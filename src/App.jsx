@@ -20,6 +20,19 @@ const IB=[[14e6,.06],[5e7,.15],[88e6,.24],[15e7,.35],[3e8,.38],[5e8,.40],[1e9,.4
 const GB=[[1e8,.10],[5e8,.20],[1e9,.30],[3e9,.40],[Infinity,.50]];
 const P={"pri":"#0747A6","pl":"#0052CC","bg":"#f8f9fc","card":"#ffffff","bd":"#dfe1e6","mt":"#6b778c","tx":"#172B4D","lt":"#f4f5f7"};
 
+/* ── 업데이트 로그 ── */
+const UPDATE_LOG=[
+  {date:"2025.04.04",items:[
+    {cat:"전체",title:"생활계산기.com 서비스 오픈",desc:"31가지 부동산 계산기 서비스 개시. 2025년 현행 세법·규정 기준."},
+    {cat:"세금",title:"취득세 비규제지역 2주택 세율 반영",desc:"비규제지역 2주택자는 중과(8%) 없이 일반세율(1~3%) 적용 확인."},
+    {cat:"세금",title:"생애최초 취득세 감면 반영",desc:"12억 이하 주택 최대 200만원 감면 (2028년까지 연장)."},
+    {cat:"세금",title:"증여세 혼인·출산 추가공제 반영",desc:"2024년 신설된 혼인·출산 시 1억원 추가공제 옵션 추가."},
+    {cat:"대출",title:"스트레스 DSR 3단계 시행 반영",desc:"가산금리 0.38~1.5%p 시나리오 안내 추가."},
+    {cat:"대출",title:"LTV 투기과열지구 세분화",desc:"투기과열 40%, 조정대상 50%, 비규제 70% 차등 적용."},
+    {cat:"비용",title:"중개보수 월세 거래금액 산정 반영",desc:"월세 시 보증금+월세×100 기준 거래금액 자동 계산."},
+  ]},
+];
+
 /* ── 가이드 데이터 ── */
 const GD={
 acquisition:{q:"취득세란 무엇인가요?",a:"부동산을 매매·상속·증여 등으로 취득할 때 납부하는 지방세입니다. 주택의 경우 1주택 매매 시 1~3%, 조정대상지역 2주택 8%, 3주택 이상 12%의 세율이 적용됩니다. 단, 비규제지역 2주택은 중과 없이 1~3% 일반세율이 적용되며, 비규제 3주택은 8%입니다. 생애최초 주택 구입자(12억 이하)는 최대 200만원 감면(2028년 말까지 연장). 2023년부터 시가인정액 제도 도입으로 실거래가 기준 과세됩니다.",
@@ -934,6 +947,35 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
       </div>
     </>)}
 
+    {/* 업데이트 내역 */}
+    <div style={{maxWidth:1100,margin:"0 auto",padding:"48px 24px"}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:24,flexWrap:"wrap",gap:8}}>
+        <div>
+          <h3 style={{fontSize:20,fontWeight:800,color:"#172B4D",margin:0}}>업데이트 내역</h3>
+          <p style={{fontSize:13,color:"#6b778c",margin:"4px 0 0"}}>세법·규정 변경사항을 실시간 반영합니다</p>
+        </div>
+        <div style={{fontSize:12,color:"#6b778c",background:"#f4f5f7",padding:"6px 14px",borderRadius:20}}>마지막 검증: {UPDATE_LOG[0]?.date}</div>
+      </div>
+      {UPDATE_LOG.slice(0,3).map((log,li)=>(
+        <div key={li} style={{marginBottom:24}}>
+          <div style={{fontSize:14,fontWeight:700,color:"#0747A6",marginBottom:12,display:"flex",alignItems:"center",gap:8}}>
+            <div style={{width:8,height:8,borderRadius:"50%",background:"#0747A6"}}/>{log.date}
+          </div>
+          <div style={{borderLeft:"2px solid #dfe1e6",marginLeft:3,paddingLeft:20}}>
+            {log.items.map((item,i)=>(
+              <div key={i} style={{marginBottom:12,padding:"12px 16px",background:"#fff",borderRadius:10,border:"1px solid #dfe1e6"}}>
+                <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:4}}>
+                  <span style={{fontSize:11,fontWeight:600,color:"#fff",padding:"2px 8px",borderRadius:4,background:item.cat==="세금"?"#0747A6":item.cat==="대출"?"#00875A":item.cat==="비용"?"#FF8B00":item.cat==="기타"?"#6554C0":"#6b778c"}}>{item.cat}</span>
+                  <span style={{fontSize:14,fontWeight:700,color:"#172B4D"}}>{item.title}</span>
+                </div>
+                <div style={{fontSize:13,color:"#6b778c",lineHeight:1.5}}>{item.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+
     {/* 푸터 */}
     <footer style={{background:"#fff",borderTop:`1px solid ${P.bd}`,padding:"48px 24px"}}>
       <div className="footer-inner" style={{maxWidth:1100,margin:"0 auto",display:"grid",gridTemplateColumns:"1fr 1fr",gap:40}}>
@@ -946,7 +988,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           {[{l:"Legal Disclaimer (면책조항)",k:"disclaimer"},{l:"Resource Center (자료실)",k:"resource"},{l:"Privacy Policy (개인정보)",k:"privacy"},{l:"Contact Support (문의)",k:"contact"}].map(item=><div key={item.k} onClick={()=>setModal(item.k)} style={{fontSize:13,color:P.mt,marginBottom:8,cursor:"pointer"}} onMouseEnter={e=>e.currentTarget.style.color="#0747A6"} onMouseLeave={e=>e.currentTarget.style.color=P.mt}>{item.l}</div>)}
         </div>
       </div>
-      <div style={{textAlign:"center",fontSize:12,color:"#a5adba",marginTop:32}}>© 2025 생활계산기.com. All rights reserved.</div>
+      <div style={{textAlign:"center",fontSize:12,color:"#a5adba",marginTop:32}}>© 2025 생활계산기.com. All rights reserved. <span>| 세법 검증: {UPDATE_LOG[0]?.date}</span></div>
     </footer>
     {modal&&<LegalModal type={modal} onClose={()=>setModal(null)}/>}
   </div>);

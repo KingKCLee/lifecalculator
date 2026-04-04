@@ -1,0 +1,71 @@
+name: Daily Tax & Regulation Check
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  update-check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Run comprehensive daily check
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          claude --print "아래 5개 영역을 웹 검색해서 최근 변경사항이 있는지 확인하고, 변경된 내용이 있으면 src/App.jsx의 계산 로직, GD, TIPS, REGS 데이터를 수정해줘.
+
+          1. 부동산 세법 변경:
+          - 취득세, 양도소득세, 종부세, 재산세, 증여세, 상속세 세율/공제 변경
+          - 다주택 중과 유예 연장 또는 폐지
+          - 생애최초 감면 변경
+          - 비과세 요건 변경
+
+          2. 대출 규제 변경:
+          - DSR/DTI/LTV 비율 변경
+          - 스트레스 DSR 가산금리 변경
+          - 규제지역 지정/해제 (투기과열지구, 조정대상지역)
+          - 생애최초 대출 우대 변경
+
+          3. 비용·수수료 변경:
+          - 중개보수 요율 개정
+          - 인지세 구간 변경
+          - 국민주택채권 매입률 변경
+          - 법무사 보수표 개정
+
+          4. 정부 부동산 정책:
+          - 국토교통부, 기획재정부, 금융위원회 발표
+          - 부동산 대책 신규 발표
+          - 공시가격 현실화율 변경
+
+          5. 금리 변동:
+          - 한국은행 기준금리 변경
+          - 전월세 전환율 상한 변경
+
+          변경사항이 있으면:
+          - 해당 계산기 로직 수정
+          - GD 가이드 설명 업데이트
+          - REGS에 새 항목 추가 (연도, 내용)
+          - TIPS에 관련 절세팁 추가/수정
+          - sitemap.xml의 lastmod를 오늘 날짜로 변경
+
+          변경사항이 있으면 UPDATE_LOG 배열 맨 앞에 새 항목을 추가해줘. 형식:
+          {date:'YYYY.MM.DD', items:[{cat:'카테고리',title:'변경 제목',desc:'변경 사유와 내용 상세'}]}
+          기존 로그는 유지하고 맨 앞에 추가해줘.
+
+          변경사항이 없으면 아무것도 수정하지 마."
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --staged --quiet || git commit -m "자동 검증: 세법·규정 업데이트 반영 $(date +%Y-%m-%d)"
+          git push || true
