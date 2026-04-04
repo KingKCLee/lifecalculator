@@ -507,12 +507,66 @@ function AccItem({title,defaultOpen,children}){
     {open&&<div style={{padding:"12px 18px 18px",background:P.card,border:`1px solid ${P.bd}`,borderTop:"none",borderRadius:"0 0 12px 12px"}}>{children}</div>}
   </div>);
 }
+/* ── 계산기별 한줄 설명 ── */
+const DESC={
+  acquisition:"매매·증여·상속 시 취득세 계산",
+  transfer:"부동산 매도 시 양도차익 세금",
+  compre:"주택 공시가 기준 종합부동산세",
+  property:"매년 부과되는 재산세 계산",
+  gift:"무상 증여 시 증여세 계산",
+  inherit:"상속 재산에 대한 상속세",
+  holdtax:"재산세+종부세 한번에 계산",
+  rental:"주택임대소득 과세 계산",
+  mortgage:"원리금균등·원금균등·만기일시 이자",
+  dsr:"연소득 대비 총 부채 상환비율",
+  dti:"신규 대출 원리금+기존 이자 비율",
+  ltv:"주택가격 대비 최대 대출 비율",
+  loanmax:"소득 기반 최대 대출 가능액 역산",
+  commission:"매매·전세·월세 중개보수 요율",
+  registration:"등록면허세·교육세·인지세 합산",
+  legal:"소유권이전 등기 대행 보수",
+  stamp:"거래가액 구간별 인지세",
+  bond:"국민주택채권 매입 할인비용",
+  appraisal:"감정평가사 공식 수수료",
+  yield:"임대수입 대비 순수익률 분석",
+  area:"제곱미터 ↔ 평 상호 변환",
+  convert:"전세 ↔ 월세 상호 전환 계산",
+  joint:"단독 vs 공동명의 종부세 비교",
+  deposit:"예금·적금 세후 이자 계산",
+  far:"대지면적 기준 용적률·건폐율",
+  auction:"낙찰가 기준 경매 총비용",
+  remodel:"리모델링 분담금 대비 수익",
+  bldvalue:"경과연수별 건물 잔존가치",
+  totalcost:"취득세~중개보수 한번에 합산",
+  compare:"매매 vs 증여 vs 상속 세금 비교",
+  invest:"매수→보유→매도 전체 수익 분석",
+};
+
+const CAT_ICON={"tax":"💰","loan":"🏦","cost":"📋","etc":"🔧","pro":"⚡"};
+
+const LogoSVG=({size=36,invert=false})=>(
+  <svg viewBox="0 0 512 512" width={size} height={size}>
+    {!invert&&<><defs><linearGradient id="lbg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style={{stopColor:"#1e40a0"}}/><stop offset="100%" style={{stopColor:"#0f2b80"}}/></linearGradient></defs>
+    <rect width="512" height="512" rx="102" fill="url(#lbg)"/></>}
+    <rect x="90" y="145" width="140" height="28" rx="14" fill="white"/>
+    <g transform="translate(370,160)"><rect x="-70" y="-14" width="140" height="28" rx="14" fill="white" transform="rotate(45)"/><rect x="-70" y="-14" width="140" height="28" rx="14" fill="white" transform="rotate(-45)"/></g>
+    <rect x="90" y="340" width="140" height="28" rx="14" fill="white"/>
+    <rect x="146" y="284" width="28" height="140" rx="14" fill="white"/>
+    <rect x="282" y="320" width="140" height="28" rx="14" fill="white"/>
+    <rect x="282" y="370" width="140" height="28" rx="14" fill="white"/>
+  </svg>
+);
+
 /* ═══ 메인 앱 ═══ */
 export default function App(){
+  const[page,setPage]=useState("home");
   const[cat,setCat]=useState("tax");const[calc,setCalc]=useState("acquisition");const[gTab,setGTab]=useState("rates");
+  const[search,setSearch]=useState("");
   const filtered=CL.filter(c=>c.c===cat);const hCat=c=>{setCat(c);const f=CL.find(x=>x.c===c);if(f)setCalc(f.id);};
+  const goCalc=(cId)=>{const info=CL.find(c=>c.id===cId);if(info){setCat(info.c);setCalc(info.id);setPage("calc");}};
   const Comp=CM[calc]||(()=><Placeholder l={CL.find(c=>c.id===calc)?.l||calc}/>);
   const catInfo=CATS.find(c=>c.id===cat);
+  const searchResults=search.trim()?CL.filter(c=>(c.l+"|"+(DESC[c.id]||"")).includes(search.trim())):[];
 
   return(<div style={{minHeight:"100vh",background:P.bg,fontFamily:"'Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif"}}>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
@@ -520,54 +574,113 @@ export default function App(){
     {/* 상단 네비게이션 */}
     <nav style={{background:"#fff",borderBottom:`1px solid ${P.bd}`,boxShadow:"0 1px 3px rgba(0,0,0,.06)",position:"sticky",top:0,zIndex:100}}>
       <div style={{padding:"12px 32px",textAlign:"center"}}>
-        <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,marginBottom:8}}>
-          <svg viewBox="0 0 512 512" width="36" height="36">
-            <defs><linearGradient id="lbg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style={{stopColor:"#1e40a0"}}/><stop offset="100%" style={{stopColor:"#0f2b80"}}/></linearGradient></defs>
-            <rect width="512" height="512" rx="102" fill="url(#lbg)"/>
-            <rect x="90" y="145" width="140" height="28" rx="14" fill="white"/>
-            <g transform="translate(370,160)"><rect x="-70" y="-14" width="140" height="28" rx="14" fill="white" transform="rotate(45)"/><rect x="-70" y="-14" width="140" height="28" rx="14" fill="white" transform="rotate(-45)"/></g>
-            <rect x="90" y="340" width="140" height="28" rx="14" fill="white"/>
-            <rect x="146" y="284" width="28" height="140" rx="14" fill="white"/>
-            <rect x="282" y="320" width="140" height="28" rx="14" fill="white"/>
-            <rect x="282" y="370" width="140" height="28" rx="14" fill="white"/>
-          </svg>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,marginBottom:page==="home"?0:8,cursor:"pointer"}} onClick={()=>{setPage("home");setSearch("");}}>
+          <LogoSVG size={36}/>
           <span style={{fontSize:20,fontWeight:800,color:P.pri}}>생활계산기.com</span>
         </div>
-        <div style={{display:"flex",justifyContent:"center",gap:4}}>
-          {CATS.map(c=>(<button key={c.id} onClick={()=>hCat(c.id)} style={{padding:"6px 16px",border:"none",borderRadius:6,background:cat===c.id?"#deebff":"transparent",color:cat===c.id?P.pri:P.mt,fontSize:13,fontWeight:cat===c.id?700:500,cursor:"pointer",fontFamily:"inherit"}}>{c.l}</button>))}
-        </div>
+        {page!=="home"&&<div style={{display:"flex",justifyContent:"center",gap:4}}>
+          {CATS.map(c=>(<button key={c.id} onClick={()=>{hCat(c.id);setPage("calc");}} style={{padding:"6px 16px",border:"none",borderRadius:6,background:cat===c.id?"#deebff":"transparent",color:cat===c.id?P.pri:P.mt,fontSize:13,fontWeight:cat===c.id?700:500,cursor:"pointer",fontFamily:"inherit"}}>{c.l}</button>))}
+        </div>}
       </div>
     </nav>
 
-    <div style={{maxWidth:1100,margin:"0 auto",padding:"32px 24px"}}>
-      {/* 섹션 헤더 */}
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:24,flexWrap:"wrap",gap:12}}>
-        <div><h1 style={{fontSize:26,fontWeight:800,color:P.tx,margin:0}}>{catInfo?.l||""} 계산기</h1><p style={{fontSize:13,color:P.mt,margin:"4px 0 0"}}>2024~2025 최신 세법·규정 기반 정밀 계산</p></div>
-        <div style={{display:"flex",gap:4,background:P.card,borderRadius:10,padding:4,border:`1px solid ${P.bd}`,flexWrap:"wrap"}}>
-          {filtered.map(c=>(<button key={c.id} onClick={()=>setCalc(c.id)} style={{padding:"8px 14px",border:"none",borderRadius:8,background:calc===c.id?P.pri:"transparent",color:calc===c.id?"#fff":P.mt,fontSize:12.5,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>{c.l}</button>))}
+    {page==="home"?(<>
+      {/* 히어로 */}
+      <div style={{background:"linear-gradient(135deg,#0747A6 0%,#0065FF 50%,#0052CC 100%)",padding:"60px 24px",textAlign:"center",minHeight:420,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
+        <LogoSVG size={64} invert/>
+        <div style={{fontSize:40,fontWeight:900,color:"#fff",marginTop:16}}>생활계산기.com</div>
+        <div style={{fontSize:18,color:"rgba(255,255,255,0.85)",marginTop:8}}>부동산 세금·대출·비용 종합 계산기</div>
+        <div style={{fontSize:14,color:"rgba(255,255,255,0.6)",marginTop:12}}>2025년 최신 세법 반영 | 무료 | 31가지 계산기</div>
+        <div style={{position:"relative",width:480,maxWidth:"90%",marginTop:24}}>
+          <input type="text" value={search} onChange={e=>setSearch(e.target.value)} placeholder="어떤 계산이 필요하세요?"
+            style={{width:"100%",height:48,background:"rgba(255,255,255,0.15)",borderRadius:24,border:"1px solid rgba(255,255,255,0.3)",padding:"0 24px",fontSize:15,color:"#fff",outline:"none",boxSizing:"border-box",fontFamily:"inherit"}}/>
+          {searchResults.length>0&&<div style={{position:"absolute",top:56,left:0,right:0,background:"#fff",borderRadius:12,boxShadow:"0 8px 24px rgba(0,0,0,.15)",overflow:"hidden",zIndex:10}}>
+            {searchResults.map(c=>(<div key={c.id} onClick={()=>{goCalc(c.id);setSearch("");}} style={{padding:"12px 20px",cursor:"pointer",borderBottom:`1px solid ${P.lt}`,display:"flex",justifyContent:"space-between",alignItems:"center"}}
+              onMouseEnter={e=>e.currentTarget.style.background=P.lt} onMouseLeave={e=>e.currentTarget.style.background="#fff"}>
+              <div><div style={{fontSize:14,fontWeight:600,color:P.tx}}>{c.l}</div><div style={{fontSize:12,color:P.mt}}>{DESC[c.id]||""}</div></div>
+              <span style={{fontSize:11,color:P.pl,background:"#deebff",padding:"2px 8px",borderRadius:8}}>{CATS.find(ct=>ct.id===c.c)?.l}</span>
+            </div>))}
+          </div>}
         </div>
       </div>
 
-      {/* 계산기 본체 */}
-      <div style={{background:P.card,borderRadius:16,padding:32,border:`1px solid ${P.bd}`,marginBottom:32,boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
-        <Comp/>
+      {/* 인기 계산기 */}
+      <div style={{background:P.bg,padding:"40px 24px",textAlign:"center"}}>
+        <div style={{fontSize:14,fontWeight:600,color:P.mt,letterSpacing:2,textTransform:"uppercase",marginBottom:20}}>인기 계산기</div>
+        <div style={{display:"flex",justifyContent:"center",gap:16,flexWrap:"wrap"}}>
+          {[{id:"acquisition",icon:"🏠"},{id:"transfer",icon:"💸"},{id:"dsr",icon:"💳"},{id:"commission",icon:"🤝"}].map(p=>{
+            const info=CL.find(c=>c.id===p.id);
+            return(<div key={p.id} onClick={()=>goCalc(p.id)} style={{width:160,padding:20,background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,textAlign:"center",cursor:"pointer",transition:"box-shadow .2s, transform .2s"}}
+              onMouseEnter={e=>{e.currentTarget.style.boxShadow="0 4px 16px rgba(0,0,0,.1)";e.currentTarget.style.transform="translateY(-2px)";}}
+              onMouseLeave={e=>{e.currentTarget.style.boxShadow="none";e.currentTarget.style.transform="none";}}>
+              <div style={{fontSize:32}}>{p.icon}</div>
+              <div style={{fontSize:14,fontWeight:700,color:P.tx,marginTop:8}}>{info?.l}</div>
+              <div style={{fontSize:12,color:P.mt,marginTop:4}}>{DESC[p.id]}</div>
+            </div>);
+          })}
+        </div>
       </div>
 
-      {/* PRO 카드 */}
-      {cat!=="pro"&&<div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:16,marginBottom:40}}>
-        {[{id:"totalcost",t:"총비용 시뮬레이터",d:"취득세부터 등기비·법무사비·중개보수까지 한번에 합산",cl:"#0747A6"},
-          {id:"compare",t:"세금 비교 분석",d:"매매·증여·상속 시 세금을 실시간 비교하여 최적 방법 제안",cl:"#00875A"},
-          {id:"invest",t:"투자수익 분석",d:"매수→보유→매도 전체 사이클 비용·수익·IRR 종합 분석",cl:"#FF8B00"}
-        ].map(card=>(<button key={card.id} onClick={()=>{setCat("pro");setCalc(card.id);}} style={{padding:20,background:`linear-gradient(135deg,${card.cl},${card.cl}dd)`,borderRadius:14,border:"none",cursor:"pointer",textAlign:"left",color:"#fff"}}>
-          <div style={{fontSize:15,fontWeight:700,marginBottom:6}}>{card.t}</div>
-          <div style={{fontSize:12,opacity:.85,lineHeight:1.5}}>{card.d}</div>
-          <div style={{fontSize:20,marginTop:12,opacity:.7}}>→</div>
-        </button>))}
-      </div>}
+      {/* 카테고리별 그리드 */}
+      <div style={{maxWidth:1100,margin:"0 auto",padding:"40px 24px"}}>
+        {CATS.map(ct=>{const items=CL.filter(c=>c.c===ct.id);return(
+          <div key={ct.id} style={{marginBottom:40}}>
+            <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:16}}>
+              <span style={{fontSize:20}}>{CAT_ICON[ct.id]}</span>
+              <span style={{fontSize:18,fontWeight:700,color:P.tx}}>{ct.l} 계산기</span>
+              <span style={{background:"#deebff",color:P.pl,borderRadius:10,padding:"2px 10px",fontSize:12,fontWeight:700}}>{items.length}</span>
+            </div>
+            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:12}}>
+              {items.map(c=>(<div key={c.id} onClick={()=>goCalc(c.id)}
+                style={{background:"#fff",borderRadius:12,padding:20,border:`1px solid ${P.bd}`,cursor:"pointer",transition:"transform .2s, box-shadow .2s",borderLeft:ct.id==="pro"?`3px solid ${P.pri}`:"none"}}
+                onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 4px 12px rgba(0,0,0,.08)";}}
+                onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";}}>
+                <div style={{fontSize:15,fontWeight:700,color:P.tx}}>{c.l}</div>
+                <div style={{fontSize:12,color:P.mt,marginTop:4}}>{DESC[c.id]||""}</div>
+              </div>))}
+            </div>
+          </div>
+        );})}
+      </div>
 
-      {/* 학습 센터 */}
-      <EduHub calc={calc} gTab={gTab} setGTab={setGTab}/>
-    </div>
+      {/* 하단 특징 배너 */}
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",maxWidth:800,margin:"0 auto",padding:24,textAlign:"center"}}>
+        {["🔒 무료·광고없음","📊 31가지 계산기","⚖️ 2025 최신 세법"].map(t=>(
+          <div key={t} style={{fontSize:14,color:P.mt,padding:24}}>{t}</div>
+        ))}
+      </div>
+    </>):(
+    <>
+      <div style={{maxWidth:1100,margin:"0 auto",padding:"32px 24px"}}>
+        {/* 섹션 헤더 */}
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:24,flexWrap:"wrap",gap:12}}>
+          <div><h1 style={{fontSize:26,fontWeight:800,color:P.tx,margin:0}}>{catInfo?.l||""} 계산기</h1><p style={{fontSize:13,color:P.mt,margin:"4px 0 0"}}>2024~2025 최신 세법·규정 기반 정밀 계산</p></div>
+          <div style={{display:"flex",gap:4,background:P.card,borderRadius:10,padding:4,border:`1px solid ${P.bd}`,flexWrap:"wrap"}}>
+            {filtered.map(c=>(<button key={c.id} onClick={()=>setCalc(c.id)} style={{padding:"8px 14px",border:"none",borderRadius:8,background:calc===c.id?P.pri:"transparent",color:calc===c.id?"#fff":P.mt,fontSize:12.5,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>{c.l}</button>))}
+          </div>
+        </div>
+
+        {/* 계산기 본체 */}
+        <div style={{background:P.card,borderRadius:16,padding:32,border:`1px solid ${P.bd}`,marginBottom:32,boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
+          <Comp/>
+        </div>
+
+        {/* PRO 카드 */}
+        {cat!=="pro"&&<div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:16,marginBottom:40}}>
+          {[{id:"totalcost",t:"총비용 시뮬레이터",d:"취득세부터 등기비·법무사비·중개보수까지 한번에 합산",cl:"#0747A6"},
+            {id:"compare",t:"세금 비교 분석",d:"매매·증여·상속 시 세금을 실시간 비교하여 최적 방법 제안",cl:"#00875A"},
+            {id:"invest",t:"투자수익 분석",d:"매수→보유→매도 전체 사이클 비용·수익·IRR 종합 분석",cl:"#FF8B00"}
+          ].map(card=>(<button key={card.id} onClick={()=>{setCat("pro");setCalc(card.id);}} style={{padding:20,background:`linear-gradient(135deg,${card.cl},${card.cl}dd)`,borderRadius:14,border:"none",cursor:"pointer",textAlign:"left",color:"#fff"}}>
+            <div style={{fontSize:15,fontWeight:700,marginBottom:6}}>{card.t}</div>
+            <div style={{fontSize:12,opacity:.85,lineHeight:1.5}}>{card.d}</div>
+            <div style={{fontSize:20,marginTop:12,opacity:.7}}>→</div>
+          </button>))}
+        </div>}
+
+        {/* 학습 센터 */}
+        <EduHub calc={calc} gTab={gTab} setGTab={setGTab}/>
+      </div>
+    </>)}
 
     {/* 푸터 */}
     <footer style={{borderTop:`1px solid ${P.bd}`,marginTop:40,padding:"32px 24px",background:P.card}}>
