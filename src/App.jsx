@@ -609,27 +609,43 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
     </nav>
 
     {page==="home"?(<>
-      {/* 히어로 */}
-      <div style={{background:"linear-gradient(135deg,#0747A6 0%,#0065FF 50%,#0052CC 100%)",padding:isMo?"48px 16px":"60px 24px",textAlign:"center",minHeight:isMo?"auto":420,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
-        <LogoSVG size={isMo?48:64} invert/>
-        <div style={{fontSize:isMo?28:40,fontWeight:900,color:"#fff",marginTop:16}}>생활계산기.com</div>
-        <div style={{fontSize:isMo?14:18,color:"rgba(255,255,255,0.85)",marginTop:8}}>부동산 세금·대출·비용 종합 계산기</div>
-        <div style={{fontSize:isMo?12:14,color:"rgba(255,255,255,0.6)",marginTop:12}}>2025년 최신 세법 반영 | 무료 | 31가지 계산기</div>
-        <div style={{position:"relative",width:isMo?"100%":480,maxWidth:isMo?"100%":"90%",marginTop:24}}>
-          <input type="text" value={search} onChange={e=>setSearch(e.target.value)} placeholder="어떤 계산이 필요하세요?"
-            style={{width:"100%",height:48,background:"rgba(255,255,255,0.15)",borderRadius:24,border:"1px solid rgba(255,255,255,0.3)",padding:"0 24px",fontSize:15,color:"#fff",outline:"none",boxSizing:"border-box",fontFamily:"inherit"}}/>
-          {searchResults.length>0&&<div style={{position:"absolute",top:56,left:0,right:0,background:"#fff",borderRadius:12,boxShadow:"0 8px 24px rgba(0,0,0,.15)",overflow:"hidden",zIndex:10}}>
-            {searchResults.map(c=>(<div key={c.id} onClick={()=>{goCalc(c.id);setSearch("");}} style={{padding:"12px 20px",cursor:"pointer",borderBottom:`1px solid ${P.lt}`,display:"flex",justifyContent:"space-between",alignItems:"center"}}
-              onMouseEnter={e=>e.currentTarget.style.background=P.lt} onMouseLeave={e=>e.currentTarget.style.background="#fff"}>
-              <div><div style={{fontSize:14,fontWeight:600,color:P.tx}}>{c.l}</div><div style={{fontSize:12,color:P.mt}}>{DESC[c.id]||""}</div></div>
-              <span style={{fontSize:11,color:P.pl,background:"#deebff",padding:"2px 8px",borderRadius:8}}>{CATS.find(ct=>ct.id===c.c)?.l}</span>
-            </div>))}
-          </div>}
+      {/* 히어로 2컬럼 */}
+      <div style={{background:"#f8f9fc",padding:isMo?"48px 16px":"80px 24px"}}>
+        <div style={{maxWidth:1100,margin:"0 auto",display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?32:48,alignItems:"center"}}>
+          <div>
+            <div style={{display:"inline-block",background:"#0747A6",color:"#fff",fontSize:11,fontWeight:700,padding:"4px 12px",borderRadius:4,letterSpacing:1,marginBottom:20}}>대한민국 NO.1 생활 계산기</div>
+            <h1 style={{fontSize:isMo?32:44,fontWeight:900,color:"#172B4D",lineHeight:1.15,margin:"0 0 20px"}}>{"생활 속 모든 계산,\n정밀하게,\n확실하게".split("\n").map((l,i)=><span key={i}>{l}{i<2&&<br/>}</span>)}</h1>
+            <p style={{fontSize:isMo?14:16,color:"#6b778c",lineHeight:1.7,margin:"0 0 28px"}}>부동산 세금, 대출, 비용부터 예적금, 경매, 투자분석까지. 31가지 전문 계산기로 일상의 중요한 재정 판단을 도와드립니다. 2025년 최신 세법 반영.</p>
+            <div style={{display:"flex",gap:12,flexWrap:"wrap"}}>
+              <button onClick={()=>{setCat("tax");setCalc("acquisition");setPage("calc");}} style={{background:"#0747A6",color:"#fff",border:"none",borderRadius:8,padding:"14px 28px",fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>지금 계산하기 →</button>
+              <button onClick={()=>document.getElementById("calcSuite")?.scrollIntoView({behavior:"smooth"})} style={{background:"#fff",color:"#172B4D",border:"2px solid #dfe1e6",borderRadius:8,padding:"14px 28px",fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>31가지 도구 보기</button>
+            </div>
+          </div>
+          <div style={{position:"relative"}}>
+            <div style={{background:"linear-gradient(135deg,#0747A6,#0065FF)",borderRadius:20,padding:32,color:"#fff",minHeight:320}}>
+              <div style={{fontSize:13,opacity:.7}}>예상 절세 효과</div>
+              <div style={{fontSize:42,fontWeight:800,marginTop:8}}>₩1,850만</div>
+              <div style={{fontSize:13,opacity:.6,marginTop:8}}>1주택 생애최초 취득 시 · 9억 기준</div>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginTop:24}}>
+                <div style={{background:"rgba(255,255,255,.12)",borderRadius:12,padding:"14px 16px"}}>
+                  <div style={{fontSize:12,opacity:.7}}>취득세 감면</div>
+                  <div style={{fontSize:18,fontWeight:700,marginTop:4}}>₩200만</div>
+                </div>
+                <div style={{background:"rgba(255,255,255,.12)",borderRadius:12,padding:"14px 16px"}}>
+                  <div style={{fontSize:12,opacity:.7}}>중개보수 절감</div>
+                  <div style={{fontSize:18,fontWeight:700,marginTop:4}}>₩350만</div>
+                </div>
+              </div>
+            </div>
+            <div style={{position:"absolute",bottom:-16,left:24,background:"#fff",borderRadius:10,padding:"10px 18px",boxShadow:"0 4px 16px rgba(0,0,0,.12)",display:"flex",alignItems:"center",gap:8,fontSize:13,fontWeight:600,color:P.tx}}>
+              <span>📊</span> 절세 분석 완료 <span style={{color:P.pri,fontWeight:800}}>₩1,850만 절감</span>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* 인기 계산기 */}
-      <div style={{background:P.bg,padding:"40px 24px",textAlign:"center"}}>
+      <div style={{background:"#fff",padding:"48px 24px",textAlign:"center"}}>
         <div style={{fontSize:14,fontWeight:600,color:P.mt,letterSpacing:2,textTransform:"uppercase",marginBottom:20}}>인기 계산기</div>
         <div style={{display:"flex",justifyContent:"center",gap:16,flexWrap:"wrap"}}>
           {[{id:"acquisition",icon:"🏠"},{id:"transfer",icon:"💸"},{id:"dsr",icon:"💳"},{id:"commission",icon:"🤝"}].map(p=>{
@@ -645,8 +661,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
         </div>
       </div>
 
-      {/* 카테고리별 그리드 */}
-      <div style={{maxWidth:1100,margin:"0 auto",padding:"40px 24px"}}>
+      {/* 종합 계산기 라인업 */}
+      <div id="calcSuite" style={{maxWidth:1100,margin:"0 auto",padding:"48px 24px"}}>
+        <div style={{textAlign:"center",marginBottom:32}}>
+          <h2 style={{fontSize:24,fontWeight:800,color:P.tx,margin:"0 0 8px"}}>종합 계산기 라인업</h2>
+          <p style={{fontSize:14,color:P.mt,margin:0}}>생활 속 재정 판단을 위한 전문 도구</p>
+        </div>
         {CATS.map(ct=>{const items=CL.filter(c=>c.c===ct.id);return(
           <div key={ct.id} style={{marginBottom:40}}>
             <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:16}}>
@@ -668,7 +688,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
       </div>
 
       {/* 하단 특징 배너 */}
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",maxWidth:800,margin:"0 auto",padding:24,textAlign:"center"}}>
+      <div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr 1fr",maxWidth:800,margin:"0 auto",padding:24,textAlign:"center"}}>
         {["🔒 무료·광고없음","📊 31가지 계산기","⚖️ 2025 최신 세법"].map(t=>(
           <div key={t} style={{fontSize:14,color:P.mt,padding:24}}>{t}</div>
         ))}
@@ -731,7 +751,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
       <div className="footer-inner" style={{maxWidth:1100,margin:"0 auto",display:"grid",gridTemplateColumns:"1fr 1fr",gap:40}}>
         <div>
           <div style={{fontSize:18,fontWeight:800,color:P.pri,marginBottom:8}}>생활계산기.com</div>
-          <div style={{fontSize:13,color:P.mt,lineHeight:1.6}}>부동산 전문 세금·비용 계산 플랫폼<br/>본 계산기는 참고용이며, 실제 세금·수수료는 세무사 또는 관할 기관에 반드시 확인하시기 바랍니다.</div>
+          <div style={{fontSize:13,color:P.mt,lineHeight:1.6}}>생활 속 세금·대출·비용 종합 계산 플랫폼<br/>본 계산기는 참고용이며, 실제 세금·수수료는 세무사 또는 관할 기관에 반드시 확인하시기 바랍니다.</div>
         </div>
         <div>
           <div style={{fontSize:11,fontWeight:700,color:P.mt,letterSpacing:1,textTransform:"uppercase",marginBottom:12}}>RESOURCES</div>
