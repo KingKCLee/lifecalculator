@@ -799,6 +799,53 @@ function LegalModal({type,onClose}){
   </div>);
 }
 
+function IndicatorDashboard({liveData,isMo}){
+  const[selectedId,setSelectedId]=useState("baseRate");const[period,setPeriod]=useState("monthly");
+  const indicators=liveData?.indicators?.items||[];const selected=indicators.find(i=>i.id===selectedId)||indicators[0];
+  if(!selected)return null;
+  const data=selected.history?.[period]||[];const labels=selected.history?.labels?.[period]||[];
+  const maxVal=Math.max(...data);const minVal=Math.min(...data);const range=maxVal-minVal||1;
+  const w=600,h=200,px=40,py=20,cW=w-px*2,cH=h-py*2;
+  const points=data.map((v,i)=>`${px+(i/(data.length-1||1))*cW},${py+cH-(((v-minVal)/range)*cH)}`).join(' ');
+  const isUp=selected.change>0,isDn=selected.change<0,cc=isUp?"#DE350B":isDn?"#00875A":"#6b778c";
+  return(<div style={{maxWidth:1100,margin:"0 auto",padding:"48px 24px"}}>
+    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:24,flexWrap:"wrap",gap:8}}>
+      <div><h2 style={{fontSize:isMo?20:24,fontWeight:800,color:"#172B4D",margin:"0 0 4px"}}>주요 경제지표</h2><p style={{fontSize:13,color:"#6b778c",margin:0}}>매일 자동 업데이트 · {liveData?.indicators?.lastUpdate||''} 기준</p></div>
+    </div>
+    <div style={{display:"flex",gap:12,overflowX:"auto",paddingBottom:12,WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
+      {indicators.map(ind=>{const up=ind.change>0,dn=ind.change<0,ic=up?"#DE350B":dn?"#00875A":"#6b778c",act=selectedId===ind.id;return(
+        <div key={ind.id} onClick={()=>setSelectedId(ind.id)} style={{minWidth:isMo?140:160,padding:"16px 18px",borderRadius:14,background:act?"linear-gradient(135deg,#0747A6,#0065FF)":"#fff",border:act?"none":"1px solid #dfe1e6",cursor:"pointer",flexShrink:0,transition:"all .2s"}}>
+          <div style={{fontSize:11,color:act?"rgba(255,255,255,.7)":"#6b778c",fontWeight:600,marginBottom:6}}>{ind.name}</div>
+          <div style={{fontSize:20,fontWeight:800,color:act?"#fff":"#172B4D"}}>{ind.id==="usdkrw"?Math.round(ind.current).toLocaleString():ind.current.toLocaleString()}{ind.unit&&<span style={{fontSize:12,fontWeight:500}}>{ind.unit}</span>}</div>
+          <div style={{fontSize:12,fontWeight:600,color:act?(up?"#FF5630":"#57D9A3"):ic,marginTop:4}}>{up?"▲":dn?"▼":"—"} {Math.abs(ind.change).toLocaleString()}{ind.unit}</div>
+        </div>);})}
+    </div>
+    <div style={{background:"#fff",borderRadius:16,border:"1px solid #dfe1e6",padding:isMo?16:24,marginTop:16}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20,flexWrap:"wrap",gap:8}}>
+        <div style={{fontSize:16,fontWeight:700,color:"#172B4D"}}>{selected.name} <span style={{fontSize:13,fontWeight:500,color:"#6b778c"}}>({period==="daily"?"일별":period==="monthly"?"월별":"연도별"})</span></div>
+        <div style={{display:"flex",gap:4,background:"#f4f5f7",borderRadius:8,padding:3}}>{[{id:"daily",l:"1주"},{id:"monthly",l:"1년"},{id:"yearly",l:"연도별"}].map(p=>(<button key={p.id} onClick={()=>setPeriod(p.id)} style={{padding:"6px 14px",borderRadius:6,border:"none",fontSize:12,fontWeight:600,cursor:"pointer",background:period===p.id?"#fff":"transparent",color:period===p.id?"#0747A6":"#6b778c",boxShadow:period===p.id?"0 1px 3px rgba(0,0,0,.1)":"none"}}>{p.l}</button>))}</div>
+      </div>
+      <div style={{width:"100%",overflowX:"auto"}}>
+        <svg viewBox={`0 0 ${w} ${h+30}`} style={{width:"100%",minWidth:isMo?400:undefined,height:isMo?200:250}}>
+          {[0,.25,.5,.75,1].map((r,i)=>{const y=py+cH*(1-r);return<g key={i}><line x1={px} y1={y} x2={w-px} y2={y} stroke="#f4f5f7" strokeWidth="1"/><text x={px-8} y={y+4} textAnchor="end" fontSize="10" fill="#a5adba">{(minVal+range*r).toFixed(selected.unit==="%"?2:0)}</text></g>;})}
+          <defs><linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#0747A6"/><stop offset="100%" stopColor="#0747A6" stopOpacity="0"/></linearGradient></defs>
+          <polygon points={`${px},${py+cH} ${points} ${px+((data.length-1)/(data.length-1||1))*cW},${py+cH}`} fill="url(#areaGrad)" opacity=".15"/>
+          <polyline points={points} fill="none" stroke="#0747A6" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round"/>
+          {data.map((v,i)=>{const x=px+(i/(data.length-1||1))*cW,y=py+cH-(((v-minVal)/range)*cH);return<g key={i}><circle cx={x} cy={y} r={i===data.length-1?5:3} fill={i===data.length-1?"#0747A6":"#fff"} stroke="#0747A6" strokeWidth="2"/>{i===data.length-1&&<text x={x} y={y-12} textAnchor="middle" fontSize="12" fontWeight="700" fill="#0747A6">{v.toLocaleString()}{selected.unit}</text>}</g>;})}
+          {labels.map((l,i)=>{const x=px+(i/(labels.length-1||1))*cW;return(labels.length<=8||i%Math.ceil(labels.length/8)===0||i===labels.length-1)?<text key={i} x={x} y={h+15} textAnchor="middle" fontSize="10" fill="#a5adba">{l}</text>:null;})}
+        </svg>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:isMo?"repeat(2,1fr)":"repeat(4,1fr)",gap:12,marginTop:16,paddingTop:16,borderTop:"1px solid #f4f5f7"}}>
+        <div><div style={{fontSize:11,color:"#6b778c"}}>현재</div><div style={{fontSize:16,fontWeight:700,color:"#172B4D"}}>{selected.current.toLocaleString()}{selected.unit}</div></div>
+        <div><div style={{fontSize:11,color:"#6b778c"}}>전일 대비</div><div style={{fontSize:16,fontWeight:700,color:cc}}>{isUp?"▲":isDn?"▼":"—"} {Math.abs(selected.change).toLocaleString()}{selected.unit}</div></div>
+        <div><div style={{fontSize:11,color:"#6b778c"}}>기간 최고</div><div style={{fontSize:16,fontWeight:700,color:"#172B4D"}}>{maxVal.toLocaleString()}{selected.unit}</div></div>
+        <div><div style={{fontSize:11,color:"#6b778c"}}>기간 최저</div><div style={{fontSize:16,fontWeight:700,color:"#172B4D"}}>{minVal.toLocaleString()}{selected.unit}</div></div>
+      </div>
+    </div>
+    <div style={{fontSize:11,color:"#a5adba",marginTop:8,textAlign:"right"}}>출처: 한국은행, 한국거래소, 한국부동산원, 통계청 | 매일 자동 업데이트</div>
+  </div>);
+}
+
 function AccItem({title,defaultOpen,children}){
   const[open,setOpen]=useState(defaultOpen||false);
   return (<div style={{marginBottom:8}}>
@@ -1211,6 +1258,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
         </div>
       </div>
     </>)}
+
+    {/* 경제지표 대시보드 */}
+    {liveData&&<IndicatorDashboard liveData={liveData} isMo={isMo}/>}
 
     {/* 업데이트 내역 */}
     <div style={{maxWidth:1100,margin:"0 auto",padding:"48px 24px"}}>
