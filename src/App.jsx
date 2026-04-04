@@ -78,10 +78,13 @@ function Slider({label,value,onChange,min,max,step}){
 }
 function Radio({label,value,onChange,options}){
   return(<div style={{marginBottom:20}}>
-    <label style={{display:"block",fontSize:11,fontWeight:600,color:P.mt,marginBottom:8,textTransform:"uppercase",letterSpacing:.5}}>{label}</label>
-    <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
-      {options.map(o=>(<div key={o.value} onClick={()=>onChange(o.value)} style={{flex:1,minWidth:120,padding:"16px 14px",borderRadius:12,border:`2px solid ${value===o.value?P.pri:P.bd}`,background:value===o.value?"#deebff":"#fff",textAlign:"center",cursor:"pointer",transition:"border .2s, background .2s"}}>
-        <div style={{fontSize:13,fontWeight:600,color:value===o.value?P.pri:P.tx}}>{o.label}</div>
+    <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:8,letterSpacing:.5,textTransform:"uppercase"}}>{label}</label>
+    <div style={{display:"grid",gridTemplateColumns:`repeat(${Math.min(options.length,3)},1fr)`,gap:10}}>
+      {options.map(o=>(<div key={o.value} onClick={()=>onChange(o.value)}
+        style={{padding:"14px 12px",borderRadius:12,border:value===o.value?"2px solid #0747A6":"2px solid #dfe1e6",
+          background:value===o.value?"#deebff":"#fff",cursor:"pointer",textAlign:"center",
+          transition:"all 0.2s",flexShrink:0}}>
+        <div style={{fontSize:13,fontWeight:value===o.value?700:500,color:value===o.value?"#0747A6":"#172B4D",lineHeight:1.4}}>{o.label}</div>
       </div>))}
     </div>
   </div>);
@@ -95,10 +98,10 @@ function Inp({label,value,onChange,suffix,placeholder,note}){
   };
   const numVal=pN(value);
   return(<div style={{marginBottom:16}}>
-    <label style={{display:"block",fontSize:11,fontWeight:600,color:P.mt,marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>{label}</label>
+    <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>{label}</label>
     <div style={{position:"relative"}}>
       <input type="text" value={displayVal} onChange={handleChange} placeholder={placeholder}
-        style={{width:"100%",boxSizing:"border-box",padding:"10px 14px",paddingRight:suffix?44:14,border:`1.5px solid ${P.bd}`,borderRadius:10,fontSize:16,background:"#fff",color:P.tx,outline:"none",fontFamily:"inherit",height:44}}
+        style={{width:"100%",boxSizing:"border-box",padding:"10px 14px",paddingRight:suffix?44:14,border:"1.5px solid #dfe1e6",borderRadius:10,fontSize:15,background:"#fff",color:P.tx,outline:"none",fontFamily:"inherit",height:44}}
         onFocus={e=>e.target.style.borderColor=P.pri} onBlur={e=>e.target.style.borderColor=P.bd}/>
       {suffix&&<span style={{position:"absolute",right:14,top:"50%",transform:"translateY(-50%)",fontSize:12,color:P.mt}}>{suffix}</span>}
     </div>
@@ -109,8 +112,8 @@ function Inp({label,value,onChange,suffix,placeholder,note}){
 }
 function Sel({label,value,onChange,options}){
   return(<div style={{marginBottom:16}}>
-    <label style={{display:"block",fontSize:11,fontWeight:600,color:P.mt,marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>{label}</label>
-    <select value={value} onChange={e=>onChange(e.target.value)} style={{width:"100%",padding:"10px 14px",border:`1.5px solid ${P.bd}`,borderRadius:10,fontSize:16,background:"#fff",color:P.tx,outline:"none",fontFamily:"inherit",cursor:"pointer",appearance:"none",height:44,backgroundImage:`url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10'%3E%3Cpath fill='%23718096' d='M5 7L0 2h10z'/%3E%3C/svg%3E")`,backgroundRepeat:"no-repeat",backgroundPosition:"right 14px center"}}>
+    <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>{label}</label>
+    <select value={value} onChange={e=>onChange(e.target.value)} style={{width:"100%",padding:"10px 14px",border:"1.5px solid #dfe1e6",borderRadius:10,fontSize:15,background:"#fff",color:P.tx,outline:"none",fontFamily:"inherit",cursor:"pointer",appearance:"none",height:44,backgroundImage:`url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10'%3E%3Cpath fill='%23718096' d='M5 7L0 2h10z'/%3E%3C/svg%3E")`,backgroundRepeat:"no-repeat",backgroundPosition:"right 14px center"}}>
       {options.map(o=><option key={o.value} value={o.value}>{o.label}</option>)}
     </select>
   </div>);
@@ -584,10 +587,14 @@ export default function App(){
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
 body{-webkit-tap-highlight-color:transparent;overscroll-behavior-y:contain;font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
 *{box-sizing:border-box}
-input[type=range]{-webkit-appearance:none;height:8px;border-radius:4px;background:#dfe1e6;outline:none}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#0747A6;cursor:pointer;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+input,select,textarea{font-size:16px!important}
+input[type=range]{-webkit-appearance:none;height:6px;border-radius:3px;background:#dfe1e6;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#0747A6;cursor:pointer;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2)}
 .sub-tabs::-webkit-scrollbar{display:none}
 .sub-tabs{scrollbar-width:none;-ms-overflow-style:none}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-thumb{background:#c1c7cd;border-radius:3px}
+::-webkit-scrollbar-track{background:transparent}
 @media(max-width:1023px){.calc-grid{grid-template-columns:1fr!important}.edu-sidebar{display:none!important}.insights-grid{grid-template-columns:1fr 1fr!important}}
 @media(max-width:768px){input,select,textarea{font-size:16px!important}.pro-cards{grid-template-columns:1fr!important}.footer-inner{grid-template-columns:1fr!important;text-align:center}.cat-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))!important}}
 @media(max-width:480px){.insights-grid{grid-template-columns:1fr!important}.cat-cards{grid-template-columns:1fr!important}}
