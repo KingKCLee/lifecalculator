@@ -8,7 +8,7 @@ const pN=v=>parseFloat(String(v).replace(/,/g,""))||0;
 const pTx=(b,br)=>{let t=0,p=0;for(const[l,r]of br){const x=Math.min(b,l)-p;if(x<=0)break;t+=x*r;p=l;}return t;};
 const IB=[[14e6,.06],[5e7,.15],[88e6,.24],[15e7,.35],[3e8,.38],[5e8,.40],[1e9,.42],[Infinity,.45]];
 const GB=[[1e8,.10],[5e8,.20],[1e9,.30],[3e9,.40],[Infinity,.50]];
-const P={"pri":"#1a365d","pl":"#2c5282","bg":"#f7f8fc","card":"#fff","bd":"#e2e8f0","mt":"#718096","tx":"#1a202c","lt":"#edf2f7"};
+const P={"pri":"#0747A6","pl":"#0052CC","bg":"#f8f9fc","card":"#ffffff","bd":"#dfe1e6","mt":"#6b778c","tx":"#172B4D","lt":"#f4f5f7"};
 
 /* ── 가이드 데이터 ── */
 const GD={
@@ -70,11 +70,11 @@ function Radio({label,value,onChange,options}){
   return(<div style={{marginBottom:20}}>
     <label style={{display:"block",fontSize:13,fontWeight:600,color:P.mt,marginBottom:8}}>{label}</label>
     <div style={{background:P.lt,borderRadius:10,padding:"12px 16px",border:`1px solid ${P.bd}`}}>
-      {options.map(o=>(<label key={o.value} style={{display:"flex",alignItems:"center",gap:10,cursor:"pointer",padding:"6px 0",fontSize:14,color:P.tx}}>
-        <div style={{width:18,height:18,borderRadius:"50%",border:`2px solid ${value===o.value?P.pri:P.bd}`,display:"flex",alignItems:"center",justifyContent:"center"}}>
+      {options.map(o=>(<div key={o.value} onClick={()=>onChange(o.value)} style={{display:"flex",alignItems:"center",gap:10,cursor:"pointer",padding:"6px 0",fontSize:14,color:P.tx}}>
+        <div style={{width:18,height:18,borderRadius:"50%",border:`2px solid ${value===o.value?P.pri:P.bd}`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
           {value===o.value&&<div style={{width:10,height:10,borderRadius:"50%",background:P.pri}}/>}
         </div>{o.label}
-      </label>))}
+      </div>))}
     </div>
   </div>);
 }
@@ -116,10 +116,10 @@ function Tog({label,value,onChange,options}){
   </div>);
 }
 function RP({title,total,sub,items}){
-  return(<div style={{background:`linear-gradient(135deg,${P.pri},${P.pl})`,borderRadius:16,padding:"28px 24px",color:"#fff",position:"sticky",top:76}}>
+  return(<div style={{background:"linear-gradient(135deg,#0747A6 0%,#0065FF 100%)",borderRadius:16,padding:"28px 24px",color:"#fff",position:"sticky",top:76}}>
     <div style={{fontSize:11,fontWeight:600,letterSpacing:1.5,opacity:.8,marginBottom:6}}>{title}</div>
     <div style={{fontSize:32,fontWeight:800}}>{fW(total)}</div>
-    {sub&&<div style={{display:"inline-flex",alignItems:"center",gap:4,background:"rgba(255,255,255,.15)",borderRadius:20,padding:"4px 12px",fontSize:11,marginTop:6,marginBottom:12}}><span style={{color:"#68d391"}}>✓</span>{sub}</div>}
+    {sub&&<div style={{display:"inline-flex",alignItems:"center",gap:4,background:"rgba(255,255,255,.15)",borderRadius:20,padding:"4px 12px",fontSize:11,marginTop:6,marginBottom:12}}><span style={{color:"#57D9A3"}}>✓</span>{sub}</div>}
     <div style={{borderTop:"1px solid rgba(255,255,255,.2)",paddingTop:16,marginTop:8}}>
       {items.map((it,i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:i<items.length-1?"1px solid rgba(255,255,255,.1)":"none"}}>
         <span style={{fontSize:13,opacity:.85}}>{it.l}</span><span style={{fontSize:14,fontWeight:600}}>{it.v}</span>
@@ -181,7 +181,7 @@ function CalcInherit(){const[ta,sTa]=useState("");const[db,sDb]=useState("");con
 
 function CalcMort(){const[pr,sPr]=useState("");const[rt,sRt]=useState("");const[yr,sYr]=useState("30");const[mt,sMt]=useState("equal");const PP=tW(pr),r=pN(rt)/100/12,n=parseInt(yr)*12;let mp=0,tp=0,ti=0;if(PP>0&&r>0&&n>0){if(mt==="equal"){mp=PP*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);tp=mp*n;ti=tp-PP;}else if(mt==="principal"){mp=PP/n+PP*r;ti=(PP*r*(n+1))/2;tp=PP+ti;}else{mp=PP*r;ti=mp*n;tp=PP+ti;}}return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start"}}><div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>💵 대출이자 계산</h3><Inp label="대출 원금" value={pr} onChange={sPr} suffix="만원" placeholder="예: 30000"/><Inp label="연이자율" value={rt} onChange={sRt} suffix="%" placeholder="예: 3.5"/><Sel label="대출 기간" value={yr} onChange={sYr} options={[5,10,15,20,25,30,35,40].map(y=>({value:String(y),label:y+"년"}))}/><Tog label="상환 방식" value={mt} onChange={sMt} options={[{value:"equal",label:"원리금균등"},{value:"principal",label:"원금균등"},{value:"bullet",label:"만기일시"}]}/></div>{PP>0&&r>0?<RP title="대출상환 분석" total={mp} sub="월 납입금 기준" items={[{l:mt==="principal"?"첫 달 납입금":"월 납입금",v:fW(mp)},{l:"총 이자 비용",v:fW(ti)},{l:"총 상환금액 (원금+이자)",v:fW(tp)},{l:"원금 대비 이자 비율",v:fP(PP>0?ti/PP*100:0)}]}/>:<Empty icon="💵"/>}</div>);}
 
-function CalcDSR(){const[inc,sInc]=useState("");const[nl,sNl]=useState("");const[nr,sNr]=useState("");const[ny,sNy]=useState("30");const[ep,sEp]=useState("");const ai=tW(inc),nlW=tW(nl),nrV=pN(nr)/100/12,nn=parseInt(ny)*12,epW=tW(ep);let nm=0;if(nlW>0&&nrV>0&&nn>0)nm=nlW*nrV*Math.pow(1+nrV,nn)/(Math.pow(1+nrV,nn)-1);const tot=nm*12+epW*12,dsr=ai>0?tot/ai*100:0;let st="양호",sc="#38a169";if(dsr>40){st="한도 초과";sc="#e53e3e";}else if(dsr>30){st="주의";sc="#d69e2e";}return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start"}}><div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>💳 DSR 계산</h3><Inp label="연 소득" value={inc} onChange={sInc} suffix="만원" placeholder="예: 5000"/><Inp label="신규 대출금액" value={nl} onChange={sNl} suffix="만원" placeholder="예: 30000"/><Inp label="신규 대출 금리" value={nr} onChange={sNr} suffix="%" placeholder="예: 3.5"/><Sel label="대출 기간" value={ny} onChange={sNy} options={[5,10,15,20,25,30,35,40].map(y=>({value:String(y),label:y+"년"}))}/><Inp label="기존 대출 월 상환액 합계" value={ep} onChange={sEp} suffix="만원" placeholder="없으면 0"/></div>{ai>0&&nlW>0?<div style={{background:`linear-gradient(135deg,${P.pri},${P.pl})`,borderRadius:16,padding:"28px 24px",color:"#fff",textAlign:"center"}}><div style={{fontSize:11,letterSpacing:1.5,opacity:.8,marginBottom:16}}>DSR 진단 결과</div><div style={{fontSize:52,fontWeight:800,color:sc==="#38a169"?"#68d391":sc==="#d69e2e"?"#fbd38d":"#fc8181"}}>{fP(dsr)}</div><div style={{fontSize:16,fontWeight:600,marginTop:4,color:sc==="#38a169"?"#68d391":sc==="#d69e2e"?"#fbd38d":"#fc8181"}}>{st}</div><div style={{fontSize:12,opacity:.7,marginTop:12}}>은행권 40% / 비은행권 50% 기준</div><div style={{borderTop:"1px solid rgba(255,255,255,.2)",marginTop:16,paddingTop:12,textAlign:"left",fontSize:13}}><div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",opacity:.85}}><span>신규 월 상환액</span><span style={{fontWeight:600}}>{fW(nm)}</span></div><div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",opacity:.85}}><span>연간 총 원리금</span><span style={{fontWeight:600}}>{fW(tot)}</span></div></div></div>:<Empty icon="💳" msg="소득과 대출 정보를 입력하세요."/>}</div>);}
+function CalcDSR(){const[inc,sInc]=useState("");const[nl,sNl]=useState("");const[nr,sNr]=useState("");const[ny,sNy]=useState("30");const[ep,sEp]=useState("");const ai=tW(inc),nlW=tW(nl),nrV=pN(nr)/100/12,nn=parseInt(ny)*12,epW=tW(ep);let nm=0;if(nlW>0&&nrV>0&&nn>0)nm=nlW*nrV*Math.pow(1+nrV,nn)/(Math.pow(1+nrV,nn)-1);const tot=nm*12+epW*12,dsr=ai>0?tot/ai*100:0;let st="양호",sc="#00875A";if(dsr>40){st="한도 초과";sc="#DE350B";}else if(dsr>30){st="주의";sc="#FF8B00";}return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start"}}><div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>💳 DSR 계산</h3><Inp label="연 소득" value={inc} onChange={sInc} suffix="만원" placeholder="예: 5000"/><Inp label="신규 대출금액" value={nl} onChange={sNl} suffix="만원" placeholder="예: 30000"/><Inp label="신규 대출 금리" value={nr} onChange={sNr} suffix="%" placeholder="예: 3.5"/><Sel label="대출 기간" value={ny} onChange={sNy} options={[5,10,15,20,25,30,35,40].map(y=>({value:String(y),label:y+"년"}))}/><Inp label="기존 대출 월 상환액 합계" value={ep} onChange={sEp} suffix="만원" placeholder="없으면 0"/></div>{ai>0&&nlW>0?<div style={{background:"linear-gradient(135deg,#0747A6 0%,#0065FF 100%)",borderRadius:16,padding:"28px 24px",color:"#fff",textAlign:"center"}}><div style={{fontSize:11,letterSpacing:1.5,opacity:.8,marginBottom:16}}>DSR 진단 결과</div><div style={{fontSize:52,fontWeight:800,color:sc==="#00875A"?"#57D9A3":sc==="#FF8B00"?"#FFC400":"#FF5630"}}>{fP(dsr)}</div><div style={{fontSize:16,fontWeight:600,marginTop:4,color:sc==="#00875A"?"#57D9A3":sc==="#FF8B00"?"#FFC400":"#FF5630"}}>{st}</div><div style={{fontSize:12,opacity:.7,marginTop:12}}>은행권 40% / 비은행권 50% 기준</div><div style={{borderTop:"1px solid rgba(255,255,255,.2)",marginTop:16,paddingTop:12,textAlign:"left",fontSize:13}}><div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",opacity:.85}}><span>신규 월 상환액</span><span style={{fontWeight:600}}>{fW(nm)}</span></div><div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",opacity:.85}}><span>연간 총 원리금</span><span style={{fontWeight:600}}>{fW(tot)}</span></div></div></div>:<Empty icon="💳" msg="소득과 대출 정보를 입력하세요."/>}</div>);}
 
 function CalcComm(){const[ty,sTy]=useState("res");const[tx,sTx]=useState("sale");const[p,sP]=useState("90000");const pW=tW(p);let r=0,mf=Infinity;if(ty==="res"){if(tx==="sale"){if(pW<5e7){r=.006;mf=250000;}else if(pW<2e8){r=.005;mf=800000;}else if(pW<9e8)r=.004;else if(pW<12e8)r=.005;else if(pW<15e8)r=.006;else r=.007;}else if(tx==="lease"){if(pW<5e7){r=.005;mf=200000;}else if(pW<1e8){r=.004;mf=300000;}else if(pW<6e8)r=.003;else if(pW<12e8)r=.004;else if(pW<15e8)r=.005;else r=.006;}else{r=.005;mf=200000;if(pW>=5e7){r=.004;mf=300000;}if(pW>=1e8){r=.003;mf=Infinity;}}}else r=.009;const cm=Math.min(pW*r,mf),vt=cm*.1;return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start"}}><div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>🏠 공인중개사 중개보수</h3><Tog label="부동산 유형" value={ty} onChange={sTy} options={[{value:"res",label:"주택"},{value:"com",label:"상가·토지·오피스텔"}]}/>{ty==="res"&&<Tog label="거래 유형" value={tx} onChange={sTx} options={[{value:"sale",label:"매매"},{value:"lease",label:"전세"},{value:"rent",label:"월세"}]}/>}<Slider label="거래금액" value={p} onChange={sP} min={1000} max={500000} step={500}/></div><RP title="중개보수 (수수료)" total={cm+vt} sub={"상한요율 "+fP(r*100)+" 적용"} items={[{l:"중개보수 (VAT 별도)",v:fW(cm)},{l:"부가가치세 (10%)",v:fW(vt)},{l:"합계 (중개보수+VAT)",v:fW(cm+vt)}]}/></div>);}
 
@@ -189,14 +189,14 @@ function CalcConvert(){const[type,sType]=useState("m2j");const[deposit,sDep]=use
 
 function CalcTotalCost(){const[p,sP]=useState("90000");const[h,sH]=useState("1");const[a,sA]=useState("non");const pW=tW(p);let acqR=pW<=6e8?.01:pW<=9e8?.02:.03;const n=parseInt(h);if(n===2)acqR=a!=="non"?.08:.03;if(n>=3)acqR=a!=="non"?.12:.08;const ac=pW*acqR,ed=ac*.1,fm=pW*.002,tAcq=ac+ed+fm;const rT=pW*.02,rE=rT*.2;let st=pW>1e9?350000:pW>5e8?150000:70000;const tReg=rT+rE+st+15000;let bf=pW<=1e8?160000:pW<=3e8?220000:pW<=5e8?310000:pW<=1e9?420000:600000;const tLeg=bf*1.1+80000;let cr=pW<2e8?.005:pW<9e8?.004:.005;const tComm=pW*cr*1.1;const grand=tAcq+tReg+tLeg+tComm;return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start"}}><div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>⚡ 매수 총비용 시뮬레이터</h3><Slider label="매수 가격" value={p} onChange={sP} min={1000} max={500000} step={500}/><Radio label="주택 수 (취득 후)" value={h} onChange={sH} options={[{value:"1",label:"1주택"},{value:"2",label:"2주택"},{value:"3",label:"3주택 이상"}]}/><Tog label="지역 구분" value={a} onChange={sA} options={[{value:"non",label:"비규제"},{value:"adj",label:"조정대상"},{value:"spec",label:"투기과열"}]}/></div><RP title="매수 총비용" total={grand} sub={"매수가의 "+(pW>0?(grand/pW*100).toFixed(2):0)+"%"} items={[{l:"취득세+교육세+농특세",v:fW(tAcq)},{l:"등기비용 (등록세+인지세)",v:fW(tReg)},{l:"법무사 수수료",v:fW(tLeg)},{l:"중개보수+VAT",v:fW(tComm)},{l:"실제 필요 총 자금",v:fW(pW+grand)}]}/></div>);}
 
-function CalcCompare(){const[p,sP]=useState("100000");const[rl,sRl]=useState("adult");const pW=tW(p);const saleT=pW*(pW<=6e8?.01:.03)*1.1+pW*.002;const gDed={spouse:6e8,adult:5e7,minor:2e7}[rl]||5e7;const giftT=pTx(Math.max(0,pW-gDed),GB)*.97+pW*.035*1.1;const inhT=pTx(Math.max(0,pW-10e8),GB)*.97+pW*.008*1.2;const items=[{l:"매매 (취득세 부담)",v:saleT,c:"#3182ce"},{l:"증여 (증여세+취득세)",v:giftT,c:"#805ad5"},{l:"상속 (상속세+등록세)",v:inhT,c:"#319795"}];const mx=Math.max(...items.map(i=>i.v),1);const best=[...items].sort((a,b)=>a.v-b.v)[0];return(<div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>⚡ 매매 vs 증여 vs 상속 세금 비교</h3><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16,marginBottom:24}}><Inp label="부동산 시가" value={p} onChange={sP} suffix="만원" placeholder="예: 100000"/><Sel label="이전 대상 (가족 관계)" value={rl} onChange={sRl} options={[{value:"spouse",label:"배우자"},{value:"adult",label:"성년 자녀"},{value:"minor",label:"미성년 자녀"}]}/></div>{pW>0&&<div style={{background:P.card,borderRadius:16,padding:24,border:`1px solid ${P.bd}`}}>{items.map(it=>(<div key={it.l} style={{marginBottom:16}}><div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}><span style={{fontSize:14,fontWeight:600,color:it.c}}>{it.l}</span><span style={{fontSize:15,fontWeight:700}}>{fW(it.v)}</span></div><div style={{background:P.lt,borderRadius:6,height:28,overflow:"hidden"}}><div style={{height:"100%",width:Math.max(it.v/mx*100,3)+"%",background:it.c,borderRadius:6}}/></div></div>))}<div style={{marginTop:16,padding:"12px 16px",background:"#fffff0",border:"1px solid #fefcbf",borderRadius:10,fontSize:13,color:"#744210"}}>{"💡 세금 기준 가장 유리한 방법: "+best.l+" ("+fW(best.v)+")"}<br/>※ 양도세·종부세·향후 세부담까지 종합적으로 세무사 상담 권장</div></div>}</div>);}
+function CalcCompare(){const[p,sP]=useState("100000");const[rl,sRl]=useState("adult");const pW=tW(p);const saleT=pW*(pW<=6e8?.01:.03)*1.1+pW*.002;const gDed={spouse:6e8,adult:5e7,minor:2e7}[rl]||5e7;const giftT=pTx(Math.max(0,pW-gDed),GB)*.97+pW*.035*1.1;const inhT=pTx(Math.max(0,pW-10e8),GB)*.97+pW*.008*1.2;const items=[{l:"매매 (취득세 부담)",v:saleT,c:"#0065FF"},{l:"증여 (증여세+취득세)",v:giftT,c:"#6554C0"},{l:"상속 (상속세+등록세)",v:inhT,c:"#00B8D9"}];const mx=Math.max(...items.map(i=>i.v),1);const best=[...items].sort((a,b)=>a.v-b.v)[0];return(<div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>⚡ 매매 vs 증여 vs 상속 세금 비교</h3><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16,marginBottom:24}}><Inp label="부동산 시가" value={p} onChange={sP} suffix="만원" placeholder="예: 100000"/><Sel label="이전 대상 (가족 관계)" value={rl} onChange={sRl} options={[{value:"spouse",label:"배우자"},{value:"adult",label:"성년 자녀"},{value:"minor",label:"미성년 자녀"}]}/></div>{pW>0&&<div style={{background:P.card,borderRadius:16,padding:24,border:`1px solid ${P.bd}`}}>{items.map(it=>(<div key={it.l} style={{marginBottom:16}}><div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}><span style={{fontSize:14,fontWeight:600,color:it.c}}>{it.l}</span><span style={{fontSize:15,fontWeight:700}}>{fW(it.v)}</span></div><div style={{background:P.lt,borderRadius:6,height:28,overflow:"hidden"}}><div style={{height:"100%",width:Math.max(it.v/mx*100,3)+"%",background:it.c,borderRadius:6}}/></div></div>))}<div style={{marginTop:16,padding:"12px 16px",background:"#fffff0",border:"1px solid #fefcbf",borderRadius:10,fontSize:13,color:"#744210"}}>{"💡 세금 기준 가장 유리한 방법: "+best.l+" ("+fW(best.v)+")"}<br/>※ 양도세·종부세·향후 세부담까지 종합적으로 세무사 상담 권장</div></div>}</div>);}
 
-function CalcInvest(){const[bp,sBp]=useState("");const[sp,sSp]=useState("");const[hy,sHy]=useState("5");const[ln,sLn]=useState("");const[lr,sLr]=useState("");const[rn,sRn]=useState("");const buyP=tW(bp),sellP=tW(sp),holdY=parseInt(hy),loanW=tW(ln),loanR=pN(lr)/100,rentW=tW(rn);const buyCost=buyP*.04;const totalPT=pTx(buyP*.6,[[6e7,.001],[1.5e8,.0015],[3e8,.0025],[Infinity,.004]])*1.34*holdY;const totalInt=loanW*loanR*holdY;const totalRent=rentW*12*holdY;const sellComm=sellP*.005*1.1;const gain=sellP-buyP;const ltD2=holdY>=3?Math.min(Math.min(holdY,15)*.04+Math.min(holdY,10)*.04,.80):0;const trTax=gain>0?pTx(Math.max(0,gain*(1-ltD2)-2500000),IB)*1.1:0;const totalCost=buyCost+totalPT+totalInt+sellComm+trTax;const totalInc=totalRent+gain;const netProfit=totalInc-totalCost;const invested=buyP-loanW+buyCost;const roi=invested>0?netProfit/invested*100:0;return(<div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>⚡ 투자수익 종합분석 (매수→보유→매도)</h3><div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12,marginBottom:20}}><Inp label="매수가" value={bp} onChange={sBp} suffix="만원" placeholder="예: 70000"/><Inp label="예상 매도가" value={sp} onChange={sSp} suffix="만원" placeholder="예: 100000"/><Sel label="보유 기간" value={hy} onChange={sHy} options={Array.from({length:20},(_,i)=>({value:String(i+1),label:(i+1)+"년"}))}/><Inp label="대출금액" value={ln} onChange={sLn} suffix="만원"/><Inp label="대출 금리" value={lr} onChange={sLr} suffix="%"/><Inp label="월세 수입 (없으면 0)" value={rn} onChange={sRn} suffix="만원"/></div>{buyP>0&&sellP>0&&<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}}><div style={{background:"linear-gradient(135deg,#0f172a,#1e3a5f)",borderRadius:16,padding:24,color:"#fff"}}><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16,marginBottom:16}}><div><div style={{fontSize:11,opacity:.7}}>총 수익</div><div style={{fontSize:22,fontWeight:800,color:"#68d391"}}>{fW(totalInc)}</div></div><div><div style={{fontSize:11,opacity:.7}}>총 비용·세금</div><div style={{fontSize:22,fontWeight:800,color:"#fc8181"}}>{fW(totalCost)}</div></div></div><div style={{borderTop:"1px solid rgba(255,255,255,.2)",paddingTop:16,textAlign:"center"}}><div style={{fontSize:11,opacity:.7}}>순수익</div><div style={{fontSize:32,fontWeight:800,color:netProfit>=0?"#68d391":"#fc8181"}}>{fW(netProfit)}</div><div style={{fontSize:14,marginTop:8,opacity:.9}}>투자수익률: <span style={{fontWeight:800,color:"#fbd38d"}}>{fP(roi)}</span></div></div></div><div style={{background:P.card,borderRadius:16,padding:20,border:`1px solid ${P.bd}`}}><div style={{fontSize:13,fontWeight:600,color:P.mt,marginBottom:12}}>비용 상세 내역</div>{[["매수 부대비용",buyCost],["보유세 ("+holdY+"년)",totalPT],["대출이자 ("+holdY+"년)",totalInt],["매도 중개보수",sellComm],["양도소득세",trTax],["임대수입 ("+holdY+"년)",totalRent]].map(([l,v],i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:`1px solid ${P.lt}`,fontSize:13}}><span style={{color:P.mt}}>{l}</span><span style={{fontWeight:600}}>{fW(v)}</span></div>))}</div></div>}</div>);}
+function CalcInvest(){const[bp,sBp]=useState("");const[sp,sSp]=useState("");const[hy,sHy]=useState("5");const[ln,sLn]=useState("");const[lr,sLr]=useState("");const[rn,sRn]=useState("");const buyP=tW(bp),sellP=tW(sp),holdY=parseInt(hy),loanW=tW(ln),loanR=pN(lr)/100,rentW=tW(rn);const buyCost=buyP*.04;const totalPT=pTx(buyP*.6,[[6e7,.001],[1.5e8,.0015],[3e8,.0025],[Infinity,.004]])*1.34*holdY;const totalInt=loanW*loanR*holdY;const totalRent=rentW*12*holdY;const sellComm=sellP*.005*1.1;const gain=sellP-buyP;const ltD2=holdY>=3?Math.min(Math.min(holdY,15)*.04+Math.min(holdY,10)*.04,.80):0;const trTax=gain>0?pTx(Math.max(0,gain*(1-ltD2)-2500000),IB)*1.1:0;const totalCost=buyCost+totalPT+totalInt+sellComm+trTax;const totalInc=totalRent+gain;const netProfit=totalInc-totalCost;const invested=buyP-loanW+buyCost;const roi=invested>0?netProfit/invested*100:0;return(<div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>⚡ 투자수익 종합분석 (매수→보유→매도)</h3><div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12,marginBottom:20}}><Inp label="매수가" value={bp} onChange={sBp} suffix="만원" placeholder="예: 70000"/><Inp label="예상 매도가" value={sp} onChange={sSp} suffix="만원" placeholder="예: 100000"/><Sel label="보유 기간" value={hy} onChange={sHy} options={Array.from({length:20},(_,i)=>({value:String(i+1),label:(i+1)+"년"}))}/><Inp label="대출금액" value={ln} onChange={sLn} suffix="만원"/><Inp label="대출 금리" value={lr} onChange={sLr} suffix="%"/><Inp label="월세 수입 (없으면 0)" value={rn} onChange={sRn} suffix="만원"/></div>{buyP>0&&sellP>0&&<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}}><div style={{background:"linear-gradient(135deg,#0747A6,#0065FF)",borderRadius:16,padding:24,color:"#fff"}}><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16,marginBottom:16}}><div><div style={{fontSize:11,opacity:.7}}>총 수익</div><div style={{fontSize:22,fontWeight:800,color:"#57D9A3"}}>{fW(totalInc)}</div></div><div><div style={{fontSize:11,opacity:.7}}>총 비용·세금</div><div style={{fontSize:22,fontWeight:800,color:"#FF5630"}}>{fW(totalCost)}</div></div></div><div style={{borderTop:"1px solid rgba(255,255,255,.2)",paddingTop:16,textAlign:"center"}}><div style={{fontSize:11,opacity:.7}}>순수익</div><div style={{fontSize:32,fontWeight:800,color:netProfit>=0?"#57D9A3":"#FF5630"}}>{fW(netProfit)}</div><div style={{fontSize:14,marginTop:8,opacity:.9}}>투자수익률: <span style={{fontWeight:800,color:"#FFC400"}}>{fP(roi)}</span></div></div></div><div style={{background:P.card,borderRadius:16,padding:20,border:`1px solid ${P.bd}`}}><div style={{fontSize:13,fontWeight:600,color:P.mt,marginBottom:12}}>비용 상세 내역</div>{[["매수 부대비용",buyCost],["보유세 ("+holdY+"년)",totalPT],["대출이자 ("+holdY+"년)",totalInt],["매도 중개보수",sellComm],["양도소득세",trTax],["임대수입 ("+holdY+"년)",totalRent]].map(([l,v],i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:`1px solid ${P.lt}`,fontSize:13}}><span style={{color:P.mt}}>{l}</span><span style={{fontWeight:600}}>{fW(v)}</span></div>))}</div></div>}</div>);}
 
 function Placeholder({l}){return (<div style={{padding:40,textAlign:"center",color:P.mt}}><div style={{fontSize:48,marginBottom:12}}>🔧</div><div style={{fontSize:16,fontWeight:600}}>{l}</div><div style={{fontSize:13,marginTop:8}}>해당 기능을 준비 중입니다.</div></div>);}
 
 /* DTI */
-function CalcDTI(){const[inc,sInc]=useState("");const[la,sLa]=useState("");const[lr,sLr]=useState("");const[ly,sLy]=useState("30");const[ei,sEi]=useState("");const ai=tW(inc),laW=tW(la),lrV=pN(lr)/100/12,lN=parseInt(ly)*12,eiW=tW(ei);let na=0;if(laW>0&&lrV>0&&lN>0)na=laW*lrV*Math.pow(1+lrV,lN)/(Math.pow(1+lrV,lN)-1)*12;const tot=na+eiW*12,dti=ai>0?tot/ai*100:0;let st="양호",sc="#38a169";if(dti>60){st="한도 초과";sc="#e53e3e";}else if(dti>50){st="주의";sc="#d69e2e";}return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start"}}><div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>📉 DTI 계산</h3><Inp label="연 소득" value={inc} onChange={sInc} suffix="만원" placeholder="예: 5000"/><Inp label="신규 대출금액" value={la} onChange={sLa} suffix="만원" placeholder="예: 30000"/><Inp label="대출 금리" value={lr} onChange={sLr} suffix="%" placeholder="예: 3.5"/><Sel label="대출 기간" value={ly} onChange={sLy} options={[5,10,15,20,25,30,35,40].map(y=>({value:String(y),label:y+"년"}))}/><Inp label="기존 대출 월이자 합계" value={ei} onChange={sEi} suffix="만원" placeholder="없으면 0" note="DTI는 기존 대출의 이자만 포함 (원금 미포함)"/></div>{ai>0&&laW>0?<div style={{background:`linear-gradient(135deg,${P.pri},${P.pl})`,borderRadius:16,padding:"28px 24px",color:"#fff",textAlign:"center"}}><div style={{fontSize:11,letterSpacing:1.5,opacity:.8,marginBottom:16}}>DTI 진단 결과</div><div style={{fontSize:52,fontWeight:800,color:sc==="#38a169"?"#68d391":sc==="#d69e2e"?"#fbd38d":"#fc8181"}}>{fP(dti)}</div><div style={{fontSize:16,fontWeight:600,marginTop:4,color:sc==="#38a169"?"#68d391":sc==="#d69e2e"?"#fbd38d":"#fc8181"}}>{st}</div><div style={{fontSize:12,opacity:.7,marginTop:12}}>규제 기준: 60%</div><div style={{borderTop:"1px solid rgba(255,255,255,.2)",marginTop:16,paddingTop:12,textAlign:"left",fontSize:13}}><div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",opacity:.85}}><span>신규 연간 원리금</span><span style={{fontWeight:600}}>{fW(na)}</span></div><div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",opacity:.85}}><span>기존 연간 이자</span><span style={{fontWeight:600}}>{fW(eiW*12)}</span></div></div></div>:<Empty icon="📉" msg="소득과 대출 정보를 입력하세요."/>}</div>);}
+function CalcDTI(){const[inc,sInc]=useState("");const[la,sLa]=useState("");const[lr,sLr]=useState("");const[ly,sLy]=useState("30");const[ei,sEi]=useState("");const ai=tW(inc),laW=tW(la),lrV=pN(lr)/100/12,lN=parseInt(ly)*12,eiW=tW(ei);let na=0;if(laW>0&&lrV>0&&lN>0)na=laW*lrV*Math.pow(1+lrV,lN)/(Math.pow(1+lrV,lN)-1)*12;const tot=na+eiW*12,dti=ai>0?tot/ai*100:0;let st="양호",sc="#00875A";if(dti>60){st="한도 초과";sc="#DE350B";}else if(dti>50){st="주의";sc="#FF8B00";}return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start"}}><div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>📉 DTI 계산</h3><Inp label="연 소득" value={inc} onChange={sInc} suffix="만원" placeholder="예: 5000"/><Inp label="신규 대출금액" value={la} onChange={sLa} suffix="만원" placeholder="예: 30000"/><Inp label="대출 금리" value={lr} onChange={sLr} suffix="%" placeholder="예: 3.5"/><Sel label="대출 기간" value={ly} onChange={sLy} options={[5,10,15,20,25,30,35,40].map(y=>({value:String(y),label:y+"년"}))}/><Inp label="기존 대출 월이자 합계" value={ei} onChange={sEi} suffix="만원" placeholder="없으면 0" note="DTI는 기존 대출의 이자만 포함 (원금 미포함)"/></div>{ai>0&&laW>0?<div style={{background:"linear-gradient(135deg,#0747A6 0%,#0065FF 100%)",borderRadius:16,padding:"28px 24px",color:"#fff",textAlign:"center"}}><div style={{fontSize:11,letterSpacing:1.5,opacity:.8,marginBottom:16}}>DTI 진단 결과</div><div style={{fontSize:52,fontWeight:800,color:sc==="#00875A"?"#57D9A3":sc==="#FF8B00"?"#FFC400":"#FF5630"}}>{fP(dti)}</div><div style={{fontSize:16,fontWeight:600,marginTop:4,color:sc==="#00875A"?"#57D9A3":sc==="#FF8B00"?"#FFC400":"#FF5630"}}>{st}</div><div style={{fontSize:12,opacity:.7,marginTop:12}}>규제 기준: 60%</div><div style={{borderTop:"1px solid rgba(255,255,255,.2)",marginTop:16,paddingTop:12,textAlign:"left",fontSize:13}}><div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",opacity:.85}}><span>신규 연간 원리금</span><span style={{fontWeight:600}}>{fW(na)}</span></div><div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",opacity:.85}}><span>기존 연간 이자</span><span style={{fontWeight:600}}>{fW(eiW*12)}</span></div></div></div>:<Empty icon="📉" msg="소득과 대출 정보를 입력하세요."/>}</div>);}
 
 /* LTV·대출한도 */
 function CalcLTV(){const[pv,sPv]=useState("");const[a,sA]=useState("non");const[h,sH]=useState("1");const[ex,sEx]=useState("");const[first,sFirst]=useState("no");const pvW=tW(pv),exW=tW(ex),n=parseInt(h);let ltv=0.70;if(first==="yes"){ltv=0.80;}else if(a!=="non"){ltv=n===1?0.50:0.30;}else{ltv=n===1?0.70:0.60;}const ml=Math.max(0,pvW*ltv-exW);return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start"}}><div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>🔑 LTV·대출한도</h3><Inp label="주택 가격 (시세)" value={pv} onChange={sPv} suffix="만원" placeholder="예: 90000"/><Tog label="규제지역" value={a} onChange={sA} options={[{value:"non",label:"비규제"},{value:"adj",label:"조정대상"},{value:"spec",label:"투기과열"}]}/><Sel label="주택 수" value={h} onChange={sH} options={[{value:"1",label:"1주택 (무주택 포함)"},{value:"2",label:"2주택"},{value:"3",label:"3주택 이상"}]}/><Tog label="생애최초 구입자" value={first} onChange={sFirst} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (LTV 80%)"}]}/><Inp label="기존 담보대출 잔액" value={ex} onChange={sEx} suffix="만원" placeholder="없으면 0"/></div>{pvW>0?<RP title="LTV·대출한도 분석" total={ml} sub={"LTV "+fP(ltv*100)+" 적용"} items={[{l:"주택 가격",v:fW(pvW)},{l:"적용 LTV 한도",v:fP(ltv*100)},{l:"담보인정 가치",v:fW(pvW*ltv)},{l:"기존 대출 차감",v:exW>0?"-"+fW(exW):"없음"},{l:"최대 대출 가능액",v:fW(ml)}]}/>:<Empty icon="🔑"/>}</div>);}
@@ -218,6 +218,27 @@ function CalcJoint(){const[p,sP]=useState("");const[r,sR]=useState("50");const p
 
 const CM={acquisition:CalcAcq,transfer:CalcTrans,compre:CalcCompre,property:CalcProp,gift:CalcGift,inherit:CalcInherit,mortgage:CalcMort,dsr:CalcDSR,dti:CalcDTI,ltv:CalcLTV,commission:CalcComm,registration:CalcReg,legal:CalcLegal,yield:CalcYield,area:CalcArea,convert:CalcConvert,joint:CalcJoint,totalcost:CalcTotalCost,compare:CalcCompare,invest:CalcInvest};
 
+
+/* ── 관련 계산기 매핑 ── */
+const RELATED={
+  totalcost:["acquisition","registration","legal","commission"],
+  compare:["acquisition","gift","inherit","transfer"],
+  invest:["transfer","property","mortgage","yield"],
+  acquisition:["registration","legal"],
+  transfer:["acquisition","commission"],
+  gift:["acquisition","inherit"],
+  inherit:["gift"],
+  dsr:["dti","ltv","mortgage"],
+  dti:["dsr","ltv","mortgage"],
+  ltv:["dsr","dti","mortgage"],
+  mortgage:["dsr","ltv"],
+  commission:["registration","legal"],
+  registration:["commission","legal"],
+  legal:["registration","commission"],
+  joint:["compre","transfer"],
+  convert:["yield"],
+  yield:["convert","mortgage"],
+};
 
 /* ── 절세 팁 (계산기별) ── */
 const TIPS={
@@ -298,12 +319,22 @@ const REGS={
 
 /* ── 학습 센터 ── */
 function EduHub({calc:calcId,gTab,setGTab}){
-  const g=GD[calcId];
   const calcInfo=CL.find(c=>c.id===calcId);
   const calcLabel=calcInfo?.l||"";
-  const tips=TIPS[calcId]||[];
-  const glossary=GLOSSARY[calcId]||[];
-  const regs=REGS[calcId]||[];
+  const relIds=RELATED[calcId]||[];
+  const allIds=[calcId,...relIds];
+
+  const tips=[];const glossary=[];const regs=[];
+  allIds.forEach(id=>{const lbl=CL.find(c=>c.id===id)?.l||id;
+    (TIPS[id]||[]).forEach(t=>tips.push({...t,from:lbl,fromId:id}));
+    (GLOSSARY[id]||[]).forEach(g=>glossary.push({...g,from:lbl,fromId:id}));
+    (REGS[id]||[]).forEach(r=>regs.push({...r,from:lbl,fromId:id}));
+  });
+  regs.sort((a,b)=>b.y.localeCompare(a.y));
+
+  const guideSources=allIds.filter(id=>GD[id]).map(id=>({id,label:CL.find(c=>c.id===id)?.l||id,data:GD[id]}));
+  const relLabels=relIds.map(id=>CL.find(c=>c.id===id)?.l||id);
+  const Badge=({item})=>item.fromId!==calcId?<span style={{marginLeft:6,background:"#deebff",color:P.pl,borderRadius:8,padding:"1px 6px",fontSize:10,fontWeight:600}}>{item.from}</span>:null;
 
   return (
     <div style={{display:"grid",gridTemplateColumns:"220px 1fr",gap:24}}>
@@ -316,31 +347,39 @@ function EduHub({calc:calcId,gTab,setGTab}){
         {[{id:"rates",icon:"📊",l:"세율표·가이드"},{id:"regs",icon:"📋",l:"규정·법령"},{id:"tips",icon:"💡",l:"절세 팁"},{id:"glossary",icon:"📖",l:"용어 사전"}].map(t=>(
           <button key={t.id} onClick={()=>setGTab(t.id)}
             style={{width:"100%",padding:"10px 12px",border:"none",borderRadius:8,
-              background:gTab===t.id?"#ebf4ff":"transparent",color:gTab===t.id?P.pri:P.mt,
+              background:gTab===t.id?"#deebff":"transparent",color:gTab===t.id?P.pri:P.mt,
               fontSize:13,fontWeight:gTab===t.id?600:400,cursor:"pointer",fontFamily:"inherit",
               textAlign:"left",display:"flex",alignItems:"center",gap:8,marginBottom:2}}>
             {t.icon+" "+t.l}
-            {t.id==="tips"&&tips.length>0&&<span style={{marginLeft:"auto",background:"#ebf4ff",color:P.pri,borderRadius:10,padding:"1px 7px",fontSize:11,fontWeight:700}}>{tips.length}</span>}
-            {t.id==="glossary"&&glossary.length>0&&<span style={{marginLeft:"auto",background:"#ebf4ff",color:P.pri,borderRadius:10,padding:"1px 7px",fontSize:11,fontWeight:700}}>{glossary.length}</span>}
-            {t.id==="regs"&&regs.length>0&&<span style={{marginLeft:"auto",background:"#ebf4ff",color:P.pri,borderRadius:10,padding:"1px 7px",fontSize:11,fontWeight:700}}>{regs.length}</span>}
+            {t.id==="tips"&&tips.length>0&&<span style={{marginLeft:"auto",background:"#deebff",color:P.pri,borderRadius:10,padding:"1px 7px",fontSize:11,fontWeight:700}}>{tips.length}</span>}
+            {t.id==="glossary"&&glossary.length>0&&<span style={{marginLeft:"auto",background:"#deebff",color:P.pri,borderRadius:10,padding:"1px 7px",fontSize:11,fontWeight:700}}>{glossary.length}</span>}
+            {t.id==="regs"&&regs.length>0&&<span style={{marginLeft:"auto",background:"#deebff",color:P.pri,borderRadius:10,padding:"1px 7px",fontSize:11,fontWeight:700}}>{regs.length}</span>}
           </button>
         ))}
-        <div style={{marginTop:16,padding:"12px 14px",background:"linear-gradient(135deg,#ebf4ff,#e9d8fd)",borderRadius:10,fontSize:12,color:P.pri,lineHeight:1.5}}>
+        {relIds.length>0&&<div style={{marginTop:16,padding:"10px 14px",background:P.lt,borderRadius:10,fontSize:11,color:P.mt,lineHeight:1.8}}>
+          <div style={{fontWeight:700,marginBottom:4,color:P.pri}}>관련 항목 포함</div>
+          <div style={{display:"flex",flexWrap:"wrap",gap:4}}>{relLabels.map(l=><span key={l} style={{background:"#deebff",color:P.pl,borderRadius:8,padding:"2px 8px",fontSize:10,fontWeight:600}}>{l}</span>)}</div>
+        </div>}
+        <div style={{marginTop:12,padding:"12px 14px",background:"linear-gradient(135deg,#deebff,#EAE6FF)",borderRadius:10,fontSize:12,color:P.pri,lineHeight:1.5}}>
           <div style={{fontWeight:700,marginBottom:4}}>📌 현재 선택</div>{calcLabel}
         </div>
       </div>
 
       <div>
-        <h2 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 16px"}}>{calcLabel} — {({rates:"세율표·가이드",regs:"규정 변경 이력",tips:"절세 팁",glossary:"관련 용어"})[gTab]}</h2>
+        <h2 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 4px"}}>{calcLabel} — {({rates:"세율표·가이드",regs:"규정 변경 이력",tips:"절세 팁",glossary:"관련 용어"})[gTab]}</h2>
+        {relIds.length>0&&<p style={{fontSize:12,color:P.mt,margin:"0 0 16px"}}>관련: {relLabels.join(", ")} 포함</p>}
+        {relIds.length===0&&<div style={{marginBottom:16}}/>}
 
-        {gTab==="rates"&&(g?(<div>
-          <AccItem title={"❓ "+g.q} defaultOpen={true}>
-            <div style={{fontSize:14,lineHeight:1.8,color:"#4a5568"}}>{g.a}</div>
-            {g.rates&&<div style={{marginTop:12,overflowX:"auto"}}><table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
-              <thead><tr>{g.rh.map((h,i)=>(<th key={i} style={{background:P.lt,padding:"8px 12px",textAlign:"left",fontWeight:600,color:P.pri,borderBottom:`2px solid ${P.bd}`}}>{h}</th>))}</tr></thead>
-              <tbody>{g.rates.map((row,ri)=>(<tr key={ri} style={{background:ri%2===0?"#fff":"#f8fafc"}}>{row.map((cell,ci)=>(<td key={ci} style={{padding:"7px 12px",borderBottom:`1px solid ${P.bd}`,fontWeight:ci===0?600:400}}>{cell}</td>))}</tr>))}</tbody>
-            </table></div>}
-          </AccItem>
+        {gTab==="rates"&&(guideSources.length>0?(<div>
+          {guideSources.map(gs=>(
+            <AccItem key={gs.id} title={"❓ "+gs.data.q+(gs.id!==calcId?" ("+gs.label+")":"")} defaultOpen={gs.id===calcId}>
+              <div style={{fontSize:14,lineHeight:1.8,color:"#4a5568"}}>{gs.data.a}</div>
+              {gs.data.rates&&<div style={{marginTop:12,overflowX:"auto"}}><table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
+                <thead><tr>{gs.data.rh.map((h,i)=>(<th key={i} style={{background:P.lt,padding:"8px 12px",textAlign:"left",fontWeight:600,color:P.pri,borderBottom:`2px solid ${P.bd}`}}>{h}</th>))}</tr></thead>
+                <tbody>{gs.data.rates.map((row,ri)=>(<tr key={ri} style={{background:ri%2===0?"#fff":"#f8fafc"}}>{row.map((cell,ci)=>(<td key={ci} style={{padding:"7px 12px",borderBottom:`1px solid ${P.bd}`,fontWeight:ci===0?600:400}}>{cell}</td>))}</tr>))}</tbody>
+              </table></div>}
+            </AccItem>
+          ))}
         </div>):(<div style={{padding:32,textAlign:"center",color:P.mt,background:P.card,borderRadius:12,border:`1px solid ${P.bd}`}}>
           <div style={{fontSize:32,marginBottom:8}}>📊</div>{calcLabel} 세율표를 준비 중입니다.
         </div>))}
@@ -353,7 +392,7 @@ function EduHub({calc:calcId,gTab,setGTab}){
             {regs.map((r,i)=>(
               <div key={i} style={{padding:"12px 18px",borderBottom:i<regs.length-1?`1px solid ${P.lt}`:"none",display:"flex",gap:12,alignItems:"flex-start"}}>
                 <span style={{background:r.y==="2026"||r.y==="2025"?P.pri:"#a0aec0",color:"#fff",padding:"2px 10px",borderRadius:16,fontSize:12,fontWeight:700,flexShrink:0}}>{r.y}</span>
-                <span style={{fontSize:13,color:"#4a5568",lineHeight:1.6}}>{r.t}</span>
+                <span style={{fontSize:13,color:"#4a5568",lineHeight:1.6}}>{r.t}<Badge item={r}/></span>
               </div>))}
           </div>
         </div>):(<div style={{padding:32,textAlign:"center",color:P.mt,background:P.card,borderRadius:12,border:`1px solid ${P.bd}`}}>
@@ -362,7 +401,7 @@ function EduHub({calc:calcId,gTab,setGTab}){
 
         {gTab==="tips"&&(tips.length>0?tips.map((tip,i)=>(
           <AccItem key={i} title={"💡 "+tip.title} defaultOpen={i===0}>
-            <div style={{fontSize:14,lineHeight:1.8,color:"#4a5568"}}>{tip.body}</div>
+            <div style={{fontSize:14,lineHeight:1.8,color:"#4a5568"}}>{tip.body}<Badge item={tip}/></div>
           </AccItem>
         )):(<div style={{padding:32,textAlign:"center",color:P.mt,background:P.card,borderRadius:12,border:`1px solid ${P.bd}`}}>
           <div style={{fontSize:32,marginBottom:8}}>💡</div>{calcLabel} 절세 팁을 준비 중입니다.
@@ -372,7 +411,7 @@ function EduHub({calc:calcId,gTab,setGTab}){
           {glossary.map((g2,i)=>(
             <div key={i} style={{padding:"12px 18px",borderBottom:i<glossary.length-1?`1px solid ${P.lt}`:"none",display:"flex",gap:16,alignItems:"flex-start"}}>
               <span style={{fontWeight:700,color:P.pri,fontSize:14,minWidth:100,flexShrink:0}}>{g2.term}</span>
-              <span style={{fontSize:13,color:"#4a5568",lineHeight:1.6}}>{g2.def}</span>
+              <span style={{fontSize:13,color:"#4a5568",lineHeight:1.6}}>{g2.def}<Badge item={g2}/></span>
             </div>))}
         </div>):(<div style={{padding:32,textAlign:"center",color:P.mt,background:P.card,borderRadius:12,border:`1px solid ${P.bd}`}}>
           <div style={{fontSize:32,marginBottom:8}}>📖</div>{calcLabel} 용어를 준비 중입니다.
@@ -404,16 +443,24 @@ export default function App(){
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 
     {/* 상단 네비게이션 */}
-    <nav style={{background:P.card,borderBottom:`1px solid ${P.bd}`,padding:"0 32px",display:"flex",alignItems:"center",justifyContent:"space-between",height:56,position:"sticky",top:0,zIndex:100}}>
-      <div style={{display:"flex",alignItems:"center",gap:32}}>
-        <span style={{fontSize:17,fontWeight:800,color:P.pri}}>생활계산기.com</span>
-        <div style={{display:"flex",gap:4}}>
-          {CATS.map(c=>(<button key={c.id} onClick={()=>hCat(c.id)} style={{padding:"6px 16px",border:"none",borderRadius:6,background:cat===c.id?"#ebf4ff":"transparent",color:cat===c.id?P.pri:P.mt,fontSize:13,fontWeight:cat===c.id?700:500,cursor:"pointer",fontFamily:"inherit"}}>{c.l}</button>))}
+    <nav style={{background:"#fff",borderBottom:`1px solid ${P.bd}`,boxShadow:"0 1px 3px rgba(0,0,0,.06)",position:"sticky",top:0,zIndex:100}}>
+      <div style={{padding:"12px 32px",textAlign:"center"}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,marginBottom:8}}>
+          <svg viewBox="0 0 512 512" width="36" height="36">
+            <defs><linearGradient id="lbg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style={{stopColor:"#1e40a0"}}/><stop offset="100%" style={{stopColor:"#0f2b80"}}/></linearGradient></defs>
+            <rect width="512" height="512" rx="102" fill="url(#lbg)"/>
+            <rect x="90" y="145" width="140" height="28" rx="14" fill="white"/>
+            <g transform="translate(370,160)"><rect x="-70" y="-14" width="140" height="28" rx="14" fill="white" transform="rotate(45)"/><rect x="-70" y="-14" width="140" height="28" rx="14" fill="white" transform="rotate(-45)"/></g>
+            <rect x="90" y="340" width="140" height="28" rx="14" fill="white"/>
+            <rect x="146" y="284" width="28" height="140" rx="14" fill="white"/>
+            <rect x="282" y="320" width="140" height="28" rx="14" fill="white"/>
+            <rect x="282" y="370" width="140" height="28" rx="14" fill="white"/>
+          </svg>
+          <span style={{fontSize:20,fontWeight:800,color:P.pri}}>생활계산기.com</span>
         </div>
-      </div>
-      <div style={{display:"flex",alignItems:"center",gap:12,color:P.mt,fontSize:16}}>
-        <span style={{cursor:"pointer"}}>🔍</span><span style={{cursor:"pointer"}}>🔔</span><span style={{cursor:"pointer"}}>⚙️</span>
-        <div style={{width:30,height:30,borderRadius:"50%",background:P.pri,color:"#fff",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,fontWeight:700}}>U</div>
+        <div style={{display:"flex",justifyContent:"center",gap:4}}>
+          {CATS.map(c=>(<button key={c.id} onClick={()=>hCat(c.id)} style={{padding:"6px 16px",border:"none",borderRadius:6,background:cat===c.id?"#deebff":"transparent",color:cat===c.id?P.pri:P.mt,fontSize:13,fontWeight:cat===c.id?700:500,cursor:"pointer",fontFamily:"inherit"}}>{c.l}</button>))}
+        </div>
       </div>
     </nav>
 
@@ -433,9 +480,9 @@ export default function App(){
 
       {/* PRO 카드 */}
       {cat!=="pro"&&<div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:16,marginBottom:40}}>
-        {[{id:"totalcost",t:"총비용 시뮬레이터",d:"취득세부터 등기비·법무사비·중개보수까지 한번에 합산",cl:"#1a365d"},
-          {id:"compare",t:"세금 비교 분석",d:"매매·증여·상속 시 세금을 실시간 비교하여 최적 방법 제안",cl:"#2f855a"},
-          {id:"invest",t:"투자수익 분석",d:"매수→보유→매도 전체 사이클 비용·수익·IRR 종합 분석",cl:"#744210"}
+        {[{id:"totalcost",t:"총비용 시뮬레이터",d:"취득세부터 등기비·법무사비·중개보수까지 한번에 합산",cl:"#0747A6"},
+          {id:"compare",t:"세금 비교 분석",d:"매매·증여·상속 시 세금을 실시간 비교하여 최적 방법 제안",cl:"#00875A"},
+          {id:"invest",t:"투자수익 분석",d:"매수→보유→매도 전체 사이클 비용·수익·IRR 종합 분석",cl:"#FF8B00"}
         ].map(card=>(<button key={card.id} onClick={()=>{setCat("pro");setCalc(card.id);}} style={{padding:20,background:`linear-gradient(135deg,${card.cl},${card.cl}dd)`,borderRadius:14,border:"none",cursor:"pointer",textAlign:"left",color:"#fff"}}>
           <div style={{fontSize:15,fontWeight:700,marginBottom:6}}>{card.t}</div>
           <div style={{fontSize:12,opacity:.85,lineHeight:1.5}}>{card.d}</div>
