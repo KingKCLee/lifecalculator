@@ -1173,9 +1173,8 @@ export default function App(){
   return(<div style={{minHeight:"100vh",background:P.bg,fontFamily:"'Pretendard','Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif"}}>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
     <style>{`
-html,body{overflow-x:hidden;overflow-y:auto;max-width:100vw}
-html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
-body{-webkit-tap-highlight-color:transparent;overscroll-behavior-y:contain;font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;overflow-x:hidden}
+body{-webkit-tap-highlight-color:transparent;font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow-x:hidden;position:relative;width:100%}
 img,svg,table,pre{max-width:100%}
 *{box-sizing:border-box}
 input,select,textarea{font-size:16px!important}
