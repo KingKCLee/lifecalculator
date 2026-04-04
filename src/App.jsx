@@ -687,11 +687,82 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
         );})}
       </div>
 
-      {/* 하단 특징 배너 */}
-      <div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr 1fr",maxWidth:800,margin:"0 auto",padding:24,textAlign:"center"}}>
-        {["🔒 무료·광고없음","📊 31가지 계산기","⚖️ 2025 최신 세법"].map(t=>(
-          <div key={t} style={{fontSize:14,color:P.mt,padding:24}}>{t}</div>
-        ))}
+      {/* 섹션 A: PRO 분석 소개 */}
+      <div style={{background:"#f8f9fc",padding:"64px 24px"}}>
+        <div style={{maxWidth:1100,margin:"0 auto"}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:32,flexWrap:"wrap",gap:12}}>
+            <h2 style={{fontSize:isMo?22:28,fontWeight:800,color:P.tx,margin:0}}>PRO 분석으로 한 차원 높게</h2>
+            <span onClick={()=>{setCat("pro");setPage("calc");}} style={{color:P.pri,fontSize:14,fontWeight:600,cursor:"pointer"}}>PRO 기능 살펴보기 →</span>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr 1fr",gap:20}}>
+            {[{id:"totalcost",t:"총비용 시뮬레이터",d:"취득세, 등기, 법무사, 중개보수까지 숨겨진 비용을 한번에 시뮬레이션",bg:"linear-gradient(135deg,#0747A6,#0065FF)"},
+              {id:"compare",t:"세금 비교 분석",d:"매매 vs 증여 vs 상속, 최적의 절세 구조를 실시간 비교 분석",bg:"linear-gradient(135deg,#00875A,#36B37E)"},
+              {id:"invest",t:"투자 수익 분석",d:"매수부터 보유, 매도까지 전체 투자 수익률(IRR) 분석",bg:"linear-gradient(135deg,#FF8B00,#FFC400)"}
+            ].map(c=>(<div key={c.id} onClick={()=>{setCat("pro");setCalc(c.id);setPage("calc");}} style={{borderRadius:16,overflow:"hidden",cursor:"pointer",transition:"transform .2s, box-shadow .2s",background:"#fff",border:`1px solid ${P.bd}`}}
+              onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow="0 8px 24px rgba(0,0,0,.12)";}}
+              onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";}}>
+              <div style={{height:140,background:c.bg,display:"flex",alignItems:"center",justifyContent:"center"}}>
+                <span style={{fontSize:40,opacity:.3,color:"#fff",fontWeight:900}}>PRO</span>
+              </div>
+              <div style={{padding:24}}>
+                <div style={{fontSize:17,fontWeight:700,color:P.tx,marginBottom:8}}>{c.t}</div>
+                <div style={{fontSize:13,color:P.mt,lineHeight:1.6}}>{c.d}</div>
+              </div>
+            </div>))}
+          </div>
+        </div>
+      </div>
+
+      {/* 섹션 B: 규제 타임라인 + 전문성 */}
+      <div style={{background:"#fff",padding:"64px 24px"}}>
+        <div style={{maxWidth:1100,margin:"0 auto",display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:32}}>
+          <div style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:32}}>
+            <h3 style={{fontSize:22,fontWeight:800,color:P.tx,margin:"0 0 24px"}}>규제 변경 타임라인</h3>
+            {[{y:"2020-2022",t:"부동산 규제 강화기",d:"취득세 중과, DSR 규제 도입",active:false},
+              {y:"2024-2025 현행",t:"규제 완화 전환",d:"생애최초 감면, LTV 완화",active:true},
+              {y:"2026 전망",t:"디지털 세정 확대",d:"전자신고 의무화 예정",active:false}
+            ].map((item,i)=>(<div key={i} style={{display:"flex",gap:16,marginBottom:i<2?24:0,position:"relative"}}>
+              {i<2&&<div style={{position:"absolute",left:9,top:24,width:2,height:"calc(100% + 4px)",borderLeft:"2px dashed #dfe1e6"}}/>}
+              <div style={{width:20,height:20,borderRadius:"50%",background:item.active?P.pri:"#dfe1e6",border:item.active?"3px solid #deebff":"3px solid #f4f5f7",flexShrink:0,marginTop:2,zIndex:1}}/>
+              <div>
+                <div style={{display:"inline-block",background:item.active?"#deebff":"#f4f5f7",color:item.active?P.pri:P.mt,fontSize:11,fontWeight:700,padding:"3px 10px",borderRadius:4,marginBottom:6}}>{item.y}</div>
+                <div style={{fontSize:15,fontWeight:700,color:P.tx}}>{item.t}</div>
+                <div style={{fontSize:13,color:P.mt,marginTop:2}}>{item.d}</div>
+              </div>
+            </div>))}
+          </div>
+          <div style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:32}}>
+            <h3 style={{fontSize:22,fontWeight:800,color:P.tx,margin:"0 0 16px"}}>정밀함이 중요한 이유</h3>
+            <p style={{fontSize:14,color:P.mt,lineHeight:1.7,margin:"0 0 24px"}}>복잡한 세법과 대출 규정은 전문 도구 없이는 정확한 판단이 어렵습니다.</p>
+            <div style={{display:"flex",gap:12,alignItems:"flex-start",marginBottom:24,padding:"16px 18px",background:"#f8f9fc",borderRadius:12}}>
+              <span style={{fontSize:24}}>💬</span>
+              <div>
+                <div style={{fontSize:14,fontWeight:700,color:P.tx}}>전문가 수준 정밀도</div>
+                <div style={{fontSize:13,color:P.mt,marginTop:2}}>세무사·공인중개사가 사용하는 계산 로직</div>
+              </div>
+            </div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}}>
+              <div style={{textAlign:"center",padding:16,background:"#f8f9fc",borderRadius:12}}>
+                <div style={{fontSize:32,fontWeight:900,color:P.pri}}>99.8%</div>
+                <div style={{fontSize:13,color:P.mt,marginTop:4}}>계산 정확도</div>
+              </div>
+              <div style={{textAlign:"center",padding:16,background:"#f8f9fc",borderRadius:12}}>
+                <div style={{fontSize:32,fontWeight:900,color:P.pri}}>31개</div>
+                <div style={{fontSize:13,color:P.mt,marginTop:4}}>전문 계산기</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 섹션 C: CTA 배너 */}
+      <div style={{background:"linear-gradient(135deg,#0747A6,#0065FF)",padding:"64px 24px",textAlign:"center"}}>
+        <div style={{fontSize:isMo?24:32,fontWeight:900,color:"#fff"}}>다음 재정 판단의 첫걸음</div>
+        <div style={{fontSize:isMo?14:16,color:"rgba(255,255,255,0.75)",marginTop:12}}>대한민국 NO.1 생활 계산기, 지금 무료로 시작하세요.</div>
+        <div style={{display:"flex",justifyContent:"center",gap:16,marginTop:32,flexDirection:isMo?"column":"row",alignItems:"center"}}>
+          <button onClick={()=>setPage("calc")} style={{background:"#fff",color:P.pri,border:"none",borderRadius:8,padding:"14px 32px",fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit",width:isMo?"100%":"auto"}}>무료로 시작하기</button>
+          <button onClick={()=>{setCat("pro");setPage("calc");}} style={{background:"transparent",color:"#fff",border:"2px solid rgba(255,255,255,0.4)",borderRadius:8,padding:"14px 32px",fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit",width:isMo?"100%":"auto"}}>PRO 둘러보기</button>
+        </div>
       </div>
     </>):(
     <>
