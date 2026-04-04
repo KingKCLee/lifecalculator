@@ -1,4 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+function useIsMobile(bp=768){
+  const[m,setM]=useState(typeof window!=="undefined"&&window.innerWidth<=bp);
+  useEffect(()=>{
+    const h=()=>setM(window.innerWidth<=bp);
+    window.addEventListener("resize",h);
+    return()=>window.removeEventListener("resize",h);
+  },[bp]);
+  return m;
+}
 
 const fmt=n=>(!n||isNaN(n)||!isFinite(n))?"0":Math.round(n).toLocaleString("ko-KR");
 const fW=n=>"₩"+fmt(n);
@@ -88,7 +98,7 @@ function Inp({label,value,onChange,suffix,placeholder,note}){
     <label style={{display:"block",fontSize:11,fontWeight:600,color:P.mt,marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>{label}</label>
     <div style={{position:"relative"}}>
       <input type="text" value={displayVal} onChange={handleChange} placeholder={placeholder}
-        style={{width:"100%",boxSizing:"border-box",padding:"10px 14px",paddingRight:suffix?44:14,border:`1.5px solid ${P.bd}`,borderRadius:10,fontSize:14,background:"#fff",color:P.tx,outline:"none",fontFamily:"inherit",height:44}}
+        style={{width:"100%",boxSizing:"border-box",padding:"10px 14px",paddingRight:suffix?44:14,border:`1.5px solid ${P.bd}`,borderRadius:10,fontSize:16,background:"#fff",color:P.tx,outline:"none",fontFamily:"inherit",height:44}}
         onFocus={e=>e.target.style.borderColor=P.pri} onBlur={e=>e.target.style.borderColor=P.bd}/>
       {suffix&&<span style={{position:"absolute",right:14,top:"50%",transform:"translateY(-50%)",fontSize:12,color:P.mt}}>{suffix}</span>}
     </div>
@@ -100,7 +110,7 @@ function Inp({label,value,onChange,suffix,placeholder,note}){
 function Sel({label,value,onChange,options}){
   return(<div style={{marginBottom:16}}>
     <label style={{display:"block",fontSize:11,fontWeight:600,color:P.mt,marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>{label}</label>
-    <select value={value} onChange={e=>onChange(e.target.value)} style={{width:"100%",padding:"10px 14px",border:`1.5px solid ${P.bd}`,borderRadius:10,fontSize:14,background:"#fff",color:P.tx,outline:"none",fontFamily:"inherit",cursor:"pointer",appearance:"none",height:44,backgroundImage:`url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10'%3E%3Cpath fill='%23718096' d='M5 7L0 2h10z'/%3E%3C/svg%3E")`,backgroundRepeat:"no-repeat",backgroundPosition:"right 14px center"}}>
+    <select value={value} onChange={e=>onChange(e.target.value)} style={{width:"100%",padding:"10px 14px",border:`1.5px solid ${P.bd}`,borderRadius:10,fontSize:16,background:"#fff",color:P.tx,outline:"none",fontFamily:"inherit",cursor:"pointer",appearance:"none",height:44,backgroundImage:`url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10'%3E%3Cpath fill='%23718096' d='M5 7L0 2h10z'/%3E%3C/svg%3E")`,backgroundRepeat:"no-repeat",backgroundPosition:"right 14px center"}}>
       {options.map(o=><option key={o.value} value={o.value}>{o.label}</option>)}
     </select>
   </div>);
@@ -558,6 +568,7 @@ const LogoSVG=({size=36,invert=false})=>(
 
 /* ═══ 메인 앱 ═══ */
 export default function App(){
+  const isMo=useIsMobile();
   const[page,setPage]=useState("home");
   const[cat,setCat]=useState("tax");const[calc,setCalc]=useState("acquisition");const[gTab,setGTab]=useState("rates");
   const[search,setSearch]=useState("");
@@ -569,29 +580,42 @@ export default function App(){
 
   return(<div style={{minHeight:"100vh",background:P.bg,fontFamily:"'Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif"}}>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-    <style>{`@media(max-width:1023px){.calc-grid{grid-template-columns:1fr!important}.edu-sidebar{display:none!important}.sub-tabs{overflow-x:auto;flex-wrap:nowrap!important}.pro-cards{grid-template-columns:1fr!important}.insights-grid{grid-template-columns:1fr 1fr!important}.footer-inner{grid-template-columns:1fr!important}}`}</style>
+    <style>{`
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{-webkit-tap-highlight-color:transparent;overscroll-behavior-y:contain}
+*{box-sizing:border-box}
+input[type=range]{-webkit-appearance:none;height:8px;border-radius:4px;background:#dfe1e6;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#0747A6;cursor:pointer;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.sub-tabs::-webkit-scrollbar{display:none}
+.sub-tabs{scrollbar-width:none;-ms-overflow-style:none}
+@media(max-width:1023px){.calc-grid{grid-template-columns:1fr!important}.edu-sidebar{display:none!important}.insights-grid{grid-template-columns:1fr 1fr!important}}
+@media(max-width:768px){input,select,textarea{font-size:16px!important}.pro-cards{grid-template-columns:1fr!important}.footer-inner{grid-template-columns:1fr!important;text-align:center}.cat-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))!important}}
+@media(max-width:480px){.insights-grid{grid-template-columns:1fr!important}}
+@media(min-width:769px){.hide-pc{display:none!important}}
+@media(max-width:768px){.hide-mo{display:none!important}}
+`}</style>
 
     {/* 상단 네비게이션 */}
     <nav style={{background:"#fff",borderBottom:`1px solid ${P.bd}`,boxShadow:"0 1px 3px rgba(0,0,0,.06)",position:"sticky",top:0,zIndex:100}}>
       <div style={{padding:"12px 32px",textAlign:"center"}}>
-        <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,marginBottom:page==="home"?0:8,cursor:"pointer"}} onClick={()=>{setPage("home");setSearch("");}}>
-          <LogoSVG size={36}/>
-          <span style={{fontSize:20,fontWeight:800,color:P.pri}}>생활계산기.com</span>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:isMo?8:10,marginBottom:page==="home"?0:8,cursor:"pointer"}} onClick={()=>{setPage("home");setSearch("");}}>
+          <LogoSVG size={isMo?28:36}/>
+          <span style={{fontSize:isMo?15:20,fontWeight:800,color:P.pri}}>생활계산기.com</span>
         </div>
-        {page!=="home"&&<div style={{display:"flex",justifyContent:"center",gap:4}}>
-          {CATS.map(c=>(<button key={c.id} onClick={()=>{hCat(c.id);setPage("calc");}} style={{padding:"6px 16px",border:"none",borderRadius:6,background:cat===c.id?"#deebff":"transparent",color:cat===c.id?P.pri:P.mt,fontSize:13,fontWeight:cat===c.id?700:500,cursor:"pointer",fontFamily:"inherit"}}>{c.l}</button>))}
+        {page!=="home"&&<div className="sub-tabs" style={{display:"flex",justifyContent:"center",gap:4,overflowX:"auto",WebkitOverflowScrolling:"touch"}}>
+          {CATS.map(c=>(<button key={c.id} onClick={()=>{hCat(c.id);setPage("calc");}} style={{padding:isMo?"6px 14px":"6px 16px",border:"none",borderRadius:6,background:cat===c.id?"#deebff":"transparent",color:cat===c.id?P.pri:P.mt,fontSize:isMo?12:13,fontWeight:cat===c.id?700:500,cursor:"pointer",fontFamily:"inherit",flexShrink:0,minHeight:44}}>{c.l}</button>))}
         </div>}
       </div>
     </nav>
 
     {page==="home"?(<>
       {/* 히어로 */}
-      <div style={{background:"linear-gradient(135deg,#0747A6 0%,#0065FF 50%,#0052CC 100%)",padding:"60px 24px",textAlign:"center",minHeight:420,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
-        <LogoSVG size={64} invert/>
-        <div style={{fontSize:40,fontWeight:900,color:"#fff",marginTop:16}}>생활계산기.com</div>
-        <div style={{fontSize:18,color:"rgba(255,255,255,0.85)",marginTop:8}}>부동산 세금·대출·비용 종합 계산기</div>
-        <div style={{fontSize:14,color:"rgba(255,255,255,0.6)",marginTop:12}}>2025년 최신 세법 반영 | 무료 | 31가지 계산기</div>
-        <div style={{position:"relative",width:480,maxWidth:"90%",marginTop:24}}>
+      <div style={{background:"linear-gradient(135deg,#0747A6 0%,#0065FF 50%,#0052CC 100%)",padding:isMo?"48px 16px":"60px 24px",textAlign:"center",minHeight:isMo?"auto":420,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
+        <LogoSVG size={isMo?48:64} invert/>
+        <div style={{fontSize:isMo?28:40,fontWeight:900,color:"#fff",marginTop:16}}>생활계산기.com</div>
+        <div style={{fontSize:isMo?14:18,color:"rgba(255,255,255,0.85)",marginTop:8}}>부동산 세금·대출·비용 종합 계산기</div>
+        <div style={{fontSize:isMo?12:14,color:"rgba(255,255,255,0.6)",marginTop:12}}>2025년 최신 세법 반영 | 무료 | 31가지 계산기</div>
+        <div style={{position:"relative",width:isMo?"100%":480,maxWidth:isMo?"100%":"90%",marginTop:24}}>
           <input type="text" value={search} onChange={e=>setSearch(e.target.value)} placeholder="어떤 계산이 필요하세요?"
             style={{width:"100%",height:48,background:"rgba(255,255,255,0.15)",borderRadius:24,border:"1px solid rgba(255,255,255,0.3)",padding:"0 24px",fontSize:15,color:"#fff",outline:"none",boxSizing:"border-box",fontFamily:"inherit"}}/>
           {searchResults.length>0&&<div style={{position:"absolute",top:56,left:0,right:0,background:"#fff",borderRadius:12,boxShadow:"0 8px 24px rgba(0,0,0,.15)",overflow:"hidden",zIndex:10}}>
@@ -630,7 +654,7 @@ export default function App(){
               <span style={{fontSize:18,fontWeight:700,color:P.tx}}>{ct.l} 계산기</span>
               <span style={{background:"#deebff",color:P.pl,borderRadius:10,padding:"2px 10px",fontSize:12,fontWeight:700}}>{items.length}</span>
             </div>
-            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:12}}>
+            <div className="cat-grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:12}}>
               {items.map(c=>(<div key={c.id} onClick={()=>goCalc(c.id)}
                 style={{background:"#fff",borderRadius:12,padding:20,border:`1px solid ${P.bd}`,cursor:"pointer",transition:"transform .2s, box-shadow .2s",borderLeft:ct.id==="pro"?`3px solid ${P.pri}`:"none"}}
                 onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 4px 12px rgba(0,0,0,.08)";}}
@@ -651,7 +675,7 @@ export default function App(){
       </div>
     </>):(
     <>
-      <div className="calc-grid" style={{maxWidth:1200,margin:"0 auto",padding:"32px 24px",display:"grid",gridTemplateColumns:"220px 1fr 320px",gap:24,alignItems:"start"}}>
+      <div className="calc-grid" style={{maxWidth:1200,margin:"0 auto",padding:isMo?"16px":"32px 24px",display:"grid",gridTemplateColumns:"220px 1fr 320px",gap:isMo?16:24,alignItems:"start"}}>
         {/* 좌측: 학습센터 사이드바 */}
         <EduSidebar calc={calc} gTab={gTab} setGTab={setGTab}/>
 
@@ -660,11 +684,11 @@ export default function App(){
           <div style={{marginBottom:24}}>
             <h1 style={{fontSize:28,fontWeight:800,color:P.tx,margin:0,letterSpacing:-1}}>{catInfo?.l||""} 계산기</h1>
             <p style={{fontSize:14,color:P.mt,margin:"4px 0 16px"}}>2025년 최신 세법 기반 정밀 계산</p>
-            <div className="sub-tabs" style={{display:"flex",gap:6,flexWrap:"wrap"}}>
-              {filtered.map(c=>(<button key={c.id} onClick={()=>setCalc(c.id)} style={{padding:"8px 20px",border:calc===c.id?"none":`1px solid ${P.bd}`,borderRadius:20,background:calc===c.id?P.pri:"transparent",color:calc===c.id?"#fff":P.mt,fontSize:13,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>{c.l}</button>))}
+            <div className="sub-tabs" style={{display:"flex",gap:6,flexWrap:"nowrap",overflowX:"auto",WebkitOverflowScrolling:"touch"}}>
+              {filtered.map(c=>(<button key={c.id} onClick={()=>setCalc(c.id)} style={{padding:"8px 20px",border:calc===c.id?"none":`1px solid ${P.bd}`,borderRadius:20,background:calc===c.id?P.pri:"transparent",color:calc===c.id?"#fff":P.mt,fontSize:isMo?12:13,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0,minHeight:44}}>{c.l}</button>))}
             </div>
           </div>
-          <div style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:32,marginBottom:24,boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
+          <div style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:isMo?16:32,marginBottom:24,boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
             <Comp/>
           </div>
           {cat!=="pro"&&<div className="pro-cards" style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12}}>
@@ -682,7 +706,7 @@ export default function App(){
         </div>
 
         {/* 우측: 가이드 콘텐츠 */}
-        <div style={{position:"sticky",top:80}}>
+        <div style={{position:isMo?"static":"sticky",top:80}}>
           <EduContent calc={calc} gTab={gTab}/>
         </div>
       </div>
