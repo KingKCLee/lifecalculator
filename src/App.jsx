@@ -10,6 +10,68 @@ function useIsMobile(bp=768){
   return m;
 }
 
+const SLUGS={acquisition:"취득세계산기",transfer:"양도소득세계산기",inctax:"종합소득세계산기",yearend:"연말정산계산기",compre:"종부세계산기",property:"재산세계산기",gift:"증여세계산기",inherit:"상속세계산기",holdtax:"보유세계산기",rental:"임대소득세계산기",mortgage:"대출이자계산기",dsr:"DSR계산기",dti:"DTI계산기",ltv:"LTV계산기",loanmax:"대출가능액계산기",commission:"중개수수료계산기",registration:"등기비용계산기",legal:"법무사수수료계산기",stamp:"인지세계산기",bond:"채권할인료계산기",appraisal:"감정평가수수료계산기",netsalary:"연봉실수령액",insurance4:"4대보험료계산기",pension:"국민연금수령액",cartax:"자동차세계산기",deposit:"예적금이자계산기",convert:"전월세전환계산기",yield:"임대수익률계산기",joint:"공동명의계산기",area:"평수변환계산기",far:"용적률건폐율계산기",auction:"경매비용계산기",remodel:"리모델링수익계산기",bldvalue:"건물잔존가치계산기",totalcost:"총비용시뮬레이터",compare:"세금비교분석",invest:"투자수익분석"};
+const SLUG_REVERSE=Object.fromEntries(Object.entries(SLUGS).map(([k,v])=>[decodeURIComponent(v),k]));
+
+const PAGE_META={
+acquisition:{title:"취득세 계산기 - 2026년 최신 세율 | 생활계산기",desc:"아파트 취득세 자동 계산. 1주택 1~3%, 2주택 8%, 3주택 12%. 비규제 일반세율, 생애최초 감면, 일시적2주택 특례 반영. 2026년 최신 세법."},
+transfer:{title:"양도소득세 계산기 - 비과세 요건 확인 | 생활계산기",desc:"부동산 양도세 자동 계산. 1주택 비과세, 12억 초과분 과세, 장기보유특별공제 최대 80%. 2026년 최신 세법 반영."},
+inctax:{title:"종합소득세 계산기 - 프리랜서 3.3% 환급 | 생활계산기",desc:"근로소득, 사업소득, 프리랜서 종합소득세 계산. 단순경비율, 기준경비율 선택. 3.3% 기납부세액 환급 확인."},
+yearend:{title:"연말정산 계산기 2026 - 환급액 미리 확인 | 생활계산기",desc:"직장인 연말정산 예상 환급액 계산. 신용카드, 의료비, 교육비, 연금저축 공제 반영. 13월의 월급 미리 확인."},
+compre:{title:"종합부동산세 계산기 - 종부세 자동 계산 | 생활계산기",desc:"주택 공시가격 기준 종부세 자동 계산. 1주택 12억 공제, 다주택 9억 공제. 고령자·장기보유 최대 80% 감면."},
+property:{title:"재산세 계산기 - 주택·토지·상가 | 생활계산기",desc:"부동산 재산세 자동 계산. 주택 0.1~0.4%, 상가 0.25%. 도시지역분, 지방교육세 포함. 7월·9월 납부."},
+gift:{title:"증여세 계산기 - 공제한도 확인 | 생활계산기",desc:"증여세 자동 계산. 배우자 6억, 성년자녀 5천만, 혼인출산 1억 추가공제. 10년 합산 누진과세 반영."},
+inherit:{title:"상속세 계산기 - 공제·세율 확인 | 생활계산기",desc:"상속세 자동 계산. 기초+일괄 10억 공제, 배우자 5~30억 공제. 장례비용 1,500만원 한도. 10~50% 누진세율."},
+holdtax:{title:"보유세 통합 계산기 - 재산세+종부세 | 생활계산기",desc:"재산세와 종합부동산세를 한번에 계산. 주택 보유 시 연간 납부할 보유세 총액 확인."},
+rental:{title:"임대소득세 계산기 - 주택임대 과세 | 생활계산기",desc:"주택임대소득 과세 계산. 분리과세 14% 또는 종합과세 선택. 2천만원 이하 분리과세 가능."},
+mortgage:{title:"대출이자 계산기 - 원리금균등·원금균등 | 생활계산기",desc:"대출 월 상환액 계산. 원리금균등, 원금균등, 만기일시 방식별 이자 비교. 상환 스케줄 확인."},
+dsr:{title:"DSR 계산기 2026 - 대출한도 확인 | 생활계산기",desc:"DSR(총부채원리금상환비율) 자동 계산. 은행 40%, 비은행 50% 기준. 스트레스DSR 3단계 반영."},
+dti:{title:"DTI 계산기 - 총부채상환비율 | 생활계산기",desc:"DTI 자동 계산. 투기과열 40%, 조정대상 50%, 비규제 60% 기준. 신규 원리금+기존 이자 반영."},
+ltv:{title:"LTV 계산기 - 주택담보대출 한도 | 생활계산기",desc:"LTV 대출한도 자동 계산. 투기과열 40%, 조정 50%, 비규제 70%. 생애최초 80%. 15억 초과 제한."},
+loanmax:{title:"대출가능액 계산기 - 소득 기준 역산 | 생활계산기",desc:"연소득 기준 최대 대출 가능 금액 역산. DSR 40% 기준 대출한도 자동 계산."},
+commission:{title:"중개수수료 계산기 - 복비 계산 | 생활계산기",desc:"부동산 중개보수 자동 계산. 매매·전세·월세 요율표. 상가 0.9%. 월세 거래금액=보증금+월세×100."},
+registration:{title:"등기비용 계산기 - 소유권이전 | 생활계산기",desc:"부동산 등기비용 자동 계산. 등록면허세, 교육세, 인지세, 채권할인비용, 법원수수료 합산."},
+legal:{title:"법무사 수수료 계산기 | 생활계산기",desc:"법무사 보수 자동 계산. 매매·상속·증여·근저당설정. 대한법무사협회 보수표 기준."},
+stamp:{title:"인지세 계산기 - 거래금액별 | 생활계산기",desc:"부동산 거래 인지세 자동 계산. 1억 이하 비과세, 1~10억 15만원, 10억 초과 35만원."},
+bond:{title:"채권할인료 계산기 | 생활계산기",desc:"국민주택채권 매입 할인비용 자동 계산. 매매가 기준 채권매입률×할인율 적용."},
+appraisal:{title:"감정평가 수수료 계산기 | 생활계산기",desc:"감정평가사 공식 수수료 자동 계산. 감정평가 업무 보수 기준표 적용."},
+netsalary:{title:"연봉 실수령액 계산기 2026 - 월급 계산 | 생활계산기",desc:"연봉에서 4대보험·소득세 공제 후 실수령액 계산. 연봉 3000만원~1억 구간별 월급 확인. 비과세 항목 반영."},
+insurance4:{title:"4대보험료 계산기 2026 - 국민연금·건강보험 | 생활계산기",desc:"직장인·사업자·프리랜서 4대보험료 자동 계산. 2026년 요율 반영. 근로자·사업주 부담분 분리 표시."},
+pension:{title:"국민연금 수령액 계산기 - 예상 월 연금 | 생활계산기",desc:"국민연금 예상 수령액 계산. 월 급여·가입기간·수령나이별 시뮬레이션. 조기수령 감액, 연기수령 가산 반영."},
+cartax:{title:"자동차세 계산기 2026 - 배기량·연식별 | 생활계산기",desc:"자동차세 자동 계산. 배기량·연식별 세액, 전기차 정액, 차령 할인 최대 50%, 1월 연납 5% 할인."},
+deposit:{title:"예적금 이자 계산기 - 세후 수익 | 생활계산기",desc:"예금·적금 세후 이자 계산. 단리·복리 비교, 이자소득세 15.4% 반영. 실수령 이자 확인."},
+convert:{title:"전월세 전환 계산기 - 전환율 계산 | 생활계산기",desc:"전세↔월세 상호 전환 계산. 법정 전환율 상한 기준금리+2% 반영. 보증금·월세 환산."},
+yield:{title:"임대수익률 계산기 - 순수익률 분석 | 생활계산기",desc:"임대수익률 자동 계산. 총수익률(Gross), 순수익률(Net) 분석. 대출이자·관리비 반영."},
+joint:{title:"공동명의 계산기 - 단독 vs 공동 비교 | 생활계산기",desc:"단독명의 vs 공동명의 종부세 비교 분석. 지분 비율별 절세 효과 시뮬레이션."},
+area:{title:"평수 변환 계산기 - 평↔㎡ | 생활계산기",desc:"평수와 제곱미터 상호 변환. 1평=3.305785㎡. 주요 아파트 평형 참고표 제공."},
+far:{title:"용적률 건폐율 계산기 | 생활계산기",desc:"대지면적 기준 용적률·건폐율 자동 계산. 건축면적, 연면적 입력으로 건축 규제 확인."},
+auction:{title:"경매비용 계산기 - 낙찰가 기준 | 생활계산기",desc:"부동산 경매 총비용 계산. 낙찰가 기준 취득세, 등기비용, 법무사, 명도비용 합산."},
+remodel:{title:"리모델링 수익 계산기 | 생활계산기",desc:"리모델링 분담금 대비 시세 상승분 수익률 분석. 투자 대비 수익 시뮬레이션."},
+bldvalue:{title:"건물 잔존가치 계산기 | 생활계산기",desc:"경과연수별 건물 감가상각 잔존가치 계산. 신축가 기준 내용연수별 잔존가액."},
+totalcost:{title:"부동산 총비용 시뮬레이터 | 생활계산기",desc:"취득세, 등기, 법무사, 중개보수까지 매수 시 총비용 한번에 시뮬레이션. PRO 분석."},
+compare:{title:"매매 vs 증여 vs 상속 세금 비교 | 생활계산기",desc:"매매·증여·상속 시 세금 총액 비교 분석. 최적의 이전 방법 실시간 비교. PRO 분석."},
+invest:{title:"부동산 투자수익 분석기 | 생활계산기",desc:"매수→보유→매도 전체 투자 수익률(IRR) 분석. 보유세, 대출이자, 양도세 반영. PRO 분석."}
+};
+
+const SEO_CONTENT={
+acquisition:`<h2>2026년 취득세 완벽 가이드</h2><h3>취득세란?</h3><p>취득세는 부동산을 매매·증여·상속 등의 방법으로 취득할 때 납부하는 지방세입니다. 주택의 경우 취득가액과 보유 주택 수, 규제지역 여부에 따라 1%에서 최대 12%까지 차등 적용됩니다.</p><h3>2026년 주택 취득세율표</h3><p>1주택자 및 비규제지역 2주택자는 취득가 6억 이하 1%, 6~9억 구간 1~3%(비례세율), 9억 초과 3%의 일반세율이 적용됩니다. 조정대상지역 2주택자는 8%, 3주택 이상은 12%의 중과세율이 적용됩니다. 비규제지역 3주택 이상은 8%입니다.</p><h3>생애최초 취득세 감면</h3><p>무주택 세대가 12억원 이하 주택을 생애 최초로 구입하면 취득세 최대 200만원을 감면받을 수 있습니다. 이 혜택은 2028년 말까지 연장되었으며, 부부합산 소득 제한 없이 적용됩니다.</p><h3>일시적 2주택 특례</h3><p>이사 목적으로 일시적 2주택이 된 경우, 3년 이내에 종전 주택을 처분하면 1주택 세율이 적용됩니다. 투기과열지구에서는 처분 기한이 2년으로 단축됩니다.</p><h3>취득세 부가세</h3><p>취득세 외에 지방교육세(취득세의 10%)와 농어촌특별세(전용면적 85㎡ 초과 시 취득가의 0.2%)가 추가됩니다. 다주택 중과(8%/12%) 시에는 면적 관계없이 농특세가 부과됩니다.</p><h3>신고 및 납부</h3><p>취득일(잔금 지급일 또는 등기일 중 빠른 날)로부터 60일 이내에 관할 시·군·구에 신고·납부해야 합니다. 기한 내 미신고 시 20%의 무신고 가산세가 부과됩니다.</p>`,
+transfer:`<h2>양도소득세 완벽 가이드</h2><h3>양도소득세란?</h3><p>부동산을 매도하여 발생한 양도차익(양도가액 - 취득가액 - 필요경비)에 대해 부과되는 국세입니다. 과세표준에 6~45%의 누진세율이 적용되며, 지방소득세(10%)가 추가로 부과됩니다.</p><h3>1세대 1주택 비과세</h3><p>1세대 1주택자가 2년 이상 보유(조정대상지역 취득 시 2년 거주 포함)하고 양도가액이 12억원 이하이면 전액 비과세됩니다. 12억원 초과 주택은 초과분에 대해서만 과세됩니다(과세대상 = 양도차익 × (양도가-12억)/양도가).</p><h3>장기보유특별공제</h3><p>1주택자는 보유기간 연 4% + 거주기간 연 4%, 최대 80%까지 공제됩니다. 10년 이상 보유·거주 시 양도차익의 80%를 공제받아 세부담이 크게 줄어듭니다. 다주택자(2주택 이상)는 보유기간 연 2%, 최대 30%까지만 공제됩니다.</p><h3>다주택 중과 유예</h3><p>다주택자 양도세 중과(+20~30%p)는 2026년 5월 9일까지 한시 유예 중입니다. 이 기간 내 매도하면 기본세율(6~45%)만 적용됩니다.</p><h3>기본공제와 필요경비</h3><p>양도소득세 기본공제는 연 250만원입니다. 필요경비에는 취득세, 중개수수료, 수리비·인테리어비(자본적 지출), 양도 시 중개보수 등이 포함됩니다. 영수증·세금계산서를 반드시 보관해야 합니다.</p><h3>신고 및 납부</h3><p>양도일(잔금 지급일)이 속하는 달의 말일부터 2개월 이내에 예정신고·납부해야 합니다. 무신고 시 20%의 무신고 가산세와 납부지연가산세가 추가로 부과됩니다.</p>`,
+inctax:`<h2>종합소득세 완벽 가이드</h2><h3>종합소득세란?</h3><p>개인이 1년간 얻은 모든 소득(근로·사업·이자·배당·연금·기타)을 합산하여 과세하는 국세입니다. 매년 5월 1일~31일에 전년도 소득을 확정신고합니다.</p><h3>과세 대상과 신고 의무</h3><p>근로소득만 있는 경우 연말정산으로 대체됩니다. 사업소득, 프리랜서(인적용역) 소득, 임대소득, 금융소득(2천만원 초과) 등이 있으면 반드시 종합소득세 신고가 필요합니다.</p><h3>프리랜서 3.3% 환급</h3><p>프리랜서는 수입 발생 시 3.3%(소득세 3% + 지방소득세 0.3%)가 원천징수됩니다. 5월 종합소득세 신고 시 필요경비와 인적공제·세액공제를 적용하면 기납부세액보다 실제 세금이 적어 환급받는 경우가 대부분입니다.</p><h3>단순경비율 vs 기준경비율</h3><p>직전년도 수입금액이 업종별 기준금액 미만이면 단순경비율(60~90%), 초과하면 기준경비율이 적용됩니다. 단순경비율은 경비 증빙 없이 일정 비율을 인정받아 유리하지만, 수입이 크면 실제 경비(기준경비율+증빙)를 적용해야 합니다.</p><h3>세율</h3><p>과세표준 구간별 6%(1,400만 이하), 15%(5천만 이하), 24%(8,800만 이하), 35%(1.5억 이하), 38%(3억 이하), 40%(5억 이하), 42%(10억 이하), 45%(10억 초과)의 8단계 누진세율이 적용됩니다.</p>`,
+yearend:`<h2>연말정산 완벽 가이드</h2><h3>연말정산이란?</h3><p>매년 1~2월 직장인이 전년도 소득과 공제 내역을 정산하여 세금을 돌려받거나 추가 납부하는 절차입니다. 월급에서 매달 원천징수된 간이세액보다 실제 세금이 적으면 환급(13월의 월급), 많으면 추가 납부합니다.</p><h3>주요 공제 항목</h3><p><strong>신용카드 소득공제:</strong> 총급여의 25%를 초과한 사용액의 15%(신용카드)~30%(체크카드·현금영수증)를 공제받습니다. 최대 300만원.</p><p><strong>의료비 세액공제:</strong> 총급여의 3%를 초과한 의료비의 15%를 공제(최대 105만원). 난임시술비는 한도 없이 20%.</p><p><strong>교육비 세액공제:</strong> 본인 전액, 자녀 1인당 300만원 한도의 15%를 세액공제.</p><p><strong>연금저축·IRP 세액공제:</strong> 연 400만원(IRP 포함 700만원) 납입액의 12~15%(연봉 5,500만 이하 15%).</p><p><strong>보장성 보험료:</strong> 연 100만원 한도의 12%.</p><p><strong>기부금:</strong> 1천만원 이하 15%, 초과분 30%.</p><h3>환급액 극대화 팁</h3><p>1월 중순~하순 홈택스 '연말정산 미리보기'에서 예상 환급액을 확인하고, 부족한 공제가 있으면 12월 말까지 챙기세요. 특히 연금저축 400만원 납입은 최대 60만원 세액공제로 가장 효율적입니다.</p>`,
+netsalary:`<h2>연봉 실수령액 완벽 가이드</h2><h3>실수령액 계산 방법</h3><p>세전 연봉에서 4대보험료와 소득세·지방소득세를 공제한 금액이 실수령액입니다. 연봉 5,000만원 기준 월 실수령액은 약 340~360만원입니다.</p><h3>2026년 4대보험 요율</h3><p><strong>국민연금:</strong> 월 보수의 4.5% (사업주 4.5% 별도, 총 9%). 기준소득월액 상한 590만원.</p><p><strong>건강보험:</strong> 월 보수의 3.545% (사업주 3.545% 별도, 총 7.09%).</p><p><strong>장기요양보험:</strong> 건강보험료의 12.95%.</p><p><strong>고용보험:</strong> 월 보수의 0.9% (실업급여). 사업주는 추가로 고용안정·직업능력개발 부담.</p><p><strong>산재보험:</strong> 사업주 전액 부담(업종별 0.6~18.6%). 근로자 부담 없음.</p><h3>비과세 항목 활용</h3><p>식대(월 20만원), 자가운전보조금(월 20만원), 자녀보육수당(월 20만원)은 비과세 소득으로 처리되어 4대보험과 소득세 대상에서 제외됩니다. 최대한 비과세 항목으로 설정하면 실수령액이 증가합니다.</p><h3>연봉별 실수령액 참고</h3><p>연봉 3,000만원: 월 약 225만원 / 5,000만원: 월 약 350만원 / 7,000만원: 월 약 480만원 / 1억원: 월 약 680만원. 부양가족 수, 비과세 항목에 따라 달라집니다.</p>`,
+dsr:`<h2>DSR 완벽 가이드</h2><h3>DSR이란?</h3><p>DSR(Debt Service Ratio, 총부채원리금상환비율)은 연소득 대비 모든 금융권 대출의 연간 원리금 상환액 비율입니다. 주담대뿐 아니라 신용대출, 학자금, 자동차할부, 카드론 등 모든 대출이 포함됩니다.</p><h3>2026년 DSR 한도</h3><p>은행권 40%, 비은행권 50% 이내여야 합니다. 예를 들어 연소득 5천만원이면 연간 원리금 상환액이 2,000만원(월 약 167만원)을 넘지 말아야 은행 대출이 가능합니다.</p><h3>스트레스 DSR 3단계</h3><p>2025년부터 시행된 스트레스 DSR 3단계는 변동금리 대출 시 금리 상승 시나리오를 반영합니다. 변동금리 +1.5%p, 혼합형(5년 고정) +0.75%p의 가산금리를 적용하여 DSR을 산정합니다. 고정금리는 가산 없음.</p><h3>연령별 만기 제한</h3><p>차주의 연령에 따라 대출 만기가 제한됩니다. 20대 최대 40년, 30대 35년, 40대 30년, 50대 이상 20년. 만기가 짧을수록 월 상환액이 커져 DSR이 높아지므로 대출한도가 줄어듭니다.</p><h3>DSR 낮추는 방법</h3><p>1) 대출 기간 연장(30년→40년)으로 월 상환액 감소 2) 신용대출·카드론 먼저 상환하여 기존 부채 정리 3) 고정금리 선택으로 스트레스 가산 회피 4) 연소득 증빙(성과급·상여금 포함) 극대화.</p>`,
+commission:`<h2>중개수수료(복비) 완벽 가이드</h2><h3>중개보수 법정 요율</h3><p>공인중개사법 시행규칙에 따라 거래금액 구간별로 상한요율이 정해져 있습니다. 실제 수수료는 이보다 낮게 협의 가능합니다.</p><h3>주택 매매 요율</h3><p>5천만원 이하: 0.6% (한도 25만원) / 2억 이하: 0.5% (한도 80만원) / 9억 이하: 0.4% / 12억 이하: 0.5% / 15억 이하: 0.6% / 15억 초과: 0.7%.</p><h3>주택 전세·월세 요율</h3><p>5천만원 이하: 0.5% (한도 20만원) / 1억 이하: 0.4% (한도 30만원) / 6억 이하: 0.3% / 12억 이하: 0.4% / 15억 이하: 0.5% / 15억 초과: 0.6%.</p><h3>월세 거래금액 산정</h3><p>월세 거래의 거래금액은 '보증금 + (월세 × 100)'으로 계산합니다. 단, 이 금액이 보증금보다 작으면 보증금 기준으로 합니다. 예: 보증금 1억 + 월세 50만원 → 거래금액 1.5억, 요율 0.3%, 보수 45만원.</p><h3>상가·오피스텔</h3><p>상가·토지·오피스텔은 매매·전세·월세 모두 0.9% 이내에서 중개사와 협의합니다.</p><h3>부가가치세</h3><p>중개보수에 부가세 10%가 별도 부과됩니다(간이과세자 4%). 거래 전 중개사 과세 유형을 확인하세요.</p>`,
+gift:`<h2>증여세 완벽 가이드</h2><h3>증여세란?</h3><p>재산을 무상으로 받을 때 수증자에게 부과되는 국세입니다. 10년 합산 기준으로 과세되며, 10~50%의 5단계 누진세율이 적용됩니다.</p><h3>증여공제 한도 (10년 합산)</h3><p>배우자 6억원 / 성년자녀 5,000만원 / 미성년자녀 2,000만원 / 기타 친족 1,000만원 / 타인 0원. 10년마다 한도가 초기화됩니다.</p><h3>혼인·출산 추가공제 (2024년 신설)</h3><p>혼인 또는 출산 시 직계존속으로부터 증여받을 경우 1억원 추가공제. 기본공제 5천만원(성년자녀) + 혼인출산 1억원 = 최대 1억 5천만원 공제 가능.</p><h3>10년 내 합산 과세</h3><p>동일인(부모 등)으로부터 10년 이내 증여받은 금액은 합산하여 누진세율이 적용됩니다. 이미 납부한 세액은 기납부세액으로 차감됩니다. 10년 단위로 분할 증여하면 세부담 경감 가능.</p><h3>부동산 증여 시 취득세</h3><p>증여세 외에 취득세 3.5%(조정대상지역 다주택자는 12%)가 별도 부과됩니다. 증여 전 총비용(증여세+취득세)을 매매 시 양도소득세와 비교하여 유리한 방법을 선택해야 합니다.</p><h3>신고 및 세액공제</h3><p>증여일이 속하는 달의 말일부터 3개월 이내 신고·납부. 기한 내 신고 시 산출세액의 3%를 추가 공제받습니다.</p>`,
+pension:`<h2>국민연금 수령액 완벽 가이드</h2><h3>수령 조건</h3><p>국민연금 최소 가입기간은 10년(120개월)입니다. 10년 미만이면 일시금으로 반환받고, 10년 이상이면 월 연금으로 수령합니다.</p><h3>수령 시작 연령</h3><p>1969년생 이후는 만 65세부터 정상 수령합니다. 60세부터 조기수령이 가능하지만 연 6%씩 감액되어 최대 30% 감액(60세 수령 시). 반대로 70세까지 연기하면 연 7.2%씩 가산되어 최대 36% 증액됩니다.</p><h3>기준소득월액 상한</h3><p>2026년 기준 국민연금 기준소득월액 상한은 590만원입니다. 월급이 590만원을 초과해도 590만원까지만 보험료가 부과되며, 연금액도 이를 기준으로 산정됩니다.</p><h3>연금액 산정 구조</h3><p>기본연금액 = 1.2 × (A + B) × 소득대체율 × (가입기간/40). A는 전체 가입자 평균소득월액(2026년 약 283만원), B는 본인 가입기간 평균 기준소득월액. 2026년 소득대체율은 40%입니다.</p><h3>연금액 높이는 방법</h3><p>1) 추후납부(추납)로 경력단절 기간 보험료 소급 납부 → 가입기간 증가 2) 임의가입·임의계속가입 활용 3) 연기연금 신청으로 최대 36% 가산 4) 기준소득 상한까지 납부.</p>`,
+cartax:`<h2>자동차세 완벽 가이드</h2><h3>자동차세 산정 기준</h3><p>자동차세는 배기량(cc) 기준으로 과세되는 지방세입니다. 매년 6월(1기분), 12월(2기분) 연 2회 납부하며, 지방교육세 30%가 별도 부과됩니다.</p><h3>2026년 승용차 세율</h3><p><strong>비영업용(자가용):</strong> 1,000cc 이하 cc당 80원, 1,001~1,600cc cc당 140원, 1,600cc 초과 cc당 200원.</p><p><strong>영업용:</strong> 1,600cc 이하 cc당 18원, 초과 cc당 19원.</p><p><strong>전기·수소차:</strong> 10만원 정액.</p><h3>차령 할인</h3><p>차량 등록 3년차부터 매년 5%씩 자동차세가 감액되며, 12년 이상 차량은 최대 50% 할인됩니다. 예: 5년차 15% 할인, 10년차 40% 할인.</p><h3>1월 연납 할인</h3><p>매년 1월 16~31일에 위택스(wetax.go.kr)에서 연납 신청하면 약 5% 할인됩니다. 1,000cc 2천만원대 차량 기준 연간 약 1만원 절약.</p><h3>대표 차량별 자동차세</h3><p>1,000cc 경차: 약 10만원 / 1,600cc 준중형: 약 29만원 / 2,000cc 중형: 약 52만원 / 3,000cc 대형: 약 78만원 (지방교육세 포함).</p>`
+};
+
+function useHashRoute(){
+  const[hash,setHash]=useState(typeof window!=="undefined"?decodeURIComponent(window.location.hash.replace('#/','')):"");
+  useEffect(()=>{const h=()=>setHash(decodeURIComponent(window.location.hash.replace('#/','')));window.addEventListener('hashchange',h);return()=>window.removeEventListener('hashchange',h);},[]);
+  return hash;
+}
+
 const fmt=n=>(!n||isNaN(n)||!isFinite(n))?"0":Math.round(n).toLocaleString("ko-KR");
 const fW=n=>"₩"+fmt(n);
 const fP=n=>(isNaN(n)?"0":n.toFixed(2))+"%";
@@ -966,8 +1028,14 @@ export default function App(){
   const[showAllLog,setShowAllLog]=useState(false);
   const[liveData,setLiveData]=useState(null);
   useEffect(()=>{fetch('/data/live-data.json?t='+Date.now()).then(r=>r.json()).then(d=>setLiveData(d)).catch(()=>{});},[]);
-  const filtered=CL.filter(c=>c.c===cat);const hCat=c=>{setCat(c);const f=CL.find(x=>x.c===c);if(f)setCalc(f.id);};
-  const goCalc=(cId)=>{const info=CL.find(c=>c.id===cId);if(info){setCat(info.c);setCalc(info.id);setPage("calc");}};
+  const filtered=CL.filter(c=>c.c===cat);
+  const navigateCalc=(catId,calcId)=>{setCat(catId);setCalc(calcId);setPage("calc");window.location.hash='/'+(SLUGS[calcId]||calcId);window.scrollTo(0,0);};
+  const navigateHome=()=>{setPage("home");window.location.hash='';window.scrollTo(0,0);};
+  const hCat=c=>{const f=CL.find(x=>x.c===c);if(f)navigateCalc(c,f.id);};
+  const goCalc=(cId)=>{const info=CL.find(c=>c.id===cId);if(info)navigateCalc(info.c,info.id);};
+  const hash=useHashRoute();
+  useEffect(()=>{if(hash&&SLUG_REVERSE[hash]){const cId=SLUG_REVERSE[hash];const it=CL.find(c=>c.id===cId);if(it){setCat(it.c);setCalc(cId);setPage("calc");}}else if(!hash){setPage("home");}},[hash]);
+  useEffect(()=>{if(page==="calc"&&calc&&PAGE_META[calc]){const m=PAGE_META[calc];document.title=m.title;document.querySelector('meta[name="description"]')?.setAttribute('content',m.desc);document.querySelector('meta[property="og:title"]')?.setAttribute('content',m.title);document.querySelector('meta[property="og:description"]')?.setAttribute('content',m.desc);}else{document.title="생활계산기 - 세금 연말정산 연봉 부동산 종합계산기";document.querySelector('meta[name="description"]')?.setAttribute('content',"취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 4대보험 국민연금 자동차세 등 37가지 무료 계산기. 2026 최신 세법 반영.");}let ld=document.getElementById('dynamic-jsonld');if(!ld){ld=document.createElement('script');ld.id='dynamic-jsonld';ld.type='application/ld+json';document.head.appendChild(ld);}if(page==="calc"&&calc&&PAGE_META[calc]){ld.textContent=JSON.stringify({"@context":"https://schema.org","@type":"WebApplication","name":PAGE_META[calc].title.split(' | ')[0],"description":PAGE_META[calc].desc,"url":"https://xn--989a00a691bdfa717h.com/#/"+SLUGS[calc],"applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}});}else{ld.textContent='';}},[page,calc]);
   const Comp=CM[calc]||(()=><Placeholder l={CL.find(c=>c.id===calc)?.l||calc}/>);
   const catInfo=CATS.find(c=>c.id===cat);
   const searchResults=search.trim()?CL.filter(c=>(c.l+"|"+(DESC[c.id]||"")).includes(search.trim())):[];
@@ -986,6 +1054,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-thumb{background:#c1c7cd;border-radius:3px}
 ::-webkit-scrollbar-track{background:transparent}
+.seo h2{font-size:20px;font-weight:800;color:#172B4D;margin:0 0 16px;letterSpacing:-0.5}
+.seo h3{font-size:16px;font-weight:700;color:#0747A6;margin:20px 0 8px}
+.seo p{margin:0 0 12px}
+.seo strong{color:#172B4D;font-weight:700}
 @media(max-width:1023px){.calc-grid{grid-template-columns:1fr!important}.edu-sidebar{display:none!important}.insights-grid{grid-template-columns:1fr 1fr!important}}
 @media(max-width:768px){input,select,textarea{font-size:16px!important}.pro-cards{grid-template-columns:1fr!important}.footer-inner{grid-template-columns:1fr!important;text-align:center}.cat-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))!important}}
 @media(max-width:480px){.insights-grid{grid-template-columns:1fr!important}.cat-cards{grid-template-columns:1fr!important}}
@@ -996,7 +1068,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
     {/* 상단 네비게이션 */}
     <nav style={{background:"#fff",borderBottom:`1px solid ${P.bd}`,boxShadow:"0 1px 3px rgba(0,0,0,.06)",position:"sticky",top:0,zIndex:100}}>
       <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:isMo?"10px 16px":"12px 32px",gap:12}}>
-        <div style={{display:"flex",alignItems:"center",gap:isMo?8:10,cursor:"pointer",flexShrink:0}} onClick={()=>{setPage("home");setSearch("");}}>
+        <div style={{display:"flex",alignItems:"center",gap:isMo?8:10,cursor:"pointer",flexShrink:0}} onClick={()=>{navigateHome();setSearch("");}}>
           <LogoSVG size={isMo?28:36}/>
           <span style={{fontSize:isMo?15:22,fontWeight:800,color:P.pri}}>생활계산기.com</span>
         </div>
@@ -1019,7 +1091,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
             <h1 style={{fontSize:isMo?32:44,fontWeight:900,color:"#172B4D",lineHeight:1.15,margin:"0 0 20px"}}>{"생활 속 모든 계산,\n정밀하게,\n확실하게".split("\n").map((l,i)=><span key={i}>{l}{i<2&&<br/>}</span>)}</h1>
             <p style={{fontSize:isMo?14:16,color:"#6b778c",lineHeight:1.7,margin:"0 0 28px"}}>부동산 세금, 대출, 비용부터 예적금, 경매, 투자분석까지. 37가지 전문 계산기로 일상의 중요한 재정 판단을 도와드립니다. 2025년 최신 세법 반영.</p>
             <div style={{display:"flex",gap:12,flexWrap:"wrap"}}>
-              <button onClick={()=>{setCat("tax");setCalc("acquisition");setPage("calc");}} style={{background:"#0747A6",color:"#fff",border:"none",borderRadius:8,padding:"14px 28px",fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>지금 계산하기 →</button>
+              <button onClick={()=>navigateCalc("tax","acquisition")} style={{background:"#0747A6",color:"#fff",border:"none",borderRadius:8,padding:"14px 28px",fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>지금 계산하기 →</button>
               <button onClick={()=>document.getElementById("calcSuite")?.scrollIntoView({behavior:"smooth"})} style={{background:"#fff",color:"#172B4D",border:"2px solid #dfe1e6",borderRadius:8,padding:"14px 28px",fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>37가지 도구 보기</button>
             </div>
           </div>
@@ -1096,7 +1168,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
             <div key={ct.id} style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,overflow:"hidden",cursor:"pointer",transition:"transform .2s, box-shadow .2s"}}
               onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow="0 8px 24px rgba(0,0,0,.08)";}}
               onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";}}
-              onClick={()=>{setCat(ct.id);setPage("calc");}}>
+              onClick={()=>{const first=CL.find(c=>c.c===ct.id);if(first)navigateCalc(ct.id,first.id);}}>
               <div style={{padding:"20px 24px 16px"}}>
                 <div style={{width:48,height:48,borderRadius:12,background:cl+"15",display:"flex",alignItems:"center",justifyContent:"center"}}>
                   <CatIcon cid={ct.id}/>
@@ -1124,13 +1196,13 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
         <div style={{maxWidth:1100,margin:"0 auto"}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:32,flexWrap:"wrap",gap:12}}>
             <h2 style={{fontSize:isMo?22:28,fontWeight:800,color:P.tx,margin:0}}>PRO 분석으로 한 차원 높게</h2>
-            <span onClick={()=>{setCat("pro");setPage("calc");}} style={{color:P.pri,fontSize:14,fontWeight:600,cursor:"pointer"}}>PRO 기능 살펴보기 →</span>
+            <span onClick={()=>navigateCalc("pro","totalcost")} style={{color:P.pri,fontSize:14,fontWeight:600,cursor:"pointer"}}>PRO 기능 살펴보기 →</span>
           </div>
           <div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr 1fr",gap:20}}>
             {[{id:"totalcost",t:"총비용 시뮬레이터",d:"취득세, 등기, 법무사, 중개보수까지 숨겨진 비용을 한번에 시뮬레이션"},
               {id:"compare",t:"세금 비교 분석",d:"매매 vs 증여 vs 상속, 최적의 절세 구조를 실시간 비교 분석"},
               {id:"invest",t:"투자 수익 분석",d:"매수부터 보유, 매도까지 전체 투자 수익률(IRR) 분석"}
-            ].map(c=>(<div key={c.id} onClick={()=>{setCat("pro");setCalc(c.id);setPage("calc");}} style={{borderRadius:16,overflow:"hidden",cursor:"pointer",transition:"transform .2s, box-shadow .2s",background:"#fff",border:`1px solid ${P.bd}`}}
+            ].map(c=>(<div key={c.id} onClick={()=>navigateCalc("pro",c.id)} style={{borderRadius:16,overflow:"hidden",cursor:"pointer",transition:"transform .2s, box-shadow .2s",background:"#fff",border:`1px solid ${P.bd}`}}
               onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow="0 8px 24px rgba(0,0,0,.12)";}}
               onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";}}>
               <div style={{height:160,background:"#1a2332",padding:16,position:"relative",overflow:"hidden",borderRadius:"16px 16px 0 0"}}>
@@ -1205,8 +1277,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
         <div style={{fontSize:isMo?24:32,fontWeight:900,color:"#fff"}}>다음 재정 판단의 첫걸음</div>
         <div style={{fontSize:isMo?14:16,color:"rgba(255,255,255,0.75)",marginTop:12}}>대한민국 NO.1 생활 계산기, 지금 무료로 시작하세요.</div>
         <div style={{display:"flex",justifyContent:"center",gap:16,marginTop:32,flexDirection:isMo?"column":"row",alignItems:"center"}}>
-          <button onClick={()=>setPage("calc")} style={{background:"#fff",color:P.pri,border:"none",borderRadius:8,padding:"14px 32px",fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit",width:isMo?"100%":"auto"}}>무료로 시작하기</button>
-          <button onClick={()=>{setCat("pro");setPage("calc");}} style={{background:"transparent",color:"#fff",border:"2px solid rgba(255,255,255,0.4)",borderRadius:8,padding:"14px 32px",fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit",width:isMo?"100%":"auto"}}>PRO 둘러보기</button>
+          <button onClick={()=>navigateCalc("tax","acquisition")} style={{background:"#fff",color:P.pri,border:"none",borderRadius:8,padding:"14px 32px",fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit",width:isMo?"100%":"auto"}}>무료로 시작하기</button>
+          <button onClick={()=>navigateCalc("pro","totalcost")} style={{background:"transparent",color:"#fff",border:"2px solid rgba(255,255,255,0.4)",borderRadius:8,padding:"14px 32px",fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit",width:isMo?"100%":"auto"}}>PRO 둘러보기</button>
         </div>
       </div>
     </>):(
@@ -1227,11 +1299,20 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           <div style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:isMo?16:32,marginBottom:24,boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
             <Comp/>
           </div>
+          {RELATED[calc]&&RELATED[calc].length>0&&<div style={{marginBottom:24,padding:"16px 20px",background:"#fff",borderRadius:12,border:`1px solid ${P.bd}`}}>
+            <div style={{fontSize:13,fontWeight:700,color:"#6b778c",marginBottom:10}}>🔗 관련 계산기</div>
+            <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
+              {RELATED[calc].map(rid=>{const it=CL.find(c=>c.id===rid);return it?<button key={rid} onClick={()=>navigateCalc(it.c,rid)} style={{padding:"6px 14px",background:"#f4f5f7",border:"none",borderRadius:16,fontSize:12,color:"#0747A6",cursor:"pointer",fontWeight:600,fontFamily:"inherit"}} onMouseEnter={e=>{e.currentTarget.style.background="#deebff"}} onMouseLeave={e=>{e.currentTarget.style.background="#f4f5f7"}}>{it.l} →</button>:null;})}
+            </div>
+          </div>}
+          {SEO_CONTENT[calc]&&<div style={{marginBottom:24,padding:isMo?"24px 18px":"32px 28px",background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`}}>
+            <div className="seo" dangerouslySetInnerHTML={{__html:SEO_CONTENT[calc]}} style={{fontSize:14,color:"#172B4D",lineHeight:1.8}}/>
+          </div>}
           {cat!=="pro"&&<div className="pro-cards" style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12}}>
             {[{id:"totalcost",t:"총비용 시뮬레이터",d:"취득세~중개보수 합산",icon:"⚡",cl:"#0747A6"},
               {id:"compare",t:"세금 비교 분석",d:"매매·증여·상속 비교",icon:"📊",cl:"#00875A"},
               {id:"invest",t:"투자수익 분석",d:"매수→매도 종합분석",icon:"📈",cl:"#FF8B00"}
-            ].map(card=>(<div key={card.id} onClick={()=>{setCat("pro");setCalc(card.id);}} style={{background:"#fff",borderRadius:12,border:`1px solid ${P.bd}`,padding:20,cursor:"pointer",transition:"transform .2s, box-shadow .2s"}}
+            ].map(card=>(<div key={card.id} onClick={()=>navigateCalc("pro",card.id)} style={{background:"#fff",borderRadius:12,border:`1px solid ${P.bd}`,padding:20,cursor:"pointer",transition:"transform .2s, box-shadow .2s"}}
               onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 4px 12px rgba(0,0,0,.08)";}}
               onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";}}>
               <div style={{width:40,height:40,borderRadius:10,background:P.lt,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,marginBottom:10}}>{card.icon}</div>
