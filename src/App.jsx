@@ -598,13 +598,13 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
     {/* 상단 네비게이션 */}
     <nav style={{background:"#fff",borderBottom:`1px solid ${P.bd}`,boxShadow:"0 1px 3px rgba(0,0,0,.06)",position:"sticky",top:0,zIndex:100}}>
       <div style={{padding:"12px 32px",textAlign:"center"}}>
-        <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:isMo?8:10,marginBottom:page==="home"?0:8,cursor:"pointer"}} onClick={()=>{setPage("home");setSearch("");}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:isMo?8:10,marginBottom:8,cursor:"pointer"}} onClick={()=>{setPage("home");setSearch("");}}>
           <LogoSVG size={isMo?28:36}/>
           <span style={{fontSize:isMo?15:20,fontWeight:800,color:P.pri}}>생활계산기.com</span>
         </div>
-        {page!=="home"&&<div className="sub-tabs" style={{display:"flex",justifyContent:"center",gap:4,overflowX:"auto",WebkitOverflowScrolling:"touch"}}>
-          {CATS.map(c=>(<button key={c.id} onClick={()=>{hCat(c.id);setPage("calc");}} style={{padding:isMo?"6px 14px":"6px 16px",border:"none",borderRadius:6,background:cat===c.id?"#deebff":"transparent",color:cat===c.id?P.pri:P.mt,fontSize:isMo?12:13,fontWeight:cat===c.id?700:500,cursor:"pointer",fontFamily:"inherit",flexShrink:0,minHeight:44}}>{c.l}</button>))}
-        </div>}
+        <div className="sub-tabs" style={{display:"flex",justifyContent:"center",gap:4,overflowX:"auto",WebkitOverflowScrolling:"touch"}}>
+          {CATS.map(c=>(<button key={c.id} onClick={()=>{hCat(c.id);setPage("calc");}} style={{padding:isMo?"6px 14px":"6px 16px",border:"none",borderRadius:6,background:cat===c.id&&page!=="home"?"#deebff":"transparent",color:cat===c.id&&page!=="home"?P.pri:P.mt,fontSize:isMo?12:13,fontWeight:cat===c.id&&page!=="home"?700:500,cursor:"pointer",fontFamily:"inherit",flexShrink:0,minHeight:44}}>{c.l}</button>))}
+        </div>
       </div>
     </nav>
 
