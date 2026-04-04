@@ -1363,44 +1363,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           </div>
         </div>
       </div>
-      {/* 섹션 A 종료 */}
-      <div style={{display:"none"}}>
-        <div>
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:32,flexWrap:"wrap",gap:12}}>
-            <h2 style={{fontSize:isMo?22:28,fontWeight:800,color:P.tx,margin:0}}>PRO 분석으로 한 차원 높게</h2>
-            <span onClick={()=>navigateCalc("pro","totalcost")} style={{color:P.pri,fontSize:14,fontWeight:600,cursor:"pointer"}}>PRO 기능 살펴보기 →</span>
-          </div>
-          <div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr 1fr",gap:20}}>
-            {[{id:"totalcost",t:"총비용 시뮬레이터",d:"취득세, 등기, 법무사, 중개보수까지 숨겨진 비용을 한번에 시뮬레이션"},
-              {id:"compare",t:"세금 비교 분석",d:"매매 vs 증여 vs 상속, 최적의 절세 구조를 실시간 비교 분석"},
-              {id:"invest",t:"투자 수익 분석",d:"매수부터 보유, 매도까지 전체 투자 수익률(IRR) 분석"}
-            ].map(c=>(<div key={c.id} onClick={()=>navigateCalc("pro",c.id)} style={{borderRadius:16,overflow:"hidden",cursor:"pointer",transition:"transform .2s, box-shadow .2s",background:"#fff",border:`1px solid ${P.bd}`}}
-              onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow="0 8px 24px rgba(0,0,0,.12)";}}
-              onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";}}>
-              <div style={{height:160,background:"#1a2332",padding:16,position:"relative",overflow:"hidden",borderRadius:"16px 16px 0 0"}}>
-                <div style={{display:"flex",gap:4,marginBottom:12}}>
-                  <div style={{width:8,height:8,borderRadius:"50%",background:"#ff5f57"}}/><div style={{width:8,height:8,borderRadius:"50%",background:"#febc2e"}}/><div style={{width:8,height:8,borderRadius:"50%",background:"#28c840"}}/>
-                </div>
-                <div style={{position:"absolute",top:12,right:12,background:"rgba(255,255,255,.15)",color:"#fff",fontSize:10,fontWeight:700,padding:"2px 8px",borderRadius:4}}>PRO</div>
-                {c.id==="totalcost"&&<div style={{display:"flex",flexDirection:"column",gap:10,marginTop:8}}>
-                  {[[70,"#0747A6"],[50,"#00875A"],[30,"#FF8B00"]].map(([w,cl],i)=><div key={i} style={{display:"flex",alignItems:"center",gap:8}}><div style={{width:w+"%",height:8,borderRadius:4,background:cl}}/><span style={{fontSize:10,color:"rgba(255,255,255,.4)"}}>{w}%</span></div>)}
-                </div>}
-                {c.id==="compare"&&<div style={{display:"flex",gap:12,alignItems:"flex-end",justifyContent:"center",height:"calc(100% - 28px)"}}>
-                  {[[80,"#0747A6"],[60,"#00875A"],[40,"#FF8B00"]].map(([h,cl],i)=><div key={i} style={{width:24,height:h,borderRadius:"4px 4px 0 0",background:cl}}/>)}
-                </div>}
-                {c.id==="invest"&&<svg viewBox="0 0 200 80" style={{width:"100%",height:"calc(100% - 28px)"}}>
-                  <path d="M0,60 Q50,55 80,40 T160,15 L200,10 L200,80 L0,80 Z" fill="rgba(0,135,90,0.15)"/>
-                  <path d="M0,60 Q50,55 80,40 T160,15 L200,10" stroke="#00875A" strokeWidth="2" fill="none"/>
-                </svg>}
-              </div>
-              <div style={{padding:24}}>
-                <div style={{fontSize:17,fontWeight:700,color:P.tx,marginBottom:8}}>{c.t}</div>
-                <div style={{fontSize:13,color:P.mt,lineHeight:1.6}}>{c.d}</div>
-              </div>
-            </div>))}
-          </div>
-        </div>
-      </div>
 
       {/* 섹션 B: 규제 타임라인 + 전문성 */}
       <div style={{background:"#fff",padding:"64px 24px"}}>
