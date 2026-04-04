@@ -925,31 +925,38 @@ function CalcSearchBar({onSelect,isMo,calcList}){
 }
 
 function CalcGrid({navigateCalc,isMo}){
-  const[openCat,setOpenCat]=useState("all");
-  const GRID_DATA=[
-    {cat:"tax",label:"세금",color:"#0747A6",icon:"💰",items:[{id:"acquisition",name:"취득세",icon:"🏠"},{id:"transfer",name:"양도소득세",icon:"💸"},{id:"inctax",name:"종합소득세",icon:"💼"},{id:"yearend",name:"연말정산",icon:"🧾"},{id:"compre",name:"종부세",icon:"🏘️"},{id:"property",name:"재산세",icon:"🏡"},{id:"gift",name:"증여세",icon:"🎁"},{id:"inherit",name:"상속세",icon:"📜"},{id:"holdtax",name:"보유세통합",icon:"🏛️"},{id:"rental",name:"임대소득세",icon:"🔑"}]},
-    {cat:"loan",label:"대출",color:"#00875A",icon:"🏦",items:[{id:"mortgage",name:"대출이자",icon:"💵"},{id:"dsr",name:"DSR",icon:"📊"},{id:"dti",name:"DTI",icon:"📉"},{id:"ltv",name:"LTV·한도",icon:"🔑"},{id:"loanmax",name:"대출가능액",icon:"💳"}]},
-    {cat:"cost",label:"비용",color:"#FF8B00",icon:"📋",items:[{id:"commission",name:"중개수수료",icon:"🤝"},{id:"registration",name:"등기비용",icon:"📝"},{id:"legal",name:"법무사",icon:"⚖️"},{id:"stamp",name:"인지세",icon:"📄"},{id:"bond",name:"채권할인",icon:"📃"},{id:"appraisal",name:"감정평가",icon:"🔍"}]},
-    {cat:"life",label:"생활",color:"#6554C0",icon:"👤",items:[{id:"netsalary",name:"연봉실수령",icon:"💰"},{id:"insurance4",name:"4대보험",icon:"🏥"},{id:"pension",name:"국민연금",icon:"👴"},{id:"cartax",name:"자동차세",icon:"🚗"},{id:"retire",name:"퇴직금",icon:"💼"},{id:"unemploy",name:"실업급여",icon:"🏢"},{id:"deposit",name:"예적금",icon:"🏧"},{id:"convert",name:"전월세전환",icon:"🔄"}]},
-    {cat:"realestate",label:"부동산",color:"#008DA6",icon:"🏠",items:[{id:"yield",name:"임대수익률",icon:"📈"},{id:"joint",name:"공동명의",icon:"👥"},{id:"area",name:"평수변환",icon:"📐"},{id:"far",name:"용적률",icon:"🏗️"},{id:"auction",name:"경매비용",icon:"🔨"},{id:"remodel",name:"리모델링",icon:"🔧"},{id:"bldvalue",name:"잔존가치",icon:"🏚️"}]},
-    {cat:"pro",label:"PRO",color:"#DE350B",icon:"⚡",items:[{id:"totalcost",name:"총비용시뮬",icon:"⚡"},{id:"compare",name:"세금비교",icon:"📊"},{id:"invest",name:"투자수익",icon:"📈"}]}
+  const[openCats,setOpenCats]=useState(["tax"]);
+  const toggleCat=(c)=>setOpenCats(p=>p.includes(c)?p.filter(x=>x!==c):[...p,c]);
+  const DATA=[
+    {cat:"tax",label:"세금 계산기",color:"#0747A6",items:[{id:"acquisition",name:"취득세",desc:"매매·증여·상속 시 취득세"},{id:"transfer",name:"양도소득세",desc:"부동산 매도 시 양도차익 세금"},{id:"inctax",name:"종합소득세",desc:"근로·사업·프리랜서 소득세"},{id:"yearend",name:"연말정산",desc:"직장인 환급액 계산"},{id:"compre",name:"종부세",desc:"공시가 기준 종합부동산세"},{id:"property",name:"재산세",desc:"매년 부과되는 재산세"},{id:"gift",name:"증여세",desc:"무상 증여 시 증여세"},{id:"inherit",name:"상속세",desc:"상속 재산에 대한 상속세"},{id:"holdtax",name:"보유세 통합",desc:"재산세+종부세 한번에"},{id:"rental",name:"임대소득세",desc:"주택임대소득 과세"}]},
+    {cat:"loan",label:"대출 계산기",color:"#00875A",items:[{id:"mortgage",name:"대출이자",desc:"원리금균등·원금균등·만기일시"},{id:"dsr",name:"DSR",desc:"총부채원리금상환비율"},{id:"dti",name:"DTI",desc:"총부채상환비율"},{id:"ltv",name:"LTV·대출한도",desc:"담보인정비율 최대 대출액"},{id:"loanmax",name:"대출가능액",desc:"소득 기준 최대 대출 역산"}]},
+    {cat:"cost",label:"비용 계산기",color:"#FF8B00",items:[{id:"commission",name:"중개수수료",desc:"매매·전세·월세 중개보수"},{id:"registration",name:"등기비용",desc:"등록면허세·인지세 합산"},{id:"legal",name:"법무사수수료",desc:"소유권이전 등기 대행"},{id:"stamp",name:"인지세",desc:"거래가액별 인지세"},{id:"bond",name:"채권할인료",desc:"국민주택채권 할인비용"},{id:"appraisal",name:"감정평가수수료",desc:"감정평가사 공식 수수료"}]},
+    {cat:"life",label:"생활 계산기",color:"#6554C0",items:[{id:"netsalary",name:"연봉 실수령액",desc:"세금·4대보험 공제 후 월급"},{id:"insurance4",name:"4대보험료",desc:"국민연금·건강·고용 보험료"},{id:"pension",name:"국민연금 수령액",desc:"예상 월 연금 수령액"},{id:"cartax",name:"자동차세",desc:"배기량·연식별 자동차세"},{id:"retire",name:"퇴직금",desc:"근속연수별 퇴직금"},{id:"unemploy",name:"실업급여",desc:"고용보험 실업급여"},{id:"deposit",name:"예적금이자",desc:"예금·적금 세후 이자"},{id:"convert",name:"전월세전환",desc:"전세↔월세 상호 전환"}]},
+    {cat:"realestate",label:"부동산 계산기",color:"#008DA6",items:[{id:"yield",name:"임대수익률",desc:"임대수입 순수익률 분석"},{id:"joint",name:"공동명의",desc:"단독 vs 공동 종부세 비교"},{id:"area",name:"평수변환",desc:"㎡ ↔ 평 상호 변환"},{id:"far",name:"용적률·건폐율",desc:"대지면적 기준 건축 규제"},{id:"auction",name:"경매비용",desc:"낙찰가 기준 총비용"},{id:"remodel",name:"리모델링수익",desc:"분담금 대비 수익률"},{id:"bldvalue",name:"건물잔존가치",desc:"경과연수별 감가상각"}]},
+    {cat:"pro",label:"PRO 분석",color:"#DE350B",items:[{id:"totalcost",name:"총비용 시뮬레이터",desc:"매수 시 총비용 한번에"},{id:"compare",name:"세금비교 분석",desc:"매매 vs 증여 vs 상속 비교"},{id:"invest",name:"투자수익 분석",desc:"매수→보유→매도 전체 분석"}]}
   ];
-  const total=GRID_DATA.reduce((a,g)=>a+g.items.length,0);
-  return(<div style={{maxWidth:1100,margin:"0 auto",padding:isMo?"24px 12px":"48px 24px"}}>
+  return(<div id="allCalcs" style={{maxWidth:1100,margin:"0 auto",padding:isMo?"24px 12px":"48px 24px"}}>
     <h2 style={{fontSize:isMo?20:24,fontWeight:800,color:"#172B4D",textAlign:"center",margin:"0 0 8px"}}>전체 계산기</h2>
-    <p style={{fontSize:13,color:"#6b778c",textAlign:"center",margin:"0 0 24px"}}>원하는 계산기를 바로 선택하세요</p>
-    <div style={{display:"flex",gap:6,justifyContent:"center",marginBottom:20,flexWrap:"wrap"}}>
-      <button onClick={()=>setOpenCat("all")} style={{padding:"6px 14px",borderRadius:20,border:"none",fontSize:12,fontWeight:600,cursor:"pointer",background:openCat==="all"?"#172B4D":"#f4f5f7",color:openCat==="all"?"#fff":"#6b778c",fontFamily:"inherit"}}>전체 {total}</button>
-      {GRID_DATA.map(g=>(<button key={g.cat} onClick={()=>setOpenCat(g.cat)} style={{padding:"6px 14px",borderRadius:20,border:"none",fontSize:12,fontWeight:600,cursor:"pointer",background:openCat===g.cat?g.color:"#f4f5f7",color:openCat===g.cat?"#fff":"#6b778c",fontFamily:"inherit"}}>{g.icon} {g.label} {g.items.length}</button>))}
-    </div>
-    <div style={{display:"grid",gridTemplateColumns:isMo?"repeat(3,1fr)":"repeat(6,1fr)",gap:isMo?8:12}}>
-      {GRID_DATA.filter(g=>openCat==="all"||openCat===g.cat).flatMap(g=>g.items.map(item=>(
-        <div key={item.id} onClick={()=>navigateCalc(g.cat,item.id)} style={{background:"#fff",borderRadius:12,border:"1px solid #dfe1e6",padding:isMo?"16px 8px":"20px 12px",textAlign:"center",cursor:"pointer",transition:"all .2s",position:"relative",minHeight:isMo?88:100}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-3px)";e.currentTarget.style.boxShadow="0 8px 20px rgba(0,0,0,0.08)";e.currentTarget.style.borderColor=g.color}} onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";e.currentTarget.style.borderColor="#dfe1e6"}}>
-          <div style={{position:"absolute",top:0,left:"50%",transform:"translateX(-50%)",width:24,height:3,borderRadius:"0 0 2px 2px",background:g.color}}/>
-          <div style={{fontSize:isMo?26:30,marginBottom:6,lineHeight:1}}>{item.icon}</div>
-          <div style={{fontSize:isMo?11:12,fontWeight:600,color:"#172B4D",lineHeight:1.3,wordBreak:"keep-all"}}>{item.name}</div>
+    <p style={{fontSize:13,color:"#6b778c",textAlign:"center",margin:"0 0 24px"}}>카테고리를 눌러 원하는 계산기를 찾으세요</p>
+    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+      {DATA.map(g=>{const isOpen=openCats.includes(g.cat);return(
+        <div key={g.cat} style={{background:"#fff",borderRadius:14,border:"1px solid #dfe1e6",overflow:"hidden",transition:"box-shadow .2s",boxShadow:isOpen?"0 4px 16px rgba(0,0,0,.06)":"none"}}>
+          <div onClick={()=>toggleCat(g.cat)} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:isMo?"14px 16px":"16px 24px",cursor:"pointer",background:isOpen?g.color+"08":"#fff"}}>
+            <div style={{display:"flex",alignItems:"center",gap:12}}>
+              <div style={{width:36,height:36,borderRadius:10,background:g.color+"15",display:"flex",alignItems:"center",justifyContent:"center"}}><div style={{width:14,height:14,borderRadius:3,background:g.color}}/></div>
+              <div><div style={{fontSize:isMo?15:16,fontWeight:700,color:"#172B4D"}}>{g.label}</div><div style={{fontSize:12,color:"#6b778c"}}>{g.items.length}개</div></div>
+            </div>
+            <span style={{fontSize:14,color:"#6b778c",transition:"transform .2s",transform:isOpen?"rotate(180deg)":"none",display:"inline-block"}}>▼</span>
+          </div>
+          {isOpen&&<div style={{padding:isMo?"0 12px 12px":"0 20px 16px"}}><div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:6}}>
+            {g.items.map(item=>(<div key={item.id} onClick={()=>navigateCalc(g.cat,item.id)} style={{display:"flex",alignItems:"center",gap:12,padding:isMo?"12px":"14px 16px",borderRadius:10,cursor:"pointer",transition:"all .15s",border:"1px solid transparent"}} onMouseEnter={e=>{e.currentTarget.style.background=g.color+"08";e.currentTarget.style.borderColor=g.color+"30"}} onMouseLeave={e=>{e.currentTarget.style.background="transparent";e.currentTarget.style.borderColor="transparent"}}>
+              <div style={{width:6,height:6,borderRadius:"50%",background:g.color,flexShrink:0}}/>
+              <div style={{flex:1}}><div style={{fontSize:isMo?13:14,fontWeight:600,color:"#172B4D"}}>{item.name}</div><div style={{fontSize:11,color:"#6b778c"}}>{item.desc}</div></div>
+              <span style={{fontSize:12,color:g.color,fontWeight:600}}>→</span>
+            </div>))}
+          </div></div>}
         </div>
-      )))}
+      );})}
     </div>
   </div>);
 }
@@ -1062,6 +1069,13 @@ function EconCalendar({liveData,isMo,setCat,setCalc,setPage}){
   </div>);
 }
 
+function Sparkline({data,color,w=60,h=24}){
+  if(!data||data.length<2)return null;
+  const min=Math.min(...data),max=Math.max(...data),range=max-min||1;
+  const points=data.map((v,i)=>((i/(data.length-1))*w)+","+(h-((v-min)/range)*h)).join(' ');
+  return<svg viewBox={`0 0 ${w} ${h}`} style={{width:w,height:h,display:"block",marginTop:6}}><polyline points={points} fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+}
+
 function IndicatorDashboard({liveData,isMo}){
   const[selectedId,setSelectedId]=useState("baseRate");const[period,setPeriod]=useState("monthly");
   const indicators=liveData?.indicators?.items||[];const selected=indicators.find(i=>i.id===selectedId)||indicators[0];
@@ -1081,6 +1095,7 @@ function IndicatorDashboard({liveData,isMo}){
           <div style={{fontSize:11,color:act?"rgba(255,255,255,.7)":"#6b778c",fontWeight:600,marginBottom:6}}>{ind.name}</div>
           <div style={{fontSize:20,fontWeight:800,color:act?"#fff":"#172B4D"}}>{ind.current!==null?(ind.id==="usdkrw"?Math.round(ind.current).toLocaleString():ind.current.toLocaleString()):"확인 중"}{ind.current!==null&&ind.unit&&<span style={{fontSize:12,fontWeight:500}}>{ind.unit}</span>}</div>
           <div style={{fontSize:12,fontWeight:600,color:act?(up?"#FF5630":"#57D9A3"):ic,marginTop:4}}>{up?"▲":dn?"▼":"—"} {Math.abs(ind.change).toLocaleString()}{ind.unit}</div>
+          <Sparkline data={ind.history?.daily||[]} color={act?"rgba(255,255,255,0.6)":up?"#DE350B":"#00875A"}/>
         </div>);})}
     </div>
     <div style={{background:"#fff",borderRadius:16,border:"1px solid #dfe1e6",padding:isMo?16:24,marginTop:16}}>
