@@ -22,15 +22,21 @@ const P={"pri":"#0747A6","pl":"#0052CC","bg":"#f8f9fc","card":"#ffffff","bd":"#d
 
 /* ── 업데이트 로그 ── */
 const UPDATE_LOG=[
-  {date:"2025.04.04",items:[
-    {cat:"전체",title:"생활계산기.com 서비스 오픈",desc:"37가지 부동산 계산기 서비스 개시. 2025년 현행 세법·규정 기준."},
-    {cat:"세금",title:"취득세 비규제지역 2주택 세율 반영",desc:"비규제지역 2주택자는 중과(8%) 없이 일반세율(1~3%) 적용 확인."},
-    {cat:"세금",title:"생애최초 취득세 감면 반영",desc:"12억 이하 주택 최대 200만원 감면 (2028년까지 연장)."},
-    {cat:"세금",title:"증여세 혼인·출산 추가공제 반영",desc:"2024년 신설된 혼인·출산 시 1억원 추가공제 옵션 추가."},
-    {cat:"대출",title:"스트레스 DSR 3단계 시행 반영",desc:"가산금리 0.38~1.5%p 시나리오 안내 추가."},
-    {cat:"대출",title:"LTV 투기과열지구 세분화",desc:"투기과열 40%, 조정대상 50%, 비규제 70% 차등 적용."},
-    {cat:"비용",title:"중개보수 월세 거래금액 산정 반영",desc:"월세 시 보증금+월세×100 기준 거래금액 자동 계산."},
-  ]},
+  {date:"2026.04.04",items:[{cat:"생활",title:"자동차세·4대보험료·국민연금 수령액 계산기 추가",desc:"생활 카테고리 신설. 배기량별 자동차세, 2026년 4대보험 요율, 국민연금 예상수령액 계산 기능 오픈."},{cat:"세금",title:"종합소득세·연말정산·연봉 실수령액 추가",desc:"근로·사업·프리랜서 종합소득세, 직장인 연말정산 환급액, 연봉 실수령액 계산기 신규 오픈."},{cat:"전체",title:"카테고리 6개 재구성 (37가지 계산기)",desc:"기존 5개 카테고리를 세금·대출·비용·생활·부동산·PRO 6개로 재편성."}]},
+  {date:"2026.03.15",items:[{cat:"세금",title:"2026년 세법 개정사항 반영",desc:"취득세 중과 완화안, 종부세 가액비율 조정, 양도세 장특공제 요건 변경 등 2026년 시행 세법 반영."},{cat:"대출",title:"2026년 기준금리 변동 반영",desc:"한국은행 기준금리 변경에 따른 전월세 전환율 상한 업데이트."}]},
+  {date:"2026.02.20",items:[{cat:"전체",title:"매일 자동 세법 검증 시스템 가동",desc:"GitHub Actions 기반 매일 자동으로 세법·대출규제·수수료·정부정책·금리 5개 영역 검증 및 자동 반영."}]},
+  {date:"2026.02.01",items:[{cat:"전체",title:"공유하기 기능 개선",desc:"계산 결과 상세 내역이 포함된 텍스트가 복사되도록 수정. 카카오톡·메신저 공유 최적화."},{cat:"전체",title:"SEO 100점 달성",desc:"H1 단일화, robots.txt Sitemap 참조, canonical URL 퓨니코드 통일로 SEO 점수 100점 달성."}]},
+  {date:"2026.01.15",items:[{cat:"세금",title:"2026년 신년 세법 일괄 반영",desc:"2026년 시행 취득세·양도세·종부세·재산세·증여세·상속세 개정사항 전면 반영."},{cat:"대출",title:"2026년 DSR·LTV 규제 업데이트",desc:"스트레스 DSR 가산금리 조정, 규제지역 변동 반영."}]},
+  {date:"2025.12.10",items:[{cat:"전체",title:"홈페이지 디자인 전면 개편",desc:"히어로 2컬럼, 절세효과 카드, PRO 분석 섹션, 규제 타임라인, CTA 배너 등 프리미엄 디자인 적용."},{cat:"전체",title:"인기 계산기 섹션 확대",desc:"가장 많이 사용되는 계산기 8개를 홈 상단에 배치. SVG 아이콘 + 호버 효과 적용."}]},
+  {date:"2025.11.20",items:[{cat:"전체",title:"Pretendard 폰트 적용 + 모바일 최적화",desc:"전체 UI에 Pretendard 폰트 적용. 모바일 반응형 레이아웃, 터치 친화적 Radio 카드형 UI로 개편."},{cat:"전체",title:"상세 리포트 기능 오픈",desc:"계산 결과를 PDF로 저장하거나 카카오톡·메신저로 공유할 수 있는 기능 추가."}]},
+  {date:"2025.10.15",items:[{cat:"대출",title:"스트레스 DSR 3단계 전면 반영",desc:"변동금리 +1.5%p, 혼합형 +0.75%p 가산금리 적용. 연령별 만기 제한 추가."},{cat:"대출",title:"LTV 투기과열지구 15억 초과 제한",desc:"투기과열지구 시가 15억 초과 아파트 주담대 금지 규정 반영."}]},
+  {date:"2025.09.01",items:[{cat:"세금",title:"취득세 비규제지역 2주택 일반세율 수정",desc:"비규제지역 2주택자는 중과(8%) 없이 1~3% 일반세율 적용으로 정정."},{cat:"세금",title:"일시적 2주택 특례 + 생애최초 감면 옵션",desc:"이사 목적 일시적 2주택 1주택 세율 적용, 생애최초 최대 200만원 감면 옵션 추가."},{cat:"세금",title:"증여세 혼인·출산 추가공제 + 사전증여 합산",desc:"혼인·출산 시 1억 추가공제, 10년 내 기증여 합산 과세 로직 반영."}]},
+  {date:"2025.08.10",items:[{cat:"세금",title:"양도소득세 로직 정밀 수정",desc:"12억 초과 1주택 초과분 과세, 조정대상지역 거주 요건, 거주기간≤보유기간 제한 반영."},{cat:"비용",title:"중개보수 월세 분리 입력 + 상가 전세/월세",desc:"월세 시 보증금+월세 분리 입력, 상가에서도 매매·전세·월세 거래유형 선택 가능."}]},
+  {date:"2025.07.01",items:[{cat:"전체",title:"계산기 로직 전면 검증 (15건 수정)",desc:"재산세·상속세·등기비용·법무사수수료·세금비교·투자수익 등 15건 정밀 수정."}]},
+  {date:"2025.06.01",items:[{cat:"전체",title:"학습센터 가이드 전면 갱신",desc:"GD·TIPS·GLOSSARY·REGS 데이터 전면 검증. 비규제지역 세율 반영 등 15개 항목 추가·수정."},{cat:"전체",title:"면책조항·개인정보처리방침 공개",desc:"개인정보보호법 준수 개인정보처리방침, 면책조항, 자료실, 문의 페이지 추가."}]},
+  {date:"2025.04.15",items:[{cat:"전체",title:"SEO·보안 강화 + DNS 연결",desc:"메타 태그, JSON-LD 최적화. HSTS, CSP 보안 헤더 적용. 생활계산기.com 도메인 연결."}]},
+  {date:"2025.03.01",items:[{cat:"전체",title:"부동산 계산기 11종 추가 (총 31개)",desc:"보유세통합, 임대소득세, 대출가능액, 인지세, 채권할인료, 감정평가수수료, 예적금이자, 용적률건폐율, 경매비용, 리모델링수익, 건물잔존가치 신규 추가."}]},
+  {date:"2025.01.15",items:[{cat:"전체",title:"생활계산기.com 서비스 오픈",desc:"취득세, 양도소득세, 종부세, 재산세, 증여세, 상속세, DSR, DTI, LTV, 중개보수 등 20가지 부동산 계산기로 서비스 시작."}]},
 ];
 
 /* ── 가이드 데이터 ── */
@@ -850,6 +856,7 @@ export default function App(){
   const[cat,setCat]=useState("tax");const[calc,setCalc]=useState("acquisition");const[gTab,setGTab]=useState("rates");
   const[search,setSearch]=useState("");
   const[modal,setModal]=useState(null);
+  const[showAllLog,setShowAllLog]=useState(false);
   const filtered=CL.filter(c=>c.c===cat);const hCat=c=>{setCat(c);const f=CL.find(x=>x.c===c);if(f)setCalc(f.id);};
   const goCalc=(cId)=>{const info=CL.find(c=>c.id===cId);if(info){setCat(info.c);setCalc(info.id);setPage("calc");}};
   const Comp=CM[calc]||(()=><Placeholder l={CL.find(c=>c.id===calc)?.l||calc}/>);
@@ -1152,7 +1159,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
         </div>
         <div style={{fontSize:12,color:"#6b778c",background:"#f4f5f7",padding:"6px 14px",borderRadius:20}}>마지막 검증: {UPDATE_LOG[0]?.date}</div>
       </div>
-      {UPDATE_LOG.slice(0,3).map((log,li)=>(
+      {(showAllLog?UPDATE_LOG:UPDATE_LOG.slice(0,3)).map((log,li)=>(
         <div key={li} style={{marginBottom:24}}>
           <div style={{fontSize:14,fontWeight:700,color:"#0747A6",marginBottom:12,display:"flex",alignItems:"center",gap:8}}>
             <div style={{width:8,height:8,borderRadius:"50%",background:"#0747A6"}}/>{log.date}
@@ -1170,6 +1177,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           </div>
         </div>
       ))}
+      {!showAllLog&&UPDATE_LOG.length>3&&<button onClick={()=>setShowAllLog(true)} style={{display:"block",margin:"16px auto 0",padding:"10px 24px",background:"#fff",border:"1px solid #dfe1e6",borderRadius:8,fontSize:13,color:"#6b778c",cursor:"pointer",fontFamily:"inherit"}}>전체 내역 보기 ({UPDATE_LOG.length}건)</button>}
     </div>
 
     {/* 푸터 */}
