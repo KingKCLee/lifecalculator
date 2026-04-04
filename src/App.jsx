@@ -590,7 +590,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 .sub-tabs{scrollbar-width:none;-ms-overflow-style:none}
 @media(max-width:1023px){.calc-grid{grid-template-columns:1fr!important}.edu-sidebar{display:none!important}.insights-grid{grid-template-columns:1fr 1fr!important}}
 @media(max-width:768px){input,select,textarea{font-size:16px!important}.pro-cards{grid-template-columns:1fr!important}.footer-inner{grid-template-columns:1fr!important;text-align:center}.cat-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))!important}}
-@media(max-width:480px){.insights-grid{grid-template-columns:1fr!important}}
+@media(max-width:480px){.insights-grid{grid-template-columns:1fr!important}.cat-cards{grid-template-columns:1fr!important}}
 @media(min-width:769px){.hide-pc{display:none!important}}
 @media(max-width:768px){.hide-mo{display:none!important}}
 `}</style>
@@ -674,14 +674,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           if(cid==="cost")return<div style={{display:"grid",gridTemplateColumns:"8px 8px",gap:3}}>{[0,1,2,3].map(i=><div key={i} style={{width:8,height:8,borderRadius:2,background:cl}}/>)}</div>;
           return<div style={{display:"grid",gridTemplateColumns:"10px 8px",gap:3}}><div style={{width:10,height:10,borderRadius:2,background:cl}}/><div style={{width:8,height:8,borderRadius:2,background:cl,opacity:.6}}/><div style={{width:10,height:8,borderRadius:2,background:cl,opacity:.6}}/><div style={{width:8,height:10,borderRadius:2,background:cl}}/></div>;
         };
-        return CATS.filter(ct=>ct.id!=="pro").map(ct=>{const items=CL.filter(c=>c.c===ct.id);const cl=catColors[ct.id]||P.pri;return(
-          <div key={ct.id} style={{marginBottom:40}}>
-            <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:16}}>
-              <span style={{fontSize:20}}>{CAT_ICON[ct.id]}</span>
-              <span style={{fontSize:18,fontWeight:700,color:P.tx}}>{ct.l} 계산기</span>
-              <span style={{background:"#deebff",color:P.pl,borderRadius:10,padding:"2px 10px",fontSize:12,fontWeight:700}}>{items.length}</span>
-            </div>
-            <div style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,overflow:"hidden",cursor:"pointer",transition:"transform .2s, box-shadow .2s"}}
+        const cats4=CATS.filter(ct=>ct.id!=="pro");
+        return <div className="cat-cards" style={{display:"grid",gridTemplateColumns:isMo?"repeat(2,1fr)":"repeat(4,1fr)",gap:20}}>
+          {cats4.map(ct=>{const items=CL.filter(c=>c.c===ct.id);const cl=catColors[ct.id]||P.pri;return(
+            <div key={ct.id} style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,overflow:"hidden",cursor:"pointer",transition:"transform .2s, box-shadow .2s"}}
               onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow="0 8px 24px rgba(0,0,0,.08)";}}
               onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";}}
               onClick={()=>{setCat(ct.id);setPage("calc");}}>
@@ -701,8 +697,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
                 ))}
               </div>
             </div>
-          </div>
-        );});})()}
+          );})}
+        </div>;})()}
       </div>
 
       {/* 섹션 A: PRO 분석 소개 */}
