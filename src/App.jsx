@@ -508,6 +508,58 @@ function EduContent({calc:calcId,gTab}){
   </div>);
 }
 
+/* ── 법적 페이지 데이터 ── */
+const LS={h:{fontSize:16,fontWeight:700,margin:"20px 0 8px",color:"#0747A6"},ib:{background:"#f8f9fc",borderRadius:12,padding:24,margin:"16px 0"}};
+const LEGAL_CONTENT={
+disclaimer:{title:"면책 조항 (Legal Disclaimer)",body:<div>
+<h3 style={LS.h}>제1조 (서비스의 목적)</h3><p>생활계산기.com(이하 "본 서비스")은 부동산 관련 세금, 대출, 비용 등의 계산을 돕기 위해 제공되는 참고용 계산 도구입니다. 본 서비스는 법률, 세무, 금융 등 전문적인 자문을 제공하는 것이 아니며, 참고 자료로만 활용되어야 합니다.</p>
+<h3 style={LS.h}>제2조 (계산 결과의 정확성)</h3><p>본 서비스의 계산 결과는 입력된 정보와 현행 세법·규정을 기반으로 산출되며, 참고용으로만 제공됩니다. 계산 결과의 정확성을 보증하지 않으며, 실제 세금·수수료·비용은 관할 세무서, 금융기관, 법원 등 관계 기관의 최종 판단에 따라 달라질 수 있습니다.</p>
+<h3 style={LS.h}>제3조 (법적 효력의 부인)</h3><p>본 서비스에서 제공하는 계산 결과, 정보, 가이드 등은 법적 효력이나 계약상의 구속력을 가지지 않습니다. 실제 부동산 거래, 세금 신고, 대출 신청 등 중요한 재정 의사결정 시에는 반드시 세무사, 공인중개사, 법무사, 금융기관 등 해당 분야 전문가의 자문을 받으시기 바랍니다.</p>
+<h3 style={LS.h}>제4조 (세법 변경)</h3><p>세법, 대출 규정, 수수료 기준 등은 정부 정책이나 법률 개정에 따라 수시로 변경될 수 있습니다. 본 서비스는 최신 규정을 반영하기 위해 노력하지만, 법령 개정 시점과 반영 시점 사이에 차이가 발생할 수 있으며, 이로 인한 계산 결과의 차이에 대해 책임지지 않습니다.</p>
+<h3 style={LS.h}>제5조 (손해배상 책임의 제한)</h3><p>본 서비스의 이용으로 인해 발생하는 직접적·간접적·부수적·결과적 손해에 대해 본 서비스 운영자는 법률이 허용하는 최대 범위 내에서 일체의 책임을 지지 않습니다.</p>
+<h3 style={LS.h}>제6조 (지적재산권)</h3><p>본 서비스에 포함된 모든 콘텐츠에 대한 지적재산권은 본 서비스 운영자에게 귀속됩니다. 사전 서면 동의 없이 복제, 배포, 수정, 역공학 등을 할 수 없습니다.</p>
+<h3 style={LS.h}>제7조 (서비스 변경 및 중단)</h3><p>본 서비스는 사전 고지 없이 내용이나 기능을 변경·수정·중단할 수 있으며, 이로 인해 발생하는 손해에 대해 책임지지 않습니다.</p>
+<h3 style={LS.h}>제8조 (준거법 및 관할법원)</h3><p>본 면책 조항은 대한민국 법률에 따라 해석되며, 본 서비스와 관련된 분쟁은 서울중앙지방법원을 제1심 관할법원으로 합니다.</p>
+</div>},
+privacy:{title:"개인정보처리방침",body:<div>
+<p>생활계산기.com(이하 "본 서비스")은 「개인정보 보호법」 제30조에 따라 이용자의 개인정보를 보호하고 이와 관련한 고충을 신속하고 원활하게 처리하기 위하여 다음과 같이 개인정보 처리방침을 수립·공개합니다.</p>
+<h3 style={LS.h}>제1조 (수집하는 개인정보 항목)</h3><p>본 서비스는 현재 별도의 회원가입 절차가 없으며, 다음과 같은 정보가 자동으로 생성·수집될 수 있습니다.</p><p>• 자동 수집 항목: 접속 IP 주소, 브라우저 종류 및 버전, 운영체제, 접속 일시, 방문 페이지, 쿠키</p>
+<h3 style={LS.h}>제2조 (개인정보의 수집 및 이용 목적)</h3><p>• 서비스 제공 및 운영: 계산기 기능 제공, 서비스 이용 통계 분석</p><p>• 서비스 개선: 이용자 접속 빈도 및 이용 패턴 분석을 통한 서비스 품질 향상</p><p>• 부정 이용 방지: 비정상적 이용 탐지 및 차단</p>
+<h3 style={LS.h}>제3조 (개인정보의 보유 및 이용 기간)</h3><p>• 자동 수집 정보: 수집일로부터 1년간 보유 후 파기</p><p>• 관련 법령에 의한 보존: 「통신비밀보호법」에 따른 통신사실확인자료 3개월</p>
+<h3 style={LS.h}>제4조 (개인정보의 제3자 제공)</h3><p>본 서비스는 이용자의 사전 동의 없이 제3자에게 제공하지 않습니다. 다만, 법령에 의한 경우는 예외로 합니다.</p>
+<h3 style={LS.h}>제5조 (개인정보의 파기)</h3><p>보유 기간이 경과하거나 처리 목적이 달성된 경우 지체 없이 파기합니다. 전자적 파일은 복구 불가능한 방법으로 영구 삭제합니다.</p>
+<h3 style={LS.h}>제6조 (쿠키의 사용)</h3><p>본 서비스는 쿠키를 사용할 수 있습니다. 이용자는 웹 브라우저 설정을 통해 쿠키 저장을 거부할 수 있으며, 이 경우 일부 서비스 이용에 제한이 있을 수 있습니다.</p>
+<h3 style={LS.h}>제7조 (이용자의 권리)</h3><p>이용자는 언제든지 자신의 개인정보에 대한 열람, 정정, 삭제, 처리정지를 요구할 수 있습니다.</p>
+<h3 style={LS.h}>제8조 (안전성 확보 조치)</h3><p>• 기술적 조치: HTTPS(SSL/TLS) 암호화 통신, 보안 헤더 적용</p><p>• 물리적 조치: 클라우드 서비스(Cloudflare) 기반 보안 인프라 운영</p>
+<h3 style={LS.h}>제9조 (개인정보 보호책임자)</h3><div style={LS.ib}><p style={{margin:"4px 0"}}>• 성명: 이광철</p><p style={{margin:"4px 0"}}>• 직책: 대표</p><p style={{margin:"4px 0"}}>• 이메일: noble.kclee@gmail.com</p></div>
+<h3 style={LS.h}>제10조 (권익침해 구제방법)</h3><p>• 개인정보침해신고센터 (privacy.kisa.or.kr / 118)</p><p>• 대검찰청 사이버수사과 (spo.go.kr / 1301)</p><p>• 경찰청 사이버안전국 (cyberbureau.police.go.kr / 182)</p>
+</div>},
+resource:{title:"자료실 (Resource Center)",body:<div>
+<h3 style={LS.h}>세율 참고 자료</h3><p>• 2025년 취득세율표 — 1주택(1~3%), 2주택(8%), 3주택(12%)</p><p>• 양도소득세 기본세율 — 6~45% 8단계 누진</p><p>• 종합부동산세율 — 일반 0.5~2.7%, 법인 2.7~5.0%</p><p>• 증여세율 — 10~50% 5단계 누진 (10년 합산)</p><p>• 상속세율 — 10~50% 5단계 누진</p>
+<h3 style={LS.h}>대출 규정 참고</h3><p>• DSR 기준 — 은행 40%, 비은행 50%, 스트레스 DSR 가산금리 적용</p><p>• LTV 기준 — 무주택 70%, 1주택 60%, 생애최초 80%</p><p>• DTI 기준 — 투기과열지구 40%, 조정대상지역 50%</p>
+<h3 style={LS.h}>중개보수 요율표</h3><p>• 매매 — 5천만 이하 0.6%, 2억 이하 0.5%, 9억 이하 0.4%, 12억 이하 0.5%, 15억 이하 0.6%, 15억 초과 0.7%</p><p>• 전세 — 5천만 이하 0.5%, 1억 이하 0.4%, 6억 이하 0.3%, 6억 초과 0.4%</p>
+<h3 style={LS.h}>관련 기관 링크</h3><p>• 국세청 홈택스 — hometax.go.kr</p><p>• 위택스 (지방세) — wetax.go.kr</p><p>• 대법원 인터넷등기소 — iros.go.kr</p><p>• 한국부동산원 — reb.or.kr</p><p>• 국토교통부 실거래가 공개 — rt.molit.go.kr</p><p>• 금융감독원 — fss.or.kr</p>
+</div>},
+contact:{title:"문의하기 (Contact Support)",body:<div>
+<h3 style={LS.h}>서비스 문의</h3><p>생활계산기.com에 대한 문의, 건의, 오류 신고 등은 아래로 연락 주시기 바랍니다.</p>
+<div style={LS.ib}><p style={{margin:"4px 0"}}>• 이메일: noble.kclee@gmail.com</p><p style={{margin:"4px 0"}}>• 운영자: 이광철</p><p style={{margin:"4px 0"}}>• 응답 시간: 영업일 기준 1~2일 이내</p></div>
+<h3 style={LS.h}>문의 유형</h3><p>• 계산 결과 오류 신고 — 계산기명, 입력값, 예상 결과를 함께 알려주시면 빠르게 수정합니다.</p><p>• 기능 건의 — 추가되었으면 하는 계산기나 기능을 제안해 주세요.</p><p>• 제휴/협력 문의 — 사업 제휴, API 연동, 광고 등 문의를 환영합니다.</p><p>• 개인정보 관련 — 열람, 정정, 삭제 요청은 이메일로 접수해 주시면 지체 없이 처리합니다.</p>
+<h3 style={LS.h}>사업자 정보</h3><div style={LS.ib}><p style={{margin:"4px 0"}}>• 상호: 더블유부동산</p><p style={{margin:"4px 0"}}>• 대표자: 이광철</p><p style={{margin:"4px 0"}}>• 사업자등록번호: 589-24-01721</p><p style={{margin:"4px 0"}}>• 이메일: noble.kclee@gmail.com</p></div>
+</div>}
+};
+
+function LegalModal({type,onClose}){
+  const content=LEGAL_CONTENT[type];if(!content)return null;
+  return(<div onClick={e=>{if(e.target===e.currentTarget)onClose()}} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.5)",zIndex:10000,display:"flex",alignItems:"center",justifyContent:"center",padding:24}}>
+    <div style={{background:"#fff",borderRadius:16,maxWidth:720,width:"100%",maxHeight:"85vh",overflow:"auto",padding:"40px 32px",position:"relative"}}>
+      <button onClick={onClose} style={{position:"absolute",right:16,top:16,background:"#f4f5f7",border:"none",borderRadius:"50%",width:32,height:32,fontSize:18,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
+      <h2 style={{fontSize:24,fontWeight:800,color:"#172B4D",margin:"0 0 8px"}}>{content.title}</h2>
+      <p style={{fontSize:13,color:"#6b778c",margin:"0 0 24px"}}>최종 수정일: 2025년 4월 1일</p>
+      <div style={{fontSize:14,color:"#172B4D",lineHeight:1.8}}>{content.body}</div>
+    </div>
+  </div>);
+}
+
 function AccItem({title,defaultOpen,children}){
   const[open,setOpen]=useState(defaultOpen||false);
   return (<div style={{marginBottom:8}}>
@@ -575,6 +627,7 @@ export default function App(){
   const[page,setPage]=useState("home");
   const[cat,setCat]=useState("tax");const[calc,setCalc]=useState("acquisition");const[gTab,setGTab]=useState("rates");
   const[search,setSearch]=useState("");
+  const[modal,setModal]=useState(null);
   const filtered=CL.filter(c=>c.c===cat);const hCat=c=>{setCat(c);const f=CL.find(x=>x.c===c);if(f)setCalc(f.id);};
   const goCalc=(cId)=>{const info=CL.find(c=>c.id===cId);if(info){setCat(info.c);setCalc(info.id);setPage("calc");}};
   const Comp=CM[calc]||(()=><Placeholder l={CL.find(c=>c.id===calc)?.l||calc}/>);
@@ -869,10 +922,11 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
         </div>
         <div>
           <div style={{fontSize:11,fontWeight:700,color:P.mt,letterSpacing:1,textTransform:"uppercase",marginBottom:12}}>RESOURCES</div>
-          {["Legal Disclaimer (면책조항)","Resource Center (자료실)","Privacy Policy (개인정보)","Contact Support (문의)"].map(l=><div key={l} style={{fontSize:13,color:P.mt,marginBottom:8,cursor:"pointer"}}>{l}</div>)}
+          {[{l:"Legal Disclaimer (면책조항)",k:"disclaimer"},{l:"Resource Center (자료실)",k:"resource"},{l:"Privacy Policy (개인정보)",k:"privacy"},{l:"Contact Support (문의)",k:"contact"}].map(item=><div key={item.k} onClick={()=>setModal(item.k)} style={{fontSize:13,color:P.mt,marginBottom:8,cursor:"pointer"}} onMouseEnter={e=>e.currentTarget.style.color="#0747A6"} onMouseLeave={e=>e.currentTarget.style.color=P.mt}>{item.l}</div>)}
         </div>
       </div>
       <div style={{textAlign:"center",fontSize:12,color:"#a5adba",marginTop:32}}>© 2025 생활계산기.com. All rights reserved.</div>
     </footer>
+    {modal&&<LegalModal type={modal} onClose={()=>setModal(null)}/>}
   </div>);
 }
