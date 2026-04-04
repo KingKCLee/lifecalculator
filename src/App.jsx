@@ -68,12 +68,10 @@ function Slider({label,value,onChange,min,max,step}){
 }
 function Radio({label,value,onChange,options}){
   return(<div style={{marginBottom:20}}>
-    <label style={{display:"block",fontSize:13,fontWeight:600,color:P.mt,marginBottom:8}}>{label}</label>
-    <div style={{background:P.lt,borderRadius:10,padding:"12px 16px",border:`1px solid ${P.bd}`}}>
-      {options.map(o=>(<div key={o.value} onClick={()=>onChange(o.value)} style={{display:"flex",alignItems:"center",gap:10,cursor:"pointer",padding:"6px 0",fontSize:14,color:P.tx}}>
-        <div style={{width:18,height:18,borderRadius:"50%",border:`2px solid ${value===o.value?P.pri:P.bd}`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-          {value===o.value&&<div style={{width:10,height:10,borderRadius:"50%",background:P.pri}}/>}
-        </div>{o.label}
+    <label style={{display:"block",fontSize:11,fontWeight:600,color:P.mt,marginBottom:8,textTransform:"uppercase",letterSpacing:.5}}>{label}</label>
+    <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+      {options.map(o=>(<div key={o.value} onClick={()=>onChange(o.value)} style={{flex:1,minWidth:120,padding:"16px 14px",borderRadius:12,border:`2px solid ${value===o.value?P.pri:P.bd}`,background:value===o.value?"#deebff":"#fff",textAlign:"center",cursor:"pointer",transition:"border .2s, background .2s"}}>
+        <div style={{fontSize:13,fontWeight:600,color:value===o.value?P.pri:P.tx}}>{o.label}</div>
       </div>))}
     </div>
   </div>);
@@ -87,10 +85,10 @@ function Inp({label,value,onChange,suffix,placeholder,note}){
   };
   const numVal=pN(value);
   return(<div style={{marginBottom:16}}>
-    <label style={{display:"block",fontSize:12,fontWeight:600,color:P.mt,marginBottom:6}}>{label}</label>
+    <label style={{display:"block",fontSize:11,fontWeight:600,color:P.mt,marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>{label}</label>
     <div style={{position:"relative"}}>
       <input type="text" value={displayVal} onChange={handleChange} placeholder={placeholder}
-        style={{width:"100%",boxSizing:"border-box",padding:"10px 14px",paddingRight:suffix?44:14,border:`1.5px solid ${P.bd}`,borderRadius:8,fontSize:14,background:P.lt,color:P.tx,outline:"none",fontFamily:"inherit"}}
+        style={{width:"100%",boxSizing:"border-box",padding:"10px 14px",paddingRight:suffix?44:14,border:`1.5px solid ${P.bd}`,borderRadius:10,fontSize:14,background:"#fff",color:P.tx,outline:"none",fontFamily:"inherit",height:44}}
         onFocus={e=>e.target.style.borderColor=P.pri} onBlur={e=>e.target.style.borderColor=P.bd}/>
       {suffix&&<span style={{position:"absolute",right:14,top:"50%",transform:"translateY(-50%)",fontSize:12,color:P.mt}}>{suffix}</span>}
     </div>
@@ -101,8 +99,8 @@ function Inp({label,value,onChange,suffix,placeholder,note}){
 }
 function Sel({label,value,onChange,options}){
   return(<div style={{marginBottom:16}}>
-    <label style={{display:"block",fontSize:12,fontWeight:600,color:P.mt,marginBottom:6}}>{label}</label>
-    <select value={value} onChange={e=>onChange(e.target.value)} style={{width:"100%",padding:"10px 14px",border:`1.5px solid ${P.bd}`,borderRadius:8,fontSize:14,background:P.lt,color:P.tx,outline:"none",fontFamily:"inherit",cursor:"pointer",appearance:"none",backgroundImage:`url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10'%3E%3Cpath fill='%23718096' d='M5 7L0 2h10z'/%3E%3C/svg%3E")`,backgroundRepeat:"no-repeat",backgroundPosition:"right 14px center"}}>
+    <label style={{display:"block",fontSize:11,fontWeight:600,color:P.mt,marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>{label}</label>
+    <select value={value} onChange={e=>onChange(e.target.value)} style={{width:"100%",padding:"10px 14px",border:`1.5px solid ${P.bd}`,borderRadius:10,fontSize:14,background:"#fff",color:P.tx,outline:"none",fontFamily:"inherit",cursor:"pointer",appearance:"none",height:44,backgroundImage:`url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10'%3E%3Cpath fill='%23718096' d='M5 7L0 2h10z'/%3E%3C/svg%3E")`,backgroundRepeat:"no-repeat",backgroundPosition:"right 14px center"}}>
       {options.map(o=><option key={o.value} value={o.value}>{o.label}</option>)}
     </select>
   </div>);
@@ -116,18 +114,22 @@ function Tog({label,value,onChange,options}){
   </div>);
 }
 function RP({title,total,sub,items}){
-  return(<div style={{background:"linear-gradient(135deg,#0747A6 0%,#0065FF 100%)",borderRadius:16,padding:"28px 24px",color:"#fff",position:"sticky",top:76}}>
-    <div style={{fontSize:11,fontWeight:600,letterSpacing:1.5,opacity:.8,marginBottom:6}}>{title}</div>
-    <div style={{fontSize:32,fontWeight:800}}>{fW(total)}</div>
-    {sub&&<div style={{display:"inline-flex",alignItems:"center",gap:4,background:"rgba(255,255,255,.15)",borderRadius:20,padding:"4px 12px",fontSize:11,marginTop:6,marginBottom:12}}><span style={{color:"#57D9A3"}}>✓</span>{sub}</div>}
-    <div style={{borderTop:"1px solid rgba(255,255,255,.2)",paddingTop:16,marginTop:8}}>
-      {items.map((it,i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:i<items.length-1?"1px solid rgba(255,255,255,.1)":"none"}}>
+  return(<div style={{background:"linear-gradient(180deg,#0747A6 0%,#0052CC 100%)",borderRadius:20,padding:"28px 24px",color:"#fff",position:"sticky",top:80}}>
+    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
+      <div style={{fontSize:11,fontWeight:600,letterSpacing:1.5,textTransform:"uppercase",opacity:.7}}>{title}</div>
+      <div style={{background:"rgba(255,255,255,.15)",borderRadius:8,padding:"4px 10px",fontSize:11,fontWeight:600}}>{sub||"RESULT"}</div>
+    </div>
+    <div style={{fontSize:36,fontWeight:800}}>{fW(total)}</div>
+    <div style={{width:40,height:3,background:"rgba(255,255,255,.5)",borderRadius:2,margin:"8px 0 20px"}}/>
+    <div>
+      {items.map((it,i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",padding:"10px 0",borderBottom:i<items.length-1?"1px solid rgba(255,255,255,.1)":"none"}}>
         <span style={{fontSize:13,opacity:.85}}>{it.l}</span><span style={{fontSize:14,fontWeight:600}}>{it.v}</span>
       </div>))}
     </div>
+    <div style={{marginTop:20,background:"#fff",color:P.pri,borderRadius:10,fontWeight:700,padding:12,textAlign:"center",cursor:"pointer",fontSize:14}}>상세 리포트</div>
   </div>);
 }
-function Empty({icon,msg}){return (<div style={{background:P.lt,borderRadius:16,padding:40,textAlign:"center",color:P.mt}}><div style={{fontSize:40,marginBottom:12}}>{icon}</div>{msg||"금액을 입력하면 결과가 표시됩니다."}</div>);}
+function Empty({icon,msg}){return (<div style={{background:P.lt,borderRadius:20,padding:40,textAlign:"center",color:P.mt}}><div style={{fontSize:40,marginBottom:12}}>{icon}</div>{msg||"금액을 입력하면 결과가 표시됩니다."}</div>);}
 
 /* ═══ 계산기 ═══ */
 
@@ -392,13 +394,10 @@ const REGS={
   bldvalue:[{y:"2023",t:"건물 기준시가 산정방법 개정"}],
 };
 
-/* ── 학습 센터 ── */
-function EduHub({calc:calcId,gTab,setGTab}){
-  const calcInfo=CL.find(c=>c.id===calcId);
-  const calcLabel=calcInfo?.l||"";
-  const relIds=RELATED[calcId]||[];
-  const allIds=[calcId,...relIds];
-
+/* ── 학습 데이터 훅 ── */
+function useEduData(calcId){
+  const calcInfo=CL.find(c=>c.id===calcId);const calcLabel=calcInfo?.l||"";
+  const relIds=RELATED[calcId]||[];const allIds=[calcId,...relIds];
   const tips=[];const glossary=[];const regs=[];
   allIds.forEach(id=>{const lbl=CL.find(c=>c.id===id)?.l||id;
     (TIPS[id]||[]).forEach(t=>tips.push({...t,from:lbl,fromId:id}));
@@ -406,105 +405,105 @@ function EduHub({calc:calcId,gTab,setGTab}){
     (REGS[id]||[]).forEach(r=>regs.push({...r,from:lbl,fromId:id}));
   });
   regs.sort((a,b)=>b.y.localeCompare(a.y));
-
   const guideSources=allIds.filter(id=>GD[id]).map(id=>({id,label:CL.find(c=>c.id===id)?.l||id,data:GD[id]}));
   const relLabels=relIds.map(id=>CL.find(c=>c.id===id)?.l||id);
-  const Badge=({item})=>item.fromId!==calcId?<span style={{marginLeft:6,background:"#deebff",color:P.pl,borderRadius:8,padding:"1px 6px",fontSize:10,fontWeight:600}}>{item.from}</span>:null;
+  return{calcLabel,relIds,allIds,tips,glossary,regs,guideSources,relLabels};
+}
 
-  return (
-    <div style={{display:"grid",gridTemplateColumns:"220px 1fr",gap:24}}>
-      <div style={{background:P.card,borderRadius:14,padding:20,border:`1px solid ${P.bd}`,alignSelf:"start",position:"sticky",top:76}}>
-        <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:4}}>
-          <span style={{fontSize:18}}>📘</span>
-          <span style={{fontSize:14,fontWeight:700,color:P.pri}}>학습 센터</span>
-        </div>
-        <div style={{fontSize:11,color:P.mt,marginBottom:16}}>선택한 계산기별 맞춤 정보</div>
-        {[{id:"rates",icon:"📊",l:"세율표·가이드"},{id:"regs",icon:"📋",l:"규정·법령"},{id:"tips",icon:"💡",l:"절세 팁"},{id:"glossary",icon:"📖",l:"용어 사전"}].map(t=>(
-          <button key={t.id} onClick={()=>setGTab(t.id)}
-            style={{width:"100%",padding:"10px 12px",border:"none",borderRadius:8,
-              background:gTab===t.id?"#deebff":"transparent",color:gTab===t.id?P.pri:P.mt,
-              fontSize:13,fontWeight:gTab===t.id?600:400,cursor:"pointer",fontFamily:"inherit",
-              textAlign:"left",display:"flex",alignItems:"center",gap:8,marginBottom:2}}>
-            {t.icon+" "+t.l}
-            {t.id==="tips"&&tips.length>0&&<span style={{marginLeft:"auto",background:"#deebff",color:P.pri,borderRadius:10,padding:"1px 7px",fontSize:11,fontWeight:700}}>{tips.length}</span>}
-            {t.id==="glossary"&&glossary.length>0&&<span style={{marginLeft:"auto",background:"#deebff",color:P.pri,borderRadius:10,padding:"1px 7px",fontSize:11,fontWeight:700}}>{glossary.length}</span>}
-            {t.id==="regs"&&regs.length>0&&<span style={{marginLeft:"auto",background:"#deebff",color:P.pri,borderRadius:10,padding:"1px 7px",fontSize:11,fontWeight:700}}>{regs.length}</span>}
-          </button>
-        ))}
-        {relIds.length>0&&<div style={{marginTop:16,padding:"10px 14px",background:P.lt,borderRadius:10,fontSize:11,color:P.mt,lineHeight:1.8}}>
-          <div style={{fontWeight:700,marginBottom:4,color:P.pri}}>관련 항목 포함</div>
-          <div style={{display:"flex",flexWrap:"wrap",gap:4}}>{relLabels.map(l=><span key={l} style={{background:"#deebff",color:P.pl,borderRadius:8,padding:"2px 8px",fontSize:10,fontWeight:600}}>{l}</span>)}</div>
-        </div>}
-        <div style={{marginTop:12,padding:"12px 14px",background:"linear-gradient(135deg,#deebff,#EAE6FF)",borderRadius:10,fontSize:12,color:P.pri,lineHeight:1.5}}>
-          <div style={{fontWeight:700,marginBottom:4}}>📌 현재 선택</div>{calcLabel}
-        </div>
+/* ── 학습센터 사이드바 ── */
+function EduSidebar({calc:calcId,gTab,setGTab}){
+  const{calcLabel,relIds,tips,glossary,regs,relLabels}=useEduData(calcId);
+  return(
+    <div className="edu-sidebar" style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:24,position:"sticky",top:80,alignSelf:"start"}}>
+      <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:4}}>
+        <span style={{fontSize:18}}>📘</span>
+        <span style={{fontSize:14,fontWeight:700,color:P.pri}}>학습 센터</span>
       </div>
-
-      <div>
-        <h2 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 4px"}}>{calcLabel} — {({rates:"세율표·가이드",regs:"규정 변경 이력",tips:"절세 팁",glossary:"관련 용어"})[gTab]}</h2>
-        {relIds.length>0&&<p style={{fontSize:12,color:P.mt,margin:"0 0 16px"}}>관련: {relLabels.join(", ")} 포함</p>}
-        {relIds.length===0&&<div style={{marginBottom:16}}/>}
-
-        {gTab==="rates"&&(guideSources.length>0?(<div>
-          {guideSources.map(gs=>(
-            <AccItem key={gs.id} title={"❓ "+gs.data.q+(gs.id!==calcId?" ("+gs.label+")":"")} defaultOpen={gs.id===calcId}>
-              <div style={{fontSize:14,lineHeight:1.8,color:"#4a5568"}}>{gs.data.a}</div>
-              {gs.data.rates&&<div style={{marginTop:12,overflowX:"auto"}}><table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
-                <thead><tr>{gs.data.rh.map((h,i)=>(<th key={i} style={{background:P.lt,padding:"8px 12px",textAlign:"left",fontWeight:600,color:P.pri,borderBottom:`2px solid ${P.bd}`}}>{h}</th>))}</tr></thead>
-                <tbody>{gs.data.rates.map((row,ri)=>(<tr key={ri} style={{background:ri%2===0?"#fff":"#f8fafc"}}>{row.map((cell,ci)=>(<td key={ci} style={{padding:"7px 12px",borderBottom:`1px solid ${P.bd}`,fontWeight:ci===0?600:400}}>{cell}</td>))}</tr>))}</tbody>
-              </table></div>}
-            </AccItem>
-          ))}
-        </div>):(<div style={{padding:32,textAlign:"center",color:P.mt,background:P.card,borderRadius:12,border:`1px solid ${P.bd}`}}>
-          <div style={{fontSize:32,marginBottom:8}}>📊</div>{calcLabel} 세율표를 준비 중입니다.
-        </div>))}
-
-        {gTab==="regs"&&(regs.length>0?(<div>
-          <div style={{padding:"12px 16px",background:"#fffff0",border:"1px solid #fefcbf",borderRadius:12,marginBottom:16,fontSize:13,color:"#744210"}}>
-            ⚠️ {calcLabel} 관련 규정 변경 이력. 국회 미통과 법안은 변경 가능.
-          </div>
-          <div style={{background:P.card,borderRadius:12,border:`1px solid ${P.bd}`,overflow:"hidden"}}>
-            {regs.map((r,i)=>(
-              <div key={i} style={{padding:"12px 18px",borderBottom:i<regs.length-1?`1px solid ${P.lt}`:"none",display:"flex",gap:12,alignItems:"flex-start"}}>
-                <span style={{background:r.y==="2026"||r.y==="2025"?P.pri:"#a0aec0",color:"#fff",padding:"2px 10px",borderRadius:16,fontSize:12,fontWeight:700,flexShrink:0}}>{r.y}</span>
-                <span style={{fontSize:13,color:"#4a5568",lineHeight:1.6}}>{r.t}<Badge item={r}/></span>
-              </div>))}
-          </div>
-        </div>):(<div style={{padding:32,textAlign:"center",color:P.mt,background:P.card,borderRadius:12,border:`1px solid ${P.bd}`}}>
-          <div style={{fontSize:32,marginBottom:8}}>📋</div>{calcLabel} 관련 규정 이력을 준비 중입니다.
-        </div>))}
-
-        {gTab==="tips"&&(tips.length>0?tips.map((tip,i)=>(
-          <AccItem key={i} title={"💡 "+tip.title} defaultOpen={i===0}>
-            <div style={{fontSize:14,lineHeight:1.8,color:"#4a5568"}}>{tip.body}<Badge item={tip}/></div>
-          </AccItem>
-        )):(<div style={{padding:32,textAlign:"center",color:P.mt,background:P.card,borderRadius:12,border:`1px solid ${P.bd}`}}>
-          <div style={{fontSize:32,marginBottom:8}}>💡</div>{calcLabel} 절세 팁을 준비 중입니다.
-        </div>))}
-
-        {gTab==="glossary"&&(glossary.length>0?(<div style={{background:P.card,borderRadius:12,border:`1px solid ${P.bd}`,overflow:"hidden"}}>
-          {glossary.map((g2,i)=>(
-            <div key={i} style={{padding:"12px 18px",borderBottom:i<glossary.length-1?`1px solid ${P.lt}`:"none",display:"flex",gap:16,alignItems:"flex-start"}}>
-              <span style={{fontWeight:700,color:P.pri,fontSize:14,minWidth:100,flexShrink:0}}>{g2.term}</span>
-              <span style={{fontSize:13,color:"#4a5568",lineHeight:1.6}}>{g2.def}<Badge item={g2}/></span>
-            </div>))}
-        </div>):(<div style={{padding:32,textAlign:"center",color:P.mt,background:P.card,borderRadius:12,border:`1px solid ${P.bd}`}}>
-          <div style={{fontSize:32,marginBottom:8}}>📖</div>{calcLabel} 용어를 준비 중입니다.
-        </div>))}
+      <div style={{fontSize:11,letterSpacing:1,textTransform:"uppercase",color:P.mt,marginBottom:16}}>REGULATORY GUIDANCE</div>
+      {[{id:"rates",icon:"📊",l:"세율표·가이드"},{id:"regs",icon:"📋",l:"규정·법령"},{id:"tips",icon:"💡",l:"절세 팁"},{id:"glossary",icon:"📖",l:"용어 사전"}].map(t=>(
+        <button key={t.id} onClick={()=>setGTab(t.id)}
+          style={{width:"100%",padding:"10px 12px",border:"none",borderRadius:0,
+            background:gTab===t.id?"#deebff":"transparent",color:gTab===t.id?P.pri:P.mt,
+            borderLeft:gTab===t.id?`3px solid ${P.pri}`:"3px solid transparent",
+            fontSize:13,fontWeight:gTab===t.id?700:400,cursor:"pointer",fontFamily:"inherit",
+            textAlign:"left",display:"flex",alignItems:"center",gap:8,marginBottom:2}}>
+          {t.icon+" "+t.l}
+          {t.id==="tips"&&tips.length>0&&<span style={{marginLeft:"auto",background:"#deebff",color:P.pri,borderRadius:10,padding:"1px 7px",fontSize:11,fontWeight:700}}>{tips.length}</span>}
+          {t.id==="glossary"&&glossary.length>0&&<span style={{marginLeft:"auto",background:"#deebff",color:P.pri,borderRadius:10,padding:"1px 7px",fontSize:11,fontWeight:700}}>{glossary.length}</span>}
+          {t.id==="regs"&&regs.length>0&&<span style={{marginLeft:"auto",background:"#deebff",color:P.pri,borderRadius:10,padding:"1px 7px",fontSize:11,fontWeight:700}}>{regs.length}</span>}
+        </button>
+      ))}
+      {relIds.length>0&&<div style={{marginTop:16,padding:"10px 14px",background:P.lt,borderRadius:10,fontSize:11,color:P.mt,lineHeight:1.8}}>
+        <div style={{fontWeight:700,marginBottom:4,color:P.pri}}>관련 항목 포함</div>
+        <div style={{display:"flex",flexWrap:"wrap",gap:4}}>{relLabels.map(l=><span key={l} style={{background:"#deebff",color:P.pl,borderRadius:8,padding:"2px 8px",fontSize:10,fontWeight:600}}>{l}</span>)}</div>
+      </div>}
+      <div style={{marginTop:12,padding:"12px 14px",background:"linear-gradient(135deg,#deebff,#EAE6FF)",borderRadius:10,fontSize:12,color:P.pri,lineHeight:1.5}}>
+        <div style={{fontWeight:700,marginBottom:4}}>📌 현재 선택</div>{calcLabel}
       </div>
     </div>
   );
+}
+
+/* ── 학습센터 콘텐츠 (우측 가이드) ── */
+function EduContent({calc:calcId,gTab}){
+  const{calcLabel,relIds,tips,glossary,regs,guideSources,relLabels}=useEduData(calcId);
+  const Badge=({item})=>item.fromId!==calcId?<span style={{marginLeft:6,background:"#deebff",color:P.pl,borderRadius:8,padding:"1px 6px",fontSize:10,fontWeight:600}}>{item.from}</span>:null;
+  return(<div>
+    <div style={{fontSize:11,fontWeight:600,letterSpacing:1.5,textTransform:"uppercase",color:P.mt,marginBottom:12}}>EXPERT GUIDE</div>
+
+    {gTab==="rates"&&(guideSources.length>0?(<div>
+      {guideSources.map(gs=>(
+        <AccItem key={gs.id} title={"❓ "+gs.data.q+(gs.id!==calcId?" ("+gs.label+")":"")} defaultOpen={gs.id===calcId}>
+          <div style={{fontSize:13,lineHeight:1.8,color:"#4a5568"}}>{gs.data.a}</div>
+          {gs.data.rates&&<div style={{marginTop:12,overflowX:"auto"}}><table style={{width:"100%",borderCollapse:"collapse",fontSize:12}}>
+            <thead><tr>{gs.data.rh.map((h,i)=>(<th key={i} style={{background:P.lt,padding:"6px 10px",textAlign:"left",fontWeight:600,color:P.pri,borderBottom:`2px solid ${P.bd}`}}>{h}</th>))}</tr></thead>
+            <tbody>{gs.data.rates.map((row,ri)=>(<tr key={ri} style={{background:ri%2===0?"#fff":"#f8fafc"}}>{row.map((cell,ci)=>(<td key={ci} style={{padding:"5px 10px",borderBottom:`1px solid ${P.bd}`,fontWeight:ci===0?600:400}}>{cell}</td>))}</tr>))}</tbody>
+          </table></div>}
+        </AccItem>
+      ))}
+    </div>):(<div style={{padding:24,textAlign:"center",color:P.mt,background:"#fff",borderRadius:12,border:`1px solid ${P.bd}`}}>
+      <div style={{fontSize:24,marginBottom:6}}>📊</div><div style={{fontSize:12}}>{calcLabel} 세율표를 준비 중입니다.</div>
+    </div>))}
+
+    {gTab==="regs"&&(regs.length>0?(<div style={{background:"#fff",borderRadius:12,border:`1px solid ${P.bd}`,overflow:"hidden"}}>
+      {regs.map((r,i)=>(
+        <div key={i} style={{padding:"10px 14px",borderBottom:i<regs.length-1?`1px solid ${P.lt}`:"none",display:"flex",gap:10,alignItems:"flex-start"}}>
+          <span style={{background:r.y==="2026"||r.y==="2025"?P.pri:"#a0aec0",color:"#fff",padding:"2px 8px",borderRadius:12,fontSize:11,fontWeight:700,flexShrink:0}}>{r.y}</span>
+          <span style={{fontSize:12,color:"#4a5568",lineHeight:1.5}}>{r.t}<Badge item={r}/></span>
+        </div>))}
+    </div>):(<div style={{padding:24,textAlign:"center",color:P.mt,background:"#fff",borderRadius:12,border:`1px solid ${P.bd}`}}>
+      <div style={{fontSize:24,marginBottom:6}}>📋</div><div style={{fontSize:12}}>규정 이력을 준비 중입니다.</div>
+    </div>))}
+
+    {gTab==="tips"&&(tips.length>0?tips.map((tip,i)=>(
+      <AccItem key={i} title={"💡 "+tip.title} defaultOpen={i===0}>
+        <div style={{fontSize:13,lineHeight:1.8,color:"#4a5568"}}>{tip.body}<Badge item={tip}/></div>
+      </AccItem>
+    )):(<div style={{padding:24,textAlign:"center",color:P.mt,background:"#fff",borderRadius:12,border:`1px solid ${P.bd}`}}>
+      <div style={{fontSize:24,marginBottom:6}}>💡</div><div style={{fontSize:12}}>절세 팁을 준비 중입니다.</div>
+    </div>))}
+
+    {gTab==="glossary"&&(glossary.length>0?(<div style={{background:"#fff",borderRadius:12,border:`1px solid ${P.bd}`,overflow:"hidden"}}>
+      {glossary.map((g2,i)=>(
+        <div key={i} style={{padding:"10px 14px",borderBottom:i<glossary.length-1?`1px solid ${P.lt}`:"none",display:"flex",gap:12,alignItems:"flex-start"}}>
+          <span style={{fontWeight:700,color:P.pri,fontSize:13,minWidth:80,flexShrink:0}}>{g2.term}</span>
+          <span style={{fontSize:12,color:"#4a5568",lineHeight:1.5}}>{g2.def}<Badge item={g2}/></span>
+        </div>))}
+    </div>):(<div style={{padding:24,textAlign:"center",color:P.mt,background:"#fff",borderRadius:12,border:`1px solid ${P.bd}`}}>
+      <div style={{fontSize:24,marginBottom:6}}>📖</div><div style={{fontSize:12}}>용어를 준비 중입니다.</div>
+    </div>))}
+  </div>);
 }
 
 function AccItem({title,defaultOpen,children}){
   const[open,setOpen]=useState(defaultOpen||false);
   return (<div style={{marginBottom:8}}>
     <button onClick={()=>setOpen(!open)}
-      style={{width:"100%",padding:"14px 18px",background:P.card,border:`1px solid ${P.bd}`,borderRadius:open?"12px 12px 0 0":12,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"space-between",fontFamily:"inherit"}}>
-      <span style={{fontSize:15,fontWeight:600,color:P.tx}}>{title}</span>
-      <span style={{transform:open?"rotate(180deg)":"none",transition:"transform .2s",display:"inline-block",color:P.mt}}>▼</span>
+      style={{width:"100%",padding:"12px 16px",background:"#fff",border:`1px solid ${P.bd}`,borderRadius:open?"12px 12px 0 0":12,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"space-between",fontFamily:"inherit"}}>
+      <span style={{fontSize:14,fontWeight:600,color:P.tx}}>{title}</span>
+      <span style={{transform:open?"rotate(180deg)":"none",transition:"transform .2s",display:"inline-block",color:P.mt,fontSize:12}}>▼</span>
     </button>
-    {open&&<div style={{padding:"12px 18px 18px",background:P.card,border:`1px solid ${P.bd}`,borderTop:"none",borderRadius:"0 0 12px 12px"}}>{children}</div>}
+    {open&&<div style={{padding:"12px 16px 16px",background:"#fff",border:`1px solid ${P.bd}`,borderTop:"none",borderRadius:"0 0 12px 12px"}}>{children}</div>}
   </div>);
 }
 /* ── 계산기별 한줄 설명 ── */
@@ -570,6 +569,7 @@ export default function App(){
 
   return(<div style={{minHeight:"100vh",background:P.bg,fontFamily:"'Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif"}}>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <style>{`@media(max-width:1023px){.calc-grid{grid-template-columns:1fr!important}.edu-sidebar{display:none!important}.sub-tabs{overflow-x:auto;flex-wrap:nowrap!important}.pro-cards{grid-template-columns:1fr!important}.insights-grid{grid-template-columns:1fr 1fr!important}.footer-inner{grid-template-columns:1fr!important}}`}</style>
 
     {/* 상단 네비게이션 */}
     <nav style={{background:"#fff",borderBottom:`1px solid ${P.bd}`,boxShadow:"0 1px 3px rgba(0,0,0,.06)",position:"sticky",top:0,zIndex:100}}>
@@ -651,45 +651,70 @@ export default function App(){
       </div>
     </>):(
     <>
-      <div style={{maxWidth:1100,margin:"0 auto",padding:"32px 24px"}}>
-        {/* 섹션 헤더 */}
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:24,flexWrap:"wrap",gap:12}}>
-          <div><h1 style={{fontSize:26,fontWeight:800,color:P.tx,margin:0}}>{catInfo?.l||""} 계산기</h1><p style={{fontSize:13,color:P.mt,margin:"4px 0 0"}}>2024~2025 최신 세법·규정 기반 정밀 계산</p></div>
-          <div style={{display:"flex",gap:4,background:P.card,borderRadius:10,padding:4,border:`1px solid ${P.bd}`,flexWrap:"wrap"}}>
-            {filtered.map(c=>(<button key={c.id} onClick={()=>setCalc(c.id)} style={{padding:"8px 14px",border:"none",borderRadius:8,background:calc===c.id?P.pri:"transparent",color:calc===c.id?"#fff":P.mt,fontSize:12.5,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>{c.l}</button>))}
+      <div className="calc-grid" style={{maxWidth:1200,margin:"0 auto",padding:"32px 24px",display:"grid",gridTemplateColumns:"220px 1fr 320px",gap:24,alignItems:"start"}}>
+        {/* 좌측: 학습센터 사이드바 */}
+        <EduSidebar calc={calc} gTab={gTab} setGTab={setGTab}/>
+
+        {/* 중앙: 헤더 + 서브탭 + 계산기 + PRO */}
+        <div>
+          <div style={{marginBottom:24}}>
+            <h1 style={{fontSize:28,fontWeight:800,color:P.tx,margin:0,letterSpacing:-1}}>{catInfo?.l||""} 계산기</h1>
+            <p style={{fontSize:14,color:P.mt,margin:"4px 0 16px"}}>2025년 최신 세법 기반 정밀 계산</p>
+            <div className="sub-tabs" style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+              {filtered.map(c=>(<button key={c.id} onClick={()=>setCalc(c.id)} style={{padding:"8px 20px",border:calc===c.id?"none":`1px solid ${P.bd}`,borderRadius:20,background:calc===c.id?P.pri:"transparent",color:calc===c.id?"#fff":P.mt,fontSize:13,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>{c.l}</button>))}
+            </div>
           </div>
+          <div style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:32,marginBottom:24,boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
+            <Comp/>
+          </div>
+          {cat!=="pro"&&<div className="pro-cards" style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12}}>
+            {[{id:"totalcost",t:"총비용 시뮬레이터",d:"취득세~중개보수 합산",icon:"⚡",cl:"#0747A6"},
+              {id:"compare",t:"세금 비교 분석",d:"매매·증여·상속 비교",icon:"📊",cl:"#00875A"},
+              {id:"invest",t:"투자수익 분석",d:"매수→매도 종합분석",icon:"📈",cl:"#FF8B00"}
+            ].map(card=>(<div key={card.id} onClick={()=>{setCat("pro");setCalc(card.id);}} style={{background:"#fff",borderRadius:12,border:`1px solid ${P.bd}`,padding:20,cursor:"pointer",transition:"transform .2s, box-shadow .2s"}}
+              onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 4px 12px rgba(0,0,0,.08)";}}
+              onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";}}>
+              <div style={{width:40,height:40,borderRadius:10,background:P.lt,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,marginBottom:10}}>{card.icon}</div>
+              <div style={{fontSize:15,fontWeight:700,color:P.tx}}>{card.t}</div>
+              <div style={{fontSize:12,color:P.mt,lineHeight:1.5,marginTop:4}}>{card.d}</div>
+            </div>))}
+          </div>}
         </div>
 
-        {/* 계산기 본체 */}
-        <div style={{background:P.card,borderRadius:16,padding:32,border:`1px solid ${P.bd}`,marginBottom:32,boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
-          <Comp/>
+        {/* 우측: 가이드 콘텐츠 */}
+        <div style={{position:"sticky",top:80}}>
+          <EduContent calc={calc} gTab={gTab}/>
         </div>
+      </div>
 
-        {/* PRO 카드 */}
-        {cat!=="pro"&&<div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:16,marginBottom:40}}>
-          {[{id:"totalcost",t:"총비용 시뮬레이터",d:"취득세부터 등기비·법무사비·중개보수까지 한번에 합산",cl:"#0747A6"},
-            {id:"compare",t:"세금 비교 분석",d:"매매·증여·상속 시 세금을 실시간 비교하여 최적 방법 제안",cl:"#00875A"},
-            {id:"invest",t:"투자수익 분석",d:"매수→보유→매도 전체 사이클 비용·수익·IRR 종합 분석",cl:"#FF8B00"}
-          ].map(card=>(<button key={card.id} onClick={()=>{setCat("pro");setCalc(card.id);}} style={{padding:20,background:`linear-gradient(135deg,${card.cl},${card.cl}dd)`,borderRadius:14,border:"none",cursor:"pointer",textAlign:"left",color:"#fff"}}>
-            <div style={{fontSize:15,fontWeight:700,marginBottom:6}}>{card.t}</div>
-            <div style={{fontSize:12,opacity:.85,lineHeight:1.5}}>{card.d}</div>
-            <div style={{fontSize:20,marginTop:12,opacity:.7}}>→</div>
-          </button>))}
-        </div>}
-
-        {/* 학습 센터 */}
-        <EduHub calc={calc} gTab={gTab} setGTab={setGTab}/>
+      {/* Insights 섹션 */}
+      <div style={{background:P.bg,padding:"48px 24px"}}>
+        <div style={{fontSize:20,fontWeight:700,textAlign:"center",color:P.tx,marginBottom:24}}>📘 학습센터 인사이트</div>
+        <div className="insights-grid" style={{maxWidth:1100,margin:"0 auto",display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:16}}>
+          {[{n:"2020-2026",t:"규제 로드맵",d:"부동산 세제 변화 타임라인"},{n:"0.5%-12%",t:"세율 범위 가이드",d:"취득세부터 종부세까지 세율 안내"},{n:"150+",t:"용어 사전",d:"부동산 전문 용어 모음"},{n:"31개",t:"전문 계산기",d:"세금·대출·비용 종합 계산"}].map((c,i)=>(
+            <div key={i} style={{background:"#fff",borderRadius:14,padding:24,border:`1px solid ${P.bd}`,textAlign:"center"}}>
+              <div style={{fontSize:28,fontWeight:800,color:P.pri,marginBottom:4}}>{c.n}</div>
+              <div style={{fontSize:14,fontWeight:700,color:P.tx,marginBottom:4}}>{c.t}</div>
+              <div style={{fontSize:12,color:P.mt}}>{c.d}</div>
+            </div>
+          ))}
+        </div>
       </div>
     </>)}
 
     {/* 푸터 */}
-    <footer style={{borderTop:`1px solid ${P.bd}`,marginTop:40,padding:"32px 24px",background:P.card}}>
-      <div style={{maxWidth:1100,margin:"0 auto",display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:24}}>
-        <div><div style={{fontSize:15,fontWeight:800,color:P.pri,marginBottom:8}}>생활계산기.com</div><div style={{fontSize:12,color:P.mt,lineHeight:1.6}}>© 2025 생활계산기.com. 본 계산기는 참고용이며, 실제 세금·수수료는 세무사 또는 관할 기관에 반드시 확인하시기 바랍니다.</div></div>
-        <div><div style={{fontSize:12,fontWeight:700,color:P.pri,marginBottom:8}}>안내</div>{["이용약관","개인정보처리방침","면책조항"].map(l=><div key={l} style={{fontSize:12,color:P.mt,marginBottom:4,cursor:"pointer"}}>{l}</div>)}</div>
-        <div><div style={{fontSize:12,fontWeight:700,color:P.pri,marginBottom:8}}>고객지원</div>{["문의하기","자주 묻는 질문","오류 제보"].map(l=><div key={l} style={{fontSize:12,color:P.mt,marginBottom:4,cursor:"pointer"}}>{l}</div>)}</div>
-        <div><div style={{fontSize:12,fontWeight:700,color:P.pri,marginBottom:8}}>연결</div><div style={{fontSize:12,color:P.mt}}>최신 세법 및 부동산 정책 반영<br/>매일 자동 업데이트</div></div>
+    <footer style={{background:"#fff",borderTop:`1px solid ${P.bd}`,padding:"48px 24px"}}>
+      <div className="footer-inner" style={{maxWidth:1100,margin:"0 auto",display:"grid",gridTemplateColumns:"1fr 1fr",gap:40}}>
+        <div>
+          <div style={{fontSize:18,fontWeight:800,color:P.pri,marginBottom:8}}>생활계산기.com</div>
+          <div style={{fontSize:13,color:P.mt,lineHeight:1.6}}>부동산 전문 세금·비용 계산 플랫폼<br/>본 계산기는 참고용이며, 실제 세금·수수료는 세무사 또는 관할 기관에 반드시 확인하시기 바랍니다.</div>
+        </div>
+        <div>
+          <div style={{fontSize:11,fontWeight:700,color:P.mt,letterSpacing:1,textTransform:"uppercase",marginBottom:12}}>RESOURCES</div>
+          {["Legal Disclaimer (면책조항)","Resource Center (자료실)","Privacy Policy (개인정보)","Contact Support (문의)"].map(l=><div key={l} style={{fontSize:13,color:P.mt,marginBottom:8,cursor:"pointer"}}>{l}</div>)}
+        </div>
       </div>
+      <div style={{textAlign:"center",fontSize:12,color:"#a5adba",marginTop:32}}>© 2025 생활계산기.com. All rights reserved.</div>
     </footer>
   </div>);
 }
