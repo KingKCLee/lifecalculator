@@ -35,10 +35,10 @@ commission:{q:"중개보수 요율은?",a:"매매 시 2억 미만 0.5%(한도 80
 /* ── 카테고리 & 계산기 ── */
 const CATS=[{id:"tax",l:"세금"},{id:"loan",l:"대출"},{id:"cost",l:"비용"},{id:"etc",l:"기타"},{id:"pro",l:"PRO 분석"}];
 const CL=[
-  {id:"acquisition",l:"취득세",c:"tax"},{id:"transfer",l:"양도소득세",c:"tax"},{id:"compre",l:"종부세",c:"tax"},{id:"property",l:"재산세",c:"tax"},{id:"gift",l:"증여세",c:"tax"},{id:"inherit",l:"상속세",c:"tax"},
-  {id:"mortgage",l:"대출이자",c:"loan"},{id:"dsr",l:"DSR",c:"loan"},{id:"dti",l:"DTI",c:"loan"},{id:"ltv",l:"LTV·대출한도",c:"loan"},
-  {id:"commission",l:"중개보수",c:"cost"},{id:"registration",l:"등기비용",c:"cost"},{id:"legal",l:"법무사수수료",c:"cost"},
-  {id:"yield",l:"임대수익률",c:"etc"},{id:"area",l:"평수변환",c:"etc"},{id:"convert",l:"전월세전환",c:"etc"},{id:"joint",l:"공동명의",c:"etc"},
+  {id:"acquisition",l:"취득세",c:"tax"},{id:"transfer",l:"양도소득세",c:"tax"},{id:"compre",l:"종부세",c:"tax"},{id:"property",l:"재산세",c:"tax"},{id:"gift",l:"증여세",c:"tax"},{id:"inherit",l:"상속세",c:"tax"},{id:"holdtax",l:"보유세 통합",c:"tax"},
+  {id:"mortgage",l:"대출이자",c:"loan"},{id:"dsr",l:"DSR",c:"loan"},{id:"dti",l:"DTI",c:"loan"},{id:"ltv",l:"LTV·대출한도",c:"loan"},{id:"loanmax",l:"대출가능액",c:"loan"},
+  {id:"commission",l:"중개보수",c:"cost"},{id:"registration",l:"등기비용",c:"cost"},{id:"legal",l:"법무사수수료",c:"cost"},{id:"stamp",l:"인지세",c:"cost"},{id:"bond",l:"채권할인료",c:"cost"},
+  {id:"yield",l:"임대수익률",c:"etc"},{id:"area",l:"평수변환",c:"etc"},{id:"convert",l:"전월세전환",c:"etc"},{id:"joint",l:"공동명의",c:"etc"},{id:"deposit",l:"예적금이자",c:"etc"},{id:"far",l:"용적률·건폐율",c:"etc"},{id:"rental",l:"임대소득세",c:"etc"},
   {id:"totalcost",l:"총비용 시뮬레이터",c:"pro"},{id:"compare",l:"세금비교 분석",c:"pro"},{id:"invest",l:"투자수익 분석",c:"pro"},
 ];
 
@@ -216,7 +216,28 @@ function CalcArea(){const[dir,sDir]=useState("s2p");const[v,sV]=useState("");con
 /* 공동명의 */
 function CalcJoint(){const[p,sP]=useState("");const[r,sR]=useState("50");const pW=tW(p),rv=pN(r)/100;const sB=Math.max(0,(pW-12e8)*0.6);const j1B=Math.max(0,(pW*rv-9e8*rv)*0.6);const j2B=Math.max(0,(pW*(1-rv)-9e8*(1-rv))*0.6);const C2=[[3e8,.005],[6e8,.007],[12e8,.01],[25e8,.013],[50e8,.02],[94e8,.022],[Infinity,.027]];const sT=pTx(sB,C2),jT=pTx(j1B,C2)+pTx(j2B,C2),sv=sT-jT;return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start"}}><div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>👥 공동명의 비교 분석</h3><Inp label="부동산 공시가격" value={p} onChange={sP} suffix="만원" placeholder="예: 150000"/><div style={{marginBottom:16}}><label style={{display:"block",fontSize:12,fontWeight:600,color:P.mt,marginBottom:6}}>{"지분 비율 — 본인 "+r+"% : 배우자 "+(100-parseInt(r))+"%"}</label><input type="range" min="10" max="90" step="10" value={r} onChange={e=>sR(e.target.value)} style={{width:"100%",accentColor:P.pri}}/><div style={{display:"flex",justifyContent:"space-between",fontSize:11,color:P.mt,marginTop:4}}><span>본인 10%</span><span>본인 90%</span></div></div><div style={{padding:"14px 16px",background:P.lt,borderRadius:10,fontSize:13,color:"#4a5568",lineHeight:1.6}}><b>단독명의:</b> 1주택 공제 12억, 고령자·장기보유 공제 가능<br/><b>공동명의:</b> 각 9억 공제 (합 18억), 고령자·장기보유 공제 불가</div></div>{pW>0?<RP title={sv>0?"공동명의가 유리":"단독명의가 유리"} total={Math.abs(sv)} sub={"절세액 기준 비교"} items={[{l:"단독명의 종부세",v:fW(sT)},{l:"공동명의 종부세 합계",v:fW(jT)},{l:"차이 (절세액)",v:fW(Math.abs(sv))},{l:"본인 지분 "+r+"%",v:fW(pW*rv)},{l:"배우자 지분 "+(100-parseInt(r))+"%",v:fW(pW*(1-rv))}]}/>:<Empty icon="👥"/>}</div>);}
 
-const CM={acquisition:CalcAcq,transfer:CalcTrans,compre:CalcCompre,property:CalcProp,gift:CalcGift,inherit:CalcInherit,mortgage:CalcMort,dsr:CalcDSR,dti:CalcDTI,ltv:CalcLTV,commission:CalcComm,registration:CalcReg,legal:CalcLegal,yield:CalcYield,area:CalcArea,convert:CalcConvert,joint:CalcJoint,totalcost:CalcTotalCost,compare:CalcCompare,invest:CalcInvest};
+/* 대출가능액 */
+function CalcLoanMax(){const[inc,sInc]=useState("");const[dsrLim,sDsrLim]=useState("40");const[rt,sRt]=useState("");const[yr,sYr]=useState("30");const[ep,sEp]=useState("");const ai=tW(inc),lim=pN(dsrLim)/100,r=pN(rt)/100/12,n=parseInt(yr)*12,epW=tW(ep);const maxAnnual=ai*lim;const maxMonthly=(maxAnnual-epW*12)/12;let maxLoan=0;if(r>0&&n>0&&maxMonthly>0){maxLoan=maxMonthly*(Math.pow(1+r,n)-1)/(r*Math.pow(1+r,n));}const actualDsr=ai>0?(maxMonthly*12+epW*12)/ai*100:0;return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start"}}><div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>💰 대출가능액 역산</h3><Inp label="연 소득" value={inc} onChange={sInc} suffix="만원" placeholder="예: 5000"/><Tog label="DSR 기준" value={dsrLim} onChange={sDsrLim} options={[{value:"40",label:"은행 40%"},{value:"50",label:"비은행 50%"}]}/><Inp label="대출 금리" value={rt} onChange={sRt} suffix="%" placeholder="예: 3.5"/><Sel label="대출 기간" value={yr} onChange={sYr} options={[5,10,15,20,25,30,35,40].map(y=>({value:String(y),label:y+"년"}))}/><Inp label="기존 대출 월 상환액" value={ep} onChange={sEp} suffix="만원" placeholder="없으면 0"/></div>{ai>0&&r>0?<RP title="최대 대출가능액" total={Math.max(0,maxLoan)} sub={"DSR "+dsrLim+"% 기준"} items={[{l:"연 소득",v:fW(ai)},{l:"DSR 한도 내 연 상환 가능액",v:fW(maxAnnual)},{l:"기존 대출 연 상환액",v:fW(epW*12)},{l:"신규 월 상환 가능액",v:fW(Math.max(0,maxMonthly))},{l:"최대 대출가능액",v:fW(Math.max(0,maxLoan))},{l:"적용 DSR",v:fP(actualDsr)}]}/>:<Empty icon="💰"/>}</div>);}
+
+/* 보유세 통합 */
+function CalcHoldTax(){const[h,sH]=useState("1");const[p,sP]=useState("");const pW=tW(p);const n=parseInt(h);const ptBase=pW*0.6;const PTB=[[6e7,.001],[1.5e8,.0015],[3e8,.0025],[Infinity,.004]];const ptTax=pTx(ptBase,PTB);const ptCity=Math.round(ptTax*0.14);const ptEdu=Math.round(ptTax*0.2);const ptTotal=ptTax+ptCity+ptEdu;const cDed=n===1?12e8:9e8;const cBase=Math.max(0,(pW-cDed)*0.6);const CTB=[[3e8,.005],[6e8,.007],[12e8,.01],[25e8,.013],[50e8,.02],[94e8,.022],[Infinity,.027]];const cTax=pTx(cBase,CTB);const cFarm=Math.round(cTax*0.2);const cTotal=cTax+cFarm;const grand=ptTotal+cTotal;return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start"}}><div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>🏛️ 보유세 통합 계산</h3><Radio label="주택 수" value={h} onChange={sH} options={[{value:"1",label:"1주택"},{value:"2",label:"2주택"},{value:"3",label:"3주택 이상"}]}/><Inp label="주택 공시가격" value={p} onChange={sP} suffix="만원" placeholder="예: 150000"/></div>{pW>0?<RP title="연간 보유세 합계" total={grand} sub={"공시가 "+fW(pW)+" 기준"} items={[{l:"재산세",v:fW(ptTax)},{l:"도시지역분 (14%)",v:fW(ptCity)},{l:"지방교육세 (20%)",v:fW(ptEdu)},{l:"재산세 소계",v:fW(ptTotal)},{l:"종부세 (공제 "+(cDed/1e8)+"억)",v:fW(cTax)},{l:"농특세 (20%)",v:fW(cFarm)},{l:"종부세 소계",v:fW(cTotal)}]}/>:<Empty icon="🏛️"/>}</div>);}
+
+/* 인지세 */
+function CalcStamp(){const[p,sP]=useState("");const pW=tW(p);let stamp=0;if(pW>30e8)stamp=500000;else if(pW>10e8)stamp=350000;else if(pW>1e8)stamp=150000;const half=Math.round(stamp/2);return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start"}}><div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>📃 인지세 계산</h3><Inp label="거래금액" value={p} onChange={sP} suffix="만원" placeholder="예: 90000"/><div style={{padding:"14px 16px",background:P.lt,borderRadius:10,fontSize:13,color:"#4a5568",lineHeight:1.6,marginTop:8}}>• 1억 이하: 비과세<br/>• 1억~10억: 15만원<br/>• 10억~30억: 35만원<br/>• 30억 초과: 50만원</div></div>{pW>0?<RP title="인지세" total={stamp} sub={stamp===0?"비과세 구간":"매도·매수인 각 50% 부담"} items={[{l:"거래금액",v:fW(pW)},{l:"인지세액",v:fW(stamp)},{l:"매도인 부담",v:fW(half)},{l:"매수인 부담",v:fW(half)}]}/>:<Empty icon="📃"/>}</div>);}
+
+/* 국민주택채권 할인료 */
+function CalcBond(){const[p,sP]=useState("");const[area,sArea]=useState("seoul");const[use,sUse]=useState("house");const pW=tW(p);let bondRate=0;if(use==="house"){if(area==="seoul"){bondRate=pW>6e8?0.05:pW>1.6e8?0.04:0.03;}else if(area==="metro"){bondRate=pW>6e8?0.04:pW>1.6e8?0.03:0.02;}else{bondRate=pW>6e8?0.03:pW>1.6e8?0.02:0.01;}}else{bondRate=area==="seoul"?0.05:area==="metro"?0.04:0.03;}const bondAmt=Math.round(pW*bondRate);const discountRate=0.045;const discountCost=Math.round(bondAmt*discountRate);return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start"}}><div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>📜 국민주택채권 할인비용</h3><Inp label="매매 가격" value={p} onChange={sP} suffix="만원" placeholder="예: 90000"/><Tog label="지역" value={area} onChange={sArea} options={[{value:"seoul",label:"서울"},{value:"metro",label:"광역시"},{value:"etc",label:"기타 지역"}]}/><Tog label="용도" value={use} onChange={sUse} options={[{value:"house",label:"주택"},{value:"commercial",label:"상가·오피스텔"}]}/></div>{pW>0?<RP title="채권 할인비용" total={discountCost} sub={"매입률 "+fP(bondRate*100)+" · 할인율 "+fP(discountRate*100)} items={[{l:"매매가격",v:fW(pW)},{l:"채권매입률",v:fP(bondRate*100)},{l:"채권매입액",v:fW(bondAmt)},{l:"할인율 (시세)",v:fP(discountRate*100)},{l:"실제 부담 할인비용",v:fW(discountCost)}]}/>:<Empty icon="📜"/>}</div>);}
+
+/* 예적금이자 */
+function CalcDeposit(){const[amt,sAmt]=useState("");const[rt,sRt]=useState("");const[mon,sMon]=useState("12");const[ty,sTy]=useState("saving");const[tax,sTax]=useState("normal");const amtW=tW(amt),r=pN(rt)/100,m=parseInt(mon);const taxRate=tax==="normal"?0.154:tax==="preferential"?0.095:0;let interest=0;if(ty==="saving"){interest=amtW*r*m/12;}else{interest=amtW*r*(m+1)/24*m/m;}const taxAmt=Math.round(interest*taxRate);const afterTax=interest-taxAmt;const total=amtW+afterTax;return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start"}}><div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>🏦 예적금 이자 계산</h3><Inp label={ty==="saving"?"예금 원금":"월 납입액"} value={amt} onChange={sAmt} suffix="만원" placeholder="예: 1000"/><Inp label="연이율" value={rt} onChange={sRt} suffix="%" placeholder="예: 3.5"/><Sel label="기간" value={mon} onChange={sMon} options={[3,6,12,18,24,36].map(m=>({value:String(m),label:m+"개월"}))}/><Tog label="상품 유형" value={ty} onChange={sTy} options={[{value:"saving",label:"예금 (거치식)"},{value:"installment",label:"적금 (적립식)"}]}/><Tog label="세금 유형" value={tax} onChange={sTax} options={[{value:"normal",label:"일반 (15.4%)"},{value:"preferential",label:"세금우대 (9.5%)"},{value:"exempt",label:"비과세"}]}/></div>{amtW>0&&r>0?<RP title="세후 수령액" total={total} sub={tax==="exempt"?"비과세 적용":"세율 "+fP(taxRate*100)+" 적용"} items={[{l:ty==="saving"?"예금 원금":"총 납입액",v:fW(ty==="saving"?amtW:amtW*m)},{l:"세전 이자",v:fW(interest)},{l:"이자소득세",v:"-"+fW(taxAmt)},{l:"세후 이자",v:fW(afterTax)},{l:"세후 총 수령액",v:fW(total)}]}/>:<Empty icon="🏦"/>}</div>);}
+
+/* 용적률·건폐율 */
+function CalcFAR(){const[land,sLand]=useState("");const[build,sBuild]=useState("");const[floor,sFloor]=useState("");const[base,sBase]=useState("");const landV=pN(land),buildV=pN(build),floorV=pN(floor),baseV=pN(base);const bcr=landV>0?buildV/landV*100:0;const far=landV>0?(floorV-baseV)/landV*100:0;const zones=[{z:"제1종 전용주거",b:"50%",f:"100%"},{z:"제2종 전용주거",b:"50%",f:"150%"},{z:"제1종 일반주거",b:"60%",f:"200%"},{z:"제2종 일반주거",b:"60%",f:"250%"},{z:"제3종 일반주거",b:"50%",f:"300%"},{z:"준주거",b:"70%",f:"500%"},{z:"일반상업",b:"80%",f:"1300%"},{z:"준공업",b:"70%",f:"400%"}];return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start"}}><div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>🏗️ 용적률·건폐율 계산</h3><Inp label="대지면적" value={land} onChange={sLand} placeholder="㎡"/><Inp label="건축면적 (1층 바닥)" value={build} onChange={sBuild} placeholder="㎡"/><Inp label="연면적 (전체 층 합계)" value={floor} onChange={sFloor} placeholder="㎡"/><Inp label="지하면적" value={base} onChange={sBase} placeholder="㎡ (없으면 0)"/>{landV>0&&buildV>0&&<div style={{padding:16,background:P.lt,borderRadius:12,textAlign:"center"}}><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}}><div><div style={{fontSize:12,color:P.mt}}>건폐율</div><div style={{fontSize:28,fontWeight:800,color:P.pri}}>{bcr.toFixed(1)}%</div></div><div><div style={{fontSize:12,color:P.mt}}>용적률</div><div style={{fontSize:28,fontWeight:800,color:P.pri}}>{far.toFixed(1)}%</div></div></div></div>}</div><div><h4 style={{fontSize:14,fontWeight:700,color:P.tx,margin:"0 0 12px"}}>용도지역별 법정한도</h4><div style={{background:P.card,borderRadius:12,border:`1px solid ${P.bd}`,overflow:"hidden"}}><div style={{display:"flex",padding:"8px 16px",background:P.lt,fontWeight:600,fontSize:12,color:P.pri}}><span style={{flex:1}}>용도지역</span><span style={{width:60,textAlign:"right"}}>건폐율</span><span style={{width:60,textAlign:"right"}}>용적률</span></div>{zones.map((z,i)=>(<div key={i} style={{display:"flex",padding:"8px 16px",borderBottom:i<zones.length-1?`1px solid ${P.lt}`:"none",fontSize:13}}><span style={{flex:1,color:P.tx}}>{z.z}</span><span style={{width:60,textAlign:"right",color:P.mt}}>{z.b}</span><span style={{width:60,textAlign:"right",color:P.mt}}>{z.f}</span></div>))}</div></div></div>);}
+
+/* 임대소득세 */
+function CalcRental(){const[h,sH]=useState("2");const[ri,sRi]=useState("");const[er,sEr]=useState("50");const[bd,sBd]=useState("200");const[mode,sMode]=useState("sep");const riW=tW(ri);const erV=pN(er)/100;const bdW=tW(bd)*10000;const n=parseInt(h);const sepBase=Math.max(0,riW*(1-erV)-bdW);const sepTax=Math.round(sepBase*0.14);const compBase=Math.max(0,riW-riW*0.6-2500000);const compTax=pTx(compBase,IB);const better=sepTax<=compTax?"분리과세":"종합과세";const isExempt=n===1&&riW<=0;return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start"}}><div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>🏘️ 주택임대소득세</h3><Radio label="주택 수" value={h} onChange={sH} options={[{value:"1",label:"1주택 (기준시가 12억↑만 과세)"},{value:"2",label:"2주택"},{value:"3",label:"3주택 이상"}]}/><Inp label="연간 임대수입" value={ri} onChange={sRi} suffix="만원" placeholder="예: 1500"/><Inp label="필요경비율" value={er} onChange={sEr} suffix="%" note="분리과세 시 50%, 등록임대 60%"/><Inp label="기본공제" value={bd} onChange={sBd} suffix="만원" note="미등록 200만, 등록 400만"/><Tog label="과세 방식" value={mode} onChange={sMode} options={[{value:"sep",label:"분리과세 (14%)"},{value:"comp",label:"종합과세 (6~45%)"}]}/></div>{riW>0?<RP title={mode==="sep"?"분리과세 임대소득세":"종합과세 임대소득세"} total={mode==="sep"?sepTax:compTax} sub={"유리한 방식: "+better} items={[{l:"연간 임대수입",v:fW(riW)},{l:"분리과세액 (14%)",v:fW(sepTax)},{l:"종합과세 참고액",v:fW(compTax)},{l:"유리한 방식",v:better}]}/>:<Empty icon="🏘️"/>}</div>);}
+
+const CM={acquisition:CalcAcq,transfer:CalcTrans,compre:CalcCompre,property:CalcProp,gift:CalcGift,inherit:CalcInherit,mortgage:CalcMort,dsr:CalcDSR,dti:CalcDTI,ltv:CalcLTV,commission:CalcComm,registration:CalcReg,legal:CalcLegal,yield:CalcYield,area:CalcArea,convert:CalcConvert,joint:CalcJoint,totalcost:CalcTotalCost,compare:CalcCompare,invest:CalcInvest,loanmax:CalcLoanMax,holdtax:CalcHoldTax,stamp:CalcStamp,bond:CalcBond,deposit:CalcDeposit,far:CalcFAR,rental:CalcRental};
 
 
 /* ── 관련 계산기 매핑 ── */
@@ -238,6 +259,13 @@ const RELATED={
   joint:["compre","transfer"],
   convert:["yield"],
   yield:["convert","mortgage"],
+  loanmax:["dsr","dti","ltv","mortgage"],
+  holdtax:["property","compre"],
+  stamp:["registration"],
+  bond:["registration","legal"],
+  deposit:["mortgage"],
+  far:["joint"],
+  rental:["yield","property"],
 };
 
 /* ── 절세 팁 (계산기별) ── */
@@ -287,6 +315,13 @@ const TIPS={
   totalcost:[{title:"총비용은 매수가의 3~5%",body:"1주택 비규제 기준, 취득세+등기+법무사+중개보수 합산 약 3~5%."}],
   compare:[{title:"종합 비교 필수",body:"단순 세금 외 향후 양도세·보유세·이전비용까지 종합 비교. 세무사 상담 병행."}],
   invest:[{title:"세후 수익률이 핵심",body:"시세차익만 보지 말고 취득세·보유세·양도세·이자 모두 차감한 세후 수익률로 판단."}],
+  loanmax:[{title:"대출 기간을 늘려 한도 확보",body:"30년→40년으로 변경하면 월 상환액이 줄어 DSR 여유가 생기고 대출 가능액이 10~15% 증가."},{title:"기존 대출 정리가 핵심",body:"신용대출·카드론을 먼저 상환하면 DSR이 개선되어 주담대 한도가 크게 오름."}],
+  holdtax:[{title:"공동명의로 종부세 절세",body:"공시가 12~18억 구간에서 부부 공동명의(각 9억 공제, 합 18억)가 단독(12억)보다 유리."},{title:"재산세+종부세 합산 확인",body:"보유세 부담은 재산세와 종부세를 합산해야 실제 부담액을 알 수 있음."}],
+  stamp:[{title:"1억 이하 비과세",body:"매매가 1억 이하 거래는 인지세 면제. 소액 부동산 거래 시 유리."},{title:"전자수입인지 구매",body:"인터넷에서 전자수입인지를 구매하면 편리. 등기 신청 시 제출."}],
+  bond:[{title:"즉시매도로 할인비용만 부담",body:"국민주택채권을 매입 즉시 매도하면 할인비용(4~5%)만 실제 부담. 보유 불필요."},{title:"지역별 매입률 차이",body:"서울 5%, 광역시 4%, 기타 3% 등 지역에 따라 매입률이 다름."}],
+  deposit:[{title:"비과세 상품 활용",body:"ISA, 청년희망적금 등 비과세·감면 상품 활용 시 이자소득세 절약."},{title:"세금우대 9.5% 확인",body:"조합·새마을금고 등 세금우대(9.5%) 상품은 일반(15.4%)보다 세금 절약."}],
+  far:[{title:"용적률은 지하 제외",body:"용적률 산정 시 지하층 면적은 제외됨. 지상층 연면적만 포함."},{title:"용도지역별 한도 확인",body:"제1종 전용주거 50~100%, 일반상업 400~1300% 등 용도지역에 따라 법정 한도가 다름."}],
+  rental:[{title:"2천만원 이하 분리과세 유리",body:"연 임대소득 2천만원 이하면 14% 분리과세가 종합과세보다 대부분 유리."},{title:"1주택자 비과세 요건",body:"1주택자는 기준시가 12억 이하 주택 임대소득 비과세. 12억 초과 시만 과세."}],
 };
 
 /* ── 용어 사전 (계산기별) ── */
@@ -302,6 +337,13 @@ const GLOSSARY={
   ltv:[{term:"LTV",def:"주택가격 대비 대출 가능 비율"},{term:"조정대상지역",def:"규제 지역, LTV 50%"}],
   commission:[{term:"상한요율",def:"법정 최대 수수료율"},{term:"부가가치세",def:"중개보수에 10% (간이 4%) 추가"}],
   mortgage:[{term:"원리금균등",def:"매월 동일 금액 납부"},{term:"원금균등",def:"매월 동일 원금+잔여이자"},{term:"만기일시",def:"이자만 납부, 만기에 원금"}],
+  loanmax:[{term:"대출가능액",def:"DSR 한도 내에서 빌릴 수 있는 최대 금액"},{term:"원리금균등상환",def:"매월 원금+이자 합계가 동일한 상환 방식"},{term:"DSR 한도",def:"은행 40%, 비은행 50% 이내"}],
+  holdtax:[{term:"보유세",def:"재산세+종부세를 합산한 부동산 보유 관련 총 세금"},{term:"공시가격",def:"정부가 매년 공시하는 부동산 기준가격"},{term:"공정시장가액비율",def:"과세표준 산정 시 적용하는 비율 (현재 60%)"}],
+  stamp:[{term:"인지세",def:"일정 금액 이상 부동산 거래 계약서에 부과되는 국세"},{term:"전자수입인지",def:"인터넷으로 구매·출력하는 수입인지"}],
+  bond:[{term:"국민주택채권",def:"부동산 등기 시 의무 매입하는 채권"},{term:"할인율",def:"채권을 즉시 매도할 때 적용되는 할인 비율 (약 4~5%)"},{term:"채권매입률",def:"부동산 가액 대비 매입해야 하는 채권 비율"}],
+  deposit:[{term:"단리",def:"원금에만 이자가 붙는 방식"},{term:"복리",def:"이자에도 이자가 붙는 방식"},{term:"이자소득세",def:"이자소득에 부과되는 세금 (일반 15.4%)"}],
+  far:[{term:"용적률",def:"대지면적 대비 지상 연면적의 비율 (%)"},{term:"건폐율",def:"대지면적 대비 건축면적(1층 바닥)의 비율 (%)"},{term:"연면적",def:"건물 각 층 바닥면적의 합계"}],
+  rental:[{term:"분리과세",def:"다른 소득과 합산하지 않고 14% 단일세율 적용"},{term:"종합과세",def:"다른 소득과 합산하여 6~45% 누진세율 적용"},{term:"필요경비율",def:"임대소득에서 경비로 인정하는 비율 (분리과세 50%)"}],
 };
 
 /* ── 규정 타임라인 (계산기별) ── */
@@ -315,6 +357,11 @@ const REGS={
   dsr:[{y:"2025",t:"스트레스 DSR 3단계 예정"},{y:"2024",t:"스트레스 DSR 2단계 (9월)"},{y:"2023",t:"DSR 3단계 (1억↑)"},{y:"2022",t:"DSR 2단계 (2억↑)"}],
   ltv:[{y:"2025",t:"15억↑ 주담대 허용 추진"},{y:"2023",t:"생애최초 LTV 80%"}],
   commission:[{y:"2021",t:"요율표 전면 개정"}],
+  loanmax:[{y:"2025",t:"스트레스 DSR 3단계 시행 예정"},{y:"2024",t:"스트레스 DSR 2단계 적용"}],
+  holdtax:[{y:"2025",t:"종부세 세율 완화 추진"},{y:"2023",t:"공정시장가액비율 60% 유지"}],
+  stamp:[{y:"2023",t:"전자수입인지 의무화"},{y:"2007",t:"인지세 구간 개정"}],
+  bond:[{y:"2024",t:"채권할인율 시장금리 연동 변동"},{y:"2023",t:"매입률 조정"}],
+  rental:[{y:"2025",t:"임대소득 과세 강화 논의"},{y:"2019",t:"2천만원 이하 분리과세 시행"}],
 };
 
 /* ── 학습 센터 ── */
