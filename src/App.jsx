@@ -107,7 +107,7 @@ const P={"pri":"#0747A6","pl":"#0052CC","bg":"#f8f9fc","card":"#ffffff","bd":"#d
 
 /* ── 업데이트 로그 ── */
 const UPDATE_LOG=[
-  {date:"2026.04.04",items:[{cat:"전체",title:"라이브 데이터 자동 업데이트 시스템 구축",desc:"매일 자동으로 기준금리·규제지역·세법 변경사항을 검증하고 사이트에 반영하는 시스템 가동. 하드코딩 제거."},{cat:"전체",title:"이달의 세무 캘린더 기능 오픈",desc:"월별 세금 신고·납부 일정 + 공과금 납부일 + 절세 팁. 이전달/다음달 네비게이션 지원."},{cat:"생활",title:"자동차세·4대보험료·국민연금 수령액 계산기 추가",desc:"배기량별 자동차세, 2026년 4대보험 요율, 국민연금 예상수령액 계산 기능 오픈."},{cat:"세금",title:"종합소득세·연말정산·연봉 실수령액 추가",desc:"근로·사업·프리랜서 종합소득세, 직장인 연말정산 환급액, 연봉 실수령액 계산기 신규 오픈."},{cat:"전체",title:"카테고리 6개 재구성 (37가지 계산기)",desc:"세금·대출·비용·생활·부동산·PRO 6개 카테고리로 재편성. 인기 계산기 8개로 확대."}]},
+  {date:"2026.04.04",items:[{cat:"전체",title:"라이브 데이터 자동 업데이트 시스템 구축",desc:"매일 자동으로 기준금리·규제지역·세법 변경사항을 검증하고 사이트에 반영하는 시스템 가동. 하드코딩 제거."},{cat:"전체",title:"이달의 세무 캘린더 기능 오픈",desc:"월별 세금 신고·납부 일정 + 공과금 납부일 + 절세 팁. 이전달/다음달 네비게이션 지원."},{cat:"생활",title:"자동차세·4대보험료·국민연금 수령액 계산기 추가",desc:"배기량별 자동차세, 2026년 4대보험 요율, 국민연금 예상수령액 계산 기능 오픈."},{cat:"세금",title:"종합소득세·연말정산·연봉 실수령액 추가",desc:"근로·사업·프리랜서 종합소득세, 직장인 연말정산 환급액, 연봉 실수령액 계산기 신규 오픈."},{cat:"전체",title:"카테고리 6개 재구성 (39가지 계산기)",desc:"세금·대출·비용·생활·부동산·PRO 6개 카테고리로 재편성. 인기 계산기 8개로 확대."}]},
   {date:"2026.03.15",items:[{cat:"세금",title:"2026년 세법 개정사항 반영",desc:"취득세 중과 완화안, 종부세 가액비율 조정, 양도세 장특공제 요건 변경 등 2026년 시행 세법 반영."},{cat:"대출",title:"2026년 기준금리 변동 반영",desc:"한국은행 기준금리 변경에 따른 전월세 전환율 상한 자동 업데이트."},{cat:"전체",title:"SEO 전면 최적화",desc:"제목·설명·키워드 네이버 글자수 기준 최적화. JSON-LD FAQ 추가. 검색 상위노출 강화."}]},
   {date:"2026.02.20",items:[{cat:"전체",title:"매일 자동 세법 검증 워크플로우 가동",desc:"GitHub Actions 기반 매일 세법·대출규제·수수료·정부정책·금리 5개 영역 자동 검증 시작."},{cat:"전체",title:"공유하기 기능 개선",desc:"계산 결과 상세 내역이 포함된 텍스트 복사. 카카오톡·메신저 공유 최적화."}]},
   {date:"2026.02.01",items:[{cat:"전체",title:"SEO 100점 달성",desc:"H1 단일화, robots.txt Sitemap 참조, canonical URL 퓨니코드 통일로 SEO 점수 100점 달성."},{cat:"전체",title:"업데이트 내역 섹션 추가",desc:"서비스 오픈 이후 모든 변경사항을 투명하게 공개하는 업데이트 로그 기능 추가."}]},
@@ -191,7 +191,7 @@ const CL=[
   {id:"acquisition",l:"취득세",c:"tax"},{id:"transfer",l:"양도소득세",c:"tax"},{id:"inctax",l:"종합소득세",c:"tax"},{id:"yearend",l:"연말정산",c:"tax"},{id:"compre",l:"종부세",c:"tax"},{id:"property",l:"재산세",c:"tax"},{id:"gift",l:"증여세",c:"tax"},{id:"inherit",l:"상속세",c:"tax"},{id:"holdtax",l:"보유세 통합",c:"tax"},{id:"rental",l:"임대소득세",c:"tax"},
   {id:"mortgage",l:"대출이자",c:"loan"},{id:"dsr",l:"DSR",c:"loan"},{id:"dti",l:"DTI",c:"loan"},{id:"ltv",l:"LTV·대출한도",c:"loan"},{id:"loanmax",l:"대출가능액",c:"loan"},
   {id:"commission",l:"중개보수",c:"cost"},{id:"registration",l:"등기비용",c:"cost"},{id:"legal",l:"법무사수수료",c:"cost"},{id:"stamp",l:"인지세",c:"cost"},{id:"bond",l:"채권할인료",c:"cost"},{id:"appraisal",l:"감정평가수수료",c:"cost"},
-  {id:"netsalary",l:"연봉 실수령액",c:"life"},{id:"insurance4",l:"4대보험료",c:"life"},{id:"pension",l:"국민연금 수령액",c:"life"},{id:"cartax",l:"자동차세",c:"life"},{id:"deposit",l:"예적금이자",c:"life"},{id:"convert",l:"전월세전환",c:"life"},
+  {id:"netsalary",l:"연봉 실수령액",c:"life"},{id:"insurance4",l:"4대보험료",c:"life"},{id:"pension",l:"국민연금 수령액",c:"life"},{id:"cartax",l:"자동차세",c:"life"},{id:"retire",l:"퇴직금",c:"life"},{id:"unemploy",l:"실업급여",c:"life"},{id:"deposit",l:"예적금이자",c:"life"},{id:"convert",l:"전월세전환",c:"life"},
   {id:"yield",l:"임대수익률",c:"realestate"},{id:"joint",l:"공동명의",c:"realestate"},{id:"area",l:"평수변환",c:"realestate"},{id:"far",l:"용적률·건폐율",c:"realestate"},{id:"auction",l:"경매비용",c:"realestate"},{id:"remodel",l:"리모델링수익",c:"realestate"},{id:"bldvalue",l:"건물잔존가치",c:"realestate"},
   {id:"totalcost",l:"총비용 시뮬레이터",c:"pro"},{id:"compare",l:"세금비교 분석",c:"pro"},{id:"invest",l:"투자수익 분석",c:"pro"},
 ];
@@ -523,6 +523,30 @@ function CalcPension(){const[age,sAge]=useState("35");const[salary,sSal]=useStat
     </div>
   </div>:<Empty icon="👴" msg="급여 정보를 입력하세요"/>}</div>);}
 
+/* 퇴직금 */
+function CalcRetire(){const[monthly,sM]=useState("");const[years,sY]=useState("");const[months,sMo]=useState("0");
+  const monthlyW=tW(monthly),y=parseInt(years)||0,m=parseInt(months)||0,totalDays=y*365+m*30;
+  const severance=Math.round(monthlyW*totalDays/365);
+  const taxBase=Math.max(0,severance-severance*0.4);const retireTax=y>0?pTx(taxBase/y,IB)*y*0.7:0;
+  return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start"}}><div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>💼 퇴직금 계산기</h3>
+    <Inp label="최근 3개월 평균 월급 (세전)" value={monthly} onChange={sM} suffix="만원" placeholder="예: 400"/>
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}><Inp label="근속 년수" value={years} onChange={sY} suffix="년" placeholder="예: 5"/><Sel label="추가 개월수" value={months} onChange={sMo} options={Array.from({length:12},(_,i)=>({value:String(i),label:i+"개월"}))}/></div>
+    <div style={{padding:"12px 16px",background:P.lt,borderRadius:10,fontSize:12,color:"#6b778c",lineHeight:1.6,marginTop:8}}>※ 퇴직금 = 1일 평균임금 × 30일 × (근속일수/365) / ※ 1년 이상 근무 시 수령 자격</div>
+  </div>{monthlyW>0&&y>=1?<RP title="예상 퇴직금" total={severance} sub={y+"년 "+m+"개월 근속 기준"} items={[{l:"월 평균임금",v:fW(monthlyW)},{l:"근속기간",v:y+"년 "+m+"개월 ("+totalDays+"일)"},{l:"퇴직금 (세전)",v:fW(severance)},{l:"퇴직소득세 (추정)",v:fW(Math.round(retireTax))},{l:"실수령 퇴직금 (추정)",v:fW(severance-Math.round(retireTax))}]}/>:<Empty icon="💼" msg="월급과 근속기간을 입력하세요"/>}</div>);}
+
+/* 실업급여 */
+function CalcUnemploy(){const[age,sAge]=useState("30");const[years,sY]=useState("3");const[daily,sD]=useState("");
+  const dailyW=tW(daily)/10000*10000;const ageV=parseInt(age),yV=parseInt(years);
+  const minWage2026=10030,minDaily=Math.round(minWage2026*8*0.8),maxDaily=66000;
+  const calcDaily=dailyW>0?Math.min(Math.max(Math.round(dailyW*0.6),minDaily),maxDaily):0;
+  let duration=120;if(ageV<50){if(yV>=10)duration=210;else if(yV>=5)duration=180;else if(yV>=3)duration=150;else if(yV>=1)duration=120;}else{if(yV>=10)duration=270;else if(yV>=5)duration=240;else if(yV>=3)duration=210;else if(yV>=1)duration=180;}
+  const totalAmount=calcDaily*duration,monthlyAmount=Math.round(calcDaily*30);
+  return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start"}}><div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>🏢 실업급여 계산기</h3>
+    <Inp label="퇴직 전 1일 평균임금" value={daily} onChange={sD} suffix="원" placeholder="예: 150000" note="최근 3개월 급여총액 ÷ 근무일수"/>
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}><Sel label="퇴직 시 나이" value={age} onChange={sAge} options={[{value:"30",label:"50세 미만"},{value:"50",label:"50세 이상"}]}/><Sel label="고용보험 가입기간" value={years} onChange={sY} options={[{value:"1",label:"1~3년 미만"},{value:"3",label:"3~5년"},{value:"5",label:"5~10년"},{value:"10",label:"10년 이상"}]}/></div>
+    <div style={{padding:"12px 16px",background:P.lt,borderRadius:10,fontSize:12,color:"#6b778c",lineHeight:1.6,marginTop:8}}>※ 자발적 퇴직은 원칙적 수급 불가 (예외 있음) / ※ 실업급여 = 평균임금 60% (하한: 최저임금 80%)</div>
+  </div>{dailyW>0?<RP title="실업급여 예상" total={monthlyAmount} sub={"월 수령액 기준 · 최대 "+duration+"일"} items={[{l:"1일 평균임금",v:fmt(dailyW)+"원"},{l:"1일 실업급여액 (60%)",v:fmt(calcDaily)+"원"},{l:"하한액 (최저임금80%)",v:fmt(minDaily)+"원"},{l:"수급 기간",v:duration+"일 (약 "+(duration/30).toFixed(1)+"개월)"},{l:"월 수령액 (30일)",v:fmt(monthlyAmount)+"원"},{l:"총 수령액",v:fmt(totalAmount)+"원"}]}/>:<Empty icon="🏢" msg="평균임금을 입력하세요"/>}</div>);}
+
 /* 자동차세 */
 function CalcCarTax(){const[carType,sCT]=useState("normal");const[cc,sCC]=useState("2000");const[year,sYear]=useState("0");const[isElec,sElec]=useState("no");
   const ccVal=parseInt(cc)||0,yearVal=parseInt(year)||0;let baseTax=0;
@@ -562,7 +586,7 @@ function CalcInsurance4(){const[type,sType]=useState("worker");const[salary,sSal
     </div>
   </div>:<Empty icon="🏥" msg="월 급여를 입력하세요"/>}</div>);}
 
-const CM={acquisition:CalcAcq,transfer:CalcTrans,compre:CalcCompre,property:CalcProp,gift:CalcGift,inherit:CalcInherit,mortgage:CalcMort,dsr:CalcDSR,dti:CalcDTI,ltv:CalcLTV,commission:CalcComm,registration:CalcReg,legal:CalcLegal,yield:CalcYield,area:CalcArea,convert:CalcConvert,joint:CalcJoint,totalcost:CalcTotalCost,compare:CalcCompare,invest:CalcInvest,loanmax:CalcLoanMax,holdtax:CalcHoldTax,stamp:CalcStamp,bond:CalcBond,deposit:CalcDeposit,far:CalcFAR,rental:CalcRental,inctax:CalcIncTax,yearend:CalcYearEnd,netsalary:CalcNetSalary,cartax:CalcCarTax,insurance4:CalcInsurance4,pension:CalcPension,appraisal:CalcAppraisal,auction:CalcAuction,remodel:CalcRemodel,bldvalue:CalcBldValue};
+const CM={acquisition:CalcAcq,transfer:CalcTrans,compre:CalcCompre,property:CalcProp,gift:CalcGift,inherit:CalcInherit,mortgage:CalcMort,dsr:CalcDSR,dti:CalcDTI,ltv:CalcLTV,commission:CalcComm,registration:CalcReg,legal:CalcLegal,yield:CalcYield,area:CalcArea,convert:CalcConvert,joint:CalcJoint,totalcost:CalcTotalCost,compare:CalcCompare,invest:CalcInvest,loanmax:CalcLoanMax,holdtax:CalcHoldTax,stamp:CalcStamp,bond:CalcBond,deposit:CalcDeposit,far:CalcFAR,rental:CalcRental,inctax:CalcIncTax,yearend:CalcYearEnd,netsalary:CalcNetSalary,cartax:CalcCarTax,insurance4:CalcInsurance4,pension:CalcPension,retire:CalcRetire,unemploy:CalcUnemploy,appraisal:CalcAppraisal,auction:CalcAuction,remodel:CalcRemodel,bldvalue:CalcBldValue};
 
 
 /* ── 관련 계산기 매핑 ── */
@@ -1081,6 +1105,8 @@ const DESC={
   netsalary:"연봉에서 세금·4대보험 빼고 실수령액",
   cartax:"배기량·연식별 자동차세 계산",
   insurance4:"국민연금·건강·고용·산재 보험료",
+  retire:"근속연수별 퇴직금 + 퇴직소득세",
+  unemploy:"고용보험 실업급여 수급액",
   pension:"국민연금 예상 월 수령액 계산",
   mortgage:"원리금균등·원금균등·만기일시 이자",
   dsr:"연소득 대비 총 부채 상환비율",
@@ -1139,7 +1165,7 @@ export default function App(){
   const goCalc=(cId)=>{const info=CL.find(c=>c.id===cId);if(info)navigateCalc(info.c,info.id);};
   const hash=useHashRoute();
   useEffect(()=>{if(hash&&SLUG_REVERSE[hash]){const cId=SLUG_REVERSE[hash];const it=CL.find(c=>c.id===cId);if(it){setCat(it.c);setCalc(cId);setPage("calc");}}else if(!hash){setPage("home");}},[hash]);
-  useEffect(()=>{if(page==="calc"&&calc&&PAGE_META[calc]){const m=PAGE_META[calc];document.title=m.title;document.querySelector('meta[name="description"]')?.setAttribute('content',m.desc);document.querySelector('meta[property="og:title"]')?.setAttribute('content',m.title);document.querySelector('meta[property="og:description"]')?.setAttribute('content',m.desc);}else{document.title="생활계산기 - 세금 연말정산 연봉 부동산 종합계산기";document.querySelector('meta[name="description"]')?.setAttribute('content',"취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 4대보험 국민연금 자동차세 등 37가지 무료 계산기. 2026 최신 세법 반영.");}let ld=document.getElementById('dynamic-jsonld');if(!ld){ld=document.createElement('script');ld.id='dynamic-jsonld';ld.type='application/ld+json';document.head.appendChild(ld);}if(page==="calc"&&calc&&PAGE_META[calc]){ld.textContent=JSON.stringify({"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":PAGE_META[calc].title.split(' | ')[0],"description":PAGE_META[calc].desc,"url":"https://xn--989a00a691bdfa717h.com/#/"+SLUGS[calc],"applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"홈","item":"https://xn--989a00a691bdfa717h.com/"},{"@type":"ListItem","position":2,"name":CATS.find(c=>c.id===cat)?.l||"","item":"https://xn--989a00a691bdfa717h.com/"},{"@type":"ListItem","position":3,"name":CL.find(c=>c.id===calc)?.l||"","item":"https://xn--989a00a691bdfa717h.com/#/"+SLUGS[calc]}]}]});}else{ld.textContent='';}},[page,calc]);
+  useEffect(()=>{if(page==="calc"&&calc&&PAGE_META[calc]){const m=PAGE_META[calc];document.title=m.title;document.querySelector('meta[name="description"]')?.setAttribute('content',m.desc);document.querySelector('meta[property="og:title"]')?.setAttribute('content',m.title);document.querySelector('meta[property="og:description"]')?.setAttribute('content',m.desc);}else{document.title="생활계산기 - 세금 연말정산 연봉 부동산 종합계산기";document.querySelector('meta[name="description"]')?.setAttribute('content',"취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 4대보험 국민연금 자동차세 등 39가지 무료 계산기. 2026 최신 세법 반영.");}let ld=document.getElementById('dynamic-jsonld');if(!ld){ld=document.createElement('script');ld.id='dynamic-jsonld';ld.type='application/ld+json';document.head.appendChild(ld);}if(page==="calc"&&calc&&PAGE_META[calc]){ld.textContent=JSON.stringify({"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":PAGE_META[calc].title.split(' | ')[0],"description":PAGE_META[calc].desc,"url":"https://xn--989a00a691bdfa717h.com/#/"+SLUGS[calc],"applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"홈","item":"https://xn--989a00a691bdfa717h.com/"},{"@type":"ListItem","position":2,"name":CATS.find(c=>c.id===cat)?.l||"","item":"https://xn--989a00a691bdfa717h.com/"},{"@type":"ListItem","position":3,"name":CL.find(c=>c.id===calc)?.l||"","item":"https://xn--989a00a691bdfa717h.com/#/"+SLUGS[calc]}]}]});}else{ld.textContent='';}},[page,calc]);
   const Comp=CM[calc]||(()=><Placeholder l={CL.find(c=>c.id===calc)?.l||calc}/>);
   const catInfo=CATS.find(c=>c.id===cat);
   const searchResults=search.trim()?CL.filter(c=>(c.l+"|"+(DESC[c.id]||"")).includes(search.trim())):[];
@@ -1147,7 +1173,7 @@ export default function App(){
   return(<div style={{minHeight:"100vh",background:P.bg,fontFamily:"'Pretendard','Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif"}}>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
     <style>{`
-html,body{overflow-x:hidden!important;max-width:100vw!important}
+html,body{overflow-x:hidden;overflow-y:auto;max-width:100vw}
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
 body{-webkit-tap-highlight-color:transparent;overscroll-behavior-y:contain;font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
 img,svg,table,pre{max-width:100%}
@@ -1200,7 +1226,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
               <span style={{color:"#0747A6"}}>10초 만에</span><br/>
               <span>완벽 계산</span>
             </h1>
-            <p style={{fontSize:isMo?14:16,color:"#6b778c",lineHeight:1.7,margin:"0 0 20px"}}>부동산 세금, 대출, 비용부터 연말정산, 연봉 실수령액, 4대보험까지. 37가지 전문 계산기로 일상의 재정 판단을 도와드립니다. 2026년 최신 세법 반영.</p>
+            <p style={{fontSize:isMo?14:16,color:"#6b778c",lineHeight:1.7,margin:"0 0 20px"}}>부동산 세금, 대출, 비용부터 연말정산, 연봉 실수령액, 4대보험까지. 39가지 전문 계산기로 일상의 재정 판단을 도와드립니다. 2026년 최신 세법 반영.</p>
             <CalcSearchBar onSelect={navigateCalc} isMo={isMo} calcList={CL.map(c=>({id:c.id,name:c.l,keywords:c.l+" "+(DESC[c.id]||""),cat:c.c}))}/>
             <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:16}}>
               {[{label:"#취득세",cat:"tax",calc:"acquisition"},{label:"#양도소득세",cat:"tax",calc:"transfer"},{label:"#연봉실수령액",cat:"life",calc:"netsalary"},{label:"#DSR한도",cat:"loan",calc:"dsr"},{label:"#연말정산",cat:"tax",calc:"yearend"},{label:"#중개수수료",cat:"cost",calc:"commission"}].map((tag,i)=>(
@@ -1209,7 +1235,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
             </div>
             <div style={{display:"flex",gap:12,flexWrap:"wrap",flexDirection:isMo?"column":"row"}}>
               <button onClick={()=>navigateCalc("tax","acquisition")} style={{background:"#0747A6",color:"#fff",border:"none",borderRadius:8,padding:"14px 28px",fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit",width:isMo?"100%":"auto"}}>지금 계산하기 →</button>
-              <button onClick={()=>document.getElementById("calcSuite")?.scrollIntoView({behavior:"smooth"})} style={{background:"#fff",color:"#172B4D",border:"2px solid #dfe1e6",borderRadius:8,padding:"14px 28px",fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit",width:isMo?"100%":"auto"}}>37가지 도구 보기</button>
+              <button onClick={()=>document.getElementById("calcSuite")?.scrollIntoView({behavior:"smooth"})} style={{background:"#fff",color:"#172B4D",border:"2px solid #dfe1e6",borderRadius:8,padding:"14px 28px",fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit",width:isMo?"100%":"auto"}}>39가지 도구 보기</button>
             </div>
             <div style={{display:"flex",gap:24,marginTop:24,flexWrap:"wrap"}}>
               <div style={{display:"flex",alignItems:"center",gap:6}}><span style={{fontSize:14}}>📊</span><span style={{fontSize:13,color:"#6b778c"}}>누적 계산 <strong style={{color:"#172B4D"}}>150,000건+</strong></span></div>
@@ -1367,7 +1393,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
                 <div style={{fontSize:13,color:P.mt,marginTop:4}}>계산 정확도</div>
               </div>
               <div style={{textAlign:"center",padding:16,background:"#f8f9fc",borderRadius:12}}>
-                <div style={{fontSize:32,fontWeight:900,color:P.pri}}>37개</div>
+                <div style={{fontSize:32,fontWeight:900,color:P.pri}}>39개</div>
                 <div style={{fontSize:13,color:P.mt,marginTop:4}}>전문 계산기</div>
               </div>
             </div>
@@ -1452,7 +1478,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
       <div style={{background:P.bg,padding:"48px 24px"}}>
         <div style={{fontSize:20,fontWeight:700,textAlign:"center",color:P.tx,marginBottom:24}}>📘 학습센터 인사이트</div>
         <div className="insights-grid" style={{maxWidth:1100,margin:"0 auto",display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:16}}>
-          {[{n:"2020-2026",t:"규제 로드맵",d:"부동산 세제 변화 타임라인"},{n:"0.5%-12%",t:"세율 범위 가이드",d:"취득세부터 종부세까지 세율 안내"},{n:"150+",t:"용어 사전",d:"부동산 전문 용어 모음"},{n:"37개",t:"전문 계산기",d:"세금·대출·비용 종합 계산"}].map((c,i)=>(
+          {[{n:"2020-2026",t:"규제 로드맵",d:"부동산 세제 변화 타임라인"},{n:"0.5%-12%",t:"세율 범위 가이드",d:"취득세부터 종부세까지 세율 안내"},{n:"150+",t:"용어 사전",d:"부동산 전문 용어 모음"},{n:"39개",t:"전문 계산기",d:"세금·대출·비용 종합 계산"}].map((c,i)=>(
             <div key={i} style={{background:"#fff",borderRadius:14,padding:24,border:`1px solid ${P.bd}`,textAlign:"center"}}>
               <div style={{fontSize:28,fontWeight:800,color:P.pri,marginBottom:4}}>{c.n}</div>
               <div style={{fontSize:14,fontWeight:700,color:P.tx,marginBottom:4}}>{c.t}</div>
