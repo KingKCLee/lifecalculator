@@ -667,24 +667,42 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           <h2 style={{fontSize:24,fontWeight:800,color:P.tx,margin:"0 0 8px"}}>종합 계산기 라인업</h2>
           <p style={{fontSize:14,color:P.mt,margin:0}}>생활 속 재정 판단을 위한 전문 도구</p>
         </div>
-        {CATS.map(ct=>{const items=CL.filter(c=>c.c===ct.id);return(
+        {(()=>{const catColors={tax:"#0747A6",loan:"#00875A",cost:"#FF8B00",etc:"#6554C0"};
+        const CatIcon=({cid})=>{const cl=catColors[cid]||P.pri;
+          if(cid==="tax")return<div style={{width:20,height:24,borderRadius:3,background:cl,position:"relative",display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center",gap:3,padding:"0 3px"}}>{[0,1,2].map(i=><div key={i} style={{width:14,height:2,borderRadius:1,background:"#fff"}}/>)}</div>;
+          if(cid==="loan")return<div style={{display:"flex",flexDirection:"column",alignItems:"center"}}><div style={{width:0,height:0,borderLeft:"12px solid transparent",borderRight:"12px solid transparent",borderBottom:`12px solid ${cl}`}}/><div style={{width:20,height:12,background:cl,borderRadius:"0 0 3px 3px"}}/></div>;
+          if(cid==="cost")return<div style={{display:"grid",gridTemplateColumns:"8px 8px",gap:3}}>{[0,1,2,3].map(i=><div key={i} style={{width:8,height:8,borderRadius:2,background:cl}}/>)}</div>;
+          return<div style={{display:"grid",gridTemplateColumns:"10px 8px",gap:3}}><div style={{width:10,height:10,borderRadius:2,background:cl}}/><div style={{width:8,height:8,borderRadius:2,background:cl,opacity:.6}}/><div style={{width:10,height:8,borderRadius:2,background:cl,opacity:.6}}/><div style={{width:8,height:10,borderRadius:2,background:cl}}/></div>;
+        };
+        return CATS.filter(ct=>ct.id!=="pro").map(ct=>{const items=CL.filter(c=>c.c===ct.id);const cl=catColors[ct.id]||P.pri;return(
           <div key={ct.id} style={{marginBottom:40}}>
             <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:16}}>
               <span style={{fontSize:20}}>{CAT_ICON[ct.id]}</span>
               <span style={{fontSize:18,fontWeight:700,color:P.tx}}>{ct.l} 계산기</span>
               <span style={{background:"#deebff",color:P.pl,borderRadius:10,padding:"2px 10px",fontSize:12,fontWeight:700}}>{items.length}</span>
             </div>
-            <div className="cat-grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:12}}>
-              {items.map(c=>(<div key={c.id} onClick={()=>goCalc(c.id)}
-                style={{background:"#fff",borderRadius:12,padding:20,border:`1px solid ${P.bd}`,cursor:"pointer",transition:"transform .2s, box-shadow .2s",borderLeft:ct.id==="pro"?`3px solid ${P.pri}`:"none"}}
-                onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 4px 12px rgba(0,0,0,.08)";}}
-                onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";}}>
-                <div style={{fontSize:15,fontWeight:700,color:P.tx}}>{c.l}</div>
-                <div style={{fontSize:12,color:P.mt,marginTop:4}}>{DESC[c.id]||""}</div>
-              </div>))}
+            <div style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,overflow:"hidden",cursor:"pointer",transition:"transform .2s, box-shadow .2s"}}
+              onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow="0 8px 24px rgba(0,0,0,.08)";}}
+              onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";}}
+              onClick={()=>{setCat(ct.id);setPage("calc");}}>
+              <div style={{padding:"20px 24px 16px"}}>
+                <div style={{width:48,height:48,borderRadius:12,background:cl+"15",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                  <CatIcon cid={ct.id}/>
+                </div>
+              </div>
+              <div style={{padding:"0 24px 8px"}}>
+                <div style={{fontSize:18,fontWeight:700,color:P.tx}}>{ct.l} 계산기</div>
+              </div>
+              <div style={{padding:"0 24px 24px"}}>
+                {items.map(c=>(
+                  <div key={c.id} onClick={e=>{e.stopPropagation();goCalc(c.id);}} style={{fontSize:13,color:P.mt,padding:"5px 0",display:"flex",alignItems:"center",gap:8,cursor:"pointer"}}>
+                    <span style={{color:cl,fontSize:14}}>◇</span>{c.l}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        );})}
+        );});})()}
       </div>
 
       {/* 섹션 A: PRO 분석 소개 */}
@@ -695,14 +713,27 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
             <span onClick={()=>{setCat("pro");setPage("calc");}} style={{color:P.pri,fontSize:14,fontWeight:600,cursor:"pointer"}}>PRO 기능 살펴보기 →</span>
           </div>
           <div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr 1fr",gap:20}}>
-            {[{id:"totalcost",t:"총비용 시뮬레이터",d:"취득세, 등기, 법무사, 중개보수까지 숨겨진 비용을 한번에 시뮬레이션",bg:"linear-gradient(135deg,#0747A6,#0065FF)"},
-              {id:"compare",t:"세금 비교 분석",d:"매매 vs 증여 vs 상속, 최적의 절세 구조를 실시간 비교 분석",bg:"linear-gradient(135deg,#00875A,#36B37E)"},
-              {id:"invest",t:"투자 수익 분석",d:"매수부터 보유, 매도까지 전체 투자 수익률(IRR) 분석",bg:"linear-gradient(135deg,#FF8B00,#FFC400)"}
+            {[{id:"totalcost",t:"총비용 시뮬레이터",d:"취득세, 등기, 법무사, 중개보수까지 숨겨진 비용을 한번에 시뮬레이션"},
+              {id:"compare",t:"세금 비교 분석",d:"매매 vs 증여 vs 상속, 최적의 절세 구조를 실시간 비교 분석"},
+              {id:"invest",t:"투자 수익 분석",d:"매수부터 보유, 매도까지 전체 투자 수익률(IRR) 분석"}
             ].map(c=>(<div key={c.id} onClick={()=>{setCat("pro");setCalc(c.id);setPage("calc");}} style={{borderRadius:16,overflow:"hidden",cursor:"pointer",transition:"transform .2s, box-shadow .2s",background:"#fff",border:`1px solid ${P.bd}`}}
               onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow="0 8px 24px rgba(0,0,0,.12)";}}
               onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";}}>
-              <div style={{height:140,background:c.bg,display:"flex",alignItems:"center",justifyContent:"center"}}>
-                <span style={{fontSize:40,opacity:.3,color:"#fff",fontWeight:900}}>PRO</span>
+              <div style={{height:160,background:"#1a2332",padding:16,position:"relative",overflow:"hidden",borderRadius:"16px 16px 0 0"}}>
+                <div style={{display:"flex",gap:4,marginBottom:12}}>
+                  <div style={{width:8,height:8,borderRadius:"50%",background:"#ff5f57"}}/><div style={{width:8,height:8,borderRadius:"50%",background:"#febc2e"}}/><div style={{width:8,height:8,borderRadius:"50%",background:"#28c840"}}/>
+                </div>
+                <div style={{position:"absolute",top:12,right:12,background:"rgba(255,255,255,.15)",color:"#fff",fontSize:10,fontWeight:700,padding:"2px 8px",borderRadius:4}}>PRO</div>
+                {c.id==="totalcost"&&<div style={{display:"flex",flexDirection:"column",gap:10,marginTop:8}}>
+                  {[[70,"#0747A6"],[50,"#00875A"],[30,"#FF8B00"]].map(([w,cl],i)=><div key={i} style={{display:"flex",alignItems:"center",gap:8}}><div style={{width:w+"%",height:8,borderRadius:4,background:cl}}/><span style={{fontSize:10,color:"rgba(255,255,255,.4)"}}>{w}%</span></div>)}
+                </div>}
+                {c.id==="compare"&&<div style={{display:"flex",gap:12,alignItems:"flex-end",justifyContent:"center",height:"calc(100% - 28px)"}}>
+                  {[[80,"#0747A6"],[60,"#00875A"],[40,"#FF8B00"]].map(([h,cl],i)=><div key={i} style={{width:24,height:h,borderRadius:"4px 4px 0 0",background:cl}}/>)}
+                </div>}
+                {c.id==="invest"&&<svg viewBox="0 0 200 80" style={{width:"100%",height:"calc(100% - 28px)"}}>
+                  <path d="M0,60 Q50,55 80,40 T160,15 L200,10 L200,80 L0,80 Z" fill="rgba(0,135,90,0.15)"/>
+                  <path d="M0,60 Q50,55 80,40 T160,15 L200,10" stroke="#00875A" strokeWidth="2" fill="none"/>
+                </svg>}
               </div>
               <div style={{padding:24}}>
                 <div style={{fontSize:17,fontWeight:700,color:P.tx,marginBottom:8}}>{c.t}</div>
