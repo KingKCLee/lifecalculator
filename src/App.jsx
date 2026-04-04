@@ -779,7 +779,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
               </div>
               <div style={{padding:"0 24px 24px"}}>
                 {items.map(c=>(
-                  <div key={c.id} onClick={e=>{e.stopPropagation();goCalc(c.id);}} style={{fontSize:13,color:P.mt,padding:"5px 0",display:"flex",alignItems:"center",gap:8,cursor:"pointer"}}>
+                  <div key={c.id} onClick={e=>{e.stopPropagation();goCalc(c.id);}} style={{fontSize:13,color:P.mt,padding:"6px 8px",margin:"0 -8px",borderRadius:6,display:"flex",alignItems:"center",gap:8,cursor:"pointer",transition:"all .15s"}}
+                    onMouseEnter={e=>{e.currentTarget.style.background=cl+"14";e.currentTarget.style.color=cl;}}
+                    onMouseLeave={e=>{e.currentTarget.style.background="transparent";e.currentTarget.style.color=P.mt;}}>
                     <span style={{color:cl,fontSize:14}}>◇</span>{c.l}
                   </div>
                 ))}
