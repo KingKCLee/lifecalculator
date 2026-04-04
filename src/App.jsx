@@ -1058,7 +1058,7 @@ function HeroCarousel({navigateCalc,isMo}){
       <button onClick={()=>navigateCalc(slide.cat,slide.calc)} style={{marginTop:isMo?16:20,padding:"12px 24px",background:"rgba(255,255,255,0.2)",backdropFilter:"blur(8px)",border:"1px solid rgba(255,255,255,0.3)",borderRadius:10,color:"#fff",fontSize:14,fontWeight:700,cursor:"pointer",position:"relative",zIndex:1,width:"100%",textAlign:"center",fontFamily:"inherit"}} onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,0.35)"}} onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,0.2)"}}>{slide.cta} →</button>
     </div>
     <div style={{display:"flex",justifyContent:"center",gap:6,marginTop:16}}>
-      {slides.map((s,i)=>(<button key={i} aria-label={"슬라이드 "+(i+1)} onClick={()=>setCurrent(i)} style={{width:i===current?32:8,height:8,borderRadius:4,border:"none",cursor:"pointer",background:i===current?"#0747A6":"#dfe1e6",transition:"all .3s",padding:0}}/>))}
+      {slides.map((s,i)=>(<button key={i} aria-label={"슬라이드 "+(i+1)} onClick={()=>setCurrent(i)} style={{minWidth:24,minHeight:24,border:"none",cursor:"pointer",background:"transparent",display:"flex",alignItems:"center",justifyContent:"center",padding:8}}><div style={{width:i===current?32:8,height:8,borderRadius:4,background:i===current?"#0747A6":"#dfe1e6",transition:"all .3s"}}/></button>))}
     </div>
   </div>);
 }
@@ -1145,7 +1145,7 @@ function IndicatorTicker({liveData}){
   return(<div style={{background:"#0d1117",overflow:"hidden",height:32,display:"flex",alignItems:"center"}}>
     <div style={{display:"flex",gap:32,animation:"ticker 30s linear infinite",whiteSpace:"nowrap",paddingLeft:16}}>
       {[...items,...items].map((ind,i)=>{const up=ind.change>0,dn=ind.change<0;return(<span key={i} style={{fontSize:12,color:"#e6edf3",display:"inline-flex",alignItems:"center",gap:6}}>
-        <span style={{opacity:.6}}>{ind.name}</span>
+        <span style={{color:"#8b949e"}}>{ind.name}</span>
         <span style={{fontWeight:700,fontVariantNumeric:"tabular-nums"}}>{ind.current?.toLocaleString()}{ind.unit}</span>
         <span style={{color:up?"#FF5630":dn?"#36B37E":"#6b778c",fontWeight:600,fontSize:11}}>{up?"▲":dn?"▼":"—"}{Math.abs(ind.change)}{ind.unit}</span>
       </span>);})}
@@ -1403,7 +1403,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
               onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";e.currentTarget.style.borderColor=P.bd;}}>
               <div style={{width:64,height:64,borderRadius:"50%",background:p.bg,margin:"0 auto 16px",display:"flex",alignItems:"center",justifyContent:"center"}}>{p.svg}</div>
               <div style={{fontSize:17,fontWeight:700,color:"#172B4D",letterSpacing:-.5,marginBottom:6}}>{info?.l}</div>
-              <div style={{fontSize:13,color:"#97a0af",lineHeight:1.5,fontWeight:400,whiteSpace:"nowrap"}}>{DESC[p.id]}</div>
+              <div style={{fontSize:13,color:"#6b778c",lineHeight:1.5,fontWeight:400,whiteSpace:"nowrap"}}>{DESC[p.id]}</div>
             </div>);
           })}
         </div>
@@ -1623,7 +1623,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           {[{l:"Legal Disclaimer (면책조항)",k:"disclaimer"},{l:"Resource Center (자료실)",k:"resource"},{l:"Privacy Policy (개인정보)",k:"privacy"},{l:"Contact Support (문의)",k:"contact"}].map(item=><div key={item.k} onClick={()=>setModal(item.k)} style={{fontSize:13,color:P.mt,marginBottom:8,cursor:"pointer"}} onMouseEnter={e=>e.currentTarget.style.color="#0747A6"} onMouseLeave={e=>e.currentTarget.style.color=P.mt}>{item.l}</div>)}
         </div>
       </div>
-      <div style={{textAlign:"center",fontSize:11,color:"#a5adba",marginTop:32,lineHeight:1.8}}>
+      <div style={{textAlign:"center",fontSize:11,color:"#6b778c",marginTop:32,lineHeight:1.8}}>
         © {new Date().getFullYear()} 생활계산기.com. All rights reserved. | 세법 검증: {UPDATE_LOG[0]?.date}<br/>
         <span>상호: 더블유부동산 | 대표: 이광철 | 사업자등록번호: 589-24-01721 | 이메일: noble.kclee@gmail.com</span>
       </div>
