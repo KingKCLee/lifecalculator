@@ -900,6 +900,43 @@ function CalcSearchBar({onSelect,isMo,calcList}){
   </div>);
 }
 
+function HeroCarousel({navigateCalc,isMo}){
+  const[current,setCurrent]=useState(0);const[touchStart,setTouchStart]=useState(null);const[count,setCount]=useState(0);
+  const slides=[
+    {bg:"linear-gradient(135deg,#0747A6,#0065FF)",badge:"부동산 매수",title:"내 집 마련 총비용",subtitle:"취득세부터 복비까지 한 번에",mainNum:4150,mainUnit:"만원",subText:"매수가 9억 기준",cards:[{label:"취득세",value:"2,700만"},{label:"중개보수",value:"360만"}],cta:"총비용 계산하기",cat:"pro",calc:"totalcost"},
+    {bg:"linear-gradient(135deg,#00875A,#36B37E)",badge:"직장인 필수",title:"내 연봉의 진짜 월급",subtitle:"4대보험·세금 떼고 실수령액",mainNum:358,mainUnit:"만원",subText:"연봉 5,000만원 기준",cards:[{label:"4대보험",value:"-38만"},{label:"소득세",value:"-18만"}],cta:"실수령액 계산하기",cat:"life",calc:"netsalary"},
+    {bg:"linear-gradient(135deg,#6554C0,#8777D9)",badge:"대출 한도",title:"DSR 한도 미리 확인",subtitle:"은행 가기 전 필수 체크",mainNum:37000,mainUnit:"만원",subText:"연소득 5,000만 · 금리 3.5% 기준",cards:[{label:"DSR",value:"38.2%"},{label:"월 상환",value:"166만"}],cta:"DSR 계산하기",cat:"loan",calc:"dsr"},
+    {bg:"linear-gradient(135deg,#FF8B00,#FFC400)",badge:"절세 전략",title:"매매 vs 증여 vs 상속",subtitle:"최적의 이전 방법 비교",mainNum:1850,mainUnit:"만원",subText:"1주택 생애최초 9억 기준",cards:[{label:"취득세 감면",value:"200만"},{label:"중개보수 절감",value:"350만"}],cta:"세금 비교 분석",cat:"pro",calc:"compare"}
+  ];
+  useEffect(()=>{const t=setInterval(()=>setCurrent(c=>(c+1)%slides.length),5000);return()=>clearInterval(t);},[slides.length]);
+  useEffect(()=>{setCount(0);let s=0;const target=slides[current].mainNum,step=target/45;const t=setInterval(()=>{s+=step;if(s>=target){setCount(target);clearInterval(t);}else setCount(Math.floor(s));},1000/60);return()=>clearInterval(t);},[current]);
+  const slide=slides[current];
+  const handleTouchStart=e=>setTouchStart(e.touches[0].clientX);
+  const handleTouchEnd=e=>{if(touchStart===null)return;const diff=touchStart-e.changedTouches[0].clientX;if(Math.abs(diff)>50){if(diff>0)setCurrent(c=>(c+1)%slides.length);else setCurrent(c=>(c-1+slides.length)%slides.length);}setTouchStart(null);};
+  return(<div style={{position:"relative"}} onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+    <div style={{background:slide.bg,borderRadius:20,padding:isMo?"24px 20px":"32px",color:"#fff",minHeight:isMo?280:340,display:"flex",flexDirection:"column",justifyContent:"space-between",position:"relative",overflow:"hidden",transition:"background .5s"}}>
+      <div style={{position:"absolute",top:-40,right:-40,width:160,height:160,borderRadius:"50%",background:"rgba(255,255,255,0.06)"}}/>
+      <div style={{position:"absolute",bottom:-20,left:-20,width:100,height:100,borderRadius:"50%",background:"rgba(255,255,255,0.04)"}}/>
+      <div style={{position:"relative",zIndex:1}}>
+        <div style={{display:"inline-block",background:"rgba(255,255,255,0.2)",backdropFilter:"blur(8px)",padding:"4px 12px",borderRadius:20,fontSize:11,fontWeight:600,marginBottom:12}}>{slide.badge}</div>
+        <div style={{fontSize:isMo?13:14,opacity:.8,marginBottom:4}}>{slide.subtitle}</div>
+        <div style={{fontSize:isMo?36:42,fontWeight:800,marginBottom:4}}>₩{count.toLocaleString()}<span style={{fontSize:isMo?16:18,fontWeight:500}}>{slide.mainUnit}</span></div>
+        {slide.subText&&<div style={{fontSize:12,opacity:.6}}>{slide.subText}</div>}
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:isMo?8:12,marginTop:isMo?16:20}}>
+          {slide.cards.map((c,i)=>(<div key={i} style={{background:"rgba(255,255,255,0.12)",backdropFilter:"blur(4px)",borderRadius:10,padding:isMo?10:12}}>
+            <div style={{fontSize:11,opacity:.7}}>{c.label}</div>
+            <div style={{fontSize:isMo?16:18,fontWeight:700,marginTop:2}}>{c.value}</div>
+          </div>))}
+        </div>
+      </div>
+      <button onClick={()=>navigateCalc(slide.cat,slide.calc)} style={{marginTop:isMo?16:20,padding:"12px 24px",background:"rgba(255,255,255,0.2)",backdropFilter:"blur(8px)",border:"1px solid rgba(255,255,255,0.3)",borderRadius:10,color:"#fff",fontSize:14,fontWeight:700,cursor:"pointer",position:"relative",zIndex:1,width:"100%",textAlign:"center",fontFamily:"inherit"}} onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,0.35)"}} onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,0.2)"}}>{slide.cta} →</button>
+    </div>
+    <div style={{display:"flex",justifyContent:"center",gap:6,marginTop:16}}>
+      {slides.map((s,i)=>(<button key={i} aria-label={"슬라이드 "+(i+1)} onClick={()=>setCurrent(i)} style={{width:i===current?32:8,height:8,borderRadius:4,border:"none",cursor:"pointer",background:i===current?"#0747A6":"#dfe1e6",transition:"all .3s",padding:0}}/>))}
+    </div>
+  </div>);
+}
+
 function ScrollTop(){
   const[show,setShow]=useState(false);
   useEffect(()=>{const h=()=>setShow(window.scrollY>400);window.addEventListener('scroll',h);return()=>window.removeEventListener('scroll',h);},[]);
@@ -1180,31 +1217,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
               <div style={{display:"flex",alignItems:"center",gap:6}}><span style={{fontSize:14}}>🔒</span><span style={{fontSize:13,color:"#6b778c"}}>완전 무료 · 광고 없음</span></div>
             </div>
           </div>
-          <div style={{position:"relative"}}>
-            <div style={{background:"linear-gradient(135deg,#0747A6,#0065FF)",borderRadius:20,padding:32,color:"#fff",minHeight:320}}>
-              <div style={{fontSize:13,opacity:.7}}>예상 절세 효과</div>
-              <div style={{fontSize:42,fontWeight:800,marginTop:8}}><CountUp target={1850}/></div>
-              <div style={{fontSize:13,opacity:.6,marginTop:8}}>1주택 생애최초 취득 시 · 9억 기준</div>
-              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginTop:24}}>
-                <div style={{background:"rgba(255,255,255,.12)",borderRadius:12,padding:"14px 16px"}}>
-                  <div style={{fontSize:12,opacity:.7}}>취득세 감면</div>
-                  <div style={{fontSize:18,fontWeight:700,marginTop:4}}><CountUp target={200} duration={1000}/></div>
-                </div>
-                <div style={{background:"rgba(255,255,255,.12)",borderRadius:12,padding:"14px 16px"}}>
-                  <div style={{fontSize:12,opacity:.7}}>중개보수 절감</div>
-                  <div style={{fontSize:18,fontWeight:700,marginTop:4}}><CountUp target={350} duration={1200}/></div>
-                </div>
-              </div>
-              <div style={{display:"flex",gap:8,marginTop:16,flexWrap:"wrap"}}>
-                {[{label:"1주택자",cat:"tax",calc:"acquisition"},{label:"3주택자",cat:"tax",calc:"acquisition"},{label:"연봉 1억",cat:"life",calc:"netsalary"}].map((btn,i)=>(
-                  <button key={i} onClick={()=>navigateCalc(btn.cat,btn.calc)} style={{padding:"6px 12px",background:"rgba(255,255,255,0.15)",border:"1px solid rgba(255,255,255,0.3)",borderRadius:8,color:"#fff",fontSize:11,fontWeight:600,cursor:"pointer",transition:"all .15s",fontFamily:"inherit"}} onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,0.3)"}} onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,0.15)"}}>{btn.label}이라면? →</button>
-                ))}
-              </div>
-            </div>
-            <div style={{position:"absolute",bottom:-16,left:24,background:"#fff",borderRadius:10,padding:"10px 18px",boxShadow:"0 4px 16px rgba(0,0,0,.12)",display:"flex",alignItems:"center",gap:8,fontSize:13,fontWeight:600,color:P.tx}}>
-              <span>📊</span> 절세 분석 완료 <span style={{color:P.pri,fontWeight:800}}>₩1,850만 절감</span>
-            </div>
-          </div>
+          <HeroCarousel navigateCalc={navigateCalc} isMo={isMo}/>
         </div>
       </div>
 
