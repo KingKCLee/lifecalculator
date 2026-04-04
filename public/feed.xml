@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>생활계산기.com - 세금·대출·생활 종합 계산기</title>
+    <link>https://xn--989a00a691bdfa717h.com/</link>
+    <description>취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 등 37가지 무료 계산기. 매일 자동 업데이트.</description>
+    <language>ko</language>
+    <lastBuildDate>Sat, 05 Apr 2026 09:00:00 +0900</lastBuildDate>
+    <atom:link href="https://xn--989a00a691bdfa717h.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>자동차세·4대보험·국민연금·종합소득세·연말정산·연봉실수령액 계산기 추가</title>
+      <link>https://xn--989a00a691bdfa717h.com/</link>
+      <description>생활 카테고리 신설. 37가지 계산기로 확대.</description>
+      <pubDate>Sat, 04 Apr 2026 09:00:00 +0900</pubDate>
+      <guid>https://xn--989a00a691bdfa717h.com/#update-20260404</guid>
+    </item>
+    <item>
+      <title>라이브 데이터 자동 업데이트 시스템 가동</title>
+      <link>https://xn--989a00a691bdfa717h.com/</link>
+      <description>매일 자동으로 기준금리·환율·코스피·규제지역·세법 변경사항을 검증하고 반영.</description>
+      <pubDate>Sat, 04 Apr 2026 09:00:00 +0900</pubDate>
+      <guid>https://xn--989a00a691bdfa717h.com/#update-20260404-live</guid>
+    </item>
+    <item>
+      <title>2026년 세법 개정사항 반영</title>
+      <link>https://xn--989a00a691bdfa717h.com/</link>
+      <description>취득세 중과 완화, 종부세 가액비율 조정, 양도세 장특공제 요건 변경 등 2026년 시행 세법 전면 반영.</description>
+      <pubDate>Sun, 15 Mar 2026 09:00:00 +0900</pubDate>
+      <guid>https://xn--989a00a691bdfa717h.com/#update-20260315</guid>
+    </item>
+    <item>
+      <title>스트레스 DSR 3단계 + LTV 15억 초과 제한 반영</title>
+      <link>https://xn--989a00a691bdfa717h.com/#/DSR%EA%B3%84%EC%82%B0%EA%B8%B0</link>
+      <description>변동금리 +1.5%p, 혼합형 +0.75%p 가산금리 적용. 투기과열지구 15억 초과 주담대 금지.</description>
+      <pubDate>Wed, 15 Oct 2025 09:00:00 +0900</pubDate>
+      <guid>https://xn--989a00a691bdfa717h.com/#update-20251015</guid>
+    </item>
+    <item>
+      <title>생활계산기.com 서비스 오픈</title>
+      <link>https://xn--989a00a691bdfa717h.com/</link>
+      <description>취득세, 양도소득세, 종부세, DSR 등 20가지 부동산 계산기로 서비스 시작.</description>
+      <pubDate>Wed, 15 Jan 2025 09:00:00 +0900</pubDate>
+      <guid>https://xn--989a00a691bdfa717h.com/#update-20250115</guid>
+    </item>
+  </channel>
+</rss>

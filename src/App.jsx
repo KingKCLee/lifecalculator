@@ -53,6 +53,29 @@ compare:{title:"매매 vs 증여 vs 상속 세금 비교 | 생활계산기",desc
 invest:{title:"부동산 투자수익 분석기 | 생활계산기",desc:"매수→보유→매도 전체 투자 수익률(IRR) 분석. 보유세, 대출이자, 양도세 반영. PRO 분석."}
 };
 
+const INTERNAL_LINKS={
+acquisition:[{id:"registration",label:"등기비용도 계산해보세요"},{id:"commission",label:"중개수수료는 얼마?"},{id:"totalcost",label:"매수 총비용 시뮬레이션"},{id:"ltv",label:"대출 얼마까지 가능?"}],
+transfer:[{id:"acquisition",label:"취득세 먼저 계산"},{id:"compare",label:"매매 vs 증여 vs 상속 비교"},{id:"invest",label:"투자수익 종합분석"}],
+inctax:[{id:"yearend",label:"연말정산 환급액 확인"},{id:"netsalary",label:"연봉 실수령액 계산"},{id:"insurance4",label:"4대보험료 확인"}],
+yearend:[{id:"netsalary",label:"실수령액도 확인해보세요"},{id:"inctax",label:"종합소득세 계산"},{id:"pension",label:"국민연금 수령액은?"}],
+netsalary:[{id:"yearend",label:"연말정산 환급 받기"},{id:"insurance4",label:"4대보험료 상세"},{id:"inctax",label:"종합소득세 계산"}],
+dsr:[{id:"ltv",label:"LTV 한도 확인"},{id:"mortgage",label:"대출이자 계산"},{id:"loanmax",label:"대출 가능액 역산"}],
+commission:[{id:"acquisition",label:"취득세 계산"},{id:"registration",label:"등기비용 계산"},{id:"totalcost",label:"매수 총비용 시뮬레이션"}],
+gift:[{id:"inherit",label:"상속세와 비교"},{id:"compare",label:"매매 vs 증여 vs 상속 비교"},{id:"acquisition",label:"증여 취득세 계산"}],
+pension:[{id:"insurance4",label:"4대보험료 확인"},{id:"netsalary",label:"연봉 실수령액 계산"},{id:"yearend",label:"연말정산 환급액"}],
+cartax:[{id:"insurance4",label:"4대보험료도 확인"},{id:"netsalary",label:"연봉 실수령액"}],
+ltv:[{id:"dsr",label:"DSR도 체크하세요"},{id:"mortgage",label:"대출이자 계산"},{id:"loanmax",label:"최대 대출 가능액"}]
+};
+
+const FUN_STATS={
+netsalary:{title:"💼 연봉 통계 알아보기",items:["2025년 한국 직장인 평균 연봉: 약 4,024만원 (통계청)","연봉 5,000만원 이상 직장인 비율: 약 28%","연봉 1억 이상: 상위 약 7%"]},
+dsr:{title:"💳 대출 통계",items:["2025년 가계대출 평균 금리: 약 4.2%","주택담보대출 평균 잔액: 약 2.4억원","DSR 40% 초과로 대출 거절 비율: 약 15%"]},
+acquisition:{title:"🏠 부동산 거래 통계",items:["2025년 서울 아파트 평균 매매가: 약 12.5억원","전국 주택 거래량 월평균: 약 5.2만건","생애최초 취득세 감면 수혜자: 연 약 15만명"]},
+yearend:{title:"🧾 연말정산 통계",items:["2025년 평균 환급액: 약 70만원","환급받은 근로자 비율: 약 68%","연금저축 세액공제 활용률: 약 42%"]},
+pension:{title:"👴 국민연금 통계",items:["2025년 노령연금 평균 수령액: 월 약 62만원","최대 수령자 월 수령액: 약 260만원","수급자 수: 약 700만명"]},
+commission:{title:"🤝 중개수수료 통계",items:["서울 아파트 매매 평균 중개보수: 약 420만원","전세 평균 중개보수: 약 150만원","협의로 수수료 할인 경험자: 약 38%"]}
+};
+
 const SEO_CONTENT={
 acquisition:`<h2>2026년 취득세 완벽 가이드</h2><h3>취득세란?</h3><p>취득세는 부동산을 매매·증여·상속 등의 방법으로 취득할 때 납부하는 지방세입니다. 주택의 경우 취득가액과 보유 주택 수, 규제지역 여부에 따라 1%에서 최대 12%까지 차등 적용됩니다.</p><h3>2026년 주택 취득세율표</h3><p>1주택자 및 비규제지역 2주택자는 취득가 6억 이하 1%, 6~9억 구간 1~3%(비례세율), 9억 초과 3%의 일반세율이 적용됩니다. 조정대상지역 2주택자는 8%, 3주택 이상은 12%의 중과세율이 적용됩니다. 비규제지역 3주택 이상은 8%입니다.</p><h3>생애최초 취득세 감면</h3><p>무주택 세대가 12억원 이하 주택을 생애 최초로 구입하면 취득세 최대 200만원을 감면받을 수 있습니다. 이 혜택은 2028년 말까지 연장되었으며, 부부합산 소득 제한 없이 적용됩니다.</p><h3>일시적 2주택 특례</h3><p>이사 목적으로 일시적 2주택이 된 경우, 3년 이내에 종전 주택을 처분하면 1주택 세율이 적용됩니다. 투기과열지구에서는 처분 기한이 2년으로 단축됩니다.</p><h3>취득세 부가세</h3><p>취득세 외에 지방교육세(취득세의 10%)와 농어촌특별세(전용면적 85㎡ 초과 시 취득가의 0.2%)가 추가됩니다. 다주택 중과(8%/12%) 시에는 면적 관계없이 농특세가 부과됩니다.</p><h3>신고 및 납부</h3><p>취득일(잔금 지급일 또는 등기일 중 빠른 날)로부터 60일 이내에 관할 시·군·구에 신고·납부해야 합니다. 기한 내 미신고 시 20%의 무신고 가산세가 부과됩니다.</p>`,
 transfer:`<h2>양도소득세 완벽 가이드</h2><h3>양도소득세란?</h3><p>부동산을 매도하여 발생한 양도차익(양도가액 - 취득가액 - 필요경비)에 대해 부과되는 국세입니다. 과세표준에 6~45%의 누진세율이 적용되며, 지방소득세(10%)가 추가로 부과됩니다.</p><h3>1세대 1주택 비과세</h3><p>1세대 1주택자가 2년 이상 보유(조정대상지역 취득 시 2년 거주 포함)하고 양도가액이 12억원 이하이면 전액 비과세됩니다. 12억원 초과 주택은 초과분에 대해서만 과세됩니다(과세대상 = 양도차익 × (양도가-12억)/양도가).</p><h3>장기보유특별공제</h3><p>1주택자는 보유기간 연 4% + 거주기간 연 4%, 최대 80%까지 공제됩니다. 10년 이상 보유·거주 시 양도차익의 80%를 공제받아 세부담이 크게 줄어듭니다. 다주택자(2주택 이상)는 보유기간 연 2%, 최대 30%까지만 공제됩니다.</p><h3>다주택 중과 유예</h3><p>다주택자 양도세 중과(+20~30%p)는 2026년 5월 9일까지 한시 유예 중입니다. 이 기간 내 매도하면 기본세율(6~45%)만 적용됩니다.</p><h3>기본공제와 필요경비</h3><p>양도소득세 기본공제는 연 250만원입니다. 필요경비에는 취득세, 중개수수료, 수리비·인테리어비(자본적 지출), 양도 시 중개보수 등이 포함됩니다. 영수증·세금계산서를 반드시 보관해야 합니다.</p><h3>신고 및 납부</h3><p>양도일(잔금 지급일)이 속하는 달의 말일부터 2개월 이내에 예정신고·납부해야 합니다. 무신고 시 20%의 무신고 가산세와 납부지연가산세가 추가로 부과됩니다.</p>`,
@@ -252,7 +275,7 @@ function generateReportHTML(title,total,sub,items){
   return`<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><title>${title} - 생활계산기.com</title><style>@page{size:A4;margin:20mm}*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Pretendard',-apple-system,sans-serif;color:#172B4D;font-size:14px;line-height:1.7;background:#fff}.r{max-width:700px;margin:0 auto;padding:40px}.hd{display:flex;justify-content:space-between;border-bottom:3px solid #0747A6;padding-bottom:20px;margin-bottom:32px}.lg{font-size:20px;font-weight:800;color:#0747A6}.ls{font-size:11px;color:#6b778c;margin-top:2px}.dt{text-align:right;font-size:12px;color:#6b778c}.ts{background:linear-gradient(135deg,#0747A6,#0065FF);color:#fff;border-radius:12px;padding:28px 24px;margin-bottom:24px}.ts h1{font-size:22px;font-weight:800}.ts .sb{font-size:13px;opacity:.7;margin-top:4px}.ts .tl{font-size:36px;font-weight:900;margin-top:16px}table{width:100%;border-collapse:collapse;margin-bottom:24px}th{text-align:left;padding:12px 16px;background:#f4f5f7;font-size:13px;font-weight:600;color:#6b778c;border-bottom:2px solid #dfe1e6}td{padding:12px 16px;border-bottom:1px solid #f4f5f7;font-size:14px}td:last-child{text-align:right;font-weight:700;color:#0747A6}tr:last-child td{border-bottom:2px solid #0747A6;font-weight:800}.ns{background:#f8f9fc;border-radius:10px;padding:20px;margin-bottom:24px}.ns h3{font-size:14px;font-weight:700;color:#0747A6;margin-bottom:8px}.ns p{font-size:12px;color:#6b778c}.dc{border-top:1px solid #dfe1e6;padding-top:20px;margin-top:32px}.dc p{font-size:11px;color:#a5adba}.ft{margin-top:40px;text-align:center;font-size:11px;color:#a5adba;border-top:1px solid #f4f5f7;padding-top:16px}.st{display:inline-block;border:2px solid #0747A6;border-radius:8px;padding:8px 20px;color:#0747A6;font-size:12px;font-weight:700;margin-top:16px;opacity:.6}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}.np{display:none}}</style></head><body><div class="r"><div class="hd"><div><div class="lg">생활계산기.com</div><div class="ls">대한민국 NO.1 생활 계산기</div></div><div class="dt"><div>작성일: ${ds}</div><div>작성시간: ${ts}</div><div>문서번호: LC-${now.getTime().toString(36).toUpperCase()}</div></div></div><div class="ts"><h1>${title}</h1><div class="sb">${sub||''}</div><div class="tl">₩${Math.round(total).toLocaleString('ko-KR')}</div></div><table><thead><tr><th>항목</th><th style="text-align:right">금액</th></tr></thead><tbody>${items.map(it=>'<tr><td>'+it.l+'</td><td>'+it.v+'</td></tr>').join('')}<tr><td><strong>합계</strong></td><td><strong>₩${Math.round(total).toLocaleString('ko-KR')}</strong></td></tr></tbody></table><div class="ns"><h3>📋 산출 기준</h3><p>• 적용 기준일: ${ds}<br>• 적용 세법: 2025년 현행 세법 기준<br>• 산출 방식: ${sub||'표준 계산 로직 적용'}</p></div><div class="ns"><h3>💡 참고 안내</h3><p>• 본 리포트의 금액은 대략적인 추정치이며, 실제 금액과 차이가 있을 수 있습니다.<br>• 정확한 세금·수수료 확인은 세무사, 법무사, 공인중개사 등 전문가에게 의뢰하시기 바랍니다.</p></div><div class="dc"><p>본 문서는 생활계산기.com에서 자동 생성된 참고용 리포트입니다. 법적 효력이 없습니다.</p></div><div class="ft"><div>생활계산기.com | https://생활계산기.com</div><div class="st">참고용 계산서</div></div><div class="np" style="text-align:center;margin-top:24px"><button onclick="window.print()" style="background:#0747A6;color:#fff;border:none;border-radius:8px;padding:12px 32px;font-size:15px;font-weight:700;cursor:pointer;margin-right:8px">🖨️ 인쇄하기</button><button onclick="window.close()" style="background:#f4f5f7;color:#172B4D;border:none;border-radius:8px;padding:12px 32px;font-size:15px;font-weight:700;cursor:pointer">닫기</button></div></div></body></html>`;}
 function generateReport(t,v,s,it){const h=generateReportHTML(t,v,s,it),b=new Blob([h],{type:'text/html'}),u=URL.createObjectURL(b);window.open(u,'_blank');setTimeout(()=>URL.revokeObjectURL(u),60000);}
 function downloadPDF(t,v,s,it){const h=generateReportHTML(t,v,s,it),b=new Blob([h],{type:'text/html'}),u=URL.createObjectURL(b),w=window.open(u,'_blank');if(w)w.onload=()=>w.print();setTimeout(()=>URL.revokeObjectURL(u),60000);}
-function shareKakao(title,total,sub,items){let text="📊 [생활계산기.com] "+title+"\n━━━━━━━━━━━━━━━━\n";if(sub)text+=sub+"\n\n";items.forEach(function(it){text+="• "+it.l+": "+it.v+"\n";});text+="━━━━━━━━━━━━━━━━\n💰 합계: ₩"+Math.round(total).toLocaleString("ko-KR")+"\n\n📅 계산일: "+new Date().toLocaleDateString("ko-KR")+"\n※ 참고용 계산 결과이며 실제와 다를 수 있습니다.\n\n👉 직접 계산해보기: https://생활계산기.com";if(navigator.share){navigator.share({title:title+" - 생활계산기.com",text:text}).catch(function(){});}else{navigator.clipboard.writeText(text).then(function(){alert("계산 결과가 복사되었습니다!\n카카오톡이나 메신저에 붙여넣기(Ctrl+V) 하세요.");}).catch(function(){var ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.left="-9999px";document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);alert("계산 결과가 복사되었습니다!\n카카오톡에 붙여넣기 하세요.");});}}
+function shareKakao(title,total,sub,items){const currentUrl=typeof window!=="undefined"?window.location.href:"https://생활계산기.com";let text="📊 [생활계산기.com] "+title+"\n━━━━━━━━━━━━━━━━\n";if(sub)text+=sub+"\n\n";items.forEach(function(it){text+="• "+it.l+": "+it.v+"\n";});text+="━━━━━━━━━━━━━━━━\n💰 합계: ₩"+Math.round(total).toLocaleString("ko-KR")+"\n\n📅 계산일: "+new Date().toLocaleDateString("ko-KR")+"\n※ 참고용 계산 결과이며 실제와 다를 수 있습니다.\n\n👉 직접 계산해보기: "+currentUrl;if(navigator.share){navigator.share({title:title+" - 생활계산기.com",text:text}).catch(function(){});}else{navigator.clipboard.writeText(text).then(function(){alert("계산 결과가 복사되었습니다!\n카카오톡이나 메신저에 붙여넣기(Ctrl+V) 하세요.");}).catch(function(){var ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.left="-9999px";document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);alert("계산 결과가 복사되었습니다!\n카카오톡에 붙여넣기 하세요.");});}}
 
 function RP({title,total,sub,items}){
   return(<div style={{background:"linear-gradient(180deg,#0747A6 0%,#0052CC 100%)",borderRadius:20,padding:"28px 24px",color:"#fff",position:"sticky",top:80}}>
@@ -1035,7 +1058,7 @@ export default function App(){
   const goCalc=(cId)=>{const info=CL.find(c=>c.id===cId);if(info)navigateCalc(info.c,info.id);};
   const hash=useHashRoute();
   useEffect(()=>{if(hash&&SLUG_REVERSE[hash]){const cId=SLUG_REVERSE[hash];const it=CL.find(c=>c.id===cId);if(it){setCat(it.c);setCalc(cId);setPage("calc");}}else if(!hash){setPage("home");}},[hash]);
-  useEffect(()=>{if(page==="calc"&&calc&&PAGE_META[calc]){const m=PAGE_META[calc];document.title=m.title;document.querySelector('meta[name="description"]')?.setAttribute('content',m.desc);document.querySelector('meta[property="og:title"]')?.setAttribute('content',m.title);document.querySelector('meta[property="og:description"]')?.setAttribute('content',m.desc);}else{document.title="생활계산기 - 세금 연말정산 연봉 부동산 종합계산기";document.querySelector('meta[name="description"]')?.setAttribute('content',"취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 4대보험 국민연금 자동차세 등 37가지 무료 계산기. 2026 최신 세법 반영.");}let ld=document.getElementById('dynamic-jsonld');if(!ld){ld=document.createElement('script');ld.id='dynamic-jsonld';ld.type='application/ld+json';document.head.appendChild(ld);}if(page==="calc"&&calc&&PAGE_META[calc]){ld.textContent=JSON.stringify({"@context":"https://schema.org","@type":"WebApplication","name":PAGE_META[calc].title.split(' | ')[0],"description":PAGE_META[calc].desc,"url":"https://xn--989a00a691bdfa717h.com/#/"+SLUGS[calc],"applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}});}else{ld.textContent='';}},[page,calc]);
+  useEffect(()=>{if(page==="calc"&&calc&&PAGE_META[calc]){const m=PAGE_META[calc];document.title=m.title;document.querySelector('meta[name="description"]')?.setAttribute('content',m.desc);document.querySelector('meta[property="og:title"]')?.setAttribute('content',m.title);document.querySelector('meta[property="og:description"]')?.setAttribute('content',m.desc);}else{document.title="생활계산기 - 세금 연말정산 연봉 부동산 종합계산기";document.querySelector('meta[name="description"]')?.setAttribute('content',"취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 4대보험 국민연금 자동차세 등 37가지 무료 계산기. 2026 최신 세법 반영.");}let ld=document.getElementById('dynamic-jsonld');if(!ld){ld=document.createElement('script');ld.id='dynamic-jsonld';ld.type='application/ld+json';document.head.appendChild(ld);}if(page==="calc"&&calc&&PAGE_META[calc]){ld.textContent=JSON.stringify({"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":PAGE_META[calc].title.split(' | ')[0],"description":PAGE_META[calc].desc,"url":"https://xn--989a00a691bdfa717h.com/#/"+SLUGS[calc],"applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"홈","item":"https://xn--989a00a691bdfa717h.com/"},{"@type":"ListItem","position":2,"name":CATS.find(c=>c.id===cat)?.l||"","item":"https://xn--989a00a691bdfa717h.com/"},{"@type":"ListItem","position":3,"name":CL.find(c=>c.id===calc)?.l||"","item":"https://xn--989a00a691bdfa717h.com/#/"+SLUGS[calc]}]}]});}else{ld.textContent='';}},[page,calc]);
   const Comp=CM[calc]||(()=><Placeholder l={CL.find(c=>c.id===calc)?.l||calc}/>);
   const catInfo=CATS.find(c=>c.id===cat);
   const searchResults=search.trim()?CL.filter(c=>(c.l+"|"+(DESC[c.id]||"")).includes(search.trim())):[];
@@ -1289,17 +1312,34 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 
         {/* 중앙: 헤더 + 서브탭 + 계산기 + PRO */}
         <div>
+          <nav aria-label="breadcrumb" style={{fontSize:12,color:P.mt,marginBottom:8,display:"flex",alignItems:"center",gap:6}}>
+            <span onClick={navigateHome} style={{cursor:"pointer",color:P.pri}}>홈</span>
+            <span>›</span>
+            <span style={{cursor:"pointer",color:P.pri}} onClick={()=>{const first=CL.find(c=>c.c===cat);if(first)navigateCalc(cat,first.id);}}>{catInfo?.l}</span>
+            <span>›</span>
+            <span style={{color:P.tx,fontWeight:600}}>{CL.find(c=>c.id===calc)?.l||""}</span>
+          </nav>
           <div style={{marginBottom:24}}>
-            <h1 style={{fontSize:28,fontWeight:800,color:P.tx,margin:0,letterSpacing:-1}}>{catInfo?.l||""} 계산기</h1>
-            <p style={{fontSize:14,color:P.mt,margin:"4px 0 16px"}}>2025년 최신 세법 기반 정밀 계산</p>
+            <h1 style={{fontSize:28,fontWeight:800,color:P.tx,margin:0,letterSpacing:-1}}>{CL.find(c=>c.id===calc)?.l||catInfo?.l+" 계산기"}</h1>
+            <p style={{fontSize:14,color:P.mt,margin:"4px 0 16px"}}>2026년 최신 세법 기반 정밀 계산</p>
             <div className="sub-tabs" style={{display:"flex",gap:6,flexWrap:"nowrap",overflowX:"auto",WebkitOverflowScrolling:"touch"}}>
-              {filtered.map(c=>(<button key={c.id} onClick={()=>setCalc(c.id)} style={{padding:"8px 20px",border:calc===c.id?"none":`1px solid ${P.bd}`,borderRadius:20,background:calc===c.id?P.pri:"transparent",color:calc===c.id?"#fff":P.mt,fontSize:isMo?12:13,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0,minHeight:44}}>{c.l}</button>))}
+              {filtered.map(c=>(<button key={c.id} onClick={()=>navigateCalc(cat,c.id)} style={{padding:"8px 20px",border:calc===c.id?"none":`1px solid ${P.bd}`,borderRadius:20,background:calc===c.id?P.pri:"transparent",color:calc===c.id?"#fff":P.mt,fontSize:isMo?12:13,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0,minHeight:44}}>{c.l}</button>))}
             </div>
           </div>
           <div style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:isMo?16:32,marginBottom:24,boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
             <Comp/>
           </div>
-          {RELATED[calc]&&RELATED[calc].length>0&&<div style={{marginBottom:24,padding:"16px 20px",background:"#fff",borderRadius:12,border:`1px solid ${P.bd}`}}>
+          {INTERNAL_LINKS[calc]&&<div style={{marginBottom:16,padding:"20px 24px",background:"#f8f9fc",borderRadius:12}}>
+            <div style={{fontSize:14,fontWeight:700,color:"#172B4D",marginBottom:12}}>🔗 함께 확인하면 좋은 계산기</div>
+            <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
+              {INTERNAL_LINKS[calc].map(link=>{const it=CL.find(c=>c.id===link.id);return it?<button key={link.id} onClick={()=>navigateCalc(it.c,link.id)} style={{padding:"8px 16px",background:"#fff",border:"1px solid #dfe1e6",borderRadius:20,fontSize:13,color:"#0747A6",cursor:"pointer",fontWeight:600,fontFamily:"inherit",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.background="#deebff";e.currentTarget.style.borderColor="#0747A6"}} onMouseLeave={e=>{e.currentTarget.style.background="#fff";e.currentTarget.style.borderColor="#dfe1e6"}}>{link.label} →</button>:null;})}
+            </div>
+          </div>}
+          {FUN_STATS[calc]&&<div style={{marginBottom:16,padding:"20px 24px",background:"linear-gradient(135deg,#deebff,#EAE6FF)",borderRadius:12}}>
+            <div style={{fontSize:14,fontWeight:700,color:"#172B4D",marginBottom:10}}>{FUN_STATS[calc].title}</div>
+            {FUN_STATS[calc].items.map((it,i)=>(<div key={i} style={{fontSize:13,color:"#344563",padding:"4px 0",display:"flex",alignItems:"flex-start",gap:8}}><span style={{color:"#0747A6"}}>•</span><span>{it}</span></div>))}
+          </div>}
+          {RELATED[calc]&&RELATED[calc].length>0&&!INTERNAL_LINKS[calc]&&<div style={{marginBottom:24,padding:"16px 20px",background:"#fff",borderRadius:12,border:`1px solid ${P.bd}`}}>
             <div style={{fontSize:13,fontWeight:700,color:"#6b778c",marginBottom:10}}>🔗 관련 계산기</div>
             <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
               {RELATED[calc].map(rid=>{const it=CL.find(c=>c.id===rid);return it?<button key={rid} onClick={()=>navigateCalc(it.c,rid)} style={{padding:"6px 14px",background:"#f4f5f7",border:"none",borderRadius:16,fontSize:12,color:"#0747A6",cursor:"pointer",fontWeight:600,fontFamily:"inherit"}} onMouseEnter={e=>{e.currentTarget.style.background="#deebff"}} onMouseLeave={e=>{e.currentTarget.style.background="#f4f5f7"}}>{it.l} →</button>:null;})}
@@ -1389,8 +1429,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           {[{l:"Legal Disclaimer (면책조항)",k:"disclaimer"},{l:"Resource Center (자료실)",k:"resource"},{l:"Privacy Policy (개인정보)",k:"privacy"},{l:"Contact Support (문의)",k:"contact"}].map(item=><div key={item.k} onClick={()=>setModal(item.k)} style={{fontSize:13,color:P.mt,marginBottom:8,cursor:"pointer"}} onMouseEnter={e=>e.currentTarget.style.color="#0747A6"} onMouseLeave={e=>e.currentTarget.style.color=P.mt}>{item.l}</div>)}
         </div>
       </div>
-      <div style={{textAlign:"center",fontSize:12,color:"#a5adba",marginTop:32}}>© 2025 생활계산기.com. All rights reserved. <span>| 세법 검증: {UPDATE_LOG[0]?.date}</span></div>
+      <div style={{textAlign:"center",fontSize:11,color:"#a5adba",marginTop:32,lineHeight:1.8}}>
+        © 2026 생활계산기.com. All rights reserved. | 세법 검증: {UPDATE_LOG[0]?.date}<br/>
+        <span>상호: 더블유부동산 | 대표: 이광철 | 사업자등록번호: 589-24-01721 | 이메일: noble.kclee@gmail.com</span>
+      </div>
     </footer>
     {modal&&<LegalModal type={modal} onClose={()=>setModal(null)}/>}
+    <button aria-label="맨 위로 스크롤" onClick={()=>window.scrollTo({top:0,behavior:"smooth"})} style={{position:"fixed",bottom:24,right:24,width:44,height:44,borderRadius:"50%",background:P.pri,color:"#fff",border:"none",fontSize:20,cursor:"pointer",boxShadow:"0 4px 12px rgba(0,0,0,.15)",zIndex:50,display:"flex",alignItems:"center",justifyContent:"center"}}>↑</button>
   </div>);
 }
