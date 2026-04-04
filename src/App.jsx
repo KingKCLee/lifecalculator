@@ -1072,21 +1072,25 @@ function ScrollTop(){
 
 function AuthModal({mode,setMode,onClose,isMo}){
   return(<div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.5)",zIndex:10000,display:"flex",alignItems:"center",justifyContent:"center",padding:16}}>
-    <div onClick={e=>e.stopPropagation()} style={{background:"#fff",borderRadius:20,padding:isMo?24:40,maxWidth:400,width:"100%",position:"relative"}}>
+    <div onClick={e=>e.stopPropagation()} style={{background:"#fff",borderRadius:20,padding:isMo?24:40,maxWidth:420,width:"100%",position:"relative"}}>
       <button aria-label="닫기" onClick={onClose} style={{position:"absolute",top:16,right:16,background:"none",border:"none",fontSize:20,cursor:"pointer",color:"#6b778c"}}>✕</button>
-      <div style={{textAlign:"center",marginBottom:24}}>
+      <div style={{textAlign:"center",marginBottom:28}}>
         <div style={{fontSize:32,marginBottom:8}}>🔐</div>
         <h3 style={{fontSize:22,fontWeight:800,color:"#172B4D",margin:0}}>{mode==="login"?"로그인":"무료 회원가입"}</h3>
-        <p style={{fontSize:13,color:"#505f79",marginTop:4}}>계산 기록 저장 · 납부 알림 · 입력값 자동 완성</p>
+        <p style={{fontSize:13,color:"#505f79",marginTop:6,lineHeight:1.5}}>계산 기록 저장 · 납부 알림 · 입력값 자동 완성</p>
       </div>
-      <div style={{display:"flex",flexDirection:"column",gap:12}}>
-        <input type="email" placeholder="이메일 주소" style={{padding:"14px 16px",border:"1.5px solid #dfe1e6",borderRadius:10,fontSize:15,outline:"none",fontFamily:"inherit"}}/>
-        <input type="password" placeholder="비밀번호" style={{padding:"14px 16px",border:"1.5px solid #dfe1e6",borderRadius:10,fontSize:15,outline:"none",fontFamily:"inherit"}}/>
-        {mode==="signup"&&<input type="password" placeholder="비밀번호 확인" style={{padding:"14px 16px",border:"1.5px solid #dfe1e6",borderRadius:10,fontSize:15,outline:"none",fontFamily:"inherit"}}/>}
-        <button onClick={()=>alert("회원 기능을 준비 중입니다. 빠른 시일 내 오픈 예정!")} style={{padding:14,background:"#0747A6",color:"#fff",border:"none",borderRadius:10,fontSize:15,fontWeight:700,cursor:"pointer",marginTop:4,fontFamily:"inherit"}}>{mode==="login"?"로그인":"가입하기"}</button>
-        <div style={{textAlign:"center",fontSize:13,color:"#505f79",marginTop:8}}>{mode==="login"?(<>계정이 없으신가요? <span onClick={()=>setMode("signup")} style={{color:"#0747A6",fontWeight:700,cursor:"pointer"}}>무료 가입</span></>):(<>이미 계정이 있으신가요? <span onClick={()=>setMode("login")} style={{color:"#0747A6",fontWeight:700,cursor:"pointer"}}>로그인</span></>)}</div>
+      <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:20}}>
+        <button onClick={()=>alert("네이버 로그인 기능을 준비 중입니다. 빠른 시일 내 오픈 예정!")} style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,padding:14,background:"#03C75A",color:"#fff",border:"none",borderRadius:10,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}><span style={{fontSize:18,fontWeight:900}}>N</span>네이버로 {mode==="login"?"로그인":"시작하기"}</button>
+        <button onClick={()=>alert("구글 로그인 기능을 준비 중입니다. 빠른 시일 내 오픈 예정!")} style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,padding:14,background:"#fff",color:"#172B4D",border:"1.5px solid #dfe1e6",borderRadius:10,fontSize:15,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}><span style={{fontSize:18}}>G</span>Google로 {mode==="login"?"로그인":"시작하기"}</button>
       </div>
-      <div style={{borderTop:"1px solid #f4f5f7",marginTop:20,paddingTop:16,textAlign:"center",fontSize:11,color:"#6b778c"}}>가입 시 이용약관 및 개인정보처리방침에 동의합니다</div>
+      <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:20}}><div style={{flex:1,height:1,background:"#dfe1e6"}}/><span style={{fontSize:12,color:"#6b778c"}}>또는</span><div style={{flex:1,height:1,background:"#dfe1e6"}}/></div>
+      <div style={{display:"flex",flexDirection:"column",gap:10}}>
+        <input type="email" placeholder="이메일 주소" style={{padding:"12px 16px",border:"1.5px solid #dfe1e6",borderRadius:10,fontSize:14,outline:"none",fontFamily:"inherit"}}/>
+        <input type="password" placeholder="비밀번호" style={{padding:"12px 16px",border:"1.5px solid #dfe1e6",borderRadius:10,fontSize:14,outline:"none",fontFamily:"inherit"}}/>
+        <button onClick={()=>{alert("회원 기능을 준비 중입니다. 빠른 시일 내 오픈 예정!");onClose();}} style={{padding:12,background:"#f4f5f7",color:"#505f79",border:"none",borderRadius:10,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>이메일로 {mode==="login"?"로그인":"가입하기"}</button>
+      </div>
+      <div style={{textAlign:"center",fontSize:13,color:"#505f79",marginTop:16}}>{mode==="login"?(<>계정이 없으신가요? <span onClick={()=>setMode("signup")} style={{color:"#0747A6",fontWeight:700,cursor:"pointer"}}>무료 가입</span></>):(<>이미 계정이 있으신가요? <span onClick={()=>setMode("login")} style={{color:"#0747A6",fontWeight:700,cursor:"pointer"}}>로그인</span></>)}</div>
+      <div style={{borderTop:"1px solid #f4f5f7",marginTop:16,paddingTop:12,textAlign:"center",fontSize:11,color:"#6b778c",lineHeight:1.6}}>가입 시 <span style={{textDecoration:"underline",cursor:"pointer"}}>이용약관</span> 및 <span style={{textDecoration:"underline",cursor:"pointer"}}>개인정보처리방침</span>에 동의합니다</div>
     </div>
   </div>);
 }
