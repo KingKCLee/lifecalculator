@@ -39,6 +39,23 @@ const UPDATE_LOG=[
   {date:"2025.01.15",items:[{cat:"전체",title:"생활계산기.com 서비스 오픈",desc:"취득세, 양도소득세, 종부세, 재산세, 증여세, 상속세, DSR, DTI, LTV, 중개보수 등 20가지 부동산 계산기로 서비스 시작."}]},
 ];
 
+/* ── 세무 캘린더 ── */
+const TAX_CALENDAR={
+1:[{day:"1.1~1.31",title:"자동차세 연납 신청",desc:"연납 시 약 5% 할인",icon:"🚗",calc:{cat:"life",id:"cartax"},urgent:true},{day:"1.25",title:"부가가치세 확정신고",desc:"7~12월분 (일반과세자)",icon:"📋"},{day:"1.31",title:"원천세 신고·납부",desc:"전월분 근로·사업소득",icon:"💼"}],
+2:[{day:"2.1~2.28",title:"연말정산 서류 제출",desc:"직장인 소득·세액공제 신고",icon:"🧾",calc:{cat:"tax",id:"yearend"},urgent:true},{day:"2.28",title:"원천세 신고·납부",desc:"전월분 근로·사업소득",icon:"💼"}],
+3:[{day:"3.31",title:"원천세 신고·납부",desc:"전월분 근로·사업소득",icon:"💼"},{day:"3.31",title:"법인세 신고·납부",desc:"12월 결산법인",icon:"🏢"}],
+4:[{day:"4.1~4.30",title:"종합소득세 미리 준비",desc:"5월 신고 전 경비 정리",icon:"📊",calc:{cat:"tax",id:"inctax"}},{day:"4.25",title:"부가가치세 예정신고",desc:"1~3월분 (일반과세자)",icon:"📋"},{day:"4.30",title:"원천세 신고·납부",desc:"전월분 근로·사업소득",icon:"💼"}],
+5:[{day:"5.1~5.31",title:"종합소득세 확정신고",desc:"프리랜서·사업자 필수",icon:"💰",calc:{cat:"tax",id:"inctax"},urgent:true},{day:"5.31",title:"개인지방소득세 신고",desc:"종합소득세와 동시 신고",icon:"🏛️"},{day:"5.31",title:"원천세 신고·납부",desc:"전월분 근로·사업소득",icon:"💼"}],
+6:[{day:"6.1",title:"종합부동산세·재산세 기준일",desc:"6.1 보유자에게 과세",icon:"🏘️",calc:{cat:"tax",id:"compre"}},{day:"6.30",title:"원천세 신고·납부",desc:"전월분 근로·사업소득",icon:"💼"}],
+7:[{day:"7.1~7.31",title:"재산세 1기분 납부",desc:"건물분+토지분 절반",icon:"🏡",calc:{cat:"tax",id:"property"},urgent:true},{day:"7.25",title:"부가가치세 확정신고",desc:"1~6월분 (일반과세자)",icon:"📋"},{day:"7.31",title:"원천세 신고·납부",desc:"전월분 근로·사업소득",icon:"💼"}],
+8:[{day:"8.31",title:"원천세 신고·납부",desc:"전월분 근로·사업소득",icon:"💼"},{day:"8.31",title:"주민세(균등분) 납부",desc:"개인 사업장 주민세",icon:"🏛️"}],
+9:[{day:"9.1~9.30",title:"재산세 2기분 납부",desc:"토지분 나머지 절반",icon:"🏡",calc:{cat:"tax",id:"property"},urgent:true},{day:"9.30",title:"원천세 신고·납부",desc:"전월분 근로·사업소득",icon:"💼"}],
+10:[{day:"10.25",title:"부가가치세 예정신고",desc:"7~9월분 (일반과세자)",icon:"📋"},{day:"10.31",title:"원천세 신고·납부",desc:"전월분 근로·사업소득",icon:"💼"}],
+11:[{day:"11.15~12.1",title:"종합부동산세 고지·납부",desc:"12.15까지 납부",icon:"🏘️",calc:{cat:"tax",id:"compre"}},{day:"11.30",title:"원천세 신고·납부",desc:"전월분 근로·사업소득",icon:"💼"}],
+12:[{day:"12.1~12.15",title:"종합부동산세 납부 마감",desc:"분납 가능 (250만원 초과)",icon:"🏘️",calc:{cat:"tax",id:"compre"},urgent:true},{day:"12.1~12.31",title:"자동차세 2기분 납부",desc:"7~12월분",icon:"🚗",calc:{cat:"life",id:"cartax"},urgent:true},{day:"12.31",title:"원천세 신고·납부",desc:"전월분 근로·사업소득",icon:"💼"}],
+};
+const UTILITY_DATES=[{name:"아파트 관리비",day:"매월 25일 전후",icon:"🏢"},{name:"전기요금",day:"매월 말일",icon:"⚡"},{name:"가스요금",day:"매월 말일",icon:"🔥"},{name:"수도요금",day:"홀수월 말일",icon:"💧"},{name:"통신요금",day:"매월 말일",icon:"📱"},{name:"건강보험료",day:"매월 10일",icon:"🏥"}];
+
 /* ── 가이드 데이터 ── */
 const GD={
 acquisition:{q:"취득세란 무엇인가요?",a:"부동산을 매매·상속·증여 등으로 취득할 때 납부하는 지방세입니다. 주택의 경우 1주택 매매 시 1~3%, 조정대상지역 2주택 8%, 3주택 이상 12%의 세율이 적용됩니다. 단, 비규제지역 2주택은 중과 없이 1~3% 일반세율이 적용되며, 비규제 3주택은 8%입니다. 일시적 2주택자(이사 목적)는 3년 내 종전주택 처분 조건으로 1주택 세율이 적용됩니다. 생애최초 주택 구입자(12억 이하)는 최대 200만원 감면(2028년 말까지 연장).",
@@ -857,6 +874,9 @@ export default function App(){
   const[search,setSearch]=useState("");
   const[modal,setModal]=useState(null);
   const[showAllLog,setShowAllLog]=useState(false);
+  const[calMonth,setCalMonth]=useState(new Date().getMonth()+1);
+  const prevMonth=()=>setCalMonth(m=>m<=1?12:m-1);
+  const nextMonth=()=>setCalMonth(m=>m>=12?1:m+1);
   const filtered=CL.filter(c=>c.c===cat);const hCat=c=>{setCat(c);const f=CL.find(x=>x.c===c);if(f)setCalc(f.id);};
   const goCalc=(cId)=>{const info=CL.find(c=>c.id===cId);if(info){setCat(info.c);setCalc(info.id);setPage("calc");}};
   const Comp=CM[calc]||(()=><Placeholder l={CL.find(c=>c.id===calc)?.l||calc}/>);
@@ -962,6 +982,46 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           })}
         </div>
       </div>
+
+      {/* 세무 캘린더 */}
+      {(()=>{const month=calMonth;const items=TAX_CALENDAR[month]||[];return(
+        <div style={{maxWidth:1100,margin:"0 auto",padding:"48px 24px"}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:24,flexWrap:"wrap",gap:8}}>
+            <div>
+              <h2 style={{fontSize:isMo?20:24,fontWeight:800,color:"#172B4D",margin:"0 0 4px"}}>{month}월 세무 캘린더</h2>
+              <p style={{fontSize:14,color:"#6b778c",margin:0}}>놓치면 안 되는 세금·납부 일정</p>
+            </div>
+            <div style={{display:"flex",alignItems:"center",gap:8}}>
+              <button onClick={prevMonth} style={{width:36,height:36,borderRadius:"50%",border:"1px solid #dfe1e6",background:"#fff",cursor:"pointer",fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}} onMouseEnter={e=>{e.currentTarget.style.background="#deebff"}} onMouseLeave={e=>{e.currentTarget.style.background="#fff"}}>←</button>
+              <div style={{fontSize:14,fontWeight:700,color:"#fff",background:"#0747A6",padding:"6px 16px",borderRadius:20,minWidth:80,textAlign:"center"}}>{month}월</div>
+              <button onClick={nextMonth} style={{width:36,height:36,borderRadius:"50%",border:"1px solid #dfe1e6",background:"#fff",cursor:"pointer",fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}} onMouseEnter={e=>{e.currentTarget.style.background="#deebff"}} onMouseLeave={e=>{e.currentTarget.style.background="#fff"}}>→</button>
+              {month===new Date().getMonth()+1&&<span style={{fontSize:11,color:"#00875A",fontWeight:600}}>● 이번 달</span>}
+            </div>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"2fr 1fr",gap:20}}>
+            <div style={{background:"#fff",borderRadius:16,border:"1px solid #dfe1e6",padding:24}}>
+              <div style={{fontSize:14,fontWeight:700,color:"#0747A6",marginBottom:16}}>📅 세금 신고·납부 일정</div>
+              {items.map((item,i)=>(<div key={i} onClick={()=>{if(item.calc){setCat(item.calc.cat);setCalc(item.calc.id);setPage("calc");}}} style={{display:"flex",gap:12,padding:"12px 14px",marginBottom:8,borderRadius:10,background:item.urgent?"#fff8f0":"#f8f9fc",border:item.urgent?"1px solid #FFE0B2":"1px solid transparent",cursor:item.calc?"pointer":"default",transition:"all .15s"}} onMouseEnter={e=>{if(item.calc)e.currentTarget.style.background="#deebff";}} onMouseLeave={e=>{e.currentTarget.style.background=item.urgent?"#fff8f0":"#f8f9fc";}}>
+                <div style={{fontSize:20,flexShrink:0}}>{item.icon}</div>
+                <div style={{flex:1}}>
+                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}><span style={{fontSize:14,fontWeight:700,color:"#172B4D"}}>{item.title}</span>{item.urgent&&<span style={{fontSize:10,fontWeight:700,color:"#DE350B",background:"#FFEBE6",padding:"2px 8px",borderRadius:4}}>마감 주의</span>}</div>
+                  <div style={{fontSize:12,color:"#6b778c",marginTop:2}}>{item.desc}</div>
+                  <div style={{fontSize:11,color:"#0747A6",fontWeight:600,marginTop:4}}>{item.day}</div>
+                </div>
+                {item.calc&&<div style={{fontSize:12,color:"#0747A6",fontWeight:600,alignSelf:"center"}}>계산 →</div>}
+              </div>))}
+            </div>
+            <div style={{background:"#fff",borderRadius:16,border:"1px solid #dfe1e6",padding:24}}>
+              <div style={{fontSize:14,fontWeight:700,color:"#0747A6",marginBottom:16}}>🧾 공과금 납부일</div>
+              {UTILITY_DATES.map((item,i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"10px 0",borderBottom:i<UTILITY_DATES.length-1?"1px solid #f4f5f7":"none"}}><div style={{display:"flex",alignItems:"center",gap:8}}><span style={{fontSize:16}}>{item.icon}</span><span style={{fontSize:13,fontWeight:600,color:"#172B4D"}}>{item.name}</span></div><span style={{fontSize:12,color:"#6b778c"}}>{item.day}</span></div>))}
+              <div style={{marginTop:20,padding:"14px 16px",background:"#f8f9fc",borderRadius:10}}>
+                <div style={{fontSize:13,fontWeight:700,color:"#172B4D",marginBottom:6}}>💡 이달의 절세 팁</div>
+                <div style={{fontSize:12,color:"#6b778c",lineHeight:1.6}}>{month===1?"1월 자동차세 연납 신청으로 약 5% 할인! 위택스에서 신청하세요.":month===2?"연말정산 서류 꼼꼼히 챙기세요. 연금저축·의료비·교육비 공제 놓치지 마세요.":month===5?"종합소득세 신고의 달! 프리랜서는 경비 증빙 정리가 환급의 핵심입니다.":month===7?"재산세 1기분 납부의 달. 카드 납부 시 무이자 할부 혜택을 확인하세요.":month===9?"재산세 2기분 납부. 납부 기한 넘기면 3% 가산금이 부과됩니다.":month===12?"종부세·자동차세 납부 마감. 분납 조건을 미리 확인하세요.":"매월 원천세 신고·납부 잊지 마세요. 홈택스에서 간편 신고 가능합니다."}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );})()}
 
       {/* 종합 계산기 라인업 */}
       <div id="calcSuite" style={{maxWidth:1100,margin:"0 auto",padding:"48px 24px"}}>
