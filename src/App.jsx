@@ -877,6 +877,8 @@ export default function App(){
   const[calMonth,setCalMonth]=useState(new Date().getMonth()+1);
   const prevMonth=()=>setCalMonth(m=>m<=1?12:m-1);
   const nextMonth=()=>setCalMonth(m=>m>=12?1:m+1);
+  const[liveData,setLiveData]=useState(null);
+  useEffect(()=>{fetch('/data/live-data.json?t='+Date.now()).then(r=>r.json()).then(d=>setLiveData(d)).catch(()=>{});},[]);
   const filtered=CL.filter(c=>c.c===cat);const hCat=c=>{setCat(c);const f=CL.find(x=>x.c===c);if(f)setCalc(f.id);};
   const goCalc=(cId)=>{const info=CL.find(c=>c.id===cId);if(info){setCat(info.c);setCalc(info.id);setPage("calc");}};
   const Comp=CM[calc]||(()=><Placeholder l={CL.find(c=>c.id===calc)?.l||calc}/>);
@@ -984,7 +986,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
       </div>
 
       {/* 세무 캘린더 */}
-      {(()=>{const month=calMonth;const items=TAX_CALENDAR[month]||[];return(
+      {(()=>{const month=calMonth;const liveCal=liveData?.taxCalendar?.[String(month)];const items=(liveCal||TAX_CALENDAR[month]||[]).map(it=>liveCal?{...it,calc:it.calcCat?{cat:it.calcCat,id:it.calcId}:null}:it);const liveUtil=liveData?.utilityDates||UTILITY_DATES;const liveTip=liveData?.monthlyTips?.[String(month)];return(
         <div style={{maxWidth:1100,margin:"0 auto",padding:"48px 24px"}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:24,flexWrap:"wrap",gap:8}}>
             <div>
@@ -1013,10 +1015,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
             </div>
             <div style={{background:"#fff",borderRadius:16,border:"1px solid #dfe1e6",padding:24}}>
               <div style={{fontSize:14,fontWeight:700,color:"#0747A6",marginBottom:16}}>🧾 공과금 납부일</div>
-              {UTILITY_DATES.map((item,i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"10px 0",borderBottom:i<UTILITY_DATES.length-1?"1px solid #f4f5f7":"none"}}><div style={{display:"flex",alignItems:"center",gap:8}}><span style={{fontSize:16}}>{item.icon}</span><span style={{fontSize:13,fontWeight:600,color:"#172B4D"}}>{item.name}</span></div><span style={{fontSize:12,color:"#6b778c"}}>{item.day}</span></div>))}
+              {liveUtil.map((item,i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"10px 0",borderBottom:i<UTILITY_DATES.length-1?"1px solid #f4f5f7":"none"}}><div style={{display:"flex",alignItems:"center",gap:8}}><span style={{fontSize:16}}>{item.icon}</span><span style={{fontSize:13,fontWeight:600,color:"#172B4D"}}>{item.name}</span></div><span style={{fontSize:12,color:"#6b778c"}}>{item.day}</span></div>))}
               <div style={{marginTop:20,padding:"14px 16px",background:"#f8f9fc",borderRadius:10}}>
                 <div style={{fontSize:13,fontWeight:700,color:"#172B4D",marginBottom:6}}>💡 이달의 절세 팁</div>
-                <div style={{fontSize:12,color:"#6b778c",lineHeight:1.6}}>{month===1?"1월 자동차세 연납 신청으로 약 5% 할인! 위택스에서 신청하세요.":month===2?"연말정산 서류 꼼꼼히 챙기세요. 연금저축·의료비·교육비 공제 놓치지 마세요.":month===5?"종합소득세 신고의 달! 프리랜서는 경비 증빙 정리가 환급의 핵심입니다.":month===7?"재산세 1기분 납부의 달. 카드 납부 시 무이자 할부 혜택을 확인하세요.":month===9?"재산세 2기분 납부. 납부 기한 넘기면 3% 가산금이 부과됩니다.":month===12?"종부세·자동차세 납부 마감. 분납 조건을 미리 확인하세요.":"매월 원천세 신고·납부 잊지 마세요. 홈택스에서 간편 신고 가능합니다."}</div>
+                <div style={{fontSize:12,color:"#6b778c",lineHeight:1.6}}>{liveTip||"매월 원천세 신고·납부 잊지 마세요. 홈택스에서 간편 신고 가능합니다."}</div>
               </div>
             </div>
           </div>
