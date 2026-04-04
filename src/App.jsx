@@ -1037,7 +1037,9 @@ function EconCalendar({liveData,isMo,setCat,setCalc,setPage}){
   for(let d=1;d<=daysInMonth;d++){const dow=(firstDay+d-1)%7;const dayEv=filtered.filter(e=>e.day===d||(e.end&&d>=e.day&&d<=e.end));week[dow]={day:d,events:dayEv};if(dow===6||d===daysInMonth){weeks.push([...week]);week=Array(7).fill(null);}}
   return(<div style={{maxWidth:1100,margin:"0 auto",padding:"48px 24px"}}>
     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20,flexWrap:"wrap",gap:8}}>
-      <div><h2 style={{fontSize:isMo?20:24,fontWeight:800,color:"#172B4D",margin:"0 0 4px"}}>생활경제 달력</h2><p style={{fontSize:13,color:"#6b778c",margin:0}}>세금 납부·금통위·FOMC·CPI 주요 일정</p></div>
+      <div><h2 style={{fontSize:isMo?20:24,fontWeight:800,color:"#172B4D",margin:"0 0 4px"}}>생활경제 달력</h2><p style={{fontSize:13,color:"#6b778c",margin:0}}>세금 납부·금통위·FOMC·CPI 주요 일정</p>
+        {(()=>{if(!isThis)return null;const today=new Date().getDate();const upcoming=events.filter(e=>e.day>=today&&e.urgent).sort((a,b)=>a.day-b.day)[0];if(!upcoming)return null;const dDay=upcoming.day-today;return(<div style={{display:"inline-flex",alignItems:"center",gap:6,background:dDay<=3?"#FFEBE6":"#FFF8E1",padding:"6px 14px",borderRadius:20,marginTop:8}}><span style={{fontSize:12,fontWeight:800,color:dDay<=3?"#DE350B":"#FF8B00"}}>D-{dDay===0?"DAY":dDay}</span><span style={{fontSize:12,color:"#172B4D",fontWeight:600}}>{upcoming.icon} {upcoming.title}</span></div>);})()}
+      </div>
       <div style={{display:"flex",alignItems:"center",gap:8}}>
         <button onClick={prevM} style={{width:36,height:36,borderRadius:"50%",border:"1px solid #dfe1e6",background:"#fff",cursor:"pointer",fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}} onMouseEnter={e=>{e.currentTarget.style.background="#deebff"}} onMouseLeave={e=>{e.currentTarget.style.background="#fff"}}>←</button>
         <div style={{fontSize:15,fontWeight:700,color:"#fff",background:"#0747A6",padding:"6px 20px",borderRadius:20,minWidth:120,textAlign:"center"}}>{calYear}년 {calMonth}월</div>
@@ -1066,6 +1068,20 @@ function EconCalendar({liveData,isMo,setCat,setCalc,setPage}){
         <div style={{padding:"14px 16px",background:"#f8f9fc",borderRadius:10}}><div style={{fontSize:13,fontWeight:700,color:"#172B4D",marginBottom:6}}>💡 {calMonth}월 경제 포인트</div><div style={{fontSize:12,color:"#6b778c",lineHeight:1.6}}>{liveData?.monthlyTips?.[String(calMonth)]||"매월 원천세 신고·납부와 주요 경제지표 발표일을 확인하세요."}</div></div>
       </div>
     </div>
+  </div>);
+}
+
+function IndicatorTicker({liveData}){
+  const items=liveData?.indicators?.items;if(!items||items.length===0)return null;
+  return(<div style={{background:"#0d1117",overflow:"hidden",height:32,display:"flex",alignItems:"center"}}>
+    <div style={{display:"flex",gap:32,animation:"ticker 30s linear infinite",whiteSpace:"nowrap",paddingLeft:16}}>
+      {[...items,...items].map((ind,i)=>{const up=ind.change>0,dn=ind.change<0;return(<span key={i} style={{fontSize:12,color:"#e6edf3",display:"inline-flex",alignItems:"center",gap:6}}>
+        <span style={{opacity:.6}}>{ind.name}</span>
+        <span style={{fontWeight:700,fontVariantNumeric:"tabular-nums"}}>{ind.current?.toLocaleString()}{ind.unit}</span>
+        <span style={{color:up?"#FF5630":dn?"#36B37E":"#6b778c",fontWeight:600,fontSize:11}}>{up?"▲":dn?"▼":"—"}{Math.abs(ind.change)}{ind.unit}</span>
+      </span>);})}
+    </div>
+    <style>{`@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}`}</style>
   </div>);
 }
 
@@ -1200,6 +1216,7 @@ export default function App(){
   const[cat,setCat]=useState("tax");const[calc,setCalc]=useState("acquisition");const[gTab,setGTab]=useState("rates");
   const[search,setSearch]=useState("");
   const[modal,setModal]=useState(null);
+  const[mobileMenu,setMobileMenu]=useState(false);
   const[showAllLog,setShowAllLog]=useState(false);
   const[liveData,setLiveData]=useState(null);
   useEffect(()=>{fetch('/data/live-data.json?t='+Date.now()).then(r=>r.json()).then(d=>setLiveData(d)).catch(()=>{});},[]);
@@ -1215,7 +1232,7 @@ export default function App(){
   const catInfo=CATS.find(c=>c.id===cat);
   const searchResults=search.trim()?CL.filter(c=>(c.l+"|"+(DESC[c.id]||"")).includes(search.trim())):[];
 
-  return(<div style={{minHeight:"100vh",background:P.bg,fontFamily:"'Pretendard','Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif"}}>
+  return(<div style={{minHeight:"100vh",background:P.bg,fontFamily:"'Pretendard','Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif",width:"100%",maxWidth:"100vw",overflowX:"hidden"}}>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
     <style>{`
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;overflow-x:hidden}
@@ -1234,6 +1251,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 .seo h3{font-size:16px;font-weight:700;color:#0747A6;margin:20px 0 8px}
 .seo p{margin:0 0 12px}
 .seo strong{color:#172B4D;font-weight:700}
+.num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
 @media(max-width:1023px){.calc-grid{grid-template-columns:1fr!important}.edu-sidebar{display:none!important}.insights-grid{grid-template-columns:1fr 1fr!important}}
 @media(max-width:768px){.calc-container>div{grid-template-columns:1fr!important;gap:16px!important}.calc-container h3{font-size:16px!important}}
 @media(max-width:768px){input,select,textarea{font-size:16px!important}.pro-cards{grid-template-columns:1fr!important}.footer-inner{grid-template-columns:1fr!important;text-align:center}.cat-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))!important}}
@@ -1259,6 +1277,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
         </div>
       </div>
     </nav>
+    {liveData&&<IndicatorTicker liveData={liveData}/>}
 
     {page==="home"?(<>
       {/* 히어로 2컬럼 */}
@@ -1279,8 +1298,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
               ))}
             </div>
             <div style={{display:"flex",gap:12,flexWrap:"wrap",flexDirection:isMo?"column":"row"}}>
-              <button onClick={()=>navigateCalc("tax","acquisition")} style={{background:"#0747A6",color:"#fff",border:"none",borderRadius:8,padding:"14px 28px",fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit",width:isMo?"100%":"auto"}}>지금 계산하기 →</button>
-              <button onClick={()=>document.getElementById("calcSuite")?.scrollIntoView({behavior:"smooth"})} style={{background:"#fff",color:"#172B4D",border:"2px solid #dfe1e6",borderRadius:8,padding:"14px 28px",fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit",width:isMo?"100%":"auto"}}>39가지 도구 보기</button>
+              <button onClick={()=>navigateCalc("tax","acquisition")} style={{background:"#0747A6",color:"#fff",border:"none",borderRadius:12,padding:isMo?"16px":"14px 28px",fontSize:isMo?16:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit",width:isMo?"100%":"auto",transition:"all .2s",boxShadow:"0 4px 14px rgba(7,71,166,0.3)"}} onMouseEnter={e=>{e.currentTarget.style.transform="scale(1.04)";e.currentTarget.style.boxShadow="0 6px 20px rgba(7,71,166,0.4)"}} onMouseLeave={e=>{e.currentTarget.style.transform="scale(1)";e.currentTarget.style.boxShadow="0 4px 14px rgba(7,71,166,0.3)"}}>지금 계산하기 →</button>
+              <button onClick={()=>document.getElementById("allCalcs")?.scrollIntoView({behavior:"smooth"})} style={{background:"#fff",color:"#172B4D",border:"2px solid #dfe1e6",borderRadius:8,padding:"14px 28px",fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit",width:isMo?"100%":"auto"}}>39가지 도구 보기</button>
             </div>
             <div style={{display:"flex",gap:24,marginTop:24,flexWrap:"wrap"}}>
               <div style={{display:"flex",alignItems:"center",gap:6}}><span style={{fontSize:14}}>📊</span><span style={{fontSize:13,color:"#6b778c"}}>누적 계산 <strong style={{color:"#172B4D"}}>150,000건+</strong></span></div>
@@ -1324,53 +1343,29 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
       {/* 전체 계산기 격자 그리드 */}
       <CalcGrid navigateCalc={navigateCalc} isMo={isMo}/>
 
-      {/* 종합 계산기 라인업 */}
-      <div id="calcSuite" style={{maxWidth:1100,margin:"0 auto",padding:"48px 24px"}}>
-        <div style={{textAlign:"center",marginBottom:32}}>
-          <h2 style={{fontSize:24,fontWeight:800,color:P.tx,margin:"0 0 8px"}}>종합 계산기 라인업</h2>
-          <p style={{fontSize:14,color:P.mt,margin:0}}>생활 속 재정 판단을 위한 전문 도구</p>
-        </div>
-        {(()=>{const catColors={tax:"#0747A6",loan:"#00875A",cost:"#FF8B00",life:"#6554C0",realestate:"#008DA6",pro:"#DE350B"};
-        const CatIcon=({cid})=>{const cl=catColors[cid]||P.pri;
-          if(cid==="tax")return<div style={{width:20,height:24,borderRadius:3,background:cl,position:"relative",display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center",gap:3,padding:"0 3px"}}>{[0,1,2].map(i=><div key={i} style={{width:14,height:2,borderRadius:1,background:"#fff"}}/>)}</div>;
-          if(cid==="loan")return<div style={{display:"flex",flexDirection:"column",alignItems:"center"}}><div style={{width:0,height:0,borderLeft:"12px solid transparent",borderRight:"12px solid transparent",borderBottom:`12px solid ${cl}`}}/><div style={{width:20,height:12,background:cl,borderRadius:"0 0 3px 3px"}}/></div>;
-          if(cid==="cost")return<div style={{display:"grid",gridTemplateColumns:"8px 8px",gap:3}}>{[0,1,2,3].map(i=><div key={i} style={{width:8,height:8,borderRadius:2,background:cl}}/>)}</div>;
-          if(cid==="life")return<div style={{width:20,height:20,borderRadius:"50%",background:cl,display:"flex",alignItems:"center",justifyContent:"center"}}><div style={{width:8,height:8,borderRadius:"50%",background:"#fff"}}/></div>;
-          if(cid==="realestate")return<div style={{display:"flex",flexDirection:"column",alignItems:"center"}}><div style={{width:0,height:0,borderLeft:"10px solid transparent",borderRight:"10px solid transparent",borderBottom:`10px solid ${cl}`}}/><div style={{width:18,height:10,background:cl,borderRadius:"0 0 2px 2px",marginTop:1}}/></div>;
-          return<div style={{display:"grid",gridTemplateColumns:"10px 8px",gap:3}}><div style={{width:10,height:10,borderRadius:2,background:cl}}/><div style={{width:8,height:8,borderRadius:2,background:cl,opacity:.6}}/><div style={{width:10,height:8,borderRadius:2,background:cl,opacity:.6}}/><div style={{width:8,height:10,borderRadius:2,background:cl}}/></div>;
-        };
-        const cats4=CATS;
-        return <div className="cat-cards" style={{display:"grid",gridTemplateColumns:isMo?"repeat(2,1fr)":"repeat(3,1fr)",gap:20}}>
-          {cats4.map(ct=>{const items=CL.filter(c=>c.c===ct.id);const cl=catColors[ct.id]||P.pri;return(
-            <div key={ct.id} style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,overflow:"hidden",cursor:"pointer",transition:"transform .2s, box-shadow .2s"}}
-              onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow="0 8px 24px rgba(0,0,0,.08)";}}
-              onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";}}
-              onClick={()=>{const first=CL.find(c=>c.c===ct.id);if(first)navigateCalc(ct.id,first.id);}}>
-              <div style={{padding:"20px 24px 16px"}}>
-                <div style={{width:48,height:48,borderRadius:12,background:cl+"15",display:"flex",alignItems:"center",justifyContent:"center"}}>
-                  <CatIcon cid={ct.id}/>
-                </div>
-              </div>
-              <div style={{padding:"0 24px 8px"}}>
-                <div style={{fontSize:18,fontWeight:700,color:P.tx}}>{ct.l} 계산기</div>
-              </div>
-              <div style={{padding:"0 24px 24px"}}>
-                {items.map(c=>(
-                  <div key={c.id} onClick={e=>{e.stopPropagation();goCalc(c.id);}} style={{fontSize:13,color:P.mt,padding:"6px 8px",margin:"0 -8px",borderRadius:6,display:"flex",alignItems:"center",gap:8,cursor:"pointer",transition:"all .15s"}}
-                    onMouseEnter={e=>{e.currentTarget.style.background=cl+"14";e.currentTarget.style.color=cl;}}
-                    onMouseLeave={e=>{e.currentTarget.style.background="transparent";e.currentTarget.style.color=P.mt;}}>
-                    <span style={{color:cl,fontSize:14}}>◇</span>{c.l}
-                  </div>
-                ))}
-              </div>
-            </div>
-          );})}
-        </div>;})()}
-      </div>
-
-      {/* 섹션 A: PRO 분석 소개 */}
-      <div style={{background:"#f8f9fc",padding:"64px 24px"}}>
+      {/* 섹션 A: PRO 분석 소개 (다크 프리미엄) */}
+      <div style={{background:"linear-gradient(135deg,#0d1117,#161b22)",padding:isMo?"32px 16px":"64px 24px",marginTop:24}}>
         <div style={{maxWidth:1100,margin:"0 auto"}}>
+          <div style={{marginBottom:24}}>
+            <div style={{display:"inline-block",background:"linear-gradient(135deg,#FFD700,#FFA500)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text",fontSize:12,fontWeight:700,letterSpacing:1,marginBottom:8}}>★ PREMIUM</div>
+            <h2 style={{fontSize:isMo?20:28,fontWeight:800,color:"#e6edf3",margin:0}}>PRO 분석</h2>
+            <p style={{fontSize:14,color:"#8b949e",margin:"4px 0 0"}}>전문 투자자를 위한 심층 분석 엔진</p>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"repeat(3,1fr)",gap:16}}>
+            {[{id:"totalcost",title:"총비용 시뮬레이터",desc:"취득세~중개보수 숨겨진 비용까지 한번에",gradient:"linear-gradient(135deg,#1a365d,#2563eb)",badge:"COST"},{id:"compare",title:"세금 비교 분석",desc:"매매 vs 증여 vs 상속 최적 절세 구조",gradient:"linear-gradient(135deg,#1a3d2e,#059669)",badge:"TAX"},{id:"invest",title:"투자 수익 분석",desc:"매수→보유→매도 전체 IRR 분석",gradient:"linear-gradient(135deg,#3d1a1a,#dc2626)",badge:"ROI"}].map(pro=>(
+              <div key={pro.id} onClick={()=>navigateCalc("pro",pro.id)} style={{background:pro.gradient,borderRadius:16,padding:isMo?20:24,cursor:"pointer",border:"1px solid rgba(255,255,255,0.06)",transition:"all .25s",position:"relative",overflow:"hidden"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow="0 12px 40px rgba(0,0,0,0.4)"}} onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none"}}>
+                <div style={{position:"absolute",top:12,right:12,background:"rgba(255,215,0,0.15)",color:"#FFD700",fontSize:10,fontWeight:700,padding:"3px 8px",borderRadius:4,letterSpacing:1}}>{pro.badge}</div>
+                <div style={{fontSize:isMo?16:18,fontWeight:700,color:"#e6edf3",marginTop:8,marginBottom:6}}>{pro.title}</div>
+                <div style={{fontSize:13,color:"#8b949e",lineHeight:1.5,marginBottom:16}}>{pro.desc}</div>
+                <div style={{fontSize:13,color:"#FFD700",fontWeight:600}}>분석 시작 →</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      {/* 섹션 A 종료 */}
+      <div style={{display:"none"}}>
+        <div>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:32,flexWrap:"wrap",gap:12}}>
             <h2 style={{fontSize:isMo?22:28,fontWeight:800,color:P.tx,margin:0}}>PRO 분석으로 한 차원 높게</h2>
             <span onClick={()=>navigateCalc("pro","totalcost")} style={{color:P.pri,fontSize:14,fontWeight:600,cursor:"pointer"}}>PRO 기능 살펴보기 →</span>
