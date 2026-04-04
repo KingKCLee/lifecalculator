@@ -924,6 +924,36 @@ function CalcSearchBar({onSelect,isMo,calcList}){
   </div>);
 }
 
+function CalcGrid({navigateCalc,isMo}){
+  const[openCat,setOpenCat]=useState("all");
+  const GRID_DATA=[
+    {cat:"tax",label:"세금",color:"#0747A6",icon:"💰",items:[{id:"acquisition",name:"취득세",icon:"🏠"},{id:"transfer",name:"양도소득세",icon:"💸"},{id:"inctax",name:"종합소득세",icon:"💼"},{id:"yearend",name:"연말정산",icon:"🧾"},{id:"compre",name:"종부세",icon:"🏘️"},{id:"property",name:"재산세",icon:"🏡"},{id:"gift",name:"증여세",icon:"🎁"},{id:"inherit",name:"상속세",icon:"📜"},{id:"holdtax",name:"보유세통합",icon:"🏛️"},{id:"rental",name:"임대소득세",icon:"🔑"}]},
+    {cat:"loan",label:"대출",color:"#00875A",icon:"🏦",items:[{id:"mortgage",name:"대출이자",icon:"💵"},{id:"dsr",name:"DSR",icon:"📊"},{id:"dti",name:"DTI",icon:"📉"},{id:"ltv",name:"LTV·한도",icon:"🔑"},{id:"loanmax",name:"대출가능액",icon:"💳"}]},
+    {cat:"cost",label:"비용",color:"#FF8B00",icon:"📋",items:[{id:"commission",name:"중개수수료",icon:"🤝"},{id:"registration",name:"등기비용",icon:"📝"},{id:"legal",name:"법무사",icon:"⚖️"},{id:"stamp",name:"인지세",icon:"📄"},{id:"bond",name:"채권할인",icon:"📃"},{id:"appraisal",name:"감정평가",icon:"🔍"}]},
+    {cat:"life",label:"생활",color:"#6554C0",icon:"👤",items:[{id:"netsalary",name:"연봉실수령",icon:"💰"},{id:"insurance4",name:"4대보험",icon:"🏥"},{id:"pension",name:"국민연금",icon:"👴"},{id:"cartax",name:"자동차세",icon:"🚗"},{id:"retire",name:"퇴직금",icon:"💼"},{id:"unemploy",name:"실업급여",icon:"🏢"},{id:"deposit",name:"예적금",icon:"🏧"},{id:"convert",name:"전월세전환",icon:"🔄"}]},
+    {cat:"realestate",label:"부동산",color:"#008DA6",icon:"🏠",items:[{id:"yield",name:"임대수익률",icon:"📈"},{id:"joint",name:"공동명의",icon:"👥"},{id:"area",name:"평수변환",icon:"📐"},{id:"far",name:"용적률",icon:"🏗️"},{id:"auction",name:"경매비용",icon:"🔨"},{id:"remodel",name:"리모델링",icon:"🔧"},{id:"bldvalue",name:"잔존가치",icon:"🏚️"}]},
+    {cat:"pro",label:"PRO",color:"#DE350B",icon:"⚡",items:[{id:"totalcost",name:"총비용시뮬",icon:"⚡"},{id:"compare",name:"세금비교",icon:"📊"},{id:"invest",name:"투자수익",icon:"📈"}]}
+  ];
+  const total=GRID_DATA.reduce((a,g)=>a+g.items.length,0);
+  return(<div style={{maxWidth:1100,margin:"0 auto",padding:isMo?"24px 12px":"48px 24px"}}>
+    <h2 style={{fontSize:isMo?20:24,fontWeight:800,color:"#172B4D",textAlign:"center",margin:"0 0 8px"}}>전체 계산기</h2>
+    <p style={{fontSize:13,color:"#6b778c",textAlign:"center",margin:"0 0 24px"}}>원하는 계산기를 바로 선택하세요</p>
+    <div style={{display:"flex",gap:6,justifyContent:"center",marginBottom:20,flexWrap:"wrap"}}>
+      <button onClick={()=>setOpenCat("all")} style={{padding:"6px 14px",borderRadius:20,border:"none",fontSize:12,fontWeight:600,cursor:"pointer",background:openCat==="all"?"#172B4D":"#f4f5f7",color:openCat==="all"?"#fff":"#6b778c",fontFamily:"inherit"}}>전체 {total}</button>
+      {GRID_DATA.map(g=>(<button key={g.cat} onClick={()=>setOpenCat(g.cat)} style={{padding:"6px 14px",borderRadius:20,border:"none",fontSize:12,fontWeight:600,cursor:"pointer",background:openCat===g.cat?g.color:"#f4f5f7",color:openCat===g.cat?"#fff":"#6b778c",fontFamily:"inherit"}}>{g.icon} {g.label} {g.items.length}</button>))}
+    </div>
+    <div style={{display:"grid",gridTemplateColumns:isMo?"repeat(3,1fr)":"repeat(6,1fr)",gap:isMo?8:12}}>
+      {GRID_DATA.filter(g=>openCat==="all"||openCat===g.cat).flatMap(g=>g.items.map(item=>(
+        <div key={item.id} onClick={()=>navigateCalc(g.cat,item.id)} style={{background:"#fff",borderRadius:12,border:"1px solid #dfe1e6",padding:isMo?"16px 8px":"20px 12px",textAlign:"center",cursor:"pointer",transition:"all .2s",position:"relative",minHeight:isMo?88:100}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-3px)";e.currentTarget.style.boxShadow="0 8px 20px rgba(0,0,0,0.08)";e.currentTarget.style.borderColor=g.color}} onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";e.currentTarget.style.borderColor="#dfe1e6"}}>
+          <div style={{position:"absolute",top:0,left:"50%",transform:"translateX(-50%)",width:24,height:3,borderRadius:"0 0 2px 2px",background:g.color}}/>
+          <div style={{fontSize:isMo?26:30,marginBottom:6,lineHeight:1}}>{item.icon}</div>
+          <div style={{fontSize:isMo?11:12,fontWeight:600,color:"#172B4D",lineHeight:1.3,wordBreak:"keep-all"}}>{item.name}</div>
+        </div>
+      )))}
+    </div>
+  </div>);
+}
+
 function HeroCarousel({navigateCalc,isMo}){
   const[current,setCurrent]=useState(0);const[touchStart,setTouchStart]=useState(null);const[count,setCount]=useState(0);
   const slides=[
@@ -1275,6 +1305,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 
       {/* 생활경제 달력 */}
       <EconCalendar liveData={liveData} isMo={isMo} setCat={setCat} setCalc={setCalc} setPage={setPage}/>
+
+      {/* 전체 계산기 격자 그리드 */}
+      <CalcGrid navigateCalc={navigateCalc} isMo={isMo}/>
 
       {/* 종합 계산기 라인업 */}
       <div id="calcSuite" style={{maxWidth:1100,margin:"0 auto",padding:"48px 24px"}}>
