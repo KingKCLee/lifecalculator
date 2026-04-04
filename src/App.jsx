@@ -63,13 +63,15 @@ legal:{q:"법무사 수수료 기준은?",a:"대한법무사협회 보수표를 
 yield:{q:"임대수익률 계산법은?",a:"총수익률(Gross)은 연간 임대수입÷매입가×100이며, 순수익률(Net)은 (임대수입-관리비-대출이자)÷자기자본×100입니다. 일반적으로 수익형 부동산은 순수익률 4~6%를 기대합니다. 자기자본은 매입가-보증금-대출금으로 계산합니다."},
 convert:{q:"전월세 전환 기준은?",a:"전세를 월세로 전환 시 '보증금×전환율÷12=월세'로 계산합니다. 법정 전환율 상한은 기준금리+2%이며, 2025년 기준 약 5.5%입니다. 역으로 월세를 전세로 환산하면 '보증금+(월세×12÷전환율)'이 전세 환산금액입니다."},
 joint:{q:"공동명의 vs 단독명의?",a:"종부세에서 단독명의는 1주택 공제 12억+고령자·장기보유 공제(최대 80%)가 가능합니다. 공동명의는 각 9억(합 18억) 공제되나 고령자·장기보유 공제 불가입니다. 공시가 12~18억 구간에서는 공동명의가, 고령자+장기보유 공제가 큰 경우 단독명의가 유리합니다."},
+inctax:{q:"종합소득세란?",a:"개인이 1년간 얻은 모든 소득(근로·사업·이자·배당·연금·기타)을 합산하여 과세하는 국세입니다. 매년 5월 1일~31일에 전년도 소득을 확정신고합니다. 근로소득만 있으면 연말정산으로 대체되며, 사업소득·프리랜서 소득이 있으면 종합소득세 신고가 필수입니다. 세율은 6~45% 8단계 누진구조이며, 각종 공제를 활용하면 세부담을 줄일 수 있습니다.",
+  rates:[["1,400만↓","6%","0"],["~5,000만","15%","126만"],["~8,800만","24%","576만"],["~1.5억","35%","1,544만"],["~3억","38%","1,994만"],["~5억","40%","2,594만"],["~10억","42%","3,594만"],["10억↑","45%","6,594만"]],rh:["과세표준","세율","누진공제"]},
 area:{q:"평수 환산 기준은?",a:"1평 = 3.305785㎡ (정확히 400/121)입니다. 아파트에서 '전용면적'은 실제 거주 공간, '공급면적'은 전용+주거공용(복도·계단 등), '계약면적'은 공급+기타공용+주차장을 포함합니다. 흔히 '32평형'이라 하면 공급면적 약 106㎡, 전용면적 약 84㎡입니다."},
 };
 
 /* ── 카테고리 & 계산기 ── */
 const CATS=[{id:"tax",l:"세금"},{id:"loan",l:"대출"},{id:"cost",l:"비용"},{id:"etc",l:"기타"},{id:"pro",l:"PRO 분석"}];
 const CL=[
-  {id:"acquisition",l:"취득세",c:"tax"},{id:"transfer",l:"양도소득세",c:"tax"},{id:"compre",l:"종부세",c:"tax"},{id:"property",l:"재산세",c:"tax"},{id:"gift",l:"증여세",c:"tax"},{id:"inherit",l:"상속세",c:"tax"},{id:"holdtax",l:"보유세 통합",c:"tax"},{id:"rental",l:"임대소득세",c:"tax"},
+  {id:"acquisition",l:"취득세",c:"tax"},{id:"transfer",l:"양도소득세",c:"tax"},{id:"compre",l:"종부세",c:"tax"},{id:"property",l:"재산세",c:"tax"},{id:"gift",l:"증여세",c:"tax"},{id:"inherit",l:"상속세",c:"tax"},{id:"holdtax",l:"보유세 통합",c:"tax"},{id:"rental",l:"임대소득세",c:"tax"},{id:"inctax",l:"종합소득세",c:"tax"},
   {id:"mortgage",l:"대출이자",c:"loan"},{id:"dsr",l:"DSR",c:"loan"},{id:"dti",l:"DTI",c:"loan"},{id:"ltv",l:"LTV·대출한도",c:"loan"},{id:"loanmax",l:"대출가능액",c:"loan"},
   {id:"commission",l:"중개보수",c:"cost"},{id:"registration",l:"등기비용",c:"cost"},{id:"legal",l:"법무사수수료",c:"cost"},{id:"stamp",l:"인지세",c:"cost"},{id:"bond",l:"채권할인료",c:"cost"},{id:"appraisal",l:"감정평가수수료",c:"cost"},
   {id:"yield",l:"임대수익률",c:"etc"},{id:"area",l:"평수변환",c:"etc"},{id:"convert",l:"전월세전환",c:"etc"},{id:"joint",l:"공동명의",c:"etc"},{id:"deposit",l:"예적금이자",c:"etc"},{id:"far",l:"용적률·건폐율",c:"etc"},{id:"auction",l:"경매비용",c:"etc"},{id:"remodel",l:"리모델링수익",c:"etc"},{id:"bldvalue",l:"건물잔존가치",c:"etc"},
@@ -311,7 +313,25 @@ function CalcRemodel(){const[cv,sCv]=useState("");const[cost,sCost]=useState("")
 /* 건물잔존가치 */
 function CalcBldValue(){const[np,sNp]=useState("");const[ul,sUl]=useState("40");const[el,sEl]=useState("");const[mt,sMt]=useState("line");const npW=tW(np),ulV=parseInt(ul),elV=parseInt(el||"0");let remaining=0,depreciation=0;if(npW>0&&ulV>0){if(mt==="line"){const ratio=Math.max(0,Math.min(1,1-elV/ulV));remaining=Math.round(npW*ratio);depreciation=npW-remaining;}else{remaining=Math.round(npW*Math.pow(0.9,elV));depreciation=npW-remaining;}}const pct=npW>0?remaining/npW*100:0;return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start"}}><div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>🏚️ 건물 잔존가치</h3><Inp label="신축 가격 (재조달원가)" value={np} onChange={sNp} suffix="만원" placeholder="예: 50000"/><Sel label="내용연수" value={ul} onChange={sUl} options={[{value:"20",label:"20년 (경량철골)"},{value:"30",label:"30년 (조적·블록)"},{value:"40",label:"40년 (철근콘크리트)"},{value:"50",label:"50년 (SRC)"}]}/><Inp label="경과연수" value={el} onChange={sEl} placeholder="예: 15"/><Tog label="감가 방법" value={mt} onChange={sMt} options={[{value:"line",label:"정액법"},{value:"declining",label:"정률법 (10%)"}]}/></div>{npW>0&&elV>0?<RP title="건물 잔존가치" total={remaining} sub={"잔존률 "+fP(pct)} items={[{l:"신축 가격",v:fW(npW)},{l:"내용연수",v:ulV+"년"},{l:"경과연수",v:elV+"년"},{l:"감가방법",v:mt==="line"?"정액법":"정률법"},{l:"감가상각 누계",v:fW(depreciation)},{l:"잔존가치",v:fW(remaining)},{l:"잔존률",v:fP(pct)}]}/>:<Empty icon="🏚️"/>}</div>);}
 
-const CM={acquisition:CalcAcq,transfer:CalcTrans,compre:CalcCompre,property:CalcProp,gift:CalcGift,inherit:CalcInherit,mortgage:CalcMort,dsr:CalcDSR,dti:CalcDTI,ltv:CalcLTV,commission:CalcComm,registration:CalcReg,legal:CalcLegal,yield:CalcYield,area:CalcArea,convert:CalcConvert,joint:CalcJoint,totalcost:CalcTotalCost,compare:CalcCompare,invest:CalcInvest,loanmax:CalcLoanMax,holdtax:CalcHoldTax,stamp:CalcStamp,bond:CalcBond,deposit:CalcDeposit,far:CalcFAR,rental:CalcRental,appraisal:CalcAppraisal,auction:CalcAuction,remodel:CalcRemodel,bldvalue:CalcBldValue};
+/* 종합소득세 */
+function CalcIncTax(){const[incType,sIT]=useState("salary");const[gross,sGross]=useState("");const[deductions,sDed]=useState("");const[bizType,sBT]=useState("simple");const[bizRate,sBR]=useState("60");const[family,sFamily]=useState("1");const[child,sChild]=useState("0");
+  const grossW=tW(gross),dedW=tW(deductions),familyN=parseInt(family),childN=parseInt(child);let taxableIncome=0;
+  if(incType==="salary"){let wd=0;if(grossW<=5e6)wd=grossW*.7;else if(grossW<=15e6)wd=3500000+(grossW-5e6)*.4;else if(grossW<=45e6)wd=7500000+(grossW-15e6)*.15;else if(grossW<=1e8)wd=12000000+(grossW-45e6)*.05;else wd=14750000+(grossW-1e8)*.02;taxableIncome=grossW-wd;}
+  else if(incType==="biz"||incType==="freelance"){if(bizType==="simple")taxableIncome=grossW*(1-pN(bizRate)/100);else taxableIncome=grossW-dedW;}
+  else{taxableIncome=Math.max(0,grossW-Math.max(grossW*.6,dedW));}
+  const personalDed=1500000*familyN+1500000*childN;const stdDed=incType==="salary"?130000:70000;const finalTaxable=Math.max(0,taxableIncome-personalDed);const tax=pTx(finalTaxable,IB);
+  let childCredit=0;if(childN===1)childCredit=150000;else if(childN===2)childCredit=300000;else if(childN>=3)childCredit=300000+(childN-2)*300000;
+  const finalTax=Math.max(0,tax-stdDed-childCredit);const totalTax=finalTax+finalTax*.1;const prepaid=incType==="freelance"?grossW*.033:0;const toPay=totalTax-prepaid;
+  return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start"}}><div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>💼 종합소득세</h3>
+    <Tog label="소득 유형" value={incType} onChange={sIT} options={[{value:"salary",label:"근로소득"},{value:"biz",label:"사업소득"},{value:"freelance",label:"프리랜서(3.3%)"},{value:"etc",label:"기타소득"}]}/>
+    <Inp label={incType==="salary"?"총급여(연봉)":"총수입금액"} value={gross} onChange={sGross} suffix="만원" placeholder={incType==="salary"?"예: 5000":"예: 8000"}/>
+    {(incType==="biz"||incType==="freelance")&&<><Tog label="경비 산정 방식" value={bizType} onChange={sBT} options={[{value:"simple",label:"단순경비율 적용"},{value:"actual",label:"실제 경비 입력"}]}/>{bizType==="simple"?<Sel label="단순경비율" value={bizRate} onChange={sBR} options={[{value:"90",label:"90% (소매업)"},{value:"80",label:"80% (음식점)"},{value:"70",label:"70% (제조업)"},{value:"60",label:"60% (서비스업)"},{value:"50",label:"50% (전문직)"},{value:"40",label:"40% (고소득 전문직)"}]}/>:<Inp label="필요경비 합계" value={deductions} onChange={sDed} suffix="만원" placeholder="실제 지출한 경비"/>}</>}
+    {incType==="etc"&&<Inp label="필요경비" value={deductions} onChange={sDed} suffix="만원" note="기타소득은 수입의 60%와 실제 경비 중 큰 금액 적용"/>}
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}><Sel label="부양가족 수 (본인 포함)" value={family} onChange={sFamily} options={[1,2,3,4,5,6].map(n=>({value:String(n),label:n+"명"}))}/><Sel label="20세 이하 자녀 수" value={child} onChange={sChild} options={[0,1,2,3,4,5].map(n=>({value:String(n),label:n+"명"}))}/></div>
+    {incType==="salary"&&<div style={{padding:"12px 16px",background:P.lt,borderRadius:10,fontSize:12,color:"#6b778c",lineHeight:1.6,marginTop:8}}>※ 4대보험료, 신용카드·의료비·교육비 등 특별공제는 반영되지 않은 간이 계산입니다.</div>}
+  </div>{grossW>0?<RP title="종합소득세" total={Math.max(0,toPay)} sub={incType==="salary"?"근로소득 기준 간이세액":incType==="freelance"?"기납부 3.3% 차감 후":"사업소득 기준"} items={[{l:incType==="salary"?"총급여":"총수입금액",v:fW(grossW)},{l:incType==="salary"?"근로소득공제":"필요경비",v:fW(grossW-taxableIncome)},{l:"소득금액",v:fW(taxableIncome)},{l:"인적공제 ("+familyN+"인+자녀"+childN+"인)",v:"-"+fW(personalDed)},{l:"과세표준",v:fW(finalTaxable)},{l:"산출세액",v:fW(tax)},{l:"세액공제 (표준+자녀)",v:"-"+fW(stdDed+childCredit)},{l:"소득세",v:fW(finalTax)},{l:"지방소득세 (10%)",v:fW(finalTax*.1)}].concat(incType==="freelance"?[{l:"기납부세액 (3.3%)",v:"-"+fW(prepaid)},{l:toPay>=0?"추가 납부":"환급 예상",v:fW(Math.abs(toPay))}]:[{l:"합계 (소득세+지방세)",v:fW(totalTax)}])}/>:<Empty icon="💼" msg="소득 금액을 입력하세요"/>}</div>);}
+
+const CM={acquisition:CalcAcq,transfer:CalcTrans,compre:CalcCompre,property:CalcProp,gift:CalcGift,inherit:CalcInherit,mortgage:CalcMort,dsr:CalcDSR,dti:CalcDTI,ltv:CalcLTV,commission:CalcComm,registration:CalcReg,legal:CalcLegal,yield:CalcYield,area:CalcArea,convert:CalcConvert,joint:CalcJoint,totalcost:CalcTotalCost,compare:CalcCompare,invest:CalcInvest,loanmax:CalcLoanMax,holdtax:CalcHoldTax,stamp:CalcStamp,bond:CalcBond,deposit:CalcDeposit,far:CalcFAR,rental:CalcRental,inctax:CalcIncTax,appraisal:CalcAppraisal,auction:CalcAuction,remodel:CalcRemodel,bldvalue:CalcBldValue};
 
 
 /* ── 관련 계산기 매핑 ── */
@@ -340,6 +360,7 @@ const RELATED={
   deposit:["mortgage"],
   far:["joint"],
   rental:["yield","property"],
+  inctax:["inherit","gift","property"],
   appraisal:["commission"],
   auction:["ltv","registration"],
   remodel:["far"],
@@ -400,6 +421,7 @@ const TIPS={
   bond:[{title:"즉시매도로 할인비용만 부담",body:"국민주택채권을 매입 즉시 매도하면 할인비용(4~5%)만 실제 부담. 보유 불필요."},{title:"지역별 매입률 차이",body:"서울 5%, 광역시 4%, 기타 3% 등 지역에 따라 매입률이 다름."}],
   deposit:[{title:"비과세 상품 활용",body:"ISA, 청년희망적금 등 비과세·감면 상품 활용 시 이자소득세 절약."},{title:"세금우대 9.5% 확인",body:"조합·새마을금고 등 세금우대(9.5%) 상품은 일반(15.4%)보다 세금 절약."}],
   far:[{title:"용적률은 지하 제외",body:"용적률 산정 시 지하층 면적은 제외됨. 지상층 연면적만 포함."},{title:"용도지역별 한도 확인",body:"제1종 전용주거 50~100%, 일반상업 400~1300% 등 용도지역에 따라 법정 한도가 다름."}],
+  inctax:[{title:"프리랜서 3.3% 환급 받기",body:"프리랜서(인적용역)는 수입 발생 시 3.3%가 원천징수됩니다. 5월 종합소득세 신고 시 필요경비와 각종 공제를 적용하면 기납부세액보다 실제 세금이 적어 환급받는 경우가 많습니다."},{title:"단순경비율 vs 기준경비율",body:"직전년도 수입이 업종별 기준금액 미만이면 단순경비율, 초과하면 기준경비율이 적용됩니다. 단순경비율은 경비 증빙 없이 일정 비율을 인정받아 유리합니다."},{title:"성실신고확인 대상자 주의",body:"업종별 수입금액이 5억~15억을 초과하면 성실신고확인 대상자가 되어 세무사 확인이 필수입니다. 미이행 시 가산세가 부과됩니다."}],
   rental:[{title:"2천만원 이하 분리과세 유리",body:"연 임대소득 2천만원 이하면 14% 분리과세가 종합과세보다 대부분 유리."},{title:"1주택자 비과세 요건",body:"1주택자는 기준시가 12억 이하 주택 임대소득 비과세. 12억 초과 시만 과세."}],
   appraisal:[{title:"감정평가 2곳 비교",body:"금액이 크면 2개 감정평가법인에 의뢰하여 평균값을 사용. 편차가 크면 재감정 요청 가능."},{title:"소송·경매 시 필수",body:"법원 경매, 재산분할 소송 등에서는 감정평가가 필수. 비용은 신청인 부담."}],
   auction:[{title:"명도비용 미리 산정",body:"점유자 명도(이사비) 비용을 낙찰 전 반드시 고려. 상가는 권리금 분쟁도 확인."},{title:"유찰 시 감정가 하락",body:"1회 유찰마다 최저가가 20~30% 하락. 2~3회 유찰 물건이 실투자 수익률 높은 경우 많음."}],
@@ -426,6 +448,7 @@ const GLOSSARY={
   bond:[{term:"국민주택채권",def:"부동산 등기 시 의무 매입하는 채권"},{term:"할인율",def:"채권을 즉시 매도할 때 적용되는 할인 비율 (약 4~5%)"},{term:"채권매입률",def:"부동산 가액 대비 매입해야 하는 채권 비율"}],
   deposit:[{term:"단리",def:"원금에만 이자가 붙는 방식"},{term:"복리",def:"이자에도 이자가 붙는 방식"},{term:"이자소득세",def:"이자소득에 부과되는 세금 (일반 15.4%)"}],
   far:[{term:"용적률",def:"대지면적 대비 지상 연면적의 비율 (%)"},{term:"건폐율",def:"대지면적 대비 건축면적(1층 바닥)의 비율 (%)"},{term:"연면적",def:"건물 각 층 바닥면적의 합계"}],
+  inctax:[{term:"종합소득",def:"이자·배당·사업·근로·연금·기타소득을 합산한 소득. 매년 5월 확정신고."},{term:"단순경비율",def:"소규모 사업자에게 적용되는 간편 경비 인정 비율. 업종마다 다름."},{term:"기준경비율",def:"일정 수입 이상 사업자에게 적용. 주요경비는 증빙, 나머지는 기준경비율로 인정."},{term:"원천징수",def:"소득을 지급할 때 세금을 미리 떼고 지급하는 제도. 프리랜서 3.3%."}],
   rental:[{term:"분리과세",def:"다른 소득과 합산하지 않고 14% 단일세율 적용"},{term:"종합과세",def:"다른 소득과 합산하여 6~45% 누진세율 적용"},{term:"필요경비율",def:"임대소득에서 경비로 인정하는 비율 (분리과세 50%)"}],
   appraisal:[{term:"감정평가",def:"부동산의 경제적 가치를 판정하여 금액으로 표시"},{term:"감정평가사",def:"국가공인 자격을 가진 부동산 가치 평가 전문가"},{term:"시가감정",def:"실거래 시세 기준 감정 (상속·증여세 신고 시 활용)"}],
   auction:[{term:"낙찰가",def:"경매에서 최종 매수인이 제시한 금액"},{term:"유찰",def:"입찰자가 없거나 최저가 미달로 경매 불성립"},{term:"명도",def:"낙찰 후 점유자를 퇴거시키는 절차"}],
@@ -449,6 +472,7 @@ const REGS={
   holdtax:[{y:"2025",t:"종부세 세율 완화 추진"},{y:"2023",t:"공정시장가액비율 60% 유지"}],
   stamp:[{y:"2023",t:"전자수입인지 의무화"},{y:"2007",t:"인지세 구간 개정"}],
   bond:[{y:"2024",t:"채권할인율 시장금리 연동 변동"},{y:"2023",t:"매입률 조정"}],
+  inctax:[{y:"2025",t:"프리랜서 원천징수 간소화, 모바일 신고 확대"},{y:"2024",t:"종합소득세 과세표준 구간 조정 (하위 구간 확대)"}],
   rental:[{y:"2025",t:"임대소득 과세 강화 논의"},{y:"2019",t:"2천만원 이하 분리과세 시행"}],
   appraisal:[{y:"2022",t:"감정평가 보수표 개정"}],
   auction:[{y:"2024",t:"법원경매 전자입찰 확대"},{y:"2023",t:"경매 대출규제 강화"}],
@@ -630,6 +654,7 @@ const DESC={
   inherit:"상속 재산에 대한 상속세",
   holdtax:"재산세+종부세 한번에 계산",
   rental:"주택임대소득 과세 계산",
+  inctax:"근로·사업·프리랜서 종합소득세 계산",
   mortgage:"원리금균등·원금균등·만기일시 이자",
   dsr:"연소득 대비 총 부채 상환비율",
   dti:"신규 대출 원리금+기존 이자 비율",
