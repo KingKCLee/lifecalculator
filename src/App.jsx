@@ -872,6 +872,22 @@ contact:{title:"문의하기 (Contact Support)",body:<div>
 </div>}
 };
 
+function ScrollTop(){
+  const[show,setShow]=useState(false);
+  useEffect(()=>{const h=()=>setShow(window.scrollY>400);window.addEventListener('scroll',h);return()=>window.removeEventListener('scroll',h);},[]);
+  if(!show)return null;
+  return(<button aria-label="맨 위로 스크롤" onClick={()=>window.scrollTo({top:0,behavior:'smooth'})} style={{position:"fixed",bottom:80,right:24,width:44,height:44,borderRadius:"50%",background:"#0747A6",color:"#fff",border:"none",cursor:"pointer",fontSize:18,boxShadow:"0 4px 12px rgba(0,0,0,0.15)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center"}}>↑</button>);
+}
+
+function CookieBanner({onPrivacy}){
+  const[show,setShow]=useState(typeof window!=="undefined"&&!localStorage.getItem('cookie_consent'));
+  if(!show)return null;
+  return(<div style={{position:"fixed",bottom:0,left:0,right:0,background:"#172B4D",color:"#fff",padding:"16px 24px",zIndex:99999,display:"flex",justifyContent:"center",alignItems:"center",gap:16,flexWrap:"wrap"}}>
+    <p style={{fontSize:13,margin:0,maxWidth:600,lineHeight:1.5}}>생활계산기.com은 서비스 개선을 위해 쿠키를 사용합니다. 계속 이용하시면 쿠키 사용에 동의하는 것으로 간주됩니다. <span onClick={onPrivacy} style={{color:"#57D9A3",cursor:"pointer",marginLeft:4,textDecoration:"underline"}}>개인정보처리방침</span></p>
+    <button onClick={()=>{localStorage.setItem('cookie_consent','true');setShow(false);}} style={{background:"#0747A6",color:"#fff",border:"none",borderRadius:6,padding:"8px 24px",fontSize:13,fontWeight:700,cursor:"pointer",flexShrink:0,fontFamily:"inherit"}}>동의합니다</button>
+  </div>);
+}
+
 function LegalModal({type,onClose}){
   const content=LEGAL_CONTENT[type];if(!content)return null;
   return(<div onClick={e=>{if(e.target===e.currentTarget)onClose()}} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.5)",zIndex:10000,display:"flex",alignItems:"center",justifyContent:"center",padding:24}}>
@@ -1430,11 +1446,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
         </div>
       </div>
       <div style={{textAlign:"center",fontSize:11,color:"#a5adba",marginTop:32,lineHeight:1.8}}>
-        © 2026 생활계산기.com. All rights reserved. | 세법 검증: {UPDATE_LOG[0]?.date}<br/>
+        © {new Date().getFullYear()} 생활계산기.com. All rights reserved. | 세법 검증: {UPDATE_LOG[0]?.date}<br/>
         <span>상호: 더블유부동산 | 대표: 이광철 | 사업자등록번호: 589-24-01721 | 이메일: noble.kclee@gmail.com</span>
       </div>
     </footer>
     {modal&&<LegalModal type={modal} onClose={()=>setModal(null)}/>}
-    <button aria-label="맨 위로 스크롤" onClick={()=>window.scrollTo({top:0,behavior:"smooth"})} style={{position:"fixed",bottom:24,right:24,width:44,height:44,borderRadius:"50%",background:P.pri,color:"#fff",border:"none",fontSize:20,cursor:"pointer",boxShadow:"0 4px 12px rgba(0,0,0,.15)",zIndex:50,display:"flex",alignItems:"center",justifyContent:"center"}}>↑</button>
+    <ScrollTop/>
+    <CookieBanner onPrivacy={()=>setModal("privacy")}/>
   </div>);
 }
