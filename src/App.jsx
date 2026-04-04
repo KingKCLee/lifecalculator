@@ -1071,6 +1071,10 @@ function EconCalendar({liveData,isMo,setCat,setCalc,setPage}){
   </div>);
 }
 
+function Skeleton({width="100%",height=20,borderRadius=6}){
+  return<div style={{width,height,borderRadius,background:"linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%)",backgroundSize:"200% 100%",animation:"shimmer 1.5s infinite"}}/>;
+}
+
 function IndicatorTicker({liveData}){
   const items=liveData?.indicators?.items;if(!items||items.length===0)return null;
   return(<div style={{background:"#0d1117",overflow:"hidden",height:32,display:"flex",alignItems:"center"}}>
@@ -1217,11 +1221,13 @@ export default function App(){
   const[search,setSearch]=useState("");
   const[modal,setModal]=useState(null);
   const[mobileMenu,setMobileMenu]=useState(false);
+  const[calcHistory,setCalcHistory]=useState(()=>{try{return JSON.parse(localStorage.getItem('calc_history')||'[]')}catch{return[]}});
+  const saveHistory=(cId,name,total)=>{if(!total||total<=0)return;const item={id:cId,name,total,time:Date.now()};setCalcHistory(prev=>{const updated=[item,...prev.filter(h=>h.id!==cId)].slice(0,10);try{localStorage.setItem('calc_history',JSON.stringify(updated))}catch{}return updated;});};
   const[showAllLog,setShowAllLog]=useState(false);
   const[liveData,setLiveData]=useState(null);
   useEffect(()=>{fetch('/data/live-data.json?t='+Date.now()).then(r=>r.json()).then(d=>setLiveData(d)).catch(()=>{});},[]);
   const filtered=CL.filter(c=>c.c===cat);
-  const navigateCalc=(catId,calcId)=>{setCat(catId);setCalc(calcId);setPage("calc");window.location.hash='/'+(SLUGS[calcId]||calcId);window.scrollTo(0,0);};
+  const navigateCalc=(catId,calcId)=>{setCat(catId);setCalc(calcId);setPage("calc");window.location.hash='/'+(SLUGS[calcId]||calcId);window.scrollTo(0,0);const info=CL.find(c=>c.id===calcId);if(info)saveHistory(calcId,info.l,1);};
   const navigateHome=()=>{setPage("home");window.location.hash='';window.scrollTo(0,0);};
   const hCat=c=>{const f=CL.find(x=>x.c===c);if(f)navigateCalc(c,f.id);};
   const goCalc=(cId)=>{const info=CL.find(c=>c.id===cId);if(info)navigateCalc(info.c,info.id);};
@@ -1252,6 +1258,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 .seo p{margin:0 0 12px}
 .seo strong{color:#172B4D;font-weight:700}
 .num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 @media(max-width:1023px){.calc-grid{grid-template-columns:1fr!important}.edu-sidebar{display:none!important}.insights-grid{grid-template-columns:1fr 1fr!important}}
 @media(max-width:768px){.calc-container>div{grid-template-columns:1fr!important;gap:16px!important}.calc-container h3{font-size:16px!important}}
 @media(max-width:768px){input,select,textarea{font-size:16px!important}.pro-cards{grid-template-columns:1fr!important}.footer-inner{grid-template-columns:1fr!important;text-align:center}.cat-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))!important}}
@@ -1339,6 +1346,17 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 
       {/* 생활경제 달력 */}
       <EconCalendar liveData={liveData} isMo={isMo} setCat={setCat} setCalc={setCalc} setPage={setPage}/>
+
+      {/* 최근 계산 히스토리 */}
+      {calcHistory.length>0&&<div style={{maxWidth:1100,margin:"0 auto",padding:isMo?"12px 16px":"16px 24px"}}>
+        <div style={{fontSize:13,fontWeight:700,color:"#172B4D",marginBottom:8}}>📌 최근 계산</div>
+        <div style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:8,WebkitOverflowScrolling:"touch"}}>
+          {calcHistory.slice(0,5).map((h,i)=>{const item=CL.find(c=>c.id===h.id);return(<button key={i} onClick={()=>{if(item)navigateCalc(item.c,h.id)}} style={{padding:"10px 14px",background:"#fff",border:"1px solid #dfe1e6",borderRadius:10,fontSize:12,cursor:"pointer",flexShrink:0,textAlign:"left",minWidth:120,fontFamily:"inherit"}}>
+            <div style={{fontWeight:700,color:"#172B4D",marginBottom:2}}>{h.name}</div>
+            <div style={{color:"#a5adba",fontSize:10,marginTop:2}}>{new Date(h.time).toLocaleDateString("ko-KR")}</div>
+          </button>);})}
+        </div>
+      </div>}
 
       {/* 전체 계산기 격자 그리드 */}
       <CalcGrid navigateCalc={navigateCalc} isMo={isMo}/>
@@ -1495,7 +1513,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
     </>)}
 
     {/* 경제지표 대시보드 */}
-    {liveData&&<IndicatorDashboard liveData={liveData} isMo={isMo}/>}
+    {liveData?<IndicatorDashboard liveData={liveData} isMo={isMo}/>:<div style={{maxWidth:1100,margin:"0 auto",padding:isMo?"24px 16px":"48px 24px"}}><Skeleton height={32} borderRadius={8}/><div style={{display:"flex",gap:12,marginTop:16}}>{[1,2,3,4,5,6].map(i=><Skeleton key={i} width={isMo?140:160} height={92} borderRadius={14}/>)}</div><div style={{marginTop:16}}><Skeleton height={250} borderRadius={16}/></div></div>}
 
     {/* 업데이트 내역 */}
     <div style={{maxWidth:1100,margin:"0 auto",padding:"48px 24px"}}>
