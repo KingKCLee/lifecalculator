@@ -973,10 +973,10 @@ function CalcSearchBar({onSelect,isMo,calcList}){
   useEffect(()=>{if(query.length<1){setResults([]);return;}const q=query.toLowerCase();setResults(calcList.filter(c=>(c.name+"|"+c.keywords).toLowerCase().includes(q)).slice(0,5));},[query,calcList]);
   const catLabels={tax:"세금",loan:"대출",cost:"비용",life:"생활",realestate:"부동산",pro:"PRO"};
   const catColors={tax:"#0747A6",loan:"#00875A",cost:"#FF8B00",life:"#6554C0",realestate:"#008DA6",pro:"#DE350B"};
-  return(<div style={{position:"relative",maxWidth:isMo?undefined:420,marginBottom:20}}>
-    <div style={{display:"flex",alignItems:"center",background:"#fff",borderRadius:12,border:"2px solid #dfe1e6",padding:"0 16px"}}>
+  return(<div style={{position:"relative",maxWidth:isMo?"100%":420,marginBottom:20,width:"100%",overflow:"visible"}}>
+    <div style={{display:"flex",alignItems:"center",background:"#fff",borderRadius:12,border:"2px solid #dfe1e6",padding:"0 16px",maxWidth:"100%"}}>
       <span style={{fontSize:18,color:"#6b778c",marginRight:8}}>🔍</span>
-      <input value={query} onChange={e=>setQuery(e.target.value)} placeholder="어떤 계산이 필요하세요? (예: 양도세, 실수령액)" style={{flex:1,border:"none",outline:"none",padding:"14px 0",fontSize:15,color:"#172B4D",background:"transparent",fontFamily:"inherit"}}/>
+      <input value={query} onChange={e=>setQuery(e.target.value)} placeholder="어떤 계산이 필요하세요? (예: 양도세, 실수령액)" style={{flex:1,border:"none",outline:"none",padding:"14px 0",fontSize:15,color:"#172B4D",background:"transparent",fontFamily:"inherit",minWidth:0,width:"100%",maxWidth:"100%"}}/>
       {query&&<button aria-label="검색어 지우기" onClick={()=>{setQuery("");setResults([]);}} style={{background:"none",border:"none",fontSize:16,color:"#6b778c",cursor:"pointer"}}>✕</button>}
     </div>
     {results.length>0&&<div style={{position:"absolute",top:"100%",left:0,right:0,background:"#fff",borderRadius:12,border:"1px solid #dfe1e6",boxShadow:"0 8px 24px rgba(0,0,0,0.12)",zIndex:100,marginTop:4,overflow:"hidden"}}>
@@ -1396,25 +1396,40 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 
     {page==="home"?(<>
       {/* 히어로 2컬럼 */}
-      <div style={{background:"#f8f9fc",padding:isMo?"32px 16px":"80px 24px",maxWidth:"100%",overflow:"hidden"}}>
-        <div style={{maxWidth:isMo?"100%":1100,margin:"0 auto",display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?32:48,alignItems:"center"}}>
+      {isMo?(<>
+        <div style={{background:"#f8f9fc",padding:"20px 16px 16px",maxWidth:"100%",overflow:"hidden"}}>
+          <div style={{fontSize:13,fontWeight:700,color:"#0747A6",marginBottom:6}}>대한민국 NO.1 생활 계산기</div>
+          <h1 style={{fontSize:22,fontWeight:900,color:"#172B4D",lineHeight:1.2,margin:"0 0 10px",letterSpacing:-1}}>복잡한 세법·대출,<br/><span style={{color:"#0747A6"}}>10초</span>만에 계산</h1>
+          <CalcSearchBar onSelect={navigateCalc} isMo={true} calcList={CL.map(c=>({id:c.id,name:c.l,keywords:c.l+" "+(DESC[c.id]||""),cat:c.c}))}/>
+          <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:4}}>
+            {[{label:"#취득세",cat:"tax",calc:"acquisition"},{label:"#양도세",cat:"tax",calc:"transfer"},{label:"#실수령액",cat:"life",calc:"netsalary"},{label:"#DSR",cat:"loan",calc:"dsr"},{label:"#연말정산",cat:"tax",calc:"yearend"},{label:"#중개보수",cat:"cost",calc:"commission"}].map((tag,i)=>(
+              <button key={i} onClick={()=>navigateCalc(tag.cat,tag.calc)} style={{padding:"4px 10px",background:"#fff",border:"1px solid #dfe1e6",borderRadius:16,fontSize:11,color:"#505f79",cursor:"pointer",fontWeight:500,fontFamily:"inherit"}}>{tag.label}</button>
+            ))}
+          </div>
+        </div>
+        <div style={{display:"flex",justifyContent:"center",gap:16,padding:"8px 16px",fontSize:11,color:"#6b778c",background:"#f8f9fc"}}>
+          <span>✅ 매일 자동 검증</span><span>🔒 완전 무료</span>
+        </div>
+      </>):(
+      <div style={{background:"#f8f9fc",padding:"80px 24px",maxWidth:"100%",overflow:"hidden"}}>
+        <div style={{maxWidth:1100,margin:"0 auto",display:"grid",gridTemplateColumns:"1fr 1fr",gap:48,alignItems:"center"}}>
           <div>
             <div style={{display:"inline-block",background:"#0747A6",color:"#fff",fontSize:11,fontWeight:700,padding:"4px 12px",borderRadius:4,letterSpacing:1,marginBottom:20}}>대한민국 NO.1 생활 계산기</div>
-            <h1 style={{fontSize:isMo?32:44,fontWeight:900,color:"#172B4D",lineHeight:1.15,letterSpacing:-2,margin:"0 0 20px"}}>
+            <h1 style={{fontSize:44,fontWeight:900,color:"#172B4D",lineHeight:1.15,letterSpacing:-2,margin:"0 0 20px"}}>
               <span>복잡한 세법·대출 규제,</span><br/>
               <span style={{color:"#0747A6"}}>10초 만에</span><br/>
               <span>완벽 계산</span>
             </h1>
-            <p style={{fontSize:isMo?14:16,color:"#505f79",lineHeight:1.7,wordBreak:"keep-all",paddingRight:isMo?16:0,margin:"0 0 20px"}}>부동산 세금, 대출, 비용부터 연말정산, 연봉 실수령액, 4대보험까지. 39가지 전문 계산기로 일상의 재정 판단을 도와드립니다. 2026년 최신 세법 반영.</p>
-            <CalcSearchBar onSelect={navigateCalc} isMo={isMo} calcList={CL.map(c=>({id:c.id,name:c.l,keywords:c.l+" "+(DESC[c.id]||""),cat:c.c}))}/>
+            <p style={{fontSize:16,color:"#505f79",lineHeight:1.7,wordBreak:"keep-all",margin:"0 0 20px"}}>부동산 세금, 대출, 비용부터 연말정산, 연봉 실수령액, 4대보험까지. 39가지 전문 계산기로 일상의 재정 판단을 도와드립니다. 2026년 최신 세법 반영.</p>
+            <CalcSearchBar onSelect={navigateCalc} isMo={false} calcList={CL.map(c=>({id:c.id,name:c.l,keywords:c.l+" "+(DESC[c.id]||""),cat:c.c}))}/>
             <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:16}}>
               {[{label:"#취득세",cat:"tax",calc:"acquisition"},{label:"#양도소득세",cat:"tax",calc:"transfer"},{label:"#연봉실수령액",cat:"life",calc:"netsalary"},{label:"#DSR한도",cat:"loan",calc:"dsr"},{label:"#연말정산",cat:"tax",calc:"yearend"},{label:"#중개수수료",cat:"cost",calc:"commission"}].map((tag,i)=>(
                 <button key={i} onClick={()=>navigateCalc(tag.cat,tag.calc)} style={{padding:"4px 12px",background:"#f4f5f7",border:"none",borderRadius:16,fontSize:12,color:"#6b778c",cursor:"pointer",fontWeight:500,transition:"all .15s",fontFamily:"inherit"}} onMouseEnter={e=>{e.currentTarget.style.background="#deebff";e.currentTarget.style.color="#0747A6"}} onMouseLeave={e=>{e.currentTarget.style.background="#f4f5f7";e.currentTarget.style.color="#6b778c"}}>{tag.label}</button>
               ))}
             </div>
-            <div style={{display:"flex",gap:12,flexWrap:"wrap",flexDirection:isMo?"column":"row"}}>
-              <button onClick={()=>navigateCalc("tax","acquisition")} style={{background:"#0747A6",color:"#fff",border:"none",borderRadius:12,padding:isMo?"16px":"14px 28px",fontSize:isMo?16:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit",width:isMo?"100%":"auto",transition:"all .2s",boxShadow:"0 4px 14px rgba(7,71,166,0.3)"}} onMouseEnter={e=>{e.currentTarget.style.transform="scale(1.04)";e.currentTarget.style.boxShadow="0 6px 20px rgba(7,71,166,0.4)"}} onMouseLeave={e=>{e.currentTarget.style.transform="scale(1)";e.currentTarget.style.boxShadow="0 4px 14px rgba(7,71,166,0.3)"}}>지금 계산하기 →</button>
-              <button onClick={()=>document.getElementById("allCalcs")?.scrollIntoView({behavior:"smooth"})} style={{background:"#fff",color:"#172B4D",border:"2px solid #dfe1e6",borderRadius:8,padding:"14px 28px",fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit",width:isMo?"100%":"auto"}}>39가지 도구 보기</button>
+            <div style={{display:"flex",gap:12,flexWrap:"wrap"}}>
+              <button onClick={()=>navigateCalc("tax","acquisition")} style={{background:"#0747A6",color:"#fff",border:"none",borderRadius:12,padding:"14px 28px",fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit",transition:"all .2s",boxShadow:"0 4px 14px rgba(7,71,166,0.3)"}} onMouseEnter={e=>{e.currentTarget.style.transform="scale(1.04)";e.currentTarget.style.boxShadow="0 6px 20px rgba(7,71,166,0.4)"}} onMouseLeave={e=>{e.currentTarget.style.transform="scale(1)";e.currentTarget.style.boxShadow="0 4px 14px rgba(7,71,166,0.3)"}}>지금 계산하기 →</button>
+              <button onClick={()=>document.getElementById("allCalcs")?.scrollIntoView({behavior:"smooth"})} style={{background:"#fff",color:"#172B4D",border:"2px solid #dfe1e6",borderRadius:8,padding:"14px 28px",fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>39가지 도구 보기</button>
             </div>
             <div style={{display:"flex",gap:24,marginTop:24,flexWrap:"wrap"}}>
               <div style={{display:"flex",alignItems:"center",gap:6}}><span style={{fontSize:14}}>📊</span><span style={{fontSize:13,color:"#6b778c"}}>누적 계산 <strong style={{color:"#172B4D"}}>150,000건+</strong></span></div>
@@ -1422,12 +1437,27 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
               <div style={{display:"flex",alignItems:"center",gap:6}}><span style={{fontSize:14}}>🔒</span><span style={{fontSize:13,color:"#6b778c"}}>완전 무료 · 로그인 없이 바로 계산</span></div>
             </div>
           </div>
-          <div style={{width:"100%",maxWidth:isMo?"calc(100vw - 32px)":"100%",overflow:"hidden"}}><HeroCarousel navigateCalc={navigateCalc} isMo={isMo}/></div>
+          <HeroCarousel navigateCalc={navigateCalc} isMo={false}/>
         </div>
       </div>
+      )}
 
-      {/* 인기 계산기 */}
-      <div style={{background:"#fff",padding:isMo?"32px 16px":"64px 24px",textAlign:"center",maxWidth:"100%",overflow:"hidden"}}>
+      {/* 모바일 빠른 접근 3x3 그리드 */}
+      {isMo&&<div style={{padding:"16px",background:"#fff"}}>
+        <div style={{fontSize:16,fontWeight:800,color:"#172B4D",marginBottom:12}}>인기 계산기</div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8}}>
+          {[{id:"acquisition",name:"취득세",icon:"🏠",cat:"tax"},{id:"transfer",name:"양도소득세",icon:"💸",cat:"tax"},{id:"netsalary",name:"연봉실수령",icon:"💰",cat:"life"},{id:"dsr",name:"DSR",icon:"📊",cat:"loan"},{id:"yearend",name:"연말정산",icon:"🧾",cat:"tax"},{id:"commission",name:"중개수수료",icon:"🤝",cat:"cost"},{id:"inctax",name:"종합소득세",icon:"💼",cat:"tax"},{id:"pension",name:"국민연금",icon:"👴",cat:"life"},{id:"mortgage",name:"대출이자",icon:"💵",cat:"loan"}].map(item=>(
+            <button key={item.id} onClick={()=>navigateCalc(item.cat,item.id)} style={{background:"#f8f9fc",border:"1px solid #e8eaed",borderRadius:12,padding:"16px 8px",textAlign:"center",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:6,fontFamily:"inherit"}}>
+              <span style={{fontSize:24}}>{item.icon}</span>
+              <span style={{fontSize:12,fontWeight:600,color:"#172B4D",wordBreak:"keep-all"}}>{item.name}</span>
+            </button>
+          ))}
+        </div>
+        <button onClick={()=>{document.getElementById("allCalcs")?.scrollIntoView({behavior:"smooth"})}} style={{width:"100%",marginTop:10,padding:"12px",background:"#fff",border:"1px solid #dfe1e6",borderRadius:10,fontSize:13,fontWeight:600,color:"#505f79",cursor:"pointer",fontFamily:"inherit"}}>전체 39가지 계산기 보기 ↓</button>
+      </div>}
+
+      {/* 인기 계산기 (PC) */}
+      {!isMo&&<div style={{background:"#fff",padding:"64px 24px",textAlign:"center",maxWidth:"100%",overflow:"hidden"}}>
         <h2 style={{fontSize:isMo?22:28,fontWeight:800,color:"#172B4D",letterSpacing:-1,margin:"0 0 8px"}}>인기 계산기</h2>
         <p style={{fontSize:15,color:"#6b778c",margin:"0 0 32px"}}>가장 많이 사용하는 계산기</p>
         <div style={{display:"grid",gridTemplateColumns:isMo?"repeat(2,1fr)":"repeat(4,1fr)",gap:isMo?10:16,maxWidth:1000,margin:"0 auto"}}>
@@ -1450,7 +1480,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
             </div>);
           })}
         </div>
-      </div>
+      </div>}
 
       {/* 생활경제 달력 */}
       <EconCalendar liveData={liveData} isMo={isMo} setCat={setCat} setCalc={setCalc} setPage={setPage}/>
