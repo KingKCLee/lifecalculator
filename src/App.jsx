@@ -1070,6 +1070,27 @@ function ScrollTop(){
   return(<button aria-label="맨 위로 스크롤" onClick={()=>window.scrollTo({top:0,behavior:'smooth'})} style={{position:"fixed",bottom:80,right:24,width:44,height:44,borderRadius:"50%",background:"#0747A6",color:"#fff",border:"none",cursor:"pointer",fontSize:18,boxShadow:"0 4px 12px rgba(0,0,0,0.15)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center"}}>↑</button>);
 }
 
+function AuthModal({mode,setMode,onClose,isMo}){
+  return(<div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.5)",zIndex:10000,display:"flex",alignItems:"center",justifyContent:"center",padding:16}}>
+    <div onClick={e=>e.stopPropagation()} style={{background:"#fff",borderRadius:20,padding:isMo?24:40,maxWidth:400,width:"100%",position:"relative"}}>
+      <button aria-label="닫기" onClick={onClose} style={{position:"absolute",top:16,right:16,background:"none",border:"none",fontSize:20,cursor:"pointer",color:"#6b778c"}}>✕</button>
+      <div style={{textAlign:"center",marginBottom:24}}>
+        <div style={{fontSize:32,marginBottom:8}}>🔐</div>
+        <h3 style={{fontSize:22,fontWeight:800,color:"#172B4D",margin:0}}>{mode==="login"?"로그인":"무료 회원가입"}</h3>
+        <p style={{fontSize:13,color:"#505f79",marginTop:4}}>계산 기록 저장 · 납부 알림 · 입력값 자동 완성</p>
+      </div>
+      <div style={{display:"flex",flexDirection:"column",gap:12}}>
+        <input type="email" placeholder="이메일 주소" style={{padding:"14px 16px",border:"1.5px solid #dfe1e6",borderRadius:10,fontSize:15,outline:"none",fontFamily:"inherit"}}/>
+        <input type="password" placeholder="비밀번호" style={{padding:"14px 16px",border:"1.5px solid #dfe1e6",borderRadius:10,fontSize:15,outline:"none",fontFamily:"inherit"}}/>
+        {mode==="signup"&&<input type="password" placeholder="비밀번호 확인" style={{padding:"14px 16px",border:"1.5px solid #dfe1e6",borderRadius:10,fontSize:15,outline:"none",fontFamily:"inherit"}}/>}
+        <button onClick={()=>alert("회원 기능을 준비 중입니다. 빠른 시일 내 오픈 예정!")} style={{padding:14,background:"#0747A6",color:"#fff",border:"none",borderRadius:10,fontSize:15,fontWeight:700,cursor:"pointer",marginTop:4,fontFamily:"inherit"}}>{mode==="login"?"로그인":"가입하기"}</button>
+        <div style={{textAlign:"center",fontSize:13,color:"#505f79",marginTop:8}}>{mode==="login"?(<>계정이 없으신가요? <span onClick={()=>setMode("signup")} style={{color:"#0747A6",fontWeight:700,cursor:"pointer"}}>무료 가입</span></>):(<>이미 계정이 있으신가요? <span onClick={()=>setMode("login")} style={{color:"#0747A6",fontWeight:700,cursor:"pointer"}}>로그인</span></>)}</div>
+      </div>
+      <div style={{borderTop:"1px solid #f4f5f7",marginTop:20,paddingTop:16,textAlign:"center",fontSize:11,color:"#6b778c"}}>가입 시 이용약관 및 개인정보처리방침에 동의합니다</div>
+    </div>
+  </div>);
+}
+
 function CookieBanner({onPrivacy}){
   const[show,setShow]=useState(typeof window!=="undefined"&&!localStorage.getItem('cookie_consent'));
   if(!show)return null;
@@ -1286,6 +1307,7 @@ export default function App(){
   const[search,setSearch]=useState("");
   const[modal,setModal]=useState(null);
   const[mobileMenu,setMobileMenu]=useState(false);
+  const[showAuth,setShowAuth]=useState(false);const[authMode,setAuthMode]=useState("login");
   const[calcHistory,setCalcHistory]=useState(()=>{try{return JSON.parse(localStorage.getItem('calc_history')||'[]')}catch{return[]}});
   const saveHistory=(cId,name,total)=>{if(!total||total<=0)return;const item={id:cId,name,total,time:Date.now()};setCalcHistory(prev=>{const updated=[item,...prev.filter(h=>h.id!==cId)].slice(0,10);try{localStorage.setItem('calc_history',JSON.stringify(updated))}catch{}return updated;});};
   const[showAllLog,setShowAllLog]=useState(false);
@@ -1344,8 +1366,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           {CATS.map(c=>(<button key={c.id} onClick={()=>{hCat(c.id);setPage("calc");}} style={{padding:isMo?"6px 14px":"8px 20px",border:"none",borderRadius:6,background:cat===c.id&&page!=="home"?"#deebff":"transparent",color:cat===c.id&&page!=="home"?P.pri:P.mt,fontSize:isMo?12:15,fontWeight:cat===c.id&&page!=="home"?700:500,cursor:"pointer",fontFamily:"inherit",flexShrink:0,minHeight:44}}>{c.l}</button>))}
         </div>
         <div style={{display:"flex",alignItems:"center",gap:8,flexShrink:0}}>
-          {!isMo&&<button onClick={()=>{}} style={{fontSize:14,fontWeight:500,color:"#6b778c",background:"none",border:"none",cursor:"pointer",padding:"8px 12px",fontFamily:"inherit"}}>로그인</button>}
-          <button onClick={()=>{}} style={{fontSize:isMo?12:14,fontWeight:700,color:"#fff",background:"#0747A6",border:"none",borderRadius:8,padding:isMo?"6px 14px":"8px 20px",cursor:"pointer",fontFamily:"inherit"}}>시작하기</button>
+          {!isMo&&<button onClick={()=>{setAuthMode("login");setShowAuth(true);}} style={{fontSize:14,fontWeight:500,color:"#6b778c",background:"none",border:"none",cursor:"pointer",padding:"8px 12px",fontFamily:"inherit"}}>로그인</button>}
+          <button onClick={()=>{setAuthMode("signup");setShowAuth(true);}} style={{fontSize:isMo?12:14,fontWeight:700,color:"#fff",background:"#0747A6",border:"none",borderRadius:8,padding:isMo?"6px 14px":"8px 20px",cursor:"pointer",fontFamily:"inherit"}}>무료 가입</button>
         </div>
       </div>
     </nav>
@@ -1580,6 +1602,25 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
     {/* 경제지표 대시보드 */}
     {liveData?<IndicatorDashboard liveData={liveData} isMo={isMo}/>:<div style={{maxWidth:1100,margin:"0 auto",padding:isMo?"24px 16px":"48px 24px"}}><Skeleton height={32} borderRadius={8}/><div style={{display:"flex",gap:12,marginTop:16}}>{[1,2,3,4,5,6].map(i=><Skeleton key={i} width={isMo?140:160} height={92} borderRadius={14}/>)}</div><div style={{marginTop:16}}><Skeleton height={250} borderRadius={16}/></div></div>}
 
+    {/* 회원 혜택 섹션 */}
+    <div style={{maxWidth:1100,margin:"0 auto",padding:isMo?"32px 16px":"48px 24px"}}>
+      <h2 style={{fontSize:isMo?20:24,fontWeight:800,color:"#172B4D",textAlign:"center",margin:"0 0 8px"}}>무료 회원이 누리는 혜택</h2>
+      <p style={{fontSize:13,color:"#505f79",textAlign:"center",margin:"0 0 24px"}}>계산기는 가입 없이 100% 무료 · 가입하면 더 편해집니다</p>
+      <div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"repeat(4,1fr)",gap:16}}>
+        {[{icon:"💾",title:"계산 기록 저장",desc:"브라우저를 닫아도 결과가 남아요. 언제든 다시 확인."},{icon:"📊",title:"변동 추적 비교",desc:"3개월 전 vs 오늘, 세금이 얼마나 바뀌었는지 한눈에."},{icon:"🔔",title:"세금 납부 알림",desc:"재산세, 종소세 등 마감일 전에 이메일로 알려드려요."},{icon:"⚡",title:"입력값 자동 완성",desc:"연봉, 주소 등 자주 쓰는 값을 매번 입력하지 않아도 돼요."}].map((item,i)=>(
+          <div key={i} style={{background:"#fff",borderRadius:14,padding:isMo?20:24,border:"1px solid #dfe1e6",textAlign:"center"}}>
+            <div style={{fontSize:32,marginBottom:12}}>{item.icon}</div>
+            <div style={{fontSize:15,fontWeight:700,color:"#172B4D",marginBottom:6}}>{item.title}</div>
+            <div style={{fontSize:13,color:"#505f79",lineHeight:1.5}}>{item.desc}</div>
+          </div>
+        ))}
+      </div>
+      <div style={{textAlign:"center",marginTop:24}}>
+        <button onClick={()=>{setAuthMode("signup");setShowAuth(true);}} style={{padding:"14px 40px",background:"#0747A6",color:"#fff",border:"none",borderRadius:10,fontSize:15,fontWeight:700,cursor:"pointer",boxShadow:"0 4px 14px rgba(7,71,166,0.3)",fontFamily:"inherit"}}>무료 회원가입 (이메일만 필요)</button>
+        <div style={{fontSize:12,color:"#6b778c",marginTop:8}}>🔒 광고 없음 · 개인정보 수집 최소화 · 언제든 탈퇴 가능</div>
+      </div>
+    </div>
+
     {/* 업데이트 내역 */}
     <div style={{maxWidth:1100,margin:"0 auto",padding:"48px 24px"}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:24,flexWrap:"wrap",gap:8}}>
@@ -1629,6 +1670,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
       </div>
     </footer>
     {modal&&<LegalModal type={modal} onClose={()=>setModal(null)}/>}
+    {showAuth&&<AuthModal mode={authMode} setMode={setAuthMode} onClose={()=>setShowAuth(false)} isMo={isMo}/>}
     <ScrollTop/>
     <CookieBanner onPrivacy={()=>setModal("privacy")}/>
   </div>);
