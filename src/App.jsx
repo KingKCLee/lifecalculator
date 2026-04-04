@@ -35,10 +35,10 @@ commission:{q:"중개보수 요율은?",a:"매매 시 2억 미만 0.5%(한도 80
 /* ── 카테고리 & 계산기 ── */
 const CATS=[{id:"tax",l:"세금"},{id:"loan",l:"대출"},{id:"cost",l:"비용"},{id:"etc",l:"기타"},{id:"pro",l:"PRO 분석"}];
 const CL=[
-  {id:"acquisition",l:"취득세",c:"tax"},{id:"transfer",l:"양도소득세",c:"tax"},{id:"compre",l:"종부세",c:"tax"},{id:"property",l:"재산세",c:"tax"},{id:"gift",l:"증여세",c:"tax"},{id:"inherit",l:"상속세",c:"tax"},{id:"holdtax",l:"보유세 통합",c:"tax"},
+  {id:"acquisition",l:"취득세",c:"tax"},{id:"transfer",l:"양도소득세",c:"tax"},{id:"compre",l:"종부세",c:"tax"},{id:"property",l:"재산세",c:"tax"},{id:"gift",l:"증여세",c:"tax"},{id:"inherit",l:"상속세",c:"tax"},{id:"holdtax",l:"보유세 통합",c:"tax"},{id:"rental",l:"임대소득세",c:"tax"},
   {id:"mortgage",l:"대출이자",c:"loan"},{id:"dsr",l:"DSR",c:"loan"},{id:"dti",l:"DTI",c:"loan"},{id:"ltv",l:"LTV·대출한도",c:"loan"},{id:"loanmax",l:"대출가능액",c:"loan"},
-  {id:"commission",l:"중개보수",c:"cost"},{id:"registration",l:"등기비용",c:"cost"},{id:"legal",l:"법무사수수료",c:"cost"},{id:"stamp",l:"인지세",c:"cost"},{id:"bond",l:"채권할인료",c:"cost"},
-  {id:"yield",l:"임대수익률",c:"etc"},{id:"area",l:"평수변환",c:"etc"},{id:"convert",l:"전월세전환",c:"etc"},{id:"joint",l:"공동명의",c:"etc"},{id:"deposit",l:"예적금이자",c:"etc"},{id:"far",l:"용적률·건폐율",c:"etc"},{id:"rental",l:"임대소득세",c:"etc"},
+  {id:"commission",l:"중개보수",c:"cost"},{id:"registration",l:"등기비용",c:"cost"},{id:"legal",l:"법무사수수료",c:"cost"},{id:"stamp",l:"인지세",c:"cost"},{id:"bond",l:"채권할인료",c:"cost"},{id:"appraisal",l:"감정평가수수료",c:"cost"},
+  {id:"yield",l:"임대수익률",c:"etc"},{id:"area",l:"평수변환",c:"etc"},{id:"convert",l:"전월세전환",c:"etc"},{id:"joint",l:"공동명의",c:"etc"},{id:"deposit",l:"예적금이자",c:"etc"},{id:"far",l:"용적률·건폐율",c:"etc"},{id:"auction",l:"경매비용",c:"etc"},{id:"remodel",l:"리모델링수익",c:"etc"},{id:"bldvalue",l:"건물잔존가치",c:"etc"},
   {id:"totalcost",l:"총비용 시뮬레이터",c:"pro"},{id:"compare",l:"세금비교 분석",c:"pro"},{id:"invest",l:"투자수익 분석",c:"pro"},
 ];
 
@@ -237,7 +237,19 @@ function CalcFAR(){const[land,sLand]=useState("");const[build,sBuild]=useState("
 /* 임대소득세 */
 function CalcRental(){const[h,sH]=useState("2");const[ri,sRi]=useState("");const[er,sEr]=useState("50");const[bd,sBd]=useState("200");const[mode,sMode]=useState("sep");const riW=tW(ri);const erV=pN(er)/100;const bdW=tW(bd)*10000;const n=parseInt(h);const sepBase=Math.max(0,riW*(1-erV)-bdW);const sepTax=Math.round(sepBase*0.14);const compBase=Math.max(0,riW-riW*0.6-2500000);const compTax=pTx(compBase,IB);const better=sepTax<=compTax?"분리과세":"종합과세";const isExempt=n===1&&riW<=0;return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start"}}><div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>🏘️ 주택임대소득세</h3><Radio label="주택 수" value={h} onChange={sH} options={[{value:"1",label:"1주택 (기준시가 12억↑만 과세)"},{value:"2",label:"2주택"},{value:"3",label:"3주택 이상"}]}/><Inp label="연간 임대수입" value={ri} onChange={sRi} suffix="만원" placeholder="예: 1500"/><Inp label="필요경비율" value={er} onChange={sEr} suffix="%" note="분리과세 시 50%, 등록임대 60%"/><Inp label="기본공제" value={bd} onChange={sBd} suffix="만원" note="미등록 200만, 등록 400만"/><Tog label="과세 방식" value={mode} onChange={sMode} options={[{value:"sep",label:"분리과세 (14%)"},{value:"comp",label:"종합과세 (6~45%)"}]}/></div>{riW>0?<RP title={mode==="sep"?"분리과세 임대소득세":"종합과세 임대소득세"} total={mode==="sep"?sepTax:compTax} sub={"유리한 방식: "+better} items={[{l:"연간 임대수입",v:fW(riW)},{l:"분리과세액 (14%)",v:fW(sepTax)},{l:"종합과세 참고액",v:fW(compTax)},{l:"유리한 방식",v:better}]}/>:<Empty icon="🏘️"/>}</div>);}
 
-const CM={acquisition:CalcAcq,transfer:CalcTrans,compre:CalcCompre,property:CalcProp,gift:CalcGift,inherit:CalcInherit,mortgage:CalcMort,dsr:CalcDSR,dti:CalcDTI,ltv:CalcLTV,commission:CalcComm,registration:CalcReg,legal:CalcLegal,yield:CalcYield,area:CalcArea,convert:CalcConvert,joint:CalcJoint,totalcost:CalcTotalCost,compare:CalcCompare,invest:CalcInvest,loanmax:CalcLoanMax,holdtax:CalcHoldTax,stamp:CalcStamp,bond:CalcBond,deposit:CalcDeposit,far:CalcFAR,rental:CalcRental};
+/* 감정평가수수료 */
+function CalcAppraisal(){const[p,sP]=useState("");const pW=tW(p);let fee=0;if(pW<=5e7)fee=200000;else if(pW<=2e8)fee=200000+Math.round((pW-5e7)*0.0009);else if(pW<=5e8)fee=155000+Math.round((pW-2e8)*0.0008);else if(pW<=10e8)fee=395000+Math.round((pW-5e8)*0.0006);else if(pW<=50e8)fee=695000+Math.round((pW-10e8)*0.0004);else if(pW<=100e8)fee=2295000+Math.round((pW-50e8)*0.0002);else fee=2295000+Math.round((pW-100e8)*0.0001);const vat=Math.round(fee*0.1);const total=fee+vat;return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start"}}><div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>🔍 감정평가 수수료</h3><Inp label="감정가액" value={p} onChange={sP} suffix="만원" placeholder="예: 90000"/><div style={{padding:"14px 16px",background:P.lt,borderRadius:10,fontSize:12,color:"#4a5568",lineHeight:1.8,marginTop:8}}>• 5천만 이하: 기본 20만원<br/>• 5천만~2억: 20만 + 초과분×0.09%<br/>• 2~5억: 15.5만 + 초과분×0.08%<br/>• 5~10억: 39.5만 + 초과분×0.06%<br/>• 10~50억: 69.5만 + 초과분×0.04%</div></div>{pW>0?<RP title="감정평가 수수료" total={total} sub="부가세 포함" items={[{l:"감정가액",v:fW(pW)},{l:"기본 수수료",v:fW(fee)},{l:"부가가치세 (10%)",v:fW(vat)},{l:"합계",v:fW(total)}]}/>:<Empty icon="🔍"/>}</div>);}
+
+/* 경매비용 */
+function CalcAuction(){const[bp,sBp]=useState("");const[ap,sAp]=useState("");const[fail,sFail]=useState("0");const bpW=tW(bp),apW=tW(ap),failN=parseInt(fail);const ratio=failN>0?Math.pow(0.8,failN):1;const minBid=Math.round(apW*ratio);const acqTax=Math.round(bpW*0.04);const regTax=Math.round(bpW*0.02*1.2);const legalFee=bpW<=3e8?220000:bpW<=5e8?310000:bpW<=10e8?420000:600000;const moveFee=3000000;const total=acqTax+regTax+legalFee+moveFee;const invested=bpW+total;const profit=apW>0?apW-invested:0;const roi=invested>0?profit/invested*100:0;return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start"}}><div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>🔨 경매비용 계산</h3><Inp label="낙찰가 (예상)" value={bp} onChange={sBp} suffix="만원" placeholder="예: 50000"/><Inp label="감정가" value={ap} onChange={sAp} suffix="만원" placeholder="예: 70000"/><Sel label="유찰 횟수" value={fail} onChange={sFail} options={[0,1,2,3,4,5].map(n=>({value:String(n),label:n===0?"신건 (유찰 없음)":n+"회 유찰 (최저가 "+(Math.pow(0.8,n)*100).toFixed(0)+"%)"}))}/></div>{bpW>0?<RP title="경매 총비용" total={total} sub={"실투자금 "+fW(invested)} items={[{l:"낙찰가",v:fW(bpW)},{l:"감정가 대비 최저입찰가",v:apW>0?fW(minBid)+" ("+(ratio*100).toFixed(0)+"%)":"—"},{l:"취득세 (4%)",v:fW(acqTax)},{l:"등기비용",v:fW(regTax)},{l:"법무사 수수료",v:fW(legalFee)},{l:"명도비 (예상)",v:fW(moveFee)},{l:"총 부대비용",v:fW(total)},{l:"실투자금 (낙찰+부대)",v:fW(invested)},{l:"예상수익 (감정가 기준)",v:fW(profit)},{l:"예상수익률",v:fP(roi)}]}/>:<Empty icon="🔨"/>}</div>);}
+
+/* 리모델링수익 */
+function CalcRemodel(){const[cv,sCv]=useState("");const[cost,sCost]=useState("");const[ev,sEv]=useState("");const cvW=tW(cv),costW=tW(cost),evW=tW(ev);const profit=evW-cvW-costW;const roi=costW>0?profit/costW*100:0;const totalRoi=(cvW+costW)>0?profit/(cvW+costW)*100:0;return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start"}}><div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>🏠 리모델링 수익 분석</h3><Inp label="기존 평가액 (현재 시세)" value={cv} onChange={sCv} suffix="만원" placeholder="예: 80000"/><Inp label="리모델링 분담금" value={cost} onChange={sCost} suffix="만원" placeholder="예: 15000"/><Inp label="리모델링 후 예상가" value={ev} onChange={sEv} suffix="만원" placeholder="예: 120000"/></div>{cvW>0&&costW>0&&evW>0?<RP title={profit>=0?"예상 수익":"예상 손실"} total={Math.abs(profit)} sub={"분담금 대비 수익률 "+fP(roi)} items={[{l:"기존 평가액",v:fW(cvW)},{l:"리모델링 분담금",v:fW(costW)},{l:"총 투자액",v:fW(cvW+costW)},{l:"리모델링 후 예상가",v:fW(evW)},{l:"예상 수익",v:fW(profit)},{l:"분담금 대비 수익률",v:fP(roi)},{l:"총투자 대비 수익률",v:fP(totalRoi)}]}/>:<Empty icon="🏠"/>}</div>);}
+
+/* 건물잔존가치 */
+function CalcBldValue(){const[np,sNp]=useState("");const[ul,sUl]=useState("40");const[el,sEl]=useState("");const[mt,sMt]=useState("line");const npW=tW(np),ulV=parseInt(ul),elV=parseInt(el||"0");let remaining=0,depreciation=0;if(npW>0&&ulV>0){if(mt==="line"){const ratio=Math.max(0,Math.min(1,1-elV/ulV));remaining=Math.round(npW*ratio);depreciation=npW-remaining;}else{remaining=Math.round(npW*Math.pow(0.9,elV));depreciation=npW-remaining;}}const pct=npW>0?remaining/npW*100:0;return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start"}}><div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>🏚️ 건물 잔존가치</h3><Inp label="신축 가격 (재조달원가)" value={np} onChange={sNp} suffix="만원" placeholder="예: 50000"/><Sel label="내용연수" value={ul} onChange={sUl} options={[{value:"20",label:"20년 (경량철골)"},{value:"30",label:"30년 (조적·블록)"},{value:"40",label:"40년 (철근콘크리트)"},{value:"50",label:"50년 (SRC)"}]}/><Inp label="경과연수" value={el} onChange={sEl} placeholder="예: 15"/><Tog label="감가 방법" value={mt} onChange={sMt} options={[{value:"line",label:"정액법"},{value:"declining",label:"정률법 (10%)"}]}/></div>{npW>0&&elV>0?<RP title="건물 잔존가치" total={remaining} sub={"잔존률 "+fP(pct)} items={[{l:"신축 가격",v:fW(npW)},{l:"내용연수",v:ulV+"년"},{l:"경과연수",v:elV+"년"},{l:"감가방법",v:mt==="line"?"정액법":"정률법"},{l:"감가상각 누계",v:fW(depreciation)},{l:"잔존가치",v:fW(remaining)},{l:"잔존률",v:fP(pct)}]}/>:<Empty icon="🏚️"/>}</div>);}
+
+const CM={acquisition:CalcAcq,transfer:CalcTrans,compre:CalcCompre,property:CalcProp,gift:CalcGift,inherit:CalcInherit,mortgage:CalcMort,dsr:CalcDSR,dti:CalcDTI,ltv:CalcLTV,commission:CalcComm,registration:CalcReg,legal:CalcLegal,yield:CalcYield,area:CalcArea,convert:CalcConvert,joint:CalcJoint,totalcost:CalcTotalCost,compare:CalcCompare,invest:CalcInvest,loanmax:CalcLoanMax,holdtax:CalcHoldTax,stamp:CalcStamp,bond:CalcBond,deposit:CalcDeposit,far:CalcFAR,rental:CalcRental,appraisal:CalcAppraisal,auction:CalcAuction,remodel:CalcRemodel,bldvalue:CalcBldValue};
 
 
 /* ── 관련 계산기 매핑 ── */
@@ -266,6 +278,10 @@ const RELATED={
   deposit:["mortgage"],
   far:["joint"],
   rental:["yield","property"],
+  appraisal:["commission"],
+  auction:["ltv","registration"],
+  remodel:["far"],
+  bldvalue:["far","remodel"],
 };
 
 /* ── 절세 팁 (계산기별) ── */
@@ -322,6 +338,10 @@ const TIPS={
   deposit:[{title:"비과세 상품 활용",body:"ISA, 청년희망적금 등 비과세·감면 상품 활용 시 이자소득세 절약."},{title:"세금우대 9.5% 확인",body:"조합·새마을금고 등 세금우대(9.5%) 상품은 일반(15.4%)보다 세금 절약."}],
   far:[{title:"용적률은 지하 제외",body:"용적률 산정 시 지하층 면적은 제외됨. 지상층 연면적만 포함."},{title:"용도지역별 한도 확인",body:"제1종 전용주거 50~100%, 일반상업 400~1300% 등 용도지역에 따라 법정 한도가 다름."}],
   rental:[{title:"2천만원 이하 분리과세 유리",body:"연 임대소득 2천만원 이하면 14% 분리과세가 종합과세보다 대부분 유리."},{title:"1주택자 비과세 요건",body:"1주택자는 기준시가 12억 이하 주택 임대소득 비과세. 12억 초과 시만 과세."}],
+  appraisal:[{title:"감정평가 2곳 비교",body:"금액이 크면 2개 감정평가법인에 의뢰하여 평균값을 사용. 편차가 크면 재감정 요청 가능."},{title:"소송·경매 시 필수",body:"법원 경매, 재산분할 소송 등에서는 감정평가가 필수. 비용은 신청인 부담."}],
+  auction:[{title:"명도비용 미리 산정",body:"점유자 명도(이사비) 비용을 낙찰 전 반드시 고려. 상가는 권리금 분쟁도 확인."},{title:"유찰 시 감정가 하락",body:"1회 유찰마다 최저가가 20~30% 하락. 2~3회 유찰 물건이 실투자 수익률 높은 경우 많음."}],
+  remodel:[{title:"분담금 대비 시세 상승 확인",body:"리모델링 분담금이 예상 시세 상승분보다 크면 투자 효과 없음. 주변 시세 비교 필수."},{title:"리모델링 기간 거주 대안",body:"리모델링 기간(보통 3~4년) 동안 임시 거주 비용도 총비용에 포함해야 정확한 수익 산정 가능."}],
+  bldvalue:[{title:"감가상각은 세금 절세 수단",body:"임대소득 신고 시 건물 감가상각비를 필요경비로 인정받아 절세 가능."},{title:"RC 내용연수 40년",body:"철근콘크리트 건물 내용연수는 40년. 경과연수에 따라 잔존가치가 달라짐."}],
 };
 
 /* ── 용어 사전 (계산기별) ── */
@@ -344,6 +364,10 @@ const GLOSSARY={
   deposit:[{term:"단리",def:"원금에만 이자가 붙는 방식"},{term:"복리",def:"이자에도 이자가 붙는 방식"},{term:"이자소득세",def:"이자소득에 부과되는 세금 (일반 15.4%)"}],
   far:[{term:"용적률",def:"대지면적 대비 지상 연면적의 비율 (%)"},{term:"건폐율",def:"대지면적 대비 건축면적(1층 바닥)의 비율 (%)"},{term:"연면적",def:"건물 각 층 바닥면적의 합계"}],
   rental:[{term:"분리과세",def:"다른 소득과 합산하지 않고 14% 단일세율 적용"},{term:"종합과세",def:"다른 소득과 합산하여 6~45% 누진세율 적용"},{term:"필요경비율",def:"임대소득에서 경비로 인정하는 비율 (분리과세 50%)"}],
+  appraisal:[{term:"감정평가",def:"부동산의 경제적 가치를 판정하여 금액으로 표시"},{term:"감정평가사",def:"국가공인 자격을 가진 부동산 가치 평가 전문가"},{term:"시가감정",def:"실거래 시세 기준 감정 (상속·증여세 신고 시 활용)"}],
+  auction:[{term:"낙찰가",def:"경매에서 최종 매수인이 제시한 금액"},{term:"유찰",def:"입찰자가 없거나 최저가 미달로 경매 불성립"},{term:"명도",def:"낙찰 후 점유자를 퇴거시키는 절차"}],
+  remodel:[{term:"리모델링",def:"기존 건물의 구조를 유지하며 증축·개축하는 행위"},{term:"분담금",def:"조합원이 추가로 부담하는 공사비 차액"},{term:"수직증축",def:"기존 건물 위에 층수를 추가하는 리모델링 방식"}],
+  bldvalue:[{term:"내용연수",def:"건물이 경제적으로 사용 가능한 기간 (RC 40년)"},{term:"감가상각",def:"시간 경과에 따른 자산 가치 감소분"},{term:"잔존가치",def:"내용연수 경과 후 남은 자산 가치"}],
 };
 
 /* ── 규정 타임라인 (계산기별) ── */
@@ -362,6 +386,10 @@ const REGS={
   stamp:[{y:"2023",t:"전자수입인지 의무화"},{y:"2007",t:"인지세 구간 개정"}],
   bond:[{y:"2024",t:"채권할인율 시장금리 연동 변동"},{y:"2023",t:"매입률 조정"}],
   rental:[{y:"2025",t:"임대소득 과세 강화 논의"},{y:"2019",t:"2천만원 이하 분리과세 시행"}],
+  appraisal:[{y:"2022",t:"감정평가 보수표 개정"}],
+  auction:[{y:"2024",t:"법원경매 전자입찰 확대"},{y:"2023",t:"경매 대출규제 강화"}],
+  remodel:[{y:"2025",t:"리모델링 수직증축 허용 범위 확대 논의"},{y:"2023",t:"리모델링 안전진단 기준 완화"}],
+  bldvalue:[{y:"2023",t:"건물 기준시가 산정방법 개정"}],
 };
 
 /* ── 학습 센터 ── */
