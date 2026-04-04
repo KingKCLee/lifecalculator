@@ -1396,8 +1396,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 
     {page==="home"?(<>
       {/* 히어로 2컬럼 */}
-      <div style={{background:"#f8f9fc",padding:isMo?"48px 16px":"80px 24px"}}>
-        <div style={{maxWidth:1100,margin:"0 auto",display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?32:48,alignItems:"center"}}>
+      <div style={{background:"#f8f9fc",padding:isMo?"32px 16px":"80px 24px",maxWidth:"100%",overflow:"hidden"}}>
+        <div style={{maxWidth:isMo?"100%":1100,margin:"0 auto",display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?32:48,alignItems:"center"}}>
           <div>
             <div style={{display:"inline-block",background:"#0747A6",color:"#fff",fontSize:11,fontWeight:700,padding:"4px 12px",borderRadius:4,letterSpacing:1,marginBottom:20}}>대한민국 NO.1 생활 계산기</div>
             <h1 style={{fontSize:isMo?32:44,fontWeight:900,color:"#172B4D",lineHeight:1.15,letterSpacing:-2,margin:"0 0 20px"}}>
@@ -1405,7 +1405,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
               <span style={{color:"#0747A6"}}>10초 만에</span><br/>
               <span>완벽 계산</span>
             </h1>
-            <p style={{fontSize:isMo?14:16,color:"#6b778c",lineHeight:1.7,margin:"0 0 20px"}}>부동산 세금, 대출, 비용부터 연말정산, 연봉 실수령액, 4대보험까지. 39가지 전문 계산기로 일상의 재정 판단을 도와드립니다. 2026년 최신 세법 반영.</p>
+            <p style={{fontSize:isMo?14:16,color:"#505f79",lineHeight:1.7,wordBreak:"keep-all",paddingRight:isMo?16:0,margin:"0 0 20px"}}>부동산 세금, 대출, 비용부터 연말정산, 연봉 실수령액, 4대보험까지. 39가지 전문 계산기로 일상의 재정 판단을 도와드립니다. 2026년 최신 세법 반영.</p>
             <CalcSearchBar onSelect={navigateCalc} isMo={isMo} calcList={CL.map(c=>({id:c.id,name:c.l,keywords:c.l+" "+(DESC[c.id]||""),cat:c.c}))}/>
             <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:16}}>
               {[{label:"#취득세",cat:"tax",calc:"acquisition"},{label:"#양도소득세",cat:"tax",calc:"transfer"},{label:"#연봉실수령액",cat:"life",calc:"netsalary"},{label:"#DSR한도",cat:"loan",calc:"dsr"},{label:"#연말정산",cat:"tax",calc:"yearend"},{label:"#중개수수료",cat:"cost",calc:"commission"}].map((tag,i)=>(
@@ -1422,15 +1422,15 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
               <div style={{display:"flex",alignItems:"center",gap:6}}><span style={{fontSize:14}}>🔒</span><span style={{fontSize:13,color:"#6b778c"}}>완전 무료 · 로그인 없이 바로 계산</span></div>
             </div>
           </div>
-          <HeroCarousel navigateCalc={navigateCalc} isMo={isMo}/>
+          <div style={{width:"100%",maxWidth:isMo?"calc(100vw - 32px)":"100%",overflow:"hidden"}}><HeroCarousel navigateCalc={navigateCalc} isMo={isMo}/></div>
         </div>
       </div>
 
       {/* 인기 계산기 */}
-      <div style={{background:"#fff",padding:"64px 24px",textAlign:"center"}}>
+      <div style={{background:"#fff",padding:isMo?"32px 16px":"64px 24px",textAlign:"center",maxWidth:"100%",overflow:"hidden"}}>
         <h2 style={{fontSize:isMo?22:28,fontWeight:800,color:"#172B4D",letterSpacing:-1,margin:"0 0 8px"}}>인기 계산기</h2>
         <p style={{fontSize:15,color:"#6b778c",margin:"0 0 32px"}}>가장 많이 사용하는 계산기</p>
-        <div style={{display:"grid",gridTemplateColumns:isMo?"repeat(2,1fr)":"repeat(4,1fr)",gap:isMo?12:16,maxWidth:1000,margin:"0 auto"}}>
+        <div style={{display:"grid",gridTemplateColumns:isMo?"repeat(2,1fr)":"repeat(4,1fr)",gap:isMo?10:16,maxWidth:1000,margin:"0 auto"}}>
           {[{id:"acquisition",bg:"#deebff",svg:<svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M3 12l9-8 9 8" stroke="#0747A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M5 10v8a1 1 0 001 1h12a1 1 0 001-1v-8" stroke="#0747A6" strokeWidth="2"/></svg>},
             {id:"transfer",bg:"#e3fcef",svg:<svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 2v14m0 0l-4-4m4 4l4-4" stroke="#00875A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><circle cx="12" cy="20" r="2" fill="#00875A"/></svg>},
             {id:"inctax",bg:"#fff0e0",svg:<svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" stroke="#FF8B00" strokeWidth="2"/><rect x="9" y="3" width="6" height="4" rx="1" stroke="#FF8B00" strokeWidth="2"/><path d="M9 12h6M9 16h4" stroke="#FF8B00" strokeWidth="2" strokeLinecap="round"/></svg>},
@@ -1441,12 +1441,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
             {id:"pension",bg:"#eae6ff",svg:<svg width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#6554C0" strokeWidth="2"/><path d="M4 20c0-4 4-7 8-7s8 3 8 7" stroke="#6554C0" strokeWidth="2" strokeLinecap="round"/></svg>}
           ].map(p=>{
             const info=CL.find(c=>c.id===p.id);
-            return(<div key={p.id} onClick={()=>goCalc(p.id)} style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:"32px 24px",textAlign:"center",cursor:"pointer",transition:"all .25s",minHeight:180}}
+            return(<div key={p.id} onClick={()=>goCalc(p.id)} style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:isMo?"16px 8px":"32px 24px",textAlign:"center",cursor:"pointer",transition:"all .25s",minHeight:"auto"}}
               onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-6px)";e.currentTarget.style.boxShadow="0 12px 32px rgba(7,71,166,.12)";e.currentTarget.style.borderColor="#0747A6";}}
               onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";e.currentTarget.style.borderColor=P.bd;}}>
-              <div style={{width:64,height:64,borderRadius:"50%",background:p.bg,margin:"0 auto 16px",display:"flex",alignItems:"center",justifyContent:"center"}}>{p.svg}</div>
-              <div style={{fontSize:17,fontWeight:700,color:"#172B4D",letterSpacing:-.5,marginBottom:6}}>{info?.l}</div>
-              <div style={{fontSize:13,color:"#6b778c",lineHeight:1.5,fontWeight:400,whiteSpace:"nowrap"}}>{DESC[p.id]}</div>
+              <div style={{width:isMo?48:64,height:isMo?48:64,borderRadius:"50%",background:p.bg,margin:"0 auto 12px",display:"flex",alignItems:"center",justifyContent:"center"}}>{p.svg}</div>
+              <div style={{fontSize:isMo?13:17,fontWeight:700,color:"#172B4D",letterSpacing:-.5,marginBottom:6}}>{info?.l}</div>
+              {!isMo&&<div style={{fontSize:13,color:"#6b778c",lineHeight:1.5,fontWeight:400,whiteSpace:"nowrap"}}>{DESC[p.id]}</div>}
             </div>);
           })}
         </div>
