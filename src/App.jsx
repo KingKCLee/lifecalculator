@@ -133,7 +133,7 @@ const pN=v=>parseFloat(String(v).replace(/,/g,""))||0;
 const pTx=(b,br)=>{let t=0,p=0;for(const[l,r]of br){const x=Math.min(b,l)-p;if(x<=0)break;t+=x*r;p=l;}return t;};
 const IB=[[14e6,.06],[5e7,.15],[88e6,.24],[15e7,.35],[3e8,.38],[5e8,.40],[1e9,.42],[Infinity,.45]];
 const GB=[[1e8,.10],[5e8,.20],[1e9,.30],[3e9,.40],[Infinity,.50]];
-const P={"pri":"#0747A6","pl":"#0052CC","bg":"#f8f9fc","card":"#ffffff","bd":"#dfe1e6","mt":"#6b778c","tx":"#172B4D","lt":"#f4f5f7"};
+const P={"pri":"#0747A6","pl":"#0052CC","bg":"#f8f9fc","card":"#ffffff","bd":"#dfe1e6","mt":"#505f79","tx":"#172B4D","lt":"#f4f5f7"};
 
 /* ── 업데이트 로그 ── */
 const UPDATE_LOG=[
