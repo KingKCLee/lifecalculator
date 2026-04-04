@@ -1274,7 +1274,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
         </div>
         <div style={{fontSize:12,color:"#6b778c",background:"#f4f5f7",padding:"6px 14px",borderRadius:20}}>마지막 검증: {UPDATE_LOG[0]?.date}</div>
       </div>
-      {(showAllLog?UPDATE_LOG:UPDATE_LOG.slice(0,3)).map((log,li)=>(
+      {(showAllLog?UPDATE_LOG:UPDATE_LOG.slice(0,1)).map((log,li)=>(
         <div key={li} style={{marginBottom:24}}>
           <div style={{fontSize:14,fontWeight:700,color:"#0747A6",marginBottom:12,display:"flex",alignItems:"center",gap:8}}>
             <div style={{width:8,height:8,borderRadius:"50%",background:"#0747A6"}}/>{log.date}
@@ -1292,7 +1292,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           </div>
         </div>
       ))}
-      {!showAllLog&&UPDATE_LOG.length>3&&<button onClick={()=>setShowAllLog(true)} style={{display:"block",margin:"16px auto 0",padding:"10px 24px",background:"#fff",border:"1px solid #dfe1e6",borderRadius:8,fontSize:13,color:"#6b778c",cursor:"pointer",fontFamily:"inherit"}}>전체 내역 보기 ({UPDATE_LOG.length}건)</button>}
+      {!showAllLog&&UPDATE_LOG.length>1&&<button onClick={()=>setShowAllLog(true)} style={{display:"block",margin:"16px auto 0",padding:"10px 24px",background:"#fff",border:"1px solid #dfe1e6",borderRadius:8,fontSize:13,color:"#6b778c",cursor:"pointer",fontFamily:"inherit",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.background="#deebff";e.currentTarget.style.color="#0747A6"}} onMouseLeave={e=>{e.currentTarget.style.background="#fff";e.currentTarget.style.color="#6b778c"}}>전체 내역 보기 ({UPDATE_LOG.length}건)</button>}
+      {showAllLog&&UPDATE_LOG.length>1&&<button onClick={()=>setShowAllLog(false)} style={{display:"block",margin:"16px auto 0",padding:"10px 24px",background:"#fff",border:"1px solid #dfe1e6",borderRadius:8,fontSize:13,color:"#6b778c",cursor:"pointer",fontFamily:"inherit",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.background="#deebff";e.currentTarget.style.color="#0747A6"}} onMouseLeave={e=>{e.currentTarget.style.background="#fff";e.currentTarget.style.color="#6b778c"}}>접기</button>}
     </div>
 
     {/* 푸터 */}
