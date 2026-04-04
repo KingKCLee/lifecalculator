@@ -799,6 +799,49 @@ function LegalModal({type,onClose}){
   </div>);
 }
 
+function EconCalendar({liveData,isMo,setCat,setCalc,setPage}){
+  const[calMonth,setCalMonth]=useState(new Date().getMonth()+1);const[calYear,setCalYear]=useState(new Date().getFullYear());const[filter,setFilter]=useState("all");
+  const prevM=()=>{if(calMonth<=1){setCalMonth(12);setCalYear(y=>y-1)}else setCalMonth(m=>m-1)};
+  const nextM=()=>{if(calMonth>=12){setCalMonth(1);setCalYear(y=>y+1)}else setCalMonth(m=>m+1)};
+  const isThis=calMonth===new Date().getMonth()+1&&calYear===new Date().getFullYear();const today=new Date().getDate();
+  const events=liveData?.econCalendar?.[String(calMonth)]||[];const filtered=filter==="all"?events:events.filter(e=>e.cat===filter);
+  const firstDay=new Date(calYear,calMonth-1,1).getDay();const daysInMonth=new Date(calYear,calMonth,0).getDate();
+  const weeks=[];let week=Array(7).fill(null);
+  for(let d=1;d<=daysInMonth;d++){const dow=(firstDay+d-1)%7;const dayEv=filtered.filter(e=>e.day===d||(e.end&&d>=e.day&&d<=e.end));week[dow]={day:d,events:dayEv};if(dow===6||d===daysInMonth){weeks.push([...week]);week=Array(7).fill(null);}}
+  return(<div style={{maxWidth:1100,margin:"0 auto",padding:"48px 24px"}}>
+    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20,flexWrap:"wrap",gap:8}}>
+      <div><h2 style={{fontSize:isMo?20:24,fontWeight:800,color:"#172B4D",margin:"0 0 4px"}}>생활경제 달력</h2><p style={{fontSize:13,color:"#6b778c",margin:0}}>세금 납부·금통위·FOMC·CPI 주요 일정</p></div>
+      <div style={{display:"flex",alignItems:"center",gap:8}}>
+        <button onClick={prevM} style={{width:36,height:36,borderRadius:"50%",border:"1px solid #dfe1e6",background:"#fff",cursor:"pointer",fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}} onMouseEnter={e=>{e.currentTarget.style.background="#deebff"}} onMouseLeave={e=>{e.currentTarget.style.background="#fff"}}>←</button>
+        <div style={{fontSize:15,fontWeight:700,color:"#fff",background:"#0747A6",padding:"6px 20px",borderRadius:20,minWidth:120,textAlign:"center"}}>{calYear}년 {calMonth}월</div>
+        <button onClick={nextM} style={{width:36,height:36,borderRadius:"50%",border:"1px solid #dfe1e6",background:"#fff",cursor:"pointer",fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}} onMouseEnter={e=>{e.currentTarget.style.background="#deebff"}} onMouseLeave={e=>{e.currentTarget.style.background="#fff"}}>→</button>
+        {!isThis&&<button onClick={()=>{setCalMonth(new Date().getMonth()+1);setCalYear(new Date().getFullYear())}} style={{fontSize:12,color:"#0747A6",background:"#deebff",border:"none",borderRadius:12,padding:"6px 12px",cursor:"pointer",fontWeight:600}}>오늘</button>}
+      </div>
+    </div>
+    <div style={{display:"flex",gap:6,marginBottom:16,overflowX:"auto",paddingBottom:4}}>{[{id:"all",label:"전체",color:"#172B4D"},{id:"tax",label:"🇰🇷 세금·납부",color:"#0747A6"},{id:"korea",label:"🏛️ 한국 경제",color:"#00875A"},{id:"global",label:"🇺🇸 미국·글로벌",color:"#6554C0"}].map(f=>(<button key={f.id} onClick={()=>setFilter(f.id)} style={{padding:"6px 14px",borderRadius:20,border:filter===f.id?"none":"1px solid #dfe1e6",fontSize:12,fontWeight:600,cursor:"pointer",flexShrink:0,background:filter===f.id?f.color:"#fff",color:filter===f.id?"#fff":f.color}}>{f.label}</button>))}</div>
+    <div style={{background:"#fff",borderRadius:16,border:"1px solid #dfe1e6",overflow:"hidden"}}>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",background:"#f8f9fc",borderBottom:"1px solid #dfe1e6"}}>{["일","월","화","수","목","금","토"].map((d,i)=>(<div key={d} style={{padding:"10px 4px",textAlign:"center",fontSize:12,fontWeight:700,color:i===0?"#DE350B":i===6?"#0747A6":"#6b778c"}}>{d}</div>))}</div>
+      {weeks.map((wk,wi)=>(<div key={wi} style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",borderBottom:wi<weeks.length-1?"1px solid #f4f5f7":"none"}}>{wk.map((cell,ci)=>{if(!cell)return<div key={ci} style={{minHeight:isMo?60:80,background:"#fafafa"}}/>;const isT=isThis&&cell.day===today;return(<div key={ci} style={{minHeight:isMo?60:80,padding:isMo?"4px":"6px 8px",borderRight:ci<6?"1px solid #f4f5f7":"none",background:isT?"#deebff":"#fff"}}>
+        <div style={{fontSize:isMo?11:13,fontWeight:isT?800:500,marginBottom:4,color:isT?"#0747A6":ci===0?"#DE350B":ci===6?"#0747A6":"#172B4D"}}>{cell.day}{isT&&<span style={{fontSize:9,background:"#0747A6",color:"#fff",borderRadius:4,padding:"1px 4px",marginLeft:4}}>오늘</span>}</div>
+        {cell.events.slice(0,isMo?2:3).map((ev,ei)=>(<div key={ei} onClick={()=>{if(ev.calcCat){setCat(ev.calcCat);setCalc(ev.calcId);setPage("calc")}}} style={{fontSize:isMo?9:11,padding:isMo?"1px 3px":"2px 6px",marginBottom:2,borderRadius:4,background:(ev.urgent?ev.color+"20":ev.color+"10"),color:ev.color,fontWeight:ev.urgent?700:500,cursor:ev.calcCat?"pointer":"default",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",borderLeft:ev.urgent?"2px solid "+ev.color:"none"}}>{isMo?ev.icon:ev.icon+" "+ev.title}</div>))}
+        {cell.events.length>(isMo?2:3)&&<div style={{fontSize:9,color:"#6b778c",textAlign:"center"}}>+{cell.events.length-(isMo?2:3)}</div>}
+      </div>);})}</div>))}
+    </div>
+    <div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:16,marginTop:20}}>
+      <div style={{background:"#fff",borderRadius:12,border:"1px solid #dfe1e6",padding:20}}>
+        <div style={{fontSize:14,fontWeight:700,color:"#DE350B",marginBottom:12}}>⚠️ 이번 달 마감 주의</div>
+        {filtered.filter(e=>e.urgent).map((ev,i)=>(<div key={i} onClick={()=>{if(ev.calcCat){setCat(ev.calcCat);setCalc(ev.calcId);setPage("calc")}}} style={{display:"flex",gap:10,padding:"10px 12px",marginBottom:6,borderRadius:8,background:"#fff8f0",border:"1px solid #FFE0B2",cursor:ev.calcCat?"pointer":"default"}} onMouseEnter={e=>{if(ev.calcCat)e.currentTarget.style.background="#deebff"}} onMouseLeave={e=>{e.currentTarget.style.background="#fff8f0"}}><span style={{fontSize:16}}>{ev.icon}</span><div><div style={{fontSize:13,fontWeight:700,color:"#172B4D"}}>{ev.title}</div><div style={{fontSize:11,color:"#0747A6",fontWeight:600}}>{calMonth}/{ev.day}{ev.end?"~"+calMonth+"/"+ev.end:""}</div></div>{ev.calcCat&&<span style={{fontSize:11,color:"#0747A6",marginLeft:"auto",alignSelf:"center"}}>계산→</span>}</div>))}
+        {filtered.filter(e=>e.urgent).length===0&&<div style={{fontSize:13,color:"#6b778c"}}>이번 달 긴급 일정이 없습니다.</div>}
+      </div>
+      <div style={{background:"#fff",borderRadius:12,border:"1px solid #dfe1e6",padding:20}}>
+        <div style={{fontSize:14,fontWeight:700,color:"#172B4D",marginBottom:12}}>📌 범례</div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:16}}>{[{color:"#0747A6",label:"세금·납부"},{color:"#00875A",label:"한국 경제지표"},{color:"#6554C0",label:"미국·글로벌"},{color:"#DE350B",label:"마감 주의"}].map(l=>(<div key={l.label} style={{display:"flex",alignItems:"center",gap:6}}><div style={{width:10,height:10,borderRadius:3,background:l.color}}/><span style={{fontSize:12,color:"#6b778c"}}>{l.label}</span></div>))}</div>
+        <div style={{padding:"14px 16px",background:"#f8f9fc",borderRadius:10}}><div style={{fontSize:13,fontWeight:700,color:"#172B4D",marginBottom:6}}>💡 {calMonth}월 경제 포인트</div><div style={{fontSize:12,color:"#6b778c",lineHeight:1.6}}>{liveData?.monthlyTips?.[String(calMonth)]||"매월 원천세 신고·납부와 주요 경제지표 발표일을 확인하세요."}</div></div>
+      </div>
+    </div>
+  </div>);
+}
+
 function IndicatorDashboard({liveData,isMo}){
   const[selectedId,setSelectedId]=useState("baseRate");const[period,setPeriod]=useState("monthly");
   const indicators=liveData?.indicators?.items||[];const selected=indicators.find(i=>i.id===selectedId)||indicators[0];
@@ -921,9 +964,6 @@ export default function App(){
   const[search,setSearch]=useState("");
   const[modal,setModal]=useState(null);
   const[showAllLog,setShowAllLog]=useState(false);
-  const[calMonth,setCalMonth]=useState(new Date().getMonth()+1);
-  const prevMonth=()=>setCalMonth(m=>m<=1?12:m-1);
-  const nextMonth=()=>setCalMonth(m=>m>=12?1:m+1);
   const[liveData,setLiveData]=useState(null);
   useEffect(()=>{fetch('/data/live-data.json?t='+Date.now()).then(r=>r.json()).then(d=>setLiveData(d)).catch(()=>{});},[]);
   const filtered=CL.filter(c=>c.c===cat);const hCat=c=>{setCat(c);const f=CL.find(x=>x.c===c);if(f)setCalc(f.id);};
@@ -1032,45 +1072,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
         </div>
       </div>
 
-      {/* 세무 캘린더 */}
-      {(()=>{const month=calMonth;const liveCal=liveData?.taxCalendar?.[String(month)];const items=(liveCal||TAX_CALENDAR[month]||[]).map(it=>liveCal?{...it,calc:it.calcCat?{cat:it.calcCat,id:it.calcId}:null}:it);const liveUtil=liveData?.utilityDates||UTILITY_DATES;const liveTip=liveData?.monthlyTips?.[String(month)];return(
-        <div style={{maxWidth:1100,margin:"0 auto",padding:"48px 24px"}}>
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:24,flexWrap:"wrap",gap:8}}>
-            <div>
-              <h2 style={{fontSize:isMo?20:24,fontWeight:800,color:"#172B4D",margin:"0 0 4px"}}>{month}월 세무 캘린더</h2>
-              <p style={{fontSize:14,color:"#6b778c",margin:0}}>놓치면 안 되는 세금·납부 일정</p>
-            </div>
-            <div style={{display:"flex",alignItems:"center",gap:8}}>
-              <button onClick={prevMonth} style={{width:36,height:36,borderRadius:"50%",border:"1px solid #dfe1e6",background:"#fff",cursor:"pointer",fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}} onMouseEnter={e=>{e.currentTarget.style.background="#deebff"}} onMouseLeave={e=>{e.currentTarget.style.background="#fff"}}>←</button>
-              <div style={{fontSize:14,fontWeight:700,color:"#fff",background:"#0747A6",padding:"6px 16px",borderRadius:20,minWidth:80,textAlign:"center"}}>{month}월</div>
-              <button onClick={nextMonth} style={{width:36,height:36,borderRadius:"50%",border:"1px solid #dfe1e6",background:"#fff",cursor:"pointer",fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}} onMouseEnter={e=>{e.currentTarget.style.background="#deebff"}} onMouseLeave={e=>{e.currentTarget.style.background="#fff"}}>→</button>
-              {month===new Date().getMonth()+1&&<span style={{fontSize:11,color:"#00875A",fontWeight:600}}>● 이번 달</span>}
-            </div>
-          </div>
-          <div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"2fr 1fr",gap:20}}>
-            <div style={{background:"#fff",borderRadius:16,border:"1px solid #dfe1e6",padding:24}}>
-              <div style={{fontSize:14,fontWeight:700,color:"#0747A6",marginBottom:16}}>📅 세금 신고·납부 일정</div>
-              {items.map((item,i)=>(<div key={i} onClick={()=>{if(item.calc){setCat(item.calc.cat);setCalc(item.calc.id);setPage("calc");}}} style={{display:"flex",gap:12,padding:"12px 14px",marginBottom:8,borderRadius:10,background:item.urgent?"#fff8f0":"#f8f9fc",border:item.urgent?"1px solid #FFE0B2":"1px solid transparent",cursor:item.calc?"pointer":"default",transition:"all .15s"}} onMouseEnter={e=>{if(item.calc)e.currentTarget.style.background="#deebff";}} onMouseLeave={e=>{e.currentTarget.style.background=item.urgent?"#fff8f0":"#f8f9fc";}}>
-                <div style={{fontSize:20,flexShrink:0}}>{item.icon}</div>
-                <div style={{flex:1}}>
-                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}><span style={{fontSize:14,fontWeight:700,color:"#172B4D"}}>{item.title}</span>{item.urgent&&<span style={{fontSize:10,fontWeight:700,color:"#DE350B",background:"#FFEBE6",padding:"2px 8px",borderRadius:4}}>마감 주의</span>}</div>
-                  <div style={{fontSize:12,color:"#6b778c",marginTop:2}}>{item.desc}</div>
-                  <div style={{fontSize:11,color:"#0747A6",fontWeight:600,marginTop:4}}>{item.day}</div>
-                </div>
-                {item.calc&&<div style={{fontSize:12,color:"#0747A6",fontWeight:600,alignSelf:"center"}}>계산 →</div>}
-              </div>))}
-            </div>
-            <div style={{background:"#fff",borderRadius:16,border:"1px solid #dfe1e6",padding:24}}>
-              <div style={{fontSize:14,fontWeight:700,color:"#0747A6",marginBottom:16}}>🧾 공과금 납부일</div>
-              {liveUtil.map((item,i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"10px 0",borderBottom:i<UTILITY_DATES.length-1?"1px solid #f4f5f7":"none"}}><div style={{display:"flex",alignItems:"center",gap:8}}><span style={{fontSize:16}}>{item.icon}</span><span style={{fontSize:13,fontWeight:600,color:"#172B4D"}}>{item.name}</span></div><span style={{fontSize:12,color:"#6b778c"}}>{item.day}</span></div>))}
-              <div style={{marginTop:20,padding:"14px 16px",background:"#f8f9fc",borderRadius:10}}>
-                <div style={{fontSize:13,fontWeight:700,color:"#172B4D",marginBottom:6}}>💡 이달의 절세 팁</div>
-                <div style={{fontSize:12,color:"#6b778c",lineHeight:1.6}}>{liveTip||"매월 원천세 신고·납부 잊지 마세요. 홈택스에서 간편 신고 가능합니다."}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      );})()}
+      {/* 생활경제 달력 */}
+      <EconCalendar liveData={liveData} isMo={isMo} setCat={setCat} setCalc={setCalc} setPage={setPage}/>
 
       {/* 종합 계산기 라인업 */}
       <div id="calcSuite" style={{maxWidth:1100,margin:"0 auto",padding:"48px 24px"}}>

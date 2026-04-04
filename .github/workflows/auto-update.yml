@@ -42,7 +42,13 @@ jobs:
              - UPDATE_LOG 맨 앞에 새 항목 추가
              - sitemap.xml lastmod 오늘 날짜로 변경
 
-          4. 변경사항 없으면 lastUpdate만 갱신"
+          4. 생활경제 달력 업데이트:
+             - FOMC 회의 일정, 한국은행 금통위 일정, 미국/한국 CPI 발표일, 미국 고용보고서 발표일 검색
+             - 세금 납부 기한 변경 여부 (공휴일 연기 등) 확인
+             - econCalendar 해당 월 데이터 업데이트
+             - indicators의 current/prev/change/history도 발표 결과 반영
+
+          5. 변경사항 없으면 lastUpdate만 갱신"
 
       - name: Check for changes
         id: changes
