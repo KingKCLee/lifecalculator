@@ -391,11 +391,11 @@ function CalcYearEnd(){const[salary,sSal]=useState("");const[card,sCard]=useStat
 
 /* 연봉 실수령액 */
 function CalcNetSalary(){const[salary,sSal]=useState("");const[family,sFamily]=useState("1");const[child,sChild]=useState("0");const[nonTax,sNT]=useState("20");
-  const salW=tW(salary),nonTaxW=tW(nonTax)*10000*12,familyN=parseInt(family),childN=parseInt(child),taxableSal=Math.max(0,salW-nonTaxW);
-  const npn=Math.min(taxableSal*.045,2700000*12*.045),hi=taxableSal*.03545,ltc=hi*.1295,ei=taxableSal*.009,totalIns=npn+hi+ltc+ei;
+  const salW=tW(salary),nonTaxW=tW(nonTax)*12,familyN=parseInt(family),childN=parseInt(child),taxableSal=Math.max(0,salW-nonTaxW);
+  const monthlySal=taxableSal/12;const npn=Math.min(monthlySal,5900000)*.045,hi=monthlySal*.03545,ltc=hi*.1295,ei=monthlySal*.009;const monthlyIns=npn+hi+ltc+ei;const totalIns=monthlyIns*12;
   let workDed=0;if(taxableSal<=5e6)workDed=taxableSal*.7;else if(taxableSal<=15e6)workDed=3500000+(taxableSal-5e6)*.4;else if(taxableSal<=45e6)workDed=7500000+(taxableSal-15e6)*.15;else if(taxableSal<=1e8)workDed=12000000+(taxableSal-45e6)*.05;else workDed=14750000+(taxableSal-1e8)*.02;
   const personalDed=1500000*familyN+1500000*childN;const taxableIncome=Math.max(0,taxableSal-workDed-personalDed-totalIns);const tax=pTx(taxableIncome,IB);const localTax=tax*.1;
-  const monthlyGross=salW/12,monthlyIns=totalIns/12,monthlyTax=(tax+localTax)/12,monthlyNet=monthlyGross-monthlyIns-monthlyTax;
+  const monthlyGross=salW/12,monthlyTax=(tax+localTax)/12,monthlyNet=monthlyGross-monthlyIns-monthlyTax;
   return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start"}}><div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>💰 연봉 실수령액</h3>
     <Inp label="연봉 (세전)" value={salary} onChange={sSal} suffix="만원" placeholder="예: 5000"/>
     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}><Sel label="부양가족 (본인 포함)" value={family} onChange={sFamily} options={[1,2,3,4,5,6].map(n=>({value:String(n),label:n+"명"}))}/><Sel label="20세 이하 자녀" value={child} onChange={sChild} options={[0,1,2,3,4].map(n=>({value:String(n),label:n+"명"}))}/></div>
@@ -408,7 +408,7 @@ function CalcNetSalary(){const[salary,sSal]=useState("");const[family,sFamily]=u
     </div>
     <div style={{background:P.card,borderRadius:16,padding:20,border:"1px solid "+P.bd}}>
       <div style={{fontSize:13,fontWeight:600,color:P.mt,marginBottom:12}}>월급 구성 상세</div>
-      {[["월급여 (세전)",monthlyGross,"+","#0747A6"],["국민연금 (4.5%)",npn/12,"-","#DE350B"],["건강보험 (3.545%)",hi/12,"-","#DE350B"],["장기요양 (12.95%)",ltc/12,"-","#DE350B"],["고용보험 (0.9%)",ei/12,"-","#DE350B"],["소득세 (간이)",tax/12,"-","#FF8B00"],["지방소득세 (10%)",localTax/12,"-","#FF8B00"]].map(([l,v,s,c],i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:"1px solid "+P.lt,fontSize:13}}><span style={{color:i===0?P.tx:P.mt}}>{l}</span><span style={{fontWeight:600,color:c}}>{s}{fW(Math.round(v))}</span></div>))}
+      {[["월급여 (세전)",monthlyGross,"+","#0747A6"],["국민연금 (4.5%)",npn,"-","#DE350B"],["건강보험 (3.545%)",hi,"-","#DE350B"],["장기요양 (12.95%)",ltc,"-","#DE350B"],["고용보험 (0.9%)",ei,"-","#DE350B"],["소득세 (간이)",tax/12,"-","#FF8B00"],["지방소득세 (10%)",localTax/12,"-","#FF8B00"]].map(([l,v,s,c],i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:"1px solid "+P.lt,fontSize:13}}><span style={{color:i===0?P.tx:P.mt}}>{l}</span><span style={{fontWeight:600,color:c}}>{s}{fW(Math.round(v))}</span></div>))}
       <div style={{display:"flex",justifyContent:"space-between",padding:"12px 0 0",fontSize:15,fontWeight:700}}><span style={{color:P.tx}}>월 실수령액</span><span style={{color:"#0747A6"}}>{fW(Math.round(monthlyNet))}</span></div>
     </div>
   </div>:<Empty icon="💰" msg="연봉을 입력하세요"/>}</div>);}
