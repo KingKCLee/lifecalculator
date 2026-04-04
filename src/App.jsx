@@ -578,11 +578,11 @@ export default function App(){
   const catInfo=CATS.find(c=>c.id===cat);
   const searchResults=search.trim()?CL.filter(c=>(c.l+"|"+(DESC[c.id]||"")).includes(search.trim())):[];
 
-  return(<div style={{minHeight:"100vh",background:P.bg,fontFamily:"'Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif"}}>
+  return(<div style={{minHeight:"100vh",background:P.bg,fontFamily:"'Pretendard','Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif"}}>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
     <style>{`
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
-body{-webkit-tap-highlight-color:transparent;overscroll-behavior-y:contain}
+body{-webkit-tap-highlight-color:transparent;overscroll-behavior-y:contain;font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
 *{box-sizing:border-box}
 input[type=range]{-webkit-appearance:none;height:8px;border-radius:4px;background:#dfe1e6;outline:none}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#0747A6;cursor:pointer;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2)}
@@ -646,16 +646,20 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 
       {/* 인기 계산기 */}
       <div style={{background:"#fff",padding:"48px 24px",textAlign:"center"}}>
-        <div style={{fontSize:14,fontWeight:600,color:P.mt,letterSpacing:2,textTransform:"uppercase",marginBottom:20}}>인기 계산기</div>
-        <div style={{display:"flex",justifyContent:"center",gap:16,flexWrap:"wrap"}}>
-          {[{id:"acquisition",icon:"🏠"},{id:"transfer",icon:"💸"},{id:"dsr",icon:"💳"},{id:"commission",icon:"🤝"}].map(p=>{
+        <div style={{fontSize:12,fontWeight:600,color:"#6b778c",letterSpacing:3,textTransform:"uppercase",marginBottom:24}}>인기 계산기</div>
+        <div style={{display:"grid",gridTemplateColumns:isMo?"repeat(2,1fr)":"repeat(4,1fr)",gap:isMo?12:16,maxWidth:800,margin:"0 auto"}}>
+          {[{id:"acquisition",bg:"#deebff",svg:<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 12l9-8 9 8" stroke="#0747A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M5 10v8a1 1 0 001 1h12a1 1 0 001-1v-8" stroke="#0747A6" strokeWidth="2"/></svg>},
+            {id:"transfer",bg:"#e3fcef",svg:<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2v14m0 0l-4-4m4 4l4-4" stroke="#00875A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><circle cx="12" cy="20" r="2" fill="#00875A"/></svg>},
+            {id:"dsr",bg:"#fff0e0",svg:<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="12" width="4" height="8" rx="1" fill="#FF8B00"/><rect x="10" y="8" width="4" height="12" rx="1" fill="#FF8B00"/><rect x="17" y="4" width="4" height="16" rx="1" fill="#FF8B00"/></svg>},
+            {id:"commission",bg:"#eae6ff",svg:<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M7 11l3 3 7-7" stroke="#6554C0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><rect x="3" y="3" width="18" height="18" rx="4" stroke="#6554C0" strokeWidth="2"/></svg>}
+          ].map(p=>{
             const info=CL.find(c=>c.id===p.id);
-            return(<div key={p.id} onClick={()=>goCalc(p.id)} style={{width:160,padding:20,background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,textAlign:"center",cursor:"pointer",transition:"box-shadow .2s, transform .2s"}}
-              onMouseEnter={e=>{e.currentTarget.style.boxShadow="0 4px 16px rgba(0,0,0,.1)";e.currentTarget.style.transform="translateY(-2px)";}}
-              onMouseLeave={e=>{e.currentTarget.style.boxShadow="none";e.currentTarget.style.transform="none";}}>
-              <div style={{fontSize:32}}>{p.icon}</div>
-              <div style={{fontSize:14,fontWeight:700,color:P.tx,marginTop:8}}>{info?.l}</div>
-              <div style={{fontSize:12,color:P.mt,marginTop:4}}>{DESC[p.id]}</div>
+            return(<div key={p.id} onClick={()=>goCalc(p.id)} style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:"28px 20px",textAlign:"center",cursor:"pointer",transition:"all .25s"}}
+              onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-6px)";e.currentTarget.style.boxShadow="0 12px 32px rgba(7,71,166,.12)";e.currentTarget.style.borderColor="#0747A6";}}
+              onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";e.currentTarget.style.borderColor=P.bd;}}>
+              <div style={{width:56,height:56,borderRadius:"50%",background:p.bg,margin:"0 auto 16px",display:"flex",alignItems:"center",justifyContent:"center"}}>{p.svg}</div>
+              <div style={{fontSize:16,fontWeight:700,color:"#172B4D",letterSpacing:-.5,marginBottom:6}}>{info?.l}</div>
+              <div style={{fontSize:13,color:"#97a0af",lineHeight:1.5,fontWeight:400}}>{DESC[p.id]}</div>
             </div>);
           })}
         </div>
