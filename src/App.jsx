@@ -859,7 +859,7 @@ function IndicatorDashboard({liveData,isMo}){
       {indicators.map(ind=>{const up=ind.change>0,dn=ind.change<0,ic=up?"#DE350B":dn?"#00875A":"#6b778c",act=selectedId===ind.id;return(
         <div key={ind.id} onClick={()=>setSelectedId(ind.id)} style={{minWidth:isMo?140:160,padding:"16px 18px",borderRadius:14,background:act?"linear-gradient(135deg,#0747A6,#0065FF)":"#fff",border:act?"none":"1px solid #dfe1e6",cursor:"pointer",flexShrink:0,transition:"all .2s"}}>
           <div style={{fontSize:11,color:act?"rgba(255,255,255,.7)":"#6b778c",fontWeight:600,marginBottom:6}}>{ind.name}</div>
-          <div style={{fontSize:20,fontWeight:800,color:act?"#fff":"#172B4D"}}>{ind.id==="usdkrw"?Math.round(ind.current).toLocaleString():ind.current.toLocaleString()}{ind.unit&&<span style={{fontSize:12,fontWeight:500}}>{ind.unit}</span>}</div>
+          <div style={{fontSize:20,fontWeight:800,color:act?"#fff":"#172B4D"}}>{ind.current!==null?(ind.id==="usdkrw"?Math.round(ind.current).toLocaleString():ind.current.toLocaleString()):"확인 중"}{ind.current!==null&&ind.unit&&<span style={{fontSize:12,fontWeight:500}}>{ind.unit}</span>}</div>
           <div style={{fontSize:12,fontWeight:600,color:act?(up?"#FF5630":"#57D9A3"):ic,marginTop:4}}>{up?"▲":dn?"▼":"—"} {Math.abs(ind.change).toLocaleString()}{ind.unit}</div>
         </div>);})}
     </div>

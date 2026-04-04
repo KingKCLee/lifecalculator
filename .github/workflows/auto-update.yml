@@ -48,7 +48,16 @@ jobs:
              - econCalendar 해당 월 데이터 업데이트
              - indicators의 current/prev/change/history도 발표 결과 반영
 
-          5. 변경사항 없으면 lastUpdate만 갱신"
+          절대 원칙:
+          - 모든 데이터는 공식 출처의 실제 발표값만 사용할 것. 추정값·예측값·임의값 절대 금지.
+          - 확인 불가능한 데이터는 null로 두고 '확인 중'으로 표시.
+          - kr.investing.com에서 USD/KRW, KOSPI 최신 종가 확인
+          - 한국은행(bok.or.kr)에서 기준금리, 국고채 금리 확인
+          - 한국부동산원(reb.or.kr)에서 주택매매가격지수 확인
+          - 통계청(kostat.go.kr)에서 소비자물가 상승률 확인
+          - 연준(federalreserve.gov), BLS(bls.gov)에서 FOMC/CPI/고용 일정 확인
+
+          6. 변경사항 없으면 lastUpdate만 갱신"
 
       - name: Check for changes
         id: changes
