@@ -462,28 +462,43 @@ function CalcRemodel(){const[cv,sCv]=useState("");const[cost,sCost]=useState("")
 function CalcBldValue(){const[np,sNp]=useState("");const[ul,sUl]=useState("40");const[el,sEl]=useState("");const[mt,sMt]=useState("line");const npW=tW(np),ulV=parseInt(ul),elV=parseInt(el||"0");let remaining=0,depreciation=0;if(npW>0&&ulV>0){if(mt==="line"){const ratio=Math.max(0,Math.min(1,1-elV/ulV));remaining=Math.round(npW*ratio);depreciation=npW-remaining;}else{remaining=Math.round(npW*Math.pow(0.9,elV));depreciation=npW-remaining;}}const pct=npW>0?remaining/npW*100:0;return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start"}}><div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>🏚️ 건물 잔존가치</h3><Inp label="신축 가격 (재조달원가)" value={np} onChange={sNp} suffix="만원" placeholder="예: 50000"/><Sel label="내용연수" value={ul} onChange={sUl} options={[{value:"20",label:"20년 (경량철골)"},{value:"30",label:"30년 (조적·블록)"},{value:"40",label:"40년 (철근콘크리트)"},{value:"50",label:"50년 (SRC)"}]}/><Inp label="경과연수" value={el} onChange={sEl} placeholder="예: 15"/><Tog label="감가 방법" value={mt} onChange={sMt} options={[{value:"line",label:"정액법"},{value:"declining",label:"정률법 (10%)"}]}/></div>{npW>0&&elV>0?<RP title="건물 잔존가치" total={remaining} sub={"잔존률 "+fP(pct)} items={[{l:"신축 가격",v:fW(npW)},{l:"내용연수",v:ulV+"년"},{l:"경과연수",v:elV+"년"},{l:"감가방법",v:mt==="line"?"정액법":"정률법"},{l:"감가상각 누계",v:fW(depreciation)},{l:"잔존가치",v:fW(remaining)},{l:"잔존률",v:fP(pct)}]}/>:<Empty icon="🏚️"/>}</div>);}
 
 /* 종합소득세 */
-function CalcIncTax(){const[incType,sIT]=useState("salary");const[gross,sGross]=useState("");const[deductions,sDed]=useState("");const[bizType,sBT]=useState("simple");const[bizRate,sBR]=useState("60");const[family,sFamily]=useState("1");const[child,sChild]=useState("0");
-  const grossW=tW(gross),dedW=tW(deductions),familyN=parseInt(family),childN=parseInt(child);let taxableIncome=0;
+function CalcIncTax(){const[incType,sIT]=useState("salary");const[gross,sGross]=useState("");const[deductions,sDed]=useState("");const[bizType,sBT]=useState("simple");const[bizRate,sBR]=useState("60");
+  const[spouse,sSpouse]=useState("0");const[parents,sParents]=useState("0");const[children,sChildren]=useState("0");const[senior,sSenior]=useState("0");const[disabled,sDisabled]=useState("0");
+  const grossW=tW(gross),dedW=tW(deductions);const spouseN=Math.min(parseInt(spouse)||0,1),parentsN=parseInt(parents)||0,childrenN=parseInt(children)||0,seniorN=parseInt(senior)||0,disabledN=parseInt(disabled)||0;
+  let taxableIncome=0;
   if(incType==="salary"){let wd=0;if(grossW<=5e6)wd=grossW*.7;else if(grossW<=15e6)wd=3500000+(grossW-5e6)*.4;else if(grossW<=45e6)wd=7500000+(grossW-15e6)*.15;else if(grossW<=1e8)wd=12000000+(grossW-45e6)*.05;else wd=14750000+(grossW-1e8)*.02;taxableIncome=grossW-wd;}
   else if(incType==="biz"||incType==="freelance"){if(bizType==="simple")taxableIncome=grossW*(1-pN(bizRate)/100);else taxableIncome=grossW-dedW;}
   else{taxableIncome=Math.max(0,grossW-Math.max(grossW*.6,dedW));}
-  const personalDed=1500000*familyN+1500000*childN;const stdDed=incType==="salary"?130000:70000;const finalTaxable=Math.max(0,taxableIncome-personalDed);const tax=pTx(finalTaxable,IB);
-  let childCredit=0;if(childN===1)childCredit=150000;else if(childN===2)childCredit=300000;else if(childN>=3)childCredit=300000+(childN-2)*300000;
+  const basicDed=(1+spouseN+parentsN+childrenN)*1500000,seniorDed=seniorN*1000000,disabledDed=disabledN*2000000,personalDed=basicDed+seniorDed+disabledDed;
+  const stdDed=incType==="salary"?130000:70000;const finalTaxable=Math.max(0,taxableIncome-personalDed);const tax=pTx(finalTaxable,IB);
+  let childCredit=0;if(childrenN===1)childCredit=150000;else if(childrenN===2)childCredit=300000;else if(childrenN>=3)childCredit=300000+(childrenN-2)*300000;
   const finalTax=Math.max(0,tax-stdDed-childCredit);const totalTax=finalTax+finalTax*.1;const prepaid=incType==="freelance"?grossW*.033:0;const toPay=totalTax-prepaid;
   return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start"}}><div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>💼 종합소득세</h3>
     <Tog label="소득 유형" value={incType} onChange={sIT} options={[{value:"salary",label:"근로소득"},{value:"biz",label:"사업소득"},{value:"freelance",label:"프리랜서(3.3%)"},{value:"etc",label:"기타소득"}]}/>
     <Inp label={incType==="salary"?"총급여(연봉)":"총수입금액"} value={gross} onChange={sGross} suffix="만원" placeholder={incType==="salary"?"예: 5000":"예: 8000"}/>
     {(incType==="biz"||incType==="freelance")&&<><Tog label="경비 산정 방식" value={bizType} onChange={sBT} options={[{value:"simple",label:"단순경비율 적용"},{value:"actual",label:"실제 경비 입력"}]}/>{bizType==="simple"?<Sel label="단순경비율" value={bizRate} onChange={sBR} options={[{value:"90",label:"90% (소매업)"},{value:"80",label:"80% (음식점)"},{value:"70",label:"70% (제조업)"},{value:"60",label:"60% (서비스업)"},{value:"50",label:"50% (전문직)"},{value:"40",label:"40% (고소득 전문직)"}]}/>:<Inp label="필요경비 합계" value={deductions} onChange={sDed} suffix="만원" placeholder="실제 지출한 경비"/>}</>}
     {incType==="etc"&&<Inp label="필요경비" value={deductions} onChange={sDed} suffix="만원" note="기타소득은 수입의 60%와 실제 경비 중 큰 금액 적용"/>}
-    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}><Sel label="부양가족 수 (본인 포함)" value={family} onChange={sFamily} options={[1,2,3,4,5,6].map(n=>({value:String(n),label:n+"명"}))}/><Sel label="20세 이하 자녀 수" value={child} onChange={sChild} options={[0,1,2,3,4,5].map(n=>({value:String(n),label:n+"명"}))}/></div>
+    <div style={{background:P.lt,borderRadius:12,padding:16,marginBottom:16}}>
+      <div style={{fontSize:14,fontWeight:700,color:P.tx,marginBottom:12}}>👨‍👩‍👧‍👦 인적공제 대상</div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+        <Inp label="배우자" value={spouse} onChange={sSpouse} suffix="명" placeholder="0 또는 1" note="연소득 100만원 이하"/>
+        <Inp label="60세 이상 부모·조부모" value={parents} onChange={sParents} suffix="명" placeholder="예: 2"/>
+        <Inp label="20세 이하 자녀" value={children} onChange={sChildren} suffix="명" placeholder="예: 1"/>
+        <Inp label="70세 이상 (경로우대)" value={senior} onChange={sSenior} suffix="명" placeholder="0" note="추가 100만원"/>
+        <Inp label="장애인" value={disabled} onChange={sDisabled} suffix="명" placeholder="0" note="추가 200만원"/>
+      </div>
+    </div>
     {incType==="salary"&&<div style={{padding:"12px 16px",background:P.lt,borderRadius:10,fontSize:12,color:"#6b778c",lineHeight:1.6,marginTop:8}}>※ 4대보험료, 신용카드·의료비·교육비 등 특별공제는 반영되지 않은 간이 계산입니다.</div>}
-  </div>{grossW>0?<RP title="종합소득세" total={Math.max(0,toPay)} sub={incType==="salary"?"근로소득 기준 간이세액":incType==="freelance"?"기납부 3.3% 차감 후":"사업소득 기준"} items={[{l:incType==="salary"?"총급여":"총수입금액",v:fW(grossW)},{l:incType==="salary"?"근로소득공제":"필요경비",v:fW(grossW-taxableIncome)},{l:"소득금액",v:fW(taxableIncome)},{l:"인적공제 ("+familyN+"인+자녀"+childN+"인)",v:"-"+fW(personalDed)},{l:"과세표준",v:fW(finalTaxable)},{l:"산출세액",v:fW(tax)},{l:"세액공제 (표준+자녀)",v:"-"+fW(stdDed+childCredit)},{l:"소득세",v:fW(finalTax)},{l:"지방소득세 (10%)",v:fW(finalTax*.1)}].concat(incType==="freelance"?[{l:"기납부세액 (3.3%)",v:"-"+fW(prepaid)},{l:toPay>=0?"추가 납부":"환급 예상",v:fW(Math.abs(toPay))}]:[{l:"합계 (소득세+지방세)",v:fW(totalTax)}])}/>:<Empty icon="💼" msg="소득 금액을 입력하세요"/>}</div>);}
+  </div>{grossW>0?<RP title="종합소득세" total={Math.max(0,toPay)} sub={incType==="salary"?"근로소득 기준 간이세액":incType==="freelance"?"기납부 3.3% 차감 후":"사업소득 기준"} items={[{l:incType==="salary"?"총급여":"총수입금액",v:fW(grossW)},{l:incType==="salary"?"근로소득공제":"필요경비",v:fW(grossW-taxableIncome)},{l:"소득금액",v:fW(taxableIncome)},{l:"기본공제 (본인+가족 "+(1+spouseN+parentsN+childrenN)+"명)",v:"-"+fW(basicDed)}].concat(seniorN>0?[{l:"경로우대공제 ("+seniorN+"명)",v:"-"+fW(seniorDed)}]:[]).concat(disabledN>0?[{l:"장애인공제 ("+disabledN+"명)",v:"-"+fW(disabledDed)}]:[]).concat([{l:"인적공제 합계",v:"-"+fW(personalDed)},{l:"과세표준",v:fW(finalTaxable)},{l:"산출세액",v:fW(tax)},{l:"세액공제 (표준+자녀)",v:"-"+fW(stdDed+childCredit)},{l:"소득세",v:fW(finalTax)},{l:"지방소득세 (10%)",v:fW(finalTax*.1)}]).concat(incType==="freelance"?[{l:"기납부세액 (3.3%)",v:"-"+fW(prepaid)},{l:toPay>=0?"추가 납부":"환급 예상",v:fW(Math.abs(toPay))}]:[{l:"합계 (소득세+지방세)",v:fW(totalTax)}])}/>:<Empty icon="💼" msg="소득 금액을 입력하세요"/>}</div>);}
 
 /* 연말정산 */
-function CalcYearEnd(){const[salary,sSal]=useState("");const[card,sCard]=useState("");const[medical,sMed]=useState("");const[edu,sEdu]=useState("");const[donate,sDon]=useState("");const[insurance,sIns]=useState("");const[pension,sPen]=useState("");const[child,sChild]=useState("0");const[family,sFamily]=useState("1");
-  const salW=tW(salary),cardW=tW(card),medW=tW(medical),eduW=tW(edu),donW=tW(donate),insW=tW(insurance),penW=tW(pension),childN=parseInt(child),familyN=parseInt(family);
+function CalcYearEnd(){const[salary,sSal]=useState("");const[card,sCard]=useState("");const[medical,sMed]=useState("");const[edu,sEdu]=useState("");const[donate,sDon]=useState("");const[insurance,sIns]=useState("");const[pension,sPen]=useState("");
+  const[spouse,sSpouse]=useState("0");const[parents,sParents]=useState("0");const[children,sChildren]=useState("0");const[senior,sSenior]=useState("0");const[disabled,sDisabled]=useState("0");
+  const salW=tW(salary),cardW=tW(card),medW=tW(medical),eduW=tW(edu),donW=tW(donate),insW=tW(insurance),penW=tW(pension);
+  const spouseN=Math.min(parseInt(spouse)||0,1),parentsN=parseInt(parents)||0,childN=parseInt(children)||0,seniorN=parseInt(senior)||0,disabledN=parseInt(disabled)||0;
   let workDed=0;if(salW<=5e6)workDed=salW*.7;else if(salW<=15e6)workDed=3500000+(salW-5e6)*.4;else if(salW<=45e6)workDed=7500000+(salW-15e6)*.15;else if(salW<=1e8)workDed=12000000+(salW-45e6)*.05;else workDed=14750000+(salW-1e8)*.02;
-  const personalDed=1500000*familyN+1500000*childN;const npn=salW*.045,hi=salW*.03545,ei=salW*.009,socialDed=npn+hi+ei;
+  const basicDed=(1+spouseN+parentsN+childN)*1500000,seniorDed=seniorN*1000000,disabledDed=disabledN*2000000,personalDed=basicDed+seniorDed+disabledDed;
+  const npn=salW*.045,hi=salW*.03545,ei=salW*.009,socialDed=npn+hi+ei;
   const cardThreshold=salW*.25,cardDed=Math.min(Math.max(0,(cardW-cardThreshold)*.15),3000000);
   const penCredit=Math.min(penW,4000000)*(salW<=55e6?.15:.12);const insCredit=Math.min(insW,1000000)*.12;
   const medThreshold=salW*.03,medCredit=Math.min(Math.max(0,(medW-medThreshold)*.15),7000000*.15);
@@ -495,14 +510,23 @@ function CalcYearEnd(){const[salary,sSal]=useState("");const[card,sCard]=useStat
   const prepaid=pTx(Math.max(0,salW-workDed-personalDed-socialDed),IB);const refund=prepaid-(finalTax+localTax);
   return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start"}}><div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>🧾 연말정산</h3>
     <Inp label="총급여 (연봉)" value={salary} onChange={sSal} suffix="만원" placeholder="예: 5000"/>
-    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}><Sel label="부양가족 (본인 포함)" value={family} onChange={sFamily} options={[1,2,3,4,5,6].map(n=>({value:String(n),label:n+"명"}))}/><Sel label="20세 이하 자녀" value={child} onChange={sChild} options={[0,1,2,3,4].map(n=>({value:String(n),label:n+"명"}))}/></div>
+    <div style={{background:P.lt,borderRadius:12,padding:16,marginBottom:16}}>
+      <div style={{fontSize:14,fontWeight:700,color:P.tx,marginBottom:12}}>👨‍👩‍👧‍👦 인적공제 대상</div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+        <Inp label="배우자" value={spouse} onChange={sSpouse} suffix="명" placeholder="0 또는 1" note="연소득 100만원 이하"/>
+        <Inp label="60세 이상 부모" value={parents} onChange={sParents} suffix="명" placeholder="예: 2"/>
+        <Inp label="20세 이하 자녀" value={children} onChange={sChildren} suffix="명" placeholder="예: 1"/>
+        <Inp label="70세 이상 경로우대" value={senior} onChange={sSenior} suffix="명" placeholder="0" note="추가 100만원"/>
+        <Inp label="장애인" value={disabled} onChange={sDisabled} suffix="명" placeholder="0" note="추가 200만원"/>
+      </div>
+    </div>
     <Inp label="신용카드·체크카드·현금영수증" value={card} onChange={sCard} suffix="만원" placeholder="예: 2000"/>
     <Inp label="의료비 지출액" value={medical} onChange={sMed} suffix="만원" placeholder="예: 300"/>
     <Inp label="교육비 (본인+자녀)" value={edu} onChange={sEdu} suffix="만원" placeholder="예: 500"/>
     <Inp label="연금저축 납입액" value={pension} onChange={sPen} suffix="만원" placeholder="최대 400만원" note="IRP 포함 시 최대 700만원"/>
     <Inp label="보장성 보험료" value={insurance} onChange={sIns} suffix="만원" placeholder="최대 100만원"/>
     <Inp label="기부금" value={donate} onChange={sDon} suffix="만원" placeholder="예: 100"/>
-  </div>{salW>0?<RP title={refund>=0?"예상 환급액":"추가 납부 예상"} total={Math.abs(refund)} sub={refund>=0?"돌려받는 금액":"더 내야 할 금액"} items={[{l:"총급여",v:fW(salW)},{l:"근로소득공제",v:"-"+fW(workDed)},{l:"인적공제",v:"-"+fW(personalDed)},{l:"4대보험료 공제",v:"-"+fW(socialDed)},{l:"신용카드 소득공제",v:"-"+fW(cardDed)},{l:"과세표준",v:fW(taxableIncome)},{l:"산출세액",v:fW(tax)},{l:"세액공제 합계",v:"-"+fW(totalCredit)},{l:"결정세액",v:fW(finalTax)},{l:"지방소득세",v:fW(localTax)},{l:"기납부세액 (추정)",v:fW(prepaid)},{l:refund>=0?"예상 환급":"추가 납부",v:fW(Math.abs(refund))}]}/>:<Empty icon="🧾" msg="총급여를 입력하세요"/>}</div>);}
+  </div>{salW>0?<RP title={refund>=0?"예상 환급액":"추가 납부 예상"} total={Math.abs(refund)} sub={refund>=0?"돌려받는 금액":"더 내야 할 금액"} items={[{l:"총급여",v:fW(salW)},{l:"근로소득공제",v:"-"+fW(workDed)},{l:"기본공제 (본인+가족 "+(1+spouseN+parentsN+childN)+"명)",v:"-"+fW(basicDed)}].concat(seniorN>0?[{l:"경로우대공제 ("+seniorN+"명)",v:"-"+fW(seniorDed)}]:[]).concat(disabledN>0?[{l:"장애인공제 ("+disabledN+"명)",v:"-"+fW(disabledDed)}]:[]).concat([{l:"인적공제 합계",v:"-"+fW(personalDed)},{l:"4대보험료 공제",v:"-"+fW(socialDed)},{l:"신용카드 소득공제",v:"-"+fW(cardDed)},{l:"과세표준",v:fW(taxableIncome)},{l:"산출세액",v:fW(tax)},{l:"세액공제 합계",v:"-"+fW(totalCredit)},{l:"결정세액",v:fW(finalTax)},{l:"지방소득세",v:fW(localTax)},{l:"기납부세액 (추정)",v:fW(prepaid)},{l:refund>=0?"예상 환급":"추가 납부",v:fW(Math.abs(refund))}])}/>:<Empty icon="🧾" msg="총급여를 입력하세요"/>}</div>);}
 
 /* 연봉 실수령액 */
 function CalcNetSalary(){const[salary,sSal]=useState("");const[family,sFamily]=useState("1");const[child,sChild]=useState("0");const[nonTax,sNT]=useState("20");
@@ -514,6 +538,7 @@ function CalcNetSalary(){const[salary,sSal]=useState("");const[family,sFamily]=u
   return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start"}}><div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>💰 연봉 실수령액</h3>
     <Inp label="연봉 (세전)" value={salary} onChange={sSal} suffix="만원" placeholder="예: 5000"/>
     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}><Sel label="부양가족 (본인 포함)" value={family} onChange={sFamily} options={[1,2,3,4,5,6].map(n=>({value:String(n),label:n+"명"}))}/><Sel label="20세 이하 자녀" value={child} onChange={sChild} options={[0,1,2,3,4].map(n=>({value:String(n),label:n+"명"}))}/></div>
+    <div style={{padding:"10px 14px",background:P.lt,borderRadius:8,fontSize:11,color:"#6b778c",lineHeight:1.5,marginBottom:16}}>※ 부양가족: 본인 포함, 60세 이상 부모도 가능 (부모 연소득 100만원 이하)</div>
     <Inp label="월 비과세액 (식대 등)" value={nonTax} onChange={sNT} suffix="만원" note="식대 20만+자가운전보조 20만 등"/>
   </div>{salW>0?<div>
     <div style={{background:"linear-gradient(135deg,#0747A6,#0065FF)",borderRadius:16,padding:"28px 24px",color:"#fff",textAlign:"center",marginBottom:16}}>
