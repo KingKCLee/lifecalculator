@@ -1415,7 +1415,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
             <div style={{display:"flex",gap:24,marginTop:24,flexWrap:"wrap"}}>
               <div style={{display:"flex",alignItems:"center",gap:6}}><span style={{fontSize:14}}>📊</span><span style={{fontSize:13,color:"#6b778c"}}>누적 계산 <strong style={{color:"#172B4D"}}>150,000건+</strong></span></div>
               <div style={{display:"flex",alignItems:"center",gap:6}}><span style={{fontSize:14}}>✅</span><span style={{fontSize:13,color:"#6b778c"}}>매일 세법 자동 검증</span></div>
-              <div style={{display:"flex",alignItems:"center",gap:6}}><span style={{fontSize:14}}>🔒</span><span style={{fontSize:13,color:"#6b778c"}}>완전 무료 · 광고 없음</span></div>
+              <div style={{display:"flex",alignItems:"center",gap:6}}><span style={{fontSize:14}}>🔒</span><span style={{fontSize:13,color:"#6b778c"}}>완전 무료 · 로그인 없이 바로 계산</span></div>
             </div>
           </div>
           <HeroCarousel navigateCalc={navigateCalc} isMo={isMo}/>
@@ -1634,7 +1634,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
       </div>
       <div style={{textAlign:"center",marginTop:24}}>
         <button onClick={()=>{setAuthMode("signup");setShowAuth(true);}} style={{padding:"14px 40px",background:"#0747A6",color:"#fff",border:"none",borderRadius:10,fontSize:15,fontWeight:700,cursor:"pointer",boxShadow:"0 4px 14px rgba(7,71,166,0.3)",fontFamily:"inherit"}}>무료 회원가입 (이메일만 필요)</button>
-        <div style={{fontSize:12,color:"#6b778c",marginTop:8}}>🔒 광고 없음 · 개인정보 수집 최소화 · 언제든 탈퇴 가능</div>
+        <div style={{fontSize:12,color:"#6b778c",marginTop:8}}>🔒 개인정보 최소 수집 · 언제든 탈퇴 가능</div>
       </div>
     </div>
 
