@@ -3,14 +3,21 @@
   <channel>
     <title>생활계산기.com - 세금·대출·생활 종합 계산기</title>
     <link>https://xn--989a00a691bdfa717h.com/</link>
-    <description>취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 등 37가지 무료 계산기. 매일 자동 업데이트.</description>
+    <description>취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 등 39가지 무료 계산기. 매일 자동 업데이트.</description>
     <language>ko</language>
     <lastBuildDate>Sat, 05 Apr 2026 09:00:00 +0900</lastBuildDate>
     <atom:link href="https://xn--989a00a691bdfa717h.com/feed.xml" rel="self" type="application/rss+xml"/>
     <item>
+      <title>퇴직금·실업급여 계산기 추가 (39종 확대)</title>
+      <link>https://xn--989a00a691bdfa717h.com/</link>
+      <description>퇴직금 예상 수령액 계산(평균임금×근속연수)과 실업급여 예상 수급액(평균임금 60%, 연령·가입기간별 수급일수) 계산기 신규 오픈.</description>
+      <pubDate>Sat, 05 Apr 2026 09:00:00 +0900</pubDate>
+      <guid>https://xn--989a00a691bdfa717h.com/#update-20260405-39</guid>
+    </item>
+    <item>
       <title>자동차세·4대보험·국민연금·종합소득세·연말정산·연봉실수령액 계산기 추가</title>
       <link>https://xn--989a00a691bdfa717h.com/</link>
-      <description>생활 카테고리 신설. 37가지 계산기로 확대.</description>
+      <description>생활 카테고리 신설. 39가지 계산기로 확대.</description>
       <pubDate>Sat, 04 Apr 2026 09:00:00 +0900</pubDate>
       <guid>https://xn--989a00a691bdfa717h.com/#update-20260404</guid>
     </item>
