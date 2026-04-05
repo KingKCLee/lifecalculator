@@ -338,26 +338,36 @@ function Empty({icon,msg}){return (<div style={{background:P.lt,borderRadius:20,
 /* ═══ 계산기 ═══ */
 
 function CalcAcq({isMo=false}){
-  const[price,sP]=useState("12500");const[own,sO]=useState("1");const[area,sA]=useState("84");const[reg,sR]=useState("spec");const[isFirst,sFirst]=useState("no");const[isTempTwo,sTT]=useState("no");
+  const[acqType,sAT]=useState("sale");const[price,sP]=useState("12500");const[own,sO]=useState("1");const[area,sA]=useState("84");const[reg,sR]=useState("spec");const[isFirst,sFirst]=useState("no");const[isTempTwo,sTT]=useState("no");const[isLowVal,sLV]=useState("no");
   const today=new Date();const firstHomeBenefitEnd=new Date('2028-12-31');const isFirstHomeBenefit=today<firstHomeBenefitEnd;
-  const pW=tW(price);let r=0.01;const n=parseInt(own),isR=reg!=="non";
-  if(n===2&&isTempTwo==="yes"){r=pW<=6e8?0.01:pW<=9e8?Math.max(0.01,(pW*2/3e8-3)/100):0.03;}
-  else if(n===1||(n===2&&!isR)){r=pW<=6e8?0.01:pW<=9e8?Math.max(0.01,(pW*2/3e8-3)/100):0.03;}else if(n===2&&isR){r=0.08;}else if(n>=3){r=isR?0.12:0.08;}
-  r=Math.max(0.01,Math.min(r,0.12));const ac=pW*r,ed=ac*.1;const isHeavy=r>=0.08;const fm=isHeavy?pW*.002:(parseInt(area)>85&&pW>6e8?pW*.002:0);const st=pW>1e9?350000:pW>5e8?150000:70000;const firstDed=isFirst==="yes"&&n===1&&isFirstHomeBenefit?Math.min(ac,2000000):0;const total=ac+ed+fm+st-firstDed;
+  const pW=tW(price);let r=0.01;const n=parseInt(own),isR=reg!=="non";const lowVal=isLowVal==="yes"&&pW<=1e8;
+  if(acqType==="gift"){r=isR&&pW>=3e8?0.12:0.035;}
+  else if(acqType==="inherit"){r=n===1?0.008:0.028;}
+  else{
+    if(lowVal){r=0.01;}
+    else if(n===2&&isTempTwo==="yes"){r=pW<=6e8?0.01:pW<=9e8?Math.max(0.01,(pW*2/3e8-3)/100):0.03;}
+    else if(n===1||(n===2&&!isR)){r=pW<=6e8?0.01:pW<=9e8?Math.max(0.01,(pW*2/3e8-3)/100):0.03;}
+    else if(n===2&&isR){r=0.08;}else if(n>=3){r=isR?0.12:0.08;}
+  }
+  r=Math.max(0.008,Math.min(r,0.12));const ac=pW*r,ed=ac*.1;const isHeavy=r>=0.08;const fm=isHeavy?pW*.002:(parseInt(area)>85&&pW>6e8?pW*.002:0);const st=pW>1e9?350000:pW>5e8?150000:70000;const firstDed=acqType==="sale"&&isFirst==="yes"&&n===1&&isFirstHomeBenefit?Math.min(ac,2000000):0;const total=ac+ed+fm+st-firstDed;
   return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start"}}>
     <div>
       <h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>🏢 취득세 시뮬레이션</h3>
-      <Slider label="매매가격" value={price} onChange={sP} min={1000} max={500000} step={500}/>
-      <Radio label="보유 주택 수" value={own} onChange={sO} options={[{value:"1",label:"1주택 (무주택자의 첫 주택 취득)"},{value:"2",label:"2주택 (1주택 보유 중 추가 취득)"},{value:"3",label:"3주택 이상"}]}/>
-      <div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?8:12}}>
+      <Tog label="취득 유형" value={acqType} onChange={sAT} options={[{value:"sale",label:"매매"},{value:"gift",label:"증여"},{value:"inherit",label:"상속"}]}/>
+      <Slider label={acqType==="sale"?"매매가격":"시가표준액"} value={price} onChange={sP} min={1000} max={500000} step={500}/>
+      {acqType==="sale"&&<Radio label="보유 주택 수" value={own} onChange={sO} options={[{value:"1",label:"1주택 (무주택자의 첫 주택 취득)"},{value:"2",label:"2주택 (1주택 보유 중 추가 취득)"},{value:"3",label:"3주택 이상"}]}/>}
+      {acqType==="inherit"&&<Radio label="상속 후 주택 수" value={own} onChange={sO} options={[{value:"1",label:"1가구 1주택 (0.8%)"},{value:"2",label:"다주택 (2.8%)"}]}/>}
+      {acqType==="sale"&&<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?8:12}}>
         <Inp label="전용면적 (㎡)" value={area} onChange={sA}/><Sel label="지역 구분" value={reg} onChange={sR} options={[{value:"spec",label:"투기과열지구 (서울 등)"},{value:"adj",label:"조정대상지역"},{value:"non",label:"비규제지역"}]}/>
-      </div>
-      <Tog label="생애최초 구입자" value={isFirst} onChange={sFirst} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (최대 200만원 감면)"}]}/>
-      {isFirst==="yes"&&!isFirstHomeBenefit&&<div style={{padding:"12px 16px",background:"#FFEBE6",border:"1px solid #FFBDAD",borderRadius:10,fontSize:13,color:"#DE350B",marginTop:8,marginBottom:12,lineHeight:1.6}}>⚠️ 생애최초 취득세 감면 혜택이 종료되었습니다 (2028.12.31 만료).</div>}
-      {n===2&&<Tog label="일시적 2주택 (이사 목적)" value={isTempTwo} onChange={sTT} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (3년 내 처분 예정)"}]}/>}
+      </div>}
+      {acqType==="gift"&&<Sel label="지역 구분" value={reg} onChange={sR} options={[{value:"spec",label:"조정대상지역 (3억 이상 12%)"},{value:"non",label:"비조정지역 (3.5%)"}]}/>}
+      {acqType==="sale"&&<Tog label="공시가 1억 이하 주택" value={isLowVal} onChange={sLV} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (다주택 중과 제외)"}]}/>}
+      {acqType==="sale"&&<Tog label="생애최초 구입자" value={isFirst} onChange={sFirst} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (최대 200만원 감면)"}]}/>}
+      {acqType==="sale"&&isFirst==="yes"&&!isFirstHomeBenefit&&<div style={{padding:"12px 16px",background:"#FFEBE6",border:"1px solid #FFBDAD",borderRadius:10,fontSize:13,color:"#DE350B",marginTop:8,marginBottom:12,lineHeight:1.6}}>⚠️ 생애최초 취득세 감면 혜택이 종료되었습니다 (2028.12.31 만료).</div>}
+      {acqType==="sale"&&n===2&&<Tog label="일시적 2주택 (이사 목적)" value={isTempTwo} onChange={sTT} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (3년 내 처분 예정)"}]}/>}
     </div>
-    <RP title="예상 취득 비용" total={total} sub={"세율 "+fP(r*100)+" 적용"}
-      items={[{l:"취득세 ("+fP(r*100)+")",v:fW(ac)},{l:"지방교육세",v:fW(ed)},{l:"농어촌특별세",v:fm>0?fW(fm):"해당없음"},{l:"인지세·증지대",v:fW(st)},{l:"생애최초 감면",v:firstDed>0?"-"+fW(firstDed):"해당없음"}].concat(isTempTwo==="yes"?[{l:"일시적 2주택 특례",v:"1주택 세율 적용"}]:[])}/>
+    <RP title={"예상 "+(acqType==="gift"?"증여":acqType==="inherit"?"상속":"취득")+"세 비용"} total={total} sub={"세율 "+fP(r*100)+" 적용"}
+      items={[{l:"취득유형",v:acqType==="gift"?"증여":acqType==="inherit"?"상속":"매매"},{l:"취득세 ("+fP(r*100)+")",v:fW(ac)},{l:"지방교육세",v:fW(ed)},{l:"농어촌특별세",v:fm>0?fW(fm):"해당없음"},{l:"인지세·증지대",v:fW(st)}].concat(lowVal?[{l:"공시가 1억 이하 특례",v:"일반세율 적용"}]:[]).concat(firstDed>0?[{l:"생애최초 감면",v:"-"+fW(firstDed)}]:[]).concat(acqType==="sale"&&isTempTwo==="yes"?[{l:"일시적 2주택 특례",v:"1주택 세율 적용"}]:[])}/>
   </div>);
 }
 
@@ -366,13 +376,18 @@ function CalcTrans({isMo=false}){
   const b=tW(bp),s=tW(sp),e=tW(ex),g=s-b-e;const hv=parseInt(hy),adjLv=Math.min(parseInt(ly),parseInt(hy)),nv=parseInt(hm);
   const today=new Date();const moratoriumEnd=new Date('2026-05-10');const isMoratorium=today<moratoriumEnd;const isSellAdj=sellAdj==="yes";
   let surcharge=0;if(!isMoratorium&&isSellAdj&&nv>=2){surcharge=nv>=3?0.30:0.20;}
-  const needResidence=wasAdj==="yes";const is1h=nv===1&&hv>=2&&(!needResidence||adjLv>=2),overLimit=s>12e8;let exempt=is1h&&!overLimit,ltD=0;
+  const shortTermRate=hv<1?0.70:hv<2?0.60:0;
+  const needResidence=wasAdj==="yes";const is1h=nv===1&&hv>=2&&(!needResidence||adjLv>=2),overLimit=s>12e8;let exempt=is1h&&!overLimit&&shortTermRate===0,ltD=0;
   if(!exempt){if(nv===1&&hv>=3)ltD=Math.min(Math.min(hv,15)*.04+Math.min(adjLv,10)*.04,.80);else if(nv>1&&hv>=3)ltD=Math.min(hv*.02,.30);}
-  if(surcharge>0)ltD=0;
+  if(surcharge>0||shortTermRate>0)ltD=0;
   let taxableGain=g;if(is1h&&overLimit){taxableGain=g*(s-12e8)/s;}
-  const tg=exempt?0:Math.max(0,taxableGain*(1-ltD)-2500000);const baseTax=pTx(tg,IB);const surTax=surcharge>0?Math.round(tg*surcharge):0;const tx=baseTax+surTax;const loc=tx*.1;
-  const baseItems=exempt?[{l:"양도차익",v:fW(g)},{l:"비과세 요건",v:"1주택, 2년↑, 12억↓"}]:[{l:"양도차익",v:fW(g)},{l:is1h&&overLimit?"과세 대상 차익 (12억 초과분)":"양도차익",v:is1h&&overLimit?fW(taxableGain):fW(g)},{l:"장기보유특별공제",v:surcharge>0?"중과 배제":fP(ltD*100)},{l:"기본공제",v:"-₩250만"},{l:"과세표준",v:fW(tg)},{l:"기본세율 산출세액",v:fW(baseTax)}];
-  const surItems=surcharge>0?[{l:"다주택 중과세율",v:"+"+(surcharge*100)+"%p (2026.5.10~ 시행)"},{l:"중과 가산세액",v:fW(surTax)}]:[];
+  const tg=exempt?0:Math.max(0,taxableGain*(1-ltD)-2500000);
+  let baseTax,taxRateLabel;
+  if(shortTermRate>0){baseTax=Math.round(tg*shortTermRate);taxRateLabel="단기보유 "+(shortTermRate*100)+"%";}
+  else{baseTax=pTx(tg,IB);taxRateLabel="기본세율";}
+  const surTax=surcharge>0&&shortTermRate===0?Math.round(tg*surcharge):0;const tx=baseTax+surTax;const loc=tx*.1;
+  const baseItems=exempt?[{l:"양도차익",v:fW(g)},{l:"비과세 요건",v:"1주택, 2년↑, 12억↓"}]:[{l:"양도차익",v:fW(g)},{l:is1h&&overLimit?"과세 대상 차익 (12억 초과분)":"양도차익",v:is1h&&overLimit?fW(taxableGain):fW(g)},{l:"장기보유특별공제",v:(surcharge>0||shortTermRate>0)?"중과 배제":fP(ltD*100)},{l:"기본공제",v:"-₩250만"},{l:"과세표준",v:fW(tg)},{l:taxRateLabel+" 산출세액",v:fW(baseTax)}];
+  const surItems=surcharge>0&&shortTermRate===0?[{l:"다주택 중과세율",v:"+"+(surcharge*100)+"%p (2026.5.10~ 시행)"},{l:"중과 가산세액",v:fW(surTax)}]:[];
   const finalItems=exempt?baseItems:[...baseItems,...surItems,{l:"양도소득세 합계",v:fW(tx)},{l:"지방소득세 (10%)",v:fW(loc)}];
   return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start"}}>
     <div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>📊 양도소득세 시뮬레이션</h3>
@@ -380,12 +395,13 @@ function CalcTrans({isMo=false}){
       <Inp label="양도가액 (매도가)" value={sp} onChange={sSp} suffix="만원" placeholder="예: 80000"/>
       <Inp label="필요경비 (취득세·중개비·수리비 등)" value={ex} onChange={sEx} suffix="만원" placeholder="예: 500"/>
       <div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?4:8}}>
-        <Sel label="보유기간" value={hy} onChange={sHy} options={Array.from({length:20},(_,i)=>({value:String(i+1),label:(i+1)+"년"}))}/><Sel label="거주기간" value={ly} onChange={sLy} options={Array.from({length:16},(_,i)=>({value:String(i),label:i+"년"}))}/><Sel label="주택 수" value={hm} onChange={sHm} options={[{value:"1",label:"1주택"},{value:"2",label:"2주택"},{value:"3",label:"3주택+"}]}/>
+        <Sel label="보유기간" value={hy} onChange={sHy} options={[{value:"0",label:"1년 미만 (70%)"}].concat(Array.from({length:20},(_,i)=>({value:String(i+1),label:(i+1)+"년"})))}/><Sel label="거주기간" value={ly} onChange={sLy} options={Array.from({length:16},(_,i)=>({value:String(i),label:i+"년"}))}/><Sel label="주택 수" value={hm} onChange={sHm} options={[{value:"1",label:"1주택"},{value:"2",label:"2주택"},{value:"3",label:"3주택+"}]}/>
       </div>
       <Tog label="취득 당시 조정대상지역" value={wasAdj} onChange={sWA} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (2년 거주 필수)"}]}/>
       {nv>=2&&<Tog label="매도 시점 조정대상지역" value={sellAdj} onChange={sSA} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (다주택 중과 대상)"}]}/>}
       {isMoratorium&&nv>=2&&isSellAdj&&<div style={{padding:"12px 16px",background:"#FFF8E1",border:"1px solid #FFE082",borderRadius:10,fontSize:13,color:"#F57F17",marginTop:12,lineHeight:1.6}}>⚠️ 현재 다주택 중과가 유예 중입니다 (2026.5.9까지). 유예 종료 후 조정대상지역 {nv}주택은 +{nv>=3?30:20}%p 중과됩니다. 유예 기간 내 매도를 고려하세요.</div>}
       {!isMoratorium&&surcharge>0&&<div style={{padding:"12px 16px",background:"#FFEBE6",border:"1px solid #FFBDAD",borderRadius:10,fontSize:13,color:"#DE350B",marginTop:12,lineHeight:1.6}}>⚠️ 다주택 중과 적용 중: 조정대상지역 {nv}주택 +{surcharge*100}%p, 장특공제 배제</div>}
+      {shortTermRate>0&&<div style={{padding:"12px 16px",background:"#FFEBE6",border:"1px solid #FFBDAD",borderRadius:10,fontSize:13,color:"#DE350B",marginTop:12,lineHeight:1.6}}>⚠️ 단기보유 중과세율 {shortTermRate*100}% 적용 중 ({hv<1?"1년 미만":"1~2년"} 보유). 장특공제·누진세 배제.</div>}
     </div>
     {g>0?<RP title={exempt?"비과세 적용":is1h&&overLimit?"12억 초과분 과세":surcharge>0?"다주택 중과 양도세":"양도소득세"} total={exempt?0:tx+loc} sub={exempt?"1세대 1주택 비과세":surcharge>0?"기본세율 + "+(surcharge*100)+"%p 중과":is1h&&overLimit?"12억 초과분만 과세 · 장특공제 "+fP(ltD*100):"장특공제 "+fP(ltD*100)} items={finalItems}/>
     :<Empty icon="📊"/>}
