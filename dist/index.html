@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      html,body{overflow-x:hidden!important;width:100%!important;max-width:100vw!important;position:relative}
+      *{box-sizing:border-box!important}
+      @media(max-width:768px){
+        body,html{overflow-x:hidden!important;width:100%!important}
+        *{box-sizing:border-box!important}
+        img,svg,table,canvas{max-width:100%!important}
+        input,select{max-width:100%!important;font-size:16px!important;min-height:52px!important;height:auto!important;line-height:1.4!important;padding:14px 16px!important}
+        select{overflow:visible!important;-webkit-appearance:none!important;appearance:none!important;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23505f79' d='M6 8L1 3h10z'/%3E%3C/svg%3E")!important;background-repeat:no-repeat!important;background-position:right 16px center!important;background-color:#fff!important;padding-right:40px!important}
+        input[type="range"]{min-height:auto!important;padding:0!important}
+        input[type="checkbox"],input[type="radio"]{min-height:auto!important;padding:0!important}
+        .hero-grid{display:flex!important;flex-direction:column!important;gap:24px!important}
+        .popular-grid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:10px!important}
+        .page-layout{display:flex!important;flex-direction:column!important}
+        .sidebar-left{display:none!important}
+        .sidebar-right{order:10!important}
+        .calc-layout{display:flex!important;flex-direction:column!important}
+        .calc-inner{display:flex!important;flex-direction:column!important;gap:12px!important}
+        .sub-tabs{flex-wrap:wrap!important;overflow-x:visible!important}
+        .sub-tabs button{flex-shrink:0!important;margin-bottom:4px!important}
+        .radio-grid{display:flex!important;flex-direction:column!important;gap:8px!important}
+        .radio-grid>div,.radio-grid button,.radio-grid label{min-height:52px!important;line-height:1.4!important;padding:14px 16px!important;overflow:visible!important;white-space:normal!important;word-break:keep-all!important;height:auto!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:14px!important}
+        div[style*="display: flex"] > button,div[style*="display:flex"] > button{min-height:48px!important;line-height:1.4!important;overflow:visible!important;white-space:normal!important;height:auto!important;padding:12px 16px!important;font-size:14px!important}
+        .econ-calendar{display:none!important}
+        .recent-calc{display:none!important}
+      }
+    </style>
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-58SYV64E1C"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-58SYV64E1C');
+    </script>
+    <!-- Naver Analytics - 실제 ID로 교체 필요 -->
+    <!--
+    <script type="text/javascript" src="//wcs.nelog.naver.com/wcslog.js"></script>
+    <script type="text/javascript">
+      if(!wcs_add) var wcs_add = {};
+      wcs_add["wa"] = "여기에_네이버애널리틱스ID";
+      if(window.wcs) wcs_do();
+    </script>
+    -->
+    <title>생활계산기 - 세금 연말정산 연봉 부동산 종합계산기</title>
+    <meta name="description" content="취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 4대보험 국민연금 자동차세 등 39가지 무료 계산기. 2025 최신 세법 반영." />
+    <meta name="keywords" content="취득세계산기,양도소득세계산기,종합소득세계산기,연말정산계산기,연봉실수령액,연봉계산기,부동산계산기,DSR계산기,LTV계산기,DTI계산기,대출이자계산기,중개수수료계산기,중개보수계산기,복비계산기,증여세계산기,상속세계산기,종부세계산기,재산세계산기,4대보험계산기,국민연금수령액,국민연금계산기,자동차세계산기,등기비용계산기,법무사수수료,전월세전환율,임대수익률,평수계산기,평수변환,보유세계산기,경매비용,세금계산기,프리랜서세금,3.3%환급" />
+    <meta property="og:title" content="생활계산기 - 39가지 세금·생활 무료 계산기" />
+    <meta property="og:description" content="취득세 양도세 연말정산 연봉실수령액 DSR 4대보험 등 39가지 계산기. 2025 최신 세법. 완전 무료." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://xn--989a00a691bdfa717h.com/" />
+    <meta property="og:image" content="https://xn--989a00a691bdfa717h.com/og-image.png" />
+    <meta property="og:locale" content="ko_KR" />
+    <meta property="og:site_name" content="생활계산기.com" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="생활계산기 - 39가지 세금·생활 무료 계산기" />
+    <meta name="twitter:description" content="취득세 양도세 연말정산 연봉실수령액 DSR 4대보험 등 39가지 계산기. 2025 최신 세법. 완전 무료." />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="생활계산기" />
+    <meta name="format-detection" content="telephone=no" />
+<meta name="google-site-verification" content="NUzW6zeF3CHQDtL9HL6XDFcez0Tad7c0MRswXrKPAg4" />
+    <!-- Naver Search Advisor 인증 - 실제 코드로 교체 필요 -->
+    <meta name="naver-site-verification" content="여기에_네이버인증코드_입력" />
+    
+    <link rel="canonical" href="https://xn--989a00a691bdfa717h.com/" />
+    <link rel="alternate" hreflang="ko" href="https://xn--989a00a691bdfa717h.com/" />
+    <link rel="alternate" type="application/rss+xml" title="생활계산기.com 업데이트" href="https://xn--989a00a691bdfa717h.com/feed.xml" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#0747A6" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/woff2/Pretendard-Regular.woff2" />
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/woff2/Pretendard-Bold.woff2" />
+    <style>
+      @font-face{font-family:'Pretendard';font-weight:400;font-style:normal;font-display:swap;src:url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/woff2/Pretendard-Regular.woff2') format('woff2')}
+      @font-face{font-family:'Pretendard';font-weight:700;font-style:normal;font-display:swap;src:url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/woff2/Pretendard-Bold.woff2') format('woff2')}
+      @font-face{font-family:'Pretendard';font-weight:900;font-style:normal;font-display:swap;src:url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/woff2/Pretendard-Black.woff2') format('woff2')}
+    </style>
+    <script type="application/ld+json">
+    {
+      "@context":"https://schema.org",
+      "@type":"WebApplication",
+      "name":"생활계산기 - 세금 대출 생활 종합 계산기",
+      "url":"https://xn--989a00a691bdfa717h.com",
+      "description":"취득세, 양도소득세, 종합소득세, 연말정산, 연봉 실수령액, DSR, 중개수수료, 4대보험, 국민연금, 자동차세 등 39가지 무료 계산기",
+      "applicationCategory":"FinanceApplication",
+      "operatingSystem":"All",
+      "offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context":"https://schema.org",
+      "@type":"BreadcrumbList",
+      "itemListElement":[{"@type":"ListItem","position":1,"name":"홈","item":"https://xn--989a00a691bdfa717h.com/"}]
+    }
+    </script>
+    <!-- 네이버 프리미엄로그분석 (가입 후 wa 값을 교체하세요)
+    <script type="text/javascript" src="//wcs.naver.net/wcslog.js"></script>
+    <script type="text/javascript">
+    if(!wcs_add) var wcs_add={};
+    wcs_add["wa"] = "여기에_네이버_분석_ID";
+    if(window.wcs){ wcs.inflow("xn--989a00a691bdfa717h.com"); wcs_do(); }
+    </script>
+    -->
+    <!-- Google Analytics (GA4 측정 ID를 교체하세요)
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+    </script>
+    -->
+    <script type="module" crossorigin src="/assets/index-ChkRayU7.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      <div style="padding:40px;text-align:center;font-family:sans-serif;background:#f7f8fc;min-height:100vh">
+        <h2 style="color:#0747A6;margin-bottom:16px">생활계산기 - 39가지 세금·대출·생활 종합 계산기</h2>
+        <p style="color:#6b778c;font-size:16px">이 사이트는 JavaScript가 필요합니다.</p>
+        <h3 style="font-size:14px;color:#172B4D;margin-top:24px">제공 서비스</h3>
+        <p style="font-size:13px;color:#6b778c;line-height:1.8">
+          세금: 취득세 양도소득세 종합소득세 연말정산 종부세 재산세 증여세 상속세 보유세통합 임대소득세<br>
+          대출: 대출이자 DSR DTI LTV 대출가능액<br>
+          비용: 중개보수 등기비용 법무사수수료 인지세 채권할인료 감정평가수수료<br>
+          생활: 연봉실수령액 4대보험료 국민연금수령액 자동차세 예적금이자 전월세전환<br>
+          부동산: 임대수익률 공동명의 평수변환 용적률건폐율 경매비용 리모델링수익 건물잔존가치<br>
+          PRO: 총비용시뮬레이터 세금비교분석 투자수익분석<br>
+          2025년 최신 세법 반영. 완전 무료.
+        </p>
+      </div>
+    </noscript>
+  </body>
+</html>
