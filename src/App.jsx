@@ -1465,17 +1465,18 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
         <div style={{padding:"16px 16px 8px",background:"#f8f9fc"}}>
           <CalcSearchBar onSelect={navigateCalc} isMo={true} calcList={CL.map(c=>({id:c.id,name:c.l,keywords:c.l+" "+(DESC[c.id]||""),cat:c.c}))}/>
         </div>
-        {/* 모바일: 인기 계산기 3x3 */}
+        {/* 모바일: 인기 계산기 2x4 설명포함 */}
         <div style={{padding:"8px 16px 16px",background:"#f8f9fc"}}>
-          <div style={{fontSize:15,fontWeight:800,color:"#172B4D",marginBottom:10}}>인기 계산기</div>
-          <div className="popular-grid" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10}}>
-            {[{id:"acquisition",name:"취득세",icon:"🏠",cat:"tax"},{id:"transfer",name:"양도소득세",icon:"💸",cat:"tax"},{id:"netsalary",name:"연봉실수령",icon:"💰",cat:"life"},{id:"dsr",name:"DSR",icon:"📊",cat:"loan"},{id:"yearend",name:"연말정산",icon:"🧾",cat:"tax"},{id:"commission",name:"중개수수료",icon:"🤝",cat:"cost"},{id:"inctax",name:"종합소득세",icon:"💼",cat:"tax"},{id:"pension",name:"국민연금",icon:"👴",cat:"life"},{id:"mortgage",name:"대출이자",icon:"💵",cat:"loan"}].map(item=>(
-              <button key={item.id} onClick={()=>navigateCalc(item.cat,item.id)} style={{background:"#fff",border:"1px solid #e8eaed",borderRadius:12,padding:"16px 4px",textAlign:"center",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:6,fontFamily:"inherit"}}>
-                <span style={{fontSize:28}}>{item.icon}</span>
-                <span style={{fontSize:13,fontWeight:600,color:"#172B4D",wordBreak:"keep-all"}}>{item.name}</span>
+          <div style={{fontSize:16,fontWeight:800,color:"#172B4D",marginBottom:12}}>인기 계산기</div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:10}}>
+            {[{id:"acquisition",name:"취득세",desc:"매매·증여·상속 시 취득세",cat:"tax",bg:"#EBF4FF"},{id:"transfer",name:"양도소득세",desc:"부동산 매도 시 양도차익 세금",cat:"tax",bg:"#EBF4FF"},{id:"netsalary",name:"연봉 실수령액",desc:"세금·4대보험 공제 후 월급",cat:"life",bg:"#E6FFFA"},{id:"dsr",name:"DSR",desc:"소득 대비 총 대출가능액",cat:"loan",bg:"#F0FFF4"},{id:"yearend",name:"연말정산",desc:"직장인 환급액 미리 확인",cat:"tax",bg:"#EBF4FF"},{id:"commission",name:"중개수수료",desc:"매매·전세·월세 복비 계산",cat:"cost",bg:"#FFFBEB"},{id:"inctax",name:"종합소득세",desc:"프리랜서·사업자 소득세",cat:"tax",bg:"#EBF4FF"},{id:"pension",name:"국민연금",desc:"예상 월 수령액 계산",cat:"life",bg:"#E6FFFA"}].map(item=>(
+              <button key={item.id} onClick={()=>navigateCalc(item.cat,item.id)} style={{background:item.bg,border:"1px solid #e2e8f0",borderRadius:12,padding:"16px 12px",textAlign:"center",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:4,fontFamily:"inherit"}}>
+                <span style={{fontSize:16,fontWeight:800,color:"#172B4D"}}>{item.name}</span>
+                <span style={{fontSize:12,color:"#505f79",lineHeight:1.4,wordBreak:"keep-all"}}>{item.desc}</span>
               </button>
             ))}
           </div>
+          <button onClick={()=>{document.getElementById("allCalcs")?.scrollIntoView({behavior:"smooth"})}} style={{width:"100%",marginTop:10,padding:"14px",background:"#fff",border:"1px solid #dfe1e6",borderRadius:10,fontSize:14,fontWeight:700,color:"#505f79",cursor:"pointer",fontFamily:"inherit"}}>전체 39가지 계산기 보기</button>
         </div>
       </>):(
       <div style={{background:"#f8f9fc",maxWidth:"100%",overflow:"hidden"}}>
