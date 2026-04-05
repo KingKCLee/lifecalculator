@@ -1,0 +1,291 @@
+name: Tax Law Auto Update
+on:
+  schedule:
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+jobs:
+  check-and-update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Check tax law changes via Claude API
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          python3 << 'PYEOF'
+          import json, os, urllib.request
+
+          prompt = """당신은 한국 세법 전문가입니다. 아래 작업을 수행하세요.
+
+          1단계: 최근 3개월 이내 시행된 또는 시행 예정인 세법 개정사항을 검색하세요.
+          확인 대상:
+          - 지방세법 (취득세, 재산세)
+          - 소득세법 (양도소득세, 종합소득세, 연말정산)
+          - 종합부동산세법
+          - 상속세및증여세법
+          - 주택법, 주택임대차보호법
+          - 금융위원회 대출규제 (DSR, LTV, 주담대한도)
+          - 국민연금법, 고용보험법, 건강보험법 (보험요율 변경)
+          - 최저임금법
+          - 근로기준법 (퇴직금, 실업급여)
+
+          2단계: 변경사항이 있으면 아래 JSON 형식으로 출력하세요.
+          변경사항이 없으면 {"changes": []} 를 출력하세요.
+
+          {
+            "changes": [
+              {
+                "category": "취득세|양도세|종부세|재산세|증여세|상속세|DSR|LTV|연봉|4대보험|연말정산|기타",
+                "type": "rate_change|threshold_change|new_deduction|new_rule|abolish|extend",
+                "severity": "data_only|code_required",
+                "description": "변경 내용 설명",
+                "effectiveDate": "2026-MM-DD",
+                "currentValue": "현재 값",
+                "newValue": "새 값",
+                "legalBasis": "근거 법령",
+                "dataJsonPath": "live-data.json에서 변경할 경로 (data_only인 경우)",
+                "codeChange": "필요한 코드 변경 설명 (code_required인 경우)"
+              }
+            ]
+          }
+
+          severity 기준:
+          - data_only: 세율, 공제금액, 한도 등 숫자만 바뀌는 경우 → live-data.json만 수정
+          - code_required: 새로운 공제 신설, 계산 구조 변경 등 → App.jsx 코드 수정 필요
+
+          JSON만 출력하세요. 다른 텍스트 없이."""
+
+          req_data = json.dumps({
+            "model": "claude-sonnet-4-20250514",
+            "max_tokens": 4000,
+            "tools": [{"type": "web_search_20250305", "name": "web_search"}],
+            "messages": [{"role": "user", "content": prompt}]
+          }).encode('utf-8')
+
+          req = urllib.request.Request(
+            'https://api.anthropic.com/v1/messages',
+            data=req_data,
+            headers={
+              'content-type': 'application/json',
+              'x-api-key': os.environ['ANTHROPIC_API_KEY'],
+              'anthropic-version': '2023-06-01'
+            }
+          )
+
+          try:
+            with urllib.request.urlopen(req, timeout=120) as resp:
+              data = json.loads(resp.read().decode('utf-8'))
+
+            changes_json = {"changes": []}
+            for block in data.get('content', []):
+              if block.get('type') == 'text':
+                import re
+                match = re.search(r'\{[\s\S]*\}', block['text'])
+                if match:
+                  try:
+                    changes_json = json.loads(match.group())
+                    break
+                  except:
+                    pass
+
+            with open('/tmp/changes.json', 'w', encoding='utf-8') as f:
+              json.dump(changes_json, f, ensure_ascii=False, indent=2)
+
+            print("Changes found:")
+            print(json.dumps(changes_json, ensure_ascii=False, indent=2))
+          except Exception as e:
+            print(f"API error: {e}")
+            with open('/tmp/changes.json', 'w') as f:
+              json.dump({"changes": []}, f)
+          PYEOF
+
+      - name: Apply data-only changes
+        run: |
+          python3 << 'PYEOF'
+          import json, os
+          from datetime import datetime
+
+          with open('/tmp/changes.json','r', encoding='utf-8') as f:
+            result = json.load(f)
+
+          changes = result.get('changes', [])
+          if not changes:
+            print("No changes detected")
+            with open('/tmp/summary.txt', 'w') as f:
+              f.write("data:0,code:0")
+            exit(0)
+
+          data_changes = [c for c in changes if c.get('severity') == 'data_only']
+          code_changes = [c for c in changes if c.get('severity') == 'code_required']
+
+          if data_changes:
+            live_path = 'public/data/live-data.json'
+            with open(live_path, 'r', encoding='utf-8') as f:
+              live_data = json.load(f)
+
+            for change in data_changes:
+              path = change.get('dataJsonPath','')
+              new_val = change.get('newValue','')
+              desc = change.get('description','')
+              if path and new_val:
+                keys = path.split('.')
+                obj = live_data
+                for k in keys[:-1]:
+                  obj = obj.setdefault(k, {})
+                obj[keys[-1]] = new_val
+                print(f"Updated: {path} = {new_val} ({desc})")
+
+            today = datetime.now().strftime('%Y.%m.%d')
+            if 'updateLog' not in live_data:
+              live_data['updateLog'] = []
+
+            for change in data_changes:
+              live_data['updateLog'].insert(0, {
+                'date': today,
+                'category': change.get('category', '전체'),
+                'title': f"세법 자동 업데이트: {change.get('description','')}",
+                'desc': f"{change.get('legalBasis','')} ({change.get('effectiveDate','')}) 시행",
+                'auto': True
+              })
+
+            live_data['updateLog'] = live_data['updateLog'][:50]
+
+            with open(live_path, 'w', encoding='utf-8') as f:
+              json.dump(live_data, f, ensure_ascii=False, indent=2)
+
+            print(f"Applied {len(data_changes)} data changes")
+
+          if code_changes:
+            issue_body = "## 세법 구조적 변경 감지\n\n"
+            for change in code_changes:
+              issue_body += f"### {change.get('category')} - {change.get('description')}\n"
+              issue_body += f"- 시행일: {change.get('effectiveDate')}\n"
+              issue_body += f"- 근거: {change.get('legalBasis')}\n"
+              issue_body += f"- 현재: {change.get('currentValue')}\n"
+              issue_body += f"- 변경: {change.get('newValue')}\n"
+              issue_body += f"- 코드 변경: {change.get('codeChange')}\n\n"
+
+            with open('/tmp/issue.md', 'w', encoding='utf-8') as f:
+              f.write(issue_body)
+
+            print(f"Code changes needed: {len(code_changes)} items")
+
+          with open('/tmp/summary.txt', 'w') as f:
+            f.write(f"data:{len(data_changes)},code:{len(code_changes)}")
+          PYEOF
+
+      - name: Apply code changes via Claude API
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          python3 << 'PYEOF'
+          import json, os, subprocess, urllib.request, re
+
+          with open('/tmp/changes.json','r', encoding='utf-8') as f:
+            result = json.load(f)
+
+          code_changes = [c for c in result.get('changes',[]) if c.get('severity') == 'code_required']
+
+          if not code_changes:
+            print("No code changes needed")
+            exit(0)
+
+          with open('src/App.jsx', 'r', encoding='utf-8') as f:
+            current_code = f.read()
+
+          prompt = f"""아래 세법 변경사항을 src/App.jsx에 반영하세요.
+
+          변경사항:
+          {json.dumps(code_changes, ensure_ascii=False, indent=2)}
+
+          현재 App.jsx의 관련 부분만 수정하세요.
+          수정이 필요한 함수명과 변경할 코드를 JSON으로 출력하세요:
+          {{"patches": [{{"functionName": "CalcAcq", "searchStr": "기존코드", "replaceStr": "새코드"}}]}}
+          """
+
+          req_data = json.dumps({
+            "model": "claude-sonnet-4-20250514",
+            "max_tokens": 4000,
+            "messages": [{"role": "user", "content": prompt}]
+          }).encode('utf-8')
+
+          req = urllib.request.Request(
+            'https://api.anthropic.com/v1/messages',
+            data=req_data,
+            headers={
+              'content-type': 'application/json',
+              'x-api-key': os.environ['ANTHROPIC_API_KEY'],
+              'anthropic-version': '2023-06-01'
+            }
+          )
+
+          try:
+            with urllib.request.urlopen(req, timeout=120) as resp:
+              resp_data = json.loads(resp.read().decode('utf-8'))
+
+            for block in resp_data.get('content', []):
+              if block.get('type') == 'text':
+                match = re.search(r'\{[\s\S]*\}', block['text'])
+                if match:
+                  patches = json.loads(match.group()).get('patches', [])
+                  for patch in patches:
+                    search = patch.get('searchStr', '')
+                    replace = patch.get('replaceStr', '')
+                    if search and search in current_code:
+                      current_code = current_code.replace(search, replace, 1)
+                      print(f"Patched: {patch.get('functionName', 'unknown')}")
+
+            with open('src/App.jsx', 'w', encoding='utf-8') as f:
+              f.write(current_code)
+
+            build_result = subprocess.run(['npm', 'run', 'build'], capture_output=True, text=True)
+            if build_result.returncode != 0:
+              print("Build failed! Reverting...")
+              subprocess.run(['git', 'checkout', '--', 'src/App.jsx'])
+              with open('/tmp/build_failed.txt', 'w') as f:
+                f.write(build_result.stderr)
+            else:
+              print("Build succeeded! Code changes applied.")
+          except Exception as e:
+            print(f"API error: {e}")
+          PYEOF
+
+      - name: Commit and push
+        run: |
+          git config user.name "Tax Law Bot"
+          git config user.email "taxbot@lifecalculator.com"
+          git add -A
+          if ! git diff --staged --quiet; then
+            SUMMARY=$(cat /tmp/summary.txt 2>/dev/null || echo "unknown")
+            git commit -m "세법 자동 업데이트: $SUMMARY"
+            git push
+          else
+            echo "No changes to commit"
+          fi
+
+      - name: Create issue for failed code changes
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ -f /tmp/build_failed.txt ] || [ -f /tmp/issue.md ]; then
+            BODY_FILE=/tmp/issue.md
+            [ -f /tmp/build_failed.txt ] && cat /tmp/build_failed.txt >> $BODY_FILE
+            [ -f $BODY_FILE ] && gh issue create \
+              --title "⚠️ 세법 구조 변경 - 수동 확인 필요" \
+              --body-file $BODY_FILE \
+              --label "tax-update" || echo "No issue to create"
+          fi
