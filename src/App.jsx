@@ -796,10 +796,14 @@ function Tip({text}){
     <span className="tip-wrap" onClick={block} onMouseDown={block} onPointerDown={block} onTouchStart={block} style={{position:"relative",display:"inline-flex",alignItems:"center",verticalAlign:"middle",marginLeft:4,flexShrink:0}}>
       <span onClick={e=>{e.stopPropagation();e.preventDefault();_setOpenTipId(isOpen?null:myId);}} onMouseDown={block} onPointerDown={block} onTouchStart={block}
         style={{cursor:"pointer",border:"1px solid #ccc",borderRadius:"50%",width:16,height:16,minWidth:16,minHeight:16,display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:10,color:"#888",userSelect:"none",lineHeight:1,flexShrink:0,boxSizing:"border-box",fontWeight:700}}>?</span>
-      {isOpen&&<div onClick={block} style={{position:"absolute",bottom:"calc(100% + 8px)",left:"50%",transform:"translateX(-50%)",background:"#333",color:"#fff",padding:"10px 14px",borderRadius:8,fontSize:13,lineHeight:1.6,width:280,zIndex:9999,boxShadow:"0 4px 12px rgba(0,0,0,0.15)",whiteSpace:"normal",wordBreak:"keep-all"}}>
-        {text}
-        <div style={{position:"absolute",bottom:-6,left:"50%",transform:"translateX(-50%)",width:0,height:0,borderLeft:"6px solid transparent",borderRight:"6px solid transparent",borderTop:"6px solid #333"}}/>
-      </div>}
+      {isOpen&&<>
+        <div onClick={()=>_setOpenTipId(null)} style={{position:"fixed",top:0,left:0,right:0,bottom:0,zIndex:9998}}/>
+        <div style={{position:"absolute",bottom:"calc(100% + 8px)",left:"50%",transform:"translateX(-50%)",background:"#333",color:"#fff",padding:"10px 14px",borderRadius:8,fontSize:13,lineHeight:1.6,width:280,zIndex:9999,boxShadow:"0 4px 12px rgba(0,0,0,0.15)",whiteSpace:"normal",wordBreak:"keep-all"}}>
+          <span onClick={e=>{e.stopPropagation();_setOpenTipId(null);}} style={{position:"absolute",top:4,right:8,cursor:"pointer",fontSize:14,color:"#aaa"}}>✕</span>
+          {text}
+          <div style={{position:"absolute",bottom:-6,left:"50%",transform:"translateX(-50%)",width:0,height:0,borderLeft:"6px solid transparent",borderRight:"6px solid transparent",borderTop:"6px solid #333"}}/>
+        </div>
+      </>}
     </span>
   );
 }
