@@ -426,7 +426,7 @@ function shareKakao(title,total,sub,items){const currentUrl=typeof window!=="und
 
 function RP({title,total,sub,items}){
   const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
-  return(<div style={{background:"linear-gradient(180deg,#0747A6 0%,#0052CC 100%)",borderRadius:20,padding:"28px 24px",color:"#fff",position:"sticky",top:80}}>
+  return(<div style={{background:"linear-gradient(180deg,#0747A6 0%,#0052CC 100%)",borderRadius:20,padding:"28px 24px",color:"#fff",position:isMo?"relative":"sticky",top:isMo?0:80}}>
     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
       <div style={{fontSize:11,fontWeight:600,letterSpacing:1.5,textTransform:"uppercase",opacity:.7}}>{title}</div>
       <div style={{background:"rgba(255,255,255,.15)",borderRadius:8,padding:"4px 10px",fontSize:11,fontWeight:600}}>{sub||"RESULT"}</div>
@@ -557,19 +557,19 @@ function CalcAcq({isMo=false}){
   if(heavyTaxExclude)basisText+="중과 배제 적용: 일반세율 1~3% 적용\n";
   if(spouseChildGive)basisText+="1세대1주택자 배우자·직계비속 증여: 조정지역 3억 초과여도 3.5% 일반세율\n";
   if(cultivation)basisText+="2년 이상 자경 농지 감면: 3% → 1.5%\n";
-  return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start"}}>
+  return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?12:32,alignItems:"start"}}>
     <div>
-      <h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>🏢 취득세 시뮬레이션</h3>
+      <h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:isMo?"0 0 12px":"0 0 20px"}}>🏢 취득세 시뮬레이션</h3>
       <div style={{marginBottom:16}}>
         <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>취득 유형</label>
-        <div style={{display:"grid",gridTemplateColumns:isMo?"repeat(2,1fr)":"repeat(4,1fr)",gap:6}}>
-          {[["sale","매매"],["gift","증여"],["inherit","상속"],["newbuild","원시"]].map(([v,l])=>(<button key={v} onClick={()=>sAT(v)} style={{padding:isMo?"10px 4px":"10px",minWidth:0,border:acqType===v?"2px solid #0747A6":"1.5px solid #dfe1e6",borderRadius:8,background:acqType===v?"#deebff":"#fff",color:acqType===v?"#0747A6":"#505f79",fontWeight:acqType===v?700:400,fontSize:13,cursor:"pointer",whiteSpace:"nowrap",wordBreak:"keep-all",fontFamily:"inherit"}}>{l}</button>))}
+        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6}}>
+          {[["sale","매매"],["gift","증여"],["inherit","상속"],["newbuild","원시"]].map(([v,l])=>(<button key={v} onClick={()=>sAT(v)} style={{padding:isMo?"8px 4px":"10px",minWidth:0,border:acqType===v?"2px solid #0747A6":"1.5px solid #dfe1e6",borderRadius:8,background:acqType===v?"#deebff":"#fff",color:acqType===v?"#0747A6":"#505f79",fontWeight:acqType===v?700:400,fontSize:isMo?12:13,cursor:"pointer",whiteSpace:"nowrap",wordBreak:"keep-all",fontFamily:"inherit"}}>{l}</button>))}
         </div>
       </div>
       <div style={{marginBottom:16}}>
         <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>부동산 유형<TipModal title="부동산 유형"><p>주거용 오피스텔인 경우에만 '오피스텔' 선택. 업무용은 '그 외'. 농지는 2년 이상 자경 시 감면 혜택.</p></TipModal></label>
-        <div style={{display:"grid",gridTemplateColumns:isMo?"repeat(2,1fr)":"repeat(4,1fr)",gap:6}}>
-          {[["house","주택"],["officetel","오피스텔"],["farmLand","농지"],["building","그 외"]].map(([v,l])=>(<button key={v} onClick={()=>sRT(v)} style={{padding:isMo?"10px 4px":"10px",minWidth:0,border:realType===v?"2px solid #0747A6":"1.5px solid #dfe1e6",borderRadius:8,background:realType===v?"#deebff":"#fff",color:realType===v?"#0747A6":"#505f79",fontWeight:realType===v?700:400,fontSize:13,cursor:"pointer",whiteSpace:"nowrap",wordBreak:"keep-all",fontFamily:"inherit"}}>{l}</button>))}
+        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6}}>
+          {[["house","주택"],["officetel","오피스텔"],["farmLand","농지"],["building","그 외"]].map(([v,l])=>(<button key={v} onClick={()=>sRT(v)} style={{padding:isMo?"8px 4px":"10px",minWidth:0,border:realType===v?"2px solid #0747A6":"1.5px solid #dfe1e6",borderRadius:8,background:realType===v?"#deebff":"#fff",color:realType===v?"#0747A6":"#505f79",fontWeight:realType===v?700:400,fontSize:isMo?12:13,cursor:"pointer",whiteSpace:"nowrap",wordBreak:"keep-all",fontFamily:"inherit"}}>{l}</button>))}
         </div>
       </div>
       {(realType==="house"||realType==="officetel")&&<div style={{marginBottom:16}}>
@@ -580,7 +580,7 @@ function CalcAcq({isMo=false}){
       </div>}
       <Slider label={acqType==="gift"?"시가인정액":acqType==="inherit"?"시가표준액":acqType==="newbuild"?"건축 원가":"취득가액"} value={price} onChange={sP} min={1000} max={500000} step={500}/>
       <div style={{position:"relative"}}><div style={{position:"absolute",top:-2,right:0,zIndex:2}}><TipModal title="시가표준액 (공시가격)"><p>미입력 시 취득가액을 시가표준액으로 간주합니다.</p><ul style={{paddingLeft:20}}><li>취득가액보다 시가표준액이 크면 시가표준액이 과세표준</li><li>시가표준액 1억 미만이면 다주택 중과 제외</li><li>조정대상지역 증여 시 시가표준액 3억 초과하면 12% 중과</li></ul><p>부동산 공시가격 알리미(realtyprice.kr)에서 확인 가능합니다.</p></TipModal></div><Inp label="시가표준액 (공시가격)" value={stdPrice} onChange={setStdPrice} suffix="만원" placeholder="미입력 시 취득가 사용" note="미입력 시 취득가 사용"/></div>
-      {isHouse&&acqType==="sale"&&<Radio label="취득 후 주택 수" value={own} onChange={sO} options={[{value:"1",label:"1주택"},{value:"2",label:"2주택"},{value:"3",label:"3주택"},{value:"4",label:"4주택+"}]} cols={isMo?2:4}/>}
+      {isHouse&&acqType==="sale"&&<Radio label="취득 후 주택 수" value={own} onChange={sO} options={[{value:"1",label:"1주택"},{value:"2",label:"2주택"},{value:"3",label:"3주택"},{value:"4",label:"4주택+"}]} cols={4}/>}
       <div style={{display:"flex",flexWrap:"wrap",gap:12,marginBottom:10}}>
         {showCorp&&<label style={{display:"flex",alignItems:"center",gap:6,fontSize:13,cursor:"pointer",whiteSpace:"nowrap",wordBreak:"keep-all"}}><input type="checkbox" checked={corporation} onChange={e=>setCorporation(e.target.checked)} style={{width:18,height:18}}/> 법인<TipModal title="법인 취득"><p>법인이 주택을 취득하는 경우 주택수와 관계없이 12% 적용됩니다.</p></TipModal></label>}
         {showFirstDist&&<label style={{display:"flex",alignItems:"center",gap:6,fontSize:13,cursor:"pointer",whiteSpace:"nowrap",wordBreak:"keep-all"}}><input type="checkbox" checked={firstDistribution} onChange={e=>setFirstDistribution(e.target.checked)} style={{width:18,height:18}}/> 임대사업자 최초분양<TipModal title="주택임대사업자 최초분양 취득세 면제·감면"><p>일정 규모 이하의 공동주택(아파트·다가구 제외), 오피스텔을 최초 분양받고 임대사업자 등록 시 취득세 면제 또는 감면</p><ul style={{paddingLeft:20}}><li><b>가격:</b> 수도권 6억, 그 외 3억 이하</li><li><b>규모:</b> 60제곱미터 이하</li><li><b>40㎡ 이하:</b> 취득세 면제</li><li><b>40~60㎡:</b> 취득세 50% 감면</li></ul></TipModal></label>}
@@ -891,7 +891,22 @@ function CalcCompare({isMo=false}){const[p,sP]=useState("100000");const[rl,sRl]=
 function CalcInvest({isMo=false}){const[bp,sBp]=useState("");const[sp,sSp]=useState("");const[hy,sHy]=useState("5");const[ln,sLn]=useState("");const[lr,sLr]=useState("");const[rn,sRn]=useState("");const buyP=tW(bp),sellP=tW(sp),holdY=parseInt(hy),loanW=tW(ln),loanR=pN(lr)/100,rentW=tW(rn);const buyCost=buyP*.015;const totalPT=pTx(buyP*.7*.6,[[6e7,.001],[1.5e8,.0015],[3e8,.0025],[Infinity,.004]])*1.34*holdY;const totalInt=loanW*loanR*holdY;const totalRent=rentW*12*holdY;const sellComm=sellP*.005*1.1;const gain=sellP-buyP;const ltD2=holdY>=3?Math.min(Math.min(holdY,15)*.04+Math.min(holdY,10)*.04,.80):0;const trTax=gain>0?pTx(Math.max(0,gain*(1-ltD2)-2500000),IB)*1.1:0;const totalCost=buyCost+totalPT+totalInt+sellComm+trTax;const totalInc=totalRent+gain;const netProfit=totalInc-totalCost;const invested=buyP-loanW+buyCost;const roi=invested>0?netProfit/invested*100:0;return(<div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>⚡ 투자수익 종합분석 (매수→보유→매도)</h3><div style={{display:"grid",gridTemplateColumns:"1fr",gap:12,marginBottom:20}}><Inp label="매수가" value={bp} onChange={sBp} suffix="만원" placeholder="예: 70000"/><Inp label="예상 매도가" value={sp} onChange={sSp} suffix="만원" placeholder="예: 100000"/><Sel label="보유 기간" value={hy} onChange={sHy} options={Array.from({length:20},(_,i)=>({value:String(i+1),label:(i+1)+"년"}))}/><Inp label="대출금액" value={ln} onChange={sLn} suffix="만원"/><Inp label="대출 금리" value={lr} onChange={sLr} suffix="%"/><Inp label="월세 수입 (없으면 0)" value={rn} onChange={sRn} suffix="만원"/></div>{buyP>0&&sellP>0&&<div style={{display:"grid",gridTemplateColumns:"1fr",gap:16}}><div style={{background:"linear-gradient(135deg,#0747A6,#0065FF)",borderRadius:16,padding:24,color:"#fff"}}><div style={{display:"grid",gridTemplateColumns:"1fr",gap:16,marginBottom:16}}><div><div style={{fontSize:11,opacity:.7}}>총 수익</div><div style={{fontSize:22,fontWeight:800,color:"#57D9A3"}}>{fW(totalInc)}</div></div><div><div style={{fontSize:11,opacity:.7}}>총 비용·세금</div><div style={{fontSize:22,fontWeight:800,color:"#FF5630"}}>{fW(totalCost)}</div></div></div><div style={{borderTop:"1px solid rgba(255,255,255,.2)",paddingTop:16,textAlign:"center"}}><div style={{fontSize:11,opacity:.7}}>순수익</div><div style={{fontSize:32,fontWeight:800,color:netProfit>=0?"#57D9A3":"#FF5630"}}>{fW(netProfit)}</div><div style={{fontSize:14,marginTop:8,opacity:.9}}>투자수익률: <span style={{fontWeight:800,color:"#FFC400"}}>{fP(roi)}</span></div></div></div><div style={{background:P.card,borderRadius:16,padding:20,border:`1px solid ${P.bd}`}}><div style={{fontSize:13,fontWeight:600,color:P.mt,marginBottom:12}}>비용 상세 내역</div>{[["매수 부대비용",buyCost],["보유세 ("+holdY+"년)",totalPT],["대출이자 ("+holdY+"년)",totalInt],["매도 중개보수",sellComm],["양도소득세",trTax],["임대수입 ("+holdY+"년)",totalRent]].map(([l,v],i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:`1px solid ${P.lt}`,fontSize:13}}><span style={{color:P.mt}}>{l}</span><span style={{fontWeight:600}}>{fW(v)}</span></div>))}</div></div>}</div>);}
 
 function Placeholder({l}){return (<div style={{padding:40,textAlign:"center",color:P.mt}}><div style={{fontSize:48,marginBottom:12}}>🔧</div><div style={{fontSize:16,fontWeight:600}}>{l}</div><div style={{fontSize:13,marginTop:8}}>해당 기능을 준비 중입니다.</div></div>);}
-function RateTable({title,headers,rows}){return(<div className="rate-table-wrap" style={{marginTop:16,background:"#f8f9fc",borderRadius:10,padding:14}}><h5 style={{fontWeight:700,marginBottom:8,fontSize:13,color:"#172B4D"}}>📊 {title}</h5><div style={{overflowX:"auto"}}><table style={{width:"100%",borderCollapse:"collapse",fontSize:11,background:"#fff"}}><thead><tr style={{background:"#f4f5f7"}}>{headers.map((h,i)=>(<th key={i} style={{padding:6,border:"1px solid #dfe1e6",textAlign:"center",fontWeight:600}}>{h}</th>))}</tr></thead><tbody>{rows.map((row,ri)=>(<tr key={ri}>{row.map((cell,ci)=>(<td key={ci} style={{padding:6,border:"1px solid #dfe1e6",textAlign:ci===0?"left":"center"}}>{cell}</td>))}</tr>))}</tbody></table></div></div>);}
+function RateTable({title,headers,rows}){
+  const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
+  return(
+    <div className="rate-table-wrap" style={{marginTop:20,borderRadius:12,overflow:"hidden",border:`1px solid ${P.bd}`}}>
+      <div style={{padding:"10px 14px",background:P.lt,fontSize:12,fontWeight:700,color:P.tx}}>{title}</div>
+      <div style={{overflowX:"auto"}}>
+        <table style={{width:"100%",borderCollapse:"collapse",fontSize:isMo?11:13}}>
+          <thead><tr>{headers.map((h,i)=><th key={i} style={{padding:isMo?"6px 4px":"8px 12px",background:"#0747A6",color:"#fff",fontWeight:600,textAlign:i===0?"left":"center",whiteSpace:"nowrap"}}>{h}</th>)}</tr></thead>
+          <tbody>{rows.map((r,ri)=><tr key={ri} style={{background:ri%2===0?"#fff":P.lt}}>
+            {r.map((c,ci)=><td key={ci} style={{padding:isMo?"6px 4px":"8px 12px",borderBottom:`1px solid ${P.lt}`,textAlign:ci===0?"left":"center",wordBreak:"keep-all",color:ci===0?P.tx:P.mt}}>{c}</td>)}
+          </tr>)}</tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
 function TipModal({title,children}){
   const[show,setShow]=useState(false);
   const block=e=>{e.stopPropagation();e.preventDefault();};
