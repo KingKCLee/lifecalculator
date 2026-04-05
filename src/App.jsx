@@ -308,6 +308,7 @@ function downloadPDF(t,v,s,it){const h=generateReportHTML(t,v,s,it),b=new Blob([
 function shareKakao(title,total,sub,items){const currentUrl=typeof window!=="undefined"?window.location.href:"https://생활계산기.com";let text="📊 [생활계산기.com] "+title+"\n━━━━━━━━━━━━━━━━\n";if(sub)text+=sub+"\n\n";items.forEach(function(it){text+="• "+it.l+": "+it.v+"\n";});text+="━━━━━━━━━━━━━━━━\n💰 합계: ₩"+Math.round(total).toLocaleString("ko-KR")+"\n\n📅 계산일: "+new Date().toLocaleDateString("ko-KR")+"\n※ 참고용 계산 결과이며 실제와 다를 수 있습니다.\n\n👉 직접 계산해보기: "+currentUrl;if(navigator.share){navigator.share({title:title+" - 생활계산기.com",text:text}).catch(function(){});}else{navigator.clipboard.writeText(text).then(function(){alert("계산 결과가 복사되었습니다!\n카카오톡이나 메신저에 붙여넣기(Ctrl+V) 하세요.");}).catch(function(){var ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.left="-9999px";document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);alert("계산 결과가 복사되었습니다!\n카카오톡에 붙여넣기 하세요.");});}}
 
 function RP({title,total,sub,items}){
+  const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
   return(<div style={{background:"linear-gradient(180deg,#0747A6 0%,#0052CC 100%)",borderRadius:20,padding:"28px 24px",color:"#fff",position:"sticky",top:80}}>
     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
       <div style={{fontSize:11,fontWeight:600,letterSpacing:1.5,textTransform:"uppercase",opacity:.7}}>{title}</div>
