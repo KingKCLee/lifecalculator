@@ -574,7 +574,7 @@ function CalcAcq({isMo=false}){
       {(realType==="house"||realType==="officetel")&&<div style={{marginBottom:16}}>
         <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>전용면적</label>
         <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6}}>
-          {[["40","40㎡ 이하"],["60","60㎡ 이하"],["85","85㎡ 이하"],["big","85㎡ 초과"]].map(([v,l])=>(<button key={v} onClick={()=>sAreaType(v)} style={{padding:"10px",border:areaType===v?"2px solid #0747A6":"1.5px solid #dfe1e6",borderRadius:8,background:areaType===v?"#deebff":"#fff",color:areaType===v?"#0747A6":"#505f79",fontWeight:areaType===v?700:400,fontSize:isMo?13:12,cursor:"pointer",fontFamily:"inherit"}}>{l}</button>))}
+          {(isMo?[["40","40㎡↓"],["60","60㎡↓"],["85","85㎡↓"],["big","85㎡↑"]]:[["40","40㎡ 이하"],["60","60㎡ 이하"],["85","85㎡ 이하"],["big","85㎡ 초과"]]).map(([v,l])=>(<button key={v} onClick={()=>sAreaType(v)} style={{padding:"10px",border:areaType===v?"2px solid #0747A6":"1.5px solid #dfe1e6",borderRadius:8,background:areaType===v?"#deebff":"#fff",color:areaType===v?"#0747A6":"#505f79",fontWeight:areaType===v?700:400,fontSize:isMo?13:12,cursor:"pointer",fontFamily:"inherit"}}>{l}</button>))}
         </div>
       </div>}
       <Slider label={acqType==="gift"?"시가인정액":acqType==="inherit"?"시가표준액":acqType==="newbuild"?"건축 원가":"취득가액"} value={price} onChange={sP} min={1000} max={500000} step={500}/>
