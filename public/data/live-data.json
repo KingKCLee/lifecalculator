@@ -1,5 +1,5 @@
 {
-  "lastUpdate": "2026-04-04T09:00:00+09:00",
+  "lastUpdate": "2026-04-06T09:00:00+09:00",
   "baseRate": 3.0,
   "baseRateDate": "2026-02-27",
   "convertRate": 5.0,
@@ -617,7 +617,7 @@
     "lastUpdate": "2026-04-01"
   },
   "indicators": {
-    "lastUpdate": "2026-04-04",
+    "lastUpdate": "2026-04-06",
     "items": [
       {
         "id": "usdkrw",
