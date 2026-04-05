@@ -1511,7 +1511,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
       )}
     </nav>
     {liveData&&<IndicatorTicker liveData={liveData}/>}
-
+    <main>
     {page==="home"?(<>
       {isMo?(<>
         {/* 모바일: 검색창 즉시 노출 */}
@@ -1723,6 +1723,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
       {showAllLog&&UPDATE_LOG.length>1&&<button onClick={()=>setShowAllLog(false)} style={{display:"block",margin:"16px auto 0",padding:"10px 24px",background:"#fff",border:"1px solid #dfe1e6",borderRadius:8,fontSize:13,color:"#6b778c",cursor:"pointer",fontFamily:"inherit",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.background="#deebff";e.currentTarget.style.color="#0747A6"}} onMouseLeave={e=>{e.currentTarget.style.background="#fff";e.currentTarget.style.color="#6b778c"}}>접기</button>}
     </div>
 
+    </main>
     {/* 푸터 */}
     <footer style={{background:"#0d1117",borderTop:"none",padding:"48px 24px"}}>
       <div className="footer-inner" style={{maxWidth:1200,margin:"0 auto",display:"grid",gridTemplateColumns:"1fr",gap:40}}>
