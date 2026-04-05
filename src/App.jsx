@@ -536,6 +536,7 @@ function CalcTrans({isMo=false}){
   const show1HouseExempt=own==="one"&&assetType==="house";
   const showNonBizLand=assetType==="land";
   const showInheritDate=inherited;
+  useEffect(()=>{if(tW(buyAmt)&&tW(sellAmt)&&buyDate.length>=8&&sellDate.length>=8)calculate();else setResult(null);},[assetType,own,baseDeduct,jointOwn,jointRate,conArea,realLive,liveYear,rentBiz,longRentEx,unregistered,inherited,nonBizLand,is1HouseExempt,isHeavy2,isHeavy3,buyAmt,sellAmt,costTotal,buyDate,sellDate,inheritBuyDate]);
   function calculate(){
     const buy=tW(buyAmt);const sell=tW(sellAmt);const expenses=tW(costTotal);
     if(!buy||!sell||!buyDate||!sellDate||buyDate.length<8||sellDate.length<8)return;
@@ -684,7 +685,7 @@ function CalcTrans({isMo=false}){
       {showUnion&&<Inp label="관리처분인가일" value={approveDate} onChange={setApproveDate} placeholder="20230101"/>}
       {showUnionPrice&&<Inp label="입주권 가치" value={unionPrice} onChange={setUnionPrice} suffix="만원"/>}
     </div>
-    <button onClick={calculate} style={{width:"100%",padding:"16px",background:"#0747A6",color:"#fff",border:"none",borderRadius:10,fontSize:16,fontWeight:700,cursor:"pointer",marginTop:8,fontFamily:"inherit"}}>양도소득세 계산</button>
+    {!result&&<div style={{marginTop:16,padding:"20px",background:"#f4f5f7",borderRadius:10,textAlign:"center",fontSize:13,color:"#6b778c"}}>취득가·양도가·날짜를 입력하면 실시간으로 계산됩니다.</div>}
     {result&&<div style={{marginTop:24}}>
       <h4 style={{fontWeight:800,marginBottom:16,fontSize:16,color:P.tx}}>계산 결과</h4>
       <table style={{width:"100%",borderCollapse:"collapse",fontSize:isMo?14:13}}>
