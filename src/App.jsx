@@ -1343,7 +1343,7 @@ export default function App(){
   const[search,setSearch]=useState("");
   const[modal,setModal]=useState(null);
   const[mobileMenu,setMobileMenu]=useState(false);
-  const[showAuth,setShowAuth]=useState(false);const[authMode,setAuthMode]=useState("login");
+  const[showAuth,setShowAuth]=useState(false);const[authMode,setAuthMode]=useState("login");const[isLoggedIn,setIsLoggedIn]=useState(false);
   const[calcHistory,setCalcHistory]=useState(()=>{try{return JSON.parse(localStorage.getItem('calc_history')||'[]')}catch{return[]}});
   const saveHistory=(cId,name,total)=>{if(!total||total<=0)return;const item={id:cId,name,total,time:Date.now()};setCalcHistory(prev=>{const updated=[item,...prev.filter(h=>h.id!==cId)].slice(0,10);try{localStorage.setItem('calc_history',JSON.stringify(updated))}catch{}return updated;});};
   const[showAllLog,setShowAllLog]=useState(false);const[hoverCat,setHoverCat]=useState(null);
@@ -1503,7 +1503,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
       </div>}
 
       {/* 최근 계산 히스토리 */}
-      {calcHistory.length>0&&<div className="recent-calc" style={{maxWidth:1200,margin:"0 auto",padding:isMo?"12px 16px":"16px 24px"}}>
+      {isLoggedIn&&calcHistory.length>0&&<div className="recent-calc" style={{maxWidth:1200,margin:"0 auto",padding:isMo?"12px 16px":"16px 24px"}}>
         <div style={{fontSize:13,fontWeight:700,color:"#172B4D",marginBottom:8}}>📌 최근 계산</div>
         <div style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:8,WebkitOverflowScrolling:"touch"}}>
           {calcHistory.slice(0,5).map((h,i)=>{const item=CL.find(c=>c.id===h.id);return(<button key={i} onClick={()=>{if(item)navigateCalc(item.c,h.id)}} style={{padding:"10px 14px",background:"#fff",border:"1px solid #dfe1e6",borderRadius:10,fontSize:12,cursor:"pointer",flexShrink:0,textAlign:"left",minWidth:120,fontFamily:"inherit"}}>
