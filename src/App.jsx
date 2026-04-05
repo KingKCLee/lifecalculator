@@ -338,9 +338,19 @@ function Empty({icon,msg}){return (<div style={{background:P.lt,borderRadius:20,
 /* ═══ 계산기 ═══ */
 
 function CalcAcq({isMo=false}){
-  const[acqType,sAT]=useState("sale");const[realType,sRT]=useState("house");const[areaType,sAreaType]=useState("85");const[price,sP]=useState("12500");const[stdPrice,setStdPrice]=useState("");const[own,sO]=useState("1");const[reg,sR]=useState("adj");const[isFirst,sFirst]=useState("no");const[isTempTwo,sTT]=useState("no");const[isRural,sRural]=useState("no");const[giftDirect,sGD]=useState("no");const[inheritNone,sIN]=useState("no");
+  const[acqType,sAT]=useState("sale");const[realType,sRT]=useState("house");const[areaType,sAreaType]=useState("85");const[price,sP]=useState("12500");const[stdPrice,setStdPrice]=useState("");const[own,sO]=useState("1");const[isTempTwo,sTT]=useState("no");const[inheritNone,sIN]=useState("no");
+  const[corporation,setCorporation]=useState(false);const[firstDistribution,setFirstDistribution]=useState(false);const[conArea,setConArea]=useState(false);const[metro,setMetro]=useState(false);const[populationDecline,setPopulationDecline]=useState(false);const[firstOfLife,setFirstOfLife]=useState(false);const[heavyTaxExclude,setHeavyTaxExclude]=useState(false);const[spouseChildGive,setSpouseChildGive]=useState(false);const[cultivation,setCultivation]=useState(false);
   const today=new Date();const firstHomeBenefitEnd=new Date('2028-12-31');const isFirstHomeBenefit=today<firstHomeBenefitEnd;
-  const pW=tW(price);const stdW=tW(stdPrice)||pW;const n=parseInt(own);const isAdj=reg==="adj";const lowVal=stdW<=1e8;const tempTwo=n===2&&isTempTwo==="yes";const baseAmount=Math.max(pW,stdW);
+  const pW=tW(price);const stdW=tW(stdPrice)||pW;const n=parseInt(own);const isAdj=conArea;const lowVal=stdW<=1e8;const tempTwo=n===2&&isTempTwo==="yes";
+  const showCorp=realType==="house";
+  const showFirstDist=realType==="house"||realType==="officetel";
+  const showConArea=realType==="house";
+  const showMetro=(realType==="house"||realType==="officetel")&&acqType==="sale";
+  const showPopDecline=realType==="house"&&acqType==="sale"&&n===1;
+  const showFirstOfLife=realType==="house"&&acqType==="sale"&&n===1;
+  const showHeavyExclude=acqType==="sale"&&(n>=2||corporation);
+  const showSpouseChild=realType==="house"&&acqType==="gift";
+  const showCultivation=realType==="farmLand";
   const isHouse=realType==="house";
   let r=0.01,rateLabel="";
   if(!isHouse){
@@ -352,7 +362,7 @@ function CalcAcq({isMo=false}){
       else{r=0.04;rateLabel="오피스텔 법인 4%";}
     }
     else if(realType==="farmLand"){
-      if(acqType==="sale"){r=0.03;rateLabel="농지 매매 3%";}
+      if(acqType==="sale"){r=cultivation?0.015:0.03;rateLabel=cultivation?"농지 자경 1.5%":"농지 매매 3%";}
       else if(acqType==="gift"){r=0.035;rateLabel="농지 증여 3.5%";}
       else if(acqType==="inherit"){r=0.023;rateLabel="농지 상속 2.3%";}
       else if(acqType==="newbuild"){r=0.028;rateLabel="농지 원시취득 2.8%";}
@@ -366,8 +376,13 @@ function CalcAcq({isMo=false}){
       else{r=0.04;rateLabel="그 외 법인 4%";}
     }
   }
+  else if(corporation&&acqType==="sale"&&!heavyTaxExclude){r=0.12;rateLabel="법인 중과 12%";}
   else if(acqType==="sale"){
     if(lowVal){r=0.01;rateLabel="공시가1억↓ 특례 1%";}
+    else if(heavyTaxExclude&&n>=2){
+      if(pW<=6e8){r=0.01;}else if(pW<=9e8){r=Math.max(0.01,Math.min(0.03,(pW*2/3e8-3)/100));}else{r=0.03;}
+      rateLabel="중과배제 일반세율 "+(r*100).toFixed(2)+"%";
+    }
     else if(tempTwo||n===1||(n===2&&!isAdj)){
       if(pW<=6e8){r=0.01;}else if(pW<=9e8){r=Math.max(0.01,Math.min(0.03,(pW*2/3e8-3)/100));}else{r=0.03;}
       rateLabel=(tempTwo?"일시적2주택 ":n===1?"1주택 ":"2주택(비조정) ")+(r*100).toFixed(2)+"%";
@@ -378,8 +393,8 @@ function CalcAcq({isMo=false}){
     else if(n>=4){r=0.12;rateLabel="4주택+ 12%";}
   }
   else if(acqType==="gift"){
-    if(isAdj&&stdW>=3e8&&giftDirect==="no"){r=0.12;rateLabel="증여 중과(조정+공시3억↑) 12%";}
-    else{r=0.035;rateLabel=giftDirect==="yes"?"증여 직계 3.5%":"증여 3.5%";}
+    if(isAdj&&stdW>=3e8&&!spouseChildGive){r=0.12;rateLabel="증여 중과(조정+공시3억↑) 12%";}
+    else{r=0.035;rateLabel=spouseChildGive?"증여 직계 3.5%":"증여 3.5%";}
   }
   else if(acqType==="inherit"){
     if(inheritNone==="yes"){r=0.008;rateLabel="상속 무주택특례 0.8%";}
@@ -403,8 +418,8 @@ function CalcAcq({isMo=false}){
   }
   const fm=Math.round(pW*farmRate);
   let st=0;if(pW>30e8)st=500000;else if(pW>10e8)st=350000;else if(pW>1e8)st=150000;
-  const firstDedCap=isRural==="yes"?3000000:2000000;
-  const firstDed=acqType==="sale"&&isFirst==="yes"&&n===1&&isFirstHomeBenefit&&pW<=12e8?Math.min(ac,firstDedCap):0;
+  const firstDedCap=populationDecline?3000000:2000000;
+  const firstDed=acqType==="sale"&&firstOfLife&&n===1&&isFirstHomeBenefit&&pW<=12e8?Math.min(ac,firstDedCap):0;
   const total=ac+ed+fm+st-firstDed;
   return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start"}}>
     <div>
@@ -430,17 +445,28 @@ function CalcAcq({isMo=false}){
       <Slider label={acqType==="gift"?"시가인정액":acqType==="inherit"?"시가표준액":acqType==="newbuild"?"건축 원가":"취득가액"} value={price} onChange={sP} min={1000} max={500000} step={500}/>
       <Inp label="시가표준액 (공시가격)" value={stdPrice} onChange={setStdPrice} suffix="만원" placeholder="미입력 시 취득가 사용" note="공시가 1억↓ 중과제외·증여 3억 판정용"/>
       {isHouse&&acqType==="sale"&&<Radio label="취득 후 주택 수" value={own} onChange={sO} options={[{value:"1",label:"1주택"},{value:"2",label:"2주택"},{value:"3",label:"3주택"},{value:"4",label:"4주택+"}]}/>}
-      {isHouse&&(acqType==="sale"||acqType==="gift")&&<Tog label="조정대상지역" value={reg} onChange={sR} options={[{value:"adj",label:"조정대상지역"},{value:"non",label:"비조정지역"}]}/>}
-      {isHouse&&acqType==="sale"&&<Tog label="생애최초 구입자" value={isFirst} onChange={sFirst} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (12억↓, 200만원 감면)"}]}/>}
-      {isHouse&&acqType==="sale"&&isFirst==="yes"&&<Tog label="인구감소지역" value={isRural} onChange={sRural} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (감면한도 300만)"}]}/>}
+      <div style={{display:"flex",flexWrap:"wrap",gap:12,marginBottom:10}}>
+        {showCorp&&<label style={{display:"flex",alignItems:"center",gap:6,fontSize:13,cursor:"pointer"}}><input type="checkbox" checked={corporation} onChange={e=>setCorporation(e.target.checked)} style={{width:18,height:18}}/> 법인</label>}
+        {showFirstDist&&<label style={{display:"flex",alignItems:"center",gap:6,fontSize:13,cursor:"pointer"}}><input type="checkbox" checked={firstDistribution} onChange={e=>setFirstDistribution(e.target.checked)} style={{width:18,height:18}}/> 임대사업자 최초분양</label>}
+      </div>
+      <div style={{display:"flex",flexWrap:"wrap",gap:12,marginBottom:10}}>
+        {showConArea&&<label style={{display:"flex",alignItems:"center",gap:6,fontSize:13,cursor:"pointer"}}><input type="checkbox" checked={conArea} onChange={e=>setConArea(e.target.checked)} style={{width:18,height:18}}/> 조정대상지역</label>}
+        {showMetro&&<label style={{display:"flex",alignItems:"center",gap:6,fontSize:13,cursor:"pointer"}}><input type="checkbox" checked={metro} onChange={e=>{setMetro(e.target.checked);if(e.target.checked)setPopulationDecline(false)}} style={{width:18,height:18}}/> 수도권</label>}
+        {showPopDecline&&<label style={{display:"flex",alignItems:"center",gap:6,fontSize:13,cursor:"pointer"}}><input type="checkbox" checked={populationDecline} onChange={e=>{setPopulationDecline(e.target.checked);if(e.target.checked)setMetro(false)}} style={{width:18,height:18}}/> 인구감소지역</label>}
+        {showHeavyExclude&&<label style={{display:"flex",alignItems:"center",gap:6,fontSize:13,cursor:"pointer"}}><input type="checkbox" checked={heavyTaxExclude} onChange={e=>setHeavyTaxExclude(e.target.checked)} style={{width:18,height:18}}/> 중과 배제</label>}
+        {showSpouseChild&&<label style={{display:"flex",alignItems:"center",gap:6,fontSize:13,cursor:"pointer"}}><input type="checkbox" checked={spouseChildGive} onChange={e=>setSpouseChildGive(e.target.checked)} style={{width:18,height:18}}/> 1주택자 배우자·직계비속 증여</label>}
+      </div>
+      <div style={{display:"flex",flexWrap:"wrap",gap:12,marginBottom:14}}>
+        {showFirstOfLife&&<label style={{display:"flex",alignItems:"center",gap:6,fontSize:13,cursor:"pointer"}}><input type="checkbox" checked={firstOfLife} onChange={e=>setFirstOfLife(e.target.checked)} style={{width:18,height:18}}/> 생애최초 구입</label>}
+        {showCultivation&&<label style={{display:"flex",alignItems:"center",gap:6,fontSize:13,cursor:"pointer"}}><input type="checkbox" checked={cultivation} onChange={e=>setCultivation(e.target.checked)} style={{width:18,height:18}}/> 2년 이상 경작</label>}
+      </div>
       {isHouse&&acqType==="sale"&&n===2&&<Tog label="일시적 2주택" value={isTempTwo} onChange={sTT} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (3년 내 처분)"}]}/>}
-      {isHouse&&acqType==="gift"&&<Tog label="1세대1주택자 배우자·직계 간 증여" value={giftDirect} onChange={sGD} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (중과 제외)"}]}/>}
       {isHouse&&acqType==="inherit"&&<Tog label="무주택가구 상속" value={inheritNone} onChange={sIN} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (0.8% 특례)"}]}/>}
       {tempTwo&&<div style={{padding:"10px 14px",background:"#FFF8E1",border:"1px solid #FFE082",borderRadius:10,fontSize:12,color:"#F57F17",marginTop:8,lineHeight:1.6}}>종전주택을 신규취득일로부터 3년 이내 처분해야 일반세율이 적용됩니다.</div>}
-      {acqType==="gift"&&giftDirect==="yes"&&<div style={{padding:"10px 14px",background:"#E3FCEF",border:"1px solid #57D9A3",borderRadius:10,fontSize:12,color:"#006644",marginTop:8,lineHeight:1.6}}>1세대 1주택자의 배우자·직계존비속 간 증여는 중과 대상에서 제외됩니다.</div>}
-      {lowVal&&<div style={{padding:"10px 14px",background:"#E3FCEF",border:"1px solid #57D9A3",borderRadius:10,fontSize:12,color:"#006644",marginTop:8,lineHeight:1.6}}>공시가격 1억원 이하 주택은 다주택이어도 중과가 제외됩니다.</div>}
-      {isRural==="yes"&&<div style={{padding:"10px 14px",background:"#DEEBFF",border:"1px solid #0747A6",borderRadius:10,fontSize:12,color:"#0747A6",marginTop:8,lineHeight:1.6}}>인구감소지역 생애최초 감면 한도는 300만원입니다.</div>}
-      {isFirst==="yes"&&!isFirstHomeBenefit&&<div style={{padding:"12px 16px",background:"#FFEBE6",border:"1px solid #FFBDAD",borderRadius:10,fontSize:13,color:"#DE350B",marginTop:8,lineHeight:1.6}}>⚠️ 생애최초 취득세 감면 혜택이 종료되었습니다 (2028.12.31 만료).</div>}
+      {spouseChildGive&&acqType==="gift"&&<div style={{padding:"10px 14px",background:"#E3FCEF",border:"1px solid #57D9A3",borderRadius:10,fontSize:12,color:"#006644",marginTop:8,lineHeight:1.6}}>1세대 1주택자의 배우자·직계존비속 간 증여는 중과 대상에서 제외됩니다.</div>}
+      {lowVal&&isHouse&&<div style={{padding:"10px 14px",background:"#E3FCEF",border:"1px solid #57D9A3",borderRadius:10,fontSize:12,color:"#006644",marginTop:8,lineHeight:1.6}}>공시가격 1억원 이하 주택은 다주택이어도 중과가 제외됩니다.</div>}
+      {populationDecline&&<div style={{padding:"10px 14px",background:"#DEEBFF",border:"1px solid #0747A6",borderRadius:10,fontSize:12,color:"#0747A6",marginTop:8,lineHeight:1.6}}>인구감소지역 생애최초 감면 한도는 300만원입니다.</div>}
+      {firstOfLife&&!isFirstHomeBenefit&&<div style={{padding:"12px 16px",background:"#FFEBE6",border:"1px solid #FFBDAD",borderRadius:10,fontSize:13,color:"#DE350B",marginTop:8,lineHeight:1.6}}>⚠️ 생애최초 취득세 감면 혜택이 종료되었습니다 (2028.12.31 만료).</div>}
     </div>
     <RP title={"예상 취득 비용"} total={total} sub={rateLabel}
       items={[{l:"과세표준",v:fW(pW)},{l:"취득세",v:fW(ac)},{l:"지방교육세",v:fW(ed)},{l:"농어촌특별세 (85㎡↑)",v:fm>0?fW(fm):"면제"},{l:"인지세·증지대",v:fW(st)}].concat(firstDed>0?[{l:"생애최초 감면",v:"-"+fW(firstDed)}]:[])}/>
