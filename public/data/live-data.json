@@ -1095,6 +1095,12 @@
     {
       "date": "2026.04.05",
       "category": "전체",
+      "title": "주담대 한도 규제 반영: 15억이하6억/25억이하4억/초과2억 + 다주택금지",
+      "desc": "주담대 한도 규제 반영: 15억이하6억/25억이하4억/초과2억 + 다주택금지"
+    },
+    {
+      "date": "2026.04.05",
+      "category": "전체",
       "title": "PageSpeed 최적화: 폰트3웨이트+NotoSans삭제+robots수정+isMo에러+접근성",
       "desc": "PageSpeed 최적화: 폰트3웨이트+NotoSans삭제+robots수정+isMo에러+접근성"
     },
