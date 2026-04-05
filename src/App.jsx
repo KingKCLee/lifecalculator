@@ -338,9 +338,9 @@ function Empty({icon,msg}){return (<div style={{background:P.lt,borderRadius:20,
 /* ═══ 계산기 ═══ */
 
 function CalcAcq({isMo=false}){
-  const[acqType,sAT]=useState("sale");const[realType,sRT]=useState("house");const[price,sP]=useState("12500");const[own,sO]=useState("1");const[area,sA]=useState("84");const[reg,sR]=useState("adj");const[isFirst,sFirst]=useState("no");const[isTempTwo,sTT]=useState("no");const[isLowVal,sLV]=useState("no");const[isRural,sRural]=useState("no");const[giftDirect,sGD]=useState("no");const[inheritNone,sIN]=useState("no");
+  const[acqType,sAT]=useState("sale");const[realType,sRT]=useState("house");const[areaType,sAreaType]=useState("85");const[price,sP]=useState("12500");const[stdPrice,setStdPrice]=useState("");const[own,sO]=useState("1");const[reg,sR]=useState("adj");const[isFirst,sFirst]=useState("no");const[isTempTwo,sTT]=useState("no");const[isRural,sRural]=useState("no");const[giftDirect,sGD]=useState("no");const[inheritNone,sIN]=useState("no");
   const today=new Date();const firstHomeBenefitEnd=new Date('2028-12-31');const isFirstHomeBenefit=today<firstHomeBenefitEnd;
-  const pW=tW(price);const n=parseInt(own);const isAdj=reg==="adj";const lowVal=isLowVal==="yes"&&pW<=1e8;const tempTwo=n===2&&isTempTwo==="yes";
+  const pW=tW(price);const stdW=tW(stdPrice)||pW;const n=parseInt(own);const isAdj=reg==="adj";const lowVal=stdW<=1e8;const tempTwo=n===2&&isTempTwo==="yes";const baseAmount=Math.max(pW,stdW);
   const isHouse=realType==="house";
   let r=0.01,rateLabel="";
   if(!isHouse){
@@ -378,7 +378,7 @@ function CalcAcq({isMo=false}){
     else if(n>=4){r=0.12;rateLabel="4주택+ 12%";}
   }
   else if(acqType==="gift"){
-    if(isAdj&&pW>=3e8&&giftDirect==="no"){r=0.12;rateLabel="증여 중과(조정+3억↑) 12%";}
+    if(isAdj&&stdW>=3e8&&giftDirect==="no"){r=0.12;rateLabel="증여 중과(조정+공시3억↑) 12%";}
     else{r=0.035;rateLabel=giftDirect==="yes"?"증여 직계 3.5%":"증여 3.5%";}
   }
   else if(acqType==="inherit"){
@@ -392,12 +392,14 @@ function CalcAcq({isMo=false}){
   let ed;
   if(isHeavy){ed=Math.round(pW*0.004);}
   else{ed=Math.round(ac*0.1);}
-  const areaV=parseInt(area)||0;
+  const isBig=areaType==="big";
   let farmRate=0;
-  if(areaV>85){
+  if(isBig){
     if(r>=0.12)farmRate=0.01;
     else if(r>=0.08)farmRate=0.006;
     else farmRate=0.002;
+  }else if(!isHouse&&realType!=="officetel"){
+    farmRate=0.002;
   }
   const fm=Math.round(pW*farmRate);
   let st=0;if(pW>30e8)st=500000;else if(pW>10e8)st=350000;else if(pW>1e8)st=150000;
@@ -407,20 +409,28 @@ function CalcAcq({isMo=false}){
   return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start"}}>
     <div>
       <h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>🏢 취득세 시뮬레이션</h3>
-      <Sel label="취득 유형" value={acqType} onChange={sAT} options={[{value:"sale",label:"매매 (유상취득)"},{value:"gift",label:"증여 (무상취득)"},{value:"inherit",label:"상속"},{value:"newbuild",label:"원시취득 (신축)"},{value:"corp",label:"법인 매매"}]}/>
+      <div style={{marginBottom:16}}>
+        <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>취득 유형</label>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6}}>
+          {[["sale","매매"],["gift","증여"],["inherit","상속"],["newbuild","원시"]].map(([v,l])=>(<button key={v} onClick={()=>sAT(v)} style={{padding:"10px",border:acqType===v?"2px solid #0747A6":"1.5px solid #dfe1e6",borderRadius:8,background:acqType===v?"#deebff":"#fff",color:acqType===v?"#0747A6":"#505f79",fontWeight:acqType===v?700:400,fontSize:isMo?14:13,cursor:"pointer",fontFamily:"inherit"}}>{l}</button>))}
+        </div>
+      </div>
       <div style={{marginBottom:16}}>
         <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>부동산 유형</label>
         <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6}}>
           {[["house","주택"],["officetel","오피스텔"],["farmLand","농지"],["building","그 외"]].map(([v,l])=>(<button key={v} onClick={()=>sRT(v)} style={{padding:"10px",border:realType===v?"2px solid #0747A6":"1.5px solid #dfe1e6",borderRadius:8,background:realType===v?"#deebff":"#fff",color:realType===v?"#0747A6":"#505f79",fontWeight:realType===v?700:400,fontSize:isMo?14:13,cursor:"pointer",fontFamily:"inherit"}}>{l}</button>))}
         </div>
       </div>
+      {(realType==="house"||realType==="officetel")&&<div style={{marginBottom:16}}>
+        <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>전용면적</label>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6}}>
+          {[["40","40㎡ 이하"],["60","60㎡ 이하"],["85","85㎡ 이하"],["big","85㎡ 초과"]].map(([v,l])=>(<button key={v} onClick={()=>sAreaType(v)} style={{padding:"10px",border:areaType===v?"2px solid #0747A6":"1.5px solid #dfe1e6",borderRadius:8,background:areaType===v?"#deebff":"#fff",color:areaType===v?"#0747A6":"#505f79",fontWeight:areaType===v?700:400,fontSize:isMo?13:12,cursor:"pointer",fontFamily:"inherit"}}>{l}</button>))}
+        </div>
+      </div>}
       <Slider label={acqType==="gift"?"시가인정액":acqType==="inherit"?"시가표준액":acqType==="newbuild"?"건축 원가":"취득가액"} value={price} onChange={sP} min={1000} max={500000} step={500}/>
+      <Inp label="시가표준액 (공시가격)" value={stdPrice} onChange={setStdPrice} suffix="만원" placeholder="미입력 시 취득가 사용" note="공시가 1억↓ 중과제외·증여 3억 판정용"/>
       {isHouse&&acqType==="sale"&&<Radio label="취득 후 주택 수" value={own} onChange={sO} options={[{value:"1",label:"1주택"},{value:"2",label:"2주택"},{value:"3",label:"3주택"},{value:"4",label:"4주택+"}]}/>}
       {isHouse&&(acqType==="sale"||acqType==="gift")&&<Tog label="조정대상지역" value={reg} onChange={sR} options={[{value:"adj",label:"조정대상지역"},{value:"non",label:"비조정지역"}]}/>}
-      {isHouse&&acqType==="sale"&&<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?8:12}}>
-        <Inp label="전용면적 (㎡)" value={area} onChange={sA} note="85㎡ 초과 시 농특세"/>
-        <Tog label="공시가 1억↓" value={isLowVal} onChange={sLV} options={[{value:"no",label:"아니오"},{value:"yes",label:"예"}]}/>
-      </div>}
       {isHouse&&acqType==="sale"&&<Tog label="생애최초 구입자" value={isFirst} onChange={sFirst} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (12억↓, 200만원 감면)"}]}/>}
       {isHouse&&acqType==="sale"&&isFirst==="yes"&&<Tog label="인구감소지역" value={isRural} onChange={sRural} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (감면한도 300만)"}]}/>}
       {isHouse&&acqType==="sale"&&n===2&&<Tog label="일시적 2주택" value={isTempTwo} onChange={sTT} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (3년 내 처분)"}]}/>}
