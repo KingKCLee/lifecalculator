@@ -1,5 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 
+// 중앙 집중 세율·요율 관리. live-data.json의 rates에서 로드됨. 로드 전 빈 객체 → 각 계산기는 하드코딩 fallback 사용.
+// 점진적 교체: 각 계산기가 RATES.xxx ?? 하드코딩값 형태로 참조하도록 변환.
+let RATES = {};
+
 function useIsMobile(bp=768){
   const[m,setM]=useState(typeof window!=="undefined"&&window.innerWidth<=bp);
   useEffect(()=>{
@@ -1761,7 +1765,7 @@ export default function App(){
   const saveHistory=(cId,name,total)=>{if(!total||total<=0)return;const item={id:cId,name,total,time:Date.now()};setCalcHistory(prev=>{const updated=[item,...prev.filter(h=>h.id!==cId)].slice(0,10);try{localStorage.setItem('calc_history',JSON.stringify(updated))}catch{}return updated;});};
   const[showAllLog,setShowAllLog]=useState(false);const[hoverCat,setHoverCat]=useState(null);
   const[liveData,setLiveData]=useState(null);
-  useEffect(()=>{fetch('/data/live-data.json?t='+Date.now()).then(r=>r.json()).then(d=>setLiveData(d)).catch(()=>{});},[]);
+  useEffect(()=>{fetch('/data/live-data.json?t='+Date.now()).then(r=>r.json()).then(d=>{setLiveData(d);RATES=d?.rates||{};}).catch(()=>{});},[]);
   const filtered=CL.filter(c=>c.c===cat);
   const navigateCalc=(catId,calcId)=>{setCat(catId);setCalc(calcId);setPage("calc");window.location.hash='/'+(SLUGS[calcId]||calcId);window.scrollTo(0,0);const info=CL.find(c=>c.id===calcId);if(info)saveHistory(calcId,info.l,1);};
   const navigateHome=()=>{setPage("home");window.location.hash='';window.scrollTo(0,0);};
