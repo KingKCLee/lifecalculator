@@ -1584,8 +1584,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           <span style={{fontWeight:600,color:"#172B4D"}}>{CL.find(c=>c.id===calc)?.l}</span>
         </div>
         <h1 style={{fontSize:22,fontWeight:800,color:P.tx,margin:0,padding:"4px 16px 8px",letterSpacing:-1}}>{CL.find(c=>c.id===calc)?.l||catInfo?.l+" 계산기"}</h1>
-        <div className="sub-tabs" style={{display:"flex",gap:6,overflowX:"auto",WebkitOverflowScrolling:"touch",padding:"4px 16px 12px",scrollbarWidth:"none"}}>
-          {filtered.map(c=>(<button key={c.id} onClick={()=>navigateCalc(cat,c.id)} style={{padding:"8px 14px",border:calc===c.id?"none":"1px solid #dfe1e6",borderRadius:20,background:calc===c.id?"#0747A6":"transparent",color:calc===c.id?"#fff":"#505f79",fontSize:13,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0}}>{c.l}</button>))}
+        <div className="sub-tabs" style={{display:"flex",gap:6,flexWrap:"wrap",padding:"4px 16px 12px"}}>
+          {filtered.map(c=>(<button key={c.id} onClick={()=>navigateCalc(cat,c.id)} style={{padding:"6px 12px",border:calc===c.id?"none":"1px solid #dfe1e6",borderRadius:20,background:calc===c.id?"#0747A6":"transparent",color:calc===c.id?"#fff":"#505f79",fontSize:12,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0}}>{c.l}</button>))}
         </div>
         <MobileCalcWrapper><Comp isMo={true}/></MobileCalcWrapper>
         <div style={{padding:"0 12px 24px"}}>
@@ -1609,8 +1609,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           <div style={{marginBottom:24}}>
             <h1 style={{fontSize:28,fontWeight:800,color:P.tx,margin:0,letterSpacing:-1}}>{CL.find(c=>c.id===calc)?.l||catInfo?.l+" 계산기"}</h1>
             <p style={{fontSize:14,color:P.mt,margin:"4px 0 16px"}}>2026년 최신 세법 기반 정밀 계산</p>
-            <div className="sub-tabs" style={{display:"flex",gap:6,flexWrap:"nowrap",overflowX:"auto",WebkitOverflowScrolling:"touch"}}>
-              {filtered.map(c=>(<button key={c.id} onClick={()=>navigateCalc(cat,c.id)} style={{padding:"8px 20px",border:calc===c.id?"none":`1px solid ${P.bd}`,borderRadius:20,background:calc===c.id?P.pri:"transparent",color:calc===c.id?"#fff":P.mt,fontSize:isMo?12:13,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0,minHeight:44}}>{c.l}</button>))}
+            <div className="sub-tabs" style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+              {filtered.map(c=>(<button key={c.id} onClick={()=>navigateCalc(cat,c.id)} style={{padding:"8px 16px",border:calc===c.id?"none":`1px solid ${P.bd}`,borderRadius:20,background:calc===c.id?P.pri:"transparent",color:calc===c.id?"#fff":P.mt,fontSize:13,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0,marginBottom:4}}>{c.l}</button>))}
             </div>
           </div>
           <div className="calc-container" style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:isMo?16:32,marginBottom:24,boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
