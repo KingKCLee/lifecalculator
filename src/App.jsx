@@ -1410,8 +1410,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 @media(max-width:480px){.insights-grid{grid-template-columns:1fr!important}.cat-cards{grid-template-columns:1fr!important}}
 @media(min-width:769px){.hide-pc{display:none!important}}
 @media(max-width:768px){.hide-mo{display:none!important}}
-@media(max-width:768px){div{grid-template-columns:1fr!important}}
-@media(max-width:768px){*[style]{grid-template-columns:1fr!important}}
 `}</style>
 
     {/* 상단 네비게이션 */}
