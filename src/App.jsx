@@ -490,17 +490,17 @@ function CalcAcq({isMo=false}){
       {firstOfLife&&!isFirstHomeBenefit&&<div style={{padding:"12px 16px",background:"#FFEBE6",border:"1px solid #FFBDAD",borderRadius:10,fontSize:13,color:"#DE350B",marginTop:8,lineHeight:1.6}}>⚠️ 생애최초 취득세 감면 혜택이 종료되었습니다 (2028.12.31 만료).</div>}
     </div>
     <div>
-      {pW>0&&<div>
+      {pW>0&&<div style={{background:"#deebff",borderRadius:12,padding:20}}>
         <h4 style={{fontWeight:800,marginBottom:16,fontSize:16,color:P.tx}}>계산 결과</h4>
-        <table style={{width:"100%",borderCollapse:"collapse",fontSize:isMo?14:13}}>
+        <table style={{width:"100%",borderCollapse:"collapse",fontSize:isMo?14:13,background:"#fff",borderRadius:8,overflow:"hidden"}}>
           <thead><tr style={{background:"#f4f5f7",borderBottom:"2px solid #dfe1e6"}}>
             <th style={{padding:10,textAlign:"left",width:"10%"}}>#</th><th style={{padding:10,textAlign:"left",width:"30%"}}>적요</th><th style={{padding:10,textAlign:"right",width:"30%"}}>값</th><th style={{padding:10,textAlign:"left",width:"30%"}}>비고</th>
           </tr></thead>
-          <tbody>{resultItems.map((item,i)=>(<tr key={i} style={{borderBottom:"1px solid #e8eaed",background:item.l.includes("합계")?"#deebff":"transparent"}}>
+          <tbody>{resultItems.map((item,i)=>(<tr key={i} style={{borderBottom:"1px solid #e8eaed",background:item.l.includes("합계")?"#b3d4fc":"#fff"}}>
             <td style={{padding:10,color:"#6b778c"}}>{i+1}</td><td style={{padding:10,fontWeight:item.l.includes("합계")?700:400}}>{item.l}</td><td style={{padding:10,textAlign:"right",fontWeight:700,color:item.l.includes("합계")?"#0747A6":"#172B4D"}}>{item.v}</td><td style={{padding:10,fontSize:12,color:"#6b778c"}}>{item.note||""}</td>
           </tr>))}</tbody>
         </table>
-        {basisText&&<div style={{background:"#e3f2fd",borderRadius:10,padding:16,marginTop:16,fontSize:12,lineHeight:1.8,whiteSpace:"pre-line"}}><b>계산결과 해설</b><br/>{basisText}</div>}
+        {basisText&&<div style={{background:"#cce5ff",borderRadius:10,padding:16,marginTop:16,fontSize:12,lineHeight:1.8,whiteSpace:"pre-line"}}><b>계산결과 해설</b><br/>{basisText}</div>}
       </div>}
       <div style={{marginTop:24,background:"#f8f9fc",borderRadius:10,padding:16}}>
         <h5 style={{fontWeight:700,marginBottom:8,fontSize:13,color:P.tx}}>주택 취득세율표</h5>
