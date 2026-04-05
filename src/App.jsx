@@ -920,9 +920,8 @@ function MobileCalcWrapper({children}){
       .mobile-calc-wrap *{box-sizing:border-box!important}
       .mobile-calc-wrap>div{display:flex!important;flex-direction:column!important;gap:16px!important;max-width:100%!important}
       .mobile-calc-wrap>div>div{max-width:100%!important;overflow:hidden!important}
-      .mobile-calc-wrap div[style*="grid-template-columns"]{display:flex!important;flex-direction:column!important;gap:12px!important}
       .mobile-calc-wrap input:not([type="range"]),.mobile-calc-wrap select{width:100%!important;max-width:100%!important;font-size:16px!important;padding:14px 12px!important}
-      .mobile-calc-wrap button{max-width:100%!important;min-height:48px!important;font-size:14px!important;line-height:1.4!important;overflow:visible!important;white-space:normal!important;height:auto!important;padding:12px!important;word-break:keep-all!important}
+      .mobile-calc-wrap button{max-width:100%!important;min-height:44px!important;font-size:14px!important;line-height:1.4!important;overflow:visible!important;white-space:nowrap!important;height:auto!important;padding:10px 4px!important;word-break:keep-all!important}
       .mobile-calc-wrap h3{font-size:20px!important}
       .mobile-calc-wrap label{font-size:14px!important}
       .mobile-calc-wrap input[type="range"]{width:100%!important}
