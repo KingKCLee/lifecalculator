@@ -1575,6 +1575,24 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 
     </>):(
     <>
+      {isMo?(<div style={{padding:"8px 0",background:"#fff"}}>
+        <div style={{padding:"8px 16px",fontSize:12,color:"#6b778c"}}>
+          <span onClick={navigateHome} style={{cursor:"pointer",color:"#0747A6"}}>홈</span>
+          <span> › </span>
+          <span onClick={()=>{const first=CL.find(c=>c.c===cat);if(first)navigateCalc(cat,first.id);}} style={{cursor:"pointer",color:"#0747A6"}}>{catInfo?.l}</span>
+          <span> › </span>
+          <span style={{fontWeight:600,color:"#172B4D"}}>{CL.find(c=>c.id===calc)?.l}</span>
+        </div>
+        <h1 style={{fontSize:22,fontWeight:800,color:P.tx,margin:0,padding:"4px 16px 8px",letterSpacing:-1}}>{CL.find(c=>c.id===calc)?.l||catInfo?.l+" 계산기"}</h1>
+        <div className="sub-tabs" style={{display:"flex",gap:6,overflowX:"auto",WebkitOverflowScrolling:"touch",padding:"4px 16px 12px",scrollbarWidth:"none"}}>
+          {filtered.map(c=>(<button key={c.id} onClick={()=>navigateCalc(cat,c.id)} style={{padding:"8px 14px",border:calc===c.id?"none":"1px solid #dfe1e6",borderRadius:20,background:calc===c.id?"#0747A6":"transparent",color:calc===c.id?"#fff":"#505f79",fontSize:13,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0}}>{c.l}</button>))}
+        </div>
+        <MobileCalcWrapper><Comp isMo={true}/></MobileCalcWrapper>
+        <div style={{padding:"0 12px 24px"}}>
+          {SEO_CONTENT[calc]&&<div style={{padding:"20px 16px",background:"#fff",borderRadius:12,border:"1px solid #dfe1e6",marginBottom:12}}><div className="seo" dangerouslySetInnerHTML={{__html:SEO_CONTENT[calc]}} style={{fontSize:14,color:"#172B4D",lineHeight:1.8}}/></div>}
+          <EduContent calc={calc} gTab={gTab}/>
+        </div>
+      </div>):(
       <div className="calc-grid page-layout" style={{maxWidth:1200,margin:"0 auto",padding:isMo?"16px":"32px 24px",display:"grid",gridTemplateColumns:"220px minmax(0,1fr) 280px",gap:isMo?16:24,alignItems:"start"}}>
         {/* 좌측: 학습센터 사이드바 */}
         <EduSidebar calc={calc} gTab={gTab} setGTab={setGTab}/>
@@ -1635,10 +1653,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
         <div className="sidebar-right" style={{position:isMo?"static":"sticky",top:80}}>
           <EduContent calc={calc} gTab={gTab}/>
         </div>
-      </div>
+      </div>)}
 
       {/* Insights 섹션 */}
-      <div style={{background:P.bg,padding:"48px 24px"}}>
+      {!isMo&&<div style={{background:P.bg,padding:"48px 24px"}}>
         <div style={{fontSize:20,fontWeight:700,textAlign:"center",color:P.tx,marginBottom:24}}>📘 학습센터 인사이트</div>
         <div className="insights-grid" style={{maxWidth:1200,margin:"0 auto",display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:16}}>
           {[{n:"2020-2026",t:"규제 로드맵",d:"부동산 세제 변화 타임라인"},{n:"0.5%-12%",t:"세율 범위 가이드",d:"취득세부터 종부세까지 세율 안내"},{n:"150+",t:"용어 사전",d:"부동산 전문 용어 모음"},{n:"39개",t:"전문 계산기",d:"세금·대출·비용 종합 계산"}].map((c,i)=>(
@@ -1649,7 +1667,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
             </div>
           ))}
         </div>
-      </div>
+      </div>}
     </>)}
 
     {/* 업데이트 내역 */}
