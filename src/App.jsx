@@ -336,10 +336,11 @@ function Empty({icon,msg}){return (<div style={{background:P.lt,borderRadius:20,
 
 function CalcAcq(){
   const[price,sP]=useState("12500");const[own,sO]=useState("1");const[area,sA]=useState("84");const[reg,sR]=useState("spec");const[isFirst,sFirst]=useState("no");const[isTempTwo,sTT]=useState("no");
+  const today=new Date();const firstHomeBenefitEnd=new Date('2028-12-31');const isFirstHomeBenefit=today<firstHomeBenefitEnd;
   const pW=tW(price);let r=0.01;const n=parseInt(own),isR=reg!=="non";
   if(n===2&&isTempTwo==="yes"){r=pW<=6e8?0.01:pW<=9e8?Math.max(0.01,(pW*2/3e8-3)/100):0.03;}
   else if(n===1||(n===2&&!isR)){r=pW<=6e8?0.01:pW<=9e8?Math.max(0.01,(pW*2/3e8-3)/100):0.03;}else if(n===2&&isR){r=0.08;}else if(n>=3){r=isR?0.12:0.08;}
-  r=Math.max(0.01,Math.min(r,0.12));const ac=pW*r,ed=ac*.1;const isHeavy=r>=0.08;const fm=isHeavy?pW*.002:(parseInt(area)>85&&pW>6e8?pW*.002:0);const st=pW>1e9?350000:pW>5e8?150000:70000;const firstDed=isFirst==="yes"&&n===1?Math.min(ac,2000000):0;const total=ac+ed+fm+st-firstDed;
+  r=Math.max(0.01,Math.min(r,0.12));const ac=pW*r,ed=ac*.1;const isHeavy=r>=0.08;const fm=isHeavy?pW*.002:(parseInt(area)>85&&pW>6e8?pW*.002:0);const st=pW>1e9?350000:pW>5e8?150000:70000;const firstDed=isFirst==="yes"&&n===1&&isFirstHomeBenefit?Math.min(ac,2000000):0;const total=ac+ed+fm+st-firstDed;
   return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start"}}>
     <div>
       <h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>🏢 취득세 시뮬레이션</h3>
@@ -349,6 +350,7 @@ function CalcAcq(){
         <Inp label="전용면적 (㎡)" value={area} onChange={sA}/><Sel label="지역 구분" value={reg} onChange={sR} options={[{value:"spec",label:"투기과열지구 (서울 등)"},{value:"adj",label:"조정대상지역"},{value:"non",label:"비규제지역"}]}/>
       </div>
       <Tog label="생애최초 구입자" value={isFirst} onChange={sFirst} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (최대 200만원 감면)"}]}/>
+      {isFirst==="yes"&&!isFirstHomeBenefit&&<div style={{padding:"12px 16px",background:"#FFEBE6",border:"1px solid #FFBDAD",borderRadius:10,fontSize:13,color:"#DE350B",marginTop:8,marginBottom:12,lineHeight:1.6}}>⚠️ 생애최초 취득세 감면 혜택이 종료되었습니다 (2028.12.31 만료).</div>}
       {n===2&&<Tog label="일시적 2주택 (이사 목적)" value={isTempTwo} onChange={sTT} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (3년 내 처분 예정)"}]}/>}
     </div>
     <RP title="예상 취득 비용" total={total} sub={"세율 "+fP(r*100)+" 적용"}
@@ -357,12 +359,18 @@ function CalcAcq(){
 }
 
 function CalcTrans(){
-  const[bp,sBp]=useState("");const[sp,sSp]=useState("");const[ex,sEx]=useState("");const[hy,sHy]=useState("5");const[ly,sLy]=useState("3");const[hm,sHm]=useState("1");const[wasAdj,sWA]=useState("no");
+  const[bp,sBp]=useState("");const[sp,sSp]=useState("");const[ex,sEx]=useState("");const[hy,sHy]=useState("5");const[ly,sLy]=useState("3");const[hm,sHm]=useState("1");const[wasAdj,sWA]=useState("no");const[sellAdj,sSA]=useState("no");
   const b=tW(bp),s=tW(sp),e=tW(ex),g=s-b-e;const hv=parseInt(hy),adjLv=Math.min(parseInt(ly),parseInt(hy)),nv=parseInt(hm);
+  const today=new Date();const moratoriumEnd=new Date('2026-05-10');const isMoratorium=today<moratoriumEnd;const isSellAdj=sellAdj==="yes";
+  let surcharge=0;if(!isMoratorium&&isSellAdj&&nv>=2){surcharge=nv>=3?0.30:0.20;}
   const needResidence=wasAdj==="yes";const is1h=nv===1&&hv>=2&&(!needResidence||adjLv>=2),overLimit=s>12e8;let exempt=is1h&&!overLimit,ltD=0;
   if(!exempt){if(nv===1&&hv>=3)ltD=Math.min(Math.min(hv,15)*.04+Math.min(adjLv,10)*.04,.80);else if(nv>1&&hv>=3)ltD=Math.min(hv*.02,.30);}
+  if(surcharge>0)ltD=0;
   let taxableGain=g;if(is1h&&overLimit){taxableGain=g*(s-12e8)/s;}
-  const tg=exempt?0:Math.max(0,taxableGain*(1-ltD)-2500000),tx=pTx(tg,IB),loc=tx*.1;
+  const tg=exempt?0:Math.max(0,taxableGain*(1-ltD)-2500000);const baseTax=pTx(tg,IB);const surTax=surcharge>0?Math.round(tg*surcharge):0;const tx=baseTax+surTax;const loc=tx*.1;
+  const baseItems=exempt?[{l:"양도차익",v:fW(g)},{l:"비과세 요건",v:"1주택, 2년↑, 12억↓"}]:[{l:"양도차익",v:fW(g)},{l:is1h&&overLimit?"과세 대상 차익 (12억 초과분)":"양도차익",v:is1h&&overLimit?fW(taxableGain):fW(g)},{l:"장기보유특별공제",v:surcharge>0?"중과 배제":fP(ltD*100)},{l:"기본공제",v:"-₩250만"},{l:"과세표준",v:fW(tg)},{l:"기본세율 산출세액",v:fW(baseTax)}];
+  const surItems=surcharge>0?[{l:"다주택 중과세율",v:"+"+(surcharge*100)+"%p (2026.5.10~ 시행)"},{l:"중과 가산세액",v:fW(surTax)}]:[];
+  const finalItems=exempt?baseItems:[...baseItems,...surItems,{l:"양도소득세 합계",v:fW(tx)},{l:"지방소득세 (10%)",v:fW(loc)}];
   return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start"}}>
     <div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>📊 양도소득세 시뮬레이션</h3>
       <Inp label="취득가액 (매입가)" value={bp} onChange={sBp} suffix="만원" placeholder="예: 50000"/>
@@ -372,9 +380,11 @@ function CalcTrans(){
         <Sel label="보유기간" value={hy} onChange={sHy} options={Array.from({length:20},(_,i)=>({value:String(i+1),label:(i+1)+"년"}))}/><Sel label="거주기간" value={ly} onChange={sLy} options={Array.from({length:16},(_,i)=>({value:String(i),label:i+"년"}))}/><Sel label="주택 수" value={hm} onChange={sHm} options={[{value:"1",label:"1주택"},{value:"2",label:"2주택"},{value:"3",label:"3주택+"}]}/>
       </div>
       <Tog label="취득 당시 조정대상지역" value={wasAdj} onChange={sWA} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (2년 거주 필수)"}]}/>
+      {nv>=2&&<Tog label="매도 시점 조정대상지역" value={sellAdj} onChange={sSA} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (다주택 중과 대상)"}]}/>}
+      {isMoratorium&&nv>=2&&isSellAdj&&<div style={{padding:"12px 16px",background:"#FFF8E1",border:"1px solid #FFE082",borderRadius:10,fontSize:13,color:"#F57F17",marginTop:12,lineHeight:1.6}}>⚠️ 현재 다주택 중과가 유예 중입니다 (2026.5.9까지). 유예 종료 후 조정대상지역 {nv}주택은 +{nv>=3?30:20}%p 중과됩니다. 유예 기간 내 매도를 고려하세요.</div>}
+      {!isMoratorium&&surcharge>0&&<div style={{padding:"12px 16px",background:"#FFEBE6",border:"1px solid #FFBDAD",borderRadius:10,fontSize:13,color:"#DE350B",marginTop:12,lineHeight:1.6}}>⚠️ 다주택 중과 적용 중: 조정대상지역 {nv}주택 +{surcharge*100}%p, 장특공제 배제</div>}
     </div>
-    {g>0?<RP title={exempt?"비과세 적용":is1h&&overLimit?"12억 초과분 과세":"양도소득세"} total={exempt?0:tx+loc} sub={exempt?"1세대 1주택 비과세":is1h&&overLimit?"12억 초과분만 과세 · 장특공제 "+fP(ltD*100):"장특공제 "+fP(ltD*100)}
-      items={exempt?[{l:"양도차익",v:fW(g)},{l:"비과세 요건",v:"1주택, 2년↑, 12억↓"}]:[{l:"양도차익",v:fW(g)},{l:is1h&&overLimit?"과세 대상 차익 (12억 초과분)":"양도차익",v:is1h&&overLimit?fW(taxableGain):fW(g)},{l:"장기보유특별공제",v:fP(ltD*100)},{l:"기본공제",v:"-₩250만"},{l:"과세표준",v:fW(tg)},{l:"양도소득세",v:fW(tx)},{l:"지방소득세 (10%)",v:fW(loc)}]}/>
+    {g>0?<RP title={exempt?"비과세 적용":is1h&&overLimit?"12억 초과분 과세":surcharge>0?"다주택 중과 양도세":"양도소득세"} total={exempt?0:tx+loc} sub={exempt?"1세대 1주택 비과세":surcharge>0?"기본세율 + "+(surcharge*100)+"%p 중과":is1h&&overLimit?"12억 초과분만 과세 · 장특공제 "+fP(ltD*100):"장특공제 "+fP(ltD*100)} items={finalItems}/>
     :<Empty icon="📊"/>}
   </div>);
 }
@@ -1699,24 +1709,25 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
         </div>
         <div style={{fontSize:12,color:"#6b778c",background:"#f4f5f7",padding:"6px 14px",borderRadius:20}}>마지막 검증: {UPDATE_LOG[0]?.date}</div>
       </div>
-      {(showAllLog?UPDATE_LOG:UPDATE_LOG.slice(0,1)).map((log,li)=>(
+      {(()=>{const autoAlerts=[];const today=new Date();const policyDates=liveData?.policyDates||{};if(policyDates.transferSurchargeEnd){const endDate=new Date(policyDates.transferSurchargeEnd);const dDay=Math.ceil((endDate-today)/(1000*60*60*24));if(dDay>0&&dDay<=30)autoAlerts.push({date:policyDates.transferSurchargeEnd.replace(/-/g,'.'),cat:"세금",title:"양도세 다주택 중과 유예 해제 D-"+dDay,desc:"조정대상지역 2주택 +20%p, 3주택 +30%p 중과가 "+policyDates.transferSurchargeEnd+"부터 시행됩니다.",urgent:true});else if(dDay<=0&&dDay>-7)autoAlerts.push({date:policyDates.transferSurchargeEnd.replace(/-/g,'.'),cat:"세금",title:"양도세 다주택 중과 시행됨",desc:"조정대상지역 2주택 +20%p, 3주택 +30%p 중과가 시행 중입니다. 계산기에 자동 반영되었습니다.",urgent:true});}if(policyDates.firstHomeBenefitEnd){const endDate=new Date(policyDates.firstHomeBenefitEnd);const dDay=Math.ceil((endDate-today)/(1000*60*60*24));if(dDay>0&&dDay<=90)autoAlerts.push({date:policyDates.firstHomeBenefitEnd.replace(/-/g,'.'),cat:"세금",title:"생애최초 취득세 감면 종료 D-"+dDay,desc:"12억 이하 주택 취득세 최대 200만원 감면 혜택이 "+policyDates.firstHomeBenefitEnd+"에 종료됩니다."});}const autoEntry=autoAlerts.length>0?[{date:"자동 알림",items:autoAlerts,auto:true}]:[];const combinedLog=[...autoEntry,...UPDATE_LOG];return(showAllLog?combinedLog:combinedLog.slice(0,autoEntry.length>0?2:1)).map((log,li)=>(
         <div key={li} style={{marginBottom:24}}>
-          <div style={{fontSize:14,fontWeight:700,color:"#0747A6",marginBottom:12,display:"flex",alignItems:"center",gap:8}}>
-            <div style={{width:8,height:8,borderRadius:"50%",background:"#0747A6"}}/>{log.date}
+          <div style={{fontSize:14,fontWeight:700,color:log.auto?"#DE350B":"#0747A6",marginBottom:12,display:"flex",alignItems:"center",gap:8}}>
+            <div style={{width:8,height:8,borderRadius:"50%",background:log.auto?"#DE350B":"#0747A6"}}/>{log.date}
           </div>
-          <div style={{borderLeft:"2px solid #dfe1e6",marginLeft:3,paddingLeft:20}}>
+          <div style={{borderLeft:"2px solid "+(log.auto?"#FFBDAD":"#dfe1e6"),marginLeft:3,paddingLeft:20}}>
             {log.items.map((item,i)=>(
-              <div key={i} style={{marginBottom:12,padding:"12px 16px",background:"#fff",borderRadius:10,border:"1px solid #dfe1e6"}}>
-                <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:4}}>
+              <div key={i} style={{marginBottom:12,padding:"12px 16px",background:item.urgent?"#FFEBE6":"#fff",borderRadius:10,border:"1px solid "+(item.urgent?"#FFBDAD":"#dfe1e6")}}>
+                <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:4,flexWrap:"wrap"}}>
                   <span style={{fontSize:11,fontWeight:600,color:"#fff",padding:"2px 8px",borderRadius:4,background:item.cat==="세금"?"#0747A6":item.cat==="대출"?"#00875A":item.cat==="비용"?"#FF8B00":item.cat==="기타"?"#6554C0":"#6b778c"}}>{item.cat}</span>
                   <span style={{fontSize:14,fontWeight:700,color:"#172B4D"}}>{item.title}</span>
+                  {item.urgent&&<span style={{display:"inline-block",background:"#FFEBE6",color:"#DE350B",fontSize:11,fontWeight:700,padding:"2px 8px",borderRadius:4,border:"1px solid #FFBDAD"}}>긴급</span>}
                 </div>
-                <div style={{fontSize:13,color:"#6b778c",lineHeight:1.5}}>{item.desc}</div>
+                <div style={{fontSize:13,color:"#505f79",lineHeight:1.5}}>{item.desc}</div>
               </div>
             ))}
           </div>
         </div>
-      ))}
+      ));})()}
       {!showAllLog&&UPDATE_LOG.length>1&&<button onClick={()=>setShowAllLog(true)} style={{display:"block",margin:"16px auto 0",padding:"10px 24px",background:"#fff",border:"1px solid #dfe1e6",borderRadius:8,fontSize:13,color:"#6b778c",cursor:"pointer",fontFamily:"inherit",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.background="#deebff";e.currentTarget.style.color="#0747A6"}} onMouseLeave={e=>{e.currentTarget.style.background="#fff";e.currentTarget.style.color="#6b778c"}}>전체 내역 보기 ({UPDATE_LOG.length}건)</button>}
       {showAllLog&&UPDATE_LOG.length>1&&<button onClick={()=>setShowAllLog(false)} style={{display:"block",margin:"16px auto 0",padding:"10px 24px",background:"#fff",border:"1px solid #dfe1e6",borderRadius:8,fontSize:13,color:"#6b778c",cursor:"pointer",fontFamily:"inherit",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.background="#deebff";e.currentTarget.style.color="#0747A6"}} onMouseLeave={e=>{e.currentTarget.style.background="#fff";e.currentTarget.style.color="#6b778c"}}>접기</button>}
     </div>

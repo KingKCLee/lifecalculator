@@ -3,6 +3,11 @@
   "baseRate": 3.0,
   "baseRateDate": "2026-02-27",
   "convertRate": 5.0,
+  "policyDates": {
+    "transferSurchargeEnd": "2026-05-10",
+    "firstHomeBenefitEnd": "2028-12-31",
+    "dsr3StepStart": "2025-07-01"
+  },
   "econCalendar": {
     "1":[{"day":1,"end":31,"title":"자동차세 연납 신청","cat":"tax","icon":"🚗","color":"#0747A6","calcCat":"life","calcId":"cartax","urgent":true},{"day":9,"title":"미국 고용보고서","cat":"global","icon":"🇺🇸","color":"#6554C0"},{"day":14,"title":"미국 CPI 발표","cat":"global","icon":"🇺🇸","color":"#6554C0"},{"day":16,"title":"한국은행 금통위","cat":"korea","icon":"🏛️","color":"#00875A"},{"day":25,"title":"부가가치세 확정신고","cat":"tax","icon":"📋","color":"#0747A6"},{"day":28,"title":"FOMC 결과 발표","cat":"global","icon":"🇺🇸","color":"#6554C0","urgent":true},{"day":31,"title":"원천세 신고·납부","cat":"tax","icon":"💼","color":"#0747A6"}],
     "2":[{"day":1,"end":28,"title":"연말정산 서류 제출","cat":"tax","icon":"🧾","color":"#0747A6","calcCat":"tax","calcId":"yearend","urgent":true},{"day":7,"title":"미국 고용보고서","cat":"global","icon":"🇺🇸","color":"#6554C0"},{"day":12,"title":"미국 CPI 발표","cat":"global","icon":"🇺🇸","color":"#6554C0"},{"day":27,"title":"한국은행 금통위","cat":"korea","icon":"🏛️","color":"#00875A"},{"day":28,"title":"원천세 신고·납부","cat":"tax","icon":"💼","color":"#0747A6"}],

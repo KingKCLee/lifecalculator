@@ -35,12 +35,19 @@ jobs:
              - 비용·수수료 변경 (중개보수/인지세/채권/법무사)
              - 정부 부동산·세제 정책 발표
              - 한국은행 기준금리 변동
+             - 정책 만료일 변경 확인 (policyDates 필드):
+               · transferSurchargeEnd: 양도세 다주택 중과 유예 해제일 (현재 2026-05-10)
+               · firstHomeBenefitEnd: 생애최초 취득세 감면 만료일 (현재 2028-12-31)
+               · dsr3StepStart: DSR 3단계 시행일
+               국회에서 유예 연장 또는 조기 해제 시 live-data.json의 policyDates 업데이트
 
-          3. 변경사항이 있으면:
-             - live-data.json의 해당 필드 업데이트 (기준금리, 규제지역 등)
-             - src/App.jsx의 계산 로직·GD·TIPS·REGS 수정
-             - UPDATE_LOG 맨 앞에 새 항목 추가
-             - sitemap.xml lastmod 오늘 날짜로 변경
+          3. 변경사항이 있으면 반드시 아래 4가지를 함께 수행할 것:
+             (1) public/data/live-data.json의 해당 데이터 수정 (기준금리, 규제지역, policyDates 등)
+             (2) src/App.jsx의 UPDATE_LOG 맨 앞에 새 항목 추가. 형식:
+                 {date:"YYYY.MM.DD",items:[{cat:"세금|대출|비용|생활|부동산|전체",title:"변경 제목",desc:"상세 내용"}]}
+                 계산 로직·GD·TIPS·REGS 수정이 동반되면 함께 반영.
+             (3) public/feed.xml의 <channel> 맨 위에 새 <item> 추가 + <lastBuildDate> 갱신
+             (4) public/sitemap.xml의 lastmod 오늘 날짜로 변경
 
           4. 생활경제 달력 업데이트:
              - FOMC 회의 일정, 한국은행 금통위 일정, 미국/한국 CPI 발표일, 미국 고용보고서 발표일 검색
