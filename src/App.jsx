@@ -1195,6 +1195,7 @@ function Skeleton({width="100%",height=20,borderRadius=6}){
 }
 
 function IndicatorTicker({liveData}){
+  const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
   const items=liveData?.indicators?.items;if(!items||items.length===0)return null;
   return(<div style={{background:"#0d1117",overflow:"hidden",height:32,display:"flex",alignItems:"center"}}>
     <div style={{display:"flex",gap:isMo?16:32,animation:"ticker 30s linear infinite",whiteSpace:"nowrap",paddingLeft:16}}>
