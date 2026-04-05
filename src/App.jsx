@@ -254,7 +254,7 @@ function Radio({label,value,onChange,options}){
   const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
   return(<div style={{marginBottom:20}}>
     <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:8,letterSpacing:.5,textTransform:"uppercase"}}>{label}</label>
-    <div style={{display:"grid",gridTemplateColumns:isMo?"1fr":`repeat(${Math.min(options.length,3)},1fr)`,gap:10}}>
+    <div className="radio-grid" style={{display:"grid",gridTemplateColumns:isMo?"1fr":`repeat(${Math.min(options.length,3)},1fr)`,gap:10}}>
       {options.map(o=>(<div key={o.value} onClick={()=>onChange(o.value)}
         style={{padding:"14px 12px",borderRadius:12,border:value===o.value?"2px solid #0747A6":"2px solid #dfe1e6",
           background:value===o.value?"#deebff":"#fff",cursor:"pointer",textAlign:"center",
@@ -853,7 +853,7 @@ function useEduData(calcId){
 function EduSidebar({calc:calcId,gTab,setGTab}){
   const{calcLabel,relIds,tips,glossary,regs,relLabels}=useEduData(calcId);
   return(
-    <div className="edu-sidebar" style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:24,position:"sticky",top:80,alignSelf:"start"}}>
+    <div className="edu-sidebar sidebar-left" style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:24,position:"sticky",top:80,alignSelf:"start"}}>
       <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:4}}>
         <span style={{fontSize:18}}>📘</span>
         <span style={{fontSize:14,fontWeight:700,color:P.pri}}>학습 센터</span>
@@ -1156,7 +1156,7 @@ function EconCalendar({liveData,isMo,setCat,setCalc,setPage}){
   const firstDay=new Date(calYear,calMonth-1,1).getDay();const daysInMonth=new Date(calYear,calMonth,0).getDate();
   const weeks=[];let week=Array(7).fill(null);
   for(let d=1;d<=daysInMonth;d++){const dow=(firstDay+d-1)%7;const dayEv=filtered.filter(e=>e.day===d||(e.end&&d>=e.day&&d<=e.end));week[dow]={day:d,events:dayEv};if(dow===6||d===daysInMonth){weeks.push([...week]);week=Array(7).fill(null);}}
-  return(<div style={{maxWidth:1200,margin:"0 auto",padding:"48px 24px"}}>
+  return(<div className="econ-calendar" style={{maxWidth:1200,margin:"0 auto",padding:"48px 24px"}}>
     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20,flexWrap:"wrap",gap:8}}>
       <div><h2 style={{fontSize:isMo?20:24,fontWeight:800,color:"#172B4D",margin:"0 0 4px"}}>생활경제 달력</h2><p style={{fontSize:13,color:"#6b778c",margin:0}}>세금 납부·금통위·FOMC·CPI 주요 일정</p>
         {(()=>{if(!isThis)return null;const today=new Date().getDate();const upcoming=events.filter(e=>e.day>=today&&e.urgent).sort((a,b)=>a.day-b.day)[0];if(!upcoming)return null;const dDay=upcoming.day-today;return(<div style={{display:"inline-flex",alignItems:"center",gap:6,background:dDay<=3?"#FFEBE6":"#FFF8E1",padding:"6px 14px",borderRadius:20,marginTop:8}}><span style={{fontSize:12,fontWeight:800,color:dDay<=3?"#DE350B":"#FF8B00"}}>D-{dDay===0?"DAY":dDay}</span><span style={{fontSize:12,color:"#172B4D",fontWeight:600}}>{upcoming.icon} {upcoming.title}</span></div>);})()}
@@ -1444,37 +1444,28 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 
     {page==="home"?(<>
       {/* 히어로 2컬럼 */}
-      {isMo?(<>
-        <div style={{background:"#f8f9fc",padding:"20px 16px 16px",maxWidth:"100%",overflow:"hidden"}}>
-          <div style={{fontSize:13,fontWeight:700,color:"#0747A6",marginBottom:6}}>대한민국 NO.1 생활 계산기</div>
-          <h1 style={{fontSize:22,fontWeight:900,color:"#172B4D",lineHeight:1.2,margin:"0 0 10px",letterSpacing:-1}}>복잡한 세법·대출,<br/><span style={{color:"#0747A6"}}>10초</span>만에 계산</h1>
-          <CalcSearchBar onSelect={navigateCalc} isMo={true} calcList={CL.map(c=>({id:c.id,name:c.l,keywords:c.l+" "+(DESC[c.id]||""),cat:c.c}))}/>
-          <button onClick={()=>navigateCalc("tax","acquisition")} style={{width:"100%",background:"#0747A6",color:"#fff",border:"none",borderRadius:10,padding:"12px",fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>지금 계산하기 →</button>
-          <div style={{fontSize:11,color:"#6b778c",marginTop:10,textAlign:"center"}}>✅ 매일 자동 검증 · 39가지 무료 계산기</div>
-        </div>
-      </>):(
-      <div style={{background:"#f8f9fc",padding:"80px 24px",maxWidth:"100%",overflow:"hidden"}}>
-        <div style={{maxWidth:1200,margin:"0 auto",display:"grid",gridTemplateColumns:"1fr",gap:48,alignItems:"center"}}>
-          <div>
-            <div style={{display:"inline-block",background:"#0747A6",color:"#fff",fontSize:11,fontWeight:700,padding:"4px 12px",borderRadius:4,letterSpacing:1,marginBottom:20}}>대한민국 NO.1 생활 계산기</div>
-            <h1 style={{fontSize:44,fontWeight:900,color:"#172B4D",lineHeight:1.15,letterSpacing:-2,margin:"0 0 20px"}}>
-              <span>복잡한 세법·대출 규제,</span><br/>
-              <span style={{color:"#0747A6"}}>10초 만에</span><br/>
-              <span>완벽 계산</span>
-            </h1>
-            <p style={{fontSize:16,color:"#505f79",lineHeight:1.7,wordBreak:"keep-all",margin:"0 0 20px"}}>부동산 세금, 대출, 비용부터 연말정산, 연봉 실수령액, 4대보험까지. 39가지 전문 계산기로 일상의 재정 판단을 도와드립니다. 2026년 최신 세법 반영.</p>
-            <CalcSearchBar onSelect={navigateCalc} isMo={false} calcList={CL.map(c=>({id:c.id,name:c.l,keywords:c.l+" "+(DESC[c.id]||""),cat:c.c}))}/>
-            <button onClick={()=>navigateCalc("tax","acquisition")} style={{background:"#0747A6",color:"#fff",border:"none",borderRadius:12,padding:"14px 28px",fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit",transition:"all .2s",boxShadow:"0 4px 14px rgba(7,71,166,0.3)"}} onMouseEnter={e=>{e.currentTarget.style.transform="scale(1.04)";e.currentTarget.style.boxShadow="0 6px 20px rgba(7,71,166,0.4)"}} onMouseLeave={e=>{e.currentTarget.style.transform="scale(1)";e.currentTarget.style.boxShadow="0 4px 14px rgba(7,71,166,0.3)"}}>지금 계산하기 →</button>
-            <div style={{fontSize:13,color:"#6b778c",marginTop:16}}>✅ 매일 자동 검증 · 39가지 무료 계산기</div>
+      <div style={{background:"#f8f9fc",maxWidth:"100%",overflow:"hidden"}}>
+        <div style={{maxWidth:1200,margin:"0 auto",padding:isMo?"20px 16px":"80px 24px"}}>
+          <div className="hero-grid" style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?24:48,alignItems:"center"}}>
+            <div>
+              <div style={{display:"inline-block",background:"#deebff",padding:"6px 16px",borderRadius:20,fontSize:13,fontWeight:700,color:"#0747A6",marginBottom:20}}>대한민국 NO.1 생활 계산기</div>
+              <h1 style={{fontSize:isMo?28:44,fontWeight:900,color:"#172B4D",lineHeight:1.15,letterSpacing:-2,margin:"0 0 16px"}}>복잡한 세법·대출 규제,<br/><span style={{color:"#0747A6"}}>10초 만에</span><br/>완벽 계산</h1>
+              <p style={{fontSize:isMo?14:16,color:"#505f79",lineHeight:1.7,margin:0,wordBreak:"keep-all"}}>부동산 세금, 대출, 비용부터 연말정산, 연봉 실수령액, 4대보험까지. 39가지 전문 계산기로 일상의 재정 판단을 도와드립니다. 2026년 최신 세법 반영.</p>
+            </div>
+            <div style={{background:"#fff",borderRadius:20,padding:isMo?"24px 16px":"40px 32px",border:"1px solid #dfe1e6",boxShadow:"0 4px 20px rgba(0,0,0,0.06)"}}>
+              <div style={{fontSize:isMo?16:18,fontWeight:700,color:"#172B4D",marginBottom:16}}>어떤 계산이 필요하세요?</div>
+              <CalcSearchBar onSelect={navigateCalc} isMo={isMo} calcList={CL.map(c=>({id:c.id,name:c.l,keywords:c.l+" "+(DESC[c.id]||""),cat:c.c}))}/>
+              <button onClick={()=>navigateCalc("tax","acquisition")} style={{width:"100%",padding:"16px",background:"#0747A6",color:"#fff",border:"none",borderRadius:12,fontSize:16,fontWeight:700,cursor:"pointer",marginTop:12,boxShadow:"0 4px 14px rgba(7,71,166,0.3)",fontFamily:"inherit"}}>지금 계산하기 →</button>
+              <div style={{display:"flex",justifyContent:"center",gap:16,marginTop:16,fontSize:13,color:"#505f79"}}><span>✅ 매일 자동 검증</span><span>🔒 39가지 무료</span></div>
+            </div>
           </div>
         </div>
       </div>
-      )}
 
       {/* 모바일 빠른 접근 3x3 그리드 */}
       {isMo&&<div style={{padding:"16px",background:"#fff"}}>
         <div style={{fontSize:16,fontWeight:800,color:"#172B4D",marginBottom:12}}>인기 계산기</div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8}}>
+        <div className="popular-grid" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8}}>
           {[{id:"acquisition",name:"취득세",icon:"🏠",cat:"tax"},{id:"transfer",name:"양도소득세",icon:"💸",cat:"tax"},{id:"netsalary",name:"연봉실수령",icon:"💰",cat:"life"},{id:"dsr",name:"DSR",icon:"📊",cat:"loan"},{id:"yearend",name:"연말정산",icon:"🧾",cat:"tax"},{id:"commission",name:"중개수수료",icon:"🤝",cat:"cost"},{id:"inctax",name:"종합소득세",icon:"💼",cat:"tax"},{id:"pension",name:"국민연금",icon:"👴",cat:"life"},{id:"mortgage",name:"대출이자",icon:"💵",cat:"loan"}].map(item=>(
             <button key={item.id} onClick={()=>navigateCalc(item.cat,item.id)} style={{background:"#f8f9fc",border:"1px solid #e8eaed",borderRadius:12,padding:"16px 8px",textAlign:"center",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:6,fontFamily:"inherit"}}>
               <span style={{fontSize:24}}>{item.icon}</span>
@@ -1512,7 +1503,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
       </div>}
 
       {/* 최근 계산 히스토리 */}
-      {calcHistory.length>0&&<div style={{maxWidth:1200,margin:"0 auto",padding:isMo?"12px 16px":"16px 24px"}}>
+      {calcHistory.length>0&&<div className="recent-calc" style={{maxWidth:1200,margin:"0 auto",padding:isMo?"12px 16px":"16px 24px"}}>
         <div style={{fontSize:13,fontWeight:700,color:"#172B4D",marginBottom:8}}>📌 최근 계산</div>
         <div style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:8,WebkitOverflowScrolling:"touch"}}>
           {calcHistory.slice(0,5).map((h,i)=>{const item=CL.find(c=>c.id===h.id);return(<button key={i} onClick={()=>{if(item)navigateCalc(item.c,h.id)}} style={{padding:"10px 14px",background:"#fff",border:"1px solid #dfe1e6",borderRadius:10,fontSize:12,cursor:"pointer",flexShrink:0,textAlign:"left",minWidth:120,fontFamily:"inherit"}}>
@@ -1530,7 +1521,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 
     </>):(
     <>
-      <div className="calc-grid" style={{maxWidth:1200,margin:"0 auto",padding:isMo?"16px":"32px 24px",display:"grid",gridTemplateColumns:"220px minmax(0,1fr) 280px",gap:isMo?16:24,alignItems:"start"}}>
+      <div className="calc-grid page-layout" style={{maxWidth:1200,margin:"0 auto",padding:isMo?"16px":"32px 24px",display:"grid",gridTemplateColumns:"220px minmax(0,1fr) 280px",gap:isMo?16:24,alignItems:"start"}}>
         {/* 좌측: 학습센터 사이드바 */}
         <EduSidebar calc={calc} gTab={gTab} setGTab={setGTab}/>
 
@@ -1587,7 +1578,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
         </div>
 
         {/* 우측: 가이드 콘텐츠 */}
-        <div style={{position:isMo?"static":"sticky",top:80}}>
+        <div className="sidebar-right" style={{position:isMo?"static":"sticky",top:80}}>
           <EduContent calc={calc} gTab={gTab}/>
         </div>
       </div>

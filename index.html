@@ -7,8 +7,23 @@
       html,body{overflow-x:hidden!important;width:100%!important;max-width:100vw!important;position:relative}
       *{box-sizing:border-box!important}
       @media(max-width:768px){
-        body *{max-width:100vw!important;box-sizing:border-box!important}
-        body div[style]{grid-template-columns:1fr!important}
+        body,html{overflow-x:hidden!important;width:100%!important}
+        *{box-sizing:border-box!important}
+        img,svg,table,canvas{max-width:100%!important}
+        input,select{max-width:100%!important;font-size:16px!important}
+        .hero-grid{display:flex!important;flex-direction:column!important;gap:24px!important}
+        .popular-grid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:10px!important}
+        .page-layout{display:flex!important;flex-direction:column!important}
+        .sidebar-left{display:none!important}
+        .sidebar-right{order:10!important}
+        .calc-layout{display:flex!important;flex-direction:column!important}
+        .calc-inner{display:flex!important;flex-direction:column!important;gap:12px!important}
+        .sub-tabs{overflow-x:auto!important;flex-wrap:nowrap!important;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+        .sub-tabs::-webkit-scrollbar{display:none}
+        .sub-tabs button{flex-shrink:0!important}
+        .radio-grid{display:flex!important;flex-direction:column!important;gap:8px!important}
+        .econ-calendar{display:none!important}
+        .recent-calc{display:none!important}
       }
     </style>
     <!-- Google Analytics 4 -->
