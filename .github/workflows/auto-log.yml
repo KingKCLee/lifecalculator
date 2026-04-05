@@ -6,11 +6,14 @@ on:
       - 'src/**'
       - 'public/data/**'
       - 'index.html'
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
 
 jobs:
   log:
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, '자동')"
+    if: "github.event_name != 'push' || !contains(github.event.head_commit.message, '자동')"
     permissions:
       contents: write
     steps:
@@ -18,7 +21,30 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Update lastVerified (scheduled only)
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        run: |
+          python3 << 'PYEOF'
+          import json, os
+          from datetime import datetime, timezone, timedelta
+          kst = timezone(timedelta(hours=9))
+          today = datetime.now(kst).strftime('%Y.%m.%d')
+          path = "public/data/live-data.json"
+          if not os.path.exists(path):
+            exit(0)
+          with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+          if data.get("lastVerified") == today:
+            print(f"Already verified today: {today}")
+            exit(0)
+          data["lastVerified"] = today
+          with open(path, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+          print(f"Updated lastVerified to {today}")
+          PYEOF
+
       - name: Generate log
+        if: github.event_name == 'push'
         run: |
           TODAY=$(TZ=Asia/Seoul date +%Y.%m.%d)
           TITLE=$(git log -1 --pretty=format:"%s" --no-merges)
@@ -71,6 +97,7 @@ jobs:
           PYEOF
 
       - name: Update RSS
+        if: github.event_name == 'push'
         run: |
           TITLE=$(git log -1 --pretty=format:"%s" --no-merges)
           TODAY_RSS=$(TZ=Asia/Seoul date -R)
@@ -111,4 +138,8 @@ jobs:
           git config user.name "Auto Logger"
           git config user.email "auto@lifecalculator.com"
           git add public/data/live-data.json public/feed.xml
-          git diff --staged --quiet || (git commit -m "자동 업데이트 로그 등록" && git push)
+          MSG="자동 업데이트 로그 등록"
+          if [ "${{ github.event_name }}" != "push" ]; then
+            MSG="자동 일일 검증: $(TZ=Asia/Seoul date +%Y-%m-%d)"
+          fi
+          git diff --staged --quiet || (git commit -m "$MSG" && git push)
