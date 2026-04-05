@@ -1095,6 +1095,12 @@
     {
       "date": "2026.04.06",
       "category": "전체",
+      "title": "PDF 저장: window.print()→실제PDF다운로드(jsPDF+html2canvas)",
+      "desc": "PDF 저장: window.print()→실제PDF다운로드(jsPDF+html2canvas)"
+    },
+    {
+      "date": "2026.04.06",
+      "category": "전체",
       "title": "전체 계산기: 입력항목 도움말 툴팁(ⓘ) 추가",
       "desc": "전체 계산기: 입력항목 도움말 툴팁(ⓘ) 추가"
     },
