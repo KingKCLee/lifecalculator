@@ -338,36 +338,66 @@ function Empty({icon,msg}){return (<div style={{background:P.lt,borderRadius:20,
 /* ═══ 계산기 ═══ */
 
 function CalcAcq({isMo=false}){
-  const[acqType,sAT]=useState("sale");const[price,sP]=useState("12500");const[own,sO]=useState("1");const[area,sA]=useState("84");const[reg,sR]=useState("spec");const[isFirst,sFirst]=useState("no");const[isTempTwo,sTT]=useState("no");const[isLowVal,sLV]=useState("no");
+  const[acqType,sAT]=useState("sale");const[price,sP]=useState("12500");const[own,sO]=useState("1");const[area,sA]=useState("84");const[reg,sR]=useState("adj");const[isFirst,sFirst]=useState("no");const[isTempTwo,sTT]=useState("no");const[isLowVal,sLV]=useState("no");const[isRural,sRural]=useState("no");const[giftDirect,sGD]=useState("no");const[inheritNone,sIN]=useState("no");
   const today=new Date();const firstHomeBenefitEnd=new Date('2028-12-31');const isFirstHomeBenefit=today<firstHomeBenefitEnd;
-  const pW=tW(price);let r=0.01;const n=parseInt(own),isR=reg!=="non";const lowVal=isLowVal==="yes"&&pW<=1e8;
-  if(acqType==="gift"){r=isR&&pW>=3e8?0.12:0.035;}
-  else if(acqType==="inherit"){r=n===1?0.008:0.028;}
-  else{
-    if(lowVal){r=0.01;}
-    else if(n===2&&isTempTwo==="yes"){r=pW<=6e8?0.01:pW<=9e8?Math.max(0.01,(pW*2/3e8-3)/100):0.03;}
-    else if(n===1||(n===2&&!isR)){r=pW<=6e8?0.01:pW<=9e8?Math.max(0.01,(pW*2/3e8-3)/100):0.03;}
-    else if(n===2&&isR){r=0.08;}else if(n>=3){r=isR?0.12:0.08;}
+  const pW=tW(price);const n=parseInt(own);const isAdj=reg==="adj";const lowVal=isLowVal==="yes"&&pW<=1e8;const tempTwo=n===2&&isTempTwo==="yes";
+  let r=0.01,rateLabel="";
+  if(acqType==="sale"){
+    if(lowVal){r=0.01;rateLabel="공시가1억↓ 특례 1%";}
+    else if(tempTwo||n===1||(n===2&&!isAdj)){
+      if(pW<=6e8){r=0.01;}else if(pW<=9e8){r=Math.max(0.01,Math.min(0.03,(pW*2/3e8-3)/100));}else{r=0.03;}
+      rateLabel=(tempTwo?"일시적2주택 ":n===1?"1주택 ":"2주택(비조정) ")+(r*100).toFixed(2)+"%";
+    }
+    else if(n===2&&isAdj){r=0.08;rateLabel="2주택(조정) 8%";}
+    else if(n===3&&!isAdj){r=0.08;rateLabel="3주택(비조정) 8%";}
+    else if(n===3&&isAdj){r=0.12;rateLabel="3주택(조정) 12%";}
+    else if(n>=4){r=0.12;rateLabel="4주택+ 12%";}
   }
-  r=Math.max(0.008,Math.min(r,0.12));const ac=pW*r,ed=ac*.1;const isHeavy=r>=0.08;const fm=isHeavy?pW*.002:(parseInt(area)>85&&pW>6e8?pW*.002:0);const st=pW>1e9?350000:pW>5e8?150000:70000;const firstDed=acqType==="sale"&&isFirst==="yes"&&n===1&&isFirstHomeBenefit?Math.min(ac,2000000):0;const total=ac+ed+fm+st-firstDed;
+  else if(acqType==="gift"){
+    if(isAdj&&pW>=3e8&&giftDirect==="no"){r=0.12;rateLabel="증여 중과(조정+3억↑) 12%";}
+    else{r=0.035;rateLabel=giftDirect==="yes"?"증여 직계 3.5%":"증여 3.5%";}
+  }
+  else if(acqType==="inherit"){
+    if(inheritNone==="yes"){r=0.008;rateLabel="상속 무주택특례 0.8%";}
+    else{r=0.028;rateLabel="상속 2.8%";}
+  }
+  else if(acqType==="newbuild"){r=0.028;rateLabel="원시취득 2.8%";}
+  else if(acqType==="corp"){r=0.12;rateLabel="법인 12%";}
+  const ac=Math.round(pW*r);
+  const isHeavy=r>=0.08;
+  let ed;
+  if(isHeavy){ed=Math.round(pW*0.04);}
+  else{ed=Math.round(ac*0.1);}
+  const areaV=parseInt(area)||0;
+  const fm=areaV>85?Math.round(pW*0.002):0;
+  let st=0;if(pW>30e8)st=500000;else if(pW>10e8)st=350000;else if(pW>1e8)st=150000;
+  const firstDedCap=isRural==="yes"?3000000:2000000;
+  const firstDed=acqType==="sale"&&isFirst==="yes"&&n===1&&isFirstHomeBenefit&&pW<=12e8?Math.min(ac,firstDedCap):0;
+  const total=ac+ed+fm+st-firstDed;
   return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start"}}>
     <div>
       <h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>🏢 취득세 시뮬레이션</h3>
-      <Tog label="취득 유형" value={acqType} onChange={sAT} options={[{value:"sale",label:"매매"},{value:"gift",label:"증여"},{value:"inherit",label:"상속"}]}/>
-      <Slider label={acqType==="sale"?"매매가격":"시가표준액"} value={price} onChange={sP} min={1000} max={500000} step={500}/>
-      {acqType==="sale"&&<Radio label="보유 주택 수" value={own} onChange={sO} options={[{value:"1",label:"1주택 (무주택자의 첫 주택 취득)"},{value:"2",label:"2주택 (1주택 보유 중 추가 취득)"},{value:"3",label:"3주택 이상"}]}/>}
-      {acqType==="inherit"&&<Radio label="상속 후 주택 수" value={own} onChange={sO} options={[{value:"1",label:"1가구 1주택 (0.8%)"},{value:"2",label:"다주택 (2.8%)"}]}/>}
+      <Sel label="취득 유형" value={acqType} onChange={sAT} options={[{value:"sale",label:"매매 (유상취득)"},{value:"gift",label:"증여 (무상취득)"},{value:"inherit",label:"상속"},{value:"newbuild",label:"원시취득 (신축)"},{value:"corp",label:"법인 매매"}]}/>
+      <Slider label={acqType==="gift"?"시가인정액":acqType==="inherit"?"시가표준액":acqType==="newbuild"?"건축 원가":"취득가액"} value={price} onChange={sP} min={1000} max={500000} step={500}/>
+      {acqType==="sale"&&<Radio label="취득 후 주택 수" value={own} onChange={sO} options={[{value:"1",label:"1주택"},{value:"2",label:"2주택"},{value:"3",label:"3주택"},{value:"4",label:"4주택+"}]}/>}
+      {(acqType==="sale"||acqType==="gift")&&<Tog label="조정대상지역" value={reg} onChange={sR} options={[{value:"adj",label:"조정대상지역"},{value:"non",label:"비조정지역"}]}/>}
       {acqType==="sale"&&<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?8:12}}>
-        <Inp label="전용면적 (㎡)" value={area} onChange={sA}/><Sel label="지역 구분" value={reg} onChange={sR} options={[{value:"spec",label:"투기과열지구 (서울 등)"},{value:"adj",label:"조정대상지역"},{value:"non",label:"비규제지역"}]}/>
+        <Inp label="전용면적 (㎡)" value={area} onChange={sA} note="85㎡ 초과 시 농특세"/>
+        <Tog label="공시가 1억↓" value={isLowVal} onChange={sLV} options={[{value:"no",label:"아니오"},{value:"yes",label:"예"}]}/>
       </div>}
-      {acqType==="gift"&&<Sel label="지역 구분" value={reg} onChange={sR} options={[{value:"spec",label:"조정대상지역 (3억 이상 12%)"},{value:"non",label:"비조정지역 (3.5%)"}]}/>}
-      {acqType==="sale"&&<Tog label="공시가 1억 이하 주택" value={isLowVal} onChange={sLV} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (다주택 중과 제외)"}]}/>}
-      {acqType==="sale"&&<Tog label="생애최초 구입자" value={isFirst} onChange={sFirst} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (최대 200만원 감면)"}]}/>}
-      {acqType==="sale"&&isFirst==="yes"&&!isFirstHomeBenefit&&<div style={{padding:"12px 16px",background:"#FFEBE6",border:"1px solid #FFBDAD",borderRadius:10,fontSize:13,color:"#DE350B",marginTop:8,marginBottom:12,lineHeight:1.6}}>⚠️ 생애최초 취득세 감면 혜택이 종료되었습니다 (2028.12.31 만료).</div>}
-      {acqType==="sale"&&n===2&&<Tog label="일시적 2주택 (이사 목적)" value={isTempTwo} onChange={sTT} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (3년 내 처분 예정)"}]}/>}
+      {acqType==="sale"&&<Tog label="생애최초 구입자" value={isFirst} onChange={sFirst} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (12억↓, 200만원 감면)"}]}/>}
+      {acqType==="sale"&&isFirst==="yes"&&<Tog label="인구감소지역" value={isRural} onChange={sRural} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (감면한도 300만)"}]}/>}
+      {acqType==="sale"&&n===2&&<Tog label="일시적 2주택" value={isTempTwo} onChange={sTT} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (3년 내 처분)"}]}/>}
+      {acqType==="gift"&&<Tog label="1세대1주택자 배우자·직계 간 증여" value={giftDirect} onChange={sGD} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (중과 제외)"}]}/>}
+      {acqType==="inherit"&&<Tog label="무주택가구 상속" value={inheritNone} onChange={sIN} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (0.8% 특례)"}]}/>}
+      {tempTwo&&<div style={{padding:"10px 14px",background:"#FFF8E1",border:"1px solid #FFE082",borderRadius:10,fontSize:12,color:"#F57F17",marginTop:8,lineHeight:1.6}}>종전주택을 신규취득일로부터 3년 이내 처분해야 일반세율이 적용됩니다.</div>}
+      {acqType==="gift"&&giftDirect==="yes"&&<div style={{padding:"10px 14px",background:"#E3FCEF",border:"1px solid #57D9A3",borderRadius:10,fontSize:12,color:"#006644",marginTop:8,lineHeight:1.6}}>1세대 1주택자의 배우자·직계존비속 간 증여는 중과 대상에서 제외됩니다.</div>}
+      {lowVal&&<div style={{padding:"10px 14px",background:"#E3FCEF",border:"1px solid #57D9A3",borderRadius:10,fontSize:12,color:"#006644",marginTop:8,lineHeight:1.6}}>공시가격 1억원 이하 주택은 다주택이어도 중과가 제외됩니다.</div>}
+      {isRural==="yes"&&<div style={{padding:"10px 14px",background:"#DEEBFF",border:"1px solid #0747A6",borderRadius:10,fontSize:12,color:"#0747A6",marginTop:8,lineHeight:1.6}}>인구감소지역 생애최초 감면 한도는 300만원입니다.</div>}
+      {isFirst==="yes"&&!isFirstHomeBenefit&&<div style={{padding:"12px 16px",background:"#FFEBE6",border:"1px solid #FFBDAD",borderRadius:10,fontSize:13,color:"#DE350B",marginTop:8,lineHeight:1.6}}>⚠️ 생애최초 취득세 감면 혜택이 종료되었습니다 (2028.12.31 만료).</div>}
     </div>
-    <RP title={"예상 "+(acqType==="gift"?"증여":acqType==="inherit"?"상속":"취득")+"세 비용"} total={total} sub={"세율 "+fP(r*100)+" 적용"}
-      items={[{l:"취득유형",v:acqType==="gift"?"증여":acqType==="inherit"?"상속":"매매"},{l:"취득세 ("+fP(r*100)+")",v:fW(ac)},{l:"지방교육세",v:fW(ed)},{l:"농어촌특별세",v:fm>0?fW(fm):"해당없음"},{l:"인지세·증지대",v:fW(st)}].concat(lowVal?[{l:"공시가 1억 이하 특례",v:"일반세율 적용"}]:[]).concat(firstDed>0?[{l:"생애최초 감면",v:"-"+fW(firstDed)}]:[]).concat(acqType==="sale"&&isTempTwo==="yes"?[{l:"일시적 2주택 특례",v:"1주택 세율 적용"}]:[])}/>
+    <RP title={"예상 취득 비용"} total={total} sub={rateLabel}
+      items={[{l:"과세표준",v:fW(pW)},{l:"취득세",v:fW(ac)},{l:"지방교육세",v:fW(ed)},{l:"농어촌특별세 (85㎡↑)",v:fm>0?fW(fm):"면제"},{l:"인지세·증지대",v:fW(st)}].concat(firstDed>0?[{l:"생애최초 감면",v:"-"+fW(firstDed)}]:[])}/>
   </div>);
 }
 
