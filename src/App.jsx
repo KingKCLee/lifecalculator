@@ -2188,11 +2188,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
             <span onClick={()=>{const first=CL.find(c=>c.c===cat);if(first)navigateCalc(cat,first.id);}} style={{cursor:"pointer",color:"#0747A6"}}>{catInfo?.l}</span>
           </div>
         </div>
-        <div style={{position:"relative"}}>
-          <div ref={tabScrollRef} className="sub-tabs" style={{display:"flex",gap:6,flexWrap:isMo?"nowrap":"wrap",overflowX:isMo?"auto":"visible",padding:"4px 16px 12px",WebkitOverflowScrolling:"touch"}}>
-            {filtered.map(c=>(<button key={c.id} onClick={()=>navigateCalc(cat,c.id)} style={{padding:isMo?"4px 10px":"6px 12px",border:calc===c.id?"none":"1px solid #dfe1e6",borderRadius:16,background:calc===c.id?"#0747A6":"transparent",color:calc===c.id?"#fff":"#505f79",fontSize:isMo?11:12,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0,height:isMo?28:undefined}}>{c.l}</button>))}
+        <div style={{position:"relative",padding:"0 16px 8px"}}>
+          <div style={{position:"absolute",left:16,top:0,bottom:8,width:32,background:"linear-gradient(to right, #fff 40%, transparent)",zIndex:2,pointerEvents:"none",display:"flex",alignItems:"center",justifyContent:"flex-start"}}><span style={{fontSize:14,color:"#0747A6",fontWeight:700,lineHeight:1}}>‹</span></div>
+          <div ref={tabScrollRef} className="sub-tabs" style={{display:"flex",gap:6,flexWrap:"nowrap",overflowX:"auto",padding:"4px 24px",scrollbarWidth:"none",msOverflowStyle:"none",WebkitOverflowScrolling:"touch"}}>
+            {filtered.map(c=>(<button key={c.id} onClick={()=>navigateCalc(cat,c.id)} style={{padding:"7px 14px",border:calc===c.id?"none":"1px solid #dfe1e6",borderRadius:20,background:calc===c.id?"#0747A6":"#fff",color:calc===c.id?"#fff":"#505f79",fontSize:12,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0}}>{c.l}</button>))}
           </div>
-          {isMo&&<div style={{position:"absolute",right:0,top:0,bottom:0,width:40,background:"linear-gradient(to right, transparent, #f4f5f7)",pointerEvents:"none",zIndex:1}}/>}
+          <div style={{position:"absolute",right:16,top:0,bottom:8,width:32,background:"linear-gradient(to left, #fff 40%, transparent)",zIndex:2,pointerEvents:"none",display:"flex",alignItems:"center",justifyContent:"flex-end"}}><span style={{fontSize:14,color:"#0747A6",fontWeight:700,lineHeight:1}}>›</span></div>
         </div>
         <MobileCalcWrapper><Comp isMo={true}/><NextStep calcId={calc} onNav={navigateCalc} isMo={true}/></MobileCalcWrapper>
         <div style={{padding:"0 12px 24px"}}>
