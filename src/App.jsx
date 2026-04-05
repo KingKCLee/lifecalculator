@@ -735,6 +735,11 @@ function CalcNetSalary({isMo=false}){const[salary,sSal]=useState("");const[famil
       <div style={{fontSize:13,fontWeight:600,color:P.mt,marginBottom:12}}>월급 구성 상세</div>
       {[["월급여 (세전)",monthlyGross,"+","#0747A6"],["국민연금 (4.5%)",npn,"-","#DE350B"],["건강보험 (3.545%)",hi,"-","#DE350B"],["장기요양 (12.95%)",ltc,"-","#DE350B"],["고용보험 (0.9%)",ei,"-","#DE350B"],["소득세 (간이)",tax/12,"-","#FF8B00"],["지방소득세 (10%)",localTax/12,"-","#FF8B00"]].map(([l,v,s,c],i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:"1px solid "+P.lt,fontSize:13}}><span style={{color:i===0?P.tx:P.mt}}>{l}</span><span style={{fontWeight:600,color:c}}>{s}{fW(Math.round(v))}</span></div>))}
       <div style={{display:"flex",justifyContent:"space-between",padding:"12px 0 0",fontSize:15,fontWeight:700}}><span style={{color:P.tx}}>월 실수령액</span><span style={{color:"#0747A6"}}>{fW(Math.round(monthlyNet))}</span></div>
+      <div style={{display:"flex",justifyContent:"space-between",padding:"6px 0 0",fontSize:12,color:P.mt}}><span>실효세율</span><span style={{fontWeight:600}}>{fP((1-monthlyNet/monthlyGross)*100)}</span></div>
+    </div>
+    <div style={{background:P.card,borderRadius:16,padding:16,border:"1px solid "+P.bd,marginTop:12}}>
+      <div style={{fontSize:13,fontWeight:600,color:P.mt,marginBottom:10}}>연봉 구간별 월 실수령액 비교</div>
+      {[3000,4000,5000,6000,7000,8000,10000].map(salManwon=>{const sy=salManwon*10000;const taxS=Math.max(0,sy-240*10000);const mS=taxS/12;const iP=Math.min(mS,5900000)*.045+mS*.03545+mS*.03545*.1295+mS*.009;let wD=0;if(taxS<=5e6)wD=taxS*.7;else if(taxS<=15e6)wD=3500000+(taxS-5e6)*.4;else if(taxS<=45e6)wD=7500000+(taxS-15e6)*.15;else if(taxS<=1e8)wD=12000000+(taxS-45e6)*.05;else wD=14750000+(taxS-1e8)*.02;const pD=1500000*familyN+1500000*childN;const tI=Math.max(0,taxS-wD-pD-iP*12);const t=pTx(tI,IB);const mT=(t+t*.1)/12;const mN=sy/12-iP-mT;return(<div key={salManwon} style={{display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:"1px solid "+P.lt,fontSize:13}}><span style={{color:P.mt}}>{salManwon<10000?salManwon+"만":(salManwon/10000)+"억"}</span><span style={{fontWeight:600}}>{fW(Math.round(mN))}/월</span></div>);})}
     </div>
   </div>:<Empty icon="💰" msg="연봉을 입력하세요"/>}</div>);}
 
@@ -785,6 +790,13 @@ function CalcUnemploy({isMo=false}){const[age,sAge]=useState("30");const[years,s
     <Inp label="퇴직 전 1일 평균임금" value={daily} onChange={sD} suffix="원" placeholder="예: 150000" note="최근 3개월 급여총액 ÷ 근무일수"/>
     <div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?8:12}}><Sel label="퇴직 시 나이" value={age} onChange={sAge} options={[{value:"30",label:"50세 미만"},{value:"50",label:"50세 이상"}]}/><Sel label="고용보험 가입기간" value={years} onChange={sY} options={[{value:"1",label:"1~3년 미만"},{value:"3",label:"3~5년"},{value:"5",label:"5~10년"},{value:"10",label:"10년 이상"}]}/></div>
     <div style={{padding:"12px 16px",background:P.lt,borderRadius:10,fontSize:12,color:"#6b778c",lineHeight:1.6,marginTop:8}}>※ 자발적 퇴직은 원칙적 수급 불가 (예외 있음) / ※ 실업급여 = 평균임금 60% (하한: 최저임금 80%)</div>
+    <div style={{background:P.card,borderRadius:10,border:"1px solid "+P.bd,padding:"12px 14px",marginTop:12,fontSize:12}}>
+      <div style={{fontWeight:700,color:P.tx,marginBottom:8}}>수급일수 테이블</div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:4,fontSize:11}}>
+        <div style={{fontWeight:600,color:P.mt}}>가입기간</div><div style={{fontWeight:600,color:P.mt,textAlign:"center"}}>50세↓</div><div style={{fontWeight:600,color:P.mt,textAlign:"center"}}>50세↑</div>
+        {[["1년 미만","120","120"],["1~3년","150","180"],["3~5년","180","210"],["5~10년","210","240"],["10년↑","240","270"]].flatMap(([k,a,b])=>[<div key={k+"k"} style={{color:"#172B4D",padding:"4px 0"}}>{k}</div>,<div key={k+"a"} style={{textAlign:"center",padding:"4px 0"}}>{a}일</div>,<div key={k+"b"} style={{textAlign:"center",padding:"4px 0"}}>{b}일</div>])}
+      </div>
+    </div>
   </div>{dailyW>0?<RP title="실업급여 예상" total={monthlyAmount} sub={"월 수령액 기준 · 최대 "+duration+"일"} items={[{l:"1일 평균임금",v:fmt(dailyW)+"원"},{l:"1일 실업급여액 (60%)",v:fmt(calcDaily)+"원"},{l:"하한액 (최저임금80%)",v:fmt(minDaily)+"원"},{l:"수급 기간",v:duration+"일 (약 "+(duration/30).toFixed(1)+"개월)"},{l:"월 수령액 (30일)",v:fmt(monthlyAmount)+"원"},{l:"총 수령액",v:fmt(totalAmount)+"원"}]}/>:<Empty icon="🏢" msg="평균임금을 입력하세요"/>}</div>);}
 
 /* 자동차세 */
