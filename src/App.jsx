@@ -366,10 +366,16 @@ function CalcAcq({isMo=false}){
   const ac=Math.round(pW*r);
   const isHeavy=r>=0.08;
   let ed;
-  if(isHeavy){ed=Math.round(pW*0.04);}
+  if(isHeavy){ed=Math.round(pW*0.004);}
   else{ed=Math.round(ac*0.1);}
   const areaV=parseInt(area)||0;
-  const fm=areaV>85?Math.round(pW*0.002):0;
+  let farmRate=0;
+  if(areaV>85){
+    if(r>=0.12)farmRate=0.01;
+    else if(r>=0.08)farmRate=0.006;
+    else farmRate=0.002;
+  }
+  const fm=Math.round(pW*farmRate);
   let st=0;if(pW>30e8)st=500000;else if(pW>10e8)st=350000;else if(pW>1e8)st=150000;
   const firstDedCap=isRural==="yes"?3000000:2000000;
   const firstDed=acqType==="sale"&&isFirst==="yes"&&n===1&&isFirstHomeBenefit&&pW<=12e8?Math.min(ac,firstDedCap):0;
