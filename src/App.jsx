@@ -1405,18 +1405,18 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           <div onClick={()=>{setAuthMode("login");setShowAuth(true);setMobileMenu(false);}} style={{padding:"14px 24px",fontSize:15,fontWeight:500,color:"#6b778c",cursor:"pointer"}}>로그인</div>
         </div>}
       </>):(
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"12px 32px",gap:12}}>
-          <div style={{display:"flex",alignItems:"center",gap:10,cursor:"pointer",flexShrink:0}} onClick={()=>{navigateHome();setSearch("");}}>
-            <LogoSVG size={36}/>
-            <span style={{fontSize:22,fontWeight:800,color:P.pri}}>생활계산기.com</span>
+        <div style={{maxWidth:1200,margin:"0 auto",display:"flex",alignItems:"center",justifyContent:"space-between",height:56,padding:"0 24px"}}>
+          <div onClick={()=>{navigateHome();setSearch("");}} style={{display:"flex",alignItems:"center",gap:8,cursor:"pointer",flexShrink:0}}>
+            <LogoSVG size={32}/>
+            <span style={{fontSize:17,fontWeight:800,color:P.pri}}>생활계산기.com</span>
           </div>
-          <div className="sub-tabs" style={{display:"flex",gap:4,flex:1,justifyContent:"center",position:"relative"}}>
+          <div style={{display:"flex",gap:2,position:"relative"}}>
             {CATS.map(c=>{const items=CL.filter(cl=>cl.c===c.id);const active=cat===c.id&&page!=="home";const hot=hoverCat===c.id;return(
               <div key={c.id} onMouseEnter={()=>setHoverCat(c.id)} onMouseLeave={()=>setHoverCat(null)} style={{position:"relative"}}>
-                <button onClick={()=>{hCat(c.id);setPage("calc");}} style={{padding:"8px 20px",border:"none",borderRadius:6,background:active||hot?"#deebff":"transparent",color:active||hot?P.pri:P.mt,fontSize:15,fontWeight:active?700:500,cursor:"pointer",fontFamily:"inherit",flexShrink:0,minHeight:44}}>{c.l}</button>
-                {hot&&<div style={{position:"absolute",top:"100%",left:0,paddingTop:4,zIndex:1000}}>
+                <button onClick={()=>{hCat(c.id);setPage("calc");}} style={{padding:"8px 16px",border:"none",borderRadius:0,background:hot?"#deebff":"transparent",color:active||hot?"#0747A6":"#505f79",fontSize:14,fontWeight:active?700:500,cursor:"pointer",fontFamily:"inherit",borderBottom:active&&!hot?"2px solid #0747A6":"2px solid transparent",transition:"all 0.15s",height:56,display:"flex",alignItems:"center"}}>{c.l}</button>
+                {hot&&<div style={{position:"absolute",top:"100%",left:"50%",transform:"translateX(-50%)",paddingTop:0,zIndex:1000}}>
                   <div style={{background:"#fff",borderRadius:12,border:"1px solid #dfe1e6",boxShadow:"0 8px 24px rgba(0,0,0,0.12)",padding:"8px 0",minWidth:220}}>
-                    <div style={{padding:"8px 16px 6px",fontSize:11,fontWeight:700,color:P.mt,letterSpacing:1}}>{c.l.toUpperCase()} — {items.length}개</div>
+                    <div style={{padding:"8px 16px 6px",fontSize:11,fontWeight:700,color:"#a5adba",letterSpacing:1}}>{c.l} — {items.length}개</div>
                     {items.map(item=>(<div key={item.id} onClick={()=>{navigateCalc(c.id,item.id);setHoverCat(null);}} style={{padding:"10px 16px",fontSize:14,cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center",transition:"background 0.1s",fontWeight:calc===item.id?700:400,color:calc===item.id?"#0747A6":"#172B4D"}} onMouseEnter={e=>{e.currentTarget.style.background="#deebff"}} onMouseLeave={e=>{e.currentTarget.style.background="transparent"}}>
                       <span>{item.l}</span><span style={{fontSize:11,color:"#a5adba"}}>→</span>
                     </div>))}
@@ -1425,9 +1425,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
               </div>
             );})}
           </div>
-          <div style={{display:"flex",alignItems:"center",gap:8,flexShrink:0}}>
-            <button onClick={()=>{setAuthMode("login");setShowAuth(true);}} style={{fontSize:14,fontWeight:500,color:"#6b778c",background:"none",border:"none",cursor:"pointer",padding:"8px 12px",fontFamily:"inherit"}}>로그인</button>
-            <button onClick={()=>{setAuthMode("signup");setShowAuth(true);}} style={{fontSize:14,fontWeight:700,color:"#fff",background:"#0747A6",border:"none",borderRadius:8,padding:"8px 20px",cursor:"pointer",fontFamily:"inherit"}}>무료 가입</button>
+          <div style={{display:"flex",alignItems:"center",gap:10,flexShrink:0}}>
+            <button onClick={()=>{setAuthMode("login");setShowAuth(true);}} style={{background:"none",border:"none",fontSize:14,color:"#505f79",cursor:"pointer",fontFamily:"inherit",fontWeight:500}}>로그인</button>
+            <button onClick={()=>{setAuthMode("signup");setShowAuth(true);}} style={{padding:"8px 20px",background:"#0747A6",color:"#fff",border:"none",borderRadius:8,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>무료 가입</button>
           </div>
         </div>
       )}
