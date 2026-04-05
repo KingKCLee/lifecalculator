@@ -488,48 +488,8 @@ function CalcAcq({isMo=false}){
       {populationDecline&&<div style={{padding:"10px 14px",background:"#DEEBFF",border:"1px solid #0747A6",borderRadius:10,fontSize:12,color:"#0747A6",marginTop:8,lineHeight:1.6}}>인구감소지역 생애최초 감면 한도는 300만원입니다.</div>}
       {firstOfLife&&!isFirstHomeBenefit&&<div style={{padding:"12px 16px",background:"#FFEBE6",border:"1px solid #FFBDAD",borderRadius:10,fontSize:13,color:"#DE350B",marginTop:8,lineHeight:1.6}}>⚠️ 생애최초 취득세 감면 혜택이 종료되었습니다 (2028.12.31 만료).</div>}
     </div>
-    <div>
-      {pW>0&&<div style={{background:"linear-gradient(180deg,#0747A6 0%,#0052CC 100%)",borderRadius:12,padding:20,color:"#fff"}}>
-        <h4 style={{fontWeight:800,marginBottom:16,fontSize:16,color:"#fff"}}>계산 결과</h4>
-        <table style={{width:"100%",borderCollapse:"collapse",fontSize:isMo?14:13,background:"rgba(255,255,255,0.08)",borderRadius:8,overflow:"hidden"}}>
-          <thead><tr style={{background:"rgba(255,255,255,0.12)",borderBottom:"2px solid rgba(255,255,255,0.2)"}}>
-            <th style={{padding:10,textAlign:"left",width:"10%",color:"#fff",fontWeight:600}}>#</th><th style={{padding:10,textAlign:"left",width:"30%",color:"#fff",fontWeight:600}}>적요</th><th style={{padding:10,textAlign:"right",width:"30%",color:"#fff",fontWeight:600}}>값</th><th style={{padding:10,textAlign:"left",width:"30%",color:"#fff",fontWeight:600}}>비고</th>
-          </tr></thead>
-          <tbody>{resultItems.map((item,i)=>(<tr key={i} style={{borderBottom:"1px solid rgba(255,255,255,0.1)",background:item.l.includes("합계")?"rgba(255,255,255,0.15)":"transparent"}}>
-            <td style={{padding:10,color:"rgba(255,255,255,0.5)"}}>{i+1}</td><td style={{padding:10,fontWeight:item.l.includes("합계")?700:400,color:"#fff"}}>{item.l}</td><td style={{padding:10,textAlign:"right",fontWeight:700,color:item.l.includes("합계")?"#FFC400":"#58a6ff"}}>{item.v}</td><td style={{padding:10,fontSize:12,color:"rgba(255,255,255,0.6)"}}>{item.note||""}</td>
-          </tr>))}</tbody>
-        </table>
-        {basisText&&<div style={{background:"rgba(255,255,255,0.08)",borderRadius:10,padding:16,marginTop:16,fontSize:12,lineHeight:1.8,whiteSpace:"pre-line",color:"rgba(255,255,255,0.85)"}}><b style={{color:"#fff"}}>계산결과 해설</b><br/>{basisText}</div>}
-      </div>}
-      <div style={{marginTop:24,background:"#f8f9fc",borderRadius:10,padding:16}}>
-        <h5 style={{fontWeight:700,marginBottom:8,fontSize:13,color:P.tx}}>주택 취득세율표</h5>
-        <div className="rate-table-wrap"><table style={{width:"100%",borderCollapse:"collapse",fontSize:12,background:"#fff"}}>
-          <thead><tr style={{background:"#f4f5f7"}}><th style={{padding:6,border:"1px solid #dfe1e6"}}>주택</th><th style={{padding:6,border:"1px solid #dfe1e6"}}>구분</th><th style={{padding:6,border:"1px solid #dfe1e6"}}>취득세율</th><th style={{padding:6,border:"1px solid #dfe1e6"}}>농특세(85㎡↑)</th><th style={{padding:6,border:"1px solid #dfe1e6"}}>교육세</th></tr></thead>
-          <tbody>
-            <tr><td rowSpan={3} style={{padding:6,border:"1px solid #dfe1e6"}}>1주택</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>6억↓</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>1%</td><td rowSpan={3} style={{padding:6,border:"1px solid #dfe1e6"}}>0.2%</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>0.1%</td></tr>
-            <tr><td style={{padding:6,border:"1px solid #dfe1e6"}}>6~9억</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>(×2/3억-3)%</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>취득세×10%</td></tr>
-            <tr><td style={{padding:6,border:"1px solid #dfe1e6"}}>9억↑</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>3%</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>0.3%</td></tr>
-            <tr><td rowSpan={2} style={{padding:6,border:"1px solid #dfe1e6"}}>2주택</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>조정</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>8%</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>0.6%</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>0.4%</td></tr>
-            <tr><td style={{padding:6,border:"1px solid #dfe1e6"}}>비조정</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>1~3%</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>0.2%</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>취득세×10%</td></tr>
-            <tr><td rowSpan={2} style={{padding:6,border:"1px solid #dfe1e6"}}>3주택</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>조정</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>12%</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>1%</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>0.4%</td></tr>
-            <tr><td style={{padding:6,border:"1px solid #dfe1e6"}}>비조정</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>8%</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>0.6%</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>0.4%</td></tr>
-            <tr><td style={{padding:6,border:"1px solid #dfe1e6"}}>4주택+</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>전체</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>12%</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>1%</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>0.4%</td></tr>
-          </tbody>
-        </table></div>
-        <h5 style={{fontWeight:700,marginTop:16,marginBottom:8,fontSize:13,color:P.tx}}>주택 외 취득세율표</h5>
-        <div className="rate-table-wrap"><table style={{width:"100%",borderCollapse:"collapse",fontSize:12,background:"#fff"}}>
-          <thead><tr style={{background:"#f4f5f7"}}><th style={{padding:6,border:"1px solid #dfe1e6"}}>구분</th><th style={{padding:6,border:"1px solid #dfe1e6"}}>취득세</th><th style={{padding:6,border:"1px solid #dfe1e6"}}>농특세</th><th style={{padding:6,border:"1px solid #dfe1e6"}}>교육세</th></tr></thead>
-          <tbody>
-            <tr><td style={{padding:6,border:"1px solid #dfe1e6"}}>매매(토지·건물)</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>4%</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>0.2%</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>0.4%</td></tr>
-            <tr><td style={{padding:6,border:"1px solid #dfe1e6"}}>원시취득/상속</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>2.8%</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>0.2%</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>0.16%</td></tr>
-            <tr><td style={{padding:6,border:"1px solid #dfe1e6"}}>증여</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>3.5%</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>0.2%</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>0.3%</td></tr>
-            <tr><td style={{padding:6,border:"1px solid #dfe1e6"}}>농지 매매(신규)</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>3%</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>0.2%</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>0.2%</td></tr>
-            <tr><td style={{padding:6,border:"1px solid #dfe1e6"}}>농지(2년 자경)</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>1.5%</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>-</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>0.1%</td></tr>
-            <tr><td style={{padding:6,border:"1px solid #dfe1e6"}}>농지 상속</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>2.3%</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>0.2%</td><td style={{padding:6,border:"1px solid #dfe1e6"}}>0.06%</td></tr>
-          </tbody>
-        </table></div>
-      </div>
-    </div>
+    <RP title="예상 취득 비용" total={total} sub={"세율 "+fP(r*100)+" 적용"}
+      items={[{l:"취득세 ("+fP(r*100)+")",v:fW(ac)},{l:"지방교육세",v:fW(ed)},{l:"농어촌특별세",v:fm>0?fW(fm):"해당없음 (85㎡ 이하)"},{l:"인지세·증지대",v:fW(st)}].concat(firstDed>0?[{l:"생애최초 감면",v:"-"+fW(firstDed)}]:[])}/>
   </div>);
 }
 
