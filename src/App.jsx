@@ -1379,7 +1379,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 .num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 @media(max-width:1023px){.calc-grid{grid-template-columns:1fr!important}.edu-sidebar{display:none!important}.insights-grid{grid-template-columns:1fr 1fr!important}}
-@media(max-width:768px){.calc-container>div{grid-template-columns:1fr!important;gap:16px!important}.calc-container h3{font-size:16px!important}}
+@media(max-width:768px){.calc-container>div{grid-template-columns:1fr!important;gap:16px!important}.calc-container>div>div[style*="grid-template-columns"]{grid-template-columns:1fr!important;gap:10px!important}.calc-container h3{font-size:16px!important}}
 @media(max-width:768px){input,select,textarea{font-size:16px!important}.pro-cards{grid-template-columns:1fr!important}.footer-inner{grid-template-columns:1fr!important;text-align:center}.cat-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))!important}}
 @media(max-width:768px){.cat-cards{grid-template-columns:repeat(2,1fr)!important}}
 @media(max-width:480px){.insights-grid{grid-template-columns:1fr!important}.cat-cards{grid-template-columns:1fr!important}}
