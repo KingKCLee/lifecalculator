@@ -1449,14 +1449,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           <div style={{fontSize:13,fontWeight:700,color:"#0747A6",marginBottom:6}}>대한민국 NO.1 생활 계산기</div>
           <h1 style={{fontSize:22,fontWeight:900,color:"#172B4D",lineHeight:1.2,margin:"0 0 10px",letterSpacing:-1}}>복잡한 세법·대출,<br/><span style={{color:"#0747A6"}}>10초</span>만에 계산</h1>
           <CalcSearchBar onSelect={navigateCalc} isMo={true} calcList={CL.map(c=>({id:c.id,name:c.l,keywords:c.l+" "+(DESC[c.id]||""),cat:c.c}))}/>
-          <div className="hscroll" style={{display:"flex",flexWrap:"nowrap",overflowX:"auto",WebkitOverflowScrolling:"touch",gap:6,marginBottom:4,paddingBottom:4}}>
-            {[{label:"#취득세",cat:"tax",calc:"acquisition"},{label:"#양도세",cat:"tax",calc:"transfer"},{label:"#실수령액",cat:"life",calc:"netsalary"},{label:"#DSR",cat:"loan",calc:"dsr"},{label:"#연말정산",cat:"tax",calc:"yearend"},{label:"#중개보수",cat:"cost",calc:"commission"}].map((tag,i)=>(
-              <button key={i} onClick={()=>navigateCalc(tag.cat,tag.calc)} style={{padding:"4px 10px",background:"#fff",border:"1px solid #dfe1e6",borderRadius:16,fontSize:11,color:"#505f79",cursor:"pointer",fontWeight:500,fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0}}>{tag.label}</button>
-            ))}
-          </div>
-        </div>
-        <div style={{display:"flex",justifyContent:"center",gap:16,padding:"8px 16px",fontSize:11,color:"#6b778c",background:"#f8f9fc"}}>
-          <span>✅ 매일 자동 검증</span><span>🔒 완전 무료</span>
+          <button onClick={()=>navigateCalc("tax","acquisition")} style={{width:"100%",background:"#0747A6",color:"#fff",border:"none",borderRadius:10,padding:"12px",fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>지금 계산하기 →</button>
+          <div style={{fontSize:11,color:"#6b778c",marginTop:10,textAlign:"center"}}>✅ 매일 자동 검증 · 39가지 무료 계산기</div>
         </div>
       </>):(
       <div style={{background:"#f8f9fc",padding:"80px 24px",maxWidth:"100%",overflow:"hidden"}}>
@@ -1470,22 +1464,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
             </h1>
             <p style={{fontSize:16,color:"#505f79",lineHeight:1.7,wordBreak:"keep-all",margin:"0 0 20px"}}>부동산 세금, 대출, 비용부터 연말정산, 연봉 실수령액, 4대보험까지. 39가지 전문 계산기로 일상의 재정 판단을 도와드립니다. 2026년 최신 세법 반영.</p>
             <CalcSearchBar onSelect={navigateCalc} isMo={false} calcList={CL.map(c=>({id:c.id,name:c.l,keywords:c.l+" "+(DESC[c.id]||""),cat:c.c}))}/>
-            <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:16}}>
-              {[{label:"#취득세",cat:"tax",calc:"acquisition"},{label:"#양도소득세",cat:"tax",calc:"transfer"},{label:"#연봉실수령액",cat:"life",calc:"netsalary"},{label:"#DSR한도",cat:"loan",calc:"dsr"},{label:"#연말정산",cat:"tax",calc:"yearend"},{label:"#중개수수료",cat:"cost",calc:"commission"}].map((tag,i)=>(
-                <button key={i} onClick={()=>navigateCalc(tag.cat,tag.calc)} style={{padding:"4px 12px",background:"#f4f5f7",border:"none",borderRadius:16,fontSize:12,color:"#6b778c",cursor:"pointer",fontWeight:500,transition:"all .15s",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0}} onMouseEnter={e=>{e.currentTarget.style.background="#deebff";e.currentTarget.style.color="#0747A6"}} onMouseLeave={e=>{e.currentTarget.style.background="#f4f5f7";e.currentTarget.style.color="#6b778c"}}>{tag.label}</button>
-              ))}
-            </div>
-            <div style={{display:"flex",gap:12,flexWrap:"wrap"}}>
-              <button onClick={()=>navigateCalc("tax","acquisition")} style={{background:"#0747A6",color:"#fff",border:"none",borderRadius:12,padding:"14px 28px",fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit",transition:"all .2s",boxShadow:"0 4px 14px rgba(7,71,166,0.3)"}} onMouseEnter={e=>{e.currentTarget.style.transform="scale(1.04)";e.currentTarget.style.boxShadow="0 6px 20px rgba(7,71,166,0.4)"}} onMouseLeave={e=>{e.currentTarget.style.transform="scale(1)";e.currentTarget.style.boxShadow="0 4px 14px rgba(7,71,166,0.3)"}}>지금 계산하기 →</button>
-              <button onClick={()=>document.getElementById("allCalcs")?.scrollIntoView({behavior:"smooth"})} style={{background:"#fff",color:"#172B4D",border:"2px solid #dfe1e6",borderRadius:8,padding:"14px 28px",fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>39가지 도구 보기</button>
-            </div>
-            <div style={{display:"flex",gap:isMo?12:24,marginTop:24,flexWrap:"wrap"}}>
-              <div style={{display:"flex",alignItems:"center",gap:6}}><span style={{fontSize:14}}>📊</span><span style={{fontSize:13,color:"#6b778c"}}>누적 계산 <strong style={{color:"#172B4D"}}>150,000건+</strong></span></div>
-              <div style={{display:"flex",alignItems:"center",gap:6}}><span style={{fontSize:14}}>✅</span><span style={{fontSize:13,color:"#6b778c"}}>매일 세법 자동 검증</span></div>
-              <div style={{display:"flex",alignItems:"center",gap:6}}><span style={{fontSize:14}}>🔒</span><span style={{fontSize:13,color:"#6b778c"}}>완전 무료 · 로그인 없이 바로 계산</span></div>
-            </div>
+            <button onClick={()=>navigateCalc("tax","acquisition")} style={{background:"#0747A6",color:"#fff",border:"none",borderRadius:12,padding:"14px 28px",fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit",transition:"all .2s",boxShadow:"0 4px 14px rgba(7,71,166,0.3)"}} onMouseEnter={e=>{e.currentTarget.style.transform="scale(1.04)";e.currentTarget.style.boxShadow="0 6px 20px rgba(7,71,166,0.4)"}} onMouseLeave={e=>{e.currentTarget.style.transform="scale(1)";e.currentTarget.style.boxShadow="0 4px 14px rgba(7,71,166,0.3)"}}>지금 계산하기 →</button>
+            <div style={{fontSize:13,color:"#6b778c",marginTop:16}}>✅ 매일 자동 검증 · 39가지 무료 계산기</div>
           </div>
-          <HeroCarousel navigateCalc={navigateCalc} isMo={false}/>
         </div>
       </div>
       )}
@@ -1530,9 +1511,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
         </div>
       </div>}
 
-      {/* 생활경제 달력 */}
-      <EconCalendar liveData={liveData} isMo={isMo} setCat={setCat} setCalc={setCalc} setPage={setPage}/>
-
       {/* 최근 계산 히스토리 */}
       {calcHistory.length>0&&<div style={{maxWidth:1200,margin:"0 auto",padding:isMo?"12px 16px":"16px 24px"}}>
         <div style={{fontSize:13,fontWeight:700,color:"#172B4D",marginBottom:8}}>📌 최근 계산</div>
@@ -1547,78 +1525,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
       {/* 전체 계산기 격자 그리드 */}
       <CalcGrid navigateCalc={navigateCalc} isMo={isMo}/>
 
-      {/* 섹션 A: PRO 분석 소개 (다크 프리미엄) */}
-      <div style={{background:"linear-gradient(135deg,#0d1117,#161b22)",padding:isMo?"32px 16px":"64px 24px",marginTop:24}}>
-        <div style={{maxWidth:1200,margin:"0 auto"}}>
-          <div style={{marginBottom:24}}>
-            <div style={{display:"inline-block",background:"linear-gradient(135deg,#FFD700,#FFA500)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text",fontSize:12,fontWeight:700,letterSpacing:1,marginBottom:8}}>★ PREMIUM</div>
-            <h2 style={{fontSize:isMo?20:28,fontWeight:800,color:"#e6edf3",margin:0}}>PRO 분석</h2>
-            <p style={{fontSize:14,color:"#8b949e",margin:"4px 0 0"}}>전문 투자자를 위한 심층 분석 엔진</p>
-          </div>
-          <div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"repeat(3,1fr)",gap:16}}>
-            {[{id:"totalcost",title:"총비용 시뮬레이터",desc:"취득세~중개보수 숨겨진 비용까지 한번에",gradient:"linear-gradient(135deg,#1a365d,#2563eb)",badge:"COST"},{id:"compare",title:"세금 비교 분석",desc:"매매 vs 증여 vs 상속 최적 절세 구조",gradient:"linear-gradient(135deg,#1a3d2e,#059669)",badge:"TAX"},{id:"invest",title:"투자 수익 분석",desc:"매수→보유→매도 전체 IRR 분석",gradient:"linear-gradient(135deg,#3d1a1a,#dc2626)",badge:"ROI"}].map(pro=>(
-              <div key={pro.id} onClick={()=>navigateCalc("pro",pro.id)} style={{background:pro.gradient,borderRadius:16,padding:isMo?20:24,cursor:"pointer",border:"1px solid rgba(255,255,255,0.06)",transition:"all .25s",position:"relative",overflow:"hidden"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow="0 12px 40px rgba(0,0,0,0.4)"}} onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none"}}>
-                <div style={{position:"absolute",top:12,right:12,background:"rgba(255,215,0,0.15)",color:"#FFD700",fontSize:10,fontWeight:700,padding:"3px 8px",borderRadius:4,letterSpacing:1}}>{pro.badge}</div>
-                <div style={{fontSize:isMo?16:18,fontWeight:700,color:"#e6edf3",marginTop:8,marginBottom:6}}>{pro.title}</div>
-                <div style={{fontSize:13,color:"#8b949e",lineHeight:1.5,marginBottom:16}}>{pro.desc}</div>
-                <div style={{fontSize:13,color:"#FFD700",fontWeight:600}}>분석 시작 →</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+      {/* 생활경제 달력 */}
+      <EconCalendar liveData={liveData} isMo={isMo} setCat={setCat} setCalc={setCalc} setPage={setPage}/>
 
-      {/* 섹션 B: 규제 타임라인 + 전문성 */}
-      <div style={{background:"#fff",padding:"64px 24px"}}>
-        <div style={{maxWidth:1200,margin:"0 auto",display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32}}>
-          <div style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:isMo?16:32}}>
-            <h3 style={{fontSize:22,fontWeight:800,color:P.tx,margin:"0 0 24px"}}>규제 변경 타임라인</h3>
-            {[{y:"2020-2022",t:"부동산 규제 강화기",d:"취득세 중과, DSR 규제 도입",active:false},
-              {y:"2024-2025 현행",t:"규제 완화 전환",d:"생애최초 감면, LTV 완화",active:true},
-              {y:"2026 전망",t:"디지털 세정 확대",d:"전자신고 의무화 예정",active:false}
-            ].map((item,i)=>(<div key={i} style={{display:"flex",gap:16,marginBottom:i<2?24:0,position:"relative"}}>
-              {i<2&&<div style={{position:"absolute",left:9,top:24,width:2,height:"calc(100% + 4px)",borderLeft:"2px dashed #dfe1e6"}}/>}
-              <div style={{width:20,height:20,borderRadius:"50%",background:item.active?P.pri:"#dfe1e6",border:item.active?"3px solid #deebff":"3px solid #f4f5f7",flexShrink:0,marginTop:2,zIndex:1}}/>
-              <div>
-                <div style={{display:"inline-block",background:item.active?"#deebff":"#f4f5f7",color:item.active?P.pri:P.mt,fontSize:11,fontWeight:700,padding:"3px 10px",borderRadius:4,marginBottom:6}}>{item.y}</div>
-                <div style={{fontSize:15,fontWeight:700,color:P.tx}}>{item.t}</div>
-                <div style={{fontSize:13,color:P.mt,marginTop:2}}>{item.d}</div>
-              </div>
-            </div>))}
-          </div>
-          <div style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:isMo?16:32}}>
-            <h3 style={{fontSize:22,fontWeight:800,color:P.tx,margin:"0 0 16px"}}>정밀함이 중요한 이유</h3>
-            <p style={{fontSize:14,color:P.mt,lineHeight:1.7,margin:"0 0 24px"}}>복잡한 세법과 대출 규정은 전문 도구 없이는 정확한 판단이 어렵습니다.</p>
-            <div style={{display:"flex",gap:12,alignItems:"flex-start",marginBottom:24,padding:"16px 18px",background:"#f8f9fc",borderRadius:12}}>
-              <span style={{fontSize:24}}>💬</span>
-              <div>
-                <div style={{fontSize:14,fontWeight:700,color:P.tx}}>전문가 수준 정밀도</div>
-                <div style={{fontSize:13,color:P.mt,marginTop:2}}>세무사·공인중개사가 사용하는 계산 로직</div>
-              </div>
-            </div>
-            <div style={{display:"grid",gridTemplateColumns:"1fr",gap:16}}>
-              <div style={{textAlign:"center",padding:16,background:"#f8f9fc",borderRadius:12}}>
-                <div style={{fontSize:32,fontWeight:900,color:P.pri}}>99.8%</div>
-                <div style={{fontSize:13,color:P.mt,marginTop:4}}>계산 정확도</div>
-              </div>
-              <div style={{textAlign:"center",padding:16,background:"#f8f9fc",borderRadius:12}}>
-                <div style={{fontSize:32,fontWeight:900,color:P.pri}}>39개</div>
-                <div style={{fontSize:13,color:P.mt,marginTop:4}}>전문 계산기</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 섹션 C: CTA 배너 */}
-      <div style={{background:"linear-gradient(135deg,#0747A6,#0065FF)",padding:"64px 24px",textAlign:"center"}}>
-        <div style={{fontSize:isMo?24:32,fontWeight:900,color:"#fff"}}>다음 재정 판단의 첫걸음</div>
-        <div style={{fontSize:isMo?14:16,color:"rgba(255,255,255,0.75)",marginTop:12}}>대한민국 NO.1 생활 계산기, 지금 무료로 시작하세요.</div>
-        <div style={{display:"flex",justifyContent:"center",gap:16,marginTop:32,flexDirection:isMo?"column":"row",alignItems:"center"}}>
-          <button onClick={()=>navigateCalc("tax","acquisition")} style={{background:"#fff",color:P.pri,border:"none",borderRadius:8,padding:"14px 32px",fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit",width:isMo?"100%":"auto"}}>무료로 시작하기</button>
-          <button onClick={()=>navigateCalc("pro","totalcost")} style={{background:"transparent",color:"#fff",border:"2px solid rgba(255,255,255,0.4)",borderRadius:8,padding:"14px 32px",fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit",width:isMo?"100%":"auto"}}>PRO 둘러보기</button>
-        </div>
-      </div>
     </>):(
     <>
       <div className="calc-grid" style={{maxWidth:1200,margin:"0 auto",padding:isMo?"16px":"32px 24px",display:"grid",gridTemplateColumns:"220px minmax(0,1fr) 280px",gap:isMo?16:24,alignItems:"start"}}>
@@ -1697,28 +1606,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
         </div>
       </div>
     </>)}
-
-    {/* 경제지표 대시보드 */}
-    {liveData?<IndicatorDashboard liveData={liveData} isMo={isMo}/>:<div style={{maxWidth:1200,margin:"0 auto",padding:isMo?"24px 16px":"48px 24px"}}><Skeleton height={32} borderRadius={8}/><div style={{display:"flex",gap:12,marginTop:16}}>{[1,2,3,4,5,6].map(i=><Skeleton key={i} width={isMo?140:160} height={92} borderRadius={14}/>)}</div><div style={{marginTop:16}}><Skeleton height={250} borderRadius={16}/></div></div>}
-
-    {/* 회원 혜택 섹션 */}
-    <div style={{maxWidth:1200,margin:"0 auto",padding:isMo?"32px 16px":"48px 24px"}}>
-      <h2 style={{fontSize:isMo?20:24,fontWeight:800,color:"#172B4D",textAlign:"center",margin:"0 0 8px"}}>무료 회원이 누리는 혜택</h2>
-      <p style={{fontSize:13,color:"#505f79",textAlign:"center",margin:"0 0 24px"}}>계산기는 가입 없이 100% 무료 · 가입하면 더 편해집니다</p>
-      <div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"repeat(4,1fr)",gap:16}}>
-        {[{icon:"💾",title:"계산 기록 저장",desc:"브라우저를 닫아도 결과가 남아요. 언제든 다시 확인."},{icon:"📊",title:"변동 추적 비교",desc:"3개월 전 vs 오늘, 세금이 얼마나 바뀌었는지 한눈에."},{icon:"🔔",title:"세금 납부 알림",desc:"재산세, 종소세 등 마감일 전에 이메일로 알려드려요."},{icon:"⚡",title:"입력값 자동 완성",desc:"연봉, 주소 등 자주 쓰는 값을 매번 입력하지 않아도 돼요."}].map((item,i)=>(
-          <div key={i} style={{background:"#fff",borderRadius:14,padding:isMo?20:24,border:"1px solid #dfe1e6",textAlign:"center"}}>
-            <div style={{fontSize:32,marginBottom:12}}>{item.icon}</div>
-            <div style={{fontSize:15,fontWeight:700,color:"#172B4D",marginBottom:6}}>{item.title}</div>
-            <div style={{fontSize:13,color:"#505f79",lineHeight:1.5}}>{item.desc}</div>
-          </div>
-        ))}
-      </div>
-      <div style={{textAlign:"center",marginTop:24}}>
-        <button onClick={()=>{setAuthMode("signup");setShowAuth(true);}} style={{padding:"14px 40px",background:"#0747A6",color:"#fff",border:"none",borderRadius:10,fontSize:15,fontWeight:700,cursor:"pointer",boxShadow:"0 4px 14px rgba(7,71,166,0.3)",fontFamily:"inherit"}}>무료 회원가입 (이메일만 필요)</button>
-        <div style={{fontSize:12,color:"#6b778c",marginTop:8}}>🔒 개인정보 최소 수집 · 언제든 탈퇴 가능</div>
-      </div>
-    </div>
 
     {/* 업데이트 내역 */}
     <div style={{maxWidth:1200,margin:"0 auto",padding:"48px 24px"}}>
