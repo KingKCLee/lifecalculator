@@ -1,0 +1,73 @@
+name: Daily Data Update
+on:
+  schedule:
+    - cron: '0 22 * * *'
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update economic data
+        run: |
+          python3 << 'PYEOF'
+          import json, urllib.request, datetime
+
+          path = "public/data/live-data.json"
+          with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+
+          today = datetime.datetime.now().strftime("%Y.%m.%d")
+          data["lastUpdate"] = today
+
+          try:
+            req = urllib.request.urlopen("https://open.er-api.com/v6/latest/USD", timeout=10)
+            rates = json.loads(req.read())
+            if rates.get("rates",{}).get("KRW"):
+              data.setdefault("indicators",{})["usdkrw"] = round(rates["rates"]["KRW"], 2)
+          except Exception as e:
+            print(f"FX fetch failed: {e}")
+
+          policyDates = data.get("policyDates", {})
+          now = datetime.datetime.now()
+
+          for key, dateStr in policyDates.items():
+            try:
+              endDate = datetime.datetime.strptime(dateStr, "%Y-%m-%d")
+              dDay = (endDate - now).days
+
+              if 0 < dDay <= 30:
+                title = f"정책 만료 D-{dDay}: {key}"
+                existing = [l for l in data.get("updateLog",[]) if l.get("title")==title]
+                if not existing:
+                  data.setdefault("updateLog",[]).insert(0, {
+                    "date": today,
+                    "category": "세금",
+                    "title": title,
+                    "desc": f"{dateStr} 만료 예정. 관련 계산기에 자동 반영됩니다.",
+                    "urgent": True
+                  })
+            except Exception as e:
+              print(f"Policy check failed for {key}: {e}")
+
+          with open(path, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+
+          print(f"Data updated: {today}")
+          PYEOF
+
+      - name: Update sitemap lastmod
+        run: |
+          TODAY=$(TZ=Asia/Seoul date +%Y-%m-%d)
+          sed -i "s|<lastmod>[0-9-]*</lastmod>|<lastmod>${TODAY}</lastmod>|g" public/sitemap.xml
+
+      - name: Commit and push
+        run: |
+          git config user.name "Auto Updater"
+          git config user.email "auto@lifecalculator.com"
+          git add -A
+          git diff --staged --quiet || (git commit -m "일일 자동 업데이트: 경제지표+정책만료체크" && git push)

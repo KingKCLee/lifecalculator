@@ -1,0 +1,56 @@
+name: Auto Sitemap
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/App.jsx'
+
+jobs:
+  sitemap:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '자동')"
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract pages and update sitemap
+        run: |
+          export TODAY=$(TZ=Asia/Seoul date +%Y-%m-%d)
+
+          python3 << 'PYEOF'
+          import re, os, urllib.parse
+
+          with open("src/App.jsx", "r", encoding="utf-8") as f:
+            code = f.read()
+
+          pages = re.findall(r'\{id:"([^"]+)",l:"([^"]+)",c:"([^"]+)"', code)
+
+          if not pages:
+            print("No pages found")
+            exit(0)
+
+          today = os.environ["TODAY"]
+          domain = "https://xn--989a00a691bdfa717h.com"
+
+          urls = [f'  <url><loc>{domain}/</loc><lastmod>{today}</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>']
+
+          for pid, name, cat in pages:
+            slug = name.replace(" ","") + "계산기"
+            encoded = urllib.parse.quote(slug)
+            urls.append(f'  <url><loc>{domain}/#/{encoded}</loc><lastmod>{today}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>')
+
+          sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "\n".join(urls) + "\n</urlset>\n"
+
+          with open("public/sitemap.xml", "w", encoding="utf-8") as f:
+            f.write(sitemap)
+
+          print(f"Sitemap updated: {len(urls)} URLs")
+          PYEOF
+
+      - name: Commit
+        run: |
+          git config user.name "Auto Sitemap"
+          git config user.email "auto@lifecalculator.com"
+          git add public/sitemap.xml
+          git diff --staged --quiet || (git commit -m "자동 사이트맵 갱신" && git push)
