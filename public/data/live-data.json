@@ -1095,6 +1095,12 @@
     {
       "date": "2026.04.06",
       "category": "전체",
+      "title": "모바일 UI 6건: Tog가로배치+체크박스nowrap+결과버튼가로+날짜갱신+EXPERT필터+note줄바꿈",
+      "desc": "모바일 UI 6건: Tog가로배치+체크박스nowrap+결과버튼가로+날짜갱신+EXPERT필터+note줄바꿈"
+    },
+    {
+      "date": "2026.04.06",
+      "category": "전체",
       "title": "도움말 컴포넌트 TipModal로 통일 (Tip 삭제)",
       "desc": "도움말 컴포넌트 TipModal로 통일 (Tip 삭제)"
     },
