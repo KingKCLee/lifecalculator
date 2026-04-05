@@ -2136,14 +2136,14 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
     </>):(
     <>
       {isMo?(<div style={{padding:"8px 0",background:"#fff"}}>
-        <div style={{padding:"8px 16px",fontSize:12,color:"#6b778c"}}>
-          <span onClick={navigateHome} style={{cursor:"pointer",color:"#0747A6"}}>홈</span>
-          <span> › </span>
-          <span onClick={()=>{const first=CL.find(c=>c.c===cat);if(first)navigateCalc(cat,first.id);}} style={{cursor:"pointer",color:"#0747A6"}}>{catInfo?.l}</span>
-          <span> › </span>
-          <span style={{fontWeight:600,color:"#172B4D"}}>{CL.find(c=>c.id===calc)?.l}</span>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 16px"}}>
+          <h1 style={{fontSize:20,fontWeight:800,color:P.tx,margin:0,letterSpacing:-1,flexShrink:0,maxWidth:"55%",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{CL.find(c=>c.id===calc)?.l||catInfo?.l+" 계산기"}</h1>
+          <div style={{fontSize:11,color:P.mt,textAlign:"right",lineHeight:1.6,flexShrink:0}}>
+            <span onClick={navigateHome} style={{cursor:"pointer",color:"#0747A6"}}>홈</span>
+            <span> › </span>
+            <span onClick={()=>{const first=CL.find(c=>c.c===cat);if(first)navigateCalc(cat,first.id);}} style={{cursor:"pointer",color:"#0747A6"}}>{catInfo?.l}</span>
+          </div>
         </div>
-        <h1 style={{fontSize:22,fontWeight:800,color:P.tx,margin:0,padding:"4px 16px 8px",letterSpacing:-1}}>{CL.find(c=>c.id===calc)?.l||catInfo?.l+" 계산기"}</h1>
         <div style={{position:"relative"}}>
           <div ref={tabScrollRef} className="sub-tabs" style={{display:"flex",gap:6,flexWrap:isMo?"nowrap":"wrap",overflowX:isMo?"auto":"visible",padding:"4px 16px 12px",WebkitOverflowScrolling:"touch"}}>
             {filtered.map(c=>(<button key={c.id} onClick={()=>navigateCalc(cat,c.id)} style={{padding:isMo?"4px 10px":"6px 12px",border:calc===c.id?"none":"1px solid #dfe1e6",borderRadius:16,background:calc===c.id?"#0747A6":"transparent",color:calc===c.id?"#fff":"#505f79",fontSize:isMo?11:12,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0,height:isMo?28:undefined}}>{c.l}</button>))}
