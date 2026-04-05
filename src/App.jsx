@@ -251,9 +251,10 @@ function Slider({label,value,onChange,min,max,step}){
   </div>);
 }
 function Radio({label,value,onChange,options}){
+  const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
   return(<div style={{marginBottom:20}}>
     <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:8,letterSpacing:.5,textTransform:"uppercase"}}>{label}</label>
-    <div style={{display:"grid",gridTemplateColumns:`repeat(${Math.min(options.length,3)},1fr)`,gap:10}}>
+    <div style={{display:"grid",gridTemplateColumns:isMo?"1fr":`repeat(${Math.min(options.length,3)},1fr)`,gap:10}}>
       {options.map(o=>(<div key={o.value} onClick={()=>onChange(o.value)}
         style={{padding:"14px 12px",borderRadius:12,border:value===o.value?"2px solid #0747A6":"2px solid #dfe1e6",
           background:value===o.value?"#deebff":"#fff",cursor:"pointer",textAlign:"center",
@@ -293,9 +294,10 @@ function Sel({label,value,onChange,options}){
   </div>);
 }
 function Tog({label,value,onChange,options}){
+  const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
   return(<div style={{marginBottom:16}}>
     <label style={{display:"block",fontSize:12,fontWeight:600,color:P.mt,marginBottom:6}}>{label}</label>
-    <div style={{display:"flex",borderRadius:8,overflow:"hidden",border:`1.5px solid ${P.bd}`}}>
+    <div style={{display:"flex",flexWrap:isMo?"wrap":"nowrap",borderRadius:8,overflow:"hidden",border:`1.5px solid ${P.bd}`}}>
       {options.map((o,i)=>(<button key={o.value} onClick={()=>onChange(o.value)} style={{flex:1,padding:"9px 8px",border:"none",borderRight:i<options.length-1?`1px solid ${P.bd}`:"none",background:value===o.value?P.pri:P.lt,color:value===o.value?"#fff":P.mt,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>{o.label}</button>))}
     </div>
   </div>);
