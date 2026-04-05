@@ -1930,6 +1930,7 @@ export default function App(){
   const[cat,setCat]=useState("tax");const[calc,setCalc]=useState("acquisition");const[gTab,setGTab]=useState("rates");
   const[search,setSearch]=useState("");
   const[modal,setModal]=useState(null);
+  const tabScrollRef=useRef(null);
   const[mobileMenu,setMobileMenu]=useState(false);const[menuExpand,setMenuExpand]=useState(null);
   const[showAuth,setShowAuth]=useState(false);const[authMode,setAuthMode]=useState("login");const[isLoggedIn,setIsLoggedIn]=useState(false);
   const[calcHistory,setCalcHistory]=useState(()=>{try{return JSON.parse(localStorage.getItem('calc_history')||'[]')}catch{return[]}});
@@ -1937,6 +1938,7 @@ export default function App(){
   const[showAllLog,setShowAllLog]=useState(false);const[hoverCat,setHoverCat]=useState(null);
   const[liveData,setLiveData]=useState(null);
   useEffect(()=>{fetch('/data/live-data.json?t='+Date.now()).then(r=>r.json()).then(d=>{setLiveData(d);RATES=d?.rates||{};}).catch(()=>{});},[]);
+  useEffect(()=>{if(!isMo)return;const el=tabScrollRef.current;if(!el)return;const t1=setTimeout(()=>{el.scrollTo({left:60,behavior:"smooth"});const t2=setTimeout(()=>el.scrollTo({left:0,behavior:"smooth"}),600);return()=>clearTimeout(t2);},800);return()=>clearTimeout(t1);},[calc,isMo]);
   const filtered=CL.filter(c=>c.c===cat);
   const navigateCalc=(catId,calcId)=>{setCat(catId);setCalc(calcId);setPage("calc");window.location.hash='/'+(SLUGS[calcId]||calcId);window.scrollTo(0,0);const info=CL.find(c=>c.id===calcId);if(info)saveHistory(calcId,info.l,1);};
   const navigateHome=()=>{setPage("home");window.location.hash='';window.scrollTo(0,0);};
@@ -2142,8 +2144,11 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           <span style={{fontWeight:600,color:"#172B4D"}}>{CL.find(c=>c.id===calc)?.l}</span>
         </div>
         <h1 style={{fontSize:22,fontWeight:800,color:P.tx,margin:0,padding:"4px 16px 8px",letterSpacing:-1}}>{CL.find(c=>c.id===calc)?.l||catInfo?.l+" 계산기"}</h1>
-        <div className="sub-tabs" style={{display:"flex",gap:6,flexWrap:"wrap",padding:"4px 16px 12px"}}>
-          {filtered.map(c=>(<button key={c.id} onClick={()=>navigateCalc(cat,c.id)} style={{padding:isMo?"4px 10px":"6px 12px",border:calc===c.id?"none":"1px solid #dfe1e6",borderRadius:16,background:calc===c.id?"#0747A6":"transparent",color:calc===c.id?"#fff":"#505f79",fontSize:isMo?11:12,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0,height:isMo?28:undefined}}>{c.l}</button>))}
+        <div style={{position:"relative"}}>
+          <div ref={tabScrollRef} className="sub-tabs" style={{display:"flex",gap:6,flexWrap:isMo?"nowrap":"wrap",overflowX:isMo?"auto":"visible",padding:"4px 16px 12px",WebkitOverflowScrolling:"touch"}}>
+            {filtered.map(c=>(<button key={c.id} onClick={()=>navigateCalc(cat,c.id)} style={{padding:isMo?"4px 10px":"6px 12px",border:calc===c.id?"none":"1px solid #dfe1e6",borderRadius:16,background:calc===c.id?"#0747A6":"transparent",color:calc===c.id?"#fff":"#505f79",fontSize:isMo?11:12,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0,height:isMo?28:undefined}}>{c.l}</button>))}
+          </div>
+          {isMo&&<div style={{position:"absolute",right:0,top:0,bottom:0,width:40,background:"linear-gradient(to right, transparent, #f4f5f7)",pointerEvents:"none",zIndex:1}}/>}
         </div>
         <MobileCalcWrapper><Comp isMo={true}/></MobileCalcWrapper>
         <div style={{padding:"0 12px 24px"}}>
