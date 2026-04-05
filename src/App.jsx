@@ -1393,7 +1393,7 @@ export default function App(){
   const[cat,setCat]=useState("tax");const[calc,setCalc]=useState("acquisition");const[gTab,setGTab]=useState("rates");
   const[search,setSearch]=useState("");
   const[modal,setModal]=useState(null);
-  const[mobileMenu,setMobileMenu]=useState(false);
+  const[mobileMenu,setMobileMenu]=useState(false);const[menuExpand,setMenuExpand]=useState(null);
   const[showAuth,setShowAuth]=useState(false);const[authMode,setAuthMode]=useState("login");const[isLoggedIn,setIsLoggedIn]=useState(false);
   const[calcHistory,setCalcHistory]=useState(()=>{try{return JSON.parse(localStorage.getItem('calc_history')||'[]')}catch{return[]}});
   const saveHistory=(cId,name,total)=>{if(!total||total<=0)return;const item={id:cId,name,total,time:Date.now()};setCalcHistory(prev=>{const updated=[item,...prev.filter(h=>h.id!==cId)].slice(0,10);try{localStorage.setItem('calc_history',JSON.stringify(updated))}catch{}return updated;});};
@@ -1457,9 +1457,31 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
             <button aria-label="메뉴" onClick={()=>setMobileMenu(!mobileMenu)} style={{background:"none",border:"none",fontSize:22,cursor:"pointer",color:"#172B4D",padding:8,lineHeight:1,minWidth:40,minHeight:40}}>{mobileMenu?"✕":"☰"}</button>
           </div>
         </div>
-        {mobileMenu&&<div style={{background:"#fff",borderTop:"1px solid #f4f5f7",boxShadow:"0 8px 24px rgba(0,0,0,0.1)"}}>
-          {CATS.map(c=>(<div key={c.id} onClick={()=>{hCat(c.id);setMobileMenu(false);window.scrollTo(0,0);}} style={{padding:"14px 24px",fontSize:16,fontWeight:cat===c.id&&page!=="home"?700:500,color:cat===c.id&&page!=="home"?P.pri:"#172B4D",background:cat===c.id&&page!=="home"?"#deebff":"transparent",cursor:"pointer",borderBottom:"1px solid #f4f5f7"}}>{c.l}</div>))}
-          <div onClick={()=>{setAuthMode("login");setShowAuth(true);setMobileMenu(false);}} style={{padding:"14px 24px",fontSize:15,fontWeight:500,color:"#6b778c",cursor:"pointer"}}>로그인</div>
+        {mobileMenu&&<div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.5)",zIndex:9999}} onClick={()=>{setMobileMenu(false);setMenuExpand(null);}}>
+          <div onClick={e=>e.stopPropagation()} style={{position:"fixed",top:0,right:0,width:"80%",maxWidth:320,height:"100vh",background:"#fff",overflowY:"auto",boxShadow:"-4px 0 20px rgba(0,0,0,0.15)",padding:"16px 0"}}>
+            <div style={{display:"flex",justifyContent:"flex-end",padding:"8px 16px"}}>
+              <button onClick={()=>{setMobileMenu(false);setMenuExpand(null);}} style={{background:"none",border:"none",fontSize:24,cursor:"pointer",color:"#505f79"}}>✕</button>
+            </div>
+            {CATS.map(c=>{const items=CL.filter(cl=>cl.c===c.id);const isExpanded=menuExpand===c.id;return(
+              <div key={c.id}>
+                <button onClick={()=>setMenuExpand(isExpanded?null:c.id)} style={{width:"100%",display:"flex",justifyContent:"space-between",alignItems:"center",padding:"16px 20px",background:isExpanded?"#f0f4ff":"transparent",border:"none",borderBottom:"1px solid #f4f5f7",cursor:"pointer",fontFamily:"inherit"}}>
+                  <span style={{fontSize:16,fontWeight:isExpanded?700:500,color:isExpanded?"#0747A6":"#172B4D"}}>{c.l}</span>
+                  <span style={{fontSize:13,color:"#a5adba",transform:isExpanded?"rotate(180deg)":"rotate(0)",transition:"transform 0.2s"}}>▼</span>
+                </button>
+                {isExpanded&&<div style={{background:"#f8f9fc"}}>
+                  {items.map(item=>(
+                    <button key={item.id} onClick={()=>{navigateCalc(c.id,item.id);setMobileMenu(false);setMenuExpand(null);}} style={{width:"100%",display:"flex",alignItems:"center",padding:"14px 20px 14px 36px",background:"transparent",border:"none",borderBottom:"1px solid #eee",cursor:"pointer",fontFamily:"inherit"}}>
+                      <span style={{fontSize:15,color:calc===item.id?"#0747A6":"#505f79",fontWeight:calc===item.id?700:400}}>{item.l}</span>
+                    </button>
+                  ))}
+                </div>}
+              </div>
+            );})}
+            <div style={{padding:"20px",borderTop:"1px solid #e8eaed",marginTop:8}}>
+              <button onClick={()=>{setAuthMode("signup");setShowAuth(true);setMobileMenu(false);}} style={{width:"100%",padding:"14px",background:"#0747A6",color:"#fff",border:"none",borderRadius:10,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>무료 가입</button>
+              <button onClick={()=>{setAuthMode("login");setShowAuth(true);setMobileMenu(false);}} style={{width:"100%",padding:"14px",background:"transparent",color:"#505f79",border:"none",borderRadius:10,fontSize:14,fontWeight:500,cursor:"pointer",fontFamily:"inherit",marginTop:8}}>로그인</button>
+            </div>
+          </div>
         </div>}
       </>):(
         <div style={{maxWidth:1200,margin:"0 auto",display:"flex",alignItems:"center",justifyContent:"space-between",height:56,padding:"0 24px"}}>
