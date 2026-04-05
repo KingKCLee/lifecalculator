@@ -1094,6 +1094,12 @@
   "updateLog": [
     {
       "date": "2026.04.06",
+      "category": "세금",
+      "title": "시가표준액 겹침 수정 + 취득세 EXPERT GUIDE FAQ 5개로 개편",
+      "desc": "시가표준액 겹침 수정 + 취득세 EXPERT GUIDE FAQ 5개로 개편"
+    },
+    {
+      "date": "2026.04.06",
       "category": "전체",
       "title": "Tip: 바깥클릭닫힘(투명오버레이)+X버튼 추가",
       "desc": "Tip: 바깥클릭닫힘(투명오버레이)+X버튼 추가"
