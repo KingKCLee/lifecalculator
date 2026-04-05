@@ -1342,7 +1342,7 @@ export default function App(){
   const[showAuth,setShowAuth]=useState(false);const[authMode,setAuthMode]=useState("login");
   const[calcHistory,setCalcHistory]=useState(()=>{try{return JSON.parse(localStorage.getItem('calc_history')||'[]')}catch{return[]}});
   const saveHistory=(cId,name,total)=>{if(!total||total<=0)return;const item={id:cId,name,total,time:Date.now()};setCalcHistory(prev=>{const updated=[item,...prev.filter(h=>h.id!==cId)].slice(0,10);try{localStorage.setItem('calc_history',JSON.stringify(updated))}catch{}return updated;});};
-  const[showAllLog,setShowAllLog]=useState(false);
+  const[showAllLog,setShowAllLog]=useState(false);const[hoverCat,setHoverCat]=useState(null);
   const[liveData,setLiveData]=useState(null);
   useEffect(()=>{fetch('/data/live-data.json?t='+Date.now()).then(r=>r.json()).then(d=>setLiveData(d)).catch(()=>{});},[]);
   const filtered=CL.filter(c=>c.c===cat);
@@ -1410,8 +1410,20 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
             <LogoSVG size={36}/>
             <span style={{fontSize:22,fontWeight:800,color:P.pri}}>생활계산기.com</span>
           </div>
-          <div className="sub-tabs" style={{display:"flex",gap:4,flex:1,justifyContent:"center"}}>
-            {CATS.map(c=>(<button key={c.id} onClick={()=>{hCat(c.id);setPage("calc");}} style={{padding:"8px 20px",border:"none",borderRadius:6,background:cat===c.id&&page!=="home"?"#deebff":"transparent",color:cat===c.id&&page!=="home"?P.pri:P.mt,fontSize:15,fontWeight:cat===c.id&&page!=="home"?700:500,cursor:"pointer",fontFamily:"inherit",flexShrink:0,minHeight:44}}>{c.l}</button>))}
+          <div className="sub-tabs" style={{display:"flex",gap:4,flex:1,justifyContent:"center",position:"relative"}}>
+            {CATS.map(c=>{const items=CL.filter(cl=>cl.c===c.id);const active=cat===c.id&&page!=="home";const hot=hoverCat===c.id;return(
+              <div key={c.id} onMouseEnter={()=>setHoverCat(c.id)} onMouseLeave={()=>setHoverCat(null)} style={{position:"relative"}}>
+                <button onClick={()=>{hCat(c.id);setPage("calc");}} style={{padding:"8px 20px",border:"none",borderRadius:6,background:active||hot?"#deebff":"transparent",color:active||hot?P.pri:P.mt,fontSize:15,fontWeight:active?700:500,cursor:"pointer",fontFamily:"inherit",flexShrink:0,minHeight:44}}>{c.l}</button>
+                {hot&&<div style={{position:"absolute",top:"100%",left:0,paddingTop:4,zIndex:1000}}>
+                  <div style={{background:"#fff",borderRadius:12,border:"1px solid #dfe1e6",boxShadow:"0 8px 24px rgba(0,0,0,0.12)",padding:"8px 0",minWidth:220}}>
+                    <div style={{padding:"8px 16px 6px",fontSize:11,fontWeight:700,color:P.mt,letterSpacing:1}}>{c.l.toUpperCase()} — {items.length}개</div>
+                    {items.map(item=>(<div key={item.id} onClick={()=>{navigateCalc(c.id,item.id);setHoverCat(null);}} style={{padding:"10px 16px",fontSize:14,cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center",transition:"background 0.1s",fontWeight:calc===item.id?700:400,color:calc===item.id?"#0747A6":"#172B4D"}} onMouseEnter={e=>{e.currentTarget.style.background="#deebff"}} onMouseLeave={e=>{e.currentTarget.style.background="transparent"}}>
+                      <span>{item.l}</span><span style={{fontSize:11,color:"#a5adba"}}>→</span>
+                    </div>))}
+                  </div>
+                </div>}
+              </div>
+            );})}
           </div>
           <div style={{display:"flex",alignItems:"center",gap:8,flexShrink:0}}>
             <button onClick={()=>{setAuthMode("login");setShowAuth(true);}} style={{fontSize:14,fontWeight:500,color:"#6b778c",background:"none",border:"none",cursor:"pointer",padding:"8px 12px",fontFamily:"inherit"}}>로그인</button>
