@@ -253,7 +253,7 @@ function Radio({label,value,onChange,options}){
   const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
   return(<div style={{marginBottom:20}}>
     <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:8,letterSpacing:.5,textTransform:"uppercase"}}>{label}</label>
-    <div className="radio-grid" style={{display:"grid",gridTemplateColumns:isMo?"1fr":`repeat(${Math.min(options.length,3)},1fr)`,gap:10}}>
+    <div className="radio-grid" style={{display:"grid",gridTemplateColumns:`repeat(${Math.min(options.length,3)},1fr)`,gap:isMo?6:10}}>
       {options.map(o=>(<div key={o.value} onClick={()=>onChange(o.value)}
         style={{padding:"14px 12px",borderRadius:12,border:value===o.value?"2px solid #0747A6":"2px solid #dfe1e6",
           background:value===o.value?"#deebff":"#fff",cursor:"pointer",textAlign:"center",
