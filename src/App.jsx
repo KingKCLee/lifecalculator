@@ -1264,7 +1264,7 @@ contact:{title:"문의하기 (Contact Support)",body:<div>
 <h3 style={LS.h}>서비스 문의</h3><p>생활계산기.com에 대한 문의, 건의, 오류 신고 등은 아래로 연락 주시기 바랍니다.</p>
 <div style={LS.ib}><p style={{margin:"4px 0"}}>• 이메일: noble.kclee@gmail.com</p><p style={{margin:"4px 0"}}>• 운영자: 이광철</p><p style={{margin:"4px 0"}}>• 응답 시간: 영업일 기준 1~2일 이내</p></div>
 <h3 style={LS.h}>문의 유형</h3><p>• 계산 결과 오류 신고 — 계산기명, 입력값, 예상 결과를 함께 알려주시면 빠르게 수정합니다.</p><p>• 기능 건의 — 추가되었으면 하는 계산기나 기능을 제안해 주세요.</p><p>• 제휴/협력 문의 — 사업 제휴, API 연동, 광고 등 문의를 환영합니다.</p><p>• 개인정보 관련 — 열람, 정정, 삭제 요청은 이메일로 접수해 주시면 지체 없이 처리합니다.</p>
-<h3 style={LS.h}>사업자 정보</h3><div style={LS.ib}><p style={{margin:"4px 0"}}>• 상호: 더블유부동산</p><p style={{margin:"4px 0"}}>• 대표자: 이광철</p><p style={{margin:"4px 0"}}>• 사업자등록번호: 589-24-01721</p><p style={{margin:"4px 0"}}>• 이메일: noble.kclee@gmail.com</p></div>
+<h3 style={LS.h}>사업자 정보</h3><div style={LS.ib}><p style={{margin:"4px 0"}}>• 상호: 더블유부동산</p><p style={{margin:"4px 0"}}>• 대표자: 이광철</p><p style={{margin:"4px 0"}}>• 사업자등록번호: 589-24-01721</p><p style={{margin:"4px 0"}}>• 통신판매업 신고번호: 제2025-인천부평-0992호</p><p style={{margin:"4px 0"}}>• 이메일: noble.kclee@gmail.com</p></div>
 </div>}
 };
 
@@ -2000,7 +2000,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
       </div>
       <div style={{textAlign:"center",fontSize:11,color:"rgba(255,255,255,0.35)",marginTop:32,lineHeight:1.8,borderTop:"1px solid rgba(255,255,255,0.1)",paddingTop:24,maxWidth:1200,margin:"32px auto 0"}}>
         © {new Date().getFullYear()} 생활계산기.com. All rights reserved. | 세법 검증: {UPDATE_LOG[0]?.date}<br/>
-        <span style={{color:"rgba(255,255,255,0.25)"}}>상호: 더블유부동산 | 대표: 이광철 | 사업자등록번호: 589-24-01721 | 이메일: noble.kclee@gmail.com</span>
+        <span style={{color:"rgba(255,255,255,0.25)"}}>상호: 더블유부동산 | 대표: 이광철 | 사업자등록번호: 589-24-01721 | 통신판매업 신고번호: 제2025-인천부평-0992호 | 이메일: noble.kclee@gmail.com</span>
       </div>
     </footer>
     {modal&&<LegalModal type={modal} onClose={()=>setModal(null)}/>}
