@@ -981,9 +981,28 @@ function CountUp({target,duration=1500,prefix="₩",suffix="만"}){
   return<span ref={ref}>{prefix}{count.toLocaleString()}{suffix}</span>;
 }
 
+const SEARCH_KEYWORDS={acquisition:"취득세 부동산 매매 집 아파트 주택 구입 구매 매수 살때",transfer:"양도소득세 양도세 매도 팔때 부동산 파는",inctax:"종합소득세 종소세 프리랜서 3.3 사업소득 사업자 개인사업 프리 소득세",yearend:"연말정산 환급 13월 월급 직장인 소득공제 세액공제 신용카드",compre:"종부세 종합부동산세 보유세 공시가격",property:"재산세 보유세 건물 토지",gift:"증여세 증여 자녀 부모 가족 물려주기 무상",inherit:"상속세 상속 사망 유산",holdtax:"보유세 통합 재산세 종부세 합산",rental:"임대소득세 월세 임대 렌트 임대사업",mortgage:"대출이자 대출 원리금 원금균등 만기일시 상환 이자계산 원리금균등",dsr:"DSR 디에스알 총부채 대출한도 부채비율 대출가능",dti:"DTI 디티아이 총부채상환 대출",ltv:"LTV 엘티브이 담보 대출한도 담보대출 주담대",loanmax:"대출가능액 최대대출 얼마까지 대출한도 소득대비",commission:"중개수수료 중개보수 복비 부동산수수료 공인중개사 부동산비용",registration:"등기비용 등록면허세 소유권이전 등기 등록세",legal:"법무사수수료 법무사 보수 법무비용",stamp:"인지세 계약서 인지",bond:"채권할인료 국민주택채권 채권 할인",appraisal:"감정평가수수료 감정평가 감정 평가비",netsalary:"연봉 실수령액 월급 세후 세전 급여 실수령 실급여 월급계산 연봉계산 내월급 내연봉",insurance4:"4대보험 사대보험 국민연금 건강보험 고용보험 산재보험 보험료",pension:"국민연금 수령액 연금 노후 수령 얼마 받을수",cartax:"자동차세 차량 배기량 연납 차세 자동차",deposit:"예적금 이자 예금 적금 금리 이율 저축 수익",convert:"전월세 전환 월세 전세 보증금 환산",yield:"임대수익률 수익률 월세수익 투자수익 임대",joint:"공동명의 단독명의 부부 명의 공동소유",area:"평수 변환 제곱미터 평 면적 몇평 평형 아파트평수",far:"용적률 건폐율 건축 대지면적 연면적 건축면적",auction:"경매 비용 낙찰 법원경매 부동산경매",remodel:"리모델링 수익 재건축 증축 분담금",bldvalue:"건물 잔존가치 감가상각 내용연수 건물가치",totalcost:"총비용 매수비용 시뮬레이터 부대비용 매수시",compare:"비교 매매 증여 상속 뭐가유리 절세 세금비교",invest:"투자수익 분석 수익률 IRR 투자 매수매도",retire:"퇴직금 퇴직 근속연수 평균임금 퇴직급여",unemploy:"실업급여 실업 구직급여 고용보험 퇴직후"};
+function searchCalcs(query){
+  if(!query||query.length<1)return[];
+  const q=query.toLowerCase().replace(/\s/g,'');
+  const qRaw=query.toLowerCase();
+  const results=[];
+  for(const[id,keywords]of Object.entries(SEARCH_KEYWORDS)){
+    const item=CL.find(c=>c.id===id);
+    if(!item)continue;
+    const nameL=item.l.toLowerCase();
+    const searchText=(item.l+" "+keywords).toLowerCase().replace(/\s/g,'');
+    if(nameL.startsWith(qRaw)){results.push({id:item.id,name:item.l,cat:item.c,priority:1});continue;}
+    if(nameL.includes(qRaw)){results.push({id:item.id,name:item.l,cat:item.c,priority:2});continue;}
+    if(searchText.includes(q)){results.push({id:item.id,name:item.l,cat:item.c,priority:3});continue;}
+    const allCharsMatch=[...q].every(ch=>searchText.includes(ch));
+    if(q.length>=2&&allCharsMatch)results.push({id:item.id,name:item.l,cat:item.c,priority:4});
+  }
+  return results.sort((a,b)=>a.priority-b.priority).slice(0,6);
+}
 function CalcSearchBar({onSelect,isMo,calcList}){
   const[query,setQuery]=useState("");const[results,setResults]=useState([]);
-  useEffect(()=>{if(query.length<1){setResults([]);return;}const q=query.toLowerCase();setResults(calcList.filter(c=>(c.name+"|"+c.keywords).toLowerCase().includes(q)).slice(0,5));},[query,calcList]);
+  useEffect(()=>{setResults(searchCalcs(query));},[query]);
   const catLabels={tax:"세금",loan:"대출",cost:"비용",life:"생활",realestate:"부동산",pro:"PRO"};
   const catColors={tax:"#0747A6",loan:"#00875A",cost:"#FF8B00",life:"#6554C0",realestate:"#008DA6",pro:"#DE350B"};
   return(<div style={{position:"relative",maxWidth:isMo?"100%":420,marginBottom:20,width:"100%",overflow:"visible"}}>
