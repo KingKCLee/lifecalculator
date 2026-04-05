@@ -71,7 +71,35 @@ commission:[{id:"acquisition",label:"취득세 계산"},{id:"registration",label
 gift:[{id:"inherit",label:"상속세와 비교"},{id:"compare",label:"매매 vs 증여 vs 상속 비교"},{id:"acquisition",label:"증여 취득세 계산"}],
 pension:[{id:"insurance4",label:"4대보험료 확인"},{id:"netsalary",label:"연봉 실수령액 계산"},{id:"yearend",label:"연말정산 환급액"}],
 cartax:[{id:"insurance4",label:"4대보험료도 확인"},{id:"netsalary",label:"연봉 실수령액"}],
-ltv:[{id:"dsr",label:"DSR도 체크하세요"},{id:"mortgage",label:"대출이자 계산"},{id:"loanmax",label:"최대 대출 가능액"}]
+ltv:[{id:"dsr",label:"DSR도 체크하세요"},{id:"mortgage",label:"대출이자 계산"},{id:"loanmax",label:"최대 대출 가능액"}],
+compre:[{id:"property",label:"재산세도 계산하기"},{id:"joint",label:"공동명의 절세 분석"},{id:"holdtax",label:"보유세 통합 계산"}],
+property:[{id:"compre",label:"종부세도 확인하기"},{id:"holdtax",label:"보유세 통합 계산"},{id:"acquisition",label:"취득세 계산"}],
+inherit:[{id:"gift",label:"증여세와 비교"},{id:"compare",label:"매매 vs 증여 vs 상속"},{id:"acquisition",label:"상속 취득세 계산"}],
+mortgage:[{id:"dsr",label:"DSR 한도 체크"},{id:"ltv",label:"LTV 확인"},{id:"loanmax",label:"최대 대출 가능액"}],
+registration:[{id:"commission",label:"중개수수료 계산"},{id:"legal",label:"법무사 수수료"},{id:"acquisition",label:"취득세 계산"}],
+legal:[{id:"registration",label:"등기비용 계산"},{id:"commission",label:"중개수수료 계산"},{id:"totalcost",label:"매수 총비용"}],
+yield:[{id:"mortgage",label:"대출이자 계산"},{id:"convert",label:"전월세 전환율"},{id:"acquisition",label:"취득세 계산"}],
+convert:[{id:"yield",label:"임대수익률 분석"},{id:"mortgage",label:"대출이자 계산"}],
+deposit:[{id:"mortgage",label:"대출이자와 비교"},{id:"netsalary",label:"실수령액 계산"}],
+retire:[{id:"netsalary",label:"연봉 실수령액"},{id:"insurance4",label:"4대보험료 계산"}],
+unemploy:[{id:"netsalary",label:"연봉 실수령액"},{id:"insurance4",label:"4대보험료 계산"}],
+area:[{id:"acquisition",label:"취득세 계산"},{id:"commission",label:"중개수수료 계산"}],
+auction:[{id:"acquisition",label:"취득세 계산"},{id:"registration",label:"등기비용 계산"},{id:"ltv",label:"경락대출 LTV"}],
+stamp:[{id:"registration",label:"등기비용 계산"},{id:"acquisition",label:"취득세 계산"}],
+bond:[{id:"registration",label:"등기비용 계산"},{id:"acquisition",label:"취득세 계산"}],
+holdtax:[{id:"property",label:"재산세 계산"},{id:"compre",label:"종부세 계산"},{id:"joint",label:"공동명의 분석"}],
+rental:[{id:"yield",label:"임대수익률 분석"},{id:"convert",label:"전월세 전환"},{id:"inctax",label:"종합소득세"}],
+joint:[{id:"compre",label:"종부세 계산"},{id:"transfer",label:"양도세 계산"},{id:"acquisition",label:"취득세 계산"}],
+insurance4:[{id:"netsalary",label:"연봉 실수령액"},{id:"yearend",label:"연말정산 환급"},{id:"pension",label:"국민연금 수령액"}],
+loanmax:[{id:"dsr",label:"DSR 체크"},{id:"ltv",label:"LTV 확인"},{id:"mortgage",label:"대출이자 계산"}],
+compare:[{id:"acquisition",label:"취득세 계산"},{id:"gift",label:"증여세 계산"},{id:"transfer",label:"양도세 계산"}],
+invest:[{id:"yield",label:"임대수익률"},{id:"transfer",label:"양도세 계산"},{id:"mortgage",label:"대출이자"}],
+totalcost:[{id:"acquisition",label:"취득세 계산"},{id:"registration",label:"등기비용"},{id:"commission",label:"중개수수료"}],
+far:[{id:"acquisition",label:"취득세 계산"},{id:"remodel",label:"리모델링 수익"}],
+remodel:[{id:"acquisition",label:"취득세 계산"},{id:"yield",label:"임대수익률"}],
+bldvalue:[{id:"acquisition",label:"취득세 계산"},{id:"remodel",label:"리모델링 수익"}],
+appraisal:[{id:"commission",label:"중개수수료"},{id:"registration",label:"등기비용"}],
+dti:[{id:"dsr",label:"DSR 체크"},{id:"ltv",label:"LTV 확인"},{id:"mortgage",label:"대출이자 계산"}]
 };
 
 const FUN_STATS={
@@ -1227,6 +1255,22 @@ function CalcInsurance4({isMo=false}){const[type,sType]=useState("worker");const
     </div>
   </div>:<Empty icon="🏥" msg="월 급여를 입력하세요"/>}</div>);}
 
+function NextStep({calcId,onNav,isMo=false}){
+  const links=(INTERNAL_LINKS[calcId]||[]).map(l=>({id:l.id,label:l.label}));
+  if(links.length===0){const rl=(RELATED[calcId]||[]).map(id=>{const it=CL.find(c=>c.id===id);return it?{id,label:it.l+" 계산하기"}:null;}).filter(Boolean);if(rl.length===0)return null;links.push(...rl);}
+  return(
+    <div style={{marginTop:16,padding:16,background:"#F0F4FF",borderRadius:12,border:"1px solid #C7D7F9"}}>
+      <div style={{fontSize:11,fontWeight:700,color:"#0747A6",letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>📋 관련 계산기</div>
+      <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
+        {links.map(l=>{const it=CL.find(c=>c.id===l.id);if(!it)return null;return(
+          <button key={l.id} onClick={()=>onNav(it.c,l.id)} style={{padding:"8px 14px",background:"#fff",border:"1.5px solid #0747A6",borderRadius:20,fontSize:isMo?12:13,color:"#0747A6",cursor:"pointer",fontWeight:600,fontFamily:"inherit",whiteSpace:"nowrap",transition:"all .15s"}}
+            onMouseEnter={e=>{e.currentTarget.style.background="#0747A6";e.currentTarget.style.color="#fff"}}
+            onMouseLeave={e=>{e.currentTarget.style.background="#fff";e.currentTarget.style.color="#0747A6"}}>{l.label} →</button>
+        );})}
+      </div>
+    </div>
+  );
+}
 const CM={acquisition:CalcAcq,transfer:CalcTrans,compre:CalcCompre,property:CalcProp,gift:CalcGift,inherit:CalcInherit,mortgage:CalcMort,dsr:CalcDSR,dti:CalcDTI,ltv:CalcLTV,commission:CalcComm,registration:CalcReg,legal:CalcLegal,yield:CalcYield,area:CalcArea,convert:CalcConvert,joint:CalcJoint,totalcost:CalcTotalCost,compare:CalcCompare,invest:CalcInvest,loanmax:CalcLoanMax,holdtax:CalcHoldTax,stamp:CalcStamp,bond:CalcBond,deposit:CalcDeposit,far:CalcFAR,rental:CalcRental,inctax:CalcIncTax,yearend:CalcYearEnd,netsalary:CalcNetSalary,cartax:CalcCarTax,insurance4:CalcInsurance4,pension:CalcPension,retire:CalcRetire,unemploy:CalcUnemploy,appraisal:CalcAppraisal,auction:CalcAuction,remodel:CalcRemodel,bldvalue:CalcBldValue};
 
 
@@ -2150,7 +2194,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           </div>
           {isMo&&<div style={{position:"absolute",right:0,top:0,bottom:0,width:40,background:"linear-gradient(to right, transparent, #f4f5f7)",pointerEvents:"none",zIndex:1}}/>}
         </div>
-        <MobileCalcWrapper><Comp isMo={true}/></MobileCalcWrapper>
+        <MobileCalcWrapper><Comp isMo={true}/><NextStep calcId={calc} onNav={navigateCalc} isMo={true}/></MobileCalcWrapper>
         <div style={{padding:"0 12px 24px"}}>
           {SEO_CONTENT[calc]&&<div style={{padding:"20px 16px",background:"#fff",borderRadius:12,border:"1px solid #dfe1e6",marginBottom:12}}><div className="seo" dangerouslySetInnerHTML={{__html:SEO_CONTENT[calc]}} style={{fontSize:14,color:"#172B4D",lineHeight:1.8}}/></div>}
           <EduContent calc={calc} gTab={gTab}/>
@@ -2177,7 +2221,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
             </div>
           </div>
           <div className="calc-container" style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:isMo?16:32,marginBottom:24,boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
-            {isMo?(<MobileCalcWrapper><Comp isMo={true}/></MobileCalcWrapper>):(<Comp isMo={false}/>)}
+            {isMo?(<MobileCalcWrapper><Comp isMo={true}/><NextStep calcId={calc} onNav={navigateCalc} isMo={true}/></MobileCalcWrapper>):(<div><Comp isMo={false}/><NextStep calcId={calc} onNav={navigateCalc} isMo={false}/></div>)}
           </div>
           {INTERNAL_LINKS[calc]&&<div style={{marginBottom:16,padding:"20px 24px",background:"#f8f9fc",borderRadius:12}}>
             <div style={{fontSize:14,fontWeight:700,color:"#172B4D",marginBottom:12}}>🔗 함께 확인하면 좋은 계산기</div>
