@@ -362,11 +362,12 @@ function Slider({label,value,onChange,min,max,step}){
     <div style={{display:"flex",justifyContent:"space-between",fontSize:11,color:P.mt,marginTop:4}}><span>{fW(min*10000)}</span><span>{fW(max*10000)}</span></div>
   </div>);
 }
-function Radio({label,value,onChange,options}){
+function Radio({label,value,onChange,options,cols}){
   const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
+  const colNum=cols||(isMo?Math.min(options.length,2):Math.min(options.length,4));
   return(<div style={{marginBottom:20}}>
     <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:8,letterSpacing:.5,textTransform:"uppercase"}}>{label}</label>
-    <div className="radio-grid" style={{display:"grid",gridTemplateColumns:`repeat(${Math.min(options.length,4)},1fr)`,gap:isMo?6:10}}>
+    <div className="radio-grid" style={{display:"grid",gridTemplateColumns:`repeat(${colNum},1fr)`,gap:isMo?6:10}}>
       {options.map(o=>(<div key={o.value} onClick={()=>onChange(o.value)}
         style={{padding:"14px 8px",borderRadius:12,border:value===o.value?"2px solid #0747A6":"2px solid #dfe1e6",
           background:value===o.value?"#deebff":"#fff",cursor:"pointer",textAlign:"center",
@@ -561,25 +562,25 @@ function CalcAcq({isMo=false}){
       <h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>🏢 취득세 시뮬레이션</h3>
       <div style={{marginBottom:16}}>
         <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>취득 유형</label>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6}}>
-          {[["sale","매매"],["gift","증여"],["inherit","상속"],["newbuild","원시"]].map(([v,l])=>(<button key={v} onClick={()=>sAT(v)} style={{padding:"10px",border:acqType===v?"2px solid #0747A6":"1.5px solid #dfe1e6",borderRadius:8,background:acqType===v?"#deebff":"#fff",color:acqType===v?"#0747A6":"#505f79",fontWeight:acqType===v?700:400,fontSize:isMo?14:13,cursor:"pointer",whiteSpace:"nowrap",wordBreak:"keep-all",fontFamily:"inherit"}}>{l}</button>))}
+        <div style={{display:"grid",gridTemplateColumns:isMo?"repeat(2,1fr)":"repeat(4,1fr)",gap:6}}>
+          {[["sale","매매"],["gift","증여"],["inherit","상속"],["newbuild","원시"]].map(([v,l])=>(<button key={v} onClick={()=>sAT(v)} style={{padding:isMo?"10px 4px":"10px",minWidth:0,border:acqType===v?"2px solid #0747A6":"1.5px solid #dfe1e6",borderRadius:8,background:acqType===v?"#deebff":"#fff",color:acqType===v?"#0747A6":"#505f79",fontWeight:acqType===v?700:400,fontSize:13,cursor:"pointer",whiteSpace:"nowrap",wordBreak:"keep-all",fontFamily:"inherit"}}>{l}</button>))}
         </div>
       </div>
       <div style={{marginBottom:16}}>
         <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>부동산 유형<TipModal title="부동산 유형"><p>주거용 오피스텔인 경우에만 '오피스텔' 선택. 업무용은 '그 외'. 농지는 2년 이상 자경 시 감면 혜택.</p></TipModal></label>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6}}>
-          {[["house","주택"],["officetel","오피스텔"],["farmLand","농지"],["building","그 외"]].map(([v,l])=>(<button key={v} onClick={()=>sRT(v)} style={{padding:"10px",border:realType===v?"2px solid #0747A6":"1.5px solid #dfe1e6",borderRadius:8,background:realType===v?"#deebff":"#fff",color:realType===v?"#0747A6":"#505f79",fontWeight:realType===v?700:400,fontSize:isMo?14:13,cursor:"pointer",whiteSpace:"nowrap",wordBreak:"keep-all",fontFamily:"inherit"}}>{l}</button>))}
+        <div style={{display:"grid",gridTemplateColumns:isMo?"repeat(2,1fr)":"repeat(4,1fr)",gap:6}}>
+          {[["house","주택"],["officetel","오피스텔"],["farmLand","농지"],["building","그 외"]].map(([v,l])=>(<button key={v} onClick={()=>sRT(v)} style={{padding:isMo?"10px 4px":"10px",minWidth:0,border:realType===v?"2px solid #0747A6":"1.5px solid #dfe1e6",borderRadius:8,background:realType===v?"#deebff":"#fff",color:realType===v?"#0747A6":"#505f79",fontWeight:realType===v?700:400,fontSize:13,cursor:"pointer",whiteSpace:"nowrap",wordBreak:"keep-all",fontFamily:"inherit"}}>{l}</button>))}
         </div>
       </div>
       {(realType==="house"||realType==="officetel")&&<div style={{marginBottom:16}}>
         <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>전용면적</label>
         <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6}}>
-          {(isMo?[["40","40㎡↓"],["60","60㎡↓"],["85","85㎡↓"],["big","85㎡↑"]]:[["40","40㎡ 이하"],["60","60㎡ 이하"],["85","85㎡ 이하"],["big","85㎡ 초과"]]).map(([v,l])=>(<button key={v} onClick={()=>sAreaType(v)} style={{padding:"10px",border:areaType===v?"2px solid #0747A6":"1.5px solid #dfe1e6",borderRadius:8,background:areaType===v?"#deebff":"#fff",color:areaType===v?"#0747A6":"#505f79",fontWeight:areaType===v?700:400,fontSize:isMo?13:12,cursor:"pointer",fontFamily:"inherit"}}>{l}</button>))}
+          {(isMo?[["40","40㎡↓"],["60","60㎡↓"],["85","85㎡↓"],["big","85㎡↑"]]:[["40","40㎡ 이하"],["60","60㎡ 이하"],["85","85㎡ 이하"],["big","85㎡ 초과"]]).map(([v,l])=>(<button key={v} onClick={()=>sAreaType(v)} style={{padding:isMo?"8px 4px":"10px",minWidth:0,border:areaType===v?"2px solid #0747A6":"1.5px solid #dfe1e6",borderRadius:8,background:areaType===v?"#deebff":"#fff",color:areaType===v?"#0747A6":"#505f79",fontWeight:areaType===v?700:400,fontSize:isMo?13:12,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>{l}</button>))}
         </div>
       </div>}
       <Slider label={acqType==="gift"?"시가인정액":acqType==="inherit"?"시가표준액":acqType==="newbuild"?"건축 원가":"취득가액"} value={price} onChange={sP} min={1000} max={500000} step={500}/>
       <div style={{position:"relative"}}><div style={{position:"absolute",top:-2,right:0,zIndex:2}}><TipModal title="시가표준액 (공시가격)"><p>미입력 시 취득가액을 시가표준액으로 간주합니다.</p><ul style={{paddingLeft:20}}><li>취득가액보다 시가표준액이 크면 시가표준액이 과세표준</li><li>시가표준액 1억 미만이면 다주택 중과 제외</li><li>조정대상지역 증여 시 시가표준액 3억 초과하면 12% 중과</li></ul><p>부동산 공시가격 알리미(realtyprice.kr)에서 확인 가능합니다.</p></TipModal></div><Inp label="시가표준액 (공시가격)" value={stdPrice} onChange={setStdPrice} suffix="만원" placeholder="미입력 시 취득가 사용" note="미입력 시 취득가 사용"/></div>
-      {isHouse&&acqType==="sale"&&<Radio label="취득 후 주택 수" value={own} onChange={sO} options={[{value:"1",label:"1주택"},{value:"2",label:"2주택"},{value:"3",label:"3주택"},{value:"4",label:"4주택+"}]}/>}
+      {isHouse&&acqType==="sale"&&<Radio label="취득 후 주택 수" value={own} onChange={sO} options={[{value:"1",label:"1주택"},{value:"2",label:"2주택"},{value:"3",label:"3주택"},{value:"4",label:"4주택+"}]} cols={isMo?2:4}/>}
       <div style={{display:"flex",flexWrap:"wrap",gap:12,marginBottom:10}}>
         {showCorp&&<label style={{display:"flex",alignItems:"center",gap:6,fontSize:13,cursor:"pointer",whiteSpace:"nowrap",wordBreak:"keep-all"}}><input type="checkbox" checked={corporation} onChange={e=>setCorporation(e.target.checked)} style={{width:18,height:18}}/> 법인<TipModal title="법인 취득"><p>법인이 주택을 취득하는 경우 주택수와 관계없이 12% 적용됩니다.</p></TipModal></label>}
         {showFirstDist&&<label style={{display:"flex",alignItems:"center",gap:6,fontSize:13,cursor:"pointer",whiteSpace:"nowrap",wordBreak:"keep-all"}}><input type="checkbox" checked={firstDistribution} onChange={e=>setFirstDistribution(e.target.checked)} style={{width:18,height:18}}/> 임대사업자 최초분양<TipModal title="주택임대사업자 최초분양 취득세 면제·감면"><p>일정 규모 이하의 공동주택(아파트·다가구 제외), 오피스텔을 최초 분양받고 임대사업자 등록 시 취득세 면제 또는 감면</p><ul style={{paddingLeft:20}}><li><b>가격:</b> 수도권 6억, 그 외 3억 이하</li><li><b>규모:</b> 60제곱미터 이하</li><li><b>40㎡ 이하:</b> 취득세 면제</li><li><b>40~60㎡:</b> 취득세 50% 감면</li></ul></TipModal></label>}
