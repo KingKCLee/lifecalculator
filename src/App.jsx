@@ -402,38 +402,93 @@ function CalcAcq({isMo=false}){
 }
 
 function CalcTrans({isMo=false}){
-  const[bp,sBp]=useState("");const[sp,sSp]=useState("");const[ex,sEx]=useState("");const[hy,sHy]=useState("5");const[ly,sLy]=useState("3");const[hm,sHm]=useState("1");const[wasAdj,sWA]=useState("no");const[sellAdj,sSA]=useState("no");
-  const b=tW(bp),s=tW(sp),e=tW(ex),g=s-b-e;const hv=parseInt(hy),adjLv=Math.min(parseInt(ly),parseInt(hy)),nv=parseInt(hm);
-  const today=new Date();const moratoriumEnd=new Date('2026-05-10');const isMoratorium=today<moratoriumEnd;const isSellAdj=sellAdj==="yes";
+  const todayStr=new Date().toISOString().slice(0,10);
+  const fiveYearsAgoStr=(()=>{const d=new Date();d.setFullYear(d.getFullYear()-5);return d.toISOString().slice(0,10);})();
+  const[txType,sTxType]=useState("house");
+  const[buyDate,sBuyDate]=useState(fiveYearsAgoStr);
+  const[sellDate,sSellDate]=useState(todayStr);
+  const[liveY,sLiveY]=useState("3");
+  const[bp,sBp]=useState("");const[sp,sSp]=useState("");
+  const[eAcq,sEAcq]=useState("");const[eMid,sEMid]=useState("");const[eLeg,sELeg]=useState("");
+  const[eSell,sESell]=useState("");const[eRepair,sERepair]=useState("");const[eOther,sEOther]=useState("");
+  const[hm,sHm]=useState("1");const[wasAdj,sWA]=useState("no");const[sellAdj,sSA]=useState("no");
+  const b=tW(bp),s=tW(sp);
+  const totalEx=tW(eAcq)+tW(eMid)+tW(eLeg)+tW(eSell)+tW(eRepair)+tW(eOther);
+  const g=s-b-totalEx;
+  const bd=new Date(buyDate),sd=new Date(sellDate);
+  const holdYears=!isNaN(bd)&&!isNaN(sd)&&sd>bd?(sd-bd)/(365.25*86400000):0;
+  const liveYv=parseInt(liveY)||0;const nv=parseInt(hm);
+  const today=new Date();const moratoriumEnd=new Date('2026-05-10');
+  const isMoratorium=today<moratoriumEnd;const isSellAdj=sellAdj==="yes";
+  const dDay=Math.ceil((moratoriumEnd-today)/86400000);
   let surcharge=0;if(!isMoratorium&&isSellAdj&&nv>=2){surcharge=nv>=3?0.30:0.20;}
-  const shortTermRate=hv<1?0.70:hv<2?0.60:0;
-  const needResidence=wasAdj==="yes";const is1h=nv===1&&hv>=2&&(!needResidence||adjLv>=2),overLimit=s>12e8;let exempt=is1h&&!overLimit&&shortTermRate===0,ltD=0;
-  if(!exempt){if(nv===1&&hv>=3)ltD=Math.min(Math.min(hv,15)*.04+Math.min(adjLv,10)*.04,.80);else if(nv>1&&hv>=3)ltD=Math.min(hv*.02,.30);}
-  if(surcharge>0||shortTermRate>0)ltD=0;
-  let taxableGain=g;if(is1h&&overLimit){taxableGain=g*(s-12e8)/s;}
-  const tg=exempt?0:Math.max(0,taxableGain*(1-ltD)-2500000);
-  let baseTax,taxRateLabel;
-  if(shortTermRate>0){baseTax=Math.round(tg*shortTermRate);taxRateLabel="단기보유 "+(shortTermRate*100)+"%";}
-  else{baseTax=pTx(tg,IB);taxRateLabel="기본세율";}
-  const surTax=surcharge>0&&shortTermRate===0?Math.round(tg*surcharge):0;const tx=baseTax+surTax;const loc=tx*.1;
-  const baseItems=exempt?[{l:"양도차익",v:fW(g)},{l:"비과세 요건",v:"1주택, 2년↑, 12억↓"}]:[{l:"양도차익",v:fW(g)},{l:is1h&&overLimit?"과세 대상 차익 (12억 초과분)":"양도차익",v:is1h&&overLimit?fW(taxableGain):fW(g)},{l:"장기보유특별공제",v:(surcharge>0||shortTermRate>0)?"중과 배제":fP(ltD*100)},{l:"기본공제",v:"-₩250만"},{l:"과세표준",v:fW(tg)},{l:taxRateLabel+" 산출세액",v:fW(baseTax)}];
-  const surItems=surcharge>0&&shortTermRate===0?[{l:"다주택 중과세율",v:"+"+(surcharge*100)+"%p (2026.5.10~ 시행)"},{l:"중과 가산세액",v:fW(surTax)}]:[];
-  const finalItems=exempt?baseItems:[...baseItems,...surItems,{l:"양도소득세 합계",v:fW(tx)},{l:"지방소득세 (10%)",v:fW(loc)}];
+  let shortTermRate=0;
+  if(txType==="preSale"){shortTermRate=holdYears<1?0.70:0.60;}
+  else if(txType==="house"||txType==="joinRight"){if(holdYears<1)shortTermRate=0.70;else if(holdYears<2)shortTermRate=0.60;}
+  else{if(holdYears<1)shortTermRate=0.50;else if(holdYears<2)shortTermRate=0.40;}
+  const needResidence=wasAdj==="yes";
+  const is1h=txType==="house"&&nv===1&&holdYears>=2&&(!needResidence||liveYv>=2);
+  const overLimit=s>12e8;
+  const exempt=is1h&&!overLimit&&shortTermRate===0;
+  let ltdHold=0,ltdLive=0,ltd=0;
+  if(shortTermRate===0&&surcharge===0&&txType==="house"){
+    const hY=Math.floor(holdYears);
+    if(is1h){
+      if(hY>=3)ltdHold=Math.min(40,(Math.min(hY,10)-3)*4+12)/100;
+      if(liveYv>=2)ltdLive=Math.min(40,(Math.min(liveYv,10)-2)*4+8)/100;
+      ltd=Math.min(ltdHold+ltdLive,0.80);
+    }else{if(hY>=3)ltd=Math.min(30,(Math.min(hY,15)-3)*2+6)/100;}
+  }
+  let taxableGain=g;if(is1h&&overLimit&&shortTermRate===0){taxableGain=g*(s-12e8)/s;}
+  const tg=exempt?0:Math.max(0,taxableGain*(1-ltd)-2500000);
+  let baseTax=0,taxRateLabel="기본세율";
+  if(exempt){baseTax=0;}
+  else if(shortTermRate>0){baseTax=Math.round(tg*shortTermRate);taxRateLabel="단기보유 "+(shortTermRate*100)+"%";}
+  else{baseTax=pTx(tg,IB);}
+  const surTax=surcharge>0&&shortTermRate===0?Math.round(tg*surcharge):0;
+  const tx=baseTax+surTax;const loc=Math.round(tx*0.1);const totalTax=exempt?0:tx+loc;
+  const dateStyle={width:"100%",padding:"10px 14px",border:"1.5px solid #dfe1e6",borderRadius:10,fontSize:15,background:"#fff",color:P.tx,outline:"none",fontFamily:"inherit",height:44};
+  const items=exempt?
+    [{l:"양도가액",v:fW(s)},{l:"양도차익",v:fW(g)},{l:"보유기간",v:holdYears.toFixed(1)+"년"},{l:"거주기간",v:liveYv+"년"},{l:"판정",v:"1세대 1주택 비과세"}]:
+    [{l:"양도가액",v:fW(s)},{l:"취득가액",v:"-"+fW(b)},{l:"필요경비 합계",v:"-"+fW(totalEx)},{l:"양도차익",v:fW(g)}]
+    .concat(is1h&&overLimit&&shortTermRate===0?[{l:"과세 대상 차익 (12억↑분)",v:fW(taxableGain)}]:[])
+    .concat(is1h&&ltd>0?[{l:"장특공제 보유분",v:fP(ltdHold*100)},{l:"장특공제 거주분",v:fP(ltdLive*100)},{l:"장특공제 합계 (max 80%)",v:fP(ltd*100)}]:[{l:"장기보유특별공제",v:(surcharge>0||shortTermRate>0||txType!=="house")?"미적용":fP(ltd*100)}])
+    .concat([{l:"기본공제",v:"-₩250만"},{l:"과세표준",v:fW(tg)},{l:taxRateLabel+" 산출세액",v:fW(baseTax)}])
+    .concat(surcharge>0&&shortTermRate===0?[{l:"다주택 중과 +"+(surcharge*100)+"%p",v:"+"+fW(surTax)}]:[])
+    .concat([{l:"양도소득세 합계",v:fW(tx)},{l:"지방소득세 (10%)",v:fW(loc)}]);
   return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start"}}>
     <div><h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>📊 양도소득세 시뮬레이션</h3>
-      <Inp label="취득가액 (매입가)" value={bp} onChange={sBp} suffix="만원" placeholder="예: 50000"/>
-      <Inp label="양도가액 (매도가)" value={sp} onChange={sSp} suffix="만원" placeholder="예: 80000"/>
-      <Inp label="필요경비 (취득세·중개비·수리비 등)" value={ex} onChange={sEx} suffix="만원" placeholder="예: 500"/>
-      <div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?4:8}}>
-        <Sel label="보유기간" value={hy} onChange={sHy} options={[{value:"0",label:"1년 미만 (70%)"}].concat(Array.from({length:20},(_,i)=>({value:String(i+1),label:(i+1)+"년"})))}/><Sel label="거주기간" value={ly} onChange={sLy} options={Array.from({length:16},(_,i)=>({value:String(i),label:i+"년"}))}/><Sel label="주택 수" value={hm} onChange={sHm} options={[{value:"1",label:"1주택"},{value:"2",label:"2주택"},{value:"3",label:"3주택+"}]}/>
+      <Sel label="양도 유형" value={txType} onChange={sTxType} options={[{value:"house",label:"주택"},{value:"preSale",label:"분양권"},{value:"joinRight",label:"조합원입주권"},{value:"land",label:"토지"},{value:"commercial",label:"상가·오피스텔"}]}/>
+      <div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?8:12}}>
+        <div style={{marginBottom:16}}><label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>취득일</label><input type="date" value={buyDate} onChange={e=>sBuyDate(e.target.value)} style={dateStyle}/></div>
+        <div style={{marginBottom:16}}><label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>양도일</label><input type="date" value={sellDate} onChange={e=>sSellDate(e.target.value)} style={dateStyle}/></div>
       </div>
-      <Tog label="취득 당시 조정대상지역" value={wasAdj} onChange={sWA} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (2년 거주 필수)"}]}/>
-      {nv>=2&&<Tog label="매도 시점 조정대상지역" value={sellAdj} onChange={sSA} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (다주택 중과 대상)"}]}/>}
-      {isMoratorium&&nv>=2&&isSellAdj&&<div style={{padding:"12px 16px",background:"#FFF8E1",border:"1px solid #FFE082",borderRadius:10,fontSize:13,color:"#F57F17",marginTop:12,lineHeight:1.6}}>⚠️ 현재 다주택 중과가 유예 중입니다 (2026.5.9까지). 유예 종료 후 조정대상지역 {nv}주택은 +{nv>=3?30:20}%p 중과됩니다. 유예 기간 내 매도를 고려하세요.</div>}
-      {!isMoratorium&&surcharge>0&&<div style={{padding:"12px 16px",background:"#FFEBE6",border:"1px solid #FFBDAD",borderRadius:10,fontSize:13,color:"#DE350B",marginTop:12,lineHeight:1.6}}>⚠️ 다주택 중과 적용 중: 조정대상지역 {nv}주택 +{surcharge*100}%p, 장특공제 배제</div>}
-      {shortTermRate>0&&<div style={{padding:"12px 16px",background:"#FFEBE6",border:"1px solid #FFBDAD",borderRadius:10,fontSize:13,color:"#DE350B",marginTop:12,lineHeight:1.6}}>⚠️ 단기보유 중과세율 {shortTermRate*100}% 적용 중 ({hv<1?"1년 미만":"1~2년"} 보유). 장특공제·누진세 배제.</div>}
+      <div style={{padding:"10px 14px",background:P.lt,borderRadius:8,fontSize:12,color:P.mt,marginBottom:12}}>보유기간: <strong style={{color:P.pri}}>{holdYears.toFixed(2)}년</strong>{shortTermRate>0&&<span style={{color:"#DE350B",fontWeight:700,marginLeft:8}}>⚠️ {holdYears<1?"1년 미만":"2년 미만"} 중과 {shortTermRate*100}%</span>}</div>
+      <Inp label="취득가액" value={bp} onChange={sBp} suffix="만원" placeholder="예: 50000"/>
+      <Inp label="양도가액" value={sp} onChange={sSp} suffix="만원" placeholder="예: 80000"/>
+      <div style={{background:P.lt,borderRadius:10,padding:"12px 14px",marginBottom:12}}>
+        <div style={{fontSize:13,fontWeight:700,color:P.tx,marginBottom:10}}>💼 필요경비 세부</div>
+        <div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?4:8}}>
+          <Inp label="취득세·등록세" value={eAcq} onChange={sEAcq} suffix="만원" placeholder="0"/>
+          <Inp label="취득 중개수수료" value={eMid} onChange={sEMid} suffix="만원" placeholder="0"/>
+          <Inp label="법무사 비용" value={eLeg} onChange={sELeg} suffix="만원" placeholder="0"/>
+          <Inp label="양도 중개수수료" value={eSell} onChange={sESell} suffix="만원" placeholder="0"/>
+          <Inp label="인테리어·수선비" value={eRepair} onChange={sERepair} suffix="만원" placeholder="0"/>
+          <Inp label="기타 경비" value={eOther} onChange={sEOther} suffix="만원" placeholder="0"/>
+        </div>
+      </div>
+      {txType==="house"&&<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?4:8}}>
+        <Sel label="주택 수" value={hm} onChange={sHm} options={[{value:"1",label:"1주택"},{value:"2",label:"2주택"},{value:"3",label:"3주택+"}]}/>
+        <Sel label="거주기간(년)" value={liveY} onChange={sLiveY} options={Array.from({length:21},(_,i)=>({value:String(i),label:i+"년"}))}/>
+      </div>}
+      {txType==="house"&&<Tog label="취득 당시 조정대상지역" value={wasAdj} onChange={sWA} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (2년 거주 필수)"}]}/>}
+      {txType==="house"&&nv>=2&&<Tog label="매도 시점 조정대상지역" value={sellAdj} onChange={sSA} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (다주택 중과)"}]}/>}
+      {isMoratorium&&txType==="house"&&nv>=2&&isSellAdj&&<div style={{padding:"12px 16px",background:"#FFF8E1",border:"1px solid #FFE082",borderRadius:10,fontSize:13,color:"#F57F17",marginTop:12,lineHeight:1.6}}>⚠️ 다주택 중과 유예 중 (2026.5.9까지, D-{dDay}일). 유예 종료 후 조정지역 {nv}주택 +{nv>=3?30:20}%p 중과.</div>}
+      {!isMoratorium&&surcharge>0&&<div style={{padding:"12px 16px",background:"#FFEBE6",border:"1px solid #FFBDAD",borderRadius:10,fontSize:13,color:"#DE350B",marginTop:12,lineHeight:1.6}}>⚠️ 다주택 중과 적용: 조정지역 {nv}주택 +{surcharge*100}%p, 장특공제 배제</div>}
+      {txType==="house"&&needResidence&&liveYv<2&&holdYears>=2&&nv===1&&<div style={{padding:"12px 16px",background:"#FFEBE6",border:"1px solid #FFBDAD",borderRadius:10,fontSize:13,color:"#DE350B",marginTop:12,lineHeight:1.6}}>⚠️ 조정대상지역 취득 주택은 2년 이상 거주해야 비과세 적용됩니다.</div>}
+      {txType==="preSale"&&<div style={{padding:"10px 14px",background:"#DEEBFF",border:"1px solid #0747A6",borderRadius:10,fontSize:12,color:"#0747A6",marginTop:8,lineHeight:1.6}}>분양권 양도: 1년 미만 70% / 1년 이상 60% 단일세율</div>}
     </div>
-    {g>0?<RP title={exempt?"비과세 적용":is1h&&overLimit?"12억 초과분 과세":surcharge>0?"다주택 중과 양도세":"양도소득세"} total={exempt?0:tx+loc} sub={exempt?"1세대 1주택 비과세":surcharge>0?"기본세율 + "+(surcharge*100)+"%p 중과":is1h&&overLimit?"12억 초과분만 과세 · 장특공제 "+fP(ltD*100):"장특공제 "+fP(ltD*100)} items={finalItems}/>
+    {g>0?<RP title={exempt?"1세대 1주택 비과세":is1h&&overLimit?"12억 초과분 과세":surcharge>0?"다주택 중과 양도세":shortTermRate>0?"단기보유 중과":"양도소득세"} total={totalTax} sub={exempt?"비과세":surcharge>0?"기본세율 + "+(surcharge*100)+"%p":shortTermRate>0?"단일세율 "+(shortTermRate*100)+"%":is1h&&overLimit?"12억 초과분만 과세":"보유 "+holdYears.toFixed(1)+"년 · 장특공 "+fP(ltd*100)} items={items}/>
     :<Empty icon="📊"/>}
   </div>);
 }
