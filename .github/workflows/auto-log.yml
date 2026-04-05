@@ -1,0 +1,132 @@
+name: Auto Update Log
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'public/data/**'
+
+jobs:
+  update-log:
+    if: github.actor != 'Auto Logger'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 50
+
+      - name: Generate update log from commit messages
+        run: |
+          export TODAY=$(TZ=Asia/Seoul date +%Y.%m.%d)
+          export COMMITS=$(git log --since="24 hours ago" --pretty=format:"%s" --no-merges --invert-grep --grep="자동 업데이트 로그" | head -10)
+
+          if [ -z "$COMMITS" ]; then
+            echo "No new commits today"
+            exit 0
+          fi
+
+          export CATEGORY="전체"
+          if echo "$COMMITS" | grep -qi "취득세\|양도세\|증여세\|상속세\|종부세\|재산세\|종소세\|연말정산\|세금"; then
+            CATEGORY="세금"
+          elif echo "$COMMITS" | grep -qi "DSR\|DTI\|LTV\|대출\|mortgage"; then
+            CATEGORY="대출"
+          elif echo "$COMMITS" | grep -qi "중개\|등기\|법무\|비용"; then
+            CATEGORY="비용"
+          fi
+
+          export TITLE=$(echo "$COMMITS" | head -1)
+          export DESC=$(echo "$COMMITS" | tr '\n' ', ' | sed 's/, $//')
+
+          python3 << 'EOF'
+          import json, os
+
+          path = "public/data/live-data.json"
+          if not os.path.exists(path):
+            print("live-data.json not found")
+            exit(0)
+
+          with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+
+          if "updateLog" not in data:
+            data["updateLog"] = []
+
+          today = os.environ["TODAY"]
+          title = os.environ["TITLE"]
+          desc = os.environ["DESC"]
+          category = os.environ["CATEGORY"]
+
+          existing = [log for log in data["updateLog"] if log.get("date") == today and log.get("title") == title]
+          if existing:
+            print("Already logged today")
+            exit(0)
+
+          data["updateLog"].insert(0, {
+            "date": today,
+            "category": category,
+            "title": title,
+            "desc": desc
+          })
+
+          data["updateLog"] = data["updateLog"][:50]
+
+          with open(path, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+
+          print(f"Added: {title}")
+          EOF
+
+      - name: Update feed.xml
+        run: |
+          export TITLE=$(git log -1 --pretty=format:"%s" --no-merges --invert-grep --grep="자동 업데이트 로그")
+          if [ -z "$TITLE" ]; then
+            echo "No eligible commit"
+            exit 0
+          fi
+
+          python3 << 'EOF'
+          import re, datetime, os
+
+          path = "public/feed.xml"
+          if not os.path.exists(path):
+            print("feed.xml not found")
+            exit(0)
+
+          with open(path, "r", encoding="utf-8") as f:
+            content = f.read()
+
+          title = os.environ["TITLE"]
+          now = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9)))
+          today = now.strftime("%a, %d %b %Y %H:%M:%S +0900")
+          guid = "update-" + now.strftime("%Y%m%d%H%M")
+
+          new_item = f"""    <item>
+              <title>{title}</title>
+              <link>https://xn--989a00a691bdfa717h.com/</link>
+              <description>{title}</description>
+              <pubDate>{today}</pubDate>
+              <guid>https://xn--989a00a691bdfa717h.com/#{guid}</guid>
+            </item>"""
+
+          content = re.sub(
+            r"<lastBuildDate>.*?</lastBuildDate>",
+            f"<lastBuildDate>{today}</lastBuildDate>",
+            content
+          )
+
+          content = content.replace("<item>", new_item + "\n    <item>", 1)
+
+          with open(path, "w", encoding="utf-8") as f:
+            f.write(content)
+
+          print(f"RSS updated: {title}")
+          EOF
+
+      - name: Commit and push
+        run: |
+          git config user.name "Auto Logger"
+          git config user.email "auto@lifecalculator.com"
+          git add public/data/live-data.json public/feed.xml
+          git diff --staged --quiet || (git commit -m "자동 업데이트 로그 등록 [skip ci]" && git push)
