@@ -1748,7 +1748,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
     <footer style={{background:"#fff",borderTop:`1px solid ${P.bd}`,padding:"48px 24px"}}>
       <div className="footer-inner" style={{maxWidth:1100,margin:"0 auto",display:"grid",gridTemplateColumns:"1fr 1fr",gap:40}}>
         <div>
-          <div style={{fontSize:18,fontWeight:800,color:P.pri,marginBottom:8}}>생활계산기.com</div>
+          <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}><LogoSVG size={32}/><span style={{fontSize:18,fontWeight:800,color:P.pri}}>생활계산기.com</span></div>
           <div style={{fontSize:13,color:P.mt,lineHeight:1.6}}>생활 속 세금·대출·비용 종합 계산 플랫폼<br/>본 계산기는 참고용이며, 실제 세금·수수료는 세무사 또는 관할 기관에 반드시 확인하시기 바랍니다.</div>
         </div>
         <div>
