@@ -178,7 +178,13 @@ const UTILITY_DATES=[{name:"아파트 관리비",day:"매월 25일 전후",icon:
 
 /* ── 가이드 데이터 ── */
 const GD={
-acquisition:{q:"취득세란 무엇인가요?",a:"부동산을 매매·상속·증여 등으로 취득할 때 납부하는 지방세입니다. 주택의 경우 1주택 매매 시 1~3%, 조정대상지역 2주택 8%, 3주택 이상 12%의 세율이 적용됩니다. 단, 비규제지역 2주택은 중과 없이 1~3% 일반세율이 적용되며, 비규제 3주택은 8%입니다. 일시적 2주택자(이사 목적)는 3년 내 종전주택 처분 조건으로 1주택 세율이 적용됩니다. 생애최초 주택 구입자(12억 이하)는 최대 200만원 감면(2028년 말까지 연장). 상세 세율표는 계산 결과 아래를 참고하세요."},
+acquisition:{q:"취득세란 무엇인가요?",a:"부동산을 매매·상속·증여 등으로 취득할 때 납부하는 지방세입니다.",faqList:[
+  {icon:"❓",title:"취득세란 무엇인가요?",body:"부동산을 매매·상속·증여 등으로 취득할 때 납부하는 지방세입니다."},
+  {icon:"💡",title:"절세 팁",body:"• 생애최초 주택 구입 시 최대 200만원 감면 (12억 이하, 2028년까지)\n• 인구감소지역은 감면 한도 300만원으로 확대\n• 일시적 2주택(이사 목적)은 3년 내 기존 주택 처분 시 1주택 세율 적용\n• 부부 공동명의로 취득해도 취득세는 동일 (지분 합산 과세)\n• 오피스텔은 주거용이라도 주택 수에 포함되므로 주의"},
+  {icon:"📅",title:"신고 기한",body:"• 매매: 잔금일 또는 등기일 중 빠른 날부터 60일 이내\n• 상속: 상속개시일(사망일)이 속하는 달의 말일부터 6개월 이내\n• 증여: 증여받은 날부터 3개월 이내 (다만, 취득세는 60일)\n• 기한 내 미신고 시 20% 가산세 부과"},
+  {icon:"🏢",title:"신고 방법",body:"• 온라인: 위택스(wetax.go.kr) → 신고/납부 → 취득세\n• 방문: 부동산 소재지 관할 시·군·구청 세무과\n• 법무사 대행: 등기 시 법무사가 대신 신고·납부 가능"},
+  {icon:"⚠️",title:"주의사항",body:"• 조정대상지역 여부에 따라 세율이 크게 달라짐 (8%↔1~3%)\n• 증여 취득세는 2023년부터 공시가격이 아닌 시가인정액 기준\n• 법인 취득은 주택 수 관계없이 12% 고정"}
+]},
 transfer:{q:"양도소득세는 어떻게 계산되나요?",a:"부동산을 팔아 생긴 차익(양도가액-취득가액-필요경비-기본공제250만)에 6~45% 누진세율을 적용합니다. 1세대 1주택자가 2년 이상 보유(조정지역은 거주 포함) 시 비과세되나, 양도가 12억 초과분은 과세됩니다. 취득 당시 조정대상지역이었다면 2년 실거주 요건이 추가됩니다. 장기보유특별공제는 보유 연 4%+거주 연 4%(최대 80%)이며, 다주택 중과는 2026.5.9까지 유예 중입니다.",
   rates:[["1,400만↓","6%","누진공제 0"],["~5,000만","15%","126만"],["~8,800만","24%","576만"],["~1.5억","35%","1,544만"],["~3억","38%","1,994만"],["~5억","40%","2,594만"],["~10억","42%","3,594만"],["10억↑","45%","6,594만"]],rh:["과세표준","세율","누진공제"]},
 compre:{q:"종합부동산세는 누가 내나요?",a:"매년 6.1 기준 보유 주택 공시가격 합계가 공제금액(1주택 12억, 다주택 9억)을 초과하면 부과됩니다. 과세표준은 (공시가-공제)×공정시장가액비율(60%)이며, 세율은 일반 0.5~2.7%, 3주택 중과 0.5~5.0%입니다. 1주택자는 고령자 공제(10~30%)+장기보유 공제(20~50%)를 합산하여 최대 80% 감면 가능합니다.",
@@ -470,8 +476,7 @@ function CalcAcq({isMo=false}){
         </div>
       </div>}
       <Slider label={acqType==="gift"?"시가인정액":acqType==="inherit"?"시가표준액":acqType==="newbuild"?"건축 원가":"취득가액"} value={price} onChange={sP} min={1000} max={500000} step={500}/>
-      <div style={{fontSize:12,color:"#6b778c",marginBottom:-8,marginLeft:2,display:"flex",alignItems:"center",gap:4,flexWrap:"nowrap"}}>시가표준액 <TipModal title="시가표준액 (공시가격)"><p>미입력 시 취득가액을 시가표준액으로 간주합니다.</p><ul style={{paddingLeft:20}}><li>취득가액보다 시가표준액이 크면 시가표준액이 과세표준</li><li>시가표준액 1억 미만이면 다주택 중과 제외</li><li>조정대상지역 증여 시 시가표준액 3억 초과하면 12% 중과</li></ul><p>부동산 공시가격 알리미(realtyprice.kr)에서 확인 가능합니다.</p></TipModal></div>
-      <Inp label="시가표준액 (공시가격)" value={stdPrice} onChange={setStdPrice} suffix="만원" placeholder="미입력 시 취득가 사용" note="공시가 1억↓ 중과제외·증여 3억 판정용"/>
+      <Inp label="시가표준액 (공시가격)" value={stdPrice} onChange={setStdPrice} suffix="만원" placeholder="미입력 시 취득가 사용" note="미입력 시 취득가를 시가표준액으로 간주 · 공시가 1억↓ 다주택 중과 제외 · 조정지역 증여 시 3억 초과면 12% 중과 · realtyprice.kr에서 확인"/>
       {isHouse&&acqType==="sale"&&<Radio label="취득 후 주택 수" value={own} onChange={sO} options={[{value:"1",label:"1주택"},{value:"2",label:"2주택"},{value:"3",label:"3주택"},{value:"4",label:"4주택+"}]}/>}
       <div style={{display:"flex",flexWrap:"wrap",gap:12,marginBottom:10}}>
         {showCorp&&<label style={{display:"flex",alignItems:"center",gap:6,fontSize:13,cursor:"pointer"}}><input type="checkbox" checked={corporation} onChange={e=>setCorporation(e.target.checked)} style={{width:18,height:18}}/> 법인<Tip text="법인이 주택을 취득하는 경우 주택수와 관계없이 12% 적용"/></label>}
@@ -1357,13 +1362,19 @@ function EduContent({calc:calcId,gTab}){
 
     {gTab==="rates"&&(guideSources.length>0?(<div>
       {guideSources.map(gs=>(
-        <AccItem key={gs.id} title={"❓ "+gs.data.q+(gs.id!==calcId?" ("+gs.label+")":"")} defaultOpen={gs.id===calcId}>
-          <div style={{fontSize:13,lineHeight:1.8,color:"#4a5568"}}>{gs.data.a}</div>
-          {gs.data.rates&&<div style={{marginTop:12,overflowX:"auto"}}><table style={{width:"100%",borderCollapse:"collapse",fontSize:12}}>
-            <thead><tr>{gs.data.rh.map((h,i)=>(<th key={i} style={{background:P.lt,padding:"6px 10px",textAlign:"left",fontWeight:600,color:P.pri,borderBottom:`2px solid ${P.bd}`}}>{h}</th>))}</tr></thead>
-            <tbody>{gs.data.rates.map((row,ri)=>(<tr key={ri} style={{background:ri%2===0?"#fff":"#f8fafc"}}>{row.map((cell,ci)=>(<td key={ci} style={{padding:"5px 10px",borderBottom:`1px solid ${P.bd}`,fontWeight:ci===0?600:400}}>{cell}</td>))}</tr>))}</tbody>
-          </table></div>}
-        </AccItem>
+        gs.data.faqList?gs.data.faqList.map((f,fi)=>(
+          <AccItem key={gs.id+"-"+fi} title={f.icon+" "+f.title+(gs.id!==calcId?" ("+gs.label+")":"")} defaultOpen={gs.id===calcId&&fi===0}>
+            <div style={{fontSize:13,lineHeight:1.8,color:"#4a5568",whiteSpace:"pre-line"}}>{f.body}</div>
+          </AccItem>
+        )):(
+          <AccItem key={gs.id} title={"❓ "+gs.data.q+(gs.id!==calcId?" ("+gs.label+")":"")} defaultOpen={gs.id===calcId}>
+            <div style={{fontSize:13,lineHeight:1.8,color:"#4a5568"}}>{gs.data.a}</div>
+            {gs.data.rates&&<div style={{marginTop:12,overflowX:"auto"}}><table style={{width:"100%",borderCollapse:"collapse",fontSize:12}}>
+              <thead><tr>{gs.data.rh.map((h,i)=>(<th key={i} style={{background:P.lt,padding:"6px 10px",textAlign:"left",fontWeight:600,color:P.pri,borderBottom:`2px solid ${P.bd}`}}>{h}</th>))}</tr></thead>
+              <tbody>{gs.data.rates.map((row,ri)=>(<tr key={ri} style={{background:ri%2===0?"#fff":"#f8fafc"}}>{row.map((cell,ci)=>(<td key={ci} style={{padding:"5px 10px",borderBottom:`1px solid ${P.bd}`,fontWeight:ci===0?600:400}}>{cell}</td>))}</tr>))}</tbody>
+            </table></div>}
+          </AccItem>
+        )
       ))}
     </div>):(<div style={{padding:24,textAlign:"center",color:P.mt,background:"#fff",borderRadius:12,border:`1px solid ${P.bd}`}}>
       <div style={{fontSize:24,marginBottom:6}}>📊</div><div style={{fontSize:12}}>{calcLabel} 세율표를 준비 중입니다.</div>
