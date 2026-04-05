@@ -1095,6 +1095,12 @@
     {
       "date": "2026.04.05",
       "category": "전체",
+      "title": "PageSpeed 최적화: 폰트3웨이트+robots수정+CSS축소+접근성",
+      "desc": "PageSpeed 최적화: 폰트3웨이트+robots수정+CSS축소+접근성"
+    },
+    {
+      "date": "2026.04.05",
+      "category": "전체",
       "title": "모바일 select/input 높이 수정: 텍스트 잘림 해결",
       "desc": "모바일 select/input 높이 수정: 텍스트 잘림 해결"
     }
