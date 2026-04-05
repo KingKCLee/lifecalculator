@@ -1460,38 +1460,42 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
     {liveData&&<IndicatorTicker liveData={liveData}/>}
 
     {page==="home"?(<>
-      {/* 히어로 2컬럼 */}
+      {isMo?(<>
+        {/* 모바일: 검색창 즉시 노출 */}
+        <div style={{padding:"16px 16px 8px",background:"#f8f9fc"}}>
+          <CalcSearchBar onSelect={navigateCalc} isMo={true} calcList={CL.map(c=>({id:c.id,name:c.l,keywords:c.l+" "+(DESC[c.id]||""),cat:c.c}))}/>
+        </div>
+        {/* 모바일: 인기 계산기 3x3 */}
+        <div style={{padding:"8px 16px 16px",background:"#f8f9fc"}}>
+          <div style={{fontSize:15,fontWeight:800,color:"#172B4D",marginBottom:10}}>인기 계산기</div>
+          <div className="popular-grid" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10}}>
+            {[{id:"acquisition",name:"취득세",icon:"🏠",cat:"tax"},{id:"transfer",name:"양도소득세",icon:"💸",cat:"tax"},{id:"netsalary",name:"연봉실수령",icon:"💰",cat:"life"},{id:"dsr",name:"DSR",icon:"📊",cat:"loan"},{id:"yearend",name:"연말정산",icon:"🧾",cat:"tax"},{id:"commission",name:"중개수수료",icon:"🤝",cat:"cost"},{id:"inctax",name:"종합소득세",icon:"💼",cat:"tax"},{id:"pension",name:"국민연금",icon:"👴",cat:"life"},{id:"mortgage",name:"대출이자",icon:"💵",cat:"loan"}].map(item=>(
+              <button key={item.id} onClick={()=>navigateCalc(item.cat,item.id)} style={{background:"#fff",border:"1px solid #e8eaed",borderRadius:12,padding:"16px 4px",textAlign:"center",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:6,fontFamily:"inherit"}}>
+                <span style={{fontSize:28}}>{item.icon}</span>
+                <span style={{fontSize:13,fontWeight:600,color:"#172B4D",wordBreak:"keep-all"}}>{item.name}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </>):(
       <div style={{background:"#f8f9fc",maxWidth:"100%",overflow:"hidden"}}>
-        <div style={{maxWidth:1200,margin:"0 auto",padding:isMo?"20px 16px":"80px 24px"}}>
-          <div className="hero-grid" style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?24:48,alignItems:"center"}}>
+        <div style={{maxWidth:1200,margin:"0 auto",padding:"80px 24px"}}>
+          <div className="hero-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:48,alignItems:"center"}}>
             <div>
               <div style={{display:"inline-block",background:"#deebff",padding:"6px 16px",borderRadius:20,fontSize:13,fontWeight:700,color:"#0747A6",marginBottom:20}}>대한민국 NO.1 생활 계산기</div>
-              <h1 style={{fontSize:isMo?28:44,fontWeight:900,color:"#172B4D",lineHeight:1.15,letterSpacing:-2,margin:"0 0 16px"}}>복잡한 세법·대출 규제,<br/><span style={{color:"#0747A6"}}>10초 만에</span><br/>완벽 계산</h1>
-              <p style={{fontSize:isMo?14:16,color:"#505f79",lineHeight:1.7,margin:0,wordBreak:"keep-all"}}>부동산 세금, 대출, 비용부터 연말정산, 연봉 실수령액, 4대보험까지. 39가지 전문 계산기로 일상의 재정 판단을 도와드립니다. 2026년 최신 세법 반영.</p>
+              <h1 style={{fontSize:44,fontWeight:900,color:"#172B4D",lineHeight:1.15,letterSpacing:-2,margin:"0 0 16px"}}>복잡한 세법·대출 규제,<br/><span style={{color:"#0747A6"}}>10초 만에</span><br/>완벽 계산</h1>
+              <p style={{fontSize:16,color:"#505f79",lineHeight:1.7,margin:0,wordBreak:"keep-all"}}>부동산 세금, 대출, 비용부터 연말정산, 연봉 실수령액, 4대보험까지. 39가지 전문 계산기로 일상의 재정 판단을 도와드립니다. 2026년 최신 세법 반영.</p>
             </div>
-            <div style={{background:"#fff",borderRadius:20,padding:isMo?"24px 16px":"40px 32px",border:"1px solid #dfe1e6",boxShadow:"0 4px 20px rgba(0,0,0,0.06)"}}>
-              <div style={{fontSize:isMo?16:18,fontWeight:700,color:"#172B4D",marginBottom:16}}>어떤 계산이 필요하세요?</div>
-              <CalcSearchBar onSelect={navigateCalc} isMo={isMo} calcList={CL.map(c=>({id:c.id,name:c.l,keywords:c.l+" "+(DESC[c.id]||""),cat:c.c}))}/>
+            <div style={{background:"#fff",borderRadius:20,padding:"40px 32px",border:"1px solid #dfe1e6",boxShadow:"0 4px 20px rgba(0,0,0,0.06)"}}>
+              <div style={{fontSize:18,fontWeight:700,color:"#172B4D",marginBottom:16}}>어떤 계산이 필요하세요?</div>
+              <CalcSearchBar onSelect={navigateCalc} isMo={false} calcList={CL.map(c=>({id:c.id,name:c.l,keywords:c.l+" "+(DESC[c.id]||""),cat:c.c}))}/>
               <button onClick={()=>navigateCalc("tax","acquisition")} style={{width:"100%",padding:"16px",background:"#0747A6",color:"#fff",border:"none",borderRadius:12,fontSize:16,fontWeight:700,cursor:"pointer",marginTop:12,boxShadow:"0 4px 14px rgba(7,71,166,0.3)",fontFamily:"inherit"}}>지금 계산하기 →</button>
               <div style={{display:"flex",justifyContent:"center",gap:16,marginTop:16,fontSize:13,color:"#505f79"}}><span>✅ 매일 자동 검증</span><span>🔒 39가지 무료</span></div>
             </div>
           </div>
         </div>
       </div>
-
-      {/* 모바일 빠른 접근 3x3 그리드 */}
-      {isMo&&<div style={{padding:"16px",background:"#fff"}}>
-        <div style={{fontSize:16,fontWeight:800,color:"#172B4D",marginBottom:12}}>인기 계산기</div>
-        <div className="popular-grid" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8}}>
-          {[{id:"acquisition",name:"취득세",icon:"🏠",cat:"tax"},{id:"transfer",name:"양도소득세",icon:"💸",cat:"tax"},{id:"netsalary",name:"연봉실수령",icon:"💰",cat:"life"},{id:"dsr",name:"DSR",icon:"📊",cat:"loan"},{id:"yearend",name:"연말정산",icon:"🧾",cat:"tax"},{id:"commission",name:"중개수수료",icon:"🤝",cat:"cost"},{id:"inctax",name:"종합소득세",icon:"💼",cat:"tax"},{id:"pension",name:"국민연금",icon:"👴",cat:"life"},{id:"mortgage",name:"대출이자",icon:"💵",cat:"loan"}].map(item=>(
-            <button key={item.id} onClick={()=>navigateCalc(item.cat,item.id)} style={{background:"#f8f9fc",border:"1px solid #e8eaed",borderRadius:12,padding:"16px 8px",textAlign:"center",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:6,fontFamily:"inherit"}}>
-              <span style={{fontSize:24}}>{item.icon}</span>
-              <span style={{fontSize:12,fontWeight:600,color:"#172B4D",wordBreak:"keep-all"}}>{item.name}</span>
-            </button>
-          ))}
-        </div>
-        <button onClick={()=>{document.getElementById("allCalcs")?.scrollIntoView({behavior:"smooth"})}} style={{width:"100%",marginTop:10,padding:"12px",background:"#fff",border:"1px solid #dfe1e6",borderRadius:10,fontSize:13,fontWeight:600,color:"#505f79",cursor:"pointer",fontFamily:"inherit"}}>전체 39가지 계산기 보기 ↓</button>
-      </div>}
+      )}
 
       {/* 인기 계산기 (PC) */}
       {!isMo&&<div style={{background:"#fff",padding:"64px 24px",textAlign:"center",maxWidth:"100%",overflow:"hidden"}}>
