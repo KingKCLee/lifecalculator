@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 
 // 중앙 집중 세율·요율 관리. live-data.json의 rates에서 로드됨. 로드 전 빈 객체 → 각 계산기는 하드코딩 fallback 사용.
 // 점진적 교체: 각 계산기가 RATES.xxx ?? 하드코딩값 형태로 참조하도록 변환.
@@ -810,18 +811,23 @@ function Tip({text}){
 function TipModal({title,children}){
   const[show,setShow]=useState(false);
   const block=e=>{e.stopPropagation();e.preventDefault();};
+  const close=e=>{e.stopPropagation();e.preventDefault();setShow(false);};
+  const open=e=>{e.stopPropagation();e.preventDefault();setShow(true);};
   return(
-    <>
-      <span onClick={e=>{e.stopPropagation();e.preventDefault();setShow(true);}} onMouseDown={block} onPointerDown={block} onTouchStart={block}
-        style={{cursor:"pointer",border:"1px solid #ccc",borderRadius:"50%",width:16,height:16,minWidth:16,minHeight:16,display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:10,color:"#888",marginLeft:4,userSelect:"none",flexShrink:0,boxSizing:"border-box",verticalAlign:"middle",lineHeight:1,fontWeight:700}}>?</span>
-      {show&&<div onClick={()=>setShow(false)} style={{position:"fixed",top:0,left:0,right:0,bottom:0,background:"rgba(0,0,0,0.4)",zIndex:10000,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
-        <div onClick={e=>e.stopPropagation()} style={{background:"#fff",borderRadius:12,padding:24,maxWidth:500,width:"100%",maxHeight:"80vh",overflowY:"auto",position:"relative",wordBreak:"keep-all"}}>
-          <button onClick={e=>{e.stopPropagation();setShow(false);}} style={{position:"absolute",top:12,right:16,background:"none",border:"none",fontSize:20,cursor:"pointer",color:"#666"}}>✕</button>
-          <h4 style={{fontWeight:700,marginBottom:16,fontSize:16,paddingRight:30}}>{title}</h4>
-          <div style={{fontSize:14,lineHeight:1.8,color:"#333"}}>{children}</div>
-        </div>
-      </div>}
-    </>
+    <span onClick={block} onMouseDown={block} onPointerDown={block} onTouchStart={block} style={{display:"inline-flex",alignItems:"center",verticalAlign:"middle",marginLeft:4,flexShrink:0}}>
+      <span onClick={open} onMouseDown={block} onPointerDown={block} onTouchStart={block}
+        style={{cursor:"pointer",border:"1px solid #ccc",borderRadius:"50%",width:16,height:16,minWidth:16,minHeight:16,display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:10,color:"#888",userSelect:"none",flexShrink:0,boxSizing:"border-box",lineHeight:1,fontWeight:700}}>?</span>
+      {show&&createPortal(
+        <div onClick={close} onMouseDown={block} style={{position:"fixed",top:0,left:0,right:0,bottom:0,background:"rgba(0,0,0,0.4)",zIndex:10000,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
+          <div onClick={block} onMouseDown={block} style={{background:"#fff",borderRadius:12,padding:24,maxWidth:500,width:"100%",maxHeight:"80vh",overflowY:"auto",position:"relative",wordBreak:"keep-all"}}>
+            <button onClick={close} onMouseDown={block} style={{position:"absolute",top:12,right:16,background:"none",border:"none",fontSize:20,cursor:"pointer",color:"#666"}}>✕</button>
+            <h4 style={{fontWeight:700,marginBottom:16,fontSize:16,paddingRight:30}}>{title}</h4>
+            <div style={{fontSize:14,lineHeight:1.8,color:"#333"}}>{children}</div>
+          </div>
+        </div>,
+        document.body
+      )}
+    </span>
   );
 }
 function MobileCalcWrapper({children}){
