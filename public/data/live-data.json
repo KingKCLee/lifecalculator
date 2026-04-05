@@ -1095,6 +1095,12 @@
     {
       "date": "2026.04.05",
       "category": "전체",
+      "title": "PageSpeed 최적화: 폰트3웨이트+NotoSans삭제+robots수정+isMo에러+접근성",
+      "desc": "PageSpeed 최적화: 폰트3웨이트+NotoSans삭제+robots수정+isMo에러+접근성"
+    },
+    {
+      "date": "2026.04.05",
+      "category": "전체",
       "title": "PageSpeed 최적화: 폰트3웨이트+robots수정+CSS축소+접근성",
       "desc": "PageSpeed 최적화: 폰트3웨이트+robots수정+CSS축소+접근성"
     },
