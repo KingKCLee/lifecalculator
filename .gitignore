@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.DS_Store
+*.log
+.env
+.env.local
+.vite/
+*.tmp
+temp_*.py
+check_syntax.py
