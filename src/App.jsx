@@ -1745,20 +1745,20 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
     </div>
 
     {/* 푸터 */}
-    <footer style={{background:"#fff",borderTop:`1px solid ${P.bd}`,padding:"48px 24px"}}>
+    <footer style={{background:"#0d1117",borderTop:"none",padding:"48px 24px"}}>
       <div className="footer-inner" style={{maxWidth:1200,margin:"0 auto",display:"grid",gridTemplateColumns:window.innerWidth<=768?"1fr":"1fr 1fr",gap:40}}>
         <div>
-          <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}><LogoSVG size={32}/><span style={{fontSize:18,fontWeight:800,color:P.pri}}>생활계산기.com</span></div>
-          <div style={{fontSize:13,color:P.mt,lineHeight:1.6}}>생활 속 세금·대출·비용 종합 계산 플랫폼<br/>본 계산기는 참고용이며, 실제 세금·수수료는 세무사 또는 관할 기관에 반드시 확인하시기 바랍니다.</div>
+          <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}><LogoSVG size={32}/><span style={{fontSize:18,fontWeight:800,color:"#fff"}}>생활계산기.com</span></div>
+          <div style={{fontSize:13,color:"rgba(255,255,255,0.5)",lineHeight:1.6}}>생활 속 세금·대출·비용 종합 계산 플랫폼<br/><span style={{color:"rgba(255,255,255,0.4)"}}>본 계산기는 참고용이며, 실제 세금·수수료는 세무사 또는 관할 기관에 반드시 확인하시기 바랍니다.</span></div>
         </div>
         <div>
-          <div style={{fontSize:11,fontWeight:700,color:P.mt,letterSpacing:1,textTransform:"uppercase",marginBottom:12}}>RESOURCES</div>
-          {[{l:"Legal Disclaimer (면책조항)",k:"disclaimer"},{l:"Resource Center (자료실)",k:"resource"},{l:"Privacy Policy (개인정보)",k:"privacy"},{l:"Contact Support (문의)",k:"contact"}].map(item=><div key={item.k} onClick={()=>setModal(item.k)} style={{fontSize:13,color:P.mt,marginBottom:8,cursor:"pointer"}} onMouseEnter={e=>e.currentTarget.style.color="#0747A6"} onMouseLeave={e=>e.currentTarget.style.color=P.mt}>{item.l}</div>)}
+          <div style={{fontSize:11,fontWeight:700,color:"rgba(255,255,255,0.5)",letterSpacing:1,textTransform:"uppercase",marginBottom:12}}>RESOURCES</div>
+          {[{l:"Legal Disclaimer (면책조항)",k:"disclaimer"},{l:"Resource Center (자료실)",k:"resource"},{l:"Privacy Policy (개인정보)",k:"privacy"},{l:"Contact Support (문의)",k:"contact"}].map(item=><div key={item.k} onClick={()=>setModal(item.k)} style={{fontSize:13,color:"rgba(255,255,255,0.5)",marginBottom:8,cursor:"pointer"}} onMouseEnter={e=>e.currentTarget.style.color="#fff"} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.5)"}>{item.l}</div>)}
         </div>
       </div>
-      <div style={{textAlign:"center",fontSize:11,color:"#6b778c",marginTop:32,lineHeight:1.8}}>
+      <div style={{textAlign:"center",fontSize:11,color:"rgba(255,255,255,0.35)",marginTop:32,lineHeight:1.8,borderTop:"1px solid rgba(255,255,255,0.1)",paddingTop:24,maxWidth:1200,margin:"32px auto 0"}}>
         © {new Date().getFullYear()} 생활계산기.com. All rights reserved. | 세법 검증: {UPDATE_LOG[0]?.date}<br/>
-        <span>상호: 더블유부동산 | 대표: 이광철 | 사업자등록번호: 589-24-01721 | 이메일: noble.kclee@gmail.com</span>
+        <span style={{color:"rgba(255,255,255,0.25)"}}>상호: 더블유부동산 | 대표: 이광철 | 사업자등록번호: 589-24-01721 | 이메일: noble.kclee@gmail.com</span>
       </div>
     </footer>
     {modal&&<LegalModal type={modal} onClose={()=>setModal(null)}/>}
