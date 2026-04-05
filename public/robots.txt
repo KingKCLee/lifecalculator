@@ -2,14 +2,3 @@ User-agent: *
 Allow: /
 
 Sitemap: https://xn--989a00a691bdfa717h.com/sitemap.xml
-
-User-agent: Googlebot
-Allow: /
-
-User-agent: Yeti
-Allow: /
-
-User-agent: AdsBot-Google
-Allow: /
-
-Feed: https://xn--989a00a691bdfa717h.com/feed.xml
