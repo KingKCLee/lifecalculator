@@ -1094,6 +1094,12 @@
   },
   "updateLog": [
     {
+      "date": "2026.04.07",
+      "category": "전체",
+      "title": "feat: TipModal→SidePanel(PC 마우스오버/모바일 하단시트), H3 설명문 SEO 최적화, 특수조건 안내문구 개선",
+      "desc": "feat: TipModal→SidePanel(PC 마우스오버/모바일 하단시트), H3 설명문 SEO 최적화, 특수조건 안내문구 개선"
+    },
+    {
       "date": "2026.04.06",
       "category": "전체",
       "title": "perf: robots.txt 정리, preconnect 4개이하, Google Fonts 비차단 preload",
@@ -1386,12 +1392,6 @@
       "category": "전체",
       "title": "모바일 UI 6건: Tog가로배치+체크박스nowrap+결과버튼가로+날짜갱신+EXPERT필터+note줄바꿈",
       "desc": "모바일 UI 6건: Tog가로배치+체크박스nowrap+결과버튼가로+날짜갱신+EXPERT필터+note줄바꿈"
-    },
-    {
-      "date": "2026.04.06",
-      "category": "전체",
-      "title": "도움말 컴포넌트 TipModal로 통일 (Tip 삭제)",
-      "desc": "도움말 컴포넌트 TipModal로 통일 (Tip 삭제)"
     }
   ],
   "rates": {
