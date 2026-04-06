@@ -1096,6 +1096,12 @@
     {
       "date": "2026.04.06",
       "category": "전체",
+      "title": "fix: 번들 해시 갱신으로 CDN 캐시 우회",
+      "desc": "fix: 번들 해시 갱신으로 CDN 캐시 우회"
+    },
+    {
+      "date": "2026.04.06",
+      "category": "전체",
       "title": "fix: 폰트 CDN URL 수정, Node 20 버전 고정으로 Cloudflare 빌드 안정화",
       "desc": "fix: 폰트 CDN URL 수정, Node 20 버전 고정으로 Cloudflare 빌드 안정화"
     },
