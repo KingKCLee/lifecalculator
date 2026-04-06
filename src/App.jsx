@@ -1,10 +1,11 @@
+// build: 2026.04.06.001
 // v2026.04.06
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 
 // 중앙 집중 세율·요율 관리. live-data.json의 rates에서 로드됨. 로드 전 빈 객체 → 각 계산기는 하드코딩 fallback 사용.
 // 점진적 교체: 각 계산기가 RATES.xxx ?? 하드코딩값 형태로 참조하도록 변환.
-let RATES = {};
+let RATES = {};const BUILD_ID="2026.04.06.001";
 
 function useIsMobile(bp=768){
   const[m,setM]=useState(typeof window!=="undefined"&&window.innerWidth<=bp);
@@ -486,7 +487,7 @@ function RP({title,total,sub,items}){
           <span style={{fontSize:18}}>{b.icon}</span>{b.l}
         </button>))}
     </div>
-    <div style={{fontSize:10,color:"rgba(255,255,255,.5)",marginTop:12,lineHeight:1.5}}>※ 참고용 계산이며 법적 효력이 없습니다. 실제 세금·수수료는 전문가에게 확인하세요.</div>
+    <div style={{fontSize:10,color:"rgba(255,255,255,.5)",marginTop:12,lineHeight:1.5}}>※ 참고용 계산이며 법적 효력이 없습니다 (v2026.04.06). 실제 세금·수수료는 전문가에게 확인하세요.</div>
   </div>);
 }
 function Empty({icon,msg}){return (<div style={{background:P.lt,borderRadius:20,padding:"40px 20px",textAlign:"center",color:"#97a0af"}}><div style={{fontSize:48,marginBottom:12}}>{icon}</div><div style={{fontSize:14}}>{msg||"금액을 입력하면 실시간으로 계산됩니다"}</div></div>);}
