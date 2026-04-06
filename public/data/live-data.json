@@ -1095,6 +1095,12 @@
   "updateLog": [
     {
       "date": "2026.04.06",
+      "category": "세금",
+      "title": "fix: 취득세 세율표를 결과박스 아래로 이동 - NextStep이 결과 바로 아래 위치",
+      "desc": "fix: 취득세 세율표를 결과박스 아래로 이동 - NextStep이 결과 바로 아래 위치"
+    },
+    {
+      "date": "2026.04.06",
       "category": "전체",
       "title": "fix: 관련계산기 calc-container 바로 아래로 이동 (SEO 콘텐츠 위)",
       "desc": "fix: 관련계산기 calc-container 바로 아래로 이동 (SEO 콘텐츠 위)"
@@ -1386,12 +1392,6 @@
       "category": "전체",
       "title": "Tip/TipModal 아이콘 겹침 수정 (flex정렬+고정크기)",
       "desc": "Tip/TipModal 아이콘 겹침 수정 (flex정렬+고정크기)"
-    },
-    {
-      "date": "2026.04.06",
-      "category": "전체",
-      "title": "도움말 클릭 시 토글선택 방지 (이벤트 버블링 차단)",
-      "desc": "도움말 클릭 시 토글선택 방지 (이벤트 버블링 차단)"
     }
   ],
   "rates": {
