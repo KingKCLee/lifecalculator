@@ -1096,6 +1096,12 @@
     {
       "date": "2026.04.06",
       "category": "전체",
+      "title": "fix: 폰트 CDN URL 수정, Node 20 버전 고정으로 Cloudflare 빌드 안정화",
+      "desc": "fix: 폰트 CDN URL 수정, Node 20 버전 고정으로 Cloudflare 빌드 안정화"
+    },
+    {
+      "date": "2026.04.06",
+      "category": "전체",
       "title": "fix: 업데이트 로그 복원 - 4월4일 항목 복구, 4월6일 실제 작업만 등록",
       "desc": "fix: 업데이트 로그 복원 - 4월4일 항목 복구, 4월6일 실제 작업만 등록"
     },
