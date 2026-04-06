@@ -1971,17 +1971,17 @@ function Skeleton({width="100%",height=20,borderRadius=6}){
   return<div style={{width,height,borderRadius,background:"linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%)",backgroundSize:"200% 100%",animation:"shimmer 1.5s infinite"}}/>;
 }
 
-function IndicatorTicker({liveData}){
+function IndicatorTicker({liveData,onNav}){
   const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
-  const items=liveData?.indicators?.items;if(!items||items.length===0)return null;
-  return(<div style={{background:"#0d1117",overflow:"hidden",height:28,display:"flex",alignItems:"center",position:"relative",zIndex:10}}>
-    <div style={{display:"flex",gap:isMo?16:32,animation:"ticker 30s linear infinite",whiteSpace:"nowrap",paddingLeft:16}}>
-      {[...items,...items].map((ind,i)=>{const up=ind.change>0,dn=ind.change<0;return(<span key={i} style={{fontSize:12,color:"#e6edf3",display:"inline-flex",alignItems:"center",gap:6}}>
-        <span style={{color:"#8b949e"}}>{ind.name}</span>
-        <span style={{fontWeight:700,fontVariantNumeric:"tabular-nums"}}>{ind.current?.toLocaleString()}{ind.unit}</span>
-        <span style={{color:up?"#FF5630":dn?"#36B37E":"#6b778c",fontWeight:600,fontSize:11}}>{up?"▲":dn?"▼":"—"}{Math.abs(ind.change)}{ind.unit}</span>
-      </span>);})}
-    </div>
+  const items=liveData?.indicators?.items||[];
+  const news=liveData?.recentNews||[];
+  if(items.length===0&&news.length===0)return null;
+  const indEls=items.map((ind,i)=>{const up=ind.change>0,dn=ind.change<0;return(<span key={"i"+i} style={{fontSize:12,color:"#e6edf3",display:"inline-flex",alignItems:"center",gap:6,flexShrink:0}}><span style={{color:"#8b949e"}}>{ind.name}</span><span style={{fontWeight:700,fontVariantNumeric:"tabular-nums"}}>{ind.current?.toLocaleString()}{ind.unit}</span><span style={{color:up?"#FF5630":dn?"#36B37E":"#6b778c",fontWeight:600,fontSize:11}}>{up?"▲":dn?"▼":"—"}{Math.abs(ind.change)}{ind.unit}</span></span>);});
+  const newsEls=news.map((n,i)=>{const lbl=n.type==="urgent"?"🔴":n.type==="tip"?"💡":"📢";const clr=n.type==="urgent"?"#FFC400":n.type==="tip"?"#57D9A3":"#85B7EB";return(<span key={"n"+i} onClick={()=>{if(n.calcId&&onNav){const it=CL.find(c=>c.id===n.calcId);if(it)onNav(it.c,n.calcId);}}} style={{fontSize:12,color:"#e6edf3",display:"inline-flex",alignItems:"center",gap:6,flexShrink:0,cursor:n.calcId?"pointer":"default"}}><span style={{fontSize:11}}>{lbl}</span><span style={{color:clr,fontWeight:600}}>{n.text}</span>{n.calcId&&<span style={{color:"#8b949e",fontSize:10}}>→</span>}</span>);});
+  const allEls=[...newsEls,...indEls];const speed=Math.max(30,allEls.length*6);
+  return(<div style={{background:"#0d1117",overflow:"hidden",height:30,display:"flex",alignItems:"center",position:"relative",zIndex:10}}>
+    {news.length>0&&<div style={{background:"#0747A6",padding:"0 10px",height:"100%",display:"flex",alignItems:"center",flexShrink:0,fontSize:11,fontWeight:700,color:"white",letterSpacing:.5}}>LIVE</div>}
+    <div style={{display:"flex",gap:32,animation:`ticker ${speed}s linear infinite`,whiteSpace:"nowrap",paddingLeft:16}}>{[...allEls,...allEls]}</div>
     <style>{`@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}`}</style>
   </div>);
 }
@@ -2262,7 +2262,7 @@ button:active{transform:scale(0.98)}
         </div>
       )}
     </nav>
-    {liveData&&!isMo&&<IndicatorTicker liveData={liveData}/>}
+    {liveData&&!isMo&&<IndicatorTicker liveData={liveData} onNav={navigateCalc}/>}
     <main>
     {page==="mypage"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><MyPage user={user} onBack={navigateHome} onLogout={handleLogout}/></div>):page&&page.startsWith("legal_")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LegalPage type={page.replace("legal_","")} onBack={navigateHome}/></div>):page==="home"?(<>
       {isMo?(<>
