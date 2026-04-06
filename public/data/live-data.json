@@ -1096,6 +1096,12 @@
     {
       "date": "2026.04.06",
       "category": "전체",
+      "title": "fix: 로그인 상태 헤더 반영 - PC/모바일 로그아웃+이름 표시",
+      "desc": "fix: 로그인 상태 헤더 반영 - PC/모바일 로그아웃+이름 표시"
+    },
+    {
+      "date": "2026.04.06",
+      "category": "전체",
       "title": "feat: Google OAuth 로그인 구현 (Supabase 연동)",
       "desc": "feat: Google OAuth 로그인 구현 (Supabase 연동)"
     },
@@ -1386,12 +1392,6 @@
       "category": "세금",
       "title": "취득세 결과 UI를 최초 버전 스타일로 복원",
       "desc": "취득세 결과 UI를 최초 버전 스타일로 복원"
-    },
-    {
-      "date": "2026.04.06",
-      "category": "세금",
-      "title": "취득세 결과 영역 짙은 파란색 배경 복원",
-      "desc": "취득세 결과 영역 짙은 파란색 배경 복원"
     }
   ],
   "rates": {
