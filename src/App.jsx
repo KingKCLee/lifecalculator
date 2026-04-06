@@ -506,8 +506,8 @@ function Empty({icon,msg}){return (<div style={{background:P.lt,borderRadius:20,
 
 function CalcAcq({isMo=false,onNav=()=>{}}){
   const[acqType,sAT]=useState("sale");const[realType,sRT]=useState("house");const[areaType,sAreaType]=useState("85");const[price,sP]=useState("12500");const[stdPrice,setStdPrice]=useState("");const[own,sO]=useState("1");const[isTempTwo,sTT]=useState("no");const[inheritNone,sIN]=useState("no");const[chipDesc,setChipDesc]=useState(null);
-  const showChipPanel=(label,desc)=>{if(!isMo&&_setPanelContent&&_setPanelVisible){_setPanelContent({title:label,body:<p style={{fontSize:13,lineHeight:1.8,color:"#344563"}}>{desc}</p>});_setPanelVisible(true);if(_panelHideTimer){clearTimeout(_panelHideTimer);_panelHideTimer=null;}}};
-  const hideChipPanel=()=>{if(_panelHideTimer){clearTimeout(_panelHideTimer);_panelHideTimer=null;}_panelHideTimer=setTimeout(()=>{if(_setPanelVisible)_setPanelVisible(false);},300);};
+  const showChipPanel=(label,desc)=>{if(_popoverTimer){clearTimeout(_popoverTimer);_popoverTimer=null;}setChipDesc({key:label,label,desc,color:"#172B4D",bg:"#f4f5f7",bc:"#dfe1e6"});};
+  const hideChipPanel=()=>{_popoverTimer=setTimeout(()=>setChipDesc(null),200);};
   const[corporation,setCorporation]=useState(false);const[firstDistribution,setFirstDistribution]=useState(false);const[conArea,setConArea]=useState(false);const[metro,setMetro]=useState(false);const[populationDecline,setPopulationDecline]=useState(false);const[firstOfLife,setFirstOfLife]=useState(false);const[heavyTaxExclude,setHeavyTaxExclude]=useState(false);const[spouseChildGive,setSpouseChildGive]=useState(false);const[cultivation,setCultivation]=useState(false);
   const today=new Date();const firstHomeBenefitEnd=new Date('2028-12-31');const isFirstHomeBenefit=today<firstHomeBenefitEnd;
   const pW=tW(price);const stdW=tW(stdPrice)||pW;const n=parseInt(own);const isAdj=conArea;const lowVal=stdW<=1e8;const tempTwo=n===2&&isTempTwo==="yes";
