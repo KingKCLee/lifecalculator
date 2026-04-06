@@ -5,8 +5,15 @@
     <link>https://xn--989a00a691bdfa717h.com/</link>
     <description>취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 등 39가지 무료 계산기. 매일 자동 업데이트.</description>
     <language>ko</language>
-    <lastBuildDate>Mon, 06 Apr 2026 13:16:01 +0900</lastBuildDate>
+    <lastBuildDate>Mon, 06 Apr 2026 13:27:47 +0900</lastBuildDate>
     <atom:link href="https://xn--989a00a691bdfa717h.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+    <title>fix: OAuth 콜백 처리 순서 수정 - exchangeCodeForSession 완료 후 홈 이동</title>
+    <link>https://xn--989a00a691bdfa717h.com/</link>
+    <description>fix: OAuth 콜백 처리 순서 수정 - exchangeCodeForSession 완료 후 홈 이동</description>
+    <pubDate>Mon, 06 Apr 2026 13:27:47 +0900</pubDate>
+    <guid>https://xn--989a00a691bdfa717h.com/#update-202604060427</guid>
+  </item>
     <item>
     <title>fix: OAuth PKCE 코드 교환 추가 - 로그인 후 세션 감지 개선</title>
     <link>https://xn--989a00a691bdfa717h.com/</link>

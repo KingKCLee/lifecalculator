@@ -1096,6 +1096,12 @@
     {
       "date": "2026.04.06",
       "category": "전체",
+      "title": "fix: OAuth 콜백 처리 순서 수정 - exchangeCodeForSession 완료 후 홈 이동",
+      "desc": "fix: OAuth 콜백 처리 순서 수정 - exchangeCodeForSession 완료 후 홈 이동"
+    },
+    {
+      "date": "2026.04.06",
+      "category": "전체",
       "title": "fix: OAuth PKCE 코드 교환 추가 - 로그인 후 세션 감지 개선",
       "desc": "fix: OAuth PKCE 코드 교환 추가 - 로그인 후 세션 감지 개선"
     },
@@ -1386,12 +1392,6 @@
       "category": "전체",
       "title": "전체 계산기: 입력항목 도움말 툴팁(ⓘ) 추가",
       "desc": "전체 계산기: 입력항목 도움말 툴팁(ⓘ) 추가"
-    },
-    {
-      "date": "2026.04.06",
-      "category": "전체",
-      "title": "결과 4버튼: PDF+사진저장+카카오톡+링크복사",
-      "desc": "결과 4버튼: PDF+사진저장+카카오톡+링크복사"
     }
   ],
   "rates": {
