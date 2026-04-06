@@ -154,10 +154,11 @@ retire:`<h2>퇴직금 완벽 가이드</h2><h3>퇴직금 산정</h3><p>퇴직금
 unemploy:`<h2>실업급여 완벽 가이드</h2><h3>수급 자격</h3><p>고용보험 180일 이상 가입 + 비자발적 퇴직이 원칙. 자발적 퇴직은 원칙적 불가하나, 임금체불·중대질병 등 정당 사유 시 예외.</p><h3>수급액</h3><p>1일 = 퇴직 전 평균임금의 60%. 상한 66,000원/일, 하한 최저임금의 80%.</p><h3>수급 기간</h3><p>연령·가입기간에 따라 120~270일. 50세 미만 1~3년 가입 120일, 10년 이상 210일. 50세 이상 10년 이상 270일.</p>`
 };
 
-function useHashRoute(){
-  const[hash,setHash]=useState(typeof window!=="undefined"?decodeURIComponent(window.location.hash.replace('#/','')):"");
-  useEffect(()=>{const h=()=>setHash(decodeURIComponent(window.location.hash.replace('#/','')));window.addEventListener('hashchange',h);return()=>window.removeEventListener('hashchange',h);},[]);
-  return hash;
+function usePathRoute(){
+  const getPath=()=>{const p=typeof window!=="undefined"?window.location.pathname.replace(/^\//,""):"";return decodeURIComponent(p);};
+  const[path,setPath]=useState(getPath);
+  useEffect(()=>{const h=()=>setPath(getPath());window.addEventListener("popstate",h);return()=>window.removeEventListener("popstate",h);},[]);
+  return path;
 }
 
 const fmt=n=>(!n||isNaN(n)||!isFinite(n))?"0":Math.round(n).toLocaleString("ko-KR");
@@ -2020,14 +2021,14 @@ export default function App(){
   useEffect(()=>{fetch('/data/live-data.json?t='+Date.now()).then(r=>r.json()).then(d=>{setLiveData(d);RATES=d?.rates||{};}).catch(()=>{});},[]);
   
   const filtered=CL.filter(c=>c.c===cat);
-  const navigateCalc=(catId,calcId)=>{setCat(catId);setCalc(calcId);setPage("calc");window.location.hash='/'+(SLUGS[calcId]||calcId);window.scrollTo(0,0);const info=CL.find(c=>c.id===calcId);if(info)saveHistory(calcId,info.l,1);};
-  const navigateHome=()=>{setPage("home");window.location.hash='';window.scrollTo(0,0);};
-  const navigateLegal=(type)=>{setPage("legal_"+type);window.location.hash='/'+type;window.scrollTo(0,0);};
+  const navigateCalc=(catId,calcId)=>{setCat(catId);setCalc(calcId);setPage("calc");const slug=SLUGS[calcId]||calcId;history.pushState(null,"","/"+encodeURIComponent(slug));window.scrollTo(0,0);const info=CL.find(c=>c.id===calcId);if(info)saveHistory(calcId,info.l,1);};
+  const navigateHome=()=>{setPage("home");history.pushState(null,"","/");window.scrollTo(0,0);};
+  const navigateLegal=(type)=>{setPage("legal_"+type);history.pushState(null,"","/"+type);window.scrollTo(0,0);};
   const hCat=c=>{const f=CL.find(x=>x.c===c);if(f)navigateCalc(c,f.id);};
   const goCalc=(cId)=>{const info=CL.find(c=>c.id===cId);if(info)navigateCalc(info.c,info.id);};
-  const hash=useHashRoute();
+  const hash=usePathRoute();
   useEffect(()=>{if(["privacy","contact","disclaimer","resource"].includes(hash)){setPage("legal_"+hash);}else if(hash&&SLUG_REVERSE[hash]){const cId=SLUG_REVERSE[hash];const it=CL.find(c=>c.id===cId);if(it){setCat(it.c);setCalc(cId);setPage("calc");}}else if(!hash){setPage("home");}},[hash]);
-  useEffect(()=>{if(page==="calc"&&calc&&PAGE_META[calc]){const m=PAGE_META[calc];document.title=m.title;document.querySelector('meta[name="description"]')?.setAttribute('content',m.desc);document.querySelector('meta[property="og:title"]')?.setAttribute('content',m.title);document.querySelector('meta[property="og:description"]')?.setAttribute('content',m.desc);}else{document.title="생활계산기 - 세금 연말정산 연봉 부동산 종합계산기";document.querySelector('meta[name="description"]')?.setAttribute('content',"취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 4대보험 국민연금 자동차세 등 39가지 무료 계산기. 2026 최신 세법 반영.");}let ld=document.getElementById('dynamic-jsonld');if(!ld){ld=document.createElement('script');ld.id='dynamic-jsonld';ld.type='application/ld+json';document.head.appendChild(ld);}if(page==="calc"&&calc&&PAGE_META[calc]){ld.textContent=JSON.stringify({"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":PAGE_META[calc].title.split(' | ')[0],"description":PAGE_META[calc].desc,"url":"https://xn--989a00a691bdfa717h.com/#/"+SLUGS[calc],"applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"홈","item":"https://xn--989a00a691bdfa717h.com/"},{"@type":"ListItem","position":2,"name":CATS.find(c=>c.id===cat)?.l||"","item":"https://xn--989a00a691bdfa717h.com/"},{"@type":"ListItem","position":3,"name":CL.find(c=>c.id===calc)?.l||"","item":"https://xn--989a00a691bdfa717h.com/#/"+SLUGS[calc]}]}]});}else{ld.textContent='';}},[page,calc]);
+  useEffect(()=>{if(page==="calc"&&calc&&PAGE_META[calc]){const m=PAGE_META[calc];document.title=m.title;document.querySelector('meta[name="description"]')?.setAttribute('content',m.desc);document.querySelector('meta[property="og:title"]')?.setAttribute('content',m.title);document.querySelector('meta[property="og:description"]')?.setAttribute('content',m.desc);}else{document.title="생활계산기 - 세금 연말정산 연봉 부동산 종합계산기";document.querySelector('meta[name="description"]')?.setAttribute('content',"취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 4대보험 국민연금 자동차세 등 39가지 무료 계산기. 2026 최신 세법 반영.");}let ld=document.getElementById('dynamic-jsonld');if(!ld){ld=document.createElement('script');ld.id='dynamic-jsonld';ld.type='application/ld+json';document.head.appendChild(ld);}if(page==="calc"&&calc&&PAGE_META[calc]){ld.textContent=JSON.stringify({"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":PAGE_META[calc].title.split(' | ')[0],"description":PAGE_META[calc].desc,"url":"https://xn--989a00a691bdfa717h.com/"+encodeURIComponent(SLUGS[calc]),"applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"홈","item":"https://xn--989a00a691bdfa717h.com/"},{"@type":"ListItem","position":2,"name":CATS.find(c=>c.id===cat)?.l||"","item":"https://xn--989a00a691bdfa717h.com/"},{"@type":"ListItem","position":3,"name":CL.find(c=>c.id===calc)?.l||"","item":"https://xn--989a00a691bdfa717h.com/"+encodeURIComponent(SLUGS[calc])}]}]});}else{ld.textContent='';}},[page,calc]);
   const Comp=CM[calc]||(()=><Placeholder l={CL.find(c=>c.id===calc)?.l||calc}/>);
   const catInfo=CATS.find(c=>c.id===cat);
   const searchResults=search.trim()?CL.filter(c=>(c.l+"|"+(DESC[c.id]||"")).includes(search.trim())):[];
