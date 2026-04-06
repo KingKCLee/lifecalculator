@@ -1,3 +1,4 @@
+import { supabase } from './supabase.js';
 // build: 2026.04.06.001
 // v2026.04.06
 import { useState, useEffect, useRef } from "react";
@@ -1795,9 +1796,18 @@ function AuthModal({mode,setMode,onClose,isMo}){
   const[agreeService,setAgreeService]=useState(false);
   const[agreePrivacy,setAgreePrivacy]=useState(false);
   const[agreeMarketing,setAgreeMarketing]=useState(false);
-  const handleSocialLogin=(provider)=>{
+  const handleSocialLogin=async(provider)=>{
     if(mode==="signup"&&!agreeAll){alert("서비스 이용을 위해 전체 동의가 필요합니다.");return;}
-    alert(provider+" 로그인 기능을 준비 중입니다. 빠른 시일 내 오픈 예정!");
+    try{
+      if(provider==="구글"){
+        const{error}=await supabase.auth.signInWithOAuth({provider:"google",options:{redirectTo:"https://xn--989a00a691bdfa717h.com/auth/callback",queryParams:{access_type:"offline",prompt:"consent"}}});
+        if(error)throw error;
+      } else if(provider==="네이버"){
+        alert("네이버 로그인은 심사 진행 중입니다. 구글 로그인을 이용해주세요.");
+      } else {
+        alert("이메일 로그인 준비 중입니다.");
+      }
+    }catch(e){alert("로그인 오류: "+e.message);}
   };
   return(<div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.5)",zIndex:10000,display:"flex",alignItems:"center",justifyContent:"center",padding:16,overflowY:"auto"}}>
     <div onClick={e=>e.stopPropagation()} style={{background:"#fff",borderRadius:20,padding:isMo?24:40,maxWidth:420,width:"100%",position:"relative",margin:"auto"}}>
@@ -2055,6 +2065,12 @@ const LogoSVG=({size=36,invert=false})=>(
 /* ═══ 메인 앱 ═══ */
 export default function App(){
   const isMo=useIsMobile();
+  const[user,setUser]=useState(null);
+  useEffect(()=>{
+    supabase.auth.getSession().then(({data:{session}})=>{setUser(session?.user||null);});
+    const{data:{subscription}}=supabase.auth.onAuthStateChange((_,session)=>{setUser(session?.user||null);if(session?.user){setShowAuth(false);}});
+    return()=>subscription.unsubscribe();
+  },[]);
   const[page,setPage]=useState("home");
   const[cat,setCat]=useState("tax");const[calc,setCalc]=useState("acquisition");const[gTab,setGTab]=useState("rates");
   const[search,setSearch]=useState("");
@@ -2078,7 +2094,7 @@ export default function App(){
   const hCat=c=>{const f=CL.find(x=>x.c===c);if(f)navigateCalc(c,f.id);};
   const goCalc=(cId)=>{const info=CL.find(c=>c.id===cId);if(info)navigateCalc(info.c,info.id);};
   const hash=usePathRoute();
-  useEffect(()=>{if(["privacy","contact","disclaimer","resource"].includes(hash)){setPage("legal_"+hash);}else if(hash&&SLUG_REVERSE[hash]){const cId=SLUG_REVERSE[hash];const it=CL.find(c=>c.id===cId);if(it){setCat(it.c);setCalc(cId);setPage("calc");}}else if(!hash){setPage("home");}},[hash]);
+  useEffect(()=>{if(hash==="auth/callback"){supabase.auth.getSession().then(({data:{session}})=>{if(session)setUser(session.user);});history.pushState(null,"","/");setPage("home");return;}if(["privacy","contact","disclaimer","resource"].includes(hash)){setPage("legal_"+hash);}else if(hash&&SLUG_REVERSE[hash]){const cId=SLUG_REVERSE[hash];const it=CL.find(c=>c.id===cId);if(it){setCat(it.c);setCalc(cId);setPage("calc");}}else if(!hash){setPage("home");}},[hash]);
   useEffect(()=>{if(page==="calc"&&calc&&PAGE_META[calc]){const m=PAGE_META[calc];document.title=m.title;document.querySelector('meta[name="description"]')?.setAttribute('content',m.desc);document.querySelector('meta[property="og:title"]')?.setAttribute('content',m.title);document.querySelector('meta[property="og:description"]')?.setAttribute('content',m.desc);}else{document.title="생활계산기 - 세금 연말정산 연봉 부동산 종합계산기";document.querySelector('meta[name="description"]')?.setAttribute('content',"취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 4대보험 국민연금 자동차세 등 39가지 무료 계산기. 2026 최신 세법 반영.");}let ld=document.getElementById('dynamic-jsonld');if(!ld){ld=document.createElement('script');ld.id='dynamic-jsonld';ld.type='application/ld+json';document.head.appendChild(ld);}if(page==="calc"&&calc&&PAGE_META[calc]){ld.textContent=JSON.stringify({"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":PAGE_META[calc].title.split(' | ')[0],"description":PAGE_META[calc].desc,"url":"https://xn--989a00a691bdfa717h.com/"+encodeURIComponent(SLUGS[calc]),"applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"홈","item":"https://xn--989a00a691bdfa717h.com/"},{"@type":"ListItem","position":2,"name":CATS.find(c=>c.id===cat)?.l||"","item":"https://xn--989a00a691bdfa717h.com/"},{"@type":"ListItem","position":3,"name":CL.find(c=>c.id===calc)?.l||"","item":"https://xn--989a00a691bdfa717h.com/"+encodeURIComponent(SLUGS[calc])}]}]});}else{ld.textContent='';}},[page,calc]);
   const Comp=CM[calc]||(()=><Placeholder l={CL.find(c=>c.id===calc)?.l||calc}/>);
   const catInfo=CATS.find(c=>c.id===cat);
@@ -2177,7 +2193,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           </div>
           <div style={{display:"flex",alignItems:"center",gap:10,flexShrink:0}}>
             <button onClick={()=>{setAuthMode("login");setShowAuth(true);}} style={{background:"none",border:"none",fontSize:14,color:"#505f79",cursor:"pointer",fontFamily:"inherit",fontWeight:500}}>로그인</button>
-            <button onClick={()=>{setAuthMode("signup");setShowAuth(true);}} style={{padding:"8px 20px",background:"#0747A6",color:"#fff",border:"none",borderRadius:8,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>무료 가입</button>
+            {user?(<div style={{display:"flex",alignItems:"center",gap:8}}><span style={{fontSize:13,color:"#505f79"}}>{user.user_metadata?.full_name||user.email?.split("@")[0]}</span><button onClick={handleLogout} style={{padding:"8px 16px",background:"#f4f5f7",color:"#505f79",border:"none",borderRadius:8,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>로그아웃</button></div>):(<button onClick={()=>{setAuthMode("signup");setShowAuth(true);}} style={{padding:"8px 20px",background:"#0747A6",color:"#fff",border:"none",borderRadius:8,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>무료 가입</button>)}
           </div>
         </div>
       )}
