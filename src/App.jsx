@@ -2140,7 +2140,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
             <span style={{fontSize:15,fontWeight:800,color:P.pri}}>생활계산기.com</span>
           </div>
           <div style={{display:"flex",alignItems:"center",gap:8}}>
-            <button onClick={()=>{setAuthMode("signup");setShowAuth(true);}} style={{fontSize:12,fontWeight:700,color:"#fff",background:P.pri,border:"none",borderRadius:8,padding:"6px 12px",cursor:"pointer",fontFamily:"inherit"}}>무료 가입</button>
+            {user?(<span style={{fontSize:12,fontWeight:600,color:P.pri}}>{user.user_metadata?.full_name?.split(" ")[0]||user.email?.split("@")[0]}</span>):(<button onClick={()=>{setAuthMode("signup");setShowAuth(true);}} style={{fontSize:12,fontWeight:700,color:"#fff",background:P.pri,border:"none",borderRadius:8,padding:"6px 12px",cursor:"pointer",fontFamily:"inherit"}}>무료 가입</button>)}
             <button aria-label="메뉴" onClick={()=>setMobileMenu(!mobileMenu)} style={{background:"none",border:"none",fontSize:22,cursor:"pointer",color:"#172B4D",padding:8,lineHeight:1,minWidth:40,minHeight:40}}>{mobileMenu?"✕":"☰"}</button>
           </div>
         </div>
@@ -2165,8 +2165,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
               </div>
             );})}
             <div style={{padding:"20px",borderTop:"1px solid #e8eaed",marginTop:8}}>
-              <button onClick={()=>{setAuthMode("signup");setShowAuth(true);setMobileMenu(false);}} style={{width:"100%",padding:"14px",background:"#0747A6",color:"#fff",border:"none",borderRadius:10,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>무료 가입</button>
-              <button onClick={()=>{setAuthMode("login");setShowAuth(true);setMobileMenu(false);}} style={{width:"100%",padding:"14px",background:"transparent",color:"#505f79",border:"none",borderRadius:10,fontSize:14,fontWeight:500,cursor:"pointer",fontFamily:"inherit",marginTop:8}}>로그인</button>
+              {user?(<><div style={{padding:"12px 16px",background:"#f4f5f7",borderRadius:10,marginBottom:8,fontSize:14,color:"#172B4D",fontWeight:600}}>{user.user_metadata?.full_name||user.email?.split("@")[0]} 님</div><button onClick={()=>{handleLogout();setMobileMenu(false);}} style={{width:"100%",padding:"14px",background:"#f4f5f7",color:"#505f79",border:"none",borderRadius:10,fontSize:15,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>로그아웃</button></>):(<><button onClick={()=>{setAuthMode("signup");setShowAuth(true);setMobileMenu(false);}} style={{width:"100%",padding:"14px",background:"#0747A6",color:"#fff",border:"none",borderRadius:10,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>무료 가입</button><button onClick={()=>{setAuthMode("login");setShowAuth(true);setMobileMenu(false);}} style={{width:"100%",padding:"14px",background:"transparent",color:"#505f79",border:"none",borderRadius:10,fontSize:14,fontWeight:500,cursor:"pointer",fontFamily:"inherit",marginTop:8}}>로그인</button></>)}
             </div>
           </div>
         </div>}
@@ -2192,7 +2191,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
             );})}
           </div>
           <div style={{display:"flex",alignItems:"center",gap:10,flexShrink:0}}>
-            <button onClick={()=>{setAuthMode("login");setShowAuth(true);}} style={{background:"none",border:"none",fontSize:14,color:"#505f79",cursor:"pointer",fontFamily:"inherit",fontWeight:500}}>로그인</button>
+            {!user&&<button onClick={()=>{setAuthMode("login");setShowAuth(true);}} style={{background:"none",border:"none",fontSize:14,color:"#505f79",cursor:"pointer",fontFamily:"inherit",fontWeight:500}}>로그인</button>}
             {user?(<div style={{display:"flex",alignItems:"center",gap:8}}><span style={{fontSize:13,color:"#505f79"}}>{user.user_metadata?.full_name||user.email?.split("@")[0]}</span><button onClick={handleLogout} style={{padding:"8px 16px",background:"#f4f5f7",color:"#505f79",border:"none",borderRadius:8,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>로그아웃</button></div>):(<button onClick={()=>{setAuthMode("signup");setShowAuth(true);}} style={{padding:"8px 20px",background:"#0747A6",color:"#fff",border:"none",borderRadius:8,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>무료 가입</button>)}
           </div>
         </div>
