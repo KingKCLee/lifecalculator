@@ -1096,6 +1096,12 @@
     {
       "date": "2026.04.06",
       "category": "전체",
+      "title": "fix: Pretendard 폰트 로컬 self-hosting으로 변경 (CDN 403 완전 해결)",
+      "desc": "fix: Pretendard 폰트 로컬 self-hosting으로 변경 (CDN 403 완전 해결)"
+    },
+    {
+      "date": "2026.04.06",
+      "category": "전체",
       "title": "fix: 번들 해시 갱신으로 CDN 캐시 우회",
       "desc": "fix: 번들 해시 갱신으로 CDN 캐시 우회"
     },
@@ -1386,12 +1392,6 @@
       "category": "전체",
       "title": "PageSpeed 최적화: 폰트3웨이트+robots수정+CSS축소+접근성",
       "desc": "PageSpeed 최적화: 폰트3웨이트+robots수정+CSS축소+접근성"
-    },
-    {
-      "date": "2026.04.05",
-      "category": "전체",
-      "title": "모바일 select/input 높이 수정: 텍스트 잘림 해결",
-      "desc": "모바일 select/input 높이 수정: 텍스트 잘림 해결"
     }
   ],
   "rates": {
