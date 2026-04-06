@@ -1096,6 +1096,12 @@
     {
       "date": "2026.04.06",
       "category": "전체",
+      "title": "a11y: 색상 대비 개선 - 푸터 텍스트 가시성 향상",
+      "desc": "a11y: 색상 대비 개선 - 푸터 텍스트 가시성 향상"
+    },
+    {
+      "date": "2026.04.06",
+      "category": "전체",
       "title": "perf: preconnect 추가, robots.txt 오류 수정, AdSense/GA4 defer 처리",
       "desc": "perf: preconnect 추가, robots.txt 오류 수정, AdSense/GA4 defer 처리"
     },
@@ -1386,12 +1392,6 @@
       "category": "전체",
       "title": "EXPERT GUIDE: 21개 계산기 faqList 4종 아코디언으로 통일 (절세팁+기한+주의사항)",
       "desc": "EXPERT GUIDE: 21개 계산기 faqList 4종 아코디언으로 통일 (절세팁+기한+주의사항)"
-    },
-    {
-      "date": "2026.04.06",
-      "category": "세금",
-      "title": "시가표준액 겹침 수정 + 취득세 EXPERT GUIDE FAQ 5개로 개편",
-      "desc": "시가표준액 겹침 수정 + 취득세 EXPERT GUIDE FAQ 5개로 개편"
     }
   ],
   "rates": {
