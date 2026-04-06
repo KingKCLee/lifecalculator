@@ -2129,6 +2129,7 @@ export default function App(){
   const navigateHome=()=>{setPage("home");history.pushState(null,"","/");window.scrollTo(0,0);};
   const navigateLegal=(type)=>{setPage("legal_"+type);history.pushState(null,"","/"+type);window.scrollTo(0,0);};
   const navigateMyPage=()=>{setPage("mypage");history.pushState(null,"","/mypage");window.scrollTo(0,0);};
+  const handleLogout=async()=>{await supabase.auth.signOut();setUser(null);history.pushState(null,"","/");setPage("home");window.scrollTo(0,0);};
   const hCat=c=>{const f=CL.find(x=>x.c===c);if(f)navigateCalc(c,f.id);};
   const goCalc=(cId)=>{const info=CL.find(c=>c.id===cId);if(info)navigateCalc(info.c,info.id);};
   const hash=usePathRoute();
