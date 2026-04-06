@@ -1282,13 +1282,13 @@ function NextStep({calcId,onNav,isMo=false}){
   const links=(INTERNAL_LINKS[calcId]||[]).map(l=>({id:l.id,label:l.label}));
   if(links.length===0){const rl=(RELATED[calcId]||[]).map(id=>{const it=CL.find(c=>c.id===id);return it?{id,label:it.l+" 계산하기"}:null;}).filter(Boolean);if(rl.length===0)return null;links.push(...rl);}
   return(
-    <div style={{marginTop:16,padding:16,background:"#F0F4FF",borderRadius:12,border:"1px solid #C7D7F9"}}>
-      <div style={{fontSize:11,fontWeight:700,color:"#0747A6",letterSpacing:1,textTransform:"uppercase",marginBottom:10}}>📋 관련 계산기</div>
-      <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
+    <div style={{marginTop:12}}>
+      <div style={{fontSize:11,fontWeight:700,color:"#6b778c",letterSpacing:.5,textTransform:"uppercase",marginBottom:8}}>함께 계산하면 좋은</div>
+      <div style={{display:"flex",flexDirection:"column",gap:6}}>
         {links.map(l=>{const it=CL.find(c=>c.id===l.id);if(!it)return null;return(
-          <button key={l.id} onClick={()=>onNav(it.c,l.id)} style={{padding:"8px 14px",background:"#fff",border:"1.5px solid #0747A6",borderRadius:20,fontSize:isMo?12:13,color:"#0747A6",cursor:"pointer",fontWeight:600,fontFamily:"inherit",whiteSpace:"nowrap",transition:"all .15s"}}
-            onMouseEnter={e=>{e.currentTarget.style.background="#0747A6";e.currentTarget.style.color="#fff"}}
-            onMouseLeave={e=>{e.currentTarget.style.background="#fff";e.currentTarget.style.color="#0747A6"}}>{l.label} →</button>
+          <button key={l.id} onClick={()=>onNav(it.c,l.id)} style={{padding:"10px 14px",background:"#fff",border:"1px solid #dfe1e6",borderRadius:10,fontSize:13,color:"#172B4D",cursor:"pointer",fontWeight:500,fontFamily:"inherit",textAlign:"left",display:"flex",justifyContent:"space-between",alignItems:"center",transition:"all .15s"}}
+            onMouseEnter={e=>{e.currentTarget.style.background="#deebff";e.currentTarget.style.borderColor="#0747A6";e.currentTarget.style.color="#0747A6"}}
+            onMouseLeave={e=>{e.currentTarget.style.background="#fff";e.currentTarget.style.borderColor="#dfe1e6";e.currentTarget.style.color="#172B4D"}}><span>{l.label}</span><span style={{color:"#0747A6",fontWeight:700}}>→</span></button>
         );})}
       </div>
     </div>
@@ -2261,8 +2261,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           <div className="calc-container" style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:isMo?16:32,marginBottom:24,boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
             {isMo?(<MobileCalcWrapper><Comp isMo={true}/><NextStep calcId={calc} onNav={navigateCalc} isMo={true}/></MobileCalcWrapper>):(<div>
   <Comp isMo={false}/>
-  <div style={{paddingLeft:"calc(50% + 16px)",marginTop:-8}}>
-    <NextStep calcId={calc} onNav={navigateCalc} isMo={false}/>
+  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,alignItems:"start",marginTop:12}}>
+    <div/>
+    <div><NextStep calcId={calc} onNav={navigateCalc} isMo={false}/></div>
   </div>
 </div>)}
           </div>
