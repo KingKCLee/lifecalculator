@@ -1096,6 +1096,12 @@
     {
       "date": "2026.04.07",
       "category": "전체",
+      "title": "feat: TipModal 버튼 위치 기반 스마트 팝오버, 버튼 hover 파란색 계열",
+      "desc": "feat: TipModal 버튼 위치 기반 스마트 팝오버, 버튼 hover 파란색 계열"
+    },
+    {
+      "date": "2026.04.07",
+      "category": "전체",
       "title": "fix: 전역 버튼 hover/active 효과 index.html에 추가",
       "desc": "fix: 전역 버튼 hover/active 효과 index.html에 추가"
     },
@@ -1386,12 +1392,6 @@
       "category": "세금",
       "title": "fix: 모바일 취득세 버튼 그룹 가로 배치 개선 (2×2 그리드)",
       "desc": "fix: 모바일 취득세 버튼 그룹 가로 배치 개선 (2×2 그리드)"
-    },
-    {
-      "date": "2026.04.06",
-      "category": "대출",
-      "title": "UI 4건: 면적축약(완료)+시가표준액TipModal복원+Empty안내문구+대출입력2열",
-      "desc": "UI 4건: 면적축약(완료)+시가표준액TipModal복원+Empty안내문구+대출입력2열"
     }
   ],
   "rates": {
