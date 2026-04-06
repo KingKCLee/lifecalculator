@@ -5,8 +5,15 @@
     <link>https://xn--989a00a691bdfa717h.com/</link>
     <description>취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 등 39가지 무료 계산기. 매일 자동 업데이트.</description>
     <language>ko</language>
-    <lastBuildDate>Mon, 06 Apr 2026 10:46:15 +0900</lastBuildDate>
+    <lastBuildDate>Mon, 06 Apr 2026 10:48:37 +0900</lastBuildDate>
     <atom:link href="https://xn--989a00a691bdfa717h.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+    <title>fix: 버튼 CSS 삭제, 관련계산기 중복 제거, RateTable 개선, PRO카드 조건화, ticker 단일화</title>
+    <link>https://xn--989a00a691bdfa717h.com/</link>
+    <description>fix: 버튼 CSS 삭제, 관련계산기 중복 제거, RateTable 개선, PRO카드 조건화, ticker 단일화</description>
+    <pubDate>Mon, 06 Apr 2026 10:48:37 +0900</pubDate>
+    <guid>https://xn--989a00a691bdfa717h.com/#update-202604060148</guid>
+  </item>
     <item>
     <title>fix: index.html 전역 flex button CSS 삭제 - PC 버튼 줄바꿈·삐져나옴 수정</title>
     <link>https://xn--989a00a691bdfa717h.com/</link>
