@@ -1829,8 +1829,8 @@ function AuthModal({mode,setMode,onClose,isMo}){
         </div>
       </div>}
       <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:20}}>
-        <button onClick={()=>handleSocialLogin("네이버")} style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,padding:14,background:"#03C75A",color:"#fff",border:"none",borderRadius:10,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}><span style={{fontSize:18,fontWeight:900}}>N</span>네이버로 {mode==="login"?"로그인":"시작하기"}</button>
         <button onClick={()=>handleSocialLogin("구글")} style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,padding:14,background:"#fff",color:"#172B4D",border:"1.5px solid #dfe1e6",borderRadius:10,fontSize:15,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}><span style={{fontSize:18}}>G</span>Google로 {mode==="login"?"로그인":"시작하기"}</button>
+        <button onClick={()=>handleSocialLogin("네이버")} style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,padding:14,background:"#03C75A",color:"#fff",border:"none",borderRadius:10,fontSize:15,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}><span style={{fontSize:18,fontWeight:900}}>N</span>네이버로 {mode==="login"?"로그인":"시작하기"}</button>
       </div>
       <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:20}}><div style={{flex:1,height:1,background:"#dfe1e6"}}/><span style={{fontSize:12,color:"#6b778c"}}>또는</span><div style={{flex:1,height:1,background:"#dfe1e6"}}/></div>
       <div style={{display:"flex",flexDirection:"column",gap:10}}>
