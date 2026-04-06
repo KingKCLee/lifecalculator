@@ -5,8 +5,15 @@
     <link>https://xn--989a00a691bdfa717h.com/</link>
     <description>취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 등 39가지 무료 계산기. 매일 자동 업데이트.</description>
     <language>ko</language>
-    <lastBuildDate>Mon, 06 Apr 2026 11:26:51 +0900</lastBuildDate>
+    <lastBuildDate>Mon, 06 Apr 2026 11:29:25 +0900</lastBuildDate>
     <atom:link href="https://xn--989a00a691bdfa717h.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+    <title>fix: 전용면적·주택수 세그먼트 컨트롤 스타일로 개선 - 텍스트 잘림 해결</title>
+    <link>https://xn--989a00a691bdfa717h.com/</link>
+    <description>fix: 전용면적·주택수 세그먼트 컨트롤 스타일로 개선 - 텍스트 잘림 해결</description>
+    <pubDate>Mon, 06 Apr 2026 11:29:25 +0900</pubDate>
+    <guid>https://xn--989a00a691bdfa717h.com/#update-202604060229</guid>
+  </item>
     <item>
     <title>feat: 서브탭 선택항목 맨앞 정렬 + 화살표 동적 표시 (스크롤 위치 기반)</title>
     <link>https://xn--989a00a691bdfa717h.com/</link>
