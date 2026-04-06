@@ -2248,7 +2248,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
             </div>
           </div>
           <div className="calc-container" style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:isMo?16:32,marginBottom:24,boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
-            {isMo?(<MobileCalcWrapper><Comp isMo={true}/><NextStep calcId={calc} onNav={navigateCalc} isMo={true}/></MobileCalcWrapper>):(<div><Comp isMo={false}/><NextStep calcId={calc} onNav={navigateCalc} isMo={false}/></div>)}
+            {isMo?(<MobileCalcWrapper><Comp isMo={true}/><NextStep calcId={calc} onNav={navigateCalc} isMo={true}/></MobileCalcWrapper>):(<div>
+  <Comp isMo={false}/>
+  <div style={{paddingLeft:"calc(50% + 16px)",marginTop:-8}}>
+    <NextStep calcId={calc} onNav={navigateCalc} isMo={false}/>
+  </div>
+</div>)}
           </div>
           
           {FUN_STATS[calc]&&<div style={{marginBottom:16,padding:"20px 24px",background:"linear-gradient(135deg,#deebff,#EAE6FF)",borderRadius:12}}>
