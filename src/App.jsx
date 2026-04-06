@@ -399,7 +399,8 @@ function Radio({label,value,onChange,options,cols}){
       {options.map(o=>(<div key={o.value} onClick={()=>onChange(o.value)}
         style={{padding:"14px 8px",borderRadius:12,border:value===o.value?"2px solid #0747A6":"2px solid #dfe1e6",
           background:value===o.value?"#deebff":"#fff",cursor:"pointer",textAlign:"center",
-          transition:"all 0.2s",flexShrink:0,minWidth:0,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>
+          transition:"all 0.2s",flexShrink:0,minWidth:0,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",
+          display:"flex",alignItems:"center",justifyContent:"center"}}>
         <div style={{fontSize:13,fontWeight:value===o.value?700:500,color:value===o.value?"#0747A6":"#172B4D",lineHeight:1.4}}>{o.label}</div>
       </div>))}
     </div>
@@ -590,19 +591,19 @@ function CalcAcq({isMo=false}){
       {!isMo&&<h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>🏢 취득세 시뮬레이션</h3>}
       <div style={{marginBottom:16}}>
         <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>취득 유형</label>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6}}>
+        <div className="radio-grid" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6}}>
           {[["sale","매매"],["gift","증여"],["inherit","상속"],["newbuild","원시"]].map(([v,l])=>(<button key={v} onClick={()=>sAT(v)} style={{padding:isMo?"8px 4px":"10px",minWidth:0,border:acqType===v?"2px solid #0747A6":"1.5px solid #dfe1e6",borderRadius:8,background:acqType===v?"#deebff":"#fff",color:acqType===v?"#0747A6":"#505f79",fontWeight:acqType===v?700:400,fontSize:isMo?12:13,cursor:"pointer",whiteSpace:"nowrap",wordBreak:"keep-all",fontFamily:"inherit"}}>{l}</button>))}
         </div>
       </div>
       <div style={{marginBottom:16}}>
         <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>부동산 유형<TipModal title="부동산 유형"><p>주거용 오피스텔인 경우에만 '오피스텔' 선택. 업무용은 '그 외'. 농지는 2년 이상 자경 시 감면 혜택.</p></TipModal></label>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6}}>
+        <div className="radio-grid" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6}}>
           {[["house","주택"],["officetel","오피스텔"],["farmLand","농지"],["building","그 외"]].map(([v,l])=>(<button key={v} onClick={()=>sRT(v)} style={{padding:isMo?"8px 4px":"10px",minWidth:0,border:realType===v?"2px solid #0747A6":"1.5px solid #dfe1e6",borderRadius:8,background:realType===v?"#deebff":"#fff",color:realType===v?"#0747A6":"#505f79",fontWeight:realType===v?700:400,fontSize:isMo?12:13,cursor:"pointer",whiteSpace:"nowrap",wordBreak:"keep-all",fontFamily:"inherit"}}>{l}</button>))}
         </div>
       </div>
       {(realType==="house"||realType==="officetel")&&<div style={{marginBottom:16}}>
         <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>전용면적</label>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6}}>
+        <div className="radio-grid" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6}}>
           {(isMo?[["40","40㎡↓"],["60","60㎡↓"],["85","85㎡↓"],["big","85㎡↑"]]:[["40","40㎡ 이하"],["60","60㎡ 이하"],["85","85㎡ 이하"],["big","85㎡ 초과"]]).map(([v,l])=>(<button key={v} onClick={()=>sAreaType(v)} style={{padding:isMo?"8px 4px":"10px",minWidth:0,border:areaType===v?"2px solid #0747A6":"1.5px solid #dfe1e6",borderRadius:8,background:areaType===v?"#deebff":"#fff",color:areaType===v?"#0747A6":"#505f79",fontWeight:areaType===v?700:400,fontSize:isMo?13:12,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>{l}</button>))}
         </div>
       </div>}
@@ -964,7 +965,9 @@ function MobileCalcWrapper({children}){
       .mobile-calc-wrap>div{display:flex!important;flex-direction:column!important;gap:16px!important;max-width:100%!important}
       .mobile-calc-wrap>div>div{max-width:100%!important;overflow:hidden!important}
       .mobile-calc-wrap input:not([type="range"]),.mobile-calc-wrap select{width:100%!important;max-width:100%!important;font-size:16px!important;padding:14px 12px!important}
-      .mobile-calc-wrap button{max-width:100%!important;min-height:44px!important;font-size:14px!important;line-height:1.4!important;overflow:visible!important;white-space:nowrap!important;height:auto!important;padding:10px 4px!important;word-break:keep-all!important}
+      .mobile-calc-wrap button{max-width:100%!important;font-size:14px!important;line-height:1.4!important;word-break:keep-all!important}
+      .mobile-calc-wrap .radio-grid button{padding:10px 4px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;height:auto!important;min-height:40px!important;display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important}
+      .mobile-calc-wrap .result-actions button{min-height:44px!important;padding:10px 8px!important}
       .mobile-calc-wrap h3{font-size:20px!important}
       .mobile-calc-wrap label{font-size:14px!important}
       .mobile-calc-wrap input[type="range"]{width:100%!important}
@@ -2218,7 +2221,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
             <h1 style={{fontSize:28,fontWeight:800,color:P.tx,margin:0,letterSpacing:-1}}>{CL.find(c=>c.id===calc)?.l||catInfo?.l+" 계산기"}</h1>
             <p style={{fontSize:14,color:P.mt,margin:"4px 0 16px"}}>2026년 최신 세법 기반 정밀 계산</p>
             <div className="sub-tabs" style={{display:"flex",gap:6,flexWrap:"wrap"}}>
-              {filtered.map(c=>(<button key={c.id} onClick={()=>navigateCalc(cat,c.id)} style={{padding:"8px 16px",border:calc===c.id?"none":`1px solid ${P.bd}`,borderRadius:20,background:calc===c.id?P.pri:"transparent",color:calc===c.id?"#fff":P.mt,fontSize:13,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0,marginBottom:4}}>{c.l}</button>))}
+              {filtered.map(c=>(<button key={c.id} onClick={()=>navigateCalc(cat,c.id)} style={{padding:"8px 16px",border:calc===c.id?"none":`1px solid ${P.bd}`,borderRadius:20,background:calc===c.id?P.pri:"transparent",color:calc===c.id?"#fff":P.mt,fontSize:13,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0,marginBottom:4,display:"inline-flex",alignItems:"center",justifyContent:"center",height:36,boxSizing:"border-box"}}>{c.l}</button>))}
             </div>
           </div>
           <div className="calc-container" style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:isMo?16:32,marginBottom:24,boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
@@ -2234,16 +2237,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
             <div style={{fontSize:14,fontWeight:700,color:"#172B4D",marginBottom:10}}>{FUN_STATS[calc].title}</div>
             {FUN_STATS[calc].items.map((it,i)=>(<div key={i} style={{fontSize:13,color:"#344563",padding:"4px 0",display:"flex",alignItems:"flex-start",gap:8}}><span style={{color:"#0747A6"}}>•</span><span>{it}</span></div>))}
           </div>}
-          {RELATED[calc]&&RELATED[calc].length>0&&!INTERNAL_LINKS[calc]&&<div style={{marginBottom:24,padding:"16px 20px",background:"#fff",borderRadius:12,border:`1px solid ${P.bd}`}}>
-            <div style={{fontSize:13,fontWeight:700,color:"#6b778c",marginBottom:10}}>🔗 관련 계산기</div>
-            <div className="hscroll" style={{display:"flex",flexWrap:window.innerWidth<=768?"nowrap":"wrap",overflowX:window.innerWidth<=768?"auto":"visible",WebkitOverflowScrolling:"touch",gap:8,paddingBottom:window.innerWidth<=768?4:0}}>
-              {RELATED[calc].map(rid=>{const it=CL.find(c=>c.id===rid);return it?<button key={rid} onClick={()=>navigateCalc(it.c,rid)} style={{padding:"6px 14px",background:"#f4f5f7",border:"none",borderRadius:16,fontSize:12,color:"#0747A6",cursor:"pointer",fontWeight:600,fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0}} onMouseEnter={e=>{e.currentTarget.style.background="#deebff"}} onMouseLeave={e=>{e.currentTarget.style.background="#f4f5f7"}}>{it.l} →</button>:null;})}
-            </div>
-          </div>}
           {SEO_CONTENT[calc]&&<div style={{marginBottom:24,padding:isMo?"24px 18px":"32px 28px",background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`}}>
             <div className="seo" dangerouslySetInnerHTML={{__html:SEO_CONTENT[calc]}} style={{fontSize:14,color:"#172B4D",lineHeight:1.8}}/>
           </div>}
-          {cat!=="pro"&&<div className="pro-cards" style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?8:12}}>
+          {cat==="tax"&&calc!=="totalcost"&&calc!=="compare"&&calc!=="invest"&&<div className="pro-cards" style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?8:12}}>
             {[{id:"totalcost",t:"총비용 시뮬레이터",d:"취득세~중개보수 합산",icon:"⚡",cl:"#0747A6"},
               {id:"compare",t:"세금 비교 분석",d:"매매·증여·상속 비교",icon:"📊",cl:"#00875A"},
               {id:"invest",t:"투자수익 분석",d:"매수→매도 종합분석",icon:"📈",cl:"#FF8B00"}
