@@ -5,8 +5,15 @@
     <link>https://xn--989a00a691bdfa717h.com/</link>
     <description>취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 등 39가지 무료 계산기. 매일 자동 업데이트.</description>
     <language>ko</language>
-    <lastBuildDate>Mon, 06 Apr 2026 11:48:37 +0900</lastBuildDate>
+    <lastBuildDate>Mon, 06 Apr 2026 11:51:11 +0900</lastBuildDate>
     <atom:link href="https://xn--989a00a691bdfa717h.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+    <title>fix: 취득가액 라벨 줄바꿈, 시가표준액 note 중복 제거</title>
+    <link>https://xn--989a00a691bdfa717h.com/</link>
+    <description>fix: 취득가액 라벨 줄바꿈, 시가표준액 note 중복 제거</description>
+    <pubDate>Mon, 06 Apr 2026 11:51:11 +0900</pubDate>
+    <guid>https://xn--989a00a691bdfa717h.com/#update-202604060251</guid>
+  </item>
     <item>
     <title>feat: 취득세 특수조건 토글칩 C안 - 선택시 하단 설명 표시</title>
     <link>https://xn--989a00a691bdfa717h.com/</link>
