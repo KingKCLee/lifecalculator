@@ -1096,6 +1096,12 @@
     {
       "date": "2026.04.07",
       "category": "전체",
+      "title": "fix: 전역 버튼 hover/active 효과 index.html에 추가",
+      "desc": "fix: 전역 버튼 hover/active 효과 index.html에 추가"
+    },
+    {
+      "date": "2026.04.07",
+      "category": "전체",
       "title": "feat: 전체 버튼 hover transition 추가 + active scale 효과",
       "desc": "feat: 전체 버튼 hover transition 추가 + active scale 효과"
     },
@@ -1386,12 +1392,6 @@
       "category": "대출",
       "title": "UI 4건: 면적축약(완료)+시가표준액TipModal복원+Empty안내문구+대출입력2열",
       "desc": "UI 4건: 면적축약(완료)+시가표준액TipModal복원+Empty안내문구+대출입력2열"
-    },
-    {
-      "date": "2026.04.06",
-      "category": "세금",
-      "title": "취득세 전용면적 버튼 모바일에서 축약 (㎡↓/㎡↑)",
-      "desc": "취득세 전용면적 버튼 모바일에서 축약 (㎡↓/㎡↑)"
     }
   ],
   "rates": {

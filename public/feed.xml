@@ -5,8 +5,15 @@
     <link>https://xn--989a00a691bdfa717h.com/</link>
     <description>취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 등 39가지 무료 계산기. 매일 자동 업데이트.</description>
     <language>ko</language>
-    <lastBuildDate>Tue, 07 Apr 2026 07:02:06 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 07 Apr 2026 07:09:11 +0900</lastBuildDate>
     <atom:link href="https://xn--989a00a691bdfa717h.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+    <title>fix: 전역 버튼 hover/active 효과 index.html에 추가</title>
+    <link>https://xn--989a00a691bdfa717h.com/</link>
+    <description>fix: 전역 버튼 hover/active 효과 index.html에 추가</description>
+    <pubDate>Tue, 07 Apr 2026 07:09:11 +0900</pubDate>
+    <guid>https://xn--989a00a691bdfa717h.com/#update-202604062209</guid>
+  </item>
     <item>
     <title>feat: 전체 버튼 hover transition 추가 + active scale 효과</title>
     <link>https://xn--989a00a691bdfa717h.com/</link>
