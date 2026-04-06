@@ -1095,6 +1095,12 @@
   "updateLog": [
     {
       "date": "2026.04.06",
+      "category": "전체",
+      "title": "feat: 전체 계산기 RateTable 앞 NextStep 삽입 - 결과박스 바로 아래 관련계산기",
+      "desc": "feat: 전체 계산기 RateTable 앞 NextStep 삽입 - 결과박스 바로 아래 관련계산기"
+    },
+    {
+      "date": "2026.04.06",
       "category": "세금",
       "title": "fix: 취득세 세율표를 결과박스 아래로 이동 - NextStep이 결과 바로 아래 위치",
       "desc": "fix: 취득세 세율표를 결과박스 아래로 이동 - NextStep이 결과 바로 아래 위치"
@@ -1386,12 +1392,6 @@
       "category": "전체",
       "title": "UI검수 6건: 4주택버튼한줄+세율표추가+중과배제+날짜갱신+통계연도+Tip겹침",
       "desc": "UI검수 6건: 4주택버튼한줄+세율표추가+중과배제+날짜갱신+통계연도+Tip겹침"
-    },
-    {
-      "date": "2026.04.06",
-      "category": "전체",
-      "title": "Tip/TipModal 아이콘 겹침 수정 (flex정렬+고정크기)",
-      "desc": "Tip/TipModal 아이콘 겹침 수정 (flex정렬+고정크기)"
     }
   ],
   "rates": {
