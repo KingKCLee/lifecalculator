@@ -936,13 +936,13 @@ function Placeholder({l}){return (<div style={{padding:40,textAlign:"center",col
 function RateTable({title,headers,rows}){
   const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
   return(
-    <div className="rate-table-wrap" style={{marginTop:20,borderRadius:12,overflow:"hidden",border:`1px solid ${P.bd}`}}>
-      <div style={{padding:"10px 14px",background:P.lt,fontSize:12,fontWeight:700,color:P.tx}}>{title}</div>
+    <div style={{marginTop:20,borderRadius:12,overflow:"hidden",border:"1px solid #dfe1e6"}}>
+      <div style={{padding:"10px 14px",background:"#f4f5f7",fontSize:12,fontWeight:700,color:"#172B4D"}}>📊 {title}</div>
       <div style={{overflowX:"auto"}}>
-        <table style={{width:"100%",borderCollapse:"collapse",fontSize:isMo?11:13}}>
-          <thead><tr>{headers.map((h,i)=><th key={i} style={{padding:isMo?"6px 4px":"8px 12px",background:"#0747A6",color:"#fff",fontWeight:600,textAlign:i===0?"left":"center",whiteSpace:"nowrap"}}>{h}</th>)}</tr></thead>
-          <tbody>{rows.map((r,ri)=><tr key={ri} style={{background:ri%2===0?"#fff":P.lt}}>
-            {r.map((c,ci)=><td key={ci} style={{padding:isMo?"6px 4px":"8px 12px",borderBottom:`1px solid ${P.lt}`,textAlign:ci===0?"left":"center",wordBreak:"keep-all",color:ci===0?P.tx:P.mt}}>{c}</td>)}
+        <table style={{width:"100%",borderCollapse:"collapse",fontSize:12,background:"#fff"}}>
+          <thead><tr>{headers.map((h,i)=><th key={i} style={{padding:"8px 10px",background:"#0747A6",color:"#fff",fontWeight:600,textAlign:i===0?"left":"center",whiteSpace:"nowrap",fontSize:11}}>{h}</th>)}</tr></thead>
+          <tbody>{rows.map((r,ri)=><tr key={ri} style={{background:ri%2===0?"#fff":"#f8f9fc"}}>
+            {r.map((c,ci)=><td key={ci} style={{padding:"7px 10px",borderBottom:"1px solid #f0f0f0",textAlign:ci===0?"left":"center",whiteSpace:"nowrap",fontSize:11,color:ci===0?"#172B4D":"#505f79"}}>{c}</td>)}
           </tr>)}</tbody>
         </table>
       </div>
@@ -2240,12 +2240,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           <div className="calc-container" style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:isMo?16:32,marginBottom:24,boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
             {isMo?(<MobileCalcWrapper><Comp isMo={true}/><NextStep calcId={calc} onNav={navigateCalc} isMo={true}/></MobileCalcWrapper>):(<div><Comp isMo={false}/><NextStep calcId={calc} onNav={navigateCalc} isMo={false}/></div>)}
           </div>
-          {INTERNAL_LINKS[calc]&&<div style={{marginBottom:16,padding:"20px 24px",background:"#f8f9fc",borderRadius:12}}>
-            <div style={{fontSize:14,fontWeight:700,color:"#172B4D",marginBottom:12}}>🔗 함께 확인하면 좋은 계산기</div>
-            <div className="hscroll" style={{display:"flex",flexWrap:window.innerWidth<=768?"nowrap":"wrap",overflowX:window.innerWidth<=768?"auto":"visible",WebkitOverflowScrolling:"touch",gap:8,paddingBottom:window.innerWidth<=768?4:0}}>
-              {INTERNAL_LINKS[calc].map(link=>{const it=CL.find(c=>c.id===link.id);return it?<button key={link.id} onClick={()=>navigateCalc(it.c,link.id)} style={{padding:"8px 16px",background:"#fff",border:"1px solid #dfe1e6",borderRadius:20,fontSize:13,color:"#0747A6",cursor:"pointer",fontWeight:600,fontFamily:"inherit",transition:"all .15s",whiteSpace:"nowrap",flexShrink:0}} onMouseEnter={e=>{e.currentTarget.style.background="#deebff";e.currentTarget.style.borderColor="#0747A6"}} onMouseLeave={e=>{e.currentTarget.style.background="#fff";e.currentTarget.style.borderColor="#dfe1e6"}}>{link.label} →</button>:null;})}
-            </div>
-          </div>}
+          
           {FUN_STATS[calc]&&<div style={{marginBottom:16,padding:"20px 24px",background:"linear-gradient(135deg,#deebff,#EAE6FF)",borderRadius:12}}>
             <div style={{fontSize:14,fontWeight:700,color:"#172B4D",marginBottom:10}}>{FUN_STATS[calc].title}</div>
             {FUN_STATS[calc].items.map((it,i)=>(<div key={i} style={{fontSize:13,color:"#344563",padding:"4px 0",display:"flex",alignItems:"flex-start",gap:8}}><span style={{color:"#0747A6"}}>•</span><span>{it}</span></div>))}
