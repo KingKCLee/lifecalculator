@@ -457,8 +457,8 @@ function Tog({label,value,onChange,options}){
   const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
   return(<div style={{marginBottom:16}}>
     <label style={{display:"block",fontSize:12,fontWeight:600,color:P.mt,marginBottom:6}}>{label}</label>
-    <div style={{display:"flex",flexWrap:"nowrap",borderRadius:8,overflow:"hidden",border:`1.5px solid ${P.bd}`}}>
-      {options.map((o,i)=>(<button key={o.value} onClick={()=>onChange(o.value)} style={{flex:"1 1 0",minWidth:0,padding:"10px 4px",border:"none",borderRight:i<options.length-1?`1px solid ${P.bd}`:"none",background:value===o.value?P.pri:P.lt,color:value===o.value?"#fff":P.mt,fontSize:isMo?12:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",overflow:"hidden",textOverflow:"ellipsis"}}>{o.label}</button>))}
+    <div style={{display:"flex",borderRadius:10,overflow:"hidden",border:`1.5px solid ${P.bd}`}}>
+      {options.map((o,i)=>(<button key={o.value} onClick={()=>onChange(o.value)} style={{flex:"1 1 0",minWidth:0,padding:"10px 4px",border:"none",borderRight:i<options.length-1?`1px solid ${P.bd}`:"none",background:value===o.value?"#0747A6":"#fff",color:value===o.value?"#fff":P.mt,fontSize:isMo?12:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s"}}>{o.label}</button>))}
     </div>
   </div>);
 }
@@ -609,14 +609,14 @@ function CalcAcq({isMo=false}){
       {!isMo&&<h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>🏢 취득세 시뮬레이션</h3>}
       <div style={{marginBottom:16}}>
         <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>취득 유형</label>
-        <div className="radio-grid" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6}}>
-          {[["sale","매매"],["gift","증여"],["inherit","상속"],["newbuild","원시"]].map(([v,l])=>(<button key={v} onClick={()=>sAT(v)} style={{padding:isMo?"8px 2px":"10px 2px",border:acqType===v?"2px solid #0747A6":"1.5px solid #dfe1e6",borderRadius:8,background:acqType===v?"#deebff":"#fff",color:acqType===v?"#0747A6":"#505f79",fontWeight:acqType===v?700:400,fontSize:isMo?12:12,cursor:"pointer",whiteSpace:"nowrap",fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",textAlign:"center",minWidth:0}}>{l}</button>))}
+        <div style={{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6"}}>
+          {[["sale","매매"],["gift","증여"],["inherit","상속"],["newbuild","원시"]].map(([v,l],i,arr)=>(<button key={v} onClick={()=>sAT(v)} style={{flex:1,padding:"10px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:acqType===v?"#0747A6":"#fff",color:acqType===v?"#fff":"#505f79",fontWeight:acqType===v?700:500,fontSize:isMo?12:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s"}}>{l}</button>))}
         </div>
       </div>
       <div style={{marginBottom:16}}>
         <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>부동산 유형<TipModal title="부동산 유형"><p>주거용 오피스텔인 경우에만 '오피스텔' 선택. 업무용은 '그 외'. 농지는 2년 이상 자경 시 감면 혜택.</p></TipModal></label>
-        <div className="radio-grid" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6}}>
-          {[["house","주택"],["officetel","오피스텔"],["farmLand","농지"],["building","그 외"]].map(([v,l])=>(<button key={v} onClick={()=>sRT(v)} style={{padding:isMo?"8px 2px":"10px 2px",border:realType===v?"2px solid #0747A6":"1.5px solid #dfe1e6",borderRadius:8,background:realType===v?"#deebff":"#fff",color:realType===v?"#0747A6":"#505f79",fontWeight:realType===v?700:400,fontSize:isMo?12:12,cursor:"pointer",whiteSpace:"nowrap",fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",textAlign:"center",minWidth:0}}>{l}</button>))}
+        <div style={{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6"}}>
+          {[["house","주택"],["officetel","오피스텔"],["farmLand","농지"],["building","그 외"]].map(([v,l],i,arr)=>(<button key={v} onClick={()=>sRT(v)} style={{flex:1,padding:"10px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:realType===v?"#0747A6":"#fff",color:realType===v?"#fff":"#505f79",fontWeight:realType===v?700:500,fontSize:isMo?12:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s"}}>{l}</button>))}
         </div>
       </div>
       {(realType==="house"||realType==="officetel")&&<div style={{marginBottom:16}}>
