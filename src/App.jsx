@@ -405,20 +405,25 @@ function Slider({label,value,onChange,min,max,step}){
 }
 function Radio({label,value,onChange,options,cols}){
   const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
-  const colNum=cols||(isMo?Math.min(options.length,2):Math.min(options.length,4));
   return(<div style={{marginBottom:20}}>
     <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:8,letterSpacing:.5,textTransform:"uppercase"}}>{label}</label>
-    <div className="radio-grid" style={{display:"grid",gridTemplateColumns:`repeat(${colNum},1fr)`,gap:isMo?6:10}}>
-      {options.map(o=>(<div key={o.value} onClick={()=>onChange(o.value)}
-        style={{padding:"14px 8px",borderRadius:12,border:value===o.value?"2px solid #0747A6":"2px solid #dfe1e6",
-          background:value===o.value?"#deebff":"#fff",cursor:"pointer",textAlign:"center",
-          transition:"all 0.2s",flexShrink:0,minWidth:0,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",
-          display:"flex",alignItems:"center",justifyContent:"center"}}>
-        <div style={{fontSize:13,fontWeight:value===o.value?700:500,color:value===o.value?"#0747A6":"#172B4D",lineHeight:1.4}}>{o.label}</div>
-      </div>))}
+    <div style={{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6"}}>
+      {options.map((o,i)=>(
+        <button key={o.value} onClick={()=>onChange(o.value)} style={{
+          flex:1,padding:"10px 2px",border:"none",
+          borderRight:i<options.length-1?"1px solid #dfe1e6":"none",
+          background:value===o.value?"#0747A6":"#fff",
+          color:value===o.value?"#fff":"#505f79",
+          fontWeight:value===o.value?700:500,
+          fontSize:isMo?12:13,cursor:"pointer",fontFamily:"inherit",
+          whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,
+          transition:"background .15s,color .15s"
+        }}>{o.label}</button>
+      ))}
     </div>
   </div>);
 }
+
 function Inp({label,value,onChange,suffix,placeholder,note}){
   const displayVal=suffix==="만원"&&value?addComma(value):value;
   const handleChange=e=>{
@@ -616,8 +621,10 @@ function CalcAcq({isMo=false}){
       </div>
       {(realType==="house"||realType==="officetel")&&<div style={{marginBottom:16}}>
         <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>전용면적</label>
-        <div className="radio-grid" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6}}>
-          {(isMo?[["40","40㎡↓"],["60","60㎡↓"],["85","85㎡↓"],["big","85㎡↑"]]:[["40","40㎡↓"],["60","60㎡↓"],["85","85㎡↓"],["big","85㎡↑"]]).map(([v,l])=>(<button key={v} onClick={()=>sAreaType(v)} style={{padding:isMo?"8px 2px":"10px 2px",minWidth:0,border:areaType===v?"2px solid #0747A6":"1.5px solid #dfe1e6",borderRadius:8,background:areaType===v?"#deebff":"#fff",color:areaType===v?"#0747A6":"#505f79",fontWeight:areaType===v?700:400,fontSize:isMo?13:11,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",display:"flex",alignItems:"center",justifyContent:"center",textAlign:"center"}}>{l}</button>))}
+        <div style={{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6"}}>
+          {[["40","40㎡↓"],["60","60㎡↓"],["85","85㎡↓"],["big","85㎡↑"]].map(([v,l],i,arr)=>(
+            <button key={v} onClick={()=>sAreaType(v)} style={{flex:1,padding:"10px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:areaType===v?"#0747A6":"#fff",color:areaType===v?"#fff":"#505f79",fontWeight:areaType===v?700:500,fontSize:isMo?12:12,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4}}>{l}</button>
+          ))}
         </div>
       </div>}
       <Slider label={acqType==="gift"?"시가인정액":acqType==="inherit"?"시가표준액":acqType==="newbuild"?"건축 원가":"취득가액"} value={price} onChange={sP} min={1000} max={500000} step={500}/>
