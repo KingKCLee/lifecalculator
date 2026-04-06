@@ -1843,6 +1843,31 @@ function AuthModal({mode,setMode,onClose,isMo}){
   </div>);
 }
 
+function MyPage({user,onBack,onLogout}){
+  const[tab,setTab]=useState("profile");const[delConfirm,setDelConfirm]=useState(false);
+  const deleteAccount=async()=>{await supabase.auth.signOut();onLogout();onBack();};
+  const tabs=[{id:"profile",label:"프로필"},{id:"history",label:"계산 기록"},{id:"favorites",label:"즐겨찾기"},{id:"saved",label:"저장된 계산"},{id:"notif",label:"알림 설정"}];
+  return(<div style={{maxWidth:800,margin:"0 auto",padding:"40px 24px",minHeight:"80vh"}}>
+    <button onClick={onBack} style={{display:"flex",alignItems:"center",gap:8,background:"none",border:"none",color:"#0747A6",fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit",marginBottom:24,padding:0}}>← 홈으로</button>
+    <div style={{display:"flex",alignItems:"center",gap:16,marginBottom:32}}>
+      {user.user_metadata?.avatar_url?(<img src={user.user_metadata.avatar_url} style={{width:56,height:56,borderRadius:"50%",objectFit:"cover"}} alt=""/>):(<div style={{width:56,height:56,borderRadius:"50%",background:"#0747A6",display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,color:"#fff",fontWeight:700}}>{(user.user_metadata?.full_name||user.email||"U")[0].toUpperCase()}</div>)}
+      <div><div style={{fontSize:20,fontWeight:800,color:"#172B4D"}}>{user.user_metadata?.full_name||"사용자"}</div><div style={{fontSize:13,color:"#6b778c"}}>{user.email}</div></div>
+    </div>
+    <div style={{display:"flex",gap:4,marginBottom:24,borderBottom:"1px solid #dfe1e6",overflowX:"auto"}}>{tabs.map(t=>(<button key={t.id} onClick={()=>setTab(t.id)} style={{padding:"10px 16px",border:"none",borderBottom:tab===t.id?"2px solid #0747A6":"2px solid transparent",background:"none",color:tab===t.id?"#0747A6":"#6b778c",fontWeight:tab===t.id?700:500,fontSize:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>{t.label}</button>))}</div>
+    {tab==="profile"&&(<div>
+      <div style={{background:"#fff",borderRadius:12,border:"1px solid #dfe1e6",padding:24,marginBottom:16}}>
+        <div style={{fontSize:13,fontWeight:600,color:"#6b778c",marginBottom:16}}>계정 정보</div>
+        {[["이름",user.user_metadata?.full_name||"-"],["이메일",user.email||"-"],["가입일",new Date(user.created_at).toLocaleDateString("ko-KR")],["로그인 방법","Google"]].map(([k,v])=>(<div key={k} style={{display:"flex",justifyContent:"space-between",padding:"10px 0",borderBottom:"1px solid #f4f5f7",fontSize:14}}><span style={{color:"#6b778c"}}>{k}</span><span style={{color:"#172B4D",fontWeight:500}}>{v}</span></div>))}
+      </div>
+      <button onClick={onLogout} style={{width:"100%",padding:14,background:"#f4f5f7",color:"#505f79",border:"none",borderRadius:10,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit",marginBottom:8}}>로그아웃</button>
+      {!delConfirm?(<button onClick={()=>setDelConfirm(true)} style={{width:"100%",padding:14,background:"none",color:"#DE350B",border:"1px solid #FFBDAD",borderRadius:10,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>회원 탈퇴</button>):(<div style={{padding:16,background:"#FFEBE6",borderRadius:10,border:"1px solid #FFBDAD"}}><p style={{fontSize:13,color:"#DE350B",marginBottom:12}}>탈퇴 시 모든 데이터가 삭제됩니다.</p><div style={{display:"flex",gap:8}}><button onClick={()=>setDelConfirm(false)} style={{flex:1,padding:10,background:"#fff",border:"1px solid #dfe1e6",borderRadius:8,fontSize:13,cursor:"pointer",fontFamily:"inherit"}}>취소</button><button onClick={deleteAccount} style={{flex:1,padding:10,background:"#DE350B",color:"#fff",border:"none",borderRadius:8,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>탈퇴 확인</button></div></div>)}
+    </div>)}
+    {tab==="history"&&(<div style={{textAlign:"center",padding:60,color:"#6b778c"}}><div style={{fontSize:40,marginBottom:12}}>📋</div><div>계산 기록이 없습니다.</div><div style={{fontSize:12,marginTop:8}}>로그인 후 계산하면 자동 저장됩니다.</div></div>)}
+    {tab==="favorites"&&(<div style={{textAlign:"center",padding:60,color:"#6b778c"}}><div style={{fontSize:40,marginBottom:12}}>⭐</div><div>즐겨찾기한 계산기가 없습니다.</div></div>)}
+    {tab==="saved"&&(<div style={{textAlign:"center",padding:60,color:"#6b778c"}}><div style={{fontSize:40,marginBottom:12}}>💾</div><div>저장된 계산이 없습니다.</div></div>)}
+    {tab==="notif"&&(<div style={{background:"#fff",borderRadius:12,border:"1px solid #dfe1e6",padding:24}}><div style={{fontSize:13,fontWeight:600,color:"#6b778c",marginBottom:16}}>이메일 알림 (추후 오픈 예정)</div><div style={{fontSize:13,color:"#6b778c",lineHeight:1.8}}>세금 신고 기한 알림, 세법 개정 안내 등 이메일 알림 기능은 준비 중입니다.</div></div>)}
+  </div>);
+}
 function LegalPage({type,onBack}){
   const data=LEGAL_CONTENT[type]||LEGAL_CONTENT["disclaimer"];
   return(<div style={{maxWidth:800,margin:"0 auto",padding:"40px 24px",minHeight:"60vh"}}>
@@ -2091,10 +2116,11 @@ export default function App(){
   const navigateCalc=(catId,calcId)=>{setCat(catId);setCalc(calcId);setPage("calc");const slug=SLUGS[calcId]||calcId;history.pushState(null,"","/"+encodeURIComponent(slug));window.scrollTo(0,0);const info=CL.find(c=>c.id===calcId);if(info)saveHistory(calcId,info.l,1);};
   const navigateHome=()=>{setPage("home");history.pushState(null,"","/");window.scrollTo(0,0);};
   const navigateLegal=(type)=>{setPage("legal_"+type);history.pushState(null,"","/"+type);window.scrollTo(0,0);};
+  const navigateMyPage=()=>{setPage("mypage");history.pushState(null,"","/mypage");window.scrollTo(0,0);};
   const hCat=c=>{const f=CL.find(x=>x.c===c);if(f)navigateCalc(c,f.id);};
   const goCalc=(cId)=>{const info=CL.find(c=>c.id===cId);if(info)navigateCalc(info.c,info.id);};
   const hash=usePathRoute();
-  useEffect(()=>{if(hash==="auth/callback"){supabase.auth.getSession().then(({data:{session}})=>{if(session)setUser(session.user);});history.pushState(null,"","/");setPage("home");return;}if(["privacy","contact","disclaimer","resource"].includes(hash)){setPage("legal_"+hash);}else if(hash&&SLUG_REVERSE[hash]){const cId=SLUG_REVERSE[hash];const it=CL.find(c=>c.id===cId);if(it){setCat(it.c);setCalc(cId);setPage("calc");}}else if(!hash){setPage("home");}},[hash]);
+  useEffect(()=>{if(hash==="mypage"){setPage("mypage");return;}if(hash==="auth/callback"){supabase.auth.getSession().then(({data:{session}})=>{if(session)setUser(session.user);});history.pushState(null,"","/");setPage("home");return;}if(["privacy","contact","disclaimer","resource"].includes(hash)){setPage("legal_"+hash);}else if(hash&&SLUG_REVERSE[hash]){const cId=SLUG_REVERSE[hash];const it=CL.find(c=>c.id===cId);if(it){setCat(it.c);setCalc(cId);setPage("calc");}}else if(!hash){setPage("home");}},[hash]);
   useEffect(()=>{if(page==="calc"&&calc&&PAGE_META[calc]){const m=PAGE_META[calc];document.title=m.title;document.querySelector('meta[name="description"]')?.setAttribute('content',m.desc);document.querySelector('meta[property="og:title"]')?.setAttribute('content',m.title);document.querySelector('meta[property="og:description"]')?.setAttribute('content',m.desc);}else{document.title="생활계산기 - 세금 연말정산 연봉 부동산 종합계산기";document.querySelector('meta[name="description"]')?.setAttribute('content',"취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 4대보험 국민연금 자동차세 등 39가지 무료 계산기. 2026 최신 세법 반영.");}let ld=document.getElementById('dynamic-jsonld');if(!ld){ld=document.createElement('script');ld.id='dynamic-jsonld';ld.type='application/ld+json';document.head.appendChild(ld);}if(page==="calc"&&calc&&PAGE_META[calc]){ld.textContent=JSON.stringify({"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":PAGE_META[calc].title.split(' | ')[0],"description":PAGE_META[calc].desc,"url":"https://xn--989a00a691bdfa717h.com/"+encodeURIComponent(SLUGS[calc]),"applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"홈","item":"https://xn--989a00a691bdfa717h.com/"},{"@type":"ListItem","position":2,"name":CATS.find(c=>c.id===cat)?.l||"","item":"https://xn--989a00a691bdfa717h.com/"},{"@type":"ListItem","position":3,"name":CL.find(c=>c.id===calc)?.l||"","item":"https://xn--989a00a691bdfa717h.com/"+encodeURIComponent(SLUGS[calc])}]}]});}else{ld.textContent='';}},[page,calc]);
   const Comp=CM[calc]||(()=><Placeholder l={CL.find(c=>c.id===calc)?.l||calc}/>);
   const catInfo=CATS.find(c=>c.id===cat);
@@ -2165,7 +2191,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
               </div>
             );})}
             <div style={{padding:"20px",borderTop:"1px solid #e8eaed",marginTop:8}}>
-              {user?(<><div style={{padding:"12px 16px",background:"#f4f5f7",borderRadius:10,marginBottom:8,fontSize:14,color:"#172B4D",fontWeight:600}}>{user.user_metadata?.full_name||user.email?.split("@")[0]} 님</div><button onClick={()=>{handleLogout();setMobileMenu(false);}} style={{width:"100%",padding:"14px",background:"#f4f5f7",color:"#505f79",border:"none",borderRadius:10,fontSize:15,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>로그아웃</button></>):(<><button onClick={()=>{setAuthMode("signup");setShowAuth(true);setMobileMenu(false);}} style={{width:"100%",padding:"14px",background:"#0747A6",color:"#fff",border:"none",borderRadius:10,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>무료 가입</button><button onClick={()=>{setAuthMode("login");setShowAuth(true);setMobileMenu(false);}} style={{width:"100%",padding:"14px",background:"transparent",color:"#505f79",border:"none",borderRadius:10,fontSize:14,fontWeight:500,cursor:"pointer",fontFamily:"inherit",marginTop:8}}>로그인</button></>)}
+              {user?(<><div style={{padding:"12px 16px",background:"#f4f5f7",borderRadius:10,marginBottom:8,fontSize:14,color:"#172B4D",fontWeight:600}}>{user.user_metadata?.full_name||user.email?.split("@")[0]} 님</div><button onClick={()=>{navigateMyPage();setMobileMenu(false);}} style={{width:"100%",padding:14,background:"#0747A6",color:"#fff",border:"none",borderRadius:10,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit",marginBottom:8}}>마이페이지</button><button onClick={()=>{handleLogout();setMobileMenu(false);}} style={{width:"100%",padding:"14px",background:"#f4f5f7",color:"#505f79",border:"none",borderRadius:10,fontSize:15,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>로그아웃</button></>):(<><button onClick={()=>{setAuthMode("signup");setShowAuth(true);setMobileMenu(false);}} style={{width:"100%",padding:"14px",background:"#0747A6",color:"#fff",border:"none",borderRadius:10,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>무료 가입</button><button onClick={()=>{setAuthMode("login");setShowAuth(true);setMobileMenu(false);}} style={{width:"100%",padding:"14px",background:"transparent",color:"#505f79",border:"none",borderRadius:10,fontSize:14,fontWeight:500,cursor:"pointer",fontFamily:"inherit",marginTop:8}}>로그인</button></>)}
             </div>
           </div>
         </div>}
@@ -2192,14 +2218,14 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           </div>
           <div style={{display:"flex",alignItems:"center",gap:10,flexShrink:0}}>
             {!user&&<button onClick={()=>{setAuthMode("login");setShowAuth(true);}} style={{background:"none",border:"none",fontSize:14,color:"#505f79",cursor:"pointer",fontFamily:"inherit",fontWeight:500}}>로그인</button>}
-            {user?(<div style={{display:"flex",alignItems:"center",gap:8}}><span style={{fontSize:13,color:"#505f79"}}>{user.user_metadata?.full_name||user.email?.split("@")[0]}</span><button onClick={handleLogout} style={{padding:"8px 16px",background:"#f4f5f7",color:"#505f79",border:"none",borderRadius:8,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>로그아웃</button></div>):(<button onClick={()=>{setAuthMode("signup");setShowAuth(true);}} style={{padding:"8px 20px",background:"#0747A6",color:"#fff",border:"none",borderRadius:8,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>무료 가입</button>)}
+            {user?(<div style={{display:"flex",alignItems:"center",gap:8}}><button onClick={navigateMyPage} style={{padding:"8px 14px",background:"#f4f5f7",color:"#172B4D",border:"none",borderRadius:8,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>{user.user_metadata?.full_name?.split(" ")[0]||user.email?.split("@")[0]} ▾</button><button onClick={handleLogout} style={{padding:"8px 14px",background:"none",color:"#6b778c",border:"1px solid #dfe1e6",borderRadius:8,fontSize:13,fontWeight:500,cursor:"pointer",fontFamily:"inherit"}}>로그아웃</button></div>):(<button onClick={()=>{setAuthMode("signup");setShowAuth(true);}} style={{padding:"8px 20px",background:"#0747A6",color:"#fff",border:"none",borderRadius:8,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>무료 가입</button>)}
           </div>
         </div>
       )}
     </nav>
     {liveData&&!isMo&&<IndicatorTicker liveData={liveData}/>}
     <main>
-    {page&&page.startsWith("legal_")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LegalPage type={page.replace("legal_","")} onBack={navigateHome}/></div>):page==="home"?(<>
+    {page==="mypage"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><MyPage user={user} onBack={navigateHome} onLogout={handleLogout}/></div>):page&&page.startsWith("legal_")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LegalPage type={page.replace("legal_","")} onBack={navigateHome}/></div>):page==="home"?(<>
       {isMo?(<>
         {/* 모바일: 검색창 즉시 노출 */}
         <div style={{padding:"16px 16px 8px",background:"#f8f9fc"}}>
