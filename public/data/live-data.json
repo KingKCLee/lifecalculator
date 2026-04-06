@@ -1096,6 +1096,12 @@
     {
       "date": "2026.04.06",
       "category": "전체",
+      "title": "feat: Google AdSense 스크립트 추가 (ca-pub-8857637137858335)",
+      "desc": "feat: Google AdSense 스크립트 추가 (ca-pub-8857637137858335)"
+    },
+    {
+      "date": "2026.04.06",
+      "category": "전체",
       "title": "fix: handleLogout 함수 누락 추가",
       "desc": "fix: handleLogout 함수 누락 추가"
     },
@@ -1386,12 +1392,6 @@
       "category": "전체",
       "title": "도움말 2단계: 짧은힌트(Tip)+긴설명(TipModal) 분리 적용",
       "desc": "도움말 2단계: 짧은힌트(Tip)+긴설명(TipModal) 분리 적용"
-    },
-    {
-      "date": "2026.04.06",
-      "category": "전체",
-      "title": "PDF 저장: window.print()→실제PDF다운로드(jsPDF+html2canvas)",
-      "desc": "PDF 저장: window.print()→실제PDF다운로드(jsPDF+html2canvas)"
     }
   ],
   "rates": {
