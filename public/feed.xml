@@ -5,8 +5,15 @@
     <link>https://xn--989a00a691bdfa717h.com/</link>
     <description>취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 등 39가지 무료 계산기. 매일 자동 업데이트.</description>
     <language>ko</language>
-    <lastBuildDate>Mon, 06 Apr 2026 10:31:07 +0900</lastBuildDate>
+    <lastBuildDate>Mon, 06 Apr 2026 10:35:15 +0900</lastBuildDate>
     <atom:link href="https://xn--989a00a691bdfa717h.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+    <title>fix: 번들 해시 강제 갱신 (Cloudflare CDN 캐시 우회)</title>
+    <link>https://xn--989a00a691bdfa717h.com/</link>
+    <description>fix: 번들 해시 강제 갱신 (Cloudflare CDN 캐시 우회)</description>
+    <pubDate>Mon, 06 Apr 2026 10:35:15 +0900</pubDate>
+    <guid>https://xn--989a00a691bdfa717h.com/#update-202604060135</guid>
+  </item>
     <item>
     <title>fix: 폰트 woff2 Git 제거, Google Fonts Noto Sans KR로 교체</title>
     <link>https://xn--989a00a691bdfa717h.com/</link>

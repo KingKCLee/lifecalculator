@@ -1096,6 +1096,12 @@
     {
       "date": "2026.04.06",
       "category": "전체",
+      "title": "fix: 번들 해시 강제 갱신 (Cloudflare CDN 캐시 우회)",
+      "desc": "fix: 번들 해시 강제 갱신 (Cloudflare CDN 캐시 우회)"
+    },
+    {
+      "date": "2026.04.06",
+      "category": "전체",
       "title": "fix: 폰트 woff2 Git 제거, Google Fonts Noto Sans KR로 교체",
       "desc": "fix: 폰트 woff2 Git 제거, Google Fonts Noto Sans KR로 교체"
     },
@@ -1386,12 +1392,6 @@
       "category": "전체",
       "title": "주담대 한도 규제 반영: 15억이하6억/25억이하4억/초과2억 + 다주택금지",
       "desc": "주담대 한도 규제 반영: 15억이하6억/25억이하4억/초과2억 + 다주택금지"
-    },
-    {
-      "date": "2026.04.05",
-      "category": "전체",
-      "title": "PageSpeed 최적화: 폰트3웨이트+NotoSans삭제+robots수정+isMo에러+접근성",
-      "desc": "PageSpeed 최적화: 폰트3웨이트+NotoSans삭제+robots수정+isMo에러+접근성"
     }
   ],
   "rates": {
