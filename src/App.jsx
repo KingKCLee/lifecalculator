@@ -2175,6 +2175,8 @@ input,select,textarea{font-size:16px!important}
 input[type=range]{-webkit-appearance:none;height:6px;border-radius:3px;background:#dfe1e6;outline:none}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#0747A6;cursor:pointer;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2)}
 .sub-tabs::-webkit-scrollbar{display:none}
+button{transition:background .15s,border-color .15s,color .15s,transform .1s}
+button:active{transform:scale(0.98)}
 .sub-tabs{scrollbar-width:none;-ms-overflow-style:none}
 .hscroll::-webkit-scrollbar{display:none}
 .hscroll{scrollbar-width:none;-ms-overflow-style:none}
