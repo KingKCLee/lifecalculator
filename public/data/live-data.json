@@ -1096,6 +1096,12 @@
     {
       "date": "2026.04.07",
       "category": "전체",
+      "title": "fix: 전체 계산기 H3 '무슨무슨 계산기' 형식으로 통일",
+      "desc": "fix: 전체 계산기 H3 '무슨무슨 계산기' 형식으로 통일"
+    },
+    {
+      "date": "2026.04.07",
+      "category": "전체",
       "title": "feat: TipModal 버튼 위치 기반 스마트 팝오버, 버튼 hover 파란색 계열",
       "desc": "feat: TipModal 버튼 위치 기반 스마트 팝오버, 버튼 hover 파란색 계열"
     },
@@ -1386,12 +1392,6 @@
       "category": "전체",
       "title": "fix: MobileCalcWrapper grid 강제 column 변환 규칙 삭제 → 버튼 가로배치 복구",
       "desc": "fix: MobileCalcWrapper grid 강제 column 변환 규칙 삭제 → 버튼 가로배치 복구"
-    },
-    {
-      "date": "2026.04.06",
-      "category": "세금",
-      "title": "fix: 모바일 취득세 버튼 그룹 가로 배치 개선 (2×2 그리드)",
-      "desc": "fix: 모바일 취득세 버튼 그룹 가로 배치 개선 (2×2 그리드)"
     }
   ],
   "rates": {
