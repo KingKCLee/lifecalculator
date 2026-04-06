@@ -2091,9 +2091,20 @@ const LogoSVG=({size=36,invert=false})=>(
 export default function App(){
   const isMo=useIsMobile();
   const[user,setUser]=useState(null);
+  const[authLoading,setAuthLoading]=useState(true);
   useEffect(()=>{
-    supabase.auth.getSession().then(({data:{session}})=>{setUser(session?.user||null);});
-    const{data:{subscription}}=supabase.auth.onAuthStateChange((_,session)=>{setUser(session?.user||null);if(session?.user){setShowAuth(false);}});
+    const params=new URLSearchParams(window.location.search);
+    const code=params.get("code");
+    if(code){
+      supabase.auth.exchangeCodeForSession(code).then(({data})=>{
+        if(data?.session){setUser(data.session.user);setShowAuth(false);}
+        history.replaceState(null,"",window.location.pathname);
+        setAuthLoading(false);
+      });
+    } else {
+      supabase.auth.getSession().then(({data:{session}})=>{setUser(session?.user||null);setAuthLoading(false);});
+    }
+    const{data:{subscription}}=supabase.auth.onAuthStateChange((_event,session)=>{setUser(session?.user||null);if(session?.user){setShowAuth(false);}setAuthLoading(false);});
     return()=>subscription.unsubscribe();
   },[]);
   const[page,setPage]=useState("home");
