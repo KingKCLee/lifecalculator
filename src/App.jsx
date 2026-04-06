@@ -1781,6 +1781,16 @@ function AuthModal({mode,setMode,onClose,isMo}){
   </div>);
 }
 
+function LegalPage({type,onBack}){
+  const data=LEGAL_CONTENT[type]||LEGAL_CONTENT["disclaimer"];
+  return(<div style={{maxWidth:800,margin:"0 auto",padding:"40px 24px",minHeight:"60vh"}}>
+    <button onClick={onBack} style={{display:"flex",alignItems:"center",gap:8,background:"none",border:"none",color:"#0747A6",fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit",marginBottom:24,padding:0}}>← 홈으로 돌아가기</button>
+    <h1 style={{fontSize:28,fontWeight:800,color:"#172B4D",marginBottom:8}}>{data.title}</h1>
+    <p style={{fontSize:13,color:"#6b778c",marginBottom:32}}>최종 업데이트: 2026년 4월 6일 | 생활계산기.com</p>
+    <div style={{background:"#fff",borderRadius:16,border:"1px solid #dfe1e6",padding:"32px 28px",fontSize:14,color:"#172B4D",lineHeight:1.9}}>{data.body}</div>
+    <div style={{marginTop:24,padding:"16px 20px",background:"#f4f5f7",borderRadius:12,fontSize:13,color:"#6b778c"}}>문의사항은 <a href="mailto:noble.kclee@gmail.com" style={{color:"#0747A6"}}>noble.kclee@gmail.com</a> 으로 연락주세요.</div>
+  </div>);
+}
 function CookieBanner({onPrivacy}){
   const[show,setShow]=useState(typeof window!=="undefined"&&!localStorage.getItem('cookie_consent'));
   if(!show)return null;
@@ -2012,10 +2022,11 @@ export default function App(){
   const filtered=CL.filter(c=>c.c===cat);
   const navigateCalc=(catId,calcId)=>{setCat(catId);setCalc(calcId);setPage("calc");window.location.hash='/'+(SLUGS[calcId]||calcId);window.scrollTo(0,0);const info=CL.find(c=>c.id===calcId);if(info)saveHistory(calcId,info.l,1);};
   const navigateHome=()=>{setPage("home");window.location.hash='';window.scrollTo(0,0);};
+  const navigateLegal=(type)=>{setPage("legal_"+type);window.location.hash='/'+type;window.scrollTo(0,0);};
   const hCat=c=>{const f=CL.find(x=>x.c===c);if(f)navigateCalc(c,f.id);};
   const goCalc=(cId)=>{const info=CL.find(c=>c.id===cId);if(info)navigateCalc(info.c,info.id);};
   const hash=useHashRoute();
-  useEffect(()=>{if(hash&&SLUG_REVERSE[hash]){const cId=SLUG_REVERSE[hash];const it=CL.find(c=>c.id===cId);if(it){setCat(it.c);setCalc(cId);setPage("calc");}}else if(!hash){setPage("home");}},[hash]);
+  useEffect(()=>{if(["privacy","contact","disclaimer","resource"].includes(hash)){setPage("legal_"+hash);}else if(hash&&SLUG_REVERSE[hash]){const cId=SLUG_REVERSE[hash];const it=CL.find(c=>c.id===cId);if(it){setCat(it.c);setCalc(cId);setPage("calc");}}else if(!hash){setPage("home");}},[hash]);
   useEffect(()=>{if(page==="calc"&&calc&&PAGE_META[calc]){const m=PAGE_META[calc];document.title=m.title;document.querySelector('meta[name="description"]')?.setAttribute('content',m.desc);document.querySelector('meta[property="og:title"]')?.setAttribute('content',m.title);document.querySelector('meta[property="og:description"]')?.setAttribute('content',m.desc);}else{document.title="생활계산기 - 세금 연말정산 연봉 부동산 종합계산기";document.querySelector('meta[name="description"]')?.setAttribute('content',"취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 4대보험 국민연금 자동차세 등 39가지 무료 계산기. 2026 최신 세법 반영.");}let ld=document.getElementById('dynamic-jsonld');if(!ld){ld=document.createElement('script');ld.id='dynamic-jsonld';ld.type='application/ld+json';document.head.appendChild(ld);}if(page==="calc"&&calc&&PAGE_META[calc]){ld.textContent=JSON.stringify({"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":PAGE_META[calc].title.split(' | ')[0],"description":PAGE_META[calc].desc,"url":"https://xn--989a00a691bdfa717h.com/#/"+SLUGS[calc],"applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"홈","item":"https://xn--989a00a691bdfa717h.com/"},{"@type":"ListItem","position":2,"name":CATS.find(c=>c.id===cat)?.l||"","item":"https://xn--989a00a691bdfa717h.com/"},{"@type":"ListItem","position":3,"name":CL.find(c=>c.id===calc)?.l||"","item":"https://xn--989a00a691bdfa717h.com/#/"+SLUGS[calc]}]}]});}else{ld.textContent='';}},[page,calc]);
   const Comp=CM[calc]||(()=><Placeholder l={CL.find(c=>c.id===calc)?.l||calc}/>);
   const catInfo=CATS.find(c=>c.id===cat);
@@ -2121,7 +2132,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
     </nav>
     {liveData&&!isMo&&<IndicatorTicker liveData={liveData}/>}
     <main>
-    {page==="home"?(<>
+    {page&&page.startsWith("legal_")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LegalPage type={page.replace("legal_","")} onBack={navigateHome}/></div>):page==="home"?(<>
       {isMo?(<>
         {/* 모바일: 검색창 즉시 노출 */}
         <div style={{padding:"16px 16px 8px",background:"#f8f9fc"}}>
@@ -2340,7 +2351,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
         </div>
         <div>
           <div style={{fontSize:11,fontWeight:700,color:"rgba(255,255,255,0.5)",letterSpacing:1,textTransform:"uppercase",marginBottom:12}}>RESOURCES</div>
-          {[{l:"Legal Disclaimer (면책조항)",k:"disclaimer"},{l:"Resource Center (자료실)",k:"resource"},{l:"Privacy Policy (개인정보)",k:"privacy"},{l:"Contact Support (문의)",k:"contact"}].map(item=><div key={item.k} onClick={()=>setModal(item.k)} style={{fontSize:13,color:"rgba(255,255,255,0.5)",marginBottom:8,cursor:"pointer"}} onMouseEnter={e=>e.currentTarget.style.color="#fff"} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.5)"}>{item.l}</div>)}
+          {[{l:"Legal Disclaimer (면책조항)",k:"disclaimer"},{l:"Resource Center (자료실)",k:"resource"},{l:"Privacy Policy (개인정보)",k:"privacy"},{l:"Contact Support (문의)",k:"contact"}].map(item=><div key={item.k} onClick={()=>navigateLegal(item.k)} style={{fontSize:13,color:"rgba(255,255,255,0.5)",marginBottom:8,cursor:"pointer"}} onMouseEnter={e=>e.currentTarget.style.color="#fff"} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.5)"}>{item.l}</div>)}
         </div>
       </div>
       <div style={{textAlign:"center",fontSize:11,color:"rgba(255,255,255,0.35)",marginTop:32,lineHeight:1.8,borderTop:"1px solid rgba(255,255,255,0.1)",paddingTop:24,maxWidth:1200,margin:"32px auto 0"}}>
