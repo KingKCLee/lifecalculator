@@ -1991,14 +1991,17 @@ export default function App(){
   const[search,setSearch]=useState("");
   const[modal,setModal]=useState(null);
   const tabScrollRef=useRef(null);
+  const[tabScroll,setTabScroll]=useState({left:false,right:true});
+  const checkTabScroll=(el)=>{if(!el)return;setTabScroll({left:el.scrollLeft>4,right:el.scrollLeft<el.scrollWidth-el.clientWidth-4});};
   const[mobileMenu,setMobileMenu]=useState(false);const[menuExpand,setMenuExpand]=useState(null);
   const[showAuth,setShowAuth]=useState(false);const[authMode,setAuthMode]=useState("login");const[isLoggedIn,setIsLoggedIn]=useState(false);
   const[calcHistory,setCalcHistory]=useState(()=>{try{return JSON.parse(localStorage.getItem('calc_history')||'[]')}catch{return[]}});
   const saveHistory=(cId,name,total)=>{if(!total||total<=0)return;const item={id:cId,name,total,time:Date.now()};setCalcHistory(prev=>{const updated=[item,...prev.filter(h=>h.id!==cId)].slice(0,10);try{localStorage.setItem('calc_history',JSON.stringify(updated))}catch{}return updated;});};
   const[showAllLog,setShowAllLog]=useState(false);const[hoverCat,setHoverCat]=useState(null);
   const[liveData,setLiveData]=useState(null);
+  useEffect(()=>{if(!isMo||!tabScrollRef.current)return;tabScrollRef.current.scrollTo({left:0,behavior:'instant'});setTimeout(()=>checkTabScroll(tabScrollRef.current),50);},[calc]);
   useEffect(()=>{fetch('/data/live-data.json?t='+Date.now()).then(r=>r.json()).then(d=>{setLiveData(d);RATES=d?.rates||{};}).catch(()=>{});},[]);
-  useEffect(()=>{if(!isMo)return;const el=tabScrollRef.current;if(!el)return;const t1=setTimeout(()=>{el.scrollTo({left:60,behavior:"smooth"});const t2=setTimeout(()=>el.scrollTo({left:0,behavior:"smooth"}),600);return()=>clearTimeout(t2);},800);return()=>clearTimeout(t1);},[calc,isMo]);
+  
   const filtered=CL.filter(c=>c.c===cat);
   const navigateCalc=(catId,calcId)=>{setCat(catId);setCalc(calcId);setPage("calc");window.location.hash='/'+(SLUGS[calcId]||calcId);window.scrollTo(0,0);const info=CL.find(c=>c.id===calcId);if(info)saveHistory(calcId,info.l,1);};
   const navigateHome=()=>{setPage("home");window.location.hash='';window.scrollTo(0,0);};
@@ -2205,11 +2208,11 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           </div>
         </div>
         <div style={{position:"relative",padding:"0 16px 8px"}}>
-          <div style={{position:"absolute",left:16,top:0,bottom:8,width:32,background:"linear-gradient(to right, #fff 40%, transparent)",zIndex:2,pointerEvents:"none",display:"flex",alignItems:"center",justifyContent:"flex-start"}}><span style={{fontSize:14,color:"#0747A6",fontWeight:700,lineHeight:1}}>‹</span></div>
-          <div ref={tabScrollRef} className="sub-tabs" style={{display:"flex",gap:6,flexWrap:"nowrap",overflowX:"auto",padding:"4px 24px",scrollbarWidth:"none",msOverflowStyle:"none",WebkitOverflowScrolling:"touch"}}>
-            {filtered.map(c=>(<button key={c.id} onClick={()=>navigateCalc(cat,c.id)} style={{padding:"7px 14px",border:calc===c.id?"none":"1px solid #dfe1e6",borderRadius:20,background:calc===c.id?"#0747A6":"#fff",color:calc===c.id?"#fff":"#505f79",fontSize:12,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0}}>{c.l}</button>))}
+          {tabScroll.left&&<div style={{position:"absolute",left:16,top:0,bottom:8,width:32,background:"linear-gradient(to right, #fff 50%, transparent)",zIndex:2,pointerEvents:"none",display:"flex",alignItems:"center",justifyContent:"flex-start"}}><span style={{fontSize:16,color:"#0747A6",fontWeight:700,lineHeight:1}}>‹</span></div>}
+          <div ref={tabScrollRef} onScroll={e=>checkTabScroll(e.currentTarget)} className="sub-tabs" style={{display:"flex",gap:6,flexWrap:"nowrap",overflowX:"auto",padding:"4px 24px",scrollbarWidth:"none",msOverflowStyle:"none",WebkitOverflowScrolling:"touch"}}>
+            {[...filtered.filter(c=>c.id===calc),...filtered.filter(c=>c.id!==calc)].map(c=>(<button key={c.id} onClick={()=>navigateCalc(cat,c.id)} style={{padding:"7px 14px",border:calc===c.id?"none":"1px solid #dfe1e6",borderRadius:20,background:calc===c.id?"#0747A6":"#fff",color:calc===c.id?"#fff":"#505f79",fontSize:12,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0}}>{c.l}</button>))}
           </div>
-          <div style={{position:"absolute",right:16,top:0,bottom:8,width:32,background:"linear-gradient(to left, #fff 40%, transparent)",zIndex:2,pointerEvents:"none",display:"flex",alignItems:"center",justifyContent:"flex-end"}}><span style={{fontSize:14,color:"#0747A6",fontWeight:700,lineHeight:1}}>›</span></div>
+          {tabScroll.right&&<div style={{position:"absolute",right:16,top:0,bottom:8,width:32,background:"linear-gradient(to left, #fff 50%, transparent)",zIndex:2,pointerEvents:"none",display:"flex",alignItems:"center",justifyContent:"flex-end"}}><span style={{fontSize:16,color:"#0747A6",fontWeight:700,lineHeight:1}}>›</span></div>}
         </div>
         <MobileCalcWrapper><Comp isMo={true}/><NextStep calcId={calc} onNav={navigateCalc} isMo={true}/></MobileCalcWrapper>
         <div style={{padding:"0 12px 24px"}}>
