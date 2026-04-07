@@ -1132,6 +1132,12 @@
   "updateLog": [
     {
       "date": "2026.04.08",
+      "category": "비용",
+      "title": "feat: 전체 계산기 TipModal·NextStep 추가 완료 (3탄 - 수익률/예적금/채권/공동명의/인지세/평수)",
+      "desc": "feat: 전체 계산기 TipModal·NextStep 추가 완료 (3탄 - 수익률/예적금/채권/공동명의/인지세/평수)"
+    },
+    {
+      "date": "2026.04.08",
       "category": "대출",
       "title": "feat: DTI/대출가능액/보유세/중개보수 H3+TipModal 추가 (2탄 완료)",
       "desc": "feat: DTI/대출가능액/보유세/중개보수 H3+TipModal 추가 (2탄 완료)"
@@ -1423,12 +1429,6 @@
       "category": "ì ì²´",
       "title": "feat: ëª¨ë°ì¼ ìë¸í­ gradient+íì´í íí¸, H1/breadcrumb í ì¤",
       "desc": "feat: ëª¨ë°ì¼ ìë¸í­ gradient+íì´í íí¸, H1/breadcrumb í ì¤"
-    },
-    {
-      "date": "2026.04.06",
-      "category": "ì ì²´",
-      "title": "feat: ì ì²´ ê³ì°ê¸° NextStep ê´ë ¨ê³ì°ê¸° ì¹´ë ì¶ê° - ì²´ë¥ìê° í¥ì",
-      "desc": "feat: ì ì²´ ê³ì°ê¸° NextStep ê´ë ¨ê³ì°ê¸° ì¹´ë ì¶ê° - ì²´ë¥ìê° í¥ì"
     }
   ],
   "rates": {
