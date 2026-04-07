@@ -1133,6 +1133,12 @@
     {
       "date": "2026.04.08",
       "category": "비용",
+      "title": "feat: 인지세 TipModal·중개보수 부동산유형 TipModal·평수변환 RateTable 추가 (마무리)",
+      "desc": "feat: 인지세 TipModal·중개보수 부동산유형 TipModal·평수변환 RateTable 추가 (마무리)"
+    },
+    {
+      "date": "2026.04.08",
+      "category": "비용",
       "title": "feat: 전체 계산기 TipModal·NextStep 추가 완료 (3탄 - 수익률/예적금/채권/공동명의/인지세/평수)",
       "desc": "feat: 전체 계산기 TipModal·NextStep 추가 완료 (3탄 - 수익률/예적금/채권/공동명의/인지세/평수)"
     },
@@ -1423,12 +1429,6 @@
       "category": "ì ì²´",
       "title": "fix: ë²í¼ ì¤ìì ë ¬Â·overflow, ê´ë ¨ê³ì°ê¸° ì¤ë³µ, PROì¹´ë ì¡°ê±´, ticker ì¤ë³µ ìì ",
       "desc": "fix: ë²í¼ ì¤ìì ë ¬Â·overflow, ê´ë ¨ê³ì°ê¸° ì¤ë³µ, PROì¹´ë ì¡°ê±´, ticker ì¤ë³µ ìì "
-    },
-    {
-      "date": "2026.04.06",
-      "category": "ì ì²´",
-      "title": "feat: ëª¨ë°ì¼ ìë¸í­ gradient+íì´í íí¸, H1/breadcrumb í ì¤",
-      "desc": "feat: ëª¨ë°ì¼ ìë¸í­ gradient+íì´í íí¸, H1/breadcrumb í ì¤"
     }
   ],
   "rates": {
