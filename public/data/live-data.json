@@ -1132,6 +1132,12 @@
   "updateLog": [
     {
       "date": "2026.04.08",
+      "category": "생활",
+      "title": "feat: RequiredGuide 실업급여 필수항목 안내 추가",
+      "desc": "feat: RequiredGuide 실업급여 필수항목 안내 추가"
+    },
+    {
+      "date": "2026.04.08",
       "category": "세금",
       "title": "feat: RequiredGuide 컴포넌트 + 증여세/상속세/LTV/연봉 필수항목 안내",
       "desc": "feat: RequiredGuide 컴포넌트 + 증여세/상속세/LTV/연봉 필수항목 안내"
@@ -1423,12 +1429,6 @@
       "category": "ì ì²´",
       "title": "fix: í°í¸ woff2 Git ì ê±°, Google Fonts Noto Sans KRë¡ êµì²´",
       "desc": "fix: í°í¸ woff2 Git ì ê±°, Google Fonts Noto Sans KRë¡ êµì²´"
-    },
-    {
-      "date": "2026.04.06",
-      "category": "ì ì²´",
-      "title": "fix: Pretendard í°í¸ ë¡ì»¬ self-hostingì¼ë¡ ë³ê²½ (CDN 403 ìì  í´ê²°)",
-      "desc": "fix: Pretendard í°í¸ ë¡ì»¬ self-hostingì¼ë¡ ë³ê²½ (CDN 403 ìì  í´ê²°)"
     }
   ],
   "rates": {
