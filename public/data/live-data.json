@@ -1133,6 +1133,12 @@
     {
       "date": "2026.04.08",
       "category": "전체",
+      "title": "feat: 예시계산 배너 추가 - RP isExample prop, CalcComm/TotalCost/Joint/HoldTax/Prop 기본값",
+      "desc": "feat: 예시계산 배너 추가 - RP isExample prop, CalcComm/TotalCost/Joint/HoldTax/Prop 기본값"
+    },
+    {
+      "date": "2026.04.08",
+      "category": "전체",
       "title": "perf: preconnect 정리 - google-analytics 추가, AdSense dns-prefetch로 변경",
       "desc": "perf: preconnect 정리 - google-analytics 추가, AdSense dns-prefetch로 변경"
     },
@@ -1423,12 +1429,6 @@
       "category": "ì ì²´",
       "title": "fix: í°í¸ CDN URL ìì , Node 20 ë²ì  ê³ ì ì¼ë¡ Cloudflare ë¹ë ìì í",
       "desc": "fix: í°í¸ CDN URL ìì , Node 20 ë²ì  ê³ ì ì¼ë¡ Cloudflare ë¹ë ìì í"
-    },
-    {
-      "date": "2026.04.06",
-      "category": "ì ì²´",
-      "title": "fix: ìë°ì´í¸ ë¡ê·¸ ë³µì - 4ì4ì¼ í­ëª© ë³µêµ¬, 4ì6ì¼ ì¤ì  ììë§ ë±ë¡",
-      "desc": "fix: ìë°ì´í¸ ë¡ê·¸ ë³µì - 4ì4ì¼ í­ëª© ë³µêµ¬, 4ì6ì¼ ì¤ì  ììë§ ë±ë¡"
     }
   ],
   "rates": {

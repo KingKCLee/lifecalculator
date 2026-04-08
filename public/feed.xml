@@ -5,8 +5,15 @@
     <link>https://xn--989a00a691bdfa717h.com/</link>
     <description>취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 등 39가지 무료 계산기. 매일 자동 업데이트.</description>
     <language>ko</language>
-    <lastBuildDate>Wed, 08 Apr 2026 09:49:46 +0900</lastBuildDate>
+    <lastBuildDate>Wed, 08 Apr 2026 10:26:38 +0900</lastBuildDate>
     <atom:link href="https://xn--989a00a691bdfa717h.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+    <title>feat: 예시계산 배너 추가 - RP isExample prop, CalcComm/TotalCost/Joint/HoldTax/Prop 기본값</title>
+    <link>https://xn--989a00a691bdfa717h.com/</link>
+    <description>feat: 예시계산 배너 추가 - RP isExample prop, CalcComm/TotalCost/Joint/HoldTax/Prop 기본값</description>
+    <pubDate>Wed, 08 Apr 2026 10:26:38 +0900</pubDate>
+    <guid>https://xn--989a00a691bdfa717h.com/#update-202604080126</guid>
+  </item>
     <item>
     <title>perf: preconnect 정리 - google-analytics 추가, AdSense dns-prefetch로 변경</title>
     <link>https://xn--989a00a691bdfa717h.com/</link>
