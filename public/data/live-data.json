@@ -1132,6 +1132,12 @@
   "updateLog": [
     {
       "date": "2026.04.08",
+      "category": "세금",
+      "title": "feat: RequiredGuide 컴포넌트 + 증여세/상속세/LTV/연봉 필수항목 안내",
+      "desc": "feat: RequiredGuide 컴포넌트 + 증여세/상속세/LTV/연봉 필수항목 안내"
+    },
+    {
+      "date": "2026.04.08",
       "category": "대출",
       "title": "feat: 예시계산 배너 2탄 - CalcMort/DSR/Deposit/Yield/Compre 기본값+isDefault+isExample",
       "desc": "feat: 예시계산 배너 2탄 - CalcMort/DSR/Deposit/Yield/Compre 기본값+isDefault+isExample"
@@ -1423,12 +1429,6 @@
       "category": "ì ì²´",
       "title": "fix: Pretendard í°í¸ ë¡ì»¬ self-hostingì¼ë¡ ë³ê²½ (CDN 403 ìì  í´ê²°)",
       "desc": "fix: Pretendard í°í¸ ë¡ì»¬ self-hostingì¼ë¡ ë³ê²½ (CDN 403 ìì  í´ê²°)"
-    },
-    {
-      "date": "2026.04.06",
-      "category": "ì ì²´",
-      "title": "fix: ë²ë¤ í´ì ê°±ì ì¼ë¡ CDN ìºì ì°í",
-      "desc": "fix: ë²ë¤ í´ì ê°±ì ì¼ë¡ CDN ìºì ì°í"
     }
   ],
   "rates": {
