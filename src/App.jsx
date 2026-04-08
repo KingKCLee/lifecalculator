@@ -1239,7 +1239,7 @@ function CalcUnemploy({isMo=false,onNav=()=>{}}){const[age,sAge]=useState("30");
         {[["1년 미만","120","120"],["1~3년","150","180"],["3~5년","180","210"],["5~10년","210","240"],["10년↑","240","270"]].flatMap(([k,a,b])=>[<div key={k+"k"} style={{color:"#172B4D",padding:"4px 0"}}>{k}</div>,<div key={k+"a"} style={{textAlign:"center",padding:"4px 0"}}>{a}일</div>,<div key={k+"b"} style={{textAlign:"center",padding:"4px 0"}}>{b}일</div>])}
       </div>
     </div>
-  </div>{dailyW>0?<RP title="실업급여 예상" total={monthlyAmount} sub={"월 수령액 기준 · 최대 "+duration+"일"} items={[{l:"1일 평균임금",v:fmt(dailyW)+"원"},{l:"1일 실업급여액 (60%)",v:fmt(calcDaily)+"원"},{l:"하한액 (최저임금80%)",v:fmt(minDaily)+"원"},{l:"수급 기간",v:duration+"일 (약 "+(duration/30).toFixed(1)+"개월)"},{l:"월 수령액 (30일)",v:fmt(monthlyAmount)+"원"},{l:"총 수령액",v:fmt(totalAmount)+"원"}]}/>:<Empty icon="🏢" msg="평균임금을 입력하세요"/>}</div>);}
+  </div>{dailyW<=0&&<RequiredGuide items={[{label:"퇴직 전 평균임금",filled:dailyW>0}]}/>}{dailyW>0?<RP title="실업급여 예상" total={monthlyAmount} sub={"월 수령액 기준 · 최대 "+duration+"일"} items={[{l:"1일 평균임금",v:fmt(dailyW)+"원"},{l:"1일 실업급여액 (60%)",v:fmt(calcDaily)+"원"},{l:"하한액 (최저임금80%)",v:fmt(minDaily)+"원"},{l:"수급 기간",v:duration+"일 (약 "+(duration/30).toFixed(1)+"개월)"},{l:"월 수령액 (30일)",v:fmt(monthlyAmount)+"원"},{l:"총 수령액",v:fmt(totalAmount)+"원"}]}/>:<Empty icon="🏢" msg="평균임금을 입력하세요"/>}</div>);}
 
 /* 자동차세 */
 function CalcCarTax({isMo=false,onNav=()=>{}}){const[carType,sCT]=useState("normal");const[cc,sCC]=useState("2000");const[year,sYear]=useState("0");const[isElec,sElec]=useState("no");
