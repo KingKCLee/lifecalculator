@@ -1167,6 +1167,12 @@
   },
   "updateLog": [
     {
+      "date": "2026.04.14",
+      "category": "전체",
+      "title": "style: RP 컴포넌트 파란 그라디언트 카드 디자인 복원",
+      "desc": "style: RP 컴포넌트 파란 그라디언트 카드 디자인 복원"
+    },
+    {
       "date": "2026.04.11",
       "category": "세금",
       "title": "정책 만료 D-28: transferSurchargeEnd",
@@ -1462,30 +1468,6 @@
       "category": "전체",
       "title": "fix: 버튼 overflow:hidden 제거 - 텍스트 클리핑 완전 해결",
       "desc": "fix: 버튼 overflow:hidden 제거 - 텍스트 클리핑 완전 해결"
-    },
-    {
-      "date": "2026.04.06",
-      "category": "전체",
-      "title": "fix: ticker 겹침, 버튼 중앙정렬, 면적버튼 라벨축약, 관련계산기 중복, PRO카드 조건",
-      "desc": "fix: ticker 겹침, 버튼 중앙정렬, 면적버튼 라벨축약, 관련계산기 중복, PRO카드 조건"
-    },
-    {
-      "date": "2026.04.06",
-      "category": "전체",
-      "title": "fix: 버튼 CSS 삭제, 관련계산기 중복 제거, RateTable 개선, PRO카드 조건화, ticker 단일화",
-      "desc": "fix: 버튼 CSS 삭제, 관련계산기 중복 제거, RateTable 개선, PRO카드 조건화, ticker 단일화"
-    },
-    {
-      "date": "2026.04.06",
-      "category": "전체",
-      "title": "fix: index.html 전역 flex button CSS 삭제 - PC 버튼 줄바꿈·삐져나옴 수정",
-      "desc": "fix: index.html 전역 flex button CSS 삭제 - PC 버튼 줄바꿈·삐져나옴 수정"
-    },
-    {
-      "date": "2026.04.06",
-      "category": "전체",
-      "title": "fix: 번들 해시 강제 갱신 (Cloudflare CDN 캐시 우회)",
-      "desc": "fix: 번들 해시 강제 갱신 (Cloudflare CDN 캐시 우회)"
     }
   ],
   "rates": {
