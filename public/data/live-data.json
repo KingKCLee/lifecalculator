@@ -15,7 +15,7 @@
         "end": 31,
         "title": "자동차세 연납 신청",
         "cat": "tax",
-        "icon": "ð",
+        "icon": "🚗",
         "color": "#0747A6",
         "calcCat": "life",
         "calcId": "cartax",
@@ -25,35 +25,35 @@
         "day": 9,
         "title": "미국 고용보고서",
         "cat": "global",
-        "icon": "ðºð¸",
+        "icon": "🇺🇸",
         "color": "#6554C0"
       },
       {
         "day": 14,
         "title": "미국 CPI 발표",
         "cat": "global",
-        "icon": "ðºð¸",
+        "icon": "🇺🇸",
         "color": "#6554C0"
       },
       {
         "day": 16,
         "title": "한국은행 금통위",
         "cat": "korea",
-        "icon": "ðï¸",
+        "icon": "🏛️",
         "color": "#00875A"
       },
       {
         "day": 25,
         "title": "부가가치세 확정신고",
         "cat": "tax",
-        "icon": "ð",
+        "icon": "📋",
         "color": "#0747A6"
       },
       {
         "day": 28,
         "title": "FOMC 결과 발표",
         "cat": "global",
-        "icon": "ðºð¸",
+        "icon": "🇺🇸",
         "color": "#6554C0",
         "urgent": true
       },
@@ -61,7 +61,7 @@
         "day": 31,
         "title": "원천세 신고·납부",
         "cat": "tax",
-        "icon": "ð¼",
+        "icon": "💼",
         "color": "#0747A6"
       }
     ],
@@ -71,7 +71,7 @@
         "end": 28,
         "title": "연말정산 서류 제출",
         "cat": "tax",
-        "icon": "ð§¾",
+        "icon": "🧾",
         "color": "#0747A6",
         "calcCat": "tax",
         "calcId": "yearend",
@@ -81,28 +81,28 @@
         "day": 7,
         "title": "미국 고용보고서",
         "cat": "global",
-        "icon": "ðºð¸",
+        "icon": "🇺🇸",
         "color": "#6554C0"
       },
       {
         "day": 12,
         "title": "미국 CPI 발표",
         "cat": "global",
-        "icon": "ðºð¸",
+        "icon": "🇺🇸",
         "color": "#6554C0"
       },
       {
         "day": 27,
         "title": "한국은행 금통위",
         "cat": "korea",
-        "icon": "ðï¸",
+        "icon": "🏛️",
         "color": "#00875A"
       },
       {
         "day": 28,
         "title": "원천세 신고·납부",
         "cat": "tax",
-        "icon": "ð¼",
+        "icon": "💼",
         "color": "#0747A6"
       }
     ],
@@ -111,28 +111,28 @@
         "day": 5,
         "title": "한국 CPI 발표",
         "cat": "korea",
-        "icon": "ð",
+        "icon": "📊",
         "color": "#00875A"
       },
       {
         "day": 7,
         "title": "미국 고용보고서",
         "cat": "global",
-        "icon": "ðºð¸",
+        "icon": "🇺🇸",
         "color": "#6554C0"
       },
       {
         "day": 12,
         "title": "미국 CPI 발표",
         "cat": "global",
-        "icon": "ðºð¸",
+        "icon": "🇺🇸",
         "color": "#6554C0"
       },
       {
         "day": 18,
         "title": "FOMC 결과 발표",
         "cat": "global",
-        "icon": "ðºð¸",
+        "icon": "🇺🇸",
         "color": "#6554C0",
         "urgent": true
       },
@@ -140,14 +140,14 @@
         "day": 31,
         "title": "법인세 신고·납부",
         "cat": "tax",
-        "icon": "ð¢",
+        "icon": "🏢",
         "color": "#0747A6"
       },
       {
         "day": 31,
         "title": "원천세 신고·납부",
         "cat": "tax",
-        "icon": "ð¼",
+        "icon": "💼",
         "color": "#0747A6"
       }
     ],
@@ -156,7 +156,7 @@
         "day": 1,
         "title": "종합소득세 준비 시작",
         "cat": "tax",
-        "icon": "ð",
+        "icon": "📊",
         "color": "#0747A6",
         "calcCat": "tax",
         "calcId": "inctax"
@@ -165,21 +165,21 @@
         "day": 4,
         "title": "미국 고용보고서",
         "cat": "global",
-        "icon": "ðºð¸",
+        "icon": "🇺🇸",
         "color": "#6554C0"
       },
       {
         "day": 10,
         "title": "미국 CPI 발표",
         "cat": "global",
-        "icon": "ðºð¸",
+        "icon": "🇺🇸",
         "color": "#6554C0"
       },
       {
         "day": 10,
         "title": "한국은행 금통위",
         "cat": "korea",
-        "icon": "ðï¸",
+        "icon": "🏛️",
         "color": "#00875A",
         "urgent": true
       },
@@ -187,14 +187,14 @@
         "day": 25,
         "title": "부가가치세 예정신고",
         "cat": "tax",
-        "icon": "ð",
+        "icon": "📋",
         "color": "#0747A6"
       },
       {
         "day": 30,
         "title": "원천세 신고·납부",
         "cat": "tax",
-        "icon": "ð¼",
+        "icon": "💼",
         "color": "#0747A6"
       }
     ],
@@ -204,7 +204,7 @@
         "end": 31,
         "title": "종합소득세 확정신고",
         "cat": "tax",
-        "icon": "ð°",
+        "icon": "💰",
         "color": "#0747A6",
         "calcCat": "tax",
         "calcId": "inctax",
@@ -214,14 +214,14 @@
         "day": 2,
         "title": "미국 고용보고서",
         "cat": "global",
-        "icon": "ðºð¸",
+        "icon": "🇺🇸",
         "color": "#6554C0"
       },
       {
         "day": 6,
         "title": "FOMC 결과 발표",
         "cat": "global",
-        "icon": "ðºð¸",
+        "icon": "🇺🇸",
         "color": "#6554C0",
         "urgent": true
       },
@@ -229,28 +229,28 @@
         "day": 13,
         "title": "미국 CPI 발표",
         "cat": "global",
-        "icon": "ðºð¸",
+        "icon": "🇺🇸",
         "color": "#6554C0"
       },
       {
         "day": 22,
         "title": "한국은행 금통위",
         "cat": "korea",
-        "icon": "ðï¸",
+        "icon": "🏛️",
         "color": "#00875A"
       },
       {
         "day": 31,
         "title": "개인지방소득세 신고",
         "cat": "tax",
-        "icon": "ðï¸",
+        "icon": "🏛️",
         "color": "#0747A6"
       },
       {
         "day": 31,
         "title": "원천세 신고·납부",
         "cat": "tax",
-        "icon": "ð¼",
+        "icon": "💼",
         "color": "#0747A6"
       }
     ],
@@ -259,7 +259,7 @@
         "day": 1,
         "title": "종부세·재산세 기준일",
         "cat": "tax",
-        "icon": "ðï¸",
+        "icon": "🏘️",
         "color": "#0747A6",
         "calcCat": "tax",
         "calcId": "compre",
@@ -269,28 +269,28 @@
         "day": 3,
         "title": "한국 CPI 발표",
         "cat": "korea",
-        "icon": "ð",
+        "icon": "📊",
         "color": "#00875A"
       },
       {
         "day": 6,
         "title": "미국 고용보고서",
         "cat": "global",
-        "icon": "ðºð¸",
+        "icon": "🇺🇸",
         "color": "#6554C0"
       },
       {
         "day": 11,
         "title": "미국 CPI 발표",
         "cat": "global",
-        "icon": "ðºð¸",
+        "icon": "🇺🇸",
         "color": "#6554C0"
       },
       {
         "day": 17,
         "title": "FOMC 결과 발표",
         "cat": "global",
-        "icon": "ðºð¸",
+        "icon": "🇺🇸",
         "color": "#6554C0",
         "urgent": true
       },
@@ -298,7 +298,7 @@
         "day": 30,
         "title": "원천세 신고·납부",
         "cat": "tax",
-        "icon": "ð¼",
+        "icon": "💼",
         "color": "#0747A6"
       }
     ],
@@ -308,7 +308,7 @@
         "end": 31,
         "title": "재산세 1기분 납부",
         "cat": "tax",
-        "icon": "ð¡",
+        "icon": "🏡",
         "color": "#0747A6",
         "calcCat": "tax",
         "calcId": "property",
@@ -318,35 +318,35 @@
         "day": 3,
         "title": "미국 고용보고서",
         "cat": "global",
-        "icon": "ðºð¸",
+        "icon": "🇺🇸",
         "color": "#6554C0"
       },
       {
         "day": 10,
         "title": "한국은행 금통위",
         "cat": "korea",
-        "icon": "ðï¸",
+        "icon": "🏛️",
         "color": "#00875A"
       },
       {
         "day": 11,
         "title": "미국 CPI 발표",
         "cat": "global",
-        "icon": "ðºð¸",
+        "icon": "🇺🇸",
         "color": "#6554C0"
       },
       {
         "day": 25,
         "title": "부가가치세 확정신고",
         "cat": "tax",
-        "icon": "ð",
+        "icon": "📋",
         "color": "#0747A6"
       },
       {
         "day": 29,
         "title": "FOMC 결과 발표",
         "cat": "global",
-        "icon": "ðºð¸",
+        "icon": "🇺🇸",
         "color": "#6554C0",
         "urgent": true
       },
@@ -354,7 +354,7 @@
         "day": 31,
         "title": "원천세 신고·납부",
         "cat": "tax",
-        "icon": "ð¼",
+        "icon": "💼",
         "color": "#0747A6"
       }
     ],
@@ -363,42 +363,42 @@
         "day": 1,
         "title": "미국 고용보고서",
         "cat": "global",
-        "icon": "ðºð¸",
+        "icon": "🇺🇸",
         "color": "#6554C0"
       },
       {
         "day": 5,
         "title": "한국 CPI 발표",
         "cat": "korea",
-        "icon": "ð",
+        "icon": "📊",
         "color": "#00875A"
       },
       {
         "day": 13,
         "title": "미국 CPI 발표",
         "cat": "global",
-        "icon": "ðºð¸",
+        "icon": "🇺🇸",
         "color": "#6554C0"
       },
       {
         "day": 21,
         "title": "한국은행 금통위",
         "cat": "korea",
-        "icon": "ðï¸",
+        "icon": "🏛️",
         "color": "#00875A"
       },
       {
         "day": 31,
         "title": "주민세 납부",
         "cat": "tax",
-        "icon": "ðï¸",
+        "icon": "🏛️",
         "color": "#0747A6"
       },
       {
         "day": 31,
         "title": "원천세 신고·납부",
         "cat": "tax",
-        "icon": "ð¼",
+        "icon": "💼",
         "color": "#0747A6"
       }
     ],
@@ -408,7 +408,7 @@
         "end": 30,
         "title": "재산세 2기분 납부",
         "cat": "tax",
-        "icon": "ð¡",
+        "icon": "🏡",
         "color": "#0747A6",
         "calcCat": "tax",
         "calcId": "property",
@@ -418,21 +418,21 @@
         "day": 5,
         "title": "미국 고용보고서",
         "cat": "global",
-        "icon": "ðºð¸",
+        "icon": "🇺🇸",
         "color": "#6554C0"
       },
       {
         "day": 10,
         "title": "미국 CPI 발표",
         "cat": "global",
-        "icon": "ðºð¸",
+        "icon": "🇺🇸",
         "color": "#6554C0"
       },
       {
         "day": 16,
         "title": "FOMC 결과 발표",
         "cat": "global",
-        "icon": "ðºð¸",
+        "icon": "🇺🇸",
         "color": "#6554C0",
         "urgent": true
       },
@@ -440,7 +440,7 @@
         "day": 30,
         "title": "원천세 신고·납부",
         "cat": "tax",
-        "icon": "ð¼",
+        "icon": "💼",
         "color": "#0747A6"
       }
     ],
@@ -449,28 +449,28 @@
         "day": 2,
         "title": "한국 CPI 발표",
         "cat": "korea",
-        "icon": "ð",
+        "icon": "📊",
         "color": "#00875A"
       },
       {
         "day": 3,
         "title": "미국 고용보고서",
         "cat": "global",
-        "icon": "ðºð¸",
+        "icon": "🇺🇸",
         "color": "#6554C0"
       },
       {
         "day": 15,
         "title": "미국 CPI 발표",
         "cat": "global",
-        "icon": "ðºð¸",
+        "icon": "🇺🇸",
         "color": "#6554C0"
       },
       {
         "day": 16,
         "title": "한국은행 금통위",
         "cat": "korea",
-        "icon": "ðï¸",
+        "icon": "🏛️",
         "color": "#00875A",
         "urgent": true
       },
@@ -478,14 +478,14 @@
         "day": 25,
         "title": "부가가치세 예정신고",
         "cat": "tax",
-        "icon": "ð",
+        "icon": "📋",
         "color": "#0747A6"
       },
       {
         "day": 28,
         "title": "FOMC 결과 발표",
         "cat": "global",
-        "icon": "ðºð¸",
+        "icon": "🇺🇸",
         "color": "#6554C0",
         "urgent": true
       },
@@ -493,7 +493,7 @@
         "day": 31,
         "title": "원천세 신고·납부",
         "cat": "tax",
-        "icon": "ð¼",
+        "icon": "💼",
         "color": "#0747A6"
       }
     ],
@@ -502,14 +502,14 @@
         "day": 7,
         "title": "미국 고용보고서",
         "cat": "global",
-        "icon": "ðºð¸",
+        "icon": "🇺🇸",
         "color": "#6554C0"
       },
       {
         "day": 12,
         "title": "미국 CPI 발표",
         "cat": "global",
-        "icon": "ðºð¸",
+        "icon": "🇺🇸",
         "color": "#6554C0"
       },
       {
@@ -517,7 +517,7 @@
         "end": 30,
         "title": "종합부동산세 납부",
         "cat": "tax",
-        "icon": "ðï¸",
+        "icon": "🏘️",
         "color": "#0747A6",
         "calcCat": "tax",
         "calcId": "compre",
@@ -527,14 +527,14 @@
         "day": 27,
         "title": "한국은행 금통위",
         "cat": "korea",
-        "icon": "ðï¸",
+        "icon": "🏛️",
         "color": "#00875A"
       },
       {
         "day": 30,
         "title": "원천세 신고·납부",
         "cat": "tax",
-        "icon": "ð¼",
+        "icon": "💼",
         "color": "#0747A6"
       }
     ],
@@ -544,7 +544,7 @@
         "end": 15,
         "title": "종부세 납부 마감",
         "cat": "tax",
-        "icon": "ðï¸",
+        "icon": "🏘️",
         "color": "#0747A6",
         "calcCat": "tax",
         "calcId": "compre",
@@ -555,7 +555,7 @@
         "end": 31,
         "title": "자동차세 2기분 납부",
         "cat": "tax",
-        "icon": "ð",
+        "icon": "🚗",
         "color": "#0747A6",
         "calcCat": "life",
         "calcId": "cartax"
@@ -564,21 +564,21 @@
         "day": 5,
         "title": "미국 고용보고서",
         "cat": "global",
-        "icon": "ðºð¸",
+        "icon": "🇺🇸",
         "color": "#6554C0"
       },
       {
         "day": 10,
         "title": "미국 CPI 발표",
         "cat": "global",
-        "icon": "ðºð¸",
+        "icon": "🇺🇸",
         "color": "#6554C0"
       },
       {
         "day": 16,
         "title": "FOMC 결과 발표",
         "cat": "global",
-        "icon": "ðºð¸",
+        "icon": "🇺🇸",
         "color": "#6554C0",
         "urgent": true
       },
@@ -586,7 +586,7 @@
         "day": 31,
         "title": "원천세 신고·납부",
         "cat": "tax",
-        "icon": "ð¼",
+        "icon": "💼",
         "color": "#0747A6"
       }
     ]
