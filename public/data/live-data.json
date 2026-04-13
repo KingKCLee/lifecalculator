@@ -1167,6 +1167,12 @@
   },
   "updateLog": [
     {
+      "date": "2026.04.14",
+      "category": "전체",
+      "title": "fix: live-data.json econCalendar 이모지 mojibake 복구",
+      "desc": "fix: live-data.json econCalendar 이모지 mojibake 복구"
+    },
+    {
       "date": "2026.04.13",
       "category": "세금",
       "title": "정책 만료 D-26: transferSurchargeEnd",
@@ -1463,18 +1469,6 @@
       "category": "전체",
       "title": "fix: 취득유형·부동산유형·Tog 세그먼트 스타일 통일",
       "desc": "fix: 취득유형·부동산유형·Tog 세그먼트 스타일 통일"
-    },
-    {
-      "date": "2026.04.06",
-      "category": "전체",
-      "title": "fix: 전용면적·주택수 세그먼트 컨트롤 스타일로 개선 - 텍스트 잘림 해결",
-      "desc": "fix: 전용면적·주택수 세그먼트 컨트롤 스타일로 개선 - 텍스트 잘림 해결"
-    },
-    {
-      "date": "2026.04.06",
-      "category": "전체",
-      "title": "feat: 서브탭 선택항목 맨앞 정렬 + 화살표 동적 표시 (스크롤 위치 기반)",
-      "desc": "feat: 서브탭 선택항목 맨앞 정렬 + 화살표 동적 표시 (스크롤 위치 기반)"
     }
   ],
   "rates": {
