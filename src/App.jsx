@@ -483,12 +483,12 @@ function RP({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlin
   const isSub=(l)=>l.startsWith("  ")||l.startsWith("└")||l.startsWith("│");
   const alertAccent=alertType==="danger"?"#FFC400":alertType==="success"?"#57D9A3":alertType==="warning"?"#FFE380":"#fff";
   return(
-  <div style={{background:"linear-gradient(180deg,#0747A6 0%,#0052CC 100%)",borderRadius:20,padding:"28px 24px",color:"#fff",position:isMo?"relative":"sticky",top:isMo?0:80,alignSelf:"start",boxShadow:"0 8px 28px rgba(7,71,166,.22)"}}>
+  <div style={{background:"linear-gradient(180deg,#0747A6 0%,#0052CC 100%)",borderRadius:20,padding:"28px 24px",color:"#fff",position:isMo?"relative":"sticky",top:isMo?0:80,alignSelf:"start",boxShadow:"0 8px 28px rgba(7,71,166,.22)",width:"100%",boxSizing:"border-box"}}>
     {isExample&&<div style={{background:"rgba(255,255,255,0.18)",borderRadius:6,padding:"4px 10px",marginBottom:12,fontSize:11,display:"inline-flex",alignItems:"center",gap:5}}>📋 예시값 · 직접 입력하면 즉시 업데이트</div>}
     {alertMsg&&<div style={{background:"rgba(255,255,255,0.15)",borderRadius:10,padding:"10px 14px",marginBottom:14,fontSize:12,display:"flex",gap:8,alignItems:"flex-start",lineHeight:1.5,color:alertAccent}}><span style={{flexShrink:0,fontWeight:800}}>{alertType==="danger"?"⚠":alertType==="success"?"✓":alertType==="warning"?"!":"ℹ"}</span><span>{alertMsg}</span></div>}
     <div style={{marginBottom:16}}>
       <div style={{fontSize:11,fontWeight:700,letterSpacing:1.5,textTransform:"uppercase",opacity:.7,marginBottom:6}}>{title}</div>
-      <div style={{fontSize:isMo?32:38,fontWeight:800,lineHeight:1.1}}>{fW(total)}</div>
+      <div style={{fontSize:isMo?32:38,fontWeight:800,lineHeight:1.1,fontVariantNumeric:"tabular-nums"}}>{fW(total)}</div>
       {sub&&<div style={{fontSize:12,opacity:.72,marginTop:6}}>{sub}</div>}
     </div>
     <div style={{borderTop:"1px solid rgba(255,255,255,.22)",paddingTop:4}}>
@@ -498,7 +498,7 @@ function RP({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlin
         return(<div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",padding:"10px 0",borderBottom:i<items.length-1?"1px solid rgba(255,255,255,.1)":"none",gap:8}}>
           <span style={{opacity:sr?0.65:tr?1:0.82,fontWeight:tr?800:400,paddingLeft:sr?12:0,fontSize:tr?16:13,flex:"1 1 auto",minWidth:0}}>{it.l}</span>
           <div style={{textAlign:"right",whiteSpace:"nowrap",flexShrink:0}}>
-            <span style={{fontWeight:tr?800:600,fontSize:tr?16:13,color:tr?"#FFC400":"#fff"}}>{it.v}</span>
+            <span style={{fontWeight:tr?800:600,fontSize:tr?16:13,color:tr?"#FFC400":"#fff",fontVariantNumeric:"tabular-nums"}}>{it.v}</span>
             {it.note&&<div style={{fontSize:10,opacity:.58,marginTop:2}}>{it.note}</div>}
           </div>
         </div>);
