@@ -5,8 +5,15 @@
     <link>https://xn--989a00a691bdfa717h.com/</link>
     <description>취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 등 39가지 무료 계산기. 매일 자동 업데이트.</description>
     <language>ko</language>
-    <lastBuildDate>Tue, 14 Apr 2026 07:25:15 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 14 Apr 2026 07:34:49 +0900</lastBuildDate>
     <atom:link href="https://xn--989a00a691bdfa717h.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+    <title>fix: 계산기 Empty fallback 제거 → RP 항시 렌더 + DSR/DTI deadline 추가</title>
+    <link>https://xn--989a00a691bdfa717h.com/</link>
+    <description>fix: 계산기 Empty fallback 제거 → RP 항시 렌더 + DSR/DTI deadline 추가</description>
+    <pubDate>Tue, 14 Apr 2026 07:34:49 +0900</pubDate>
+    <guid>https://xn--989a00a691bdfa717h.com/#update-202604132234</guid>
+  </item>
     <item>
     <title>style: RP 컴포넌트 파란 그라디언트 카드 디자인 복원</title>
     <link>https://xn--989a00a691bdfa717h.com/</link>

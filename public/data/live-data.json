@@ -1168,6 +1168,12 @@
   "updateLog": [
     {
       "date": "2026.04.14",
+      "category": "대출",
+      "title": "fix: 계산기 Empty fallback 제거 → RP 항시 렌더 + DSR/DTI deadline 추가",
+      "desc": "fix: 계산기 Empty fallback 제거 → RP 항시 렌더 + DSR/DTI deadline 추가"
+    },
+    {
+      "date": "2026.04.14",
       "category": "전체",
       "title": "style: RP 컴포넌트 파란 그라디언트 카드 디자인 복원",
       "desc": "style: RP 컴포넌트 파란 그라디언트 카드 디자인 복원"
@@ -1462,12 +1468,6 @@
       "category": "전체",
       "title": "feat: 서브탭 선택항목 맨앞 정렬 + 화살표 동적 표시 (스크롤 위치 기반)",
       "desc": "feat: 서브탭 선택항목 맨앞 정렬 + 화살표 동적 표시 (스크롤 위치 기반)"
-    },
-    {
-      "date": "2026.04.06",
-      "category": "전체",
-      "title": "fix: 버튼 overflow:hidden 제거 - 텍스트 클리핑 완전 해결",
-      "desc": "fix: 버튼 overflow:hidden 제거 - 텍스트 클리핑 완전 해결"
     }
   ],
   "rates": {
