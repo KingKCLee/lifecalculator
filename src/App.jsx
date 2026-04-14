@@ -3988,15 +3988,17 @@ body.lc-embed main{padding-top:0!important}
         {/* 좌측: 헤더 + 서브탭 + 계산기 + PRO */}
         <div>
           {navContent&&<NavContentPanel navContent={navContent} setNavContent={setNavContent} calc={calc} effectiveUser={effectiveUser} lcToken={lcToken} setAuthMode={setAuthMode} setShowAuth={setShowAuth}/>}
-          <nav aria-label="breadcrumb" style={{fontSize:12,color:P.mt,marginBottom:8,display:"flex",alignItems:"center",gap:6}}>
-            <span onClick={navigateHome} style={{cursor:"pointer",color:P.pri}}>홈</span>
-            <span>›</span>
-            <span style={{cursor:"pointer",color:P.pri}} onClick={()=>{const first=CL.find(c=>c.c===cat);if(first)navigateCalc(cat,first.id);}}>{catInfo?.l}</span>
-            <span>›</span>
-            <span style={{color:P.tx,fontWeight:600}}>{CL.find(c=>c.id===calc)?.l||""}</span>
-          </nav>
-          <div className="sub-tabs" style={{display:"flex",gap:6,flexWrap:"nowrap",overflowX:"auto",WebkitOverflowScrolling:"touch",marginBottom:14,paddingBottom:6,scrollbarWidth:"thin"}}>
-            {filtered.map(c=>(<button key={c.id} onClick={()=>navigateCalc(cat,c.id)} style={{padding:"8px 16px",border:calc===c.id?"none":"1px solid #E5E7EB",borderRadius:20,background:calc===c.id?"#0a1628":"#fff",color:calc===c.id?"#fff":"#6B7280",fontSize:13,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0,display:"inline-flex",alignItems:"center",justifyContent:"center",height:36,boxSizing:"border-box"}}>{c.l}</button>))}
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:16,marginBottom:14}}>
+            <div className="sub-tabs" style={{flex:"1 1 auto",minWidth:0,display:"flex",gap:6,flexWrap:"nowrap",overflowX:"auto",WebkitOverflowScrolling:"touch",paddingBottom:6,scrollbarWidth:"thin"}}>
+              {filtered.map(c=>(<button key={c.id} onClick={()=>navigateCalc(cat,c.id)} style={{padding:"8px 16px",border:calc===c.id?"none":"1px solid #E5E7EB",borderRadius:20,background:calc===c.id?"#0a1628":"#fff",color:calc===c.id?"#fff":"#6B7280",fontSize:13,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0,display:"inline-flex",alignItems:"center",justifyContent:"center",height:36,boxSizing:"border-box"}}>{c.l}</button>))}
+            </div>
+            <nav aria-label="breadcrumb" style={{fontSize:12,color:P.mt,display:"flex",alignItems:"center",gap:6,flexShrink:0,whiteSpace:"nowrap"}}>
+              <span onClick={navigateHome} style={{cursor:"pointer",color:P.pri}}>홈</span>
+              <span>›</span>
+              <span style={{cursor:"pointer",color:P.pri}} onClick={()=>{const first=CL.find(c=>c.c===cat);if(first)navigateCalc(cat,first.id);}}>{catInfo?.l}</span>
+              <span>›</span>
+              <span style={{color:P.tx,fontWeight:600}}>{CL.find(c=>c.id===calc)?.l||""}</span>
+            </nav>
           </div>
           <div style={{marginBottom:24}}>
             <div style={{fontSize:11,fontWeight:600,color:"#6B7280",textTransform:"uppercase",letterSpacing:1.5,marginBottom:6}}>2026년 최신 세법 기준</div>
