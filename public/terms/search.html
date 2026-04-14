@@ -29,12 +29,16 @@
   .searchbox .icon { position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
     color: var(--mt); pointer-events: none; }
 
-  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
-  .chip { padding: 6px 14px; border: 1px solid var(--bd); background: var(--card);
-    border-radius: 20px; font-size: 13px; color: var(--mt); cursor: pointer;
-    transition: all .15s; }
-  .chip:hover { border-color: var(--pri); color: var(--pri); }
-  .chip.active { background: var(--pri); color: #fff; border-color: var(--pri); }
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; padding: 12px;
+    background: var(--card); border: 1px solid var(--bd); border-radius: 12px; }
+  .chip { padding: 8px 16px; border: 1.5px solid var(--bd); background: var(--card);
+    border-radius: 22px; font-size: 13px; font-weight: 600; color: var(--mt); cursor: pointer;
+    transition: all .18s; user-select: none; }
+  .chip:hover { border-color: var(--pri); color: var(--pri); transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(7,71,166,0.08); }
+  .chip.active { background: var(--pri); color: #fff; border-color: var(--pri);
+    box-shadow: 0 4px 12px rgba(7,71,166,0.25); }
+  .chip.active:hover { background: var(--pl); transform: translateY(-1px); }
 
   .popular { background: var(--card); border: 1px solid var(--bd); border-radius: 10px;
     padding: 14px 16px; margin-bottom: 18px; }
@@ -71,8 +75,21 @@
   .card .btn-out { background: var(--card); color: var(--pri); border: 1px solid var(--pri); }
   .card .btn-out:hover { background: var(--lt); }
 
-  .empty { text-align: center; padding: 60px 20px; color: var(--mt); }
-  .empty .ic { font-size: 36px; margin-bottom: 12px; }
+  .empty { text-align: center; padding: 50px 20px 30px; color: var(--mt); }
+  .empty .ic { font-size: 42px; margin-bottom: 12px; }
+  .empty .msg { font-size: 15px; margin-bottom: 24px; }
+  .empty .sub { font-size: 13px; color: var(--mt); margin-bottom: 18px; }
+  .empty-calcs { background: var(--card); border: 1px solid var(--bd); border-radius: 12px;
+    padding: 20px; margin: 0 auto; max-width: 540px; }
+  .empty-calcs h4 { margin: 0 0 12px; font-size: 13px; color: var(--pri); font-weight: 700; }
+  .empty-calcs .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .empty-calcs a { display: block; padding: 11px 14px; background: var(--lt); color: var(--tx);
+    border-radius: 8px; font-size: 13px; font-weight: 600; text-decoration: none;
+    transition: all .15s; text-align: left; }
+  .empty-calcs a:hover { background: var(--pri); color: #fff; transform: translateX(2px); }
+  .empty-calcs a::after { content: " →"; color: var(--mt); float: right; }
+  .empty-calcs a:hover::after { color: #fff; }
+  @media (max-width: 480px) { .empty-calcs .grid { grid-template-columns: 1fr; } }
 
   mark { background: #fff8a8; color: var(--tx); padding: 0 2px; border-radius: 2px; }
 
@@ -107,7 +124,19 @@
 </div>
 
 <script>
-const POPULAR = ['취득세','DSR','LTV','일시적2주택','전세','월세','장기보유특별공제','조정대상지역','중개보수','디딤돌대출'];
+const POPULAR = ['취득세','양도소득세','DSR','LTV','전세','임대차','공시가격','장특공','비과세','중개수수료'];
+
+// 검색 결과 0건일 때 노출할 추천 계산기 8종
+const QUICK_CALCS = [
+  { name: '취득세 계산기', url: '/취득세계산기' },
+  { name: '양도소득세 계산기', url: '/양도소득세계산기' },
+  { name: 'DSR 계산기', url: '/DSR계산기' },
+  { name: 'LTV·대출한도 계산기', url: '/LTV·대출한도계산기' },
+  { name: '중개보수 계산기', url: '/중개보수계산기' },
+  { name: '등기비용 계산기', url: '/등기비용계산기' },
+  { name: '연말정산 계산기', url: '/연말정산계산기' },
+  { name: '연봉 실수령액 계산기', url: '/연봉실수령액계산기' }
+];
 
 const CALC_LINK = {
   '취득세': { name: '취득세 계산기', url: '/취득세계산기' },

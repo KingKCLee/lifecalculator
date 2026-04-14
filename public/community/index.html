@@ -27,11 +27,18 @@ a{color:inherit;text-decoration:none}
 .header p{margin:0;font-size:14px;color:var(--mt)}
 .write-btn{display:inline-flex;align-items:center;gap:6px;padding:11px 20px;background:var(--pri);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
 .write-btn:hover{background:var(--pl)}
-.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.stat{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:16px 18px;text-align:center;transition:all .15s}
+.stat:hover{border-color:var(--pri);transform:translateY(-2px);box-shadow:0 4px 12px rgba(7,71,166,.08)}
+.stat .num{font-size:22px;font-weight:800;color:var(--pri);font-variant-numeric:tabular-nums;line-height:1.2}
+.stat .lbl{font-size:11px;color:var(--mt);font-weight:600;letter-spacing:.3px;text-transform:uppercase;margin-top:4px}
+@media(max-width:768px){.stats{grid-template-columns:repeat(2,1fr);gap:8px}.stat{padding:12px 14px}.stat .num{font-size:18px}}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;align-items:center;padding:12px;background:#fff;border:1px solid var(--bd);border-radius:12px}
 .cats{display:flex;gap:6px;flex-wrap:wrap;flex:1;min-width:0}
-.cats button{padding:8px 14px;background:#fff;border:1.5px solid var(--bd);border-radius:20px;font-size:13px;color:var(--mt);cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap}
-.cats button.active{background:var(--pri);color:#fff;border-color:var(--pri);font-weight:600}
-.cats button:hover{border-color:var(--pri)}
+.cats button{padding:9px 16px;background:#fff;border:1.5px solid var(--bd);border-radius:22px;font-size:13px;font-weight:600;color:var(--mt);cursor:pointer;font-family:inherit;transition:all .18s;white-space:nowrap;user-select:none}
+.cats button:hover{border-color:var(--pri);color:var(--pri);transform:translateY(-1px);box-shadow:0 2px 8px rgba(7,71,166,.08)}
+.cats button.active{background:var(--pri);color:#fff;border-color:var(--pri);font-weight:700;box-shadow:0 4px 12px rgba(7,71,166,.25)}
+.cats button.active:hover{background:var(--pl);transform:translateY(-1px)}
 .search{display:flex;gap:6px;min-width:200px}
 .search input{flex:1;padding:9px 12px;border:1.5px solid var(--bd);border-radius:10px;font-size:13px;font-family:inherit;outline:none;background:#fff;color:var(--tx)}
 .search input:focus{border-color:var(--pri)}
@@ -88,6 +95,13 @@ a{color:inherit;text-decoration:none}
       <p>부동산 세금·대출·시장 이슈를 자유롭게 이야기하세요</p>
     </div>
     <a href="/community/write.html" class="write-btn">✏️ 글쓰기</a>
+  </div>
+
+  <div class="stats" id="statsBox">
+    <div class="stat"><div class="num" id="statTotal">-</div><div class="lbl">📋 총 게시글</div></div>
+    <div class="stat"><div class="num" id="statToday">-</div><div class="lbl">🆕 오늘 작성</div></div>
+    <div class="stat"><div class="num" id="statCats">5</div><div class="lbl">📂 카테고리</div></div>
+    <div class="stat"><div class="num" id="statLive">●</div><div class="lbl">🟢 D1 라이브</div></div>
   </div>
 
   <div class="notice-box">
@@ -226,14 +240,33 @@ function render(){
   });
 }
 
+function updateStats(){
+  const total = allPosts.length;
+  const today = new Date();
+  const todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+  const todayCount = allPosts.filter(p => {
+    if(!p.created_at) return false;
+    return String(p.created_at).startsWith(todayStr);
+  }).length;
+  const elTotal = document.getElementById('statTotal');
+  const elToday = document.getElementById('statToday');
+  const elLive = document.getElementById('statLive');
+  if(elTotal) elTotal.textContent = total.toLocaleString('ko-KR');
+  if(elToday) elToday.textContent = todayCount.toLocaleString('ko-KR');
+  if(elLive) elLive.style.color = '#00875A';
+}
+
 async function loadPosts(){
   try {
     const res = await fetch(POSTS_ENDPOINT, {cache:'no-store'});
     if(!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
     allPosts = Array.isArray(data.items) ? data.items : (Array.isArray(data) ? data : []);
+    updateStats();
     render();
   } catch(e) {
+    const elLive = document.getElementById('statLive');
+    if(elLive){ elLive.style.color = '#DE350B'; elLive.textContent = '✕'; }
     container.innerHTML = '<div class="row" style="justify-content:center;color:#BF2600;font-size:13px;padding:32px 18px;display:block;text-align:center;background:#FFEBE6">⚠ 게시글을 불러오지 못했습니다: ' + escapeHtml(e.message || String(e)) + '<br><br><a href="/community/write.html" style="color:#0747A6;font-weight:700">새 글 작성하기 →</a></div>';
   }
 }
