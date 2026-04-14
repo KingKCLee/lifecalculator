@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.14",
       "category": "전체",
+      "title": "feat: Expert Guide LeftNav 인라인 아코디언·계산기 헤더 한 줄 통합 레이아웃",
+      "desc": "feat: Expert Guide LeftNav 인라인 아코디언·계산기 헤더 한 줄 통합 레이아웃"
+    },
+    {
+      "date": "2026.04.14",
+      "category": "전체",
       "title": "fix: CalcAcq 입력 섹션 사이 hr 구분선 6개 추가",
       "desc": "fix: CalcAcq 입력 섹션 사이 hr 구분선 6개 추가"
     },
@@ -1459,12 +1465,6 @@
       "category": "전체",
       "title": "refactor: 40개 계산기 레이아웃·입력 일관성 통일 (CalcAcq 기준)",
       "desc": "refactor: 40개 계산기 레이아웃·입력 일관성 통일 (CalcAcq 기준)"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "전체",
-      "title": "feat: Phase A - 즐겨찾기, 2026 세법 기준 문구, KAKAO_JS_KEY 상수",
-      "desc": "feat: Phase A - 즐겨찾기, 2026 세법 기준 문구, KAKAO_JS_KEY 상수"
     }
   ],
   "rates": {
