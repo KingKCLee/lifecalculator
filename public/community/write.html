@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>글쓰기 | 커뮤니티 게시판 | 생활계산기</title>
+<meta name="description" content="생활계산기 커뮤니티 게시판 글쓰기 페이지.">
+<link rel="canonical" href="https://xn--989a00a691bdfa717h.com/community/write.html">
+<meta name="robots" content="noindex,follow">
+<style>
+:root{--pri:#0747A6;--pl:#0052CC;--bg:#f8f9fc;--card:#fff;--bd:#dfe1e6;--tx:#172B4D;--mt:#505f79;--lt:#f4f5f7}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",sans-serif;background:var(--bg);color:var(--tx);line-height:1.6}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:760px;margin:0 auto;padding:20px 20px 64px}
+.topnav{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 18px;padding:10px;background:#fff;border:1px solid var(--bd);border-radius:10px}
+.topnav a{display:inline-block;padding:6px 12px;font-size:13px;color:var(--mt);text-decoration:none;border-radius:16px;border:1px solid var(--bd)}
+.topnav a:hover{background:#e6f0ff;color:var(--pri);border-color:var(--pri)}
+.topnav a.tn-home{background:var(--pri);color:#fff;border-color:var(--pri);font-weight:600}
+.topnav a.tn-home:hover{background:var(--pl)}
+.topnav a.active{background:var(--pri);color:#fff;border-color:var(--pri);font-weight:600}
+.crumb{font-size:13px;color:var(--mt);margin-bottom:16px}
+h1{font-size:26px;margin:0 0 20px;color:var(--pri);letter-spacing:-0.5px}
+.form{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:28px}
+.field{margin-bottom:18px}
+.field label{display:block;font-size:12px;font-weight:700;color:var(--mt);margin-bottom:6px;letter-spacing:.5px;text-transform:uppercase}
+.field input,.field select,.field textarea{width:100%;padding:11px 14px;border:1.5px solid var(--bd);border-radius:10px;font-size:15px;font-family:inherit;background:#fff;color:var(--tx);outline:none;transition:border-color .15s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--pri)}
+.field textarea{min-height:320px;resize:vertical;line-height:1.7;font-size:15px}
+.field .hint{font-size:11px;color:var(--mt);margin-top:4px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field-required::after{content:" *";color:#DE350B}
+.warn{padding:12px 16px;background:#FFF8E1;border:1px solid #FFE082;border-radius:10px;font-size:13px;color:#F57F17;margin-bottom:18px;line-height:1.7}
+.warn strong{color:#BF2600}
+.notice-box{padding:14px 18px;background:#eff6ff;border:1px solid #93c5fd;border-radius:10px;font-size:13px;color:#1e40af;margin-bottom:20px;line-height:1.7}
+.notice-box strong{color:var(--pri)}
+.actions{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap}
+.btn{padding:12px 24px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;border:none;transition:opacity .15s}
+.btn-primary{background:var(--pri);color:#fff;flex:1;min-width:120px}
+.btn-primary:hover{background:var(--pl)}
+.btn-ghost{background:#fff;color:var(--mt);border:1.5px solid var(--bd)}
+.btn-ghost:hover{background:var(--lt)}
+.agree{display:flex;align-items:flex-start;gap:8px;padding:12px 14px;background:var(--lt);border-radius:8px;margin-top:16px;font-size:12px;color:var(--mt);line-height:1.6}
+.agree input{margin-top:2px;width:16px;height:16px;flex-shrink:0}
+.toolbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;padding:8px;background:var(--lt);border-radius:8px}
+.toolbar button{padding:6px 10px;background:#fff;border:1px solid var(--bd);border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit;color:var(--mt)}
+.toolbar button:hover{border-color:var(--pri);color:var(--pri)}
+.foot{margin-top:40px;padding-top:24px;border-top:1px solid var(--bd);font-size:12px;color:var(--mt);text-align:center}
+.foot a{color:var(--mt)}
+@media(max-width:768px){
+  .wrap{padding:16px 12px 48px}
+  h1{font-size:22px}
+  .form{padding:18px}
+  .row2{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <nav class="topnav" aria-label="사이트 네비게이션">
+    <a href="/" class="tn-home">홈</a>
+    <a href="/community/" class="active" aria-current="page">커뮤니티</a>
+    <a href="/news/">뉴스</a>
+    <a href="/terms/">용어사전</a>
+  </nav>
+  <nav class="crumb"><a href="/">생활계산기</a> › <a href="/community/">커뮤니티</a> › 글쓰기</nav>
+
+  <h1>✏️ 글쓰기</h1>
+
+  <div class="notice-box">
+    ℹ️ <strong>베타 안내</strong>: 현재 프론트엔드만 구현되어 있어 "등록" 버튼을 눌러도 글이 저장되지 않습니다. 백엔드(Cloudflare D1) 연동 후 정식 오픈됩니다.
+  </div>
+
+  <div class="warn">
+    <strong>⚠️ 게시 전 확인사항</strong><br>
+    • 특정 개인·기업에 대한 비방, 허위사실, 광고·홍보성 글은 사전 통보 없이 삭제됩니다.<br>
+    • 세무·법률 자문은 법적 효력이 없으며, 실제 신고·거래 전에는 반드시 전문가에게 확인하세요.<br>
+    • 부동산 매매 추천 및 투기 조장성 게시글은 금지됩니다.
+  </div>
+
+  <form class="form" id="writeForm" novalidate>
+    <div class="field">
+      <label for="category" class="field-required">카테고리</label>
+      <select id="category" name="category" required>
+        <option value="">— 선택하세요 —</option>
+        <option value="tax">세금 (취득·양도·증여·상속·보유)</option>
+        <option value="loan">대출 (주담대·DSR·LTV)</option>
+        <option value="market">시장 (실거래·전망·지역)</option>
+        <option value="qna">질문</option>
+        <option value="free">자유</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="title" class="field-required">제목</label>
+      <input type="text" id="title" name="title" maxlength="100" placeholder="제목을 입력하세요 (최대 100자)" required>
+      <div class="hint">핵심을 담은 제목이 좋은 답변을 부릅니다</div>
+    </div>
+
+    <div class="field">
+      <label for="content" class="field-required">본문</label>
+      <div class="toolbar" aria-label="편집 도구">
+        <button type="button" data-act="bold"><strong>B</strong></button>
+        <button type="button" data-act="italic"><em>I</em></button>
+        <button type="button" data-act="link">🔗 링크</button>
+        <button type="button" data-act="list">• 목록</button>
+        <button type="button" data-act="quote">❝ 인용</button>
+      </div>
+      <textarea id="content" name="content" placeholder="본문을 입력하세요.&#10;&#10;• 세무·법률 질문은 개별 상황을 구체적으로 적어주세요 (보유 주택 수, 지역, 기간 등).&#10;• 계산 결과는 생활계산기의 해당 계산기 링크와 함께 공유하면 답변이 빠릅니다.&#10;• 개인정보(실명·전화번호·주소 등)는 작성하지 마세요." required></textarea>
+      <div class="hint"><span id="charCount">0</span> / 10,000자</div>
+    </div>
+
+    <div class="row2">
+      <div class="field">
+        <label for="author" class="field-required">작성자</label>
+        <input type="text" id="author" name="author" maxlength="20" placeholder="닉네임" required>
+      </div>
+      <div class="field">
+        <label for="password" class="field-required">비밀번호</label>
+        <input type="password" id="password" name="password" maxlength="20" placeholder="수정·삭제용" required>
+        <div class="hint">4~20자 · 글 수정/삭제 시 필요</div>
+      </div>
+    </div>
+
+    <div class="agree">
+      <input type="checkbox" id="agree" name="agree" required>
+      <label for="agree">
+        <strong style="color:var(--tx)">커뮤니티 이용 규칙</strong>에 동의하며, 본 게시글의 책임은 작성자 본인에게 있음을 확인합니다. 불법·광고·명예훼손성 글은 별도 통보 없이 삭제될 수 있습니다.
+      </label>
+    </div>
+
+    <div class="actions">
+      <button type="submit" class="btn btn-primary">등록</button>
+      <button type="button" class="btn btn-ghost" id="cancelBtn">취소</button>
+    </div>
+  </form>
+
+  <div class="foot">
+    © 2026 생활계산기.com · <a href="/community/">목록으로</a> · <a href="/">홈</a>
+  </div>
+</main>
+
+<script>
+// 본문 글자 수 카운터
+const content = document.getElementById('content');
+const charCount = document.getElementById('charCount');
+content.addEventListener('input', () => {
+  charCount.textContent = content.value.length.toLocaleString('ko-KR');
+  if(content.value.length > 10000){
+    content.value = content.value.slice(0, 10000);
+    charCount.textContent = '10,000';
+  }
+});
+
+// 툴바 (간단한 마크다운 삽입)
+document.querySelectorAll('.toolbar button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const act = btn.dataset.act;
+    const start = content.selectionStart;
+    const end = content.selectionEnd;
+    const sel = content.value.slice(start, end);
+    const wrap = {bold:'**', italic:'_', link:'[텍스트](URL)', list:'\n- ', quote:'\n> '};
+    let insert = '';
+    if(act==='bold'||act==='italic'){
+      insert = wrap[act] + (sel||'텍스트') + wrap[act];
+    } else if(act==='link'){
+      insert = '[' + (sel||'텍스트') + '](https://)';
+    } else {
+      insert = wrap[act] + (sel||'항목');
+    }
+    content.value = content.value.slice(0, start) + insert + content.value.slice(end);
+    content.focus();
+    content.setSelectionRange(start + insert.length, start + insert.length);
+    content.dispatchEvent(new Event('input'));
+  });
+});
+
+// 취소
+document.getElementById('cancelBtn').addEventListener('click', () => {
+  if(confirm('작성 중인 내용이 사라집니다. 목록으로 돌아가시겠습니까?')){
+    location.href = '/community/';
+  }
+});
+
+// 제출 (백엔드 없음 — 알림)
+document.getElementById('writeForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const f = e.target;
+  if(!f.category.value || !f.title.value.trim() || !f.content.value.trim() || !f.author.value.trim() || !f.password.value || !f.agree.checked){
+    alert('모든 필수 항목을 입력하고 이용 규칙에 동의해주세요.');
+    return;
+  }
+  if(f.password.value.length < 4){
+    alert('비밀번호는 4자 이상이어야 합니다.');
+    return;
+  }
+  alert('⚠️ 베타 오픈 중입니다.\n\n현재는 UI만 구현되어 글이 저장되지 않습니다.\nCloudflare D1 백엔드 연동 후 정식 오픈됩니다.');
+});
+</script>
+</body>
+</html>

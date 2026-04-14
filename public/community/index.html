@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>커뮤니티 게시판 | 생활계산기</title>
+<meta name="description" content="부동산 세금·대출·시장 이슈를 나누는 생활계산기 커뮤니티 게시판.">
+<link rel="canonical" href="https://xn--989a00a691bdfa717h.com/community/">
+<meta property="og:title" content="커뮤니티 게시판 | 생활계산기">
+<meta property="og:description" content="부동산 세금·대출·시장 이슈를 나누는 생활계산기 커뮤니티 게시판.">
+<meta name="robots" content="index,follow">
+<style>
+:root{--pri:#0747A6;--pl:#0052CC;--bg:#f8f9fc;--card:#fff;--bd:#dfe1e6;--tx:#172B4D;--mt:#505f79;--lt:#f4f5f7}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",sans-serif;background:var(--bg);color:var(--tx);line-height:1.6}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:960px;margin:0 auto;padding:20px 20px 64px}
+.topnav{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 18px;padding:10px;background:#fff;border:1px solid var(--bd);border-radius:10px}
+.topnav a{display:inline-block;padding:6px 12px;font-size:13px;color:var(--mt);text-decoration:none;border-radius:16px;border:1px solid var(--bd)}
+.topnav a:hover{background:#e6f0ff;color:var(--pri);border-color:var(--pri)}
+.topnav a.tn-home{background:var(--pri);color:#fff;border-color:var(--pri);font-weight:600}
+.topnav a.tn-home:hover{background:var(--pl)}
+.topnav a.active{background:var(--pri);color:#fff;border-color:var(--pri);font-weight:600}
+.crumb{font-size:13px;color:var(--mt);margin-bottom:12px}
+.header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.header h1{font-size:28px;margin:0 0 4px;color:var(--pri);letter-spacing:-0.5px}
+.header p{margin:0;font-size:14px;color:var(--mt)}
+.write-btn{display:inline-flex;align-items:center;gap:6px;padding:11px 20px;background:var(--pri);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
+.write-btn:hover{background:var(--pl)}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+.cats{display:flex;gap:6px;flex-wrap:wrap;flex:1;min-width:0}
+.cats button{padding:8px 14px;background:#fff;border:1.5px solid var(--bd);border-radius:20px;font-size:13px;color:var(--mt);cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap}
+.cats button.active{background:var(--pri);color:#fff;border-color:var(--pri);font-weight:600}
+.cats button:hover{border-color:var(--pri)}
+.search{display:flex;gap:6px;min-width:200px}
+.search input{flex:1;padding:9px 12px;border:1.5px solid var(--bd);border-radius:10px;font-size:13px;font-family:inherit;outline:none;background:#fff;color:var(--tx)}
+.search input:focus{border-color:var(--pri)}
+.search button{padding:9px 14px;background:#fff;border:1.5px solid var(--bd);border-radius:10px;font-size:13px;cursor:pointer;font-family:inherit;color:var(--mt)}
+.search button:hover{background:var(--lt)}
+.board{background:#fff;border:1px solid var(--bd);border-radius:12px;overflow:hidden}
+.board-head{display:grid;grid-template-columns:70px 1fr 110px 110px 70px 70px;gap:12px;padding:14px 18px;background:var(--lt);font-size:12px;font-weight:700;color:var(--mt);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--bd)}
+.row{display:grid;grid-template-columns:70px 1fr 110px 110px 70px 70px;gap:12px;padding:16px 18px;border-bottom:1px solid #f1f5f9;font-size:14px;align-items:center;transition:background .15s}
+.row:last-child{border-bottom:none}
+.row:hover{background:var(--lt);cursor:pointer}
+.row .no{color:#94a3b8;font-size:13px}
+.row .tt{min-width:0}
+.row .tt a{font-weight:600;color:var(--tx);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .tt .cat-badge{display:inline-block;margin-right:6px;padding:2px 8px;background:#e6f0ff;color:var(--pri);font-size:11px;font-weight:600;border-radius:10px;vertical-align:middle}
+.row .tt .cmt{color:#DE350B;font-weight:700;margin-left:4px;font-size:12px}
+.row .au{color:var(--mt);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .dt{color:var(--mt);font-size:12px}
+.row .vw,.row .rc{color:var(--mt);font-size:12px;text-align:right;font-variant-numeric:tabular-nums}
+.row.notice{background:#fff8e1}
+.row.notice .no{color:#DE350B;font-weight:700}
+.row.notice .tt .cat-badge{background:#ffebe6;color:#DE350B}
+.pagination{display:flex;justify-content:center;gap:6px;margin-top:24px}
+.pagination button{padding:8px 12px;background:#fff;border:1.5px solid var(--bd);border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit;color:var(--mt);min-width:36px}
+.pagination button.active{background:var(--pri);color:#fff;border-color:var(--pri);font-weight:700}
+.pagination button:hover:not(.active){border-color:var(--pri);color:var(--pri)}
+.notice-box{padding:14px 18px;background:#eff6ff;border:1px solid #93c5fd;border-radius:10px;font-size:13px;color:#1e40af;margin-bottom:16px;line-height:1.7}
+.notice-box strong{color:var(--pri)}
+.foot{margin-top:40px;padding-top:24px;border-top:1px solid var(--bd);font-size:12px;color:var(--mt);text-align:center}
+.foot a{color:var(--mt)}
+@media(max-width:768px){
+  .wrap{padding:16px 12px 48px}
+  .header h1{font-size:22px}
+  .board-head{display:none}
+  .row{grid-template-columns:1fr;gap:4px;padding:14px 14px}
+  .row .no,.row .au,.row .dt,.row .vw,.row .rc{display:none}
+  .row .tt a{white-space:normal}
+  .row::after{content:attr(data-meta);font-size:11px;color:var(--mt);margin-top:2px}
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <nav class="topnav" aria-label="사이트 네비게이션">
+    <a href="/" class="tn-home">홈</a>
+    <a href="/community/" class="active" aria-current="page">커뮤니티</a>
+    <a href="/news/">뉴스</a>
+    <a href="/terms/">용어사전</a>
+  </nav>
+  <nav class="crumb"><a href="/">생활계산기</a> › 커뮤니티 게시판</nav>
+
+  <div class="header">
+    <div>
+      <h1>커뮤니티 게시판</h1>
+      <p>부동산 세금·대출·시장 이슈를 자유롭게 이야기하세요</p>
+    </div>
+    <a href="/community/write.html" class="write-btn">✏️ 글쓰기</a>
+  </div>
+
+  <div class="notice-box">
+    ℹ️ <strong>베타 오픈</strong>: 현재 UI만 구현되어 있으며 글 저장·조회는 백엔드 연동 후 활성화됩니다. 법률·세무 상담은 반드시 전문가에게 문의하세요.
+  </div>
+
+  <div class="toolbar">
+    <div class="cats">
+      <button class="active" data-cat="all">전체</button>
+      <button data-cat="tax">세금</button>
+      <button data-cat="loan">대출</button>
+      <button data-cat="market">시장</button>
+      <button data-cat="qna">질문</button>
+      <button data-cat="free">자유</button>
+    </div>
+    <div class="search">
+      <input type="text" placeholder="제목·내용 검색" aria-label="검색어">
+      <button type="button">검색</button>
+    </div>
+  </div>
+
+  <div class="board" id="board">
+    <div class="board-head">
+      <div>번호</div><div>제목</div><div>작성자</div><div>작성일</div><div>조회</div><div>추천</div>
+    </div>
+
+    <div class="row notice" data-meta="공지 · 운영자 · 방금 전 · 조회 —">
+      <div class="no">📌</div>
+      <div class="tt"><a href="#"><span class="cat-badge">공지</span>커뮤니티 이용 규칙 및 가이드라인</a></div>
+      <div class="au">운영자</div>
+      <div class="dt">2026.04.01</div>
+      <div class="vw">—</div>
+      <div class="rc">—</div>
+    </div>
+    <div class="row notice" data-meta="공지 · 운영자 · 2026.03.15 · 조회 —">
+      <div class="no">📌</div>
+      <div class="tt"><a href="#"><span class="cat-badge">공지</span>2026년 세법 개정 주요 변경사항 안내</a></div>
+      <div class="au">운영자</div>
+      <div class="dt">2026.03.15</div>
+      <div class="vw">—</div>
+      <div class="rc">—</div>
+    </div>
+
+    <div class="row" data-meta="세금 · 홍길동 · 2시간 전 · 조회 234">
+      <div class="no">342</div>
+      <div class="tt"><a href="#"><span class="cat-badge">세금</span>1세대1주택 비과세 12억 넘었는데 장특공 계산 어떻게 되나요?<span class="cmt">[5]</span></a></div>
+      <div class="au">홍길동</div>
+      <div class="dt">2시간 전</div>
+      <div class="vw">234</div>
+      <div class="rc">12</div>
+    </div>
+    <div class="row" data-meta="대출 · 박영수 · 5시간 전 · 조회 189">
+      <div class="no">341</div>
+      <div class="tt"><a href="#"><span class="cat-badge">대출</span>스트레스 DSR 2단계 시행 후 한도 체감 후기<span class="cmt">[12]</span></a></div>
+      <div class="au">박영수</div>
+      <div class="dt">5시간 전</div>
+      <div class="vw">189</div>
+      <div class="rc">24</div>
+    </div>
+    <div class="row" data-meta="시장 · 김미래 · 8시간 전 · 조회 456">
+      <div class="no">340</div>
+      <div class="tt"><a href="#"><span class="cat-badge">시장</span>강남 재건축 안전진단 통과 단지 정리 (4월 기준)<span class="cmt">[27]</span></a></div>
+      <div class="au">김미래</div>
+      <div class="dt">8시간 전</div>
+      <div class="vw">456</div>
+      <div class="rc">38</div>
+    </div>
+    <div class="row" data-meta="질문 · 신입투자자 · 1일 전 · 조회 145">
+      <div class="no">339</div>
+      <div class="tt"><a href="#"><span class="cat-badge">질문</span>공동명의 전환 시 취득세 추가로 내야 하나요?<span class="cmt">[8]</span></a></div>
+      <div class="au">신입투자자</div>
+      <div class="dt">1일 전</div>
+      <div class="vw">145</div>
+      <div class="rc">7</div>
+    </div>
+    <div class="row" data-meta="세금 · 세무초보 · 1일 전 · 조회 278">
+      <div class="no">338</div>
+      <div class="tt"><a href="#"><span class="cat-badge">세금</span>증여 후 10년 내 상속 발생하면 어떻게 되나요?<span class="cmt">[4]</span></a></div>
+      <div class="au">세무초보</div>
+      <div class="dt">1일 전</div>
+      <div class="vw">278</div>
+      <div class="rc">11</div>
+    </div>
+    <div class="row" data-meta="자유 · 부동산러버 · 2일 전 · 조회 98">
+      <div class="no">337</div>
+      <div class="tt"><a href="#"><span class="cat-badge">자유</span>집 사기 전에 후회 없는 체크리스트 공유합니다</a></div>
+      <div class="au">부동산러버</div>
+      <div class="dt">2일 전</div>
+      <div class="vw">98</div>
+      <div class="rc">15</div>
+    </div>
+    <div class="row" data-meta="대출 · 이대출 · 2일 전 · 조회 167">
+      <div class="no">336</div>
+      <div class="tt"><a href="#"><span class="cat-badge">대출</span>대환대출 갈아탔는데 중도상환수수료 계산 도와주세요<span class="cmt">[6]</span></a></div>
+      <div class="au">이대출</div>
+      <div class="dt">2일 전</div>
+      <div class="vw">167</div>
+      <div class="rc">9</div>
+    </div>
+    <div class="row" data-meta="시장 · 성북러 · 3일 전 · 조회 321">
+      <div class="no">335</div>
+      <div class="tt"><a href="#"><span class="cat-badge">시장</span>성북구 실거래가 분석 — 2026년 1분기<span class="cmt">[18]</span></a></div>
+      <div class="au">성북러</div>
+      <div class="dt">3일 전</div>
+      <div class="vw">321</div>
+      <div class="rc">22</div>
+    </div>
+    <div class="row" data-meta="질문 · 청년무주택 · 3일 전 · 조회 89">
+      <div class="no">334</div>
+      <div class="tt"><a href="#"><span class="cat-badge">질문</span>생애최초 취득세 감면 2028년까지인가요?<span class="cmt">[3]</span></a></div>
+      <div class="au">청년무주택</div>
+      <div class="dt">3일 전</div>
+      <div class="vw">89</div>
+      <div class="rc">5</div>
+    </div>
+    <div class="row" data-meta="세금 · 다주택자 · 4일 전 · 조회 412">
+      <div class="no">333</div>
+      <div class="tt"><a href="#"><span class="cat-badge">세금</span>양도세 중과 유예 2026.5.9 종료 전 매도 전략<span class="cmt">[33]</span></a></div>
+      <div class="au">다주택자</div>
+      <div class="dt">4일 전</div>
+      <div class="vw">412</div>
+      <div class="rc">29</div>
+    </div>
+  </div>
+
+  <div class="pagination" role="navigation" aria-label="페이지 네비게이션">
+    <button type="button" aria-label="이전">‹</button>
+    <button type="button" class="active" aria-current="page">1</button>
+    <button type="button">2</button>
+    <button type="button">3</button>
+    <button type="button">4</button>
+    <button type="button">5</button>
+    <button type="button" aria-label="다음">›</button>
+  </div>
+
+  <div class="foot">
+    © 2026 생활계산기.com · <a href="/">홈으로</a> · <a href="/community/write.html">글쓰기</a>
+    <div style="margin-top:8px;opacity:.7">본 게시판의 글은 작성자 개인의 의견이며 생활계산기의 공식 입장이 아닙니다.</div>
+  </div>
+</main>
+
+<script>
+// 카테고리 필터 (프론트엔드 상태만, 백엔드 연동 전)
+document.querySelectorAll('.cats button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.cats button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const cat = btn.dataset.cat;
+    document.querySelectorAll('.board .row:not(.notice)').forEach(row => {
+      if(cat === 'all'){ row.style.display=''; return; }
+      const badge = row.querySelector('.cat-badge');
+      const map = {tax:'세금',loan:'대출',market:'시장',qna:'질문',free:'자유'};
+      row.style.display = (badge && badge.textContent === map[cat]) ? '' : 'none';
+    });
+  });
+});
+// 행 클릭 → 상세 (백엔드 전이라 알림)
+document.querySelectorAll('.row').forEach(row => {
+  row.addEventListener('click', e => {
+    if(e.target.tagName==='A') return;
+    alert('게시글 상세 페이지는 백엔드 연동 후 제공됩니다.');
+  });
+});
+// 검색
+document.querySelector('.search button').addEventListener('click', () => {
+  alert('검색 기능은 백엔드 연동 후 활성화됩니다.');
+});
+</script>
+</body>
+</html>
