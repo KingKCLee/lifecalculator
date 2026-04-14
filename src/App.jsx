@@ -2867,9 +2867,54 @@ const LogoSVG=({size=36,invert=false})=>(
   </svg>
 );
 
+/* ═══ 좌측 네비게이션 (Resource Hub) ═══ */
+function LeftNav({isMo,navOpen,setNavOpen,effectiveUser,setAuthMode,setShowAuth,navigateHome,navigateMyPage,handleLogout}){
+  const SV=(children)=>(<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">{children}</svg>);
+  const MENU=[
+    {id:"expert",l:"Expert Guide",icon:SV(<><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></>)},
+    {id:"learning",l:"Learning Center",icon:SV(<><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H20v15H5.5A1.5 1.5 0 0 1 4 16.5z"/><path d="M4 16.5A1.5 1.5 0 0 1 5.5 15H20v6H5.5A1.5 1.5 0 0 1 4 19.5z"/></>)},
+    {id:"market",l:"Market Data",icon:SV(<><path d="M3 20h18"/><path d="M6 16V8"/><path d="M12 16V4"/><path d="M18 16v-6"/></>)},
+    {id:"history",l:"지난 계산 내역",icon:SV(<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>)}
+  ];
+  const tx=isMo&&!navOpen?"translateX(-100%)":"none";
+  return(<>
+    {isMo&&navOpen&&<div onClick={()=>setNavOpen(false)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.5)",zIndex:9998}}/>}
+    <aside style={{position:"fixed",top:0,left:0,width:240,height:"100vh",background:"#0a1628",color:"#fff",display:"flex",flexDirection:"column",zIndex:9999,fontFamily:"inherit",padding:"24px 0",transform:tx,transition:"transform .25s ease",boxShadow:isMo?"4px 0 20px rgba(0,0,0,.3)":"none"}}>
+      <div style={{padding:"0 22px",marginBottom:28,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+        <div onClick={()=>{navigateHome?.();setNavOpen(false);}} style={{fontSize:15,fontWeight:800,color:"#fff",cursor:"pointer",letterSpacing:-.3,lineHeight:1.2}}>생활계산기.com</div>
+        {isMo&&<button onClick={()=>setNavOpen(false)} aria-label="닫기" style={{background:"none",border:"none",color:"#fff",fontSize:22,cursor:"pointer",padding:0,lineHeight:1}}>✕</button>}
+      </div>
+      <div style={{padding:"0 22px",fontSize:10,fontWeight:700,letterSpacing:2,color:"#6b7a99",marginBottom:12,textTransform:"uppercase"}}>RESOURCE HUB</div>
+      <nav style={{flex:"1 1 auto",display:"flex",flexDirection:"column"}}>
+        {MENU.map(m=>(
+          <button key={m.id} onClick={()=>{if(m.id==="history")navigateMyPage?.();setNavOpen(false);}} style={{display:"flex",alignItems:"center",gap:12,padding:"12px 22px",background:"none",border:"none",color:"#fff",fontSize:13,fontWeight:500,cursor:"pointer",fontFamily:"inherit",textAlign:"left"}} onMouseEnter={e=>e.currentTarget.style.background="rgba(255,255,255,.06)"} onMouseLeave={e=>e.currentTarget.style.background="none"}>
+            <span style={{width:22,height:22,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{m.icon}</span>
+            <span>{m.l}</span>
+          </button>
+        ))}
+      </nav>
+      <div style={{padding:"16px 22px",borderTop:"1px solid rgba(255,255,255,.08)"}}>
+        {effectiveUser?(
+          <div style={{display:"flex",alignItems:"center",gap:10}}>
+            <div style={{width:32,height:32,borderRadius:"50%",background:"#1e3a5f",display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,fontWeight:700,flexShrink:0}}>{(effectiveUser.email||"U")[0].toUpperCase()}</div>
+            <div style={{flex:"1 1 auto",minWidth:0}}>
+              <div style={{fontSize:12,fontWeight:600,color:"#fff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{effectiveUser.user_metadata?.full_name||effectiveUser.email?.split("@")[0]||"사용자"}</div>
+              <button onClick={handleLogout} style={{fontSize:11,color:"#8b9bbd",background:"none",border:"none",cursor:"pointer",padding:0,fontFamily:"inherit",marginTop:2}}>로그아웃</button>
+            </div>
+          </div>
+        ):(
+          <button onClick={()=>{setAuthMode("login");setShowAuth(true);setNavOpen(false);}} style={{width:"100%",padding:"10px 14px",background:"#0747A6",color:"#fff",border:"none",borderRadius:8,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>로그인 / 가입</button>
+        )}
+      </div>
+    </aside>
+  </>);
+}
+
 /* ═══ 메인 앱 ═══ */
 export default function App(){
   const isMo=useIsMobile();
+  // 2026.04.14 좌측 Resource Hub 네비 토글 (모바일 전용)
+  const[navOpen,setNavOpen]=useState(false);
   const[user,setUser]=useState(null);
   const[authLoading,setAuthLoading]=useState(true);
   // 2026.04.14 AI해설 게이트에서 Supabase 로그인 상태 참조용 ref
@@ -3070,8 +3115,10 @@ export default function App(){
   const catInfo=CATS.find(c=>c.id===cat);
   const searchResults=search.trim()?CL.filter(c=>(c.l+"|"+(DESC[c.id]||"")).includes(search.trim())):[];
 
-  return(<div style={{minHeight:"100vh",background:P.bg,fontFamily:"'Pretendard','Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif",width:"100%",maxWidth:"100vw",overflowX:"hidden"}}>
+  return(<div style={{minHeight:"100vh",background:P.bg,fontFamily:"'Pretendard','Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif",width:"100%",maxWidth:"100vw",overflowX:"hidden",paddingLeft:isMo?0:240}}>
     <SidePanel/>
+    <LeftNav isMo={isMo} navOpen={navOpen} setNavOpen={setNavOpen} effectiveUser={effectiveUser} setAuthMode={setAuthMode} setShowAuth={setShowAuth} navigateHome={navigateHome} navigateMyPage={navigateMyPage} handleLogout={handleLogout}/>
+    {isMo&&<button onClick={()=>setNavOpen(true)} aria-label="메뉴 열기" style={{position:"fixed",top:10,left:10,zIndex:9997,width:40,height:40,background:"#0a1628",color:"#fff",border:"none",borderRadius:10,cursor:"pointer",fontSize:20,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 8px rgba(0,0,0,.2)"}}>☰</button>}
     <style>{`
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;overflow-x:hidden}
 body{-webkit-tap-highlight-color:transparent;font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow-x:hidden;position:relative;width:100%}
@@ -3316,7 +3363,7 @@ body.lc-embed main{padding-top:0!important}
           <EduContent calc={calc} eduTab={eduTab}/>
         </div>
       </div>):(
-      <div className="calc-grid page-layout" style={{maxWidth:1200,margin:"0 auto",padding:isMo?"16px":"32px 24px"}}>
+      <div className="calc-grid page-layout" style={{padding:isMo?"16px":24}}>
         {/* 좌측: 헤더 + 서브탭 + 계산기 + PRO */}
         <div>
           <nav aria-label="breadcrumb" style={{fontSize:12,color:P.mt,marginBottom:8,display:"flex",alignItems:"center",gap:6}}>
