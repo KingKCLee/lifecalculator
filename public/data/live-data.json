@@ -1168,6 +1168,12 @@
   "updateLog": [
     {
       "date": "2026.04.14",
+      "category": "대출",
+      "title": "fix: Tog 글자겹침 근본 해결 (ellipsis·minWidth:0·DSR 중복 레이블 제거·marginBottom:-8 잔재)",
+      "desc": "fix: Tog 글자겹침 근본 해결 (ellipsis·minWidth:0·DSR 중복 레이블 제거·marginBottom:-8 잔재)"
+    },
+    {
+      "date": "2026.04.14",
       "category": "전체",
       "title": "fix: 취득가액 Slider 복원·시가표준액 인라인 레이아웃·특수조건 } 버그·조회패널 maxWidth",
       "desc": "fix: 취득가액 Slider 복원·시가표준액 인라인 레이아웃·특수조건 } 버그·조회패널 maxWidth"
@@ -1459,12 +1465,6 @@
       "category": "전체",
       "title": "fix: 레이아웃 개선, 결과박스 너비고정, 학습센터 이동, 업데이트내역 숨김",
       "desc": "fix: 레이아웃 개선, 결과박스 너비고정, 학습센터 이동, 업데이트내역 숨김"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "전체",
-      "title": "fix: RP 결과 프레임 width 고정 + tabular-nums 적용 (폭 흔들림 방지)",
-      "desc": "fix: RP 결과 프레임 width 고정 + tabular-nums 적용 (폭 흔들림 방지)"
     }
   ],
   "rates": {
