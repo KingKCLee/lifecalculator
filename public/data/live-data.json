@@ -1168,6 +1168,12 @@
   "updateLog": [
     {
       "date": "2026.04.14",
+      "category": "전체",
+      "title": "feat: 시가표준액 2단계 조회 (worker PNU → 브라우저 V-world 직접 호출)",
+      "desc": "feat: 시가표준액 2단계 조회 (worker PNU → 브라우저 V-world 직접 호출)"
+    },
+    {
+      "date": "2026.04.14",
       "category": "세금",
       "title": "fix: 취득세 시가표준액 입력 전 유형 노출·유형별 안내 문구 분기",
       "desc": "fix: 취득세 시가표준액 입력 전 유형 노출·유형별 안내 문구 분기"
@@ -1463,12 +1469,6 @@
       "title": "정책 만료 D-30: transferSurchargeEnd",
       "desc": "2026-05-10 만료 예정. 관련 계산기에 자동 반영됩니다.",
       "urgent": true
-    },
-    {
-      "date": "2026.04.08",
-      "category": "세금",
-      "title": "feat: RequiredGuide 연말정산/퇴직금/4대보험 필수항목 안내 추가",
-      "desc": "feat: RequiredGuide 연말정산/퇴직금/4대보험 필수항목 안내 추가"
     }
   ],
   "rates": {
