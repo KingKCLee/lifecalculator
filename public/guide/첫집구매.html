@@ -81,7 +81,21 @@ th{background:var(--lt);font-weight:600;color:var(--tx)}
 .consult .kv b{display:block;color:var(--accent);font-size:10px;margin-bottom:4px;letter-spacing:0.5px;text-transform:uppercase}
 .foot{text-align:center;margin-top:28px;font-size:13px;color:var(--mt)}
 .foot a{color:var(--mt);text-decoration:none;margin:0 10px}
-.foot a:hover{color:var(--pri);text-decoration:underline}</style>
+.foot a:hover{color:var(--pri);text-decoration:underline}
+.update-badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;padding:14px 16px;background:#FFF8E1;border:1px solid #FFE082;border-radius:12px}
+.update-badges .lbl{font-size:11px;font-weight:800;color:#F57F17;letter-spacing:.5px;text-transform:uppercase;margin-right:4px;align-self:center}
+.update-badges .badge{display:inline-flex;align-items:center;gap:4px;padding:6px 12px;background:#fff;border:1px solid #FFE082;color:#BF6A00;border-radius:14px;font-size:12px;font-weight:700}
+.update-badges .badge strong{color:#DE350B}
+.share-bar{display:flex;gap:8px;margin:0 0 22px;flex-wrap:wrap;align-items:center;padding:12px 16px;background:var(--card);border:1px solid var(--bd);border-radius:12px}
+.share-bar .lbl{font-size:11px;font-weight:800;color:var(--mt);text-transform:uppercase;letter-spacing:.5px;margin-right:6px}
+.share-bar button{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#fff;border:1.5px solid var(--bd);border-radius:18px;font-size:12px;font-weight:700;color:var(--mt);cursor:pointer;font-family:inherit;transition:all .15s}
+.share-bar button:hover{border-color:var(--pri);color:var(--pri);transform:translateY(-1px);box-shadow:0 2px 8px rgba(7,71,166,.08)}
+.share-bar button.kakao{background:#FEE500;border-color:#FEE500;color:#191919}
+.share-bar button.kakao:hover{background:#FDD800;border-color:#FDD800;color:#000}
+.toc b{display:flex;align-items:center;justify-content:space-between}
+.toc b .auto{font-size:10px;color:var(--pri);font-weight:700;padding:3px 8px;background:#e6f0ff;border-radius:8px;letter-spacing:0}
+@media(max-width:600px){.update-badges{padding:12px 14px}.update-badges .badge{font-size:11px;padding:5px 10px}.share-bar button{font-size:11px;padding:7px 12px}}
+</style>
 </head>
 <body>
 <main class="wrap">
@@ -90,6 +104,19 @@ th{background:var(--lt);font-weight:600;color:var(--tx)}
     <span class="tag">첫 집 구매</span>
     <h1>생애최초 주택구입 완벽 가이드</h1>
     <p>처음 집을 구매하는 분이 놓치지 말아야 할 2026년 혜택과 절차, 총비용 계산을 한눈에 정리했습니다.</p>
+  </div>
+  <div class="update-badges">
+    <span class="lbl">🆕 2026 최신</span>
+    <span class="badge">양도세 중과유예 ~<strong>2026.5.9</strong></span>
+    <span class="badge">생애최초 감면 ~<strong>2028.12.31</strong></span>
+    <span class="badge">기준금리 <strong>3.00%</strong></span>
+    <span class="badge">스트레스 DSR <strong>2단계</strong> 시행</span>
+  </div>
+  <div class="share-bar">
+    <span class="lbl">📤 공유</span>
+    <button type="button" class="kakao" data-share="kakao">💬 카카오톡</button>
+    <button type="button" data-share="copy">🔗 링크 복사</button>
+    <button type="button" data-share="native">📱 공유하기</button>
   </div>
   <nav class="toc"><b>목차</b><ol><li><a href="#f1">생애최초 혜택 요약</a></li><li><a href="#f2">취득세 감면 최대 200만원</a></li><li><a href="#f3">LTV 80% 대출 완화</a></li><li><a href="#f4">디딤돌·보금자리 대출 비교</a></li><li><a href="#f5">총비용 체크리스트</a></li></ol></nav>
   
@@ -229,5 +256,66 @@ th{background:var(--lt);font-weight:600;color:var(--tx)}
     <a href="/">홈</a>
   </nav>
 </main>
+<script>
+// 2026-04-14 guide 페이지 자동 목차 + 공유 버튼
+(function(){
+  // 1. Auto TOC: section[id] > h2 자동 수집 → 기존 수동 목차 대체
+  var toc = document.querySelector('nav.toc');
+  if (toc) {
+    var sections = document.querySelectorAll('section[id]');
+    var items = [];
+    sections.forEach(function(s){
+      var h2 = s.querySelector('h2');
+      if (h2) {
+        var text = (h2.textContent || '').trim();
+        items.push('<li><a href="#' + s.id + '">' + text + '</a></li>');
+      }
+    });
+    if (items.length > 0) {
+      toc.innerHTML = '<b>📑 목차 <span class="auto">AUTO</span></b><ol>' + items.join('') + '</ol>';
+    }
+  }
+
+  // 2. 공유 버튼
+  var buttons = document.querySelectorAll('.share-bar button[data-share]');
+  var pageUrl = window.location.href;
+  var pageTitle = document.title;
+  buttons.forEach(function(btn){
+    btn.addEventListener('click', async function(){
+      var type = btn.dataset.share;
+      if (type === 'copy') {
+        try {
+          await navigator.clipboard.writeText(pageUrl);
+          var orig = btn.innerHTML;
+          btn.innerHTML = '✅ 복사됨';
+          setTimeout(function(){ btn.innerHTML = orig; }, 2000);
+        } catch(e) {
+          var ta = document.createElement('textarea');
+          ta.value = pageUrl;
+          ta.style.position = 'fixed';
+          ta.style.left = '-9999px';
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          alert('링크가 복사되었습니다:\n' + pageUrl);
+        }
+      } else if (type === 'kakao') {
+        // Kakao SDK 없이 URL scheme 기반 공유
+        var kakaoUrl = 'https://sharer.kakao.com/talk/friends/picker/link?url=' + encodeURIComponent(pageUrl) + '&text=' + encodeURIComponent(pageTitle);
+        window.open(kakaoUrl, '_blank', 'width=500,height=600');
+      } else if (type === 'native') {
+        if (navigator.share) {
+          try {
+            await navigator.share({ title: pageTitle, text: pageTitle, url: pageUrl });
+          } catch(e) { /* user cancelled */ }
+        } else {
+          alert('이 브라우저는 기본 공유를 지원하지 않습니다.\n카카오톡 또는 링크 복사를 이용해주세요.');
+        }
+      }
+    });
+  });
+})();
+</script>
 </body>
 </html>
