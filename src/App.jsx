@@ -2885,8 +2885,10 @@ function CalcGrid({navigateCalc,isMo}){
           {isOpen&&<div style={{padding:isMo?"0 12px 12px":"0 20px 16px"}}><div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:6}}>
             {g.items.map(item=>(<div key={item.id} onClick={()=>navigateCalc(g.cat,item.id)} style={{display:"flex",alignItems:"center",gap:12,padding:isMo?"12px":"14px 16px",borderRadius:10,cursor:"pointer",transition:"all .15s",border:"1px solid transparent"}} onMouseEnter={e=>{e.currentTarget.style.background=g.color+"08";e.currentTarget.style.borderColor=g.color+"30"}} onMouseLeave={e=>{e.currentTarget.style.background="transparent";e.currentTarget.style.borderColor="transparent"}}>
               <div style={{width:6,height:6,borderRadius:"50%",background:g.color,flexShrink:0}}/>
-              <div style={{flex:1}}><div style={{fontSize:isMo?13:14,fontWeight:600,color:"#172B4D"}}>{item.name}</div><div style={{fontSize:11,color:"#6b778c"}}>{item.desc}</div></div>
-              <span style={{display:"inline-flex",alignItems:"center"}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+              <div style={{fontSize:isMo?13:14,fontWeight:600,color:"#0a1628",flexShrink:0}}>{item.name}</div>
+              <div style={{flex:1}}/>
+              {!isMo&&<div style={{fontSize:12,color:"#6B7280",textAlign:"right",flexShrink:1,minWidth:0,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{item.desc}</div>}
+              <span style={{display:"inline-flex",alignItems:"center",flexShrink:0,marginLeft:8}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
             </div>))}
           </div></div>}
         </div>
