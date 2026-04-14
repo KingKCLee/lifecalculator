@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.14",
       "category": "전체",
+      "title": "feat: 좌측 Resource Hub 네비 신설·풀폭 메인·모바일 햄버거",
+      "desc": "feat: 좌측 Resource Hub 네비 신설·풀폭 메인·모바일 햄버거"
+    },
+    {
+      "date": "2026.04.14",
+      "category": "전체",
       "title": "fix: 입력 레이블 공통 스타일 lblSt 도입 (40개 계산기 전수 통일)",
       "desc": "fix: 입력 레이블 공통 스타일 lblSt 도입 (40개 계산기 전수 통일)"
     },
@@ -1463,12 +1469,6 @@
       "category": "전체",
       "title": "fix: 관련계산기 calc-container 바로 아래로 이동 (SEO 콘텐츠 위)",
       "desc": "fix: 관련계산기 calc-container 바로 아래로 이동 (SEO 콘텐츠 위)"
-    },
-    {
-      "date": "2026.04.06",
-      "category": "전체",
-      "title": "fix: 소셜 로그인 순서 구글→네이버로 변경, 버튼 크기 균등",
-      "desc": "fix: 소셜 로그인 순서 구글→네이버로 변경, 버튼 크기 균등"
     }
   ],
   "rates": {
