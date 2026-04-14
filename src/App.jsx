@@ -996,16 +996,34 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
         setStdErr(jj.error||"주소를 PNU로 변환하지 못했습니다. 단지명/동·호를 확인해주세요.");
         return;
       }
-      // 2단계: V-world 공동주택가격 API를 브라우저에서 직접 호출
-      const vwUrl="https://api.vworld.kr/ned/data/getApartHousingPriceAttr"+
-        "?key=FFEB4285-215F-3D37-B2C9-66EEB153913E"+
-        "&pnu="+encodeURIComponent(pnu)+
-        "&stdrYear=2025"+
-        "&format=json"+
-        "&numOfRows=100"+
-        "&domain=xn--989a00a691bdfa717h.com";
-      const vr=await fetch(vwUrl);
-      const vj=await vr.json().catch(()=>({}));
+      // 2단계: V-world 공동주택가격 API를 JSONP로 직접 호출 (CORS 우회)
+      const loadVworldJsonp=(pnuArg)=>new Promise((resolve,reject)=>{
+        const cbName="__vw_"+Date.now()+"_"+Math.floor(Math.random()*1e6);
+        let settled=false;
+        const cleanup=()=>{
+          if(settled)return;settled=true;
+          clearTimeout(timer);
+          try{delete window[cbName];}catch{window[cbName]=undefined;}
+          if(script&&script.parentNode)script.parentNode.removeChild(script);
+        };
+        const timer=setTimeout(()=>{cleanup();reject(new Error("JSONP timeout (10s)"));},10000);
+        window[cbName]=(res)=>{cleanup();resolve(res);};
+        const script=document.createElement("script");
+        script.src="http://api.vworld.kr/ned/data/getApartHousingPriceAttr"
+          +"?key=FFEB4285-215F-3D37-B2C9-66EEB153913E"
+          +"&domain=xn--989a00a691bdfa717h.com"
+          +"&pnu="+encodeURIComponent(pnuArg)
+          +"&stdrYear=2025"
+          +"&dongNm="+encodeURIComponent(stdDongNo||"")
+          +"&hoNm="+encodeURIComponent(stdHoNo||"")
+          +"&format=json&numOfRows=100&pageNo=1"
+          +"&callback="+cbName;
+        script.onerror=()=>{cleanup();reject(new Error("JSONP script load failed"));};
+        document.body.appendChild(script);
+      });
+      let vj;
+      try{vj=await loadVworldJsonp(pnu);}
+      catch(e){setStdErr("V-world JSONP 호출 실패: "+(e&&e.message||"unknown"));return;}
       const wrapper=vj?.apartHousingPrices||vj?.indvdHousingPrices||vj;
       const rc=wrapper?.resultCode;
       if(rc&&rc!=="OK"&&rc!=="NORMAL_CODE"&&rc!=="NORMAL_SERVICE"){
