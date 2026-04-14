@@ -1167,6 +1167,12 @@
   },
   "updateLog": [
     {
+      "date": "2026.04.15",
+      "category": "전체",
+      "title": "feat(nav): 상단 메인/서브 탭 SVG 아이콘 + 정보센터 톤앤매너 통일 + 홈화면 개선",
+      "desc": "feat(nav): 상단 메인/서브 탭 SVG 아이콘 + 정보센터 톤앤매너 통일 + 홈화면 개선"
+    },
+    {
       "date": "2026.04.14",
       "category": "세금",
       "title": "정책 만료 D-25: transferSurchargeEnd",
@@ -1460,18 +1466,6 @@
       "category": "전체",
       "title": "feat: 헤더/LeftNav/컬러 개편·풀폭 레이아웃·Market Data 오버레이",
       "desc": "feat: 헤더/LeftNav/컬러 개편·풀폭 레이아웃·Market Data 오버레이"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "전체",
-      "title": "feat: SVG 라인 아이콘 Ico 추가 및 이모지 → 컴포넌트 교체",
-      "desc": "feat: SVG 라인 아이콘 Ico 추가 및 이모지 → 컴포넌트 교체"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "전체",
-      "title": "feat: UI 강화 - 타이포·Market Intel·실시간 뉴스·Compliance Note",
-      "desc": "feat: UI 강화 - 타이포·Market Intel·실시간 뉴스·Compliance Note"
     }
   ],
   "rates": {
