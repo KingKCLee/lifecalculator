@@ -1135,13 +1135,15 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
           ))}
         </div>
       </div>}
-      <Slider label={acqType==="gift"?"시가인정액":acqType==="inherit"?"시가표준액":acqType==="newbuild"?"건축 원가":"취득가액"} value={price} onChange={sP} min={1000} max={500000} step={500}/>
-      <div style={{position:"relative"}}>
+      {/* 2026.04.14 취득 유형별 입력 레이블 분기 */}
+      <Slider label={acqType==="sale"?"취득가액 (실거래가)":acqType==="gift"||acqType==="inherit"?"시가인정액 또는 시가표준액":acqType==="newbuild"?"건축 원가":"취득가액"} value={price} onChange={sP} min={1000} max={500000} step={500}/>
+      {/* 2026.04.14 시가표준액 조회는 증여·상속·원시취득에만 노출 (매매/법인 숨김) */}
+      {(acqType==="gift"||acqType==="inherit"||acqType==="newbuild")&&<div style={{position:"relative"}}>
         <div style={{position:"absolute",top:-2,right:72,zIndex:2}}><TipModal title="시가표준액 (공시가격)"><p>미입력 시 취득가액을 시가표준액으로 간주합니다.</p><ul style={{paddingLeft:20}}><li>취득가액보다 시가표준액이 크면 시가표준액이 과세표준</li><li>시가표준액 1억 미만이면 다주택 중과 제외</li><li>조정대상지역 증여 시 시가표준액 3억 초과하면 12% 중과</li></ul><p>부동산 공시가격 알리미(realtyprice.kr)에서 확인 가능합니다.</p></TipModal></div>
         <button type="button" onClick={()=>setShowStdPanel(v=>!v)} style={{position:"absolute",top:-4,right:0,zIndex:2,padding:"4px 10px",background:showStdPanel?"#6B7280":"#0747A6",color:"#fff",border:"none",borderRadius:6,fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>{showStdPanel?"닫기":"조회"}</button>
         <Inp label="시가표준액 (공시가격)" value={stdPrice} onChange={setStdPrice} suffix="만원" placeholder="미입력 시 취득가 사용"/>
-      </div>
-      {showStdPanel&&(()=>{
+      </div>}
+      {showStdPanel&&(acqType==="gift"||acqType==="inherit"||acqType==="newbuild")&&(()=>{
         const selSt={width:"100%",padding:"10px 12px",border:"1.5px solid #E5E7EB",borderRadius:8,fontSize:14,fontFamily:"inherit",outline:"none",color:"#0a1628",boxSizing:"border-box",background:"#fff"};
         const detailLabel=(stdType==="land"||stdType==="house")?"지번":(stdType==="shop"||stdType==="office")?"건물명":"단지명";
         const isApt=stdType==="apt"||stdType==="officetel";
