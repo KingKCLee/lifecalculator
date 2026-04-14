@@ -1294,7 +1294,7 @@ function Placeholder({l}){return (<div style={{padding:40,textAlign:"center",col
 function RateTable({title,headers,rows}){
   const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
   return(
-    <div style={{marginTop:20,borderRadius:12,overflow:"hidden",border:"1px solid #dfe1e6"}}>
+    <div style={{marginTop:20,borderRadius:12,overflow:"hidden",border:"1px solid #dfe1e6",gridColumn:"1/-1"}}>
       <div style={{padding:"10px 14px",background:"#f4f5f7",fontSize:12,fontWeight:700,color:"#172B4D"}}>📊 {title}</div>
       <div style={{overflowX:"auto"}}>
         <table style={{width:"100%",borderCollapse:"collapse",fontSize:12,background:"#fff"}}>
@@ -3316,7 +3316,7 @@ body.lc-embed main{padding-top:0!important}
           <EduContent calc={calc} eduTab={eduTab}/>
         </div>
       </div>):(
-      <div className="calc-grid page-layout" style={{maxWidth:1200,margin:"0 auto",padding:isMo?"16px":"32px 24px",display:"grid",gridTemplateColumns:"minmax(0,1fr) 300px",gap:isMo?16:24,alignItems:"start"}}>
+      <div className="calc-grid page-layout" style={{maxWidth:1200,margin:"0 auto",padding:isMo?"16px":"32px 24px"}}>
         {/* 좌측: 헤더 + 서브탭 + 계산기 + PRO */}
         <div>
           <nav aria-label="breadcrumb" style={{fontSize:12,color:P.mt,marginBottom:8,display:"flex",alignItems:"center",gap:6}}>
@@ -3337,6 +3337,18 @@ body.lc-embed main{padding-top:0!important}
             <div className="sub-tabs" style={{display:"flex",gap:6,flexWrap:"wrap"}}>
               {filtered.map(c=>(<button key={c.id} onClick={()=>navigateCalc(cat,c.id)} style={{padding:"8px 16px",border:calc===c.id?"none":`1px solid ${P.bd}`,borderRadius:20,background:calc===c.id?P.pri:"rgba(255,255,255,0.75)",color:calc===c.id?"#fff":P.mt,fontSize:13,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0,marginBottom:4,display:"inline-flex",alignItems:"center",justifyContent:"center",height:36,boxSizing:"border-box"}}>{c.l}</button>))}
             </div>
+          </div>
+          {/* 2026.04.14 Expert Guide 탭 + 학습센터 콘텐츠 (계산기 상단 배치) */}
+          <div id="edu-content-top" style={{marginBottom:16,background:"#fff",border:`1px solid ${P.bd}`,borderRadius:12,padding:"14px 18px"}}>
+            <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:10,overflowX:"auto"}}>
+              {[{id:"rates",icon:"📊",l:"세율표·가이드"},{id:"regs",icon:"📋",l:"규정·법령"},{id:"tips",icon:"💡",l:"절세 팁"},{id:"glossary",icon:"📖",l:"용어 사전"}].map(t=>(
+                <button key={t.id} onClick={()=>setEduTab(t.id)} style={{padding:"7px 14px",borderRadius:20,border:eduTab===t.id?"none":`1px solid ${P.bd}`,background:eduTab===t.id?P.pri:"#fff",color:eduTab===t.id?"#fff":P.mt,fontSize:12,fontWeight:eduTab===t.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0}}>{t.icon} {t.l}</button>
+              ))}
+            </div>
+            <details open style={{marginTop:6}}>
+              <summary style={{cursor:"pointer",fontSize:13,fontWeight:700,color:P.pri,padding:"6px 0",listStyle:"none",userSelect:"none"}}>📘 Expert Guide 펼치기/접기</summary>
+              <div style={{marginTop:12,borderTop:`1px solid ${P.lt}`,paddingTop:12}}><EduContent calc={calc} eduTab={eduTab}/></div>
+            </details>
           </div>
           <div className="calc-container" style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:isMo?16:32,marginBottom:24,boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
             {isMo?(<MobileCalcWrapper><Comp isMo={true} onNav={navigateCalc}/></MobileCalcWrapper>):(<div><Comp isMo={false} onNav={navigateCalc}/></div>)}
@@ -3363,24 +3375,44 @@ body.lc-embed main{padding-top:0!important}
           </div>}
         </div>
 
-        {/* 2026.04.14 Expert Guide(EduContent) 위 · 학습센터(EduSidebar) 아래 */}
-        <div className="sidebar-right">
-          <div id="edu-content-top"><EduContent calc={calc} eduTab={eduTab}/></div>
-          <EduSidebar calc={calc} eduTab={eduTab} setEduTab={setEduTab}/>
-        </div>
       </div>)}
 
-      {/* Insights 섹션 */}
+      {/* 2026.04.14 오늘의 부동산 정보 (최근 세법 변경 3 + 계산 팁 3) */}
       {!isMo&&<div style={{background:P.bg,padding:"48px 24px"}}>
-        <div style={{fontSize:20,fontWeight:700,textAlign:"center",color:P.tx,marginBottom:24}}>📘 학습센터 인사이트</div>
-        <div className="insights-grid" style={{maxWidth:1200,margin:"0 auto",display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:16}}>
-          {[{n:"2020-2026",t:"규제 로드맵",d:"부동산 세제 변화 타임라인"},{n:"0.5%-12%",t:"세율 범위 가이드",d:"취득세부터 종부세까지 세율 안내"},{n:"150+",t:"용어 사전",d:"부동산 전문 용어 모음"},{n:"39개",t:"전문 계산기",d:"세금·대출·비용 종합 계산"}].map((c,i)=>(
-            <div key={i} style={{background:"#fff",borderRadius:14,padding:24,border:`1px solid ${P.bd}`,textAlign:"center"}}>
-              <div style={{fontSize:28,fontWeight:800,color:P.pri,marginBottom:4}}>{c.n}</div>
-              <div style={{fontSize:14,fontWeight:700,color:P.tx,marginBottom:4}}>{c.t}</div>
-              <div style={{fontSize:12,color:P.mt}}>{c.d}</div>
-            </div>
-          ))}
+        <div style={{maxWidth:1200,margin:"0 auto"}}>
+          <div style={{fontSize:20,fontWeight:700,textAlign:"center",color:P.tx,marginBottom:8}}>📰 오늘의 부동산 정보</div>
+          <div style={{fontSize:12,color:P.mt,textAlign:"center",marginBottom:24}}>최근 세법 변경사항과 유용한 계산 팁</div>
+          <div style={{fontSize:13,fontWeight:700,color:P.pri,marginBottom:10,padding:"0 4px"}}>🔔 최근 세법 변경</div>
+          <div className="insights-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:16,marginBottom:28}}>
+            {[
+              {t:"양도세 다주택 중과 유예",d:"2026.5.9까지 조정대상 2·3주택 중과 유예. 양도 시점 기준 자동 반영.",tag:"세금",date:"2026"},
+              {t:"수도권 주담대 한도 축소",d:"15억↓ 6억, 25억↓ 4억, 25억↑ 2억. LTV/DSR 계산기 반영 완료.",tag:"대출",date:"2026"},
+              {t:"기준금리 3.0% 유지",d:"2026.2.27 금통위 동결. 스트레스 DSR 변동 +1.5%p.",tag:"금리",date:"2026.02"}
+            ].map((c,i)=>(
+              <div key={i} style={{background:"#fff",borderRadius:14,padding:"20px 22px",border:`1px solid ${P.bd}`}}>
+                <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:8}}>
+                  <span style={{fontSize:10,fontWeight:700,color:"#fff",background:P.pri,padding:"2px 8px",borderRadius:10}}>{c.tag}</span>
+                  <span style={{fontSize:11,color:P.mt}}>{c.date}</span>
+                </div>
+                <div style={{fontSize:15,fontWeight:700,color:P.tx,marginBottom:6,lineHeight:1.4}}>{c.t}</div>
+                <div style={{fontSize:12,color:P.mt,lineHeight:1.6}}>{c.d}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{fontSize:13,fontWeight:700,color:P.pri,marginBottom:10,padding:"0 4px"}}>💡 유용한 계산 팁</div>
+          <div className="insights-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:16}}>
+            {[
+              {t:"시가표준액 꼭 입력하세요",d:"미입력 시 취득가액을 과세표준으로 간주. 공시가 1억↓ 주택은 중과 제외.",icon:"📋"},
+              {t:"생애최초 감면 12억까지",d:"2028.12.31까지 12억↓ 주택 취득세 최대 200만원 감면. 인구감소지역은 300만원.",icon:"🏠"},
+              {t:"스냅샷으로 시나리오 비교",d:"결과 박스 스냅샷 버튼으로 값 변경 전후 차이를 한눈에 비교.",icon:"📸"}
+            ].map((c,i)=>(
+              <div key={i} style={{background:"#fff",borderRadius:14,padding:"20px 22px",border:`1px solid ${P.bd}`}}>
+                <div style={{fontSize:22,marginBottom:8}}>{c.icon}</div>
+                <div style={{fontSize:15,fontWeight:700,color:P.tx,marginBottom:6,lineHeight:1.4}}>{c.t}</div>
+                <div style={{fontSize:12,color:P.mt,lineHeight:1.6}}>{c.d}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>}
     </>)}
