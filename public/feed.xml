@@ -5,8 +5,15 @@
     <link>https://xn--989a00a691bdfa717h.com/</link>
     <description>취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 등 39가지 무료 계산기. 매일 자동 업데이트.</description>
     <language>ko</language>
-    <lastBuildDate>Tue, 14 Apr 2026 19:15:28 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 14 Apr 2026 19:48:52 +0900</lastBuildDate>
     <atom:link href="https://xn--989a00a691bdfa717h.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+    <title>feat: CalcAcq 시가표준액 V-world 호출 JSONP 방식으로 변경 (CORS 우회)</title>
+    <link>https://xn--989a00a691bdfa717h.com/</link>
+    <description>feat: CalcAcq 시가표준액 V-world 호출 JSONP 방식으로 변경 (CORS 우회)</description>
+    <pubDate>Tue, 14 Apr 2026 19:48:52 +0900</pubDate>
+    <guid>https://xn--989a00a691bdfa717h.com/#update-202604141048</guid>
+  </item>
     <item>
     <title>feat: 시가표준액 2단계 조회 (worker PNU → 브라우저 V-world 직접 호출)</title>
     <link>https://xn--989a00a691bdfa717h.com/</link>
