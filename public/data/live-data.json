@@ -1168,6 +1168,12 @@
   "updateLog": [
     {
       "date": "2026.04.14",
+      "category": "대출",
+      "title": "feat(app): 서브메뉴 가로 스크롤 탭바 + 경락잔금대출 카테고리 이동",
+      "desc": "feat(app): 서브메뉴 가로 스크롤 탭바 + 경락잔금대출 카테고리 이동"
+    },
+    {
+      "date": "2026.04.14",
       "category": "전체",
       "title": "feat: 좌측 Resource Hub 네비 신설·풀폭 메인·모바일 햄버거",
       "desc": "feat: 좌측 Resource Hub 네비 신설·풀폭 메인·모바일 햄버거"
@@ -1463,12 +1469,6 @@
       "category": "세금",
       "title": "fix: 취득세 세율표를 결과박스 아래로 이동 - NextStep이 결과 바로 아래 위치",
       "desc": "fix: 취득세 세율표를 결과박스 아래로 이동 - NextStep이 결과 바로 아래 위치"
-    },
-    {
-      "date": "2026.04.06",
-      "category": "전체",
-      "title": "fix: 관련계산기 calc-container 바로 아래로 이동 (SEO 콘텐츠 위)",
-      "desc": "fix: 관련계산기 calc-container 바로 아래로 이동 (SEO 콘텐츠 위)"
     }
   ],
   "rates": {
