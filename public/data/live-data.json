@@ -1168,6 +1168,12 @@
   "updateLog": [
     {
       "date": "2026.04.14",
+      "category": "세금",
+      "title": "fix: 취득세 입력란 width 480·드롭다운 제거·특수조건/NextStep marginTop",
+      "desc": "fix: 취득세 입력란 width 480·드롭다운 제거·특수조건/NextStep marginTop"
+    },
+    {
+      "date": "2026.04.14",
       "category": "대출",
       "title": "fix: Tog 글자겹침 근본 해결 (ellipsis·minWidth:0·DSR 중복 레이블 제거·marginBottom:-8 잔재)",
       "desc": "fix: Tog 글자겹침 근본 해결 (ellipsis·minWidth:0·DSR 중복 레이블 제거·marginBottom:-8 잔재)"
@@ -1459,12 +1465,6 @@
       "category": "세금",
       "title": "fix: 취득세 계산기 레이아웃 단일 컬럼으로 통일 (양도세와 동일)",
       "desc": "fix: 취득세 계산기 레이아웃 단일 컬럼으로 통일 (양도세와 동일)"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "전체",
-      "title": "fix: 레이아웃 개선, 결과박스 너비고정, 학습센터 이동, 업데이트내역 숨김",
-      "desc": "fix: 레이아웃 개선, 결과박스 너비고정, 학습센터 이동, 업데이트내역 숨김"
     }
   ],
   "rates": {
