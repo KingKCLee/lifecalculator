@@ -1055,8 +1055,8 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
           ))}
         </div>
       </div>}
-      {/* 2026.04.14 취득 유형별 입력 레이블 분기 */}
-      <Slider label={acqType==="sale"?"취득가액 (실거래가)":acqType==="gift"||acqType==="inherit"?"시가인정액 또는 시가표준액":acqType==="newbuild"?"건축 원가":"취득가액"} value={price} onChange={sP} min={1000} max={500000} step={500}/>
+      {/* 2026.04.14 취득 유형별 입력 레이블 분기 — Slider → Inp 통일 (레이블 위·입력란 풀폭) */}
+      <Inp label={acqType==="sale"?"취득가액 (실거래가)":acqType==="gift"||acqType==="inherit"?"시가인정액 또는 시가표준액":acqType==="newbuild"?"건축 원가":"취득가액"} value={price} onChange={sP} suffix="만원" placeholder="예: 12500"/>
       {/* 2026.04.14 시가표준액: 직접 입력 + 외부 조회 링크 (API 연동 제거) */}
       <div style={{position:"relative"}}>
         <div style={{position:"absolute",top:-2,right:0,zIndex:2}}><TipModal title="시가표준액 (공시가격)"><p>미입력 시 취득가액을 시가표준액으로 간주합니다.</p><ul style={{paddingLeft:20}}><li>취득가액보다 시가표준액이 크면 시가표준액이 과세표준</li><li>시가표준액 1억 미만이면 다주택 중과 제외</li><li>조정대상지역 증여 시 시가표준액 3억 초과하면 12% 중과</li></ul></TipModal></div>
