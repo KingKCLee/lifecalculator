@@ -1953,7 +1953,7 @@ function CalcMinWage({isMo=false,onNav=()=>{}}){
   const weeklyH=h*d,hasPay=weeklyH>=15,payH=hasPay?(weeklyH/d):0,totalWH=weeklyH+payH;
   const daily=hourly*h,monthly=Math.round(hourly*totalWH*w),yearly=monthly*12;
   const isVio=parseFloat(customH)>0&&parseFloat(customH)<MIN_HOURLY;
-  return(<div>
+  return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}>
     <div>
       {!isMo&&<h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>최저임금 계산기</h3>}
       <div style={{padding:"12px 16px",background:"#E6F1FB",borderRadius:10,marginBottom:16,fontSize:13,color:"#0747A6",fontWeight:600}}>2026년 최저임금: <strong>시급 {MIN_HOURLY.toLocaleString()}원</strong></div>
