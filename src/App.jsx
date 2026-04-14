@@ -116,6 +116,11 @@ const IconNews = ({c="#0747A6"}={}) => _svg(c, <><rect x="3" y="5" width="14" he
 const IconBank = ({c="#0747A6"}={}) => _svg(c, <><path d="M3 10h18L12 3z"/><path d="M5 10v9M10 10v9M14 10v9M19 10v9"/><path d="M3 21h18"/></>);
 const IconQ = ({c="#0747A6"}={}) => _svg(c, <><circle cx="12" cy="12" r="9"/><path d="M9 9a3 3 0 1 1 4 2.8c-.8.4-1 1.2-1 2.2"/><path d="M12 17v.5"/></>);
 const IconChat = ({c="#FEE500"}={}) => _svg(c, <><path d="M4 5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1h-8l-5 4v-4H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/></>);
+const IconPieChart = ({c="#0747A6"}={}) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a10 10 0 1 0 10 10h-10z"/><path d="M12 2v10l7-7A10 10 0 0 0 12 2z"/></svg>;
+const IconGauge = ({c="#0747A6"}={}) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 14l4-4"/><path d="M3.5 14a9 9 0 1 1 17 0"/><circle cx="12" cy="14" r="1"/></svg>;
+const IconWallet = ({c="#0747A6"}={}) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M16 12h4"/><path d="M3 7v-1a1 1 0 0 1 1-1h14"/></svg>;
+const IconHandshake = ({c="#0747A6"}={}) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 12l-3 3a2 2 0 1 1-3-3l5-5a3 3 0 0 1 4 0l2 2"/><path d="M13 12l3 3a2 2 0 1 0 3-3l-5-5"/><path d="M3 10l2 2"/><path d="M21 10l-2 2"/></svg>;
+const IconDocArrow = ({c="#0747A6"}={}) => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="14 3 14 9 20 9"/><path d="M9 17l3-3 3 3"/><path d="M12 14v6"/></svg>;
 function lcGetCalcInputs(){if(typeof document==="undefined")return[];const scopes=document.querySelectorAll('.calc-container, .mobile-calc-wrap');const out=[];scopes.forEach(s=>s.querySelectorAll('input[type="text"],input[type="number"]').forEach(el=>out.push(el)));return out;}
 function lcSetInputValue(el,val){try{const setter=Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype,'value').set;setter.call(el,val);el.dispatchEvent(new Event('input',{bubbles:true}));}catch{}}
 function lcEncodeInputs(){try{return btoa(encodeURIComponent(JSON.stringify(lcGetCalcInputs().map(el=>el.value))));}catch{return"";}}
@@ -2847,7 +2852,7 @@ function CalcGrid({navigateCalc,isMo}){
         <div key={g.cat} style={{background:"#fff",borderRadius:14,border:"1px solid #dfe1e6",overflow:"hidden",transition:"box-shadow .2s",boxShadow:isOpen?"0 4px 16px rgba(0,0,0,.06)":"none"}}>
           <div onClick={()=>toggleCat(g.cat)} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:isMo?"14px 16px":"16px 24px",cursor:"pointer",background:isOpen?g.color+"08":"#fff"}}>
             <div style={{display:"flex",alignItems:"center",gap:12}}>
-              <div style={{width:36,height:36,borderRadius:10,background:g.color+"15",display:"flex",alignItems:"center",justifyContent:"center"}}><div style={{width:14,height:14,borderRadius:3,background:g.color}}/></div>
+              <div style={{width:36,height:36,borderRadius:10,background:"#EFF6FF",display:"flex",alignItems:"center",justifyContent:"center"}}><div style={{width:14,height:14,borderRadius:3,background:"#0747A6"}}/></div>
               <div><div style={{fontSize:isMo?15:16,fontWeight:700,color:"#172B4D"}}>{g.label}</div><div style={{fontSize:12,color:"#6b778c"}}>{g.items.length}개</div></div>
             </div>
             <span style={{fontSize:14,color:"#6b778c",transition:"transform .2s",transform:isOpen?"rotate(180deg)":"none",display:"inline-block"}}>▼</span>
@@ -2856,7 +2861,7 @@ function CalcGrid({navigateCalc,isMo}){
             {g.items.map(item=>(<div key={item.id} onClick={()=>navigateCalc(g.cat,item.id)} style={{display:"flex",alignItems:"center",gap:12,padding:isMo?"12px":"14px 16px",borderRadius:10,cursor:"pointer",transition:"all .15s",border:"1px solid transparent"}} onMouseEnter={e=>{e.currentTarget.style.background=g.color+"08";e.currentTarget.style.borderColor=g.color+"30"}} onMouseLeave={e=>{e.currentTarget.style.background="transparent";e.currentTarget.style.borderColor="transparent"}}>
               <div style={{width:6,height:6,borderRadius:"50%",background:g.color,flexShrink:0}}/>
               <div style={{flex:1}}><div style={{fontSize:isMo?13:14,fontWeight:600,color:"#172B4D"}}>{item.name}</div><div style={{fontSize:11,color:"#6b778c"}}>{item.desc}</div></div>
-              <span style={{fontSize:12,color:g.color,fontWeight:600}}>→</span>
+              <span style={{display:"inline-flex",alignItems:"center"}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
             </div>))}
           </div></div>}
         </div>
@@ -3810,14 +3815,14 @@ body.lc-embed main{padding-top:0!important}
         </div>}
       </>):(
         <div style={{display:"flex",alignItems:"center",height:64,padding:"0 24px",gap:16,position:"relative"}}>
-          <div onClick={()=>{navigateHome();setSearch("");}} style={{display:"flex",alignItems:"center",gap:8,cursor:"pointer",flexShrink:0}}>
-            <LogoSVG size={32}/>
-            <span style={{fontSize:20,fontWeight:800,color:"#0a1628",letterSpacing:-.3,marginLeft:4}}>생활계산기.com</span>
+          <div onClick={()=>{navigateHome();setSearch("");}} style={{display:"flex",alignItems:"center",gap:10,cursor:"pointer",flexShrink:0}}>
+            <LogoSVG size={40}/>
+            <span style={{fontSize:24,fontWeight:800,color:"#0a1628",letterSpacing:-.3,marginLeft:4}}>생활계산기.com</span>
           </div>
           <div style={{position:"absolute",left:"50%",top:0,bottom:0,transform:"translateX(-50%)",display:"flex",alignItems:"center",gap:4}}>
             {CATS.map(c=>{const items=CL.filter(cl=>cl.c===c.id);const active=cat===c.id&&page!=="home";const hot=hoverCat===c.id;return(
               <div key={c.id} onMouseEnter={()=>setHoverCat(c.id)} onMouseLeave={()=>setHoverCat(null)} style={{position:"relative"}}>
-                <button onClick={()=>{hCat(c.id);setPage("calc");}} style={{padding:"0 16px",border:"none",borderRadius:0,background:"transparent",color:active?"#0747A6":hot?"#0a1628":"#6B7280",fontSize:14,fontWeight:active?700:500,cursor:"pointer",fontFamily:"inherit",borderBottom:active?"3px solid #0747A6":"3px solid transparent",transition:"all .15s",height:64,display:"flex",alignItems:"center"}}>{c.l}</button>
+                <button onClick={()=>{hCat(c.id);setPage("calc");}} style={{padding:"0 16px",border:"none",borderRadius:0,background:"transparent",color:active?"#0747A6":hot?"#0a1628":"#6B7280",fontSize:16,fontWeight:active?700:600,cursor:"pointer",fontFamily:"inherit",borderBottom:active?"3px solid #0747A6":"3px solid transparent",transition:"all .15s",height:64,display:"flex",alignItems:"center"}}>{c.l}</button>
                 {hot&&<div style={{position:"absolute",top:"100%",left:0,paddingTop:0,zIndex:1000}}>
                   <div style={{background:"#fff",borderRadius:"0 0 8px 8px",border:"1px solid #E5E7EB",borderTop:"none",boxShadow:"0 8px 24px rgba(0,0,0,0.12)",padding:"8px 0",minWidth:220}}>
                     <div style={{padding:"8px 16px 6px",fontSize:11,fontWeight:700,color:"#6B7280",letterSpacing:1}}>{c.l} — {items.length}개</div>
@@ -3903,14 +3908,14 @@ body.lc-embed main{padding-top:0!important}
         <h2 style={{fontSize:isMo?22:28,fontWeight:800,color:"#172B4D",letterSpacing:-1,margin:"0 0 8px"}}>인기 계산기</h2>
         <p style={{fontSize:15,color:"#6b778c",margin:"0 0 32px"}}>가장 많이 사용하는 계산기</p>
         <div style={{display:"grid",gridTemplateColumns:isMo?"repeat(2,1fr)":"repeat(4,1fr)",gap:isMo?10:16,maxWidth:1200,margin:"0 auto"}}>
-          {[{id:"acquisition",bg:"#deebff",svg:<svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M3 12l9-8 9 8" stroke="#0747A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M5 10v8a1 1 0 001 1h12a1 1 0 001-1v-8" stroke="#0747A6" strokeWidth="2"/></svg>},
-            {id:"transfer",bg:"#e3fcef",svg:<svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 2v14m0 0l-4-4m4 4l4-4" stroke="#00875A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><circle cx="12" cy="20" r="2" fill="#00875A"/></svg>},
-            {id:"inctax",bg:"#fff0e0",svg:<svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" stroke="#FF8B00" strokeWidth="2"/><rect x="9" y="3" width="6" height="4" rx="1" stroke="#FF8B00" strokeWidth="2"/><path d="M9 12h6M9 16h4" stroke="#FF8B00" strokeWidth="2" strokeLinecap="round"/></svg>},
-            {id:"yearend",bg:"#e3fcef",svg:<svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2z" stroke="#00875A" strokeWidth="2"/><path d="M9 12l2 2 4-4" stroke="#00875A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>},
-            {id:"dsr",bg:"#fff0e0",svg:<svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="3" y="12" width="4" height="8" rx="1" fill="#FF8B00"/><rect x="10" y="8" width="4" height="12" rx="1" fill="#FF8B00"/><rect x="17" y="4" width="4" height="16" rx="1" fill="#FF8B00"/></svg>},
-            {id:"netsalary",bg:"#fff0e0",svg:<svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="2" y="6" width="20" height="12" rx="2" stroke="#FF8B00" strokeWidth="2"/><path d="M12 9v6M9 12h6" stroke="#FF8B00" strokeWidth="2" strokeLinecap="round"/></svg>},
-            {id:"commission",bg:"#eae6ff",svg:<svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M7 11l3 3 7-7" stroke="#6554C0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><rect x="3" y="3" width="18" height="18" rx="4" stroke="#6554C0" strokeWidth="2"/></svg>},
-            {id:"pension",bg:"#eae6ff",svg:<svg width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#6554C0" strokeWidth="2"/><path d="M4 20c0-4 4-7 8-7s8 3 8 7" stroke="#6554C0" strokeWidth="2" strokeLinecap="round"/></svg>}
+          {[{id:"acquisition",bg:"#EFF6FF",svg:<IconHome/>},
+            {id:"transfer",bg:"#EFF6FF",svg:<IconDocArrow/>},
+            {id:"inctax",bg:"#EFF6FF",svg:<IconPieChart/>},
+            {id:"yearend",bg:"#EFF6FF",svg:<IconCal/>},
+            {id:"dsr",bg:"#EFF6FF",svg:<IconGauge/>},
+            {id:"netsalary",bg:"#EFF6FF",svg:<IconWallet/>},
+            {id:"commission",bg:"#EFF6FF",svg:<IconHandshake/>},
+            {id:"pension",bg:"#EFF6FF",svg:<IconUser/>}
           ].map(p=>{
             const info=CL.find(c=>c.id===p.id);
             return(<div key={p.id} onClick={()=>goCalc(p.id)} style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:isMo?"16px 8px":"32px 24px",textAlign:"center",cursor:"pointer",transition:"all .25s",minHeight:"auto"}}
@@ -4116,7 +4121,7 @@ body.lc-embed main{padding-top:0!important}
           <LogoSVG size={40}/>
           <span style={{fontSize:20,fontWeight:800,color:"#0747A6",letterSpacing:-.3}}>생활계산기.com</span>
         </div>
-        <div style={{fontSize:13,color:"#6B7280",lineHeight:1.6,maxWidth:640}}>생활 속 세금·대출·비용 종합 계산 플랫폼</div>
+        <div style={{fontSize:13,color:"#6B7280",lineHeight:1.6,maxWidth:640}}>생활 속 세금·대출·비용·부동산 종합 계산 플랫폼</div>
         <div style={{fontSize:12,color:"#6B7280",lineHeight:1.6,maxWidth:640}}>본 계산기는 참고용이며, 실제 세금·수수료는 세무사 또는 관할 기관에 반드시 확인하시기 바랍니다.</div>
         <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:20,flexWrap:"wrap",marginTop:12}}>
           {[{l:"면책조항",k:"disclaimer"},{l:"자료실",k:"resource"},{l:"개인정보처리방침",k:"privacy"},{l:"문의",k:"contact"}].map(item=><span key={item.k} onClick={()=>navigateLegal(item.k)} style={{fontSize:13,color:"#6B7280",cursor:"pointer"}} onMouseEnter={e=>e.currentTarget.style.color="#0a1628"} onMouseLeave={e=>e.currentTarget.style.color="#6B7280"}>{item.l}</span>)}
