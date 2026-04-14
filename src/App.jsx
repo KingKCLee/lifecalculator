@@ -823,10 +823,89 @@ function LiveNewsCards(){
   ))}</>);
 }
 
+/* ═══ 시가표준액 조회 모달 (lc-realestate-worker/standard-price) ═══ */
+function StdPriceLookupModal({onClose,onApply}){
+  const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
+  const[type,setType]=useState("apt");
+  const[sido,setSido]=useState("");
+  const[sigungu,setSigungu]=useState("");
+  const[dong,setDong]=useState("");
+  const[detail,setDetail]=useState("");
+  const[unit,setUnit]=useState("");
+  const[loading,setLoading]=useState(false);
+  const[err,setErr]=useState(null);
+  const[result,setResult]=useState(null);
+  const TYPES=[
+    {v:"apt",l:"공동주택",sub:"아파트·빌라·연립",detailLabel:"단지명",needUnit:true},
+    {v:"house",l:"단독주택",sub:"단독·다가구",detailLabel:"지번",needUnit:false},
+    {v:"officetel",l:"오피스텔",sub:"",detailLabel:"단지명",needUnit:false},
+    {v:"shop",l:"상가",sub:"",detailLabel:"건물명",needUnit:false},
+    {v:"office",l:"사무실",sub:"",detailLabel:"건물명",needUnit:false},
+    {v:"land",l:"토지",sub:"",detailLabel:"지번",needUnit:false}
+  ];
+  const cur=TYPES.find(t=>t.v===type)||TYPES[0];
+  const canLookup=sido&&sigungu&&dong&&detail&&(!cur.needUnit||unit);
+  const lookup=async()=>{
+    setLoading(true);setErr(null);setResult(null);
+    try{
+      const qs=new URLSearchParams({type,sido,sigungu,dong,detail,...(cur.needUnit?{unit}:{})}).toString();
+      const r=await fetch(LC_REALESTATE_WORKER+"/standard-price?"+qs);
+      const j=await r.json().catch(()=>({}));
+      if(r.ok&&(j.stdPrice||j.price||j.amount)){
+        const val=j.stdPrice||j.price||j.amount;
+        setResult({val,label:j.address||(sido+" "+sigungu+" "+dong+" "+detail+(unit?" "+unit:""))});
+      }else{
+        setErr(j.error||"조회 결과가 없습니다. 직접 입력을 이용해주세요.");
+      }
+    }catch{setErr("네트워크 오류로 조회할 수 없습니다.");}
+    finally{setLoading(false);}
+  };
+  const apply=()=>{if(result){onApply(Math.round((result.val||0)/10000));onClose();}};
+  const inpSt={width:"100%",padding:"10px 12px",border:"1.5px solid #E5E7EB",borderRadius:8,fontSize:14,fontFamily:"inherit",outline:"none",color:"#0a1628",boxSizing:"border-box"};
+  return(<div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(10,22,40,.5)",zIndex:10003,display:"flex",alignItems:"center",justifyContent:"center",padding:16}}>
+    <div onClick={e=>e.stopPropagation()} style={{background:"#fff",borderRadius:16,padding:24,maxWidth:520,width:"100%",maxHeight:"85vh",overflowY:"auto",position:"relative",fontFamily:"inherit"}}>
+      <button onClick={onClose} aria-label="닫기" style={{position:"absolute",top:12,right:12,background:"none",border:"none",fontSize:22,cursor:"pointer",color:"#6B7280"}}>✕</button>
+      <div style={{fontSize:18,fontWeight:800,color:"#0a1628",marginBottom:4}}>시가표준액 조회</div>
+      <div style={{fontSize:12,color:"#6B7280",marginBottom:16}}>공시가격·기준시가를 자동으로 불러옵니다</div>
+      <Tog label="부동산 유형" value={type} onChange={v=>{setType(v);setDetail("");setUnit("");setResult(null);setErr(null);}} options={TYPES.map(t=>({value:t.v,label:t.l+(t.sub?" ("+t.sub+")":"")}))}/>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:10}}>
+        <div>
+          <label style={lblSt(isMo)}>시/도</label>
+          <input type="text" value={sido} onChange={e=>setSido(e.target.value)} placeholder="예: 서울특별시" style={inpSt}/>
+        </div>
+        <div>
+          <label style={lblSt(isMo)}>시/군/구</label>
+          <input type="text" value={sigungu} onChange={e=>setSigungu(e.target.value)} placeholder="예: 강남구" style={inpSt}/>
+        </div>
+      </div>
+      <div style={{marginBottom:10}}>
+        <label style={lblSt(isMo)}>읍/면/동</label>
+        <input type="text" value={dong} onChange={e=>setDong(e.target.value)} placeholder="예: 역삼동" style={inpSt}/>
+      </div>
+      <div style={{marginBottom:10}}>
+        <label style={lblSt(isMo)}>{cur.detailLabel}</label>
+        <input type="text" value={detail} onChange={e=>setDetail(e.target.value)} placeholder={cur.detailLabel+" 입력"} style={inpSt}/>
+      </div>
+      {cur.needUnit&&<div style={{marginBottom:10}}>
+        <label style={lblSt(isMo)}>동/호 (예: 101동 1503호)</label>
+        <input type="text" value={unit} onChange={e=>setUnit(e.target.value)} placeholder="동/호 입력" style={inpSt}/>
+      </div>}
+      <button onClick={lookup} disabled={!canLookup||loading} style={{width:"100%",marginTop:8,padding:"12px 16px",background:canLookup&&!loading?"#0747A6":"#E5E7EB",color:"#fff",border:"none",borderRadius:10,fontSize:14,fontWeight:700,cursor:canLookup&&!loading?"pointer":"not-allowed",fontFamily:"inherit"}}>{loading?"조회 중…":"시가표준액 조회"}</button>
+      {err&&<div style={{marginTop:12,padding:"10px 14px",background:"#FFEBE6",border:"1px solid #FFBDAD",borderRadius:8,fontSize:12,color:"#BF2600",lineHeight:1.5}}>{err}</div>}
+      {result&&<div style={{marginTop:14,padding:"14px 16px",background:"#EFF6FF",border:"1px solid #0747A6",borderRadius:10}}>
+        <div style={{fontSize:11,color:"#6B7280",marginBottom:4}}>{result.label}</div>
+        <div style={{fontSize:22,fontWeight:800,color:"#0747A6",marginBottom:10,fontVariantNumeric:"tabular-nums"}}>{"₩"+Number(result.val).toLocaleString("ko-KR")}</div>
+        <button onClick={apply} style={{width:"100%",padding:"10px 14px",background:"#0747A6",color:"#fff",border:"none",borderRadius:8,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>이 금액으로 적용</button>
+      </div>}
+    </div>
+  </div>);
+}
+
 /* ═══ 계산기 ═══ */
 
 function CalcAcq({isMo=false,onNav=()=>{}}){
   const[acqType,sAT]=useState("sale");const[realType,sRT]=useState("house");const[areaType,sAreaType]=useState("85");const[price,sP]=useState("12500");const[stdPrice,setStdPrice]=useState("");const[own,sO]=useState("1");const[isTempTwo,sTT]=useState("no");const[inheritNone,sIN]=useState("no");const[chipDesc,setChipDesc]=useState(null);
+  const[showStdModal,setShowStdModal]=useState(false);
   const showChipPanel=(label,desc)=>{if(_popoverTimer){clearTimeout(_popoverTimer);_popoverTimer=null;}setChipDesc({key:label,label,desc,color:"#172B4D",bg:"#f4f5f7",bc:"#dfe1e6"});};
   const hideChipPanel=()=>{_popoverTimer=setTimeout(()=>setChipDesc(null),200);};
   const[corporation,setCorporation]=useState(false);const[firstDistribution,setFirstDistribution]=useState(false);const[conArea,setConArea]=useState(false);const[metro,setMetro]=useState(false);const[populationDecline,setPopulationDecline]=useState(false);const[firstOfLife,setFirstOfLife]=useState(false);const[heavyTaxExclude,setHeavyTaxExclude]=useState(false);const[spouseChildGive,setSpouseChildGive]=useState(false);const[cultivation,setCultivation]=useState(false);const[birthChild,setBirthChild]=useState(false);
@@ -964,7 +1043,12 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
         </div>
       </div>}
       <Slider label={acqType==="gift"?"시가인정액":acqType==="inherit"?"시가표준액":acqType==="newbuild"?"건축 원가":"취득가액"} value={price} onChange={sP} min={1000} max={500000} step={500}/>
-      <div style={{position:"relative"}}><div style={{position:"absolute",top:-2,right:0,zIndex:2}}><TipModal title="시가표준액 (공시가격)"><p>미입력 시 취득가액을 시가표준액으로 간주합니다.</p><ul style={{paddingLeft:20}}><li>취득가액보다 시가표준액이 크면 시가표준액이 과세표준</li><li>시가표준액 1억 미만이면 다주택 중과 제외</li><li>조정대상지역 증여 시 시가표준액 3억 초과하면 12% 중과</li></ul><p>부동산 공시가격 알리미(realtyprice.kr)에서 확인 가능합니다.</p></TipModal></div><Inp label="시가표준액 (공시가격)" value={stdPrice} onChange={setStdPrice} suffix="만원" placeholder="미입력 시 취득가 사용"/></div>
+      <div style={{position:"relative"}}>
+        <div style={{position:"absolute",top:-2,right:72,zIndex:2}}><TipModal title="시가표준액 (공시가격)"><p>미입력 시 취득가액을 시가표준액으로 간주합니다.</p><ul style={{paddingLeft:20}}><li>취득가액보다 시가표준액이 크면 시가표준액이 과세표준</li><li>시가표준액 1억 미만이면 다주택 중과 제외</li><li>조정대상지역 증여 시 시가표준액 3억 초과하면 12% 중과</li></ul><p>부동산 공시가격 알리미(realtyprice.kr)에서 확인 가능합니다.</p></TipModal></div>
+        <button type="button" onClick={()=>setShowStdModal(true)} style={{position:"absolute",top:-4,right:0,zIndex:2,padding:"4px 10px",background:"#0747A6",color:"#fff",border:"none",borderRadius:6,fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>조회</button>
+        <Inp label="시가표준액 (공시가격)" value={stdPrice} onChange={setStdPrice} suffix="만원" placeholder="미입력 시 취득가 사용"/>
+      </div>
+      {showStdModal&&<StdPriceLookupModal onClose={()=>setShowStdModal(false)} onApply={v=>setStdPrice(String(v))}/>}
       {isHouse&&acqType==="sale"&&<Radio label="취득 후 주택 수" value={own} onChange={sO} options={[{value:"1",label:"1주택"},{value:"2",label:"2주택"},{value:"3",label:"3주택"},{value:"4",label:"4주택+"}]} cols={4}/>}
       {(showCorp||showFirstDist||showConArea||showMetro||showPopDecline||showHeavyExclude||showSpouseChild||showFirstOfLife||showCultivation||showBirthChild)&&<div style={{marginBottom:14}}>
         <div style={{fontSize:11,fontWeight:600,color:"#6b778c",letterSpacing:.5,textTransform:"uppercase",marginBottom:8}}>특수 조건 <span style={{fontWeight:400,color:"#aaa",fontSize:10}}>{isMo?"항목을 누르면 설명이 나타납니다":"마우스를 올리면 설명이 나타납니다"}</span></div>
