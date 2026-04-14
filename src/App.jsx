@@ -2494,8 +2494,8 @@ function CalcIncTax({isMo=false,onNav=()=>{}}){const[incType,sIT]=useState("sala
     <Inp label={incType==="salary"?"총급여(연봉)":"총수입금액"} value={gross} onChange={sGross} suffix="만원" placeholder={incType==="salary"?"예: 5000":"예: 8000"} error={!gross||gross==="0"}/>
     {(incType==="biz"||incType==="freelance")&&<><Tog label="경비 산정 방식" value={bizType} onChange={sBT} options={[{value:"simple",label:"단순경비율 적용"},{value:"actual",label:"실제 경비 입력"}]}/>{bizType==="simple"?<Sel label="단순경비율" value={bizRate} onChange={sBR} options={[{value:"90",label:"90% (소매업)"},{value:"80",label:"80% (음식점)"},{value:"70",label:"70% (제조업)"},{value:"60",label:"60% (서비스업)"},{value:"50",label:"50% (전문직)"},{value:"40",label:"40% (고소득 전문직)"}]}/>:<Inp label="필요경비 합계" value={deductions} onChange={sDed} suffix="만원" placeholder="실제 지출한 경비"/>}</>}
     {incType==="etc"&&<Inp label="필요경비" value={deductions} onChange={sDed} suffix="만원" note="기타소득은 수입의 60%와 실제 경비 중 큰 금액 적용"/>}
-    {/* 2026.04.14 인적공제는 근로소득(salary)에만 노출 — 사업/프리랜서/기타는 숨김 */}
-    {incType==="salary"&&<div style={{background:P.lt,borderRadius:12,padding:16,marginBottom:16}}>
+    {/* 2026.04.15 인적공제는 모든 소득유형에 공통 적용 (소득세법 §50~§52) */}
+    <div style={{background:P.lt,borderRadius:12,padding:16,marginBottom:16}}>
       <div style={{fontSize:14,fontWeight:700,color:P.tx,marginBottom:12,display:"flex",alignItems:"center",gap:6}}><IconUser/> 인적공제 대상</div>
       <div style={{display:"grid",gridTemplateColumns:"1fr",gap:10}}>
         <Inp label="배우자" value={spouse} onChange={sSpouse} suffix="명" placeholder="0 또는 1" note="연소득 100만원 이하"/>
@@ -2504,7 +2504,7 @@ function CalcIncTax({isMo=false,onNav=()=>{}}){const[incType,sIT]=useState("sala
         <Inp label="70세 이상 (경로우대)" value={senior} onChange={sSenior} suffix="명" placeholder="0" note="추가 100만원"/>
         <Inp label="장애인" value={disabled} onChange={sDisabled} suffix="명" placeholder="0" note="추가 200만원"/>
       </div>
-    </div>}
+    </div>
     {incType==="salary"&&<div style={{padding:"12px 16px",background:P.lt,borderRadius:10,fontSize:12,color:"#6b778c",lineHeight:1.6,marginTop:8}}>※ 4대보험료, 신용카드·의료비·교육비 등 특별공제는 반영되지 않은 간이 계산입니다.</div>}
   </div><div><RP miss={tW(gross)>0?null:MI.inctax} title="종합소득세"
       deadline="신고기한: 매년 5월 1일 ~ 5월 31일 (성실신고확인 시 6월 30일)"
