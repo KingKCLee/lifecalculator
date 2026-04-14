@@ -4900,7 +4900,7 @@ body.lc-embed main{padding-top:0!important}
           </div>
           {tabScroll.right&&<div style={{position:"absolute",right:16,top:0,bottom:8,width:32,background:"linear-gradient(to left, #fff 50%, transparent)",zIndex:2,pointerEvents:"none",display:"flex",alignItems:"center",justifyContent:"flex-end"}}><span style={{fontSize:16,color:"#0747A6",fontWeight:700,lineHeight:1}}>›</span></div>}
         </div>
-        <MobileCalcWrapper><Comp isMo={true}/><NextStep calcId={calc} onNav={navigateCalc} isMo={true}/></MobileCalcWrapper>
+        <MobileCalcWrapper><Comp key={calc} isMo={true}/><NextStep calcId={calc} onNav={navigateCalc} isMo={true}/></MobileCalcWrapper>
         <div style={{padding:"0 12px 24px"}}>
           {SEO_CONTENT[calc]&&<div style={{padding:"20px 16px",background:"#fff",borderRadius:12,border:"1px solid #dfe1e6",marginBottom:12}}><div className="seo" dangerouslySetInnerHTML={{__html:SEO_CONTENT[calc]}} style={{fontSize:14,color:"#172B4D",lineHeight:1.8}}/></div>}
           <EduContent calc={calc} eduTab={eduTab}/>
@@ -4930,7 +4930,7 @@ body.lc-embed main{padding-top:0!important}
             <button onClick={()=>{const slug=SLUGS[calc]||calc;const url=window.location.origin+"/"+encodeURIComponent(slug)+"?embed=y";const code='<iframe src="'+url+'" style="width:100%;height:700px;border:none" title="생활계산기 '+(CL.find(c=>c.id===calc)?.l||"")+'"></iframe>';if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(code).then(()=>showToast("퍼가기 코드가 복사되었습니다")).catch(()=>showToast("복사 실패"));}else{const ta=document.createElement("textarea");ta.value=code;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);showToast("퍼가기 코드가 복사되었습니다");}}} aria-label="퍼가기 코드 복사" style={{background:"#fff",border:"1px solid #dfe1e6",borderRadius:20,padding:"6px 12px",cursor:"pointer",fontSize:13,fontWeight:700,color:"#6b778c",display:"inline-flex",alignItems:"center",gap:4,fontFamily:"inherit"}}><IconPin/> 퍼가기</button>
           </div>
           <div className="calc-container" style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:isMo?16:32,marginBottom:24,boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
-            {isMo?(<MobileCalcWrapper><Comp isMo={true} onNav={navigateCalc}/></MobileCalcWrapper>):(<div><Comp isMo={false} onNav={navigateCalc}/></div>)}
+            {isMo?(<MobileCalcWrapper><Comp key={calc} isMo={true} onNav={navigateCalc}/></MobileCalcWrapper>):(<div><Comp key={calc} isMo={false} onNav={navigateCalc}/></div>)}
           </div>
 
           <MarketIntel isMo={isMo}/>
