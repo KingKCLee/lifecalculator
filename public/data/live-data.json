@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.14",
       "category": "전체",
+      "title": "refactor: REGION_DATA 인라인 상수 제거·public/data/lawd.json 동적 로드·드릴다운 UI 복원",
+      "desc": "refactor: REGION_DATA 인라인 상수 제거·public/data/lawd.json 동적 로드·드릴다운 UI 복원"
+    },
+    {
+      "date": "2026.04.14",
+      "category": "전체",
       "title": "fix: Tog/Radio flexWrap:wrap 적용·홈화면 62가지 문구 통일",
       "desc": "fix: Tog/Radio flexWrap:wrap 적용·홈화면 62가지 문구 통일"
     },
@@ -1460,12 +1466,6 @@
       "category": "대출",
       "title": "fix: 계산기 Empty fallback 제거 → RP 항시 렌더 + DSR/DTI deadline 추가",
       "desc": "fix: 계산기 Empty fallback 제거 → RP 항시 렌더 + DSR/DTI deadline 추가"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "전체",
-      "title": "style: RP 컴포넌트 파란 그라디언트 카드 디자인 복원",
-      "desc": "style: RP 컴포넌트 파란 그라디언트 카드 디자인 복원"
     }
   ],
   "rates": {
