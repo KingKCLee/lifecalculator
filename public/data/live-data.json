@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.14",
       "category": "전체",
+      "title": "fix: RP 그라디언트·Expert Guide 오버레이 전용·헤더 강조·SVG 교체 외 24건",
+      "desc": "fix: RP 그라디언트·Expert Guide 오버레이 전용·헤더 강조·SVG 교체 외 24건"
+    },
+    {
+      "date": "2026.04.14",
+      "category": "전체",
       "title": "feat: 헤더/LeftNav/컬러 개편·풀폭 레이아웃·Market Data 오버레이",
       "desc": "feat: 헤더/LeftNav/컬러 개편·풀폭 레이아웃·Market Data 오버레이"
     },
@@ -1463,12 +1469,6 @@
       "category": "전체",
       "title": "a11y: 색상 대비 개선 - 푸터 텍스트 가시성 향상",
       "desc": "a11y: 색상 대비 개선 - 푸터 텍스트 가시성 향상"
-    },
-    {
-      "date": "2026.04.06",
-      "category": "전체",
-      "title": "perf: preconnect 추가, robots.txt 오류 수정, AdSense/GA4 defer 처리",
-      "desc": "perf: preconnect 추가, robots.txt 오류 수정, AdSense/GA4 defer 처리"
     }
   ],
   "rates": {
