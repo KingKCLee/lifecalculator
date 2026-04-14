@@ -1033,12 +1033,14 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
           {[["sale","매매"],["gift","증여"],["inherit","상속"],["newbuild","원시"],["corp","법인"]].map(([v,l],i,arr)=>(<button key={v} onClick={()=>sAT(v)} style={{flex:1,padding:"10px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:acqType===v?"#0747A6":"#fff",color:acqType===v?"#fff":"#505f79",fontWeight:acqType===v?700:500,fontSize:isMo?12:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s"}}>{l}</button>))}
         </div>
       </div>
+      <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"16px 0"}}/>
       <div style={{marginBottom:16}}>
         <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>부동산 유형<TipModal title="부동산 유형"><p>주거용 오피스텔인 경우에만 '오피스텔' 선택. 업무용은 '그 외'. 농지는 2년 이상 자경 시 감면 혜택.</p></TipModal></label>
         <div style={{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6"}}>
           {[["house","주택"],["officetel","오피스텔"],["farmLand","농지"],["building","그 외"]].map(([v,l],i,arr)=>(<button key={v} onClick={()=>sRT(v)} style={{flex:1,padding:"10px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:realType===v?"#0747A6":"#fff",color:realType===v?"#fff":"#505f79",fontWeight:realType===v?700:500,fontSize:isMo?12:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s"}}>{l}</button>))}
         </div>
       </div>
+      <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"16px 0"}}/>
       {(realType==="house"||realType==="officetel")&&<div style={{marginBottom:16}}>
         <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>전용면적</label>
         <div style={{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6"}}>
@@ -1047,6 +1049,7 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
           ))}
         </div>
       </div>}
+      {(realType==="house"||realType==="officetel")&&<hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"16px 0"}}/>}
       {/* 2026.04.14 취득가액 — 인라인 레이아웃 (width:480) */}
       <div style={{marginBottom:12}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8,marginBottom:4,flexWrap:"wrap"}}>
@@ -1057,6 +1060,7 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
           </div>
         </div>
       </div>
+      <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"16px 0"}}/>
       {/* 2026.04.14 시가표준액 인라인 레이아웃 (Slider와 동일: 레이블 좌측 + 입력란 우측 같은 줄) */}
       <div style={{marginBottom:12}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8,marginBottom:4,flexWrap:"wrap"}}>
@@ -1071,7 +1075,8 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
       <div style={{marginBottom:16,maxWidth:480}}>
         <a href="https://www.realtyprice.kr:447/notice/main/mainBody.htm" target="_blank" rel="noopener noreferrer" style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,width:"100%",padding:"10px 14px",background:"#0747A6",color:"#fff",borderRadius:8,fontSize:13,fontWeight:700,textDecoration:"none",fontFamily:"inherit"}}>공시가격알리미에서 조회 →</a>
       </div>
-      {isHouse&&acqType==="sale"&&<Radio label="취득 후 주택 수" value={own} onChange={sO} options={[{value:"1",label:"1주택"},{value:"2",label:"2주택"},{value:"3",label:"3주택"},{value:"4",label:"4주택+"}]} cols={4}/>}
+      <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"16px 0"}}/>
+      {isHouse&&acqType==="sale"&&<><Radio label="취득 후 주택 수" value={own} onChange={sO} options={[{value:"1",label:"1주택"},{value:"2",label:"2주택"},{value:"3",label:"3주택"},{value:"4",label:"4주택+"}]} cols={4}/><hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"16px 0"}}/></>}
       {/* 2026.04.14 사치성재산 칩이 항상 보이도록 무조건 노출 (모든 취득유형에서 선택 가능) */}
       <div style={{marginTop:24,marginBottom:14}}>
         <div style={{fontSize:11,fontWeight:600,color:"#6b778c",letterSpacing:.5,textTransform:"uppercase",marginBottom:8}}>특수 조건 <span style={{fontWeight:400,color:"#aaa",fontSize:10}}>{isMo?"항목을 누르면 설명이 나타납니다":"마우스를 올리면 설명이 나타납니다"}</span></div>
