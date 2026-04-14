@@ -1064,16 +1064,13 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
       {/* 2026.04.14 시가표준액 인라인 레이아웃 (Slider와 동일: 레이블 좌측 + 입력란 우측 같은 줄) */}
       <div style={{marginBottom:12}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8,marginBottom:4,flexWrap:"wrap"}}>
-          <label style={{fontSize:isMo?13:14,fontWeight:600,color:"#0a1628",lineHeight:1.6,wordBreak:"keep-all"}}>시가표준액 (공시가격) <TipModal title="시가표준액 (공시가격)"><p>미입력 시 취득가액을 시가표준액으로 간주합니다.</p><ul style={{paddingLeft:20}}><li>취득가액보다 시가표준액이 크면 시가표준액이 과세표준</li><li>시가표준액 1억 미만이면 다주택 중과 제외</li><li>조정대상지역 증여 시 시가표준액 3억 초과하면 12% 중과</li></ul></TipModal></label>
+          <label style={{fontSize:isMo?13:14,fontWeight:600,color:"#0a1628",lineHeight:1.6,wordBreak:"keep-all"}}>시가표준액 (공시가격) <TipModal title="시가표준액 (공시가격)"><p>미입력 시 취득가액을 시가표준액으로 간주합니다.</p><ul style={{paddingLeft:20}}><li>취득가액보다 시가표준액이 크면 시가표준액이 과세표준</li><li>시가표준액 1억 미만이면 다주택 중과 제외</li><li>조정대상지역 증여 시 시가표준액 3억 초과하면 12% 중과</li></ul><p style={{marginTop:10}}>공시가격은 부동산공시가격알리미(realtyprice.kr)에서 조회하실 수 있습니다. <a href="https://www.realtyprice.kr" target="_blank" rel="noopener noreferrer" style={{color:"#0747A6",fontWeight:700,textDecoration:"none"}}>바로가기 →</a></p></TipModal></label>
           <div style={{display:"flex",alignItems:"center",gap:6}}>
             <input type="text" value={stdPrice?Number(String(stdPrice).replace(/,/g,"")).toLocaleString("ko-KR"):""} onChange={e=>{const raw=e.target.value.replace(/,/g,"");if(raw===""||/^\d+$/.test(raw))setStdPrice(raw);}} placeholder="미입력 시 취득가 사용" style={{width:480,maxWidth:"100%",textAlign:"right",padding:"8px 12px",border:"1.5px solid #dfe1e6",borderRadius:8,fontSize:15,fontWeight:700,color:P.tx,background:P.lt,outline:"none",fontFamily:"inherit"}}/>
             <span style={{fontSize:13,color:P.mt,fontWeight:500}}>만원</span>
           </div>
         </div>
         <div style={{fontSize:11,color:P.mt,lineHeight:1.6,wordBreak:"keep-all"}}>{acqType==="gift"||acqType==="inherit"?"취득가액이 없으므로 시가표준액 기준으로 계산합니다":acqType==="newbuild"?"시가표준액을 과세표준으로 계산합니다":"취득가액보다 시가표준액이 높으면 시가표준액이 과세표준이 됩니다"}</div>
-      </div>
-      <div style={{marginBottom:16,maxWidth:480}}>
-        <a href="https://www.realtyprice.kr:447/notice/main/mainBody.htm" target="_blank" rel="noopener noreferrer" style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,width:"100%",padding:"10px 14px",background:"#0747A6",color:"#fff",borderRadius:8,fontSize:13,fontWeight:700,textDecoration:"none",fontFamily:"inherit"}}>공시가격알리미에서 조회 →</a>
       </div>
       <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"16px 0"}}/>
       {isHouse&&acqType==="sale"&&<><Radio label="취득 후 주택 수" value={own} onChange={sO} options={[{value:"1",label:"1주택"},{value:"2",label:"2주택"},{value:"3",label:"3주택"},{value:"4",label:"4주택+"}]} cols={4}/><hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"16px 0"}}/></>}
@@ -3249,7 +3246,7 @@ function SidePanelOverlay({sidePanel,setSidePanel,calc,isMo,sideMarketNews,sideM
   const close=()=>setSidePanel(null);
   return(<>
     <div onClick={close} style={{position:"fixed",inset:0,background:"rgba(10,22,40,.35)",zIndex:9998}}/>
-    <aside style={{position:"fixed",top:64,left:isMo?0:200,width:isMo?"100%":400,maxWidth:"100vw",height:"calc(100vh - 64px)",background:"#fff",borderRight:"1px solid #E5E7EB",boxShadow:"4px 0 24px rgba(0,0,0,.12)",zIndex:9999,overflowY:"auto",fontFamily:"inherit"}}>
+    <aside style={{position:"fixed",top:64,left:isMo?0:280,width:isMo?"100%":400,maxWidth:"100vw",height:"calc(100vh - 64px)",background:"#fff",borderRight:"1px solid #E5E7EB",boxShadow:"4px 0 24px rgba(0,0,0,.12)",zIndex:9999,overflowY:"auto",fontFamily:"inherit"}}>
       <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"16px 20px",borderBottom:"1px solid #E5E7EB",position:"sticky",top:0,background:"#fff",zIndex:2}}>
         <div style={{fontSize:15,fontWeight:800,color:"#0a1628"}}>{titleMap[sidePanel]||""}</div>
         <button onClick={close} aria-label="닫기" style={{background:"none",border:"none",fontSize:22,cursor:"pointer",color:"#0a1628",padding:4,lineHeight:1}}>✕</button>
@@ -3455,7 +3452,7 @@ function LeftNav({isMo,navOpen,setNavOpen,navContent,setNavContent,effectiveUser
   const tx=isMo&&!navOpen?"translateX(-100%)":"none";
   return(<>
     {isMo&&navOpen&&<div onClick={()=>setNavOpen(false)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.5)",zIndex:9998}}/>}
-    <aside style={{position:"fixed",top:64,left:0,width:200,height:"calc(100vh - 64px)",background:"#FFFFFF",borderRight:"1px solid #E5E7EB",color:"#0a1628",display:"flex",flexDirection:"column",zIndex:50,fontFamily:"inherit",paddingTop:8,transform:tx,transition:"transform .25s ease",boxShadow:isMo?"4px 0 20px rgba(0,0,0,.12)":"none",overflowY:"auto"}}>
+    <aside className="lc-leftnav" style={{position:"fixed",top:64,left:0,width:280,height:"calc(100vh - 64px)",background:"#FFFFFF",borderRight:"1px solid #E5E7EB",color:"#0a1628",display:"flex",flexDirection:"column",zIndex:50,fontFamily:"inherit",paddingTop:8,transform:tx,transition:"transform .25s ease",boxShadow:isMo?"4px 0 20px rgba(0,0,0,.12)":"none",overflowY:"auto",scrollbarWidth:"none",msOverflowStyle:"none",wordBreak:"keep-all",overflowWrap:"anywhere"}}>
       {isMo&&<div style={{padding:"12px 22px",display:"flex",justifyContent:"flex-end"}}><button onClick={()=>setNavOpen(false)} aria-label="닫기" style={{background:"none",border:"none",color:"#0a1628",fontSize:22,cursor:"pointer",padding:0,lineHeight:1}}>✕</button></div>}
       <div style={{padding:"0 22px",marginTop:24,marginBottom:8,fontSize:11,fontWeight:700,letterSpacing:1.5,color:"#6B7280",textTransform:"uppercase"}}>RESOURCE HUB</div>
       <nav style={{flex:"1 1 auto",display:"flex",flexDirection:"column"}}>
@@ -3752,7 +3749,7 @@ export default function App(){
   const catInfo=CATS.find(c=>c.id===cat);
   const searchResults=search.trim()?CL.filter(c=>(c.l+"|"+(DESC[c.id]||"")).includes(search.trim())):[];
 
-  return(<div style={{minHeight:"100vh",background:"#FFFFFF",fontFamily:"'Pretendard','Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif",width:"100%",maxWidth:"100vw",overflowX:"hidden",paddingLeft:(isMo||page==="home")?0:200,paddingTop:64}}>
+  return(<div style={{minHeight:"100vh",background:"#FFFFFF",fontFamily:"'Pretendard','Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif",width:"100%",maxWidth:"100vw",overflowX:"hidden",paddingLeft:(isMo||page==="home")?0:280,paddingTop:64}}>
     <SidePanel/>
     {page!=="home"&&<LeftNav isMo={isMo} navOpen={navOpen} setNavOpen={setNavOpen} navContent={navContent} setNavContent={setNavContent} effectiveUser={effectiveUser} setAuthMode={setAuthMode} setShowAuth={setShowAuth} navigateMyPage={navigateMyPage} calc={calc}/>}
     {isMo&&<button onClick={()=>setNavOpen(true)} aria-label="메뉴 열기" style={{position:"fixed",top:10,left:10,zIndex:9997,width:40,height:40,background:"#0a1628",color:"#fff",border:"none",borderRadius:10,cursor:"pointer",fontSize:20,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 8px rgba(0,0,0,.2)"}}>☰</button>}
@@ -3765,6 +3762,7 @@ input,select,textarea{font-size:16px!important}
 input[type=range]{-webkit-appearance:none;height:6px;border-radius:3px;background:#dfe1e6;outline:none}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#0747A6;cursor:pointer;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2)}
 .sub-tabs::-webkit-scrollbar{display:none}
+.lc-leftnav::-webkit-scrollbar{display:none;width:0;height:0}
 button{transition:background .15s,border-color .15s,color .15s,transform .1s}
 button:active{transform:scale(0.98)}
 .sub-tabs{scrollbar-width:none;-ms-overflow-style:none}
@@ -4130,7 +4128,7 @@ body.lc-embed main{padding-top:0!important}
 
     </main>
     {/* 푸터 */}
-    <footer style={{background:"#F9FAFB",borderTop:"1px solid #E5E7EB",padding:"48px 24px",position:"relative",width:(isMo||page==="home")?"100%":"calc(100% + 200px)",marginLeft:(isMo||page==="home")?0:-200,boxSizing:"border-box",textAlign:"center"}}>
+    <footer style={{background:"#F9FAFB",borderTop:"1px solid #E5E7EB",padding:"48px 24px",position:"relative",width:(isMo||page==="home")?"100%":"calc(100% + 280px)",marginLeft:(isMo||page==="home")?0:-280,boxSizing:"border-box",textAlign:"center"}}>
       <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:12}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10}}>
           <LogoSVG size={40}/>
