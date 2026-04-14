@@ -515,8 +515,8 @@ function Tog({label,value,onChange,options}){
   const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
   return(<div style={{marginBottom:16}}>
     <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:8,letterSpacing:.5,textTransform:"uppercase"}}>{label}</label>
-    <div style={{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6"}}>
-      {options.map((o,i)=>(<button key={o.value} onClick={()=>onChange(o.value)} style={{flex:"1 1 auto",minWidth:isMo?48:72,padding:isMo?"11px 8px":"11px 12px",border:"none",borderRight:i<options.length-1?"1px solid #dfe1e6":"none",background:value===o.value?"#0747A6":"#fff",color:value===o.value?"#fff":"#505f79",fontSize:isMo?12:13,fontWeight:value===o.value?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",wordBreak:"keep-all",overflow:"hidden",textOverflow:"ellipsis",textAlign:"center",lineHeight:1.3,transition:"background .15s,color .15s"}}>{o.label}</button>))}
+    <div style={{display:"flex",flexWrap:"nowrap",borderRadius:10,overflow:"visible",border:"1.5px solid #dfe1e6"}}>
+      {options.map((o,i)=>(<button key={o.value} onClick={()=>onChange(o.value)} style={{flex:"1 1 auto",minWidth:isMo?60:80,padding:isMo?"11px 6px":"11px 10px",border:"none",borderRight:i<options.length-1?"1px solid #dfe1e6":"none",background:value===o.value?"#0747A6":"#fff",color:value===o.value?"#fff":"#505f79",fontSize:isMo?11:13,fontWeight:value===o.value?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",wordBreak:"keep-all",overflow:"visible",textAlign:"center",lineHeight:1.3,transition:"background .15s,color .15s"}}>{o.label}</button>))}
     </div>
   </div>);
 }
@@ -566,6 +566,8 @@ function getConsultFunnel(calcId,total){
   return null;
 }
 function RP({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlineLinkLabel,alertMsg,alertType="info",consultFunnel}){
+  // 2026.04.14 입력값 없을 때(isExample) 결과 0 + 빈 항목으로 표시
+  if(isExample){total=0;items=[];sub="입력값을 입력하면 결과가 표시됩니다";}
   const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
   const rpKey=typeof window!=="undefined"?window.location.pathname:"";
   // 2026.04.14 상담 퍼널: pathname → calcId 역추적 후 규칙 매칭, prop override 우선
@@ -2196,7 +2198,7 @@ function EduSidebar({calc:calcId,gTab,setGTab}){
       </div>
       <div style={{fontSize:11,letterSpacing:1,color:P.mt,marginBottom:16}}>규정 가이드</div>
       {[{id:"rates",icon:"📊",l:"세율표·가이드"},{id:"regs",icon:"📋",l:"규정·법령"},{id:"tips",icon:"💡",l:"절세 팁"},{id:"glossary",icon:"📖",l:"용어 사전"}].map(t=>(
-        <button key={t.id} onClick={()=>setGTab(t.id)}
+        <button key={t.id} onClick={()=>{setGTab(t.id);try{document.getElementById('edu-content-top')?.scrollIntoView({behavior:'smooth',block:'start'});}catch{}}}
           style={{width:"100%",padding:"10px 12px",border:"none",borderRadius:0,
             background:gTab===t.id?"#deebff":"transparent",color:gTab===t.id?P.pri:P.mt,
             borderLeft:gTab===t.id?`3px solid ${P.pri}`:"3px solid transparent",
@@ -2267,12 +2269,18 @@ function EduContent({calc:calcId,gTab}){
     </div>))}
 
     {gTab==="glossary"&&(glossary.length>0?(<div style={{background:"#fff",borderRadius:12,border:`1px solid ${P.bd}`,overflow:"hidden"}}>
-      {glossary.map((g2,i)=>(
-        <button key={i} onClick={()=>setOpenTerm(g2)} style={{width:"100%",padding:"10px 14px",borderBottom:i<glossary.length-1?`1px solid ${P.lt}`:"none",display:"flex",gap:12,alignItems:"flex-start",background:"#fff",border:"none",cursor:"pointer",textAlign:"left",fontFamily:"inherit"}} onMouseEnter={e=>e.currentTarget.style.background="#f4f5f7"} onMouseLeave={e=>e.currentTarget.style.background="#fff"}>
+      {glossary.map((g2,i)=>{
+        // 2026.04.14 용어 항목 클릭 시 /terms/<slug>.html로 이동 (CALC_TERMS에서 슬러그 역매핑)
+        let slug=null;
+        try{for(const k in CALC_TERMS){const hit=(CALC_TERMS[k]||[]).find(x=>x.t===g2.term);if(hit){slug=hit.s;break;}}}catch{}
+        const handleClick=()=>{if(slug){window.location.href="/terms/"+slug+".html";}else{setOpenTerm(g2);}};
+        return(
+        <button key={i} onClick={handleClick} style={{width:"100%",padding:"10px 14px",borderBottom:i<glossary.length-1?`1px solid ${P.lt}`:"none",display:"flex",gap:12,alignItems:"flex-start",background:"#fff",border:"none",cursor:"pointer",textAlign:"left",fontFamily:"inherit"}} onMouseEnter={e=>e.currentTarget.style.background="#f4f5f7"} onMouseLeave={e=>e.currentTarget.style.background="#fff"}>
           <span style={{fontWeight:700,color:P.pri,fontSize:13,minWidth:80,flexShrink:0}}>{g2.term}</span>
           <span style={{fontSize:12,color:"#4a5568",lineHeight:1.5,textAlign:"left",flex:"1 1 auto"}}>{g2.def}<Badge item={g2}/></span>
-          <span style={{marginLeft:6,color:P.mt,fontSize:11,flexShrink:0}}>▶</span>
-        </button>))}
+          <span style={{marginLeft:6,color:P.mt,fontSize:11,flexShrink:0}}>{slug?"→":"▶"}</span>
+        </button>);
+      })}
     </div>):(<div style={{padding:24,textAlign:"center",color:P.mt,background:"#fff",borderRadius:12,border:`1px solid ${P.bd}`}}>
       <div style={{fontSize:24,marginBottom:6}}>📖</div><div style={{fontSize:12}}>용어를 준비 중입니다.</div>
     </div>))}
@@ -2997,7 +3005,11 @@ export default function App(){
       const d=e.detail||{};
       setAiModal({loading:true,error:null,content:null,tips:[],title:d.title});
       try{
-        const r=await fetch(LC_API+"/ai/explain",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({calcId:calcSaveRef.current,title:d.title,total:d.total,items:d.items,sub:d.sub})});
+        // 2026.04.14 비로그인도 AI해설 호출 가능: 로그인 시에만 Authorization 헤더 포함
+        const _tok=(()=>{try{return localStorage.getItem('lc_token')||""}catch{return""}})();
+        const _hdrs={"Content-Type":"application/json"};
+        if(_tok)_hdrs.Authorization="Bearer "+_tok;
+        const r=await fetch(LC_API+"/ai/explain",{method:"POST",headers:_hdrs,body:JSON.stringify({calcId:calcSaveRef.current,title:d.title,total:d.total,items:d.items,sub:d.sub})});
         const j=await r.json().catch(()=>({}));
         if(r.ok)setAiModal({loading:false,content:j.explanation||j.content||"",tips:j.tips||[],title:d.title});
         else setAiModal({loading:false,error:j.error||"해설 생성 실패 (서버 준비 중일 수 있습니다)",title:d.title});
@@ -3328,10 +3340,10 @@ body.lc-embed main{padding-top:0!important}
           </div>}
         </div>
 
-        {/* 2026.04.14 버그 수정: 탭(EduSidebar) 위 · 콘텐츠(EduContent) 아래 순서로 변경. 탭 클릭 시 즉시 아래에 변경 내용 노출 */}
+        {/* 2026.04.14 버그 수정: Expert Guide(EduContent) 위 · 학습센터(EduSidebar) 아래 순서 */}
         <div className="sidebar-right">
+          <div id="edu-content-top"><EduContent calc={calc} gTab={gTab}/></div>
           <EduSidebar calc={calc} gTab={gTab} setGTab={setGTab}/>
-          <EduContent calc={calc} gTab={gTab}/>
         </div>
       </div>)}
 
