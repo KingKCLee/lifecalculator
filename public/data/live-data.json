@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.14",
       "category": "전체",
+      "title": "fix: 헤더 브랜드 로고·탑메뉴 중앙정렬·생활경제달력 제거·푸터 중앙정렬 재디자인",
+      "desc": "fix: 헤더 브랜드 로고·탑메뉴 중앙정렬·생활경제달력 제거·푸터 중앙정렬 재디자인"
+    },
+    {
+      "date": "2026.04.14",
+      "category": "전체",
       "title": "feat: LeftNav 드롭다운 확장 (Expert 기본펼침·Learning/Market 서브·History 로그인게이트)·계산기 로고 SVG",
       "desc": "feat: LeftNav 드롭다운 확장 (Expert 기본펼침·Learning/Market 서브·History 로그인게이트)·계산기 로고 SVG"
     },
@@ -1463,12 +1469,6 @@
       "category": "전체",
       "title": "feat: TipModal 버튼 위치 기반 스마트 팝오버, 버튼 hover 파란색 계열",
       "desc": "feat: TipModal 버튼 위치 기반 스마트 팝오버, 버튼 hover 파란색 계열"
-    },
-    {
-      "date": "2026.04.07",
-      "category": "전체",
-      "title": "fix: 전역 버튼 hover/active 효과 index.html에 추가",
-      "desc": "fix: 전역 버튼 hover/active 효과 index.html에 추가"
     }
   ],
   "rates": {
