@@ -426,7 +426,7 @@ const CL=[
   {id:"acquisition",l:"취득세",c:"tax"},{id:"transfer",l:"양도소득세",c:"tax"},{id:"inctax",l:"종합소득세",c:"tax"},{id:"yearend",l:"연말정산",c:"tax"},{id:"compre",l:"종부세",c:"tax"},{id:"property",l:"재산세",c:"tax"},{id:"gift",l:"증여세",c:"tax"},{id:"inherit",l:"상속세",c:"tax"},{id:"holdtax",l:"보유세 통합",c:"tax"},{id:"rental",l:"임대소득세",c:"tax"},
   {id:"bldvat",l:"건물 부가세",c:"tax"},{id:"estincome",l:"임대 추정소득",c:"tax"},{id:"goodlord",l:"착한임대인 공제",c:"tax"},{id:"imputedrent",l:"간주임대료",c:"tax"},{id:"legalinherit",l:"법정상속분",c:"tax"},{id:"progressive",l:"누진세 범용",c:"tax"},{id:"subscription",l:"청약가점",c:"realestate"},
   {id:"mortgage",l:"대출이자",c:"loan"},{id:"dsr",l:"DSR",c:"loan"},{id:"dti",l:"DTI",c:"loan"},{id:"ltv",l:"LTV·대출한도",c:"loan"},{id:"loanmax",l:"대출가능액",c:"loan"},{id:"rti",l:"RTI",c:"loan"},
-  {id:"auctionloan",l:"경락잔금대출",c:"loan"},{id:"refinance",l:"대환대출 비교",c:"loan"},
+  {id:"auctionloan",l:"경락잔금대출",c:"realestate"},{id:"refinance",l:"대환대출 비교",c:"loan"},
   {id:"commission",l:"중개보수",c:"cost"},{id:"registration",l:"등기비용",c:"cost"},{id:"legal",l:"법무사수수료",c:"cost"},{id:"stamp",l:"인지세",c:"cost"},{id:"bond",l:"채권할인료",c:"cost"},{id:"appraisal",l:"감정평가수수료",c:"cost"},
   {id:"bond2",l:"국민주택채권 매입",c:"cost"},{id:"jeonseins",l:"전세보증금보험료",c:"cost"},{id:"stamp2",l:"인지세(전자계약)",c:"cost"},
   {id:"netsalary",l:"연봉 실수령액",c:"life"},{id:"insurance4",l:"4대보험료",c:"life"},{id:"pension",l:"국민연금 수령액",c:"life"},{id:"cartax",l:"자동차세",c:"life"},{id:"retire",l:"퇴직금",c:"life"},{id:"unemploy",l:"실업급여",c:"life"},{id:"minwage",l:"최저임금",c:"life"},{id:"deposit",l:"예적금이자",c:"life"},{id:"convert",l:"전월세전환",c:"life"},
@@ -652,7 +652,7 @@ function RP({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlin
       </div>
       <button onClick={()=>window.dispatchEvent(new CustomEvent('lc-consult',{detail:{title,total}}))} style={{flexShrink:0,padding:"8px 14px",background:"#fff",color:tier==="strong"?"#BF5B00":"#0747A6",border:"none",borderRadius:8,fontSize:12,fontWeight:800,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>1:1 상담 →</button>
     </div>}
-    <div style={{marginTop:10,fontSize:10,opacity:.5,lineHeight:1.5,textAlign:"center"}}>※ 2026년 세법 기준 · 참고용 계산이며 법적 효력 없음 (v2026.04.06)</div>
+    <div style={{marginTop:10,fontSize:10,opacity:.5,lineHeight:1.5,textAlign:"center"}}>본 계산은 2026년 세법 기준 참고용이며 법적 효력이 없습니다. (v2026.04.06)</div>
   </div>);
 }
 function RequiredGuide({items}){const missing=items.filter(i=>!i.filled);if(missing.length===0)return null;return(<div style={{background:"#F4F5F7",borderRadius:12,padding:"16px 20px",marginTop:8}}><div style={{fontSize:12,fontWeight:700,color:"#505f79",marginBottom:10}}>필수 입력 항목</div>{missing.map((item,i)=>(<div key={i} style={{display:"flex",alignItems:"center",gap:8,marginBottom:6,fontSize:13,color:"#172B4D"}}><span style={{width:6,height:6,borderRadius:"50%",background:"#0747A6",flexShrink:0,display:"inline-block"}}/>{item.label}</div>))}</div>);}
@@ -2959,6 +2959,32 @@ export default function App(){
   const saveHistory=(cId,name,total)=>{if(!total||total<=0)return;const item={id:cId,name,total,time:Date.now()};setCalcHistory(prev=>{const updated=[item,...prev.filter(h=>h.id!==cId)].slice(0,10);try{localStorage.setItem('calc_history',JSON.stringify(updated))}catch{}return updated;});};
   const[showAllLog,setShowAllLog]=useState(false);const[hoverCat,setHoverCat]=useState(null);
   const[liveData,setLiveData]=useState(null);
+  // 2026-04-14 좌측 네비 패널 (Expert Guide / Learning Center / Market Data / 지난 계산 내역)
+  const[sidePanel,setSidePanel]=useState(null);
+  const[sideMarketNews,setSideMarketNews]=useState(null);
+  const[sideMarketLoading,setSideMarketLoading]=useState(false);
+  const[sideHistory,setSideHistory]=useState(null);
+  const[sideHistoryLoading,setSideHistoryLoading]=useState(false);
+  const[sideHistoryErr,setSideHistoryErr]=useState("");
+  useEffect(()=>{
+    if(sidePanel!=='market'||sideMarketNews!==null)return;
+    setSideMarketLoading(true);
+    const tryFetch=(url)=>fetch(url,{headers:{'Accept':'application/json'}}).then(r=>r.ok?r.json():Promise.reject('HTTP '+r.status));
+    tryFetch(LC_REALESTATE_WORKER+'/news').catch(()=>tryFetch(LC_API+'/news')).then(d=>{
+      const items=(d&&(d.items||d.recent||d.articles||d.news))||[];
+      setSideMarketNews(Array.isArray(items)?items.slice(0,5):[]);
+    }).catch(()=>setSideMarketNews([])).finally(()=>setSideMarketLoading(false));
+  },[sidePanel,sideMarketNews]);
+  useEffect(()=>{
+    if(sidePanel!=='history'||!lcToken||sideHistory!==null)return;
+    setSideHistoryLoading(true);setSideHistoryErr("");
+    fetch(LC_API+'/history/list',{headers:{'Authorization':'Bearer '+lcToken}})
+      .then(r=>r.ok?r.json():Promise.reject('HTTP '+r.status))
+      .then(d=>{const arr=Array.isArray(d&&d.items)?d.items:(Array.isArray(d)?d:[]);setSideHistory(arr);})
+      .catch(e=>{setSideHistory([]);setSideHistoryErr('내역을 불러오지 못했습니다: '+e);})
+      .finally(()=>setSideHistoryLoading(false));
+  },[sidePanel,lcToken,sideHistory]);
+  useEffect(()=>{setSideHistory(null);setSideHistoryErr("");},[lcToken]);
   useEffect(()=>{if(!isMo||!tabScrollRef.current)return;tabScrollRef.current.scrollTo({left:0,behavior:'instant'});setTimeout(()=>checkTabScroll(tabScrollRef.current),50);},[calc]);
   useEffect(()=>{fetch('/data/live-data.json?t='+Date.now()).then(r=>r.json()).then(d=>{setLiveData(d);RATES=d?.rates||{};}).catch(()=>{});},[]);
   
@@ -3373,6 +3399,9 @@ body.lc-embed main{padding-top:0!important}
             <span>›</span>
             <span style={{color:P.tx,fontWeight:600}}>{CL.find(c=>c.id===calc)?.l||""}</span>
           </nav>
+          <div className="sub-tabs" style={{display:"flex",gap:6,flexWrap:"nowrap",overflowX:"auto",WebkitOverflowScrolling:"touch",marginBottom:14,paddingBottom:6,scrollbarWidth:"thin"}}>
+            {filtered.map(c=>(<button key={c.id} onClick={()=>navigateCalc(cat,c.id)} style={{padding:"8px 16px",border:calc===c.id?"none":`1px solid ${P.bd}`,borderRadius:20,background:calc===c.id?P.pri:"rgba(255,255,255,0.75)",color:calc===c.id?"#fff":P.mt,fontSize:13,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0,display:"inline-flex",alignItems:"center",justifyContent:"center",height:36,boxSizing:"border-box"}}>{c.l}</button>))}
+          </div>
           <div style={{marginBottom:24}}>
             <div style={{display:"flex",alignItems:"center",gap:12,flexWrap:"wrap"}}>
               <h1 style={{fontSize:28,fontWeight:800,color:P.tx,margin:0,letterSpacing:-1}}>{CL.find(c=>c.id===calc)?.l||catInfo?.l+" 계산기"}</h1>
@@ -3381,9 +3410,6 @@ body.lc-embed main{padding-top:0!important}
               <button onClick={()=>{const slug=SLUGS[calc]||calc;const url=window.location.origin+"/"+encodeURIComponent(slug)+"?embed=y";const code='<iframe src="'+url+'" style="width:100%;height:700px;border:none" title="생활계산기 '+(CL.find(c=>c.id===calc)?.l||"")+'"></iframe>';if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(code).then(()=>showToast("퍼가기 코드가 복사되었습니다")).catch(()=>showToast("복사 실패"));}else{const ta=document.createElement("textarea");ta.value=code;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);showToast("퍼가기 코드가 복사되었습니다");}}} aria-label="퍼가기 코드 복사" style={{background:"#fff",border:"1px solid #dfe1e6",borderRadius:20,padding:"6px 12px",cursor:"pointer",fontSize:13,fontWeight:700,color:"#6b778c",display:"inline-flex",alignItems:"center",gap:4,fontFamily:"inherit"}}>📌 퍼가기</button>
             </div>
             <p style={{fontSize:14,color:P.mt,margin:"4px 0 16px"}}>2026년 최신 세법 기반 정밀 계산</p>
-            <div className="sub-tabs" style={{display:"flex",gap:6,flexWrap:"wrap"}}>
-              {filtered.map(c=>(<button key={c.id} onClick={()=>navigateCalc(cat,c.id)} style={{padding:"8px 16px",border:calc===c.id?"none":`1px solid ${P.bd}`,borderRadius:20,background:calc===c.id?P.pri:"rgba(255,255,255,0.75)",color:calc===c.id?"#fff":P.mt,fontSize:13,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0,marginBottom:4,display:"inline-flex",alignItems:"center",justifyContent:"center",height:36,boxSizing:"border-box"}}>{c.l}</button>))}
-            </div>
           </div>
           {/* 2026.04.14 Expert Guide 탭 + 학습센터 콘텐츠 (계산기 상단 배치) */}
           <div id="edu-content-top" style={{marginBottom:16,background:"#fff",border:`1px solid ${P.bd}`,borderRadius:12,padding:"14px 18px"}}>
