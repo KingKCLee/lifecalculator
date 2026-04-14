@@ -3552,16 +3552,6 @@ function LeftNav({isMo,navOpen,setNavOpen,navContent,setNavContent,effectiveUser
           </div>);
         })}
       </nav>
-      <div style={{padding:"16px 22px",borderTop:"1px solid #E5E7EB",background:"#F9FAFB"}}>
-        {[
-          {l:"코스피",v:"2,650",d:"▲0.3%",col:"#00C853"},
-          {l:"기준금리",v:"3.5%",d:"",col:"#6B7280"},
-          {l:"서울 아파트",v:"12.5억",d:"강남 기준",col:"#6B7280"}
-        ].map((x,i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",paddingTop:8,paddingBottom:8,borderBottom:i<2?"1px solid #E5E7EB":"none"}}>
-          <span style={{fontSize:10,color:"#6B7280",textTransform:"uppercase",letterSpacing:.5}}>{x.l}</span>
-          <span style={{fontSize:13,fontWeight:700,color:"#0a1628"}}>{x.v} {x.d&&<span style={{fontSize:10,fontWeight:600,color:x.col,marginLeft:2}}>{x.d}</span>}</span>
-        </div>))}
-      </div>
     </aside>
   </>);
 }
