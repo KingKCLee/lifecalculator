@@ -3,18 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>실시간 부동산 시장 데이터 | 기준금리·아파트 시세·DSR 규제 현황 | 생활계산기</title>
-<meta name="description" content="실시간 부동산 시장 데이터. 한국은행 기준금리, 코스피·코스닥, 서울 주요 아파트 시세, 전세가율, DSR·LTV 규제 현황, 조정대상지역, 공시가격 현실화율을 한눈에.">
-<meta name="keywords" content="부동산 시장 데이터, 기준금리 현황, 아파트 시세, 전세가율, DSR 규제, LTV 규제, 조정대상지역, 공시가격 현실화율">
+<title>실시간 부동산 시장 데이터 | 기준금리·KOSPI·아파트 시세·DSR/LTV 규제 | 생활계산기</title>
+<meta name="description" content="실시간 부동산 시장 데이터. 한국은행 기준금리 3.0%, KOSPI, 서울 아파트 시세, DSR·LTV 규제, 조정대상지역, 공시가격 현실화율을 한눈에. 30분 자동 갱신.">
+<meta name="keywords" content="부동산 시장 데이터, 기준금리 3.0, KOSPI, 서울 아파트 시세, DSR 규제, LTV 규제, 조정대상지역, 공시가격 현실화율 2026">
+<meta name="lastmod" content="2026-04-14">
 <link rel="canonical" href="https://xn--989a00a691bdfa717h.com/market/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="실시간 부동산 시장 데이터">
-<meta property="og:description" content="기준금리·아파트 시세·DSR 규제 현황을 한눈에">
+<meta property="og:title" content="실시간 부동산 시장 데이터 | 생활계산기">
+<meta property="og:description" content="기준금리·KOSPI·서울 아파트 시세·DSR·LTV 규제 현황을 한눈에 (30분 자동 갱신)">
 <meta property="og:url" content="https://xn--989a00a691bdfa717h.com/market/">
 <meta property="og:site_name" content="생활계산기">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="robots" content="index,follow">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":"부동산 시장 데이터","description":"한국은행 기준금리·코스피·서울 아파트 시세·부동산 규제 현황","publisher":{"@type":"Organization","name":"생활계산기"},"url":"https://xn--989a00a691bdfa717h.com/market/"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":"부동산 시장 데이터 2026","description":"한국은행 기준금리, KOSPI, 서울 아파트 시세, DSR·LTV 규제, 조정대상지역, 공시가격 현실화율","publisher":{"@type":"Organization","name":"생활계산기","url":"https://xn--989a00a691bdfa717h.com/"},"url":"https://xn--989a00a691bdfa717h.com/market/","temporalCoverage":"2026","dateModified":"2026-04-14","keywords":["기준금리","KOSPI","아파트 시세","DSR","LTV","조정대상지역","공시가격 현실화율"],"creator":{"@type":"Organization","name":"생활계산기"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"생활계산기","item":"https://xn--989a00a691bdfa717h.com/"},{"@type":"ListItem","position":2,"name":"시장 데이터","item":"https://xn--989a00a691bdfa717h.com/market/"}]}</script>
 <style>
 :root{--pri:#0747A6;--pl:#0052CC;--bg:#f8f9fc;--card:#fff;--bd:#dfe1e6;--tx:#172B4D;--mt:#505f79;--ok:#00875A;--warn:#DE350B;--lt:#f4f5f7;--accent:#FFAB00}
@@ -30,16 +31,17 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans
 .refresh{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.2);padding:8px 14px;border-radius:20px;font-size:12px;font-weight:600}
 .refresh .dot{width:8px;height:8px;background:#57D9A3;border-radius:50%;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-bottom:22px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-bottom:22px}
 .card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:22px 24px;position:relative;overflow:hidden}
 .card .tag{display:inline-block;background:var(--lt);color:var(--mt);font-size:10px;font-weight:700;padding:4px 10px;border-radius:10px;margin-bottom:10px;letter-spacing:0.3px;text-transform:uppercase}
 .card h3{font-size:14px;color:var(--mt);margin:0 0 8px;font-weight:600}
 .card .v{font-size:32px;font-weight:800;color:var(--pri);margin:0 0 4px;letter-spacing:-0.8px;line-height:1.15;font-variant-numeric:tabular-nums}
-.card .chg{font-size:13px;font-weight:600}
+.card .chg{font-size:13px;font-weight:600;color:var(--mt)}
 .card .chg.up{color:var(--warn)}
-.card .chg.down{color:#0052CC}
+.card .chg.down{color:var(--pl)}
 .card .src{font-size:11px;color:var(--mt);margin-top:12px;padding-top:10px;border-top:1px dashed var(--bd)}
-.card.wide{grid-column:1/-1}
+.card .src a{color:var(--pri);text-decoration:none}
+.card .src a:hover{text-decoration:underline}
 section{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:26px 28px;margin-bottom:18px}
 h2{font-size:22px;margin:0 0 16px;color:var(--pri);display:flex;align-items:center;gap:10px;letter-spacing:-0.3px}
 h2::before{content:"";display:inline-block;width:5px;height:20px;background:var(--pri);border-radius:3px}
@@ -47,23 +49,23 @@ table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
 th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--bd);vertical-align:top}
 th{background:var(--lt);font-weight:700;font-size:13px;color:var(--tx)}
 td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
-.apt-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:14px}
-.apt-list .apt{padding:14px 16px;background:var(--lt);border:1px solid var(--bd);border-radius:10px}
-.apt-list .apt .name{font-size:13px;font-weight:700;color:var(--tx);margin-bottom:4px}
-.apt-list .apt .price{font-size:18px;font-weight:800;color:var(--pri);font-variant-numeric:tabular-nums}
-.apt-list .apt .unit{font-size:11px;color:var(--mt);margin-top:2px}
-.rate-badge{display:inline-block;padding:4px 10px;background:#e6f0ff;color:var(--pri);font-size:11px;font-weight:700;border-radius:10px;margin-left:6px}
-.rate-badge.warn{background:#FFEBE6;color:var(--warn)}
-.loading{text-align:center;padding:40px 20px;color:var(--mt);font-size:14px}
-.loading::before{content:"⏳ ";}
-.error{background:#FFEBE6;border-color:#FFBDAD;color:#BF2600;padding:16px 18px;border-radius:10px;font-size:13px;margin-bottom:16px}
-.chart-placeholder{background:linear-gradient(180deg,#e6f0ff 0%,#f8f9fc 100%);border:1px dashed var(--bd);border-radius:10px;padding:30px 20px;text-align:center;color:var(--mt);font-size:13px;margin-top:12px}
+.callout{background:var(--lt);border-left:4px solid var(--pri);border-radius:8px;padding:14px 18px;margin:14px 0;font-size:13px;line-height:1.7}
+.callout b{display:block;margin-bottom:4px}
 .foot{text-align:center;margin-top:28px;font-size:13px;color:var(--mt)}
 .foot a{color:var(--mt);text-decoration:none;margin:0 10px}
 .foot a:hover{color:var(--pri);text-decoration:underline}
-.callout{background:var(--lt);border-left:4px solid var(--pri);border-radius:8px;padding:14px 18px;margin:14px 0;font-size:13px;line-height:1.7}
-.callout b{display:block;margin-bottom:4px}
-@media(max-width:600px){.hero{padding:28px 22px}.hero h1{font-size:22px}}
+.badge-ok{display:inline-block;padding:3px 10px;background:#E3FCEF;color:var(--ok);font-size:11px;font-weight:700;border-radius:10px}
+.badge-warn{display:inline-block;padding:3px 10px;background:#FFEBE6;color:var(--warn);font-size:11px;font-weight:700;border-radius:10px}
+@media(max-width:768px){
+  .wrap{padding:18px 14px 56px}
+  .hero{padding:26px 20px}
+  .hero h1{font-size:22px}
+  .grid{grid-template-columns:1fr;gap:12px}
+  section{padding:20px 18px}
+  h2{font-size:18px}
+  table{font-size:13px}
+  th,td{padding:8px 8px}
+}
 </style>
 </head>
 <body>
@@ -71,16 +73,14 @@ td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
   <nav class="crumb"><a href="/">생활계산기</a> › 시장 데이터</nav>
 
   <div class="hero">
-    <h1>📊 실시간 부동산 시장 데이터</h1>
-    <p>한국은행 기준금리·증권시장·서울 아파트 시세·부동산 규제 현황을 한눈에 확인하세요.</p>
+    <h1>실시간 부동산 시장 데이터</h1>
+    <p>한국은행 기준금리·KOSPI·서울 아파트 시세·DSR/LTV 규제 현황을 한눈에 확인하세요.</p>
     <div class="refresh">
       <span class="dot"></span>
       <span id="lastUpdate">데이터 로딩 중…</span>
       <span>· 30분 자동 갱신</span>
     </div>
   </div>
-
-  <div id="statusBar"></div>
 
   <!-- 핵심 지표 카드 -->
   <div class="grid" id="kpiGrid">
@@ -89,117 +89,27 @@ td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
       <h3>기준금리</h3>
       <div class="v" id="baseRate">3.00%</div>
       <div class="chg" id="baseRateChg">— 동결 유지</div>
-      <div class="src">2026.02.27 결정 · 한국은행 금통위</div>
+      <div class="src">2026.02.27 금통위 결정 · <a href="https://www.bok.or.kr" target="_blank" rel="noopener">한국은행</a></div>
     </div>
     <div class="card">
       <span class="tag">증권</span>
       <h3>KOSPI</h3>
-      <div class="v" id="kospi">—</div>
-      <div class="chg" id="kospiChg">실시간 데이터 로딩</div>
-      <div class="src">한국거래소 KRX</div>
+      <div class="v" id="kospi">2,680.45</div>
+      <div class="chg" id="kospiChg">정적 참고값</div>
+      <div class="src">한국거래소 KRX · <a href="https://finance.naver.com/sise/" target="_blank" rel="noopener">실시간 보기</a></div>
     </div>
     <div class="card">
-      <span class="tag">증권</span>
-      <h3>KOSDAQ</h3>
-      <div class="v" id="kosdaq">—</div>
-      <div class="chg" id="kosdaqChg">실시간 데이터 로딩</div>
-      <div class="src">한국거래소 KRX</div>
-    </div>
-    <div class="card">
-      <span class="tag">주택금융</span>
-      <h3>전세가율 (전국)</h3>
-      <div class="v" id="jeonseRatio">68.2%</div>
-      <div class="chg">— 한국부동산원 기준</div>
-      <div class="src">월간 갱신 · 2026.03 기준</div>
+      <span class="tag">부동산원</span>
+      <h3>서울 아파트 시세</h3>
+      <div class="v" id="seoulApt">+0.08%</div>
+      <div class="chg">주간 변동률 (2026.04 기준)</div>
+      <div class="src"><a href="https://www.reb.or.kr/r-one/" target="_blank" rel="noopener">한국부동산원 월간동향 →</a></div>
     </div>
   </div>
 
-  <!-- 기준금리 히스토리 차트 (간이 SVG) -->
-  <section>
-    <h2>📈 기준금리 히스토리 (2020~2026)</h2>
-    <p>한국은행 기준금리의 6년간 변화 추이입니다.</p>
-    <div style="overflow-x:auto;margin-top:12px">
-      <svg width="100%" height="220" viewBox="0 0 720 220" preserveAspectRatio="xMidYMid meet" style="display:block;max-width:100%">
-        <defs>
-          <linearGradient id="areaG" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#0747A6" stop-opacity="0.25"/>
-            <stop offset="100%" stop-color="#0747A6" stop-opacity="0"/>
-          </linearGradient>
-        </defs>
-        <!-- Grid lines -->
-        <line x1="40" y1="20" x2="700" y2="20" stroke="#dfe1e6" stroke-dasharray="2,2"/>
-        <line x1="40" y1="70" x2="700" y2="70" stroke="#dfe1e6" stroke-dasharray="2,2"/>
-        <line x1="40" y1="120" x2="700" y2="120" stroke="#dfe1e6" stroke-dasharray="2,2"/>
-        <line x1="40" y1="170" x2="700" y2="170" stroke="#dfe1e6" stroke-dasharray="2,2"/>
-        <!-- Y labels -->
-        <text x="8" y="24" font-size="10" fill="#505f79">4.0%</text>
-        <text x="8" y="74" font-size="10" fill="#505f79">3.0%</text>
-        <text x="8" y="124" font-size="10" fill="#505f79">2.0%</text>
-        <text x="8" y="174" font-size="10" fill="#505f79">1.0%</text>
-        <text x="8" y="195" font-size="10" fill="#505f79">0.5%</text>
-        <!-- Area + line: 2020(0.5%)=195, 2021(1.0%)=170, 2022(2.5%)=95, 2023(3.5%)=45, 2024(3.5%)=45, 2025(3.25%)=57, 2026(3.0%)=70 -->
-        <path d="M 80 195 L 180 170 L 280 95 L 380 45 L 480 45 L 580 57 L 680 70 L 680 195 L 80 195 Z" fill="url(#areaG)"/>
-        <polyline points="80,195 180,170 280,95 380,45 480,45 580,57 680,70" fill="none" stroke="#0747A6" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
-        <!-- Data points -->
-        <circle cx="80" cy="195" r="4" fill="#0747A6"/>
-        <circle cx="180" cy="170" r="4" fill="#0747A6"/>
-        <circle cx="280" cy="95" r="4" fill="#0747A6"/>
-        <circle cx="380" cy="45" r="4" fill="#0747A6"/>
-        <circle cx="480" cy="45" r="4" fill="#0747A6"/>
-        <circle cx="580" cy="57" r="4" fill="#0747A6"/>
-        <circle cx="680" cy="70" r="5" fill="#FFAB00" stroke="#0747A6" stroke-width="2"/>
-        <!-- X labels -->
-        <text x="80" y="215" font-size="11" fill="#505f79" text-anchor="middle">2020</text>
-        <text x="180" y="215" font-size="11" fill="#505f79" text-anchor="middle">2021</text>
-        <text x="280" y="215" font-size="11" fill="#505f79" text-anchor="middle">2022</text>
-        <text x="380" y="215" font-size="11" fill="#505f79" text-anchor="middle">2023</text>
-        <text x="480" y="215" font-size="11" fill="#505f79" text-anchor="middle">2024</text>
-        <text x="580" y="215" font-size="11" fill="#505f79" text-anchor="middle">2025</text>
-        <text x="680" y="215" font-size="11" fill="#FFAB00" text-anchor="middle" font-weight="700">2026</text>
-      </svg>
-    </div>
-    <div class="callout"><b>📌 금리 전망</b>2026년 기준금리는 3.0% 수준에서 안정적 유지 예상. 연내 소폭 인하 가능성이 제기되고 있으나 한국은행 금통위 결정에 따라 변동 가능.</div>
-  </section>
-
-  <!-- 서울 주요 지역 아파트 시세 -->
-  <section>
-    <h2>🏙 서울 주요 지역 아파트 시세 (평균)</h2>
-    <p>2026년 3월 기준 서울 25개구 아파트 평균 매매가입니다. (한국부동산원 주간 시계열 참조)</p>
-    <div class="apt-list">
-      <div class="apt"><div class="name">강남구</div><div class="price">24.8억</div><div class="unit">전용 84㎡ 기준</div></div>
-      <div class="apt"><div class="name">서초구</div><div class="price">23.5억</div><div class="unit">전용 84㎡ 기준</div></div>
-      <div class="apt"><div class="name">송파구</div><div class="price">19.2억</div><div class="unit">전용 84㎡ 기준</div></div>
-      <div class="apt"><div class="name">용산구</div><div class="price">18.8억</div><div class="unit">전용 84㎡ 기준</div></div>
-      <div class="apt"><div class="name">마포구</div><div class="price">14.3억</div><div class="unit">전용 84㎡ 기준</div></div>
-      <div class="apt"><div class="name">성동구</div><div class="price">13.6억</div><div class="unit">전용 84㎡ 기준</div></div>
-      <div class="apt"><div class="name">광진구</div><div class="price">12.8억</div><div class="unit">전용 84㎡ 기준</div></div>
-      <div class="apt"><div class="name">영등포구</div><div class="price">11.2억</div><div class="unit">전용 84㎡ 기준</div></div>
-      <div class="apt"><div class="name">양천구</div><div class="price">10.9억</div><div class="unit">전용 84㎡ 기준</div></div>
-      <div class="apt"><div class="name">강동구</div><div class="price">10.2억</div><div class="unit">전용 84㎡ 기준</div></div>
-    </div>
-    <p style="margin-top:14px;font-size:12px;color:var(--mt)">* 지역 평균값이며 단지·평형별 편차가 큽니다. 정확한 실거래가는 <a href="https://rt.molit.go.kr" target="_blank" rel="noopener" style="color:var(--pri)">국토부 실거래가 공개시스템</a>에서 확인하세요.</p>
-  </section>
-
-  <!-- 전세가율 -->
-  <section>
-    <h2>🏠 전세가율 현황 (2026)</h2>
-    <table>
-      <thead><tr><th>지역</th><th class="num">전세가율</th><th class="num">전년 대비</th></tr></thead>
-      <tbody>
-        <tr><td>전국 평균</td><td class="num">68.2%</td><td class="num" style="color:var(--warn)">+1.5%p</td></tr>
-        <tr><td>수도권</td><td class="num">61.8%</td><td class="num" style="color:var(--warn)">+2.1%p</td></tr>
-        <tr><td>서울</td><td class="num">55.4%</td><td class="num" style="color:var(--warn)">+1.8%p</td></tr>
-        <tr><td>경기</td><td class="num">68.3%</td><td class="num" style="color:var(--warn)">+2.3%p</td></tr>
-        <tr><td>인천</td><td class="num">71.2%</td><td class="num" style="color:var(--warn)">+1.9%p</td></tr>
-        <tr><td>6대 광역시</td><td class="num">72.5%</td><td class="num" style="color:var(--warn)">+1.2%p</td></tr>
-      </tbody>
-    </table>
-    <div class="callout"><b>💡 전세가율 해석</b>전세가율이 70% 이상이면 갭투자 수요 증가, 역전세 리스크도 함께 상승. 전세보증보험 가입 필수 검토.</div>
-  </section>
-
   <!-- DSR/LTV 규제 현황표 -->
   <section>
-    <h2>🏦 DSR·LTV 규제 현황 (2026)</h2>
+    <h2>DSR·LTV 규제 현황 (2026)</h2>
     <h3 style="font-size:16px;margin:14px 0 8px">DSR 규제</h3>
     <table>
       <thead><tr><th>구분</th><th class="num">DSR 한도</th><th>비고</th></tr></thead>
@@ -230,73 +140,61 @@ td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
         <tr><td>25억 초과</td><td class="num">2억</td></tr>
       </tbody>
     </table>
+    <div class="callout"><b>관련 계산기</b><a href="/#DSR계산기" style="color:var(--pri)">DSR 계산기</a> · <a href="/#LTV계산기" style="color:var(--pri)">LTV 계산기</a> · <a href="/#대출가능액계산기" style="color:var(--pri)">대출가능액 계산기</a></div>
   </section>
 
-  <!-- 조정대상지역 -->
+  <!-- 조정대상지역 목록 -->
   <section>
-    <h2>🗺 조정대상지역·투기과열지구 (2026 현재)</h2>
-    <p>2023년 1월 대규모 해제 이후, 서울 주요 4개구만 유지되고 있습니다.</p>
+    <h2>조정대상지역·투기과열지구 (2026.04 현재)</h2>
+    <p>2023년 1월 대규모 해제 이후 2026년 현재 <b>전국 모두 해제</b>된 상태입니다.</p>
     <table>
-      <thead><tr><th>지역</th><th>조정대상지역</th><th>투기과열지구</th><th>토지거래허가구역</th></tr></thead>
+      <thead><tr><th>구분</th><th>지정 현황</th><th>최근 변동</th></tr></thead>
       <tbody>
-        <tr><td><b>서울 강남구</b></td><td class="num" style="color:var(--warn)">✓</td><td class="num" style="color:var(--warn)">✓</td><td class="num" style="color:var(--warn)">✓</td></tr>
-        <tr><td><b>서울 서초구</b></td><td class="num" style="color:var(--warn)">✓</td><td class="num" style="color:var(--warn)">✓</td><td class="num" style="color:var(--warn)">✓</td></tr>
-        <tr><td><b>서울 송파구</b></td><td class="num" style="color:var(--warn)">✓</td><td class="num" style="color:var(--warn)">✓</td><td class="num" style="color:var(--warn)">✓</td></tr>
-        <tr><td><b>서울 용산구</b></td><td class="num" style="color:var(--warn)">✓</td><td class="num" style="color:var(--warn)">✓</td><td class="num" style="color:var(--mt)">—</td></tr>
-        <tr><td>그 외 전국</td><td class="num" style="color:var(--ok)">해제</td><td class="num" style="color:var(--ok)">해제</td><td class="num" style="color:var(--mt)">—</td></tr>
+        <tr><td>조정대상지역</td><td><span class="badge-ok">없음 (전국 해제)</span></td><td>2023.01.05 해제</td></tr>
+        <tr><td>투기과열지구</td><td><span class="badge-ok">없음 (전국 해제)</span></td><td>2023.01.05 해제</td></tr>
+        <tr><td>투기지역</td><td><span class="badge-ok">없음</span></td><td>—</td></tr>
       </tbody>
     </table>
-    <div class="callout"><b>⚠ 최신 발표 확인</b>규제지역 지정·해제는 수시 변동됩니다. 거래 전 <a href="https://www.molit.go.kr" target="_blank" rel="noopener" style="color:var(--pri)">국토교통부 공식 발표</a>를 반드시 재확인하세요.</div>
+    <div class="callout"><b>최신 발표 확인</b>규제지역 지정·해제는 국토교통부 고시에 따라 수시로 변동됩니다. 거래 전 <a href="https://www.molit.go.kr" target="_blank" rel="noopener" style="color:var(--pri)">국토교통부 공식 발표</a>를 반드시 재확인하세요.</div>
   </section>
 
   <!-- 공시가격 현실화율 -->
   <section>
-    <h2>📋 공시가격 현실화율 (2026)</h2>
-    <p>공시가격이 실거래가 대비 차지하는 비율. 재산세·종부세 과세표준에 직접 영향.</p>
+    <h2>공시가격 현실화율 (2026 동결)</h2>
+    <p>정부는 2026년 공시가격 현실화율을 2020년 수준에서 <b>동결</b>하기로 결정했습니다. 재산세·종합부동산세 과세표준 급등을 방지하는 조치입니다.</p>
     <table>
-      <thead><tr><th>구분</th><th class="num">현실화율</th><th>비고</th></tr></thead>
+      <thead><tr><th>구분</th><th class="num">현실화율 (2026)</th><th>비고</th></tr></thead>
       <tbody>
-        <tr><td>공동주택 (전체 평균)</td><td class="num">71.5%</td><td>2026.1 공시</td></tr>
-        <tr><td>공동주택 (9억 미만)</td><td class="num">68.9%</td><td>동결 기조</td></tr>
-        <tr><td>공동주택 (9~15억)</td><td class="num">74.2%</td><td></td></tr>
-        <tr><td>공동주택 (15억 이상)</td><td class="num">76.8%</td><td></td></tr>
-        <tr><td>단독주택</td><td class="num">58.3%</td><td></td></tr>
-        <tr><td>토지</td><td class="num">66.5%</td><td></td></tr>
+        <tr><td>주택 (전체 평균)</td><td class="num">65%</td><td>2020년 수준 동결</td></tr>
+        <tr><td>공동주택 (아파트 등)</td><td class="num">69.0%</td><td>2020년 수준 동결</td></tr>
+        <tr><td>단독주택</td><td class="num">53.6%</td><td>2020년 수준 동결</td></tr>
+        <tr><td>토지</td><td class="num">65.5%</td><td>2020년 수준 동결</td></tr>
       </tbody>
     </table>
-    <p style="margin-top:12px;font-size:12px;color:var(--mt)">* 현재 정부는 공시가격 현실화 로드맵을 재검토 중이며, 급격한 현실화율 상승은 당분간 자제되고 있습니다.</p>
+    <p style="margin-top:12px;font-size:12px;color:var(--mt)">* 현실화 로드맵은 현재 재검토 중이며, 당분간 급격한 현실화율 상승은 없을 전망입니다. 정확한 공시가격은 <a href="https://www.realtyprice.kr" target="_blank" rel="noopener" style="color:var(--pri)">부동산공시가격 알리미</a>에서 개별 확인 가능합니다.</p>
   </section>
 
   <nav class="foot">
     <a href="/">홈</a> ·
     <a href="/learn/">학습센터</a> ·
     <a href="/law/">법령</a> ·
-    <a href="/policy/">정책 해설</a> ·
-    <a href="/guide/">가이드</a>
+    <a href="/guide/">가이드</a> ·
+    <a href="/consult/">전문가 상담</a>
   </nav>
 </main>
 
 <script>
-// Cloudflare Worker API 연동 (lc-realestate-worker/market-data)
-// 실패 시 정적 기본값 유지
+// Cloudflare Worker API: lc-realestate-worker/market-data
+// 404 또는 오류 시 정적 fallback 값을 그대로 유지
 const API = 'https://lc-realestate-worker.noble-kclee.workers.dev/market-data';
 const REFRESH_MS = 30 * 60 * 1000; // 30분
 
-const fmt = {
-  num: n => Number(n).toLocaleString('ko-KR'),
-  pct: (v, base) => {
-    const d = v - base;
-    const sign = d >= 0 ? '+' : '';
-    return sign + d.toFixed(2);
-  },
-  time: d => {
-    const h = String(d.getHours()).padStart(2, '0');
-    const m = String(d.getMinutes()).padStart(2, '0');
-    return d.getFullYear() + '.' + String(d.getMonth()+1).padStart(2,'0') + '.' + String(d.getDate()).padStart(2,'0') + ' ' + h + ':' + m;
-  }
-};
-
 function setText(id, text){ const el = document.getElementById(id); if(el) el.textContent = text; }
+
+function fmtTime(d){
+  const p = n => String(n).padStart(2,'0');
+  return d.getFullYear()+'.'+p(d.getMonth()+1)+'.'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes());
+}
 
 async function fetchMarketData(){
   try {
@@ -304,11 +202,10 @@ async function fetchMarketData(){
     if(!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
     applyData(data);
-    setText('lastUpdate', '업데이트: ' + fmt.time(new Date()));
+    setText('lastUpdate', '업데이트: ' + fmtTime(new Date()));
   } catch(e) {
-    console.warn('Market API failed:', e.message);
-    setText('lastUpdate', '정적 데이터 표시 중');
-    // 기본값 유지
+    console.warn('[market] API unavailable, using static fallback:', e.message);
+    setText('lastUpdate', '정적 데이터 표시 중 · ' + fmtTime(new Date()));
   }
 }
 
@@ -316,31 +213,25 @@ function applyData(data){
   if(!data) return;
   if(data.baseRate !== undefined){
     setText('baseRate', Number(data.baseRate).toFixed(2) + '%');
-    if(data.baseRateChange !== undefined) {
-      const el = document.getElementById('baseRateChg');
-      if(el) el.textContent = data.baseRateChange > 0 ? '▲ ' + data.baseRateChange + '%p' : data.baseRateChange < 0 ? '▼ ' + Math.abs(data.baseRateChange) + '%p' : '— 동결';
+    const el = document.getElementById('baseRateChg');
+    if(el && data.baseRateChange !== undefined){
+      const c = Number(data.baseRateChange);
+      el.textContent = c > 0 ? '▲ ' + c + '%p' : c < 0 ? '▼ ' + Math.abs(c) + '%p' : '— 동결 유지';
     }
   }
   if(data.kospi !== undefined){
-    setText('kospi', fmt.num(data.kospi.toFixed(2)));
-    if(data.kospiChange !== undefined){
-      const el = document.getElementById('kospiChg');
-      const up = data.kospiChange >= 0;
+    setText('kospi', Number(data.kospi).toLocaleString('ko-KR', {minimumFractionDigits:2, maximumFractionDigits:2}));
+    const el = document.getElementById('kospiChg');
+    if(el && data.kospiChange !== undefined){
+      const up = Number(data.kospiChange) >= 0;
       el.className = 'chg ' + (up ? 'up' : 'down');
-      el.textContent = (up ? '▲ ' : '▼ ') + Math.abs(data.kospiChange).toFixed(2) + ' (' + (up ? '+' : '') + data.kospiChangePct.toFixed(2) + '%)';
+      const pct = data.kospiChangePct !== undefined ? ' ('+(up?'+':'')+Number(data.kospiChangePct).toFixed(2)+'%)' : '';
+      el.textContent = (up ? '▲ ' : '▼ ') + Math.abs(Number(data.kospiChange)).toFixed(2) + pct;
     }
   }
-  if(data.kosdaq !== undefined){
-    setText('kosdaq', fmt.num(data.kosdaq.toFixed(2)));
-    if(data.kosdaqChange !== undefined){
-      const el = document.getElementById('kosdaqChg');
-      const up = data.kosdaqChange >= 0;
-      el.className = 'chg ' + (up ? 'up' : 'down');
-      el.textContent = (up ? '▲ ' : '▼ ') + Math.abs(data.kosdaqChange).toFixed(2) + ' (' + (up ? '+' : '') + data.kosdaqChangePct.toFixed(2) + '%)';
-    }
-  }
-  if(data.jeonseRatio !== undefined){
-    setText('jeonseRatio', Number(data.jeonseRatio).toFixed(1) + '%');
+  if(data.seoulAptChange !== undefined){
+    const c = Number(data.seoulAptChange);
+    setText('seoulApt', (c>=0?'+':'') + c.toFixed(2) + '%');
   }
 }
 

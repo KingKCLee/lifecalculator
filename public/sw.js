@@ -9,7 +9,7 @@
  * 버전 변경 시 CACHE_VERSION 만 올리면 자동 롤오버.
  */
 
-const CACHE_VERSION = 'v2026-04-14-2-overnight';
+const CACHE_VERSION = 'v2026-04-14-3';
 const STATIC_CACHE = `lc-static-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `lc-runtime-${CACHE_VERSION}`;
 const OFFLINE_URL = '/offline.html';

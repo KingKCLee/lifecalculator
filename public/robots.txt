@@ -1,5 +1,13 @@
 User-agent: *
 Allow: /
+Allow: /terms/
+Allow: /learn/
+Allow: /law/
+Allow: /market/
+Allow: /guide/
+Allow: /community/
+Allow: /news/
+Allow: /consult/
 Disallow: /payment/
 Disallow: /api/
 Disallow: /admin/
