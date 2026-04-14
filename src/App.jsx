@@ -1595,6 +1595,21 @@ function CalcTrans({isMo=false,onNav=()=>{}}){
   const holdText=(()=>{if(buyDate.length<8||sellDate.length<8)return null;const bd=new Date(buyDate.slice(0,4)+"-"+buyDate.slice(4,6)+"-"+buyDate.slice(6,8));const sd=new Date(sellDate.slice(0,4)+"-"+sellDate.slice(4,6)+"-"+sellDate.slice(6,8));const hd=Math.floor((sd-bd)/86400000);if(isNaN(hd)||hd<0)return null;const hy=Math.floor(hd/365);const hm=Math.floor((hd%365)/30);return"보유기간: "+hy+"년 "+hm+"개월";})();
   const sellNumRender=parseInt(sellDate)||0;
   const inMoratoriumRender=sellNumRender>=20220510&&sellNumRender<=20260509;
+  // 2026.04.15 1세대1주택 비과세 자동판정 + 미충족 사유 힌트
+  const[autoExempt,setAutoExempt]=useState(false);
+  const[exemptHint,setExemptHint]=useState("");
+  useEffect(()=>{
+    if(assetType!=="house"||own!=="one"||!buyDate||!sellDate||buyDate.length<8||sellDate.length<8){setAutoExempt(false);setExemptHint("");return;}
+    const sellW=tW(sellAmt);if(!sellW){setAutoExempt(false);setExemptHint("");return;}
+    const bd=new Date(buyDate.slice(0,4)+"-"+buyDate.slice(4,6)+"-"+buyDate.slice(6,8));
+    const sd=new Date(sellDate.slice(0,4)+"-"+sellDate.slice(4,6)+"-"+sellDate.slice(6,8));
+    const holdY=(sd-bd)/(365.25*86400000);
+    const liveY=parseInt(liveYear)||0;
+    if(holdY<2){setIs1HouseExempt(false);setAutoExempt(false);setExemptHint("📌 보유기간 2년을 채우면 기본세율이 적용됩니다");return;}
+    if(sellW>12e8){setIs1HouseExempt(false);setAutoExempt(false);setExemptHint("📌 양도가액이 12억 이하이면 전액 비과세입니다 (현재 "+fW(sellW)+")");return;}
+    if(conArea&&liveY<2){setIs1HouseExempt(false);setAutoExempt(false);setExemptHint("📌 조정지역 거주기간 2년을 채우면 양도세가 0원이 됩니다");return;}
+    setIs1HouseExempt(true);setAutoExempt(true);setExemptHint("✅ 1세대1주택 비과세 요건 충족 — 자동 적용됨");
+  },[assetType,own,buyDate,sellDate,sellAmt,conArea,liveYear]);
   useEffect(()=>{if(tW(buyAmt)&&tW(sellAmt)&&buyDate.length>=8&&sellDate.length>=8)calculate();else setResult(null);},[assetType,own,baseDeduct,jointOwn,jointRate,conArea,realLive,liveYear,rentBiz,longRentEx,unregistered,inherited,nonBizLand,is1HouseExempt,isHeavy2,isHeavy3,buyAmt,sellAmt,costTotal,buyDate,sellDate,inheritBuyDate,sangSaeng,mixedHouse,houseArea,shopArea,useManualGain,manualGain]);
   function calculate(){
     const buy=tW(buyAmt);const sell=tW(sellAmt);const expenses=tW(costTotal);
@@ -1769,7 +1784,7 @@ function CalcTrans({isMo=false,onNav=()=>{}}){
             {show:true,val:unregistered,set:setUnregistered,lbl:"미등기양도",desc:"등기 없이 양도 시 70% 단일세율. 장기보유특별공제 적용 불가."},
             {show:true,val:inherited,set:setInherited,lbl:"상속자산",desc:"상속 부동산 양도: 세율은 피상속인 취득일부터, 장특공제는 상속개시일부터 기산."},
             {show:showNonBizLand,val:nonBizLand,set:setNonBizLand,lbl:"비사업용토지",desc:"지목 본래 용도에 사용하지 않은 토지. 기본세율 + 10%p 추가과세."},
-            {show:show1HouseExempt,val:is1HouseExempt,set:setIs1HouseExempt,lbl:"1세대1주택 비과세",desc:"1세대1주택 비과세 요건 충족 주택."},
+            {show:show1HouseExempt,val:is1HouseExempt,set:setIs1HouseExempt,lbl:autoExempt?"1세대1주택 비과세 (자동)":"1세대1주택 비과세",desc:"1세대1주택 비과세 요건 충족 주택."},
             {show:showSangSaeng,val:sangSaeng,set:setSangSaeng,lbl:"상생임대주택",desc:"임대료 5% 이내 인상 계약. 조정지역 거주 2년 요건 면제. 장특 보유공제만 적용."},
             {show:showMixedHouse,val:mixedHouse,set:setMixedHouse,lbl:"겸용주택",desc:"주택분·상가분 면적 비율 분리 과세. 주택분만 1세대1주택 혜택 적용."},
             {show:showHeavy2,val:isHeavy2,set:setIsHeavy2,lbl:"조정 중과 2주택",desc:"조정대상 2주택 중과 적용."},
@@ -1818,6 +1833,7 @@ function CalcTrans({isMo=false,onNav=()=>{}}){
           alertMsg={inMoratoriumRender&&(result.own==="two"||result.own==="more")&&result.conArea?"다주택 중과 한시배제 (~2026.5.9): 기본세율 적용 중":null}
           alertType="info"
         />
+        {exemptHint&&<div style={{marginTop:10,padding:"10px 14px",background:autoExempt?"#E3FCEF":"#FFF8E1",border:autoExempt?"1px solid #57D9A3":"1px solid #FFE082",borderRadius:10,fontSize:12,color:autoExempt?"#006644":"#F57F17",lineHeight:1.6,fontWeight:600}}>{exemptHint}</div>}
         <SavingsGuide tips={_tips}/>
         {result.basis&&<div style={{background:"#e3f2fd",borderRadius:10,padding:16,marginTop:16,fontSize:isMo?13:12,lineHeight:1.8,whiteSpace:"pre-line"}}><b>계산결과 해설</b><br/>{result.basis}</div>}
         <div style={{marginTop:12,padding:"10px 14px",background:"#f8f9fc",border:"1px solid #dfe1e6",borderRadius:8,fontSize:12,color:"#505f79",lineHeight:1.6,display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:8}}><span style={{display:"inline-flex",alignItems:"center",gap:4}}><IconCal/> 신고기한: 양도일이 속한 달 말일로부터 2개월 이내</span><a href="https://hometax.go.kr" target="_blank" rel="noopener noreferrer" style={{color:"#0747A6",fontWeight:700,textDecoration:"none"}}>홈택스 신고 →</a></div>
@@ -4402,6 +4418,26 @@ function NavContentPanel({navContent,setNavContent,calc,effectiveUser,lcToken,se
   </div>);
 }
 
+// 2026.04.15 계산기별 동적 네비 콘텐츠 (Expert Guide + 관련 법령 + 관련 계산기)
+const CALC_NAV_CONTENT={
+  acquisition:{items:[{title:"취득세란?",open:true,body:"부동산을 매매·증여·상속 등으로 취득할 때 납부하는 지방세. 주택은 1~12% 차등 적용."},{title:"절세 팁",body:"생애최초 200만원 감면, 일시적2주택 1주택세율, 시가표준액 1억이하 중과제외."},{title:"신고 기한",body:"취득일로부터 60일 이내 신고·납부. 상속은 6개월, 증여는 3개월."},{title:"신고 방법",body:"위택스(wetax.go.kr) 온라인 신고 또는 관할 시·군·구청 방문."},{title:"주의사항",body:"과세표준은 실거래가. 시가표준액이 높으면 시가표준액 적용. 법인은 무조건 12%."}],law:{text:"지방세법 제10조~제16조",url:"/law/acquisition-tax"},related:["registration","commission","ltv","totalcost","bond"]},
+  transfer:{items:[{title:"양도소득세란?",open:true,body:"부동산 매도 시 양도차익에 부과. 6~45% 누진세율 + 지방소득세 10%."},{title:"비과세 요건",body:"1주택 2년보유(조정지역 2년거주) + 양도가 12억이하 → 전액비과세."},{title:"장기보유특별공제",body:"1주택: 보유연4%+거주연4% 최대80%. 다주택: 보유연2% 최대30%."},{title:"중과세율",body:"2주택+20%p, 3주택+30%p. 단, 2026.5.9까지 중과유예."},{title:"신고 방법",body:"양도일 속한 달 말일로부터 2개월 이내. 홈택스 온라인 신고."}],law:{text:"소득세법 제89조~제104조",url:"/law/transfer-tax"},related:["acquisition","netsale","compare","invest","totalcost"]},
+  compre:{items:[{title:"종부세란?",open:true,body:"매년 6월1일 기준 주택 공시가격 합산이 공제액 초과 시 부과."},{title:"과세기준일",body:"6월 1일 기준. 이 날 소유자에게 부과. 매도 시 6.1 이전 잔금 필수."},{title:"공제방법",body:"1주택 12억, 다주택 9억 공제. 공정시장가액비율 60% 적용."},{title:"절세전략",body:"공동명의 전환 시 각 9억 공제(총18억). 6.1 이전 매도로 과세 회피."},{title:"납부방법",body:"매년 12월1일~15일 납부. 분납 가능(500만원 초과 시)."}],law:{text:"종합부동산세법",url:"/law/comprehensive-tax"},related:["property","holdtax","joint","transfer"]},
+  property:{items:[{title:"재산세란?",open:true,body:"매년 6월1일 기준 부동산 소유자에게 부과하는 지방세."},{title:"과세기준",body:"주택: 공시가격×60% 과세표준. 토지/건물 별도 계산."},{title:"세율표",body:"주택 0.1~0.4%, 토지 0.2~0.5%, 건물 0.25%. 1주택 특례세율 적용."},{title:"납부방법",body:"7월(건물·주택절반)·9월(토지·주택절반) 분납. 위택스 납부."}],law:{text:"지방세법 제105조~제122조",url:""},related:["compre","holdtax","acquisition"]},
+  gift:{items:[{title:"증여세란?",open:true,body:"타인에게 무상으로 재산을 이전할 때 수증자가 납부하는 세금."},{title:"증여재산공제",body:"배우자6억, 직계존속5천만(미성년2천만), 직계비속5천만, 기타친족1천만. 10년 합산."},{title:"10년 합산과세",body:"같은 증여자로부터 10년 내 받은 증여 모두 합산하여 과세."},{title:"절세전략",body:"10년 주기로 공제 한도 내 분할증여. 배우자 6억까지 비과세 활용."},{title:"신고방법",body:"증여받은 날로부터 3개월 이내. 홈택스 신고."}],law:{text:"상증세법 제53조~제58조",url:""},related:["inherit","acquisition","compare","legalinherit"]},
+  inherit:{items:[{title:"상속세란?",open:true,body:"피상속인 사망 시 상속재산에 부과. 10~50% 누진세율."},{title:"상속공제",body:"기초공제2억, 배우자공제 최소5억, 일괄공제5억 중 큰 금액 선택."},{title:"법정상속분",body:"배우자 1.5, 자녀 각1 비율로 분배. 협의분할 가능."},{title:"신고기한",body:"사망일로부터 6개월 이내(해외거주 9개월). 홈택스 신고."},{title:"절세전략",body:"사전 증여로 상속재산 축소. 배우자 공제 최대 활용."}],law:{text:"상증세법 제18조~제26조",url:""},related:["gift","legalinherit","compare"]},
+  holdtax:{items:[{title:"보유세란?",open:true,body:"부동산 보유 시 매년 납부. 재산세(지방세)+종부세(국세) 합산."},{title:"계산방법",body:"재산세: 공시가×60%×세율. 종부세: (공시가합산-공제)×60%×세율."},{title:"납부일정",body:"재산세 7·9월, 종부세 12월. 연간 총 3번 납부."},{title:"절세전략",body:"6.1 이전 매도, 공동명의 전환, 장기보유 감면 활용."}],law:{text:"지방세법+종합부동산세법",url:""},related:["property","compre","joint","transfer"]},
+  rental:{items:[{title:"임대소득세란?",open:true,body:"주택임대수입에 부과. 2주택이상 또는 1주택 고가주택."},{title:"과세기준",body:"2주택이상 월세 전액과세. 3주택이상 보증금 간주임대료 과세."},{title:"분리과세vs종합과세",body:"수입 2000만이하 분리과세(14%) 또는 종합과세 선택. 유리한 방식 적용."},{title:"필요경비",body:"분리과세: 필요경비율 50%(등록임대사업자 60%). 종합과세: 실제경비."},{title:"신고방법",body:"매년 5월 종합소득세 신고. 홈택스 신고."}],law:{text:"소득세법 제25조, 제64조의2",url:""},related:["yield","imputedrent","estincome","goodlord"]},
+  inctax:{items:[{title:"종합소득세란?",open:true,body:"근로·사업·이자·배당·연금·기타소득 합산 과세. 매년 5월 신고."},{title:"소득유형별과세",body:"근로소득: 간이세액 원천징수. 사업소득: 장부 또는 추계신고. 프리랜서: 3.3% 원천징수."},{title:"인적공제",body:"본인150만, 배우자150만, 부양가족 1인당150만. 경로우대·장애인 추가."},{title:"소득공제",body:"국민연금·건강보험료 전액공제. 주택자금·신용카드 공제."},{title:"신고방법",body:"매년 5월1일~31일. 홈택스 신고. 환급은 6월 중 지급."}],law:{text:"소득세법 제14조~제55조",url:""},related:["yearend","netsalary","progressive","rental"]},
+  yearend:{items:[{title:"연말정산이란?",open:true,body:"근로소득자의 1년 세금을 정산. 13월의 월급 또는 추가납부."},{title:"소득공제vs세액공제",body:"소득공제: 과세표준 낮춤. 세액공제: 세금 직접 차감. 세액공제가 더 유리."},{title:"주요공제항목",body:"인적공제, 보험료, 의료비, 교육비, 기부금, 신용카드, 주택자금."},{title:"환급전략",body:"IRP 연700만, 연금저축 600만 세액공제 16.5%. ISA 납입도 활용."},{title:"신청방법",body:"매년 1~2월 회사 제출. 국세청 홈택스 간소화 서비스 활용."}],law:{text:"소득세법 제52조~제59조의4",url:""},related:["inctax","netsalary","insurance4"]},
+  mortgage:{items:[{title:"대출이자란?",open:true,body:"대출원금에 대한 사용료. 상환방식에 따라 총이자 차이 큼."},{title:"상환방식비교",body:"원리금균등/원금균등/만기일시. 초기 부담·총이자 차이."},{title:"금리종류",body:"고정: 안정. 변동: 초기저렴·변동위험. 혼합: 5년고정후변동."},{title:"중도상환수수료",body:"3년이내 0.5~1.5%. 갈아타기 판단 시 고려."}],law:{text:"은행법, 금융소비자보호법",url:"/law/loan-regulation"},related:["dsr","dti","ltv","loanmax","refinance"]},
+  dsr:{items:[{title:"DSR이란?",open:true,body:"총부채원리금상환비율. 연소득 대비 모든 대출 원리금 비율. 40%/50% 규제."},{title:"스트레스DSR",body:"변동 +1.5%p, 혼합 +0.75%p 가산. 2024.9 시행."},{title:"은행vs비은행",body:"은행 40%, 비은행 50%. 초과 시 대출 불가."},{title:"DSR낮추는법",body:"대출기간 연장·소득증빙 강화·기존대출 상환."}],law:{text:"금융위원회 고시 제2023-14호",url:"/law/loan-regulation"},related:["dti","ltv","mortgage","loanmax"]},
+  ltv:{items:[{title:"LTV란?",open:true,body:"담보인정비율. 주택가격 대비 대출가능 금액 비율."},{title:"지역별기준",body:"무주택 70%, 생애최초 80%(6억한도), 수도권 한도 15억↓6억/25억↓4억."},{title:"실수요자우대",body:"생애최초 80%, 서민실수요 70%. 조건 충족 시 우대."},{title:"주의사항",body:"KB시세·공시가·감정가 중 낮은 값 기준."}],law:{text:"금융위원회 고시",url:"/law/loan-regulation"},related:["dsr","dti","loanmax","mortgage"]},
+  commission:{items:[{title:"중개보수란?",open:true,body:"부동산 거래 시 공인중개사에게 지급하는 보수. 법정 상한요율 존재."},{title:"요율표",body:"매매 5천↓0.6%/5천~2억 0.5%/2~9억 0.4%/9~12억 0.5%/12~15억 0.6%/15억↑ 0.7%."},{title:"협의방법",body:"상한요율 이내 협의 가능. 영수증 반드시 수령."},{title:"주의사항",body:"이중계약 금지. 매도/매수인 각각 지급. VAT 별도."}],law:{text:"공인중개사법 시행규칙 제20조",url:"/law/brokerage"},related:["acquisition","registration","totalcost"]},
+  convert:{items:[{title:"전월세전환이란?",open:true,body:"전세 ↔ 월세 전환 시 적용 비율. 법정 상한 기준금리+2%=5.0%."},{title:"전환율계산",body:"월세=(전세금-보증금)×전환율÷12."},{title:"2026년기준율",body:"기준금리 3.0% + 2%p = 5.0% 법정 상한."},{title:"세입자권리",body:"초과 요구 시 거부 가능. 주임법 §7의2."}],law:{text:"주택임대차보호법 §7의2",url:"/law/rental-protection"},related:["yield","rentincrease","jeonseins"]},
+  default:{items:[{title:"이 계산기 사용법",open:true,body:"입력값을 넣으면 자동으로 계산됩니다. 2026년 최신 세법 기준."},{title:"주의사항",body:"본 계산기는 참고용입니다. 정확한 세금은 세무사 상담을 권장합니다."}],law:{text:"",url:""},related:["totalcost","compare","invest"]},
+};
+
 /* ═══ 좌측 네비게이션 (Resource Hub) ═══ */
 function LeftNav({isMo,navOpen,setNavOpen,navContent,setNavContent,effectiveUser,setAuthMode,setShowAuth,navigateMyPage,calc}){
   // 2026.04.14 LeftNav 전면 개편 — static scroll · 신규 메뉴 구조
@@ -4439,14 +4475,12 @@ function LeftNav({isMo,navOpen,setNavOpen,navContent,setNavContent,effectiveUser
       std:SI(<><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></>),
     },
   };
+  // 2026.04.15 calc prop 기반 동적 네비 콘텐츠
+  const navData=CALC_NAV_CONTENT[calc]||CALC_NAV_CONTENT.default;
+  const expertItems=navData.items.map((it,i)=>({id:"ni"+i,title:it.title,defaultOpen:!!it.open,body:it.body}));
+  useEffect(()=>{const first=expertItems.find(i=>i.defaultOpen)||expertItems[0];if(first)setExpertExp(first.id);},[calc]);
   const MENU=[
-    {id:"expert",l:"Expert Guide",always:true,icon:(c)=>SV(c,<><path d="M4 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M8 2v20"/></>),items:[
-      {id:"intro",title:"취득세란 무엇인가요?",defaultOpen:true,body:"부동산을 매매·증여·상속 등으로 취득할 때 납부하는 지방세입니다. 주택의 경우 1~12% 차등 적용."},
-      {id:"tips",title:"절세 팁",body:"• 생애최초 12억↓ 200만원 감면 (2028까지)\n• 일시적 2주택 3년 내 처분 시 일반세율\n• 공시가 1억↓ 다주택 중과 제외"},
-      {id:"deadline",title:"신고 기한",body:"잔금일·등기일 중 빠른 날부터 60일 이내 (상속 6개월, 증여 3개월). 위택스(wetax.go.kr)에서 온라인 신고 가능."},
-      {id:"howto",title:"신고 방법",body:"1) 위택스 로그인 → 2) 신고하기 → 3) 매매계약서·등기필증 첨부 → 4) 세액 확인 → 5) 즉시 납부 또는 가상계좌 발급"},
-      {id:"caution",title:"주의사항",body:"• 시가표준액 ≠ 실거래가 (둘 중 큰 값이 과세표준)\n• 조정대상지역 2주택 8% / 3주택+ 12% 중과\n• 법인은 주택수 무관 12%"}
-    ]},
+    {id:"expert",l:"Expert Guide",always:true,icon:(c)=>SV(c,<><path d="M4 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M8 2v20"/></>),items:expertItems},
     {id:"regs",l:"규정·법령",inline:true,icon:(c)=>SV(c,<><path d="M12 3v18"/><path d="M6 7h12"/><path d="M6 7l-3 7h6z"/><path d="M18 7l3 7h-6z"/></>),body:"• 지방세법 (취득세·재산세·지방교육세)\n• 소득세법 (양도소득세·종합소득세)\n• 종합부동산세법 (종부세)\n• 상속세 및 증여세법\n• 주택법·주택임대차보호법·상가건물임대차보호법\n• 은행업 감독규정 (DSR·DTI·LTV)"},
     {id:"glossary",l:"용어 사전",inline:true,icon:(c)=>SV(c,<><path d="M4 3h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4z"/><path d="M4 3v18"/><path d="M8 7h6M8 11h6M8 15h4"/></>),body:"• 과세표준: 세금 계산의 기준 금액\n• 시가표준액: 지자체가 고시하는 부동산 기준가\n• 공시가격: 국토부 고시 부동산 가격\n• DSR: 총부채원리금상환비율\n• LTV: 담보인정비율\n• DTI: 총부채상환비율\n• 1세대1주택: 세대 전원 기준 1주택"},
     {id:"learning",l:"Learning Center",icon:(c)=>SV(c,<><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></>),sub:[
@@ -4549,6 +4583,24 @@ function LeftNav({isMo,navOpen,setNavOpen,navContent,setNavContent,effectiveUser
             </div>}
           </div>);
         })}
+        {/* 2026.04.15 calc 기반 동적: 관련 법령 + 함께 사용하면 좋은 계산기 */}
+        <div key={"nav-"+calc} style={{animation:"lcNavFade .2s ease"}}>
+          <style>{`@keyframes lcNavFade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}`}</style>
+          {navData.law&&navData.law.text&&(
+            <div style={{padding:"12px 18px",borderTop:"1px solid #F1F5F9"}}>
+              <div style={{fontSize:11,fontWeight:700,color:"#6B7280",letterSpacing:.5,marginBottom:6,textTransform:"uppercase"}}>관련 법령</div>
+              {navData.law.url?<a href={navData.law.url} style={{fontSize:12,color:"#0747A6",textDecoration:"none",fontWeight:600,lineHeight:1.5,display:"inline-block"}}>{navData.law.text} →</a>:<div style={{fontSize:12,color:"#475569",lineHeight:1.5}}>{navData.law.text}</div>}
+            </div>
+          )}
+          {navData.related&&navData.related.length>0&&(
+            <div style={{padding:"12px 18px",borderTop:"1px solid #F1F5F9"}}>
+              <div style={{fontSize:11,fontWeight:700,color:"#6B7280",letterSpacing:.5,marginBottom:8,textTransform:"uppercase"}}>함께 사용하면 좋은 계산기</div>
+              <div style={{display:"flex",flexDirection:"column",gap:4}}>
+                {navData.related.map(rid=>{const info=CL.find(c=>c.id===rid);if(!info)return null;return(<a key={rid} href={"/"+(SLUGS[rid]||rid)} style={{fontSize:12,color:"#475569",textDecoration:"none",padding:"6px 10px",borderRadius:6,display:"flex",alignItems:"center",gap:6,transition:"background .15s,color .15s"}} onMouseEnter={e=>{e.currentTarget.style.background="#EFF6FF";e.currentTarget.style.color="#0747A6"}} onMouseLeave={e=>{e.currentTarget.style.background="transparent";e.currentTarget.style.color="#475569"}}>→ {info.l}</a>);})}
+              </div>
+            </div>
+          )}
+        </div>
       </nav>
     </aside>
   </>);
