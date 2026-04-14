@@ -516,7 +516,7 @@ function Tog({label,value,onChange,options}){
   return(<div style={{marginBottom:16}}>
     <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:8,letterSpacing:.5,textTransform:"uppercase"}}>{label}</label>
     <div style={{display:"flex",flexWrap:"nowrap",borderRadius:10,overflow:"visible",border:"1.5px solid #dfe1e6"}}>
-      {options.map((o,i)=>(<button key={o.value} onClick={()=>onChange(o.value)} style={{flex:1,padding:isMo?"8px 4px":"10px 8px",border:"none",borderRight:i<options.length-1?"1px solid #dfe1e6":"none",background:value===o.value?"#0747A6":"#fff",color:value===o.value?"#fff":"#505f79",fontSize:isMo?10:12,fontWeight:value===o.value?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",wordBreak:"keep-all",overflow:"visible",textAlign:"center",lineHeight:1.3,transition:"background .15s,color .15s"}}>{o.label}</button>))}
+      {options.map((o,i)=>(<button key={o.value} onClick={()=>onChange(o.value)} style={{flex:1,padding:"8px 4px",border:"none",borderRight:i<options.length-1?"1px solid #dfe1e6":"none",background:value===o.value?"#0747A6":"#fff",color:value===o.value?"#fff":"#505f79",fontSize:isMo?10:12,fontWeight:value===o.value?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",wordBreak:"keep-all",overflow:"hidden",textOverflow:"ellipsis",textAlign:"center",lineHeight:1.3,transition:"background .15s,color .15s"}}>{o.label}</button>))}
     </div>
   </div>);
 }
@@ -566,8 +566,8 @@ function getConsultFunnel(calcId,total){
   return null;
 }
 function RP({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlineLinkLabel,alertMsg,alertType="info",consultFunnel}){
-  // 2026.04.14 입력값 없을 때(isExample) RP 숨김 처리
-  if(isExample)return null;
+  // 2026.04.14 입력값 없을 때(isExample) ₩0으로 표시 (항상 노출, 숨기지 않음)
+  if(isExample){total=0;items=[];sub="입력값을 입력하면 결과가 표시됩니다";}
   const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
   const rpKey=typeof window!=="undefined"?window.location.pathname:"";
   // 2026.04.14 상담 퍼널: pathname → calcId 역추적 후 규칙 매칭, prop override 우선
@@ -606,13 +606,14 @@ function RP({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlin
       <span>📅</span><span style={{opacity:.88,flex:"1 1 auto",minWidth:0}}>{deadline}</span>
       {deadlineLink&&<a href={deadlineLink} target="_blank" rel="noopener noreferrer" style={{color:"#FFC400",fontWeight:700,textDecoration:"none"}}>{deadlineLinkLabel||"바로가기 →"}</a>}
     </div>}
-    <div style={{display:"grid",gridTemplateColumns:"repeat(6,1fr)",gap:6,marginTop:14}}>
-      {[{fn:()=>downloadPDF(title,total,sub,items),icon:"📄",l:"PDF"},{fn:()=>downloadImage(title,total,sub,items),icon:"🖼",l:"이미지"},{fn:()=>downloadCSV(title,total,sub,items),icon:"📊",l:"CSV"},{fn:()=>shareKakao(title,total,sub,items),icon:"💬",l:"카카오"},{fn:()=>window.dispatchEvent(new CustomEvent('lc-share-url')),icon:"🔗",l:"링크"},{fn:()=>window.dispatchEvent(new CustomEvent('lc-save-calc',{detail:{title,total,sub,items}})),icon:"💾",l:"저장"}].map((b,i)=>(
+    {(()=>{const _shareBtns=[{fn:()=>downloadPDF(title,total,sub,items),icon:"📄",l:"PDF"},{fn:()=>downloadImage(title,total,sub,items),icon:"🖼",l:"이미지"},{fn:()=>downloadCSV(title,total,sub,items),icon:"📊",l:"CSV"}].concat(KAKAO_JS_KEY?[{fn:()=>shareKakao(title,total,sub,items),icon:"💬",l:"카카오"}]:[]).concat([{fn:()=>window.dispatchEvent(new CustomEvent('lc-share-url')),icon:"🔗",l:"링크"},{fn:()=>window.dispatchEvent(new CustomEvent('lc-save-calc',{detail:{title,total,sub,items}})),icon:"💾",l:"저장"}]);return(
+    <div style={{display:"grid",gridTemplateColumns:"repeat("+_shareBtns.length+",1fr)",gap:6,marginTop:14}}>
+      {_shareBtns.map((b,i)=>(
         <button key={i} onClick={b.fn} style={{padding:"9px 4px",background:"#fff",color:"#0747A6",border:"none",borderRadius:8,fontSize:11,fontWeight:700,cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:2,fontFamily:"inherit",transition:"transform .15s"}}
           onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-1px)"}} onMouseLeave={e=>{e.currentTarget.style.transform="translateY(0)"}}>
           <span style={{fontSize:14}}>{b.icon}</span>{b.l}
         </button>))}
-    </div>
+    </div>);})()}
     <div style={{display:"flex",gap:6,marginTop:10,flexWrap:"wrap"}}>
       {[{m:0.9,l:"−10%"},{m:1,l:"원래"},{m:1.1,l:"+10%"}].map(s=>(
         <button key={s.l} onClick={()=>window.dispatchEvent(new CustomEvent('lc-scenario',{detail:{mult:s.m}}))} style={{flex:"1 1 0",minWidth:0,padding:"8px 4px",background:"rgba(255,255,255,.12)",color:"#fff",border:"1px solid rgba(255,255,255,.28)",borderRadius:8,fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>{s.l}</button>
@@ -3352,10 +3353,10 @@ body.lc-embed main{padding-top:0!important}
           </div>}
         </div>
 
-        {/* 2026.04.14 버그 수정: Expert Guide(EduSidebar 탭) 위 · 학습센터(EduContent) 아래 순서 */}
+        {/* 2026.04.14 Expert Guide(EduContent) 위 · 학습센터(EduSidebar) 아래 */}
         <div className="sidebar-right">
-          <EduSidebar calc={calc} gTab={gTab} setGTab={setGTab}/>
           <div id="edu-content-top"><EduContent calc={calc} gTab={gTab}/></div>
+          <EduSidebar calc={calc} gTab={gTab} setGTab={setGTab}/>
         </div>
       </div>)}
 
