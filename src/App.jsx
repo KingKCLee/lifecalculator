@@ -3003,15 +3003,27 @@ export default function App(){
   useEffect(()=>{
     const h=async(e)=>{
       const d=e.detail||{};
+      // 2026.04.14 AI해설 게이팅: 비로그인→로그인유도 / 무료→월3회 / pro·agent→무제한
+      const _tok=(()=>{try{return localStorage.getItem('lc_token')||""}catch{return""}})();
+      const _plan=(()=>{try{return localStorage.getItem('lc_plan')||""}catch{return""}})();
+      if(!_tok){setAiModal({gate:"login",title:d.title});return;}
+      const isPaid=_plan==="pro"||_plan==="agent";
+      const ym=new Date().toISOString().slice(0,7).replace("-","");
+      const ckey="lc_ai_count_"+ym;
+      if(!isPaid){
+        const used=(()=>{try{return parseInt(localStorage.getItem(ckey)||"0",10)||0}catch{return 0}})();
+        if(used>=3){setAiModal({gate:"limit",title:d.title});return;}
+      }
       setAiModal({loading:true,error:null,content:null,tips:[],title:d.title});
       try{
-        // 2026.04.14 비로그인도 AI해설 호출 가능: 로그인 시에만 Authorization 헤더 포함
-        const _tok=(()=>{try{return localStorage.getItem('lc_token')||""}catch{return""}})();
         const _hdrs={"Content-Type":"application/json"};
         if(_tok)_hdrs.Authorization="Bearer "+_tok;
         const r=await fetch(LC_API+"/ai/explain",{method:"POST",headers:_hdrs,body:JSON.stringify({calcId:calcSaveRef.current,title:d.title,total:d.total,items:d.items,sub:d.sub})});
         const j=await r.json().catch(()=>({}));
-        if(r.ok)setAiModal({loading:false,content:j.explanation||j.content||"",tips:j.tips||[],title:d.title});
+        if(r.ok){
+          if(!isPaid){try{localStorage.setItem(ckey,String(((parseInt(localStorage.getItem(ckey)||"0",10)||0)+1)));}catch{}}
+          setAiModal({loading:false,content:j.explanation||j.content||"",tips:j.tips||[],title:d.title});
+        }
         else setAiModal({loading:false,error:j.error||"해설 생성 실패 (서버 준비 중일 수 있습니다)",title:d.title});
       }catch{setAiModal({loading:false,error:"네트워크 오류",title:d.title});}
     };
@@ -3421,7 +3433,7 @@ body.lc-embed main{padding-top:0!important}
         <button onClick={()=>setAiModal(null)} aria-label="닫기" style={{position:"absolute",top:12,right:12,background:"none",border:"none",fontSize:20,cursor:"pointer",color:"#6b778c"}}>✕</button>
         <div style={{fontSize:18,fontWeight:800,color:"#172B4D",marginBottom:4}}>🤖 AI 해설</div>
         <div style={{fontSize:12,color:"#6b778c",marginBottom:16}}>{aiModal.title}</div>
-        {aiModal.loading?<div style={{padding:"40px 0",textAlign:"center",color:"#6b778c"}}><div style={{display:"inline-block",width:32,height:32,border:"3px solid #dfe1e6",borderTop:"3px solid #0747A6",borderRadius:"50%",animation:"lcspin 0.8s linear infinite"}}/><style>{`@keyframes lcspin{to{transform:rotate(360deg)}}`}</style><div style={{marginTop:12,fontSize:13}}>Claude가 결과를 분석 중...</div></div>:aiModal.error?<div style={{padding:"16px",background:"#FFEBE6",border:"1px solid #FFBDAD",borderRadius:10,color:"#BF2600",fontSize:13,lineHeight:1.6}}>{aiModal.error}</div>:<><div style={{fontSize:14,color:"#172B4D",lineHeight:1.8,whiteSpace:"pre-line",marginBottom:16}}>{aiModal.content}</div>{aiModal.tips&&aiModal.tips.length>0&&<div style={{background:"#f8f9fc",borderRadius:10,padding:16}}><div style={{fontSize:12,fontWeight:700,color:"#0747A6",marginBottom:8}}>💡 절세 팁</div>{aiModal.tips.map((tip,i)=>(<div key={i} style={{fontSize:13,color:"#172B4D",lineHeight:1.7,marginBottom:6,paddingLeft:12,position:"relative"}}><span style={{position:"absolute",left:0}}>•</span>{tip}</div>))}</div>}</>}
+        {aiModal.gate==="login"?<div style={{padding:"12px 0"}}><div style={{fontSize:14,color:"#172B4D",lineHeight:1.7,marginBottom:16}}>로그인하면 월 <strong style={{color:"#0747A6"}}>3회 무료</strong>로 AI 해설을 이용할 수 있어요.</div><div style={{fontSize:12,color:"#6b778c",lineHeight:1.6,marginBottom:20,background:"#f4f5f7",borderRadius:8,padding:"10px 12px"}}>PRO 플랜 가입 시 무제한 · 중개사/전문가 전용 혜택 제공</div><div style={{display:"flex",gap:8}}><button onClick={()=>{setAiModal(null);setAuthMode("login");setShowAuth(true);}} style={{flex:"1 1 auto",padding:"12px 16px",background:"#0747A6",color:"#fff",border:"none",borderRadius:10,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>로그인하기</button><button onClick={()=>setAiModal(null)} style={{padding:"12px 16px",background:"#fff",color:"#505f79",border:"1px solid #dfe1e6",borderRadius:10,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>닫기</button></div></div>:aiModal.gate==="limit"?<div style={{padding:"12px 0"}}><div style={{fontSize:14,color:"#172B4D",lineHeight:1.7,marginBottom:12}}>이번 달 무료 횟수(<strong style={{color:"#BF2600"}}>3회</strong>)를 모두 사용했어요.</div><div style={{fontSize:13,color:"#172B4D",lineHeight:1.7,marginBottom:20,background:"#FFFAE6",borderRadius:8,padding:"12px 14px",border:"1px solid #FFE380"}}><strong>PRO 플랜</strong>으로 업그레이드하면 <strong style={{color:"#0747A6"}}>무제한</strong> 사용 가능합니다.</div><div style={{display:"flex",gap:8}}><button onClick={()=>{setAiModal(null);window.dispatchEvent(new CustomEvent('lc-consult',{detail:{title:"PRO 플랜 업그레이드",total:0}}));}} style={{flex:"1 1 auto",padding:"12px 16px",background:"#FF8B00",color:"#fff",border:"none",borderRadius:10,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>PRO 업그레이드</button><button onClick={()=>setAiModal(null)} style={{padding:"12px 16px",background:"#fff",color:"#505f79",border:"1px solid #dfe1e6",borderRadius:10,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>닫기</button></div></div>:aiModal.loading?<div style={{padding:"40px 0",textAlign:"center",color:"#6b778c"}}><div style={{display:"inline-block",width:32,height:32,border:"3px solid #dfe1e6",borderTop:"3px solid #0747A6",borderRadius:"50%",animation:"lcspin 0.8s linear infinite"}}/><style>{`@keyframes lcspin{to{transform:rotate(360deg)}}`}</style><div style={{marginTop:12,fontSize:13}}>Claude가 결과를 분석 중...</div></div>:aiModal.error?<div style={{padding:"16px",background:"#FFEBE6",border:"1px solid #FFBDAD",borderRadius:10,color:"#BF2600",fontSize:13,lineHeight:1.6}}>{aiModal.error}</div>:<><div style={{fontSize:14,color:"#172B4D",lineHeight:1.8,whiteSpace:"pre-line",marginBottom:16}}>{aiModal.content}</div>{aiModal.tips&&aiModal.tips.length>0&&<div style={{background:"#f8f9fc",borderRadius:10,padding:16}}><div style={{fontSize:12,fontWeight:700,color:"#0747A6",marginBottom:8}}>💡 절세 팁</div>{aiModal.tips.map((tip,i)=>(<div key={i} style={{fontSize:13,color:"#172B4D",lineHeight:1.7,marginBottom:6,paddingLeft:12,position:"relative"}}><span style={{position:"absolute",left:0}}>•</span>{tip}</div>))}</div>}</>}
       </div>
     </div>}
     {/* 2026.04.14 중개사 브랜드 PDF 모달 */}
