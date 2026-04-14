@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.15",
       "category": "전체",
+      "title": "fix: CalcIncTax 인적공제 모든 소득유형 공통 노출 (소득세법 §50~§52)",
+      "desc": "fix: CalcIncTax 인적공제 모든 소득유형 공통 노출 (소득세법 §50~§52)"
+    },
+    {
+      "date": "2026.04.15",
+      "category": "전체",
       "title": "feat: CalcTrans UI를 CalcAcq 포맷으로 통일 (인라인 입력·hr 구분선·칩)",
       "desc": "feat: CalcTrans UI를 CalcAcq 포맷으로 통일 (인라인 입력·hr 구분선·칩)"
     },
@@ -1459,12 +1465,6 @@
       "category": "대출",
       "title": "feat(app): 서브메뉴 가로 스크롤 탭바 + 경락잔금대출 카테고리 이동",
       "desc": "feat(app): 서브메뉴 가로 스크롤 탭바 + 경락잔금대출 카테고리 이동"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "전체",
-      "title": "feat: 좌측 Resource Hub 네비 신설·풀폭 메인·모바일 햄버거",
-      "desc": "feat: 좌측 Resource Hub 네비 신설·풀폭 메인·모바일 햄버거"
     }
   ],
   "rates": {
