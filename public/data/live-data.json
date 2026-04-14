@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.14",
       "category": "전체",
+      "title": "refactor: 시가표준액 조회 API 제거·realtyprice.kr 외부 링크로 전환",
+      "desc": "refactor: 시가표준액 조회 API 제거·realtyprice.kr 외부 링크로 전환"
+    },
+    {
+      "date": "2026.04.14",
+      "category": "전체",
       "title": "feat: CalcAcq 시가표준액 V-world 호출 JSONP 방식으로 변경 (CORS 우회)",
       "desc": "feat: CalcAcq 시가표준액 V-world 호출 JSONP 방식으로 변경 (CORS 우회)"
     },
@@ -1459,13 +1465,6 @@
       "date": "2026.04.11",
       "category": "세금",
       "title": "정책 만료 D-28: transferSurchargeEnd",
-      "desc": "2026-05-10 만료 예정. 관련 계산기에 자동 반영됩니다.",
-      "urgent": true
-    },
-    {
-      "date": "2026.04.10",
-      "category": "세금",
-      "title": "정책 만료 D-29: transferSurchargeEnd",
       "desc": "2026-05-10 만료 예정. 관련 계산기에 자동 반영됩니다.",
       "urgent": true
     }
