@@ -221,6 +221,7 @@ function render() {
         <div class="head">
           <div class="term">${highlight(t.term, q)}</div>
           <span class="cat">${escapeHtml(t.category)}</span>
+    <span style="font-size:11px;color:var(--mt);margin-left:8px">업데이트: 2026-04-14</span>
         </div>
         <div class="def">${highlight(summarize(t.definition), q)}</div>
         ${related ? `<div class="related"><b>관련:</b>${related}</div>` : ''}
