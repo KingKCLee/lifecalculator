@@ -29,6 +29,64 @@ import CalcRealPrice from './calcs/CalcRealPrice';
 // 점진적 교체: 각 계산기가 RATES.xxx ?? 하드코딩값 형태로 참조하도록 변환.
 let RATES = {};const BUILD_ID="2026.04.06.001";const LC_API="https://lc-auth-worker.noble-kclee.workers.dev";const LC_REALESTATE_WORKER="https://lc-realestate-worker.noble-kclee.workers.dev";const KAKAO_JS_KEY="";
 
+// 2026.04.14 시가표준액 조회 인라인 패널용 지역 데이터 (계단식 드롭다운)
+const REGION_DATA = {
+  "서울특별시": {
+    "강남구": ["역삼동","개포동","도곡동","삼성동","청담동","논현동","대치동","압구정동","신사동","세곡동","수서동","율현동","일원동"],
+    "서초구": ["서초동","방배동","반포동","잠원동","양재동","내곡동","염곡동"],
+    "송파구": ["잠실동","신천동","풍납동","송파동","석촌동","삼전동","가락동","문정동","장지동","방이동","오금동","거여동","마천동"],
+    "강동구": ["천호동","성내동","길동","둔촌동","암사동","상일동","명일동","고덕동","강일동"],
+    "마포구": ["공덕동","아현동","도화동","용강동","대흥동","염리동","신공덕동","마포동","현석동","상수동","당인동","서교동","합정동","망원동","연남동","성산동","상암동"],
+    "용산구": ["후암동","용산동","남영동","청파동","원효로동","한강로동","이촌동","이태원동","한남동","서빙고동","보광동"],
+    "성동구": ["왕십리동","상왕십리동","하왕십리동","홍익동","도선동","마장동","사근동","행당동","응봉동","금호동","옥수동","성수동","송정동"],
+    "광진구": ["중곡동","능동","구의동","광장동","자양동","화양동","군자동"],
+    "영등포구": ["영등포동","여의도동","당산동","도림동","문래동","양평동","신길동","대림동"],
+    "강서구": ["염창동","등촌동","화곡동","가양동","발산동","공항동","방화동","마곡동","내발산동","외발산동","과해동","오쇠동","오곡동"],
+    "종로구": ["청운동","신교동","궁정동","효자동","창성동","통의동","적선동","사직동","내자동","내수동","세종로","신문로","경운동","운니동","익선동"],
+    "중구": ["무교동","다동","태평로","을지로","남대문로","명동","장충동","묵정동","필동","예장동","충무로","회현동","광희동","쌍림동","주교동","방산동","오장동","예관동","인현동","저동","신당동","흥인동","동화동","황학동"]
+  },
+  "경기도": {
+    "수원시 영통구": ["영통동","이의동","망포동","원천동","매탄동"],
+    "성남시 분당구": ["정자동","서현동","이매동","야탑동","구미동","금곡동","판교동","삼평동","백현동","수내동"],
+    "성남시 수정구": ["신흥동","태평동","수진동","산성동","양지동","창곡동","복정동","단대동","시흥동"],
+    "성남시 중원구": ["성남동","중앙동","금광동","은행동","상대원동","하대원동","여수동","도촌동","갈현동"],
+    "고양시 일산동구": ["식사동","중산동","정발산동","장항동","마두동","백석동","풍동","사리현동","설문동","지영동","성석동","문봉동"],
+    "고양시 일산서구": ["일산동","주엽동","대화동","덕이동","가좌동","구산동","법곳동","탄현동"],
+    "용인시 수지구": ["풍덕천동","죽전동","동천동","고기동","신봉동","성복동","상현동"],
+    "용인시 기흥구": ["신갈동","보정동","마북동","구성동","언남동","청덕동","상하동","보라동","중동","영덕동"],
+    "안양시 동안구": ["비산동","관양동","평촌동","호계동"],
+    "안양시 만안구": ["안양동","석수동","박달동"]
+  },
+  "인천광역시": {
+    "중구": ["운서동","영종동","용유동"],
+    "연수구": ["옥련동","선학동","연수동","청학동","동춘동","송도동"],
+    "남동구": ["구월동","간석동","만수동","장수동","서창동","논현동","고잔동","남촌동","수산동"],
+    "부평구": ["부평동","십정동","산곡동","청천동","삼산동","일신동","부개동","갈산동"],
+    "서구": ["검암동","경서동","연희동","심곡동","공촌동","석남동","가정동","신현동","원창동","당하동","원당동","검단동","마전동","오류동","금곡동"],
+    "계양구": ["계산동","작전동","효성동","서운동","병방동","임학동"]
+  },
+  "부산광역시": {
+    "해운대구": ["우동","중동","좌동","송정동","반여동","반송동","석대동"],
+    "수영구": ["남천동","수영동","망미동","광안동","민락동"],
+    "연제구": ["거제동","연산동"],
+    "남구": ["대연동","용호동","용당동","문현동","우암동","감만동"],
+    "부산진구": ["부전동","범전동","연지동","초읍동","양정동","전포동","부암동","당감동","가야동","개금동","범천동"]
+  },
+  "대구광역시": {
+    "수성구": ["범어동","만촌동","수성동","황금동","중동","상동","파동","두산동","지산동","범물동"],
+    "중구": ["동인동","삼덕동","성내동","대신동","남산동","동산동","달성동"]
+  },
+  "광주광역시": {
+    "서구": ["양동","농성동","광천동","유덕동","치평동","상무동","화정동","서창동","금호동","풍암동","동천동"]
+  },
+  "대전광역시": {
+    "서구": ["복수동","변동","도마동","정림동","용문동","탄방동","내동","갈마동","월평동","만년동","둔산동","괴정동","가장동","가수원동","관저동","흑석동","매노동","산직동","장안동","평촌동","오동","우명동","금고동","원정동","용촌동","계백동","용운동","괴곡동"]
+  },
+  "울산광역시": {
+    "남구": ["삼산동","신정동","달동","무거동","옥동","야음동","선암동","용연동"]
+  }
+};
+
 const _svg = (color, children) => (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{display:"inline-block",verticalAlign:"-3px",flexShrink:0}}>{children}</svg>);
 const IconHome = ({c="#0747A6"}={}) => _svg(c, <><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></>);
 const IconMoney = ({c="#0747A6"}={}) => _svg(c, <><circle cx="12" cy="12" r="10"/><path d="M7 9h10M7 13h10M10 6v12M14 6v12"/></>);
@@ -905,7 +963,32 @@ function StdPriceLookupModal({onClose,onApply}){
 
 function CalcAcq({isMo=false,onNav=()=>{}}){
   const[acqType,sAT]=useState("sale");const[realType,sRT]=useState("house");const[areaType,sAreaType]=useState("85");const[price,sP]=useState("12500");const[stdPrice,setStdPrice]=useState("");const[own,sO]=useState("1");const[isTempTwo,sTT]=useState("no");const[inheritNone,sIN]=useState("no");const[chipDesc,setChipDesc]=useState(null);
-  const[showStdModal,setShowStdModal]=useState(false);
+  // 2026.04.14 시가표준액 조회 인라인 패널 상태 (모달 제거)
+  const[showStdPanel,setShowStdPanel]=useState(false);
+  const[stdType,setStdType]=useState("apt");
+  const[stdSido,setStdSido]=useState("");
+  const[stdSigungu,setStdSigungu]=useState("");
+  const[stdDong,setStdDong]=useState("");
+  const[stdDetail,setStdDetail]=useState("");
+  const[stdLoading,setStdLoading]=useState(false);
+  const[stdErr,setStdErr]=useState("");
+  const[stdResult,setStdResult]=useState(null);
+  const lookupStdPrice=async()=>{
+    setStdLoading(true);setStdErr("");setStdResult(null);
+    try{
+      const qs=new URLSearchParams({type:stdType,sido:stdSido,sigungu:stdSigungu,dong:stdDong,detail:stdDetail}).toString();
+      const r=await fetch(LC_REALESTATE_WORKER+"/standard-price?"+qs);
+      const j=await r.json().catch(()=>({}));
+      if(r.ok&&(j.stdPrice||j.price||j.amount)){
+        const val=j.stdPrice||j.price||j.amount;
+        setStdResult({val,label:j.address||(stdSido+" "+stdSigungu+" "+stdDong+" "+stdDetail)});
+      }else{
+        setStdErr(j.error||"조회 결과가 없습니다. 직접 입력을 이용해주세요.");
+      }
+    }catch{setStdErr("네트워크 오류로 조회할 수 없습니다.");}
+    finally{setStdLoading(false);}
+  };
+  const applyStdPrice=()=>{if(stdResult){setStdPrice(String(Math.round((stdResult.val||0)/10000)));setShowStdPanel(false);setStdResult(null);}};
   const showChipPanel=(label,desc)=>{if(_popoverTimer){clearTimeout(_popoverTimer);_popoverTimer=null;}setChipDesc({key:label,label,desc,color:"#172B4D",bg:"#f4f5f7",bc:"#dfe1e6"});};
   const hideChipPanel=()=>{_popoverTimer=setTimeout(()=>setChipDesc(null),200);};
   const[corporation,setCorporation]=useState(false);const[firstDistribution,setFirstDistribution]=useState(false);const[conArea,setConArea]=useState(false);const[metro,setMetro]=useState(false);const[populationDecline,setPopulationDecline]=useState(false);const[firstOfLife,setFirstOfLife]=useState(false);const[heavyTaxExclude,setHeavyTaxExclude]=useState(false);const[spouseChildGive,setSpouseChildGive]=useState(false);const[cultivation,setCultivation]=useState(false);const[birthChild,setBirthChild]=useState(false);
@@ -1045,10 +1128,47 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
       <Slider label={acqType==="gift"?"시가인정액":acqType==="inherit"?"시가표준액":acqType==="newbuild"?"건축 원가":"취득가액"} value={price} onChange={sP} min={1000} max={500000} step={500}/>
       <div style={{position:"relative"}}>
         <div style={{position:"absolute",top:-2,right:72,zIndex:2}}><TipModal title="시가표준액 (공시가격)"><p>미입력 시 취득가액을 시가표준액으로 간주합니다.</p><ul style={{paddingLeft:20}}><li>취득가액보다 시가표준액이 크면 시가표준액이 과세표준</li><li>시가표준액 1억 미만이면 다주택 중과 제외</li><li>조정대상지역 증여 시 시가표준액 3억 초과하면 12% 중과</li></ul><p>부동산 공시가격 알리미(realtyprice.kr)에서 확인 가능합니다.</p></TipModal></div>
-        <button type="button" onClick={()=>setShowStdModal(true)} style={{position:"absolute",top:-4,right:0,zIndex:2,padding:"4px 10px",background:"#0747A6",color:"#fff",border:"none",borderRadius:6,fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>조회</button>
+        <button type="button" onClick={()=>setShowStdPanel(v=>!v)} style={{position:"absolute",top:-4,right:0,zIndex:2,padding:"4px 10px",background:showStdPanel?"#6B7280":"#0747A6",color:"#fff",border:"none",borderRadius:6,fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>{showStdPanel?"닫기":"조회"}</button>
         <Inp label="시가표준액 (공시가격)" value={stdPrice} onChange={setStdPrice} suffix="만원" placeholder="미입력 시 취득가 사용"/>
       </div>
-      {showStdModal&&<StdPriceLookupModal onClose={()=>setShowStdModal(false)} onApply={v=>setStdPrice(String(v))}/>}
+      {showStdPanel&&(()=>{
+        const selSt={width:"100%",padding:"10px 12px",border:"1.5px solid #E5E7EB",borderRadius:8,fontSize:14,fontFamily:"inherit",outline:"none",color:"#0a1628",boxSizing:"border-box",background:"#fff"};
+        const detailLabel=(stdType==="land"||stdType==="house")?"지번":(stdType==="shop"||stdType==="office")?"건물명":"단지명";
+        const canLookup=stdSido&&stdSigungu&&stdDong&&stdDetail&&!stdLoading;
+        return(<div style={{marginTop:-8,marginBottom:16,padding:"16px 18px",background:"#F9FAFB",border:"1px solid #E5E7EB",borderRadius:10}}>
+          <div style={{fontSize:12,fontWeight:700,color:"#0a1628",marginBottom:10}}>시가표준액 조회</div>
+          <Tog label="부동산 유형" value={stdType} onChange={v=>{setStdType(v);setStdResult(null);setStdErr("");}} options={[
+            {value:"apt",label:"공동주택"},
+            {value:"house",label:"단독주택"},
+            {value:"officetel",label:"오피스텔"},
+            {value:"shop",label:"상가"},
+            {value:"office",label:"사무실"},
+            {value:"land",label:"토지"}
+          ]}/>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
+            <select value={stdSido} onChange={e=>{setStdSido(e.target.value);setStdSigungu("");setStdDong("");}} style={selSt}>
+              <option value="">시/도 선택</option>
+              {Object.keys(REGION_DATA).map(s=><option key={s} value={s}>{s}</option>)}
+            </select>
+            <select value={stdSigungu} onChange={e=>{setStdSigungu(e.target.value);setStdDong("");}} disabled={!stdSido} style={selSt}>
+              <option value="">시/군/구</option>
+              {stdSido&&Object.keys(REGION_DATA[stdSido]||{}).map(sg=><option key={sg} value={sg}>{sg}</option>)}
+            </select>
+          </div>
+          <select value={stdDong} onChange={e=>setStdDong(e.target.value)} disabled={!stdSigungu} style={{...selSt,marginBottom:8}}>
+            <option value="">읍/면/동</option>
+            {stdSigungu&&(REGION_DATA[stdSido]?.[stdSigungu]||[]).map(d=><option key={d} value={d}>{d}</option>)}
+          </select>
+          <Inp label={detailLabel} value={stdDetail} onChange={setStdDetail} placeholder={detailLabel+" 입력 후 조회"}/>
+          <button onClick={lookupStdPrice} disabled={!canLookup} style={{width:"100%",marginTop:4,padding:"12px 16px",background:canLookup?"#0747A6":"#E5E7EB",color:"#fff",border:"none",borderRadius:10,fontSize:14,fontWeight:700,cursor:canLookup?"pointer":"not-allowed",fontFamily:"inherit"}}>{stdLoading?"조회 중…":"시가표준액 조회"}</button>
+          {stdErr&&<div style={{marginTop:10,padding:"10px 14px",background:"#FFEBE6",border:"1px solid #FFBDAD",borderRadius:8,fontSize:12,color:"#BF2600",lineHeight:1.5}}>{stdErr}</div>}
+          {stdResult&&<div style={{marginTop:12,padding:"14px 16px",background:"#EFF6FF",border:"1px solid #0747A6",borderRadius:10}}>
+            <div style={{fontSize:11,color:"#6B7280",marginBottom:4}}>{stdResult.label}</div>
+            <div style={{fontSize:20,fontWeight:800,color:"#0747A6",marginBottom:10,fontVariantNumeric:"tabular-nums"}}>{"₩"+Number(stdResult.val).toLocaleString("ko-KR")}</div>
+            <button onClick={applyStdPrice} style={{width:"100%",padding:"10px 14px",background:"#0747A6",color:"#fff",border:"none",borderRadius:8,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>이 금액으로 적용</button>
+          </div>}
+        </div>);
+      })()}
       {isHouse&&acqType==="sale"&&<Radio label="취득 후 주택 수" value={own} onChange={sO} options={[{value:"1",label:"1주택"},{value:"2",label:"2주택"},{value:"3",label:"3주택"},{value:"4",label:"4주택+"}]} cols={4}/>}
       {(showCorp||showFirstDist||showConArea||showMetro||showPopDecline||showHeavyExclude||showSpouseChild||showFirstOfLife||showCultivation||showBirthChild)&&<div style={{marginBottom:14}}>
         <div style={{fontSize:11,fontWeight:600,color:"#6b778c",letterSpacing:.5,textTransform:"uppercase",marginBottom:8}}>특수 조건 <span style={{fontWeight:400,color:"#aaa",fontSize:10}}>{isMo?"항목을 누르면 설명이 나타납니다":"마우스를 올리면 설명이 나타납니다"}</span></div>
@@ -3170,8 +3290,135 @@ function SidePanelOverlay({sidePanel,setSidePanel,calc,isMo,sideMarketNews,sideM
   </>);
 }
 
+/* ═══ 2026.04.14 좌측 네비 클릭 시 메인 영역에 표시되는 컨텐츠 패널 ═══ */
+function NavContentPanel({navContent,setNavContent,calc,effectiveUser,lcToken,setAuthMode,setShowAuth}){
+  const[news,setNews]=useState(null);
+  const[newsLoading,setNewsLoading]=useState(false);
+  const[history,setHistory]=useState(null);
+  const[historyLoading,setHistoryLoading]=useState(false);
+  const[historyErr,setHistoryErr]=useState("");
+  const[priceLawdCd,setPriceLawdCd]=useState("");
+  const[priceType,setPriceType]=useState("apt");
+  const[priceData,setPriceData]=useState(null);
+  const[priceLoading,setPriceLoading]=useState(false);
+  const[priceErr,setPriceErr]=useState("");
+  const menu=navContent?.menu,sub=navContent?.sub;
+  useEffect(()=>{
+    if(menu!=="market"||sub!=="market_news")return;
+    setNewsLoading(true);
+    const tryFetch=(url)=>fetch(url,{headers:{'Accept':'application/json'}}).then(r=>r.ok?r.json():Promise.reject('HTTP '+r.status));
+    tryFetch(LC_REALESTATE_WORKER+'/news').catch(()=>tryFetch(LC_API+'/news')).then(d=>{
+      const items=(d&&(d.items||d.recent||d.articles||d.news))||[];
+      setNews(Array.isArray(items)?items.slice(0,10):[]);
+    }).catch(()=>setNews([])).finally(()=>setNewsLoading(false));
+  },[menu,sub]);
+  useEffect(()=>{
+    if(menu!=="history"||!lcToken)return;
+    setHistoryLoading(true);setHistoryErr("");
+    fetch(LC_API+'/history/list',{headers:{'Authorization':'Bearer '+lcToken}})
+      .then(r=>r.ok?r.json():Promise.reject('HTTP '+r.status))
+      .then(d=>{const arr=Array.isArray(d&&d.items)?d.items:(Array.isArray(d)?d:[]);setHistory(arr.slice(0,10));})
+      .catch(e=>{setHistory([]);setHistoryErr('내역을 불러오지 못했습니다.');})
+      .finally(()=>setHistoryLoading(false));
+  },[menu,lcToken]);
+  if(!navContent)return null;
+  const lookupPrice=async()=>{
+    if(!priceLawdCd)return;
+    setPriceLoading(true);setPriceErr("");setPriceData(null);
+    try{
+      const qs=new URLSearchParams({lawdCd:priceLawdCd,type:priceType}).toString();
+      const r=await fetch(LC_REALESTATE_WORKER+"/price?"+qs);
+      const j=await r.json().catch(()=>({}));
+      if(r.ok){setPriceData(j);}
+      else{setPriceErr(j.error||"조회 결과가 없습니다.");}
+    }catch{setPriceErr("네트워크 오류");}
+    finally{setPriceLoading(false);}
+  };
+  const titleMap={
+    expert:"Expert Guide",learning:"Learning Center",market:"Market Data",history:"지난 계산 내역"
+  };
+  const subTitleMap={
+    rates:"세율표·가이드",regs:"규정·법령",tips:"절세 팁",glossary:"용어 사전",
+    market_news:"실시간 뉴스",market_price:"실거래가 조회",market_stats:"부동산 통계"
+  };
+  const close=()=>setNavContent(null);
+  return(<div style={{background:"#fff",border:"1px solid #E5E7EB",borderRadius:12,padding:"18px 20px",marginBottom:18,boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
+    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14,paddingBottom:10,borderBottom:"1px solid #E5E7EB"}}>
+      <div>
+        <div style={{fontSize:11,fontWeight:700,color:"#6B7280",letterSpacing:1,textTransform:"uppercase",marginBottom:2}}>{titleMap[menu]||""}</div>
+        <div style={{fontSize:16,fontWeight:800,color:"#0a1628"}}>{subTitleMap[sub]||titleMap[menu]||""}</div>
+      </div>
+      <button onClick={close} aria-label="닫기" style={{background:"none",border:"none",fontSize:22,cursor:"pointer",color:"#6B7280",padding:4,lineHeight:1}}>✕</button>
+    </div>
+    {(menu==="expert"||menu==="learning")&&(
+      <EduContent calc={calc} eduTab={sub||"rates"}/>
+    )}
+    {menu==="market"&&sub==="market_news"&&(
+      newsLoading?<div style={{fontSize:13,color:"#6B7280"}}>불러오는 중…</div>:
+      (news&&news.length>0?news.map((n,i)=>(
+        <a key={i} href={n.url||n.link||"#"} target="_blank" rel="noopener noreferrer" style={{display:"block",padding:"12px 14px",background:"#F9FAFB",border:"1px solid #E5E7EB",borderRadius:10,marginBottom:8,textDecoration:"none",color:"#0a1628"}}>
+          <div style={{fontSize:14,fontWeight:600,marginBottom:3,lineHeight:1.4}}>{n.title||n.headline||"(제목 없음)"}</div>
+          {(n.summary||n.date||n.published)&&<div style={{fontSize:11,color:"#6B7280",lineHeight:1.5}}>{n.date||n.published||""} {n.summary||""}</div>}
+        </a>
+      )):<div style={{fontSize:13,color:"#6B7280"}}>불러올 데이터가 없습니다.</div>)
+    )}
+    {menu==="market"&&sub==="market_price"&&(
+      <div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr auto",gap:8,marginBottom:10,alignItems:"end"}}>
+          <div>
+            <label style={{display:"block",fontSize:11,fontWeight:600,color:"#6B7280",marginBottom:4}}>법정동코드 (5자리)</label>
+            <input type="text" value={priceLawdCd} onChange={e=>setPriceLawdCd(e.target.value.replace(/\D/g,"").slice(0,5))} placeholder="예: 11680" style={{width:"100%",padding:"10px 12px",border:"1.5px solid #E5E7EB",borderRadius:8,fontSize:14,fontFamily:"inherit",outline:"none",boxSizing:"border-box"}}/>
+          </div>
+          <div>
+            <label style={{display:"block",fontSize:11,fontWeight:600,color:"#6B7280",marginBottom:4}}>유형</label>
+            <select value={priceType} onChange={e=>setPriceType(e.target.value)} style={{width:"100%",padding:"10px 12px",border:"1.5px solid #E5E7EB",borderRadius:8,fontSize:14,fontFamily:"inherit",outline:"none",boxSizing:"border-box",background:"#fff"}}>
+              <option value="apt">아파트 매매</option>
+              <option value="apt_rent">아파트 전월세</option>
+              <option value="officetel">오피스텔</option>
+            </select>
+          </div>
+          <button onClick={lookupPrice} disabled={!priceLawdCd||priceLoading} style={{padding:"10px 16px",background:priceLawdCd?"#0747A6":"#E5E7EB",color:"#fff",border:"none",borderRadius:8,fontSize:13,fontWeight:700,cursor:priceLawdCd?"pointer":"not-allowed",fontFamily:"inherit"}}>{priceLoading?"…":"조회"}</button>
+        </div>
+        {priceErr&&<div style={{padding:"10px 14px",background:"#FFEBE6",border:"1px solid #FFBDAD",borderRadius:8,fontSize:12,color:"#BF2600"}}>{priceErr}</div>}
+        {priceData&&(()=>{
+          const items=Array.isArray(priceData.items)?priceData.items:(Array.isArray(priceData.deals)?priceData.deals:[]);
+          const list=items.slice(0,5);
+          return(<div>
+            {priceData.summary&&<div style={{padding:"10px 14px",background:"#EFF6FF",borderRadius:8,fontSize:13,color:"#0747A6",marginBottom:10,fontWeight:600}}>{priceData.summary}</div>}
+            {list.length>0?list.map((it,i)=>(
+              <div key={i} style={{padding:"10px 12px",background:"#F9FAFB",border:"1px solid #E5E7EB",borderRadius:8,marginBottom:6,fontSize:13,color:"#0a1628"}}>
+                <div style={{fontWeight:600}}>{it.aptName||it.name||"(이름 없음)"}</div>
+                <div style={{fontSize:12,color:"#6B7280",marginTop:2}}>{it.dealAmount||it.price||""} {it.area||""} {it.dealDate||it.date||""}</div>
+              </div>
+            )):<div style={{fontSize:13,color:"#6B7280"}}>결과 없음</div>}
+          </div>);
+        })()}
+      </div>
+    )}
+    {menu==="market"&&sub==="market_stats"&&(
+      <div style={{padding:"24px 16px",textAlign:"center",fontSize:14,color:"#6B7280"}}>부동산 통계 · 준비 중</div>
+    )}
+    {menu==="history"&&(
+      !effectiveUser?<div style={{padding:"24px 16px",textAlign:"center"}}>
+        <div style={{fontSize:14,color:"#0a1628",marginBottom:14,fontWeight:600}}>로그인 후 이용 가능</div>
+        <button onClick={()=>{setAuthMode("login");setShowAuth(true);}} style={{padding:"10px 20px",background:"#0a1628",color:"#fff",border:"none",borderRadius:8,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>로그인 / 가입</button>
+      </div>:historyLoading?<div style={{fontSize:13,color:"#6B7280"}}>불러오는 중…</div>:
+      historyErr?<div style={{fontSize:13,color:"#DE350B"}}>{historyErr}</div>:
+      (history&&history.length>0?history.map((h,i)=>(
+        <div key={i} style={{padding:"12px 14px",background:"#F9FAFB",border:"1px solid #E5E7EB",borderRadius:10,marginBottom:8}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+            <div style={{fontSize:13,fontWeight:600,color:"#0a1628"}}>{h.inputs?.title||h.calc_type||h.type||"계산"}</div>
+            {h.result?.total&&<div style={{fontSize:13,fontWeight:700,color:"#0747A6",fontVariantNumeric:"tabular-nums"}}>{"₩"+Number(h.result.total).toLocaleString("ko-KR")}</div>}
+          </div>
+          <div style={{fontSize:11,color:"#6B7280",marginTop:2}}>{h.created_at||h.time||""}</div>
+        </div>
+      )):<div style={{fontSize:13,color:"#6B7280"}}>저장된 내역이 없습니다.</div>)
+    )}
+  </div>);
+}
+
 /* ═══ 좌측 네비게이션 (Resource Hub) ═══ */
-function LeftNav({isMo,navOpen,setNavOpen,sidePanel,setSidePanel,setEduTab,effectiveUser,setAuthMode,setShowAuth,navigateMyPage}){
+function LeftNav({isMo,navOpen,setNavOpen,navContent,setNavContent,effectiveUser,setAuthMode,setShowAuth,navigateMyPage}){
   // 2026.04.14 Expert Guide는 기본 펼침, 나머지는 접힘
   const[openMenu,setOpenMenu]=useState("expert");
   const SV=(stroke,children)=>(<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">{children}</svg>);
@@ -3203,41 +3450,34 @@ function LeftNav({isMo,navOpen,setNavOpen,sidePanel,setSidePanel,setEduTab,effec
       <div style={{padding:"0 22px",marginTop:24,marginBottom:8,fontSize:11,fontWeight:700,letterSpacing:1.5,color:"#6B7280",textTransform:"uppercase"}}>RESOURCE HUB</div>
       <nav style={{flex:"1 1 auto",display:"flex",flexDirection:"column"}}>
         {MENU.map(m=>{
-          const a=sidePanel===m.id||(m.sub&&m.sub.some(s=>sidePanel===s.id));
+          const a=navContent?.menu===m.id;
           const expanded=m.always||openMenu===m.id;
           const hasSub=Array.isArray(m.sub)&&m.sub.length>0;
           const isHist=m.special==="history";
           const iconColor=a?"#0747A6":"#0a1628";
+          const handleHistoryClick=()=>{
+            if(effectiveUser){setNavContent?.({menu:"history",sub:null});if(isMo)setNavOpen(false);}
+            else{setAuthMode?.("login");setShowAuth?.(true);if(isMo)setNavOpen(false);}
+          };
           return(<div key={m.id}>
             <button onClick={()=>{
               if(m.always)return;
-              if(hasSub||isHist){setOpenMenu(expanded?null:m.id);}
-              else{setSidePanel?.(a?null:m.id);if(isMo)setNavOpen(false);}
+              if(isHist){handleHistoryClick();return;}
+              if(hasSub){setOpenMenu(expanded?null:m.id);}
             }} style={{width:"100%",display:"flex",alignItems:"center",gap:10,padding:"12px 18px",background:a?"#EFF6FF":"none",border:"none",borderLeft:a?"3px solid #0747A6":"3px solid transparent",color:a?"#0747A6":"#0a1628",fontSize:13,fontWeight:a?700:500,cursor:m.always?"default":"pointer",fontFamily:"inherit",textAlign:"left",position:"relative"}} onMouseEnter={e=>{if(!a&&!m.always)e.currentTarget.style.background="#F9FAFB"}} onMouseLeave={e=>{if(!a)e.currentTarget.style.background="none"}}>
               {a&&<span style={{position:"absolute",left:8,top:"50%",transform:"translateY(-50%)",width:6,height:6,borderRadius:"50%",background:"#0747A6"}}/>}
               <span style={{width:22,height:22,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{m.icon(iconColor)}</span>
               <span style={{flex:"1 1 auto"}}>{m.l}</span>
-              {!m.always&&(hasSub||isHist)&&<span style={{fontSize:10,color:a?"#0747A6":"#6B7280",flexShrink:0}}>{expanded?"▼":"▶"}</span>}
+              {!m.always&&hasSub&&<span style={{fontSize:10,color:a?"#0747A6":"#6B7280",flexShrink:0}}>{expanded?"▼":"▶"}</span>}
             </button>
             {hasSub&&expanded&&<div style={{background:"#F9FAFB",borderLeft:"3px solid #EFF6FF"}}>
               {m.sub.map(s=>{
-                const active=sidePanel===s.id;
+                const active=navContent?.menu===m.id&&navContent?.sub===s.id;
                 return(<button key={s.id} onClick={()=>{
-                  if(m.id==="expert"||m.id==="learning"){setEduTab?.(s.id);setSidePanel?.(m.id);}
-                  else if(m.id==="market"){setSidePanel?.(s.id);}
+                  setNavContent?.({menu:m.id,sub:s.id});
                   if(isMo)setNavOpen(false);
                 }} style={{width:"100%",display:"flex",alignItems:"center",padding:"10px 18px 10px 44px",background:active?"#EFF6FF":"none",border:"none",color:active?"#0747A6":"#475569",fontSize:12,fontWeight:active?700:500,cursor:"pointer",fontFamily:"inherit",textAlign:"left"}} onMouseEnter={e=>{if(!active){e.currentTarget.style.background="#EFF6FF";e.currentTarget.style.color="#0747A6"}}} onMouseLeave={e=>{if(!active){e.currentTarget.style.background="none";e.currentTarget.style.color="#475569"}}}>{s.l}</button>);
               })}
-            </div>}
-            {isHist&&expanded&&<div style={{background:"#F9FAFB",borderLeft:"3px solid #EFF6FF",padding:"12px 18px 12px 44px"}}>
-              {effectiveUser?(
-                <button onClick={()=>{navigateMyPage?.();if(isMo)setNavOpen(false);}} style={{width:"100%",padding:"10px 12px",background:"#0a1628",color:"#fff",border:"none",borderRadius:6,fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>전체 내역 보기 →</button>
-              ):(
-                <div>
-                  <div style={{fontSize:11,color:"#6B7280",marginBottom:8,lineHeight:1.5}}>로그인 후 이용 가능</div>
-                  <button onClick={()=>{setAuthMode?.("login");setShowAuth?.(true);if(isMo)setNavOpen(false);}} style={{width:"100%",padding:"8px 12px",background:"#0747A6",color:"#fff",border:"none",borderRadius:6,fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>로그인</button>
-                </div>
-              )}
             </div>}
           </div>);
         })}
@@ -3307,6 +3547,8 @@ export default function App(){
   const[liveData,setLiveData]=useState(null);
   // 2026-04-14 좌측 네비 패널 (Expert Guide / Learning Center / Market Data / 지난 계산 내역)
   const[sidePanel,setSidePanel]=useState(null);
+  // 2026.04.14 좌측 네비 클릭 시 메인 영역에 표시할 컨텐츠 ({menu,sub})
+  const[navContent,setNavContent]=useState(null);
   const[sideMarketNews,setSideMarketNews]=useState(null);
   const[sideMarketLoading,setSideMarketLoading]=useState(false);
   const[sideHistory,setSideHistory]=useState(null);
@@ -3489,8 +3731,7 @@ export default function App(){
 
   return(<div style={{minHeight:"100vh",background:"#FFFFFF",fontFamily:"'Pretendard','Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif",width:"100%",maxWidth:"100vw",overflowX:"hidden",paddingLeft:(isMo||page==="home")?0:200,paddingTop:64}}>
     <SidePanel/>
-    {page!=="home"&&<LeftNav isMo={isMo} navOpen={navOpen} setNavOpen={setNavOpen} sidePanel={sidePanel} setSidePanel={setSidePanel} setEduTab={setEduTab} effectiveUser={effectiveUser} setAuthMode={setAuthMode} setShowAuth={setShowAuth} navigateMyPage={navigateMyPage}/>}
-    <SidePanelOverlay sidePanel={sidePanel} setSidePanel={setSidePanel} calc={calc} isMo={isMo} sideMarketNews={sideMarketNews} sideMarketLoading={sideMarketLoading} sideHistory={sideHistory} sideHistoryLoading={sideHistoryLoading} sideHistoryErr={sideHistoryErr} lcToken={lcToken} setAuthMode={setAuthMode} setShowAuth={setShowAuth} eduTab={eduTab} setEduTab={setEduTab}/>
+    {page!=="home"&&<LeftNav isMo={isMo} navOpen={navOpen} setNavOpen={setNavOpen} navContent={navContent} setNavContent={setNavContent} effectiveUser={effectiveUser} setAuthMode={setAuthMode} setShowAuth={setShowAuth} navigateMyPage={navigateMyPage}/>}
     {isMo&&<button onClick={()=>setNavOpen(true)} aria-label="메뉴 열기" style={{position:"fixed",top:10,left:10,zIndex:9997,width:40,height:40,background:"#0a1628",color:"#fff",border:"none",borderRadius:10,cursor:"pointer",fontSize:20,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 8px rgba(0,0,0,.2)"}}>☰</button>}
     <style>{`
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;overflow-x:hidden}
@@ -3739,6 +3980,7 @@ body.lc-embed main{padding-top:0!important}
       <div className="calc-grid page-layout" style={{padding:isMo?"16px":24}}>
         {/* 좌측: 헤더 + 서브탭 + 계산기 + PRO */}
         <div>
+          {navContent&&<NavContentPanel navContent={navContent} setNavContent={setNavContent} calc={calc} effectiveUser={effectiveUser} lcToken={lcToken} setAuthMode={setAuthMode} setShowAuth={setShowAuth}/>}
           <nav aria-label="breadcrumb" style={{fontSize:12,color:P.mt,marginBottom:8,display:"flex",alignItems:"center",gap:6}}>
             <span onClick={navigateHome} style={{cursor:"pointer",color:P.pri}}>홈</span>
             <span>›</span>
