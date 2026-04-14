@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.15",
       "category": "전체",
+      "title": "feat: CalcTrans UI를 CalcAcq 포맷으로 통일 (인라인 입력·hr 구분선·칩)",
+      "desc": "feat: CalcTrans UI를 CalcAcq 포맷으로 통일 (인라인 입력·hr 구분선·칩)"
+    },
+    {
+      "date": "2026.04.15",
+      "category": "전체",
       "title": "feat: 정보센터 메가메뉴·/info 허브 페이지·홈 정보 섹션 간소화",
       "desc": "feat: 정보센터 메가메뉴·/info 허브 페이지·홈 정보 섹션 간소화"
     },
@@ -1459,12 +1465,6 @@
       "category": "전체",
       "title": "feat: 좌측 Resource Hub 네비 신설·풀폭 메인·모바일 햄버거",
       "desc": "feat: 좌측 Resource Hub 네비 신설·풀폭 메인·모바일 햄버거"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "전체",
-      "title": "fix: 입력 레이블 공통 스타일 lblSt 도입 (40개 계산기 전수 통일)",
-      "desc": "fix: 입력 레이블 공통 스타일 lblSt 도입 (40개 계산기 전수 통일)"
     }
   ],
   "rates": {
