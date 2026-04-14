@@ -2439,7 +2439,7 @@ function EduContent({calc:calcId,eduTab}){
 /* ── 법적 페이지 데이터 ── */
 const LS={h:{fontSize:16,fontWeight:700,margin:"20px 0 8px",color:"#0747A6"},ib:{background:"#f8f9fc",borderRadius:12,padding:24,margin:"16px 0"}};
 const LEGAL_CONTENT={
-disclaimer:{title:"면책 조항 (Legal Disclaimer)",body:<div>
+disclaimer:{title:"면책조항",body:<div>
 <h3 style={LS.h}>제1조 (서비스의 목적)</h3><p>생활계산기.com(이하 "본 서비스")은 부동산 관련 세금, 대출, 비용 등의 계산을 돕기 위해 제공되는 참고용 계산 도구입니다. 본 서비스는 법률, 세무, 금융 등 전문적인 자문을 제공하는 것이 아니며, 참고 자료로만 활용되어야 합니다.</p>
 <h3 style={LS.h}>제2조 (계산 결과의 정확성)</h3><p>본 서비스의 계산 결과는 입력된 정보와 현행 세법·규정을 기반으로 산출되며, 참고용으로만 제공됩니다. 계산 결과의 정확성을 보증하지 않으며, 실제 세금·수수료·비용은 관할 세무서, 금융기관, 법원 등 관계 기관의 최종 판단에 따라 달라질 수 있습니다.</p>
 <h3 style={LS.h}>제3조 (법적 효력의 부인)</h3><p>본 서비스에서 제공하는 계산 결과, 정보, 가이드 등은 법적 효력이나 계약상의 구속력을 가지지 않습니다. 실제 부동산 거래, 세금 신고, 대출 신청 등 중요한 재정 의사결정 시에는 반드시 세무사, 공인중개사, 법무사, 금융기관 등 해당 분야 전문가의 자문을 받으시기 바랍니다.</p>
@@ -2513,13 +2513,13 @@ privacy:{title:"개인정보처리방침",body:<div>
 <h3 style={LS.h}>제12조 (개인정보 처리방침 변경)</h3>
 <p>본 방침은 법령·정책 변경 시 사전 공지 후 개정됩니다. 시행일: 2026년 4월 6일</p>
 </div>},
-resource:{title:"자료실 (Resource Center)",body:<div>
+resource:{title:"자료실",body:<div>
 <h3 style={LS.h}>세율 참고 자료</h3><p>• 2025년 취득세율표 — 1주택(1~3%), 2주택(8%), 3주택(12%)</p><p>• 양도소득세 기본세율 — 6~45% 8단계 누진</p><p>• 종합부동산세율 — 일반 0.5~2.7%, 법인 2.7~5.0%</p><p>• 증여세율 — 10~50% 5단계 누진 (10년 합산)</p><p>• 상속세율 — 10~50% 5단계 누진</p>
 <h3 style={LS.h}>대출 규정 참고</h3><p>• DSR 기준 — 은행 40%, 비은행 50%, 스트레스 DSR 가산금리 적용</p><p>• LTV 기준 — 무주택 70%, 1주택 60%, 생애최초 80%</p><p>• DTI 기준 — 투기과열지구 40%, 조정대상지역 50%</p>
 <h3 style={LS.h}>중개보수 요율표</h3><p>• 매매 — 5천만 이하 0.6%, 2억 이하 0.5%, 9억 이하 0.4%, 12억 이하 0.5%, 15억 이하 0.6%, 15억 초과 0.7%</p><p>• 전세 — 5천만 이하 0.5%, 1억 이하 0.4%, 6억 이하 0.3%, 6억 초과 0.4%</p>
 <h3 style={LS.h}>관련 기관 링크</h3><p>• 국세청 홈택스 — hometax.go.kr</p><p>• 위택스 (지방세) — wetax.go.kr</p><p>• 대법원 인터넷등기소 — iros.go.kr</p><p>• 한국부동산원 — reb.or.kr</p><p>• 국토교통부 실거래가 공개 — rt.molit.go.kr</p><p>• 금융감독원 — fss.or.kr</p>
 </div>},
-contact:{title:"문의하기 (Contact Support)",body:<div>
+contact:{title:"문의하기",body:<div>
 <h3 style={LS.h}>서비스 문의</h3><p>생활계산기.com에 대한 문의, 건의, 오류 신고 등은 아래로 연락 주시기 바랍니다.</p>
 <div style={LS.ib}><p style={{margin:"4px 0"}}>• 이메일: noble.kclee@gmail.com</p><p style={{margin:"4px 0"}}>• 운영자: 이광철</p><p style={{margin:"4px 0"}}>• 응답 시간: 영업일 기준 1~2일 이내</p></div>
 <h3 style={LS.h}>문의 유형</h3><p>• 계산 결과 오류 신고 — 계산기명, 입력값, 예상 결과를 함께 알려주시면 빠르게 수정합니다.</p><p>• 기능 건의 — 추가되었으면 하는 계산기나 기능을 제안해 주세요.</p><p>• 제휴/협력 문의 — 사업 제휴, API 연동, 광고 등 문의를 환영합니다.</p><p>• 개인정보 관련 — 열람, 정정, 삭제 요청은 이메일로 접수해 주시면 지체 없이 처리합니다.</p>
@@ -3720,8 +3720,8 @@ body.lc-embed main{padding-top:0!important}
 
     </main>
     {/* 푸터 */}
-    <footer style={{background:"#F9FAFB",borderTop:"1px solid #E5E7EB",padding:"48px 24px"}}>
-      <div className="footer-inner" style={{maxWidth:1200,margin:"0 auto",display:"grid",gridTemplateColumns:"1fr",gap:40}}>
+    <footer style={{background:"#F9FAFB",borderTop:"1px solid #E5E7EB",padding:"48px 24px",width:"100vw",position:"relative",left:"50%",right:"50%",marginLeft:"-50vw",marginRight:"-50vw",boxSizing:"border-box"}}>
+      <div className="footer-inner" style={{width:"100%",display:"grid",gridTemplateColumns:"1fr",gap:40}}>
         <div>
           <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}><LogoSVG size={32}/><span style={{fontSize:18,fontWeight:800,color:"#0a1628"}}>생활계산기.com</span></div>
           <div style={{fontSize:13,color:"#6B7280",lineHeight:1.6}}>생활 속 세금·대출·비용 종합 계산 플랫폼<br/><span style={{color:"#6B7280"}}>본 계산기는 참고용이며, 실제 세금·수수료는 세무사 또는 관할 기관에 반드시 확인하시기 바랍니다.</span></div>
@@ -3731,7 +3731,7 @@ body.lc-embed main{padding-top:0!important}
           {[{l:"면책조항",k:"disclaimer"},{l:"자료실",k:"resource"},{l:"개인정보처리방침",k:"privacy"},{l:"문의",k:"contact"}].map(item=><div key={item.k} onClick={()=>navigateLegal(item.k)} style={{fontSize:13,color:"#6B7280",marginBottom:8,cursor:"pointer"}} onMouseEnter={e=>e.currentTarget.style.color="#0a1628"} onMouseLeave={e=>e.currentTarget.style.color="#6B7280"}>{item.l}</div>)}
         </div>
       </div>
-      <div style={{textAlign:"center",fontSize:11,color:"#6B7280",marginTop:32,lineHeight:1.8,borderTop:"1px solid #E5E7EB",paddingTop:24,maxWidth:1200,margin:"32px auto 0"}}>
+      <div style={{textAlign:"center",fontSize:11,color:"#6B7280",marginTop:32,lineHeight:1.8,borderTop:"1px solid #E5E7EB",paddingTop:24,width:"100%"}}>
         © {new Date().getFullYear()} 생활계산기.com. All rights reserved. | 세법 검증: {UPDATE_LOG[0]?.date}<br/>
         <span style={{color:"#6B7280"}}>상호: 더블유부동산 | 대표: 이광철 | 사업자등록번호: 589-24-01721 | 통신판매업 신고번호: 제2025-인천부평-0992호 | 이메일: noble.kclee@gmail.com</span>
       </div>
