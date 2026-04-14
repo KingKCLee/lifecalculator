@@ -68,7 +68,7 @@ h1{font-size:26px;margin:0 0 20px;color:var(--pri);letter-spacing:-0.5px}
   <h1>✏️ 글쓰기</h1>
 
   <div class="notice-box">
-    ℹ️ <strong>베타 안내</strong>: 현재 프론트엔드만 구현되어 있어 "등록" 버튼을 눌러도 글이 저장되지 않습니다. 백엔드(Cloudflare D1) 연동 후 정식 오픈됩니다.
+    ℹ️ <strong>D1 백엔드 연동 완료</strong>: 작성된 글은 Cloudflare D1 데이터베이스에 저장되며, 목록 페이지에 즉시 반영됩니다. 타인을 비방하거나 개인정보가 포함된 글은 삭제될 수 있습니다.
   </div>
 
   <div class="warn">
@@ -182,10 +182,14 @@ document.getElementById('cancelBtn').addEventListener('click', () => {
   }
 });
 
-// 제출 (백엔드 없음 — 알림)
-document.getElementById('writeForm').addEventListener('submit', e => {
+// lc-auth-worker POST /posts 연동 — Cloudflare D1
+const POSTS_ENDPOINT = 'https://lc-auth-worker.noble-kclee.workers.dev/posts';
+const CAT_MAP = {tax:'세금', loan:'대출', market:'시장', qna:'질문', free:'자유'};
+
+document.getElementById('writeForm').addEventListener('submit', async e => {
   e.preventDefault();
   const f = e.target;
+  const submitBtn = f.querySelector('.btn-primary');
   if(!f.category.value || !f.title.value.trim() || !f.content.value.trim() || !f.author.value.trim() || !f.password.value || !f.agree.checked){
     alert('모든 필수 항목을 입력하고 이용 규칙에 동의해주세요.');
     return;
@@ -194,7 +198,31 @@ document.getElementById('writeForm').addEventListener('submit', e => {
     alert('비밀번호는 4자 이상이어야 합니다.');
     return;
   }
-  alert('⚠️ 베타 오픈 중입니다.\n\n현재는 UI만 구현되어 글이 저장되지 않습니다.\nCloudflare D1 백엔드 연동 후 정식 오픈됩니다.');
+  const originalText = submitBtn.textContent;
+  submitBtn.disabled = true;
+  submitBtn.textContent = '등록 중...';
+  try {
+    const res = await fetch(POSTS_ENDPOINT, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        title: f.title.value.trim(),
+        content: f.content.value.trim(),
+        category: CAT_MAP[f.category.value] || f.category.value,
+        author: f.author.value.trim()
+      })
+    });
+    const data = await res.json().catch(() => ({}));
+    if(!res.ok){
+      throw new Error(data.error || ('HTTP ' + res.status));
+    }
+    alert('✅ 게시글이 등록되었습니다.\n\n글번호: ' + (data.id || '-') + '\n\n목록으로 이동합니다.');
+    location.href = '/community/';
+  } catch(err) {
+    alert('❌ 게시글 등록 실패: ' + (err.message || err) + '\n\n잠시 후 다시 시도하거나 운영자에게 문의해주세요.');
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalText;
+  }
 });
 </script>
 </body>
