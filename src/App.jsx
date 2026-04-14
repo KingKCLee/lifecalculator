@@ -627,14 +627,11 @@ const Tog = ({label, options, value, onChange, isMo:isMoProp}) => {
             key={opt.value}
             onClick={() => onChange(opt.value)}
             style={{
-              flex:"1 1 0",
-              minWidth:0,
-              padding:isMo?"8px 10px":"10px 14px",
-              fontSize:isMo?11:13,
+              flex:"0 0 auto",
+              padding:"6px 12px",
+              fontSize:13,
               fontWeight:value===opt.value?700:400,
               whiteSpace:"nowrap",
-              overflow:"hidden",
-              textOverflow:"ellipsis",
               lineHeight:1.3,
               borderRadius:6,
               border:"1.5px solid",
