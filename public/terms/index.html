@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>부동산 용어집 — 생활계산기</title>
+<meta name="description" content="취득세·양도세·대출·임대차·중개수수료 등 부동산 거래에 꼭 필요한 용어를 가나다순·카테고리별로 정리했습니다.">
+<link rel="canonical" href="https://생활계산기.com/terms/index.html">
+<style>
+  :root {
+    --pri:#0747A6; --pl:#0052CC; --bg:#f8f9fc; --card:#ffffff;
+    --bd:#dfe1e6; --mt:#505f79; --tx:#172B4D; --lt:#f4f5f7;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Pretendard", sans-serif;
+         background: var(--bg); color: var(--tx); margin: 0; line-height: 1.5; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 24px 16px 80px; }
+  header { padding: 12px 0 24px; }
+  header a.back { display: inline-block; color: var(--mt); font-size: 13px; text-decoration: none; margin-bottom: 12px; }
+  header a.back:hover { color: var(--pri); }
+  header h1 { font-size: 26px; margin: 0 0 6px; color: var(--pri); }
+  header p { margin: 0; color: var(--mt); font-size: 14px; }
+  header .stats { margin-top: 8px; font-size: 13px; color: var(--mt); }
+  header .stats strong { color: var(--pri); font-size: 16px; }
+
+  .searchbar { display: flex; gap: 8px; margin-bottom: 20px; }
+  .searchbar input { flex: 1; padding: 12px 16px; border: 2px solid var(--bd);
+    border-radius: 10px; font-size: 15px; background: var(--card); color: var(--tx); outline: none; }
+  .searchbar input:focus { border-color: var(--pri); }
+  .searchbar button { padding: 12px 20px; background: var(--pri); color: #fff;
+    border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .searchbar button:hover { background: var(--pl); }
+
+  .index-jump { background: var(--card); border: 1px solid var(--bd); border-radius: 10px;
+    padding: 12px 14px; margin-bottom: 20px; }
+  .index-jump h3 { font-size: 13px; color: var(--mt); margin: 0 0 8px; font-weight: 600; }
+  .index-jump .letters { display: flex; flex-wrap: wrap; gap: 6px; }
+  .index-jump .letter { width: 32px; height: 32px; display: inline-flex; align-items: center;
+    justify-content: center; background: var(--lt); border-radius: 6px; color: var(--tx);
+    font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none;
+    transition: all .15s; }
+  .index-jump .letter:hover { background: var(--pri); color: #fff; }
+  .index-jump .letter.disabled { color: #c1c7d0; cursor: default; }
+  .index-jump .letter.disabled:hover { background: var(--lt); color: #c1c7d0; }
+
+  .accordion { background: var(--card); border: 1px solid var(--bd); border-radius: 10px;
+    margin-bottom: 12px; overflow: hidden; }
+  .accordion summary { padding: 16px 18px; cursor: pointer; font-weight: 700; color: var(--tx);
+    list-style: none; display: flex; align-items: center; justify-content: space-between; }
+  .accordion summary::-webkit-details-marker { display: none; }
+  .accordion summary:hover { background: var(--lt); }
+  .accordion summary .arrow { color: var(--mt); transition: transform .15s; font-size: 12px; }
+  .accordion[open] summary .arrow { transform: rotate(90deg); }
+  .accordion summary .count { font-size: 12px; color: var(--mt); font-weight: 500;
+    background: var(--lt); padding: 2px 10px; border-radius: 10px; }
+  .accordion .body { padding: 0 18px 18px; }
+
+  .term-row { padding: 12px 0; border-top: 1px solid var(--bd); }
+  .term-row:first-child { border-top: none; }
+  .term-row .name { font-size: 15px; font-weight: 700; color: var(--tx); margin-bottom: 4px;
+    display: flex; align-items: center; gap: 8px; }
+  .term-row .name .chosung { font-size: 11px; color: var(--pri); background: #e6efff;
+    padding: 1px 6px; border-radius: 8px; font-weight: 600; }
+  .term-row .def { font-size: 13px; color: var(--mt); }
+
+  .gana-section { padding: 14px 0 4px; font-size: 13px; font-weight: 700; color: var(--pri);
+    border-top: 2px solid #e6efff; margin-top: 8px; }
+  .gana-section:first-child { border-top: none; padding-top: 0; }
+
+  @media (max-width: 600px) {
+    header h1 { font-size: 22px; }
+    .index-jump .letter { width: 28px; height: 28px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="back" href="/">← 생활계산기 홈으로</a>
+    <h1>부동산 용어집</h1>
+    <p>취득세·양도세·대출·임대차·중개수수료 등 부동산 거래 필수 용어 정리</p>
+    <div class="stats">총 <strong id="totalCount">-</strong>개 용어 등록 · 마지막 업데이트 <span id="lastUpdated">-</span></div>
+  </header>
+
+  <div class="searchbar">
+    <input id="q" type="text" placeholder="용어 검색 (예: 취득세, DSR)" onkeydown="if(event.key==='Enter')goSearch()">
+    <button onclick="goSearch()">검색</button>
+  </div>
+
+  <div class="index-jump">
+    <h3>가나다순 인덱스</h3>
+    <div class="letters" id="letters"></div>
+  </div>
+
+  <div id="categories"></div>
+</div>
+
+<script>
+const CHO = ['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+const CHO_DISPLAY = ['ㄱ','ㄴ','ㄷ','ㄹ','ㅁ','ㅂ','ㅅ','ㅇ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ','#'];
+
+function getChosung(str) {
+  if (!str) return '#';
+  const code = str.charCodeAt(0) - 0xAC00;
+  if (code < 0 || code > 11171) return '#';
+  const cho = CHO[Math.floor(code / 588)];
+  if (cho === 'ㄲ') return 'ㄱ';
+  if (cho === 'ㄸ') return 'ㄷ';
+  if (cho === 'ㅃ') return 'ㅂ';
+  if (cho === 'ㅆ') return 'ㅅ';
+  if (cho === 'ㅉ') return 'ㅈ';
+  return cho;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function summarize(def, n=90) {
+  return def.length <= n ? def : def.slice(0, n) + '…';
+}
+
+function goSearch() {
+  const v = document.getElementById('q').value.trim();
+  location.href = '/terms/search.html' + (v ? '?q=' + encodeURIComponent(v) : '');
+}
+
+(async function init() {
+  let data;
+  try {
+    const res = await fetch('/terms/terms.json');
+    data = await res.json();
+  } catch (e) {
+    document.getElementById('categories').innerHTML =
+      '<div style="text-align:center;padding:40px;color:#505f79">용어집 데이터를 불러오지 못했습니다.</div>';
+    return;
+  }
+
+  const terms = data.terms || [];
+  document.getElementById('totalCount').textContent = terms.length;
+  document.getElementById('lastUpdated').textContent = data.lastUpdated || '-';
+
+  // 가나다순 인덱스 (실제 등장한 초성만 active)
+  const presentChos = new Set(terms.map(t => getChosung(t.term)));
+  document.getElementById('letters').innerHTML = CHO_DISPLAY.map(ch => {
+    const has = presentChos.has(ch);
+    return `<a class="letter${has ? '' : ' disabled'}" ${has ? `href="#cho-${ch}"` : ''}>${ch}</a>`;
+  }).join('');
+
+  // 카테고리별 그룹
+  const byCat = {};
+  for (const t of terms) {
+    if (!byCat[t.category]) byCat[t.category] = [];
+    byCat[t.category].push(t);
+  }
+
+  // 가나다순 그룹 (전체 통합 — 인덱스 점프용)
+  const byCho = {};
+  for (const t of terms) {
+    const ch = getChosung(t.term);
+    if (!byCho[ch]) byCho[ch] = [];
+    byCho[ch].push(t);
+  }
+  for (const ch of Object.keys(byCho)) {
+    byCho[ch].sort((a, b) => a.term.localeCompare(b.term, 'ko'));
+  }
+
+  // 카테고리 아코디언 렌더
+  const catKeys = Object.keys(byCat).sort();
+  const catHtml = catKeys.map((cat, i) => {
+    const items = byCat[cat].sort((a, b) => a.term.localeCompare(b.term, 'ko'));
+    const rows = items.map(t => `
+      <div class="term-row" id="${encodeURIComponent(t.term)}">
+        <div class="name">
+          ${escapeHtml(t.term)}
+          <span class="chosung">${getChosung(t.term)}</span>
+        </div>
+        <div class="def">${escapeHtml(summarize(t.definition))}</div>
+      </div>
+    `).join('');
+    return `
+      <details class="accordion"${i === 0 ? ' open' : ''}>
+        <summary>
+          <span><span class="arrow">▶</span> ${escapeHtml(cat)}</span>
+          <span class="count">${items.length}개</span>
+        </summary>
+        <div class="body">${rows}</div>
+      </details>
+    `;
+  }).join('');
+
+  // 가나다 점프 타겟 (보이지 않는 앵커)
+  const choAnchors = CHO_DISPLAY.filter(ch => byCho[ch]).map(ch =>
+    `<div id="cho-${ch}" style="position:relative;top:-80px"></div>`
+  ).join('');
+
+  document.getElementById('categories').innerHTML = choAnchors + catHtml;
+})();
+</script>
+</body>
+</html>

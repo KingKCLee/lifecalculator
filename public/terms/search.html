@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>부동산 용어 검색 — 생활계산기</title>
+<meta name="description" content="취득세·양도세·DSR·LTV·전월세 등 부동산 세무·금융 용어를 빠르게 검색하세요.">
+<link rel="canonical" href="https://생활계산기.com/terms/search.html">
+<style>
+  :root {
+    --pri:#0747A6; --pl:#0052CC; --bg:#f8f9fc; --card:#ffffff;
+    --bd:#dfe1e6; --mt:#505f79; --tx:#172B4D; --lt:#f4f5f7;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Pretendard", sans-serif;
+         background: var(--bg); color: var(--tx); margin: 0; line-height: 1.5; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 24px 16px 80px; }
+  header { padding: 12px 0 24px; }
+  header h1 { font-size: 24px; margin: 0 0 6px; color: var(--pri); }
+  header p { margin: 0; color: var(--mt); font-size: 14px; }
+  header a.back { display: inline-block; color: var(--mt); font-size: 13px; text-decoration: none; margin-bottom: 12px; }
+  header a.back:hover { color: var(--pri); }
+
+  .searchbox { position: relative; margin-bottom: 16px; }
+  .searchbox input { width: 100%; padding: 14px 44px 14px 16px;
+    border: 2px solid var(--bd); border-radius: 10px; font-size: 16px;
+    background: var(--card); color: var(--tx); outline: none; transition: border-color .15s; }
+  .searchbox input:focus { border-color: var(--pri); }
+  .searchbox .icon { position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+    color: var(--mt); pointer-events: none; }
+
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+  .chip { padding: 6px 14px; border: 1px solid var(--bd); background: var(--card);
+    border-radius: 20px; font-size: 13px; color: var(--mt); cursor: pointer;
+    transition: all .15s; }
+  .chip:hover { border-color: var(--pri); color: var(--pri); }
+  .chip.active { background: var(--pri); color: #fff; border-color: var(--pri); }
+
+  .popular { background: var(--card); border: 1px solid var(--bd); border-radius: 10px;
+    padding: 14px 16px; margin-bottom: 18px; }
+  .popular h3 { margin: 0 0 10px; font-size: 13px; color: var(--mt); font-weight: 600; }
+  .popular .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .popular .tag { padding: 4px 10px; background: var(--lt); border-radius: 14px;
+    font-size: 12px; color: var(--tx); cursor: pointer; transition: background .15s; }
+  .popular .tag:hover { background: var(--pri); color: #fff; }
+  .popular .tag .rank { color: var(--pri); font-weight: 700; margin-right: 4px; }
+  .popular .tag:hover .rank { color: #fff; }
+
+  .meta { font-size: 13px; color: var(--mt); margin-bottom: 12px; }
+  .meta strong { color: var(--pri); }
+
+  .cards { display: flex; flex-direction: column; gap: 10px; }
+  .card { background: var(--card); border: 1px solid var(--bd); border-radius: 10px;
+    padding: 16px; transition: all .15s; }
+  .card:hover { border-color: var(--pri); box-shadow: 0 2px 8px rgba(7,71,166,0.08); }
+  .card .head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+  .card .term { font-size: 16px; font-weight: 700; color: var(--tx); }
+  .card .cat { font-size: 11px; padding: 2px 8px; background: var(--lt);
+    border-radius: 10px; color: var(--mt); }
+  .card .def { font-size: 14px; color: var(--mt); margin-bottom: 10px; }
+  .card .related { font-size: 12px; color: var(--mt); margin-bottom: 10px; }
+  .card .related b { color: var(--tx); margin-right: 4px; }
+  .card .related span { display: inline-block; padding: 2px 8px; margin: 2px 4px 2px 0;
+    background: var(--lt); border-radius: 10px; cursor: pointer; }
+  .card .related span:hover { background: var(--pri); color: #fff; }
+  .card .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .card .btn { padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 600;
+    text-decoration: none; cursor: pointer; border: none; }
+  .card .btn-pri { background: var(--pri); color: #fff; }
+  .card .btn-pri:hover { background: var(--pl); }
+  .card .btn-out { background: var(--card); color: var(--pri); border: 1px solid var(--pri); }
+  .card .btn-out:hover { background: var(--lt); }
+
+  .empty { text-align: center; padding: 60px 20px; color: var(--mt); }
+  .empty .ic { font-size: 36px; margin-bottom: 12px; }
+
+  mark { background: #fff8a8; color: var(--tx); padding: 0 2px; border-radius: 2px; }
+
+  @media (max-width: 600px) {
+    header h1 { font-size: 20px; }
+    .card .term { font-size: 15px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="back" href="/terms/index.html">← 용어집 전체 목록</a>
+    <h1>부동산 용어 검색</h1>
+    <p>취득세·양도세·DSR·LTV·전월세 등 부동산 세무·금융 용어를 검색해보세요.</p>
+  </header>
+
+  <div class="searchbox">
+    <input id="q" type="text" placeholder="예: 취득세, DSR, 일시적2주택" autocomplete="off">
+    <span class="icon">🔍</span>
+  </div>
+
+  <div class="filters" id="filters"></div>
+
+  <div class="popular" id="popular">
+    <h3>🔥 인기 검색어</h3>
+    <div class="tags" id="popularTags"></div>
+  </div>
+
+  <div class="meta" id="meta"></div>
+  <div class="cards" id="results"></div>
+</div>
+
+<script>
+const POPULAR = ['취득세','DSR','LTV','일시적2주택','전세','월세','장기보유특별공제','조정대상지역','중개보수','디딤돌대출'];
+
+const CALC_LINK = {
+  '취득세': { name: '취득세 계산기', url: '/취득세계산기' },
+  '양도세': { name: '양도소득세 계산기', url: '/양도소득세계산기' },
+  '중개수수료': { name: '중개보수 계산기', url: '/중개보수계산기' },
+  '대출': { name: '대출이자 계산기', url: '/대출이자계산기' },
+  '임대차': { name: '전월세전환 계산기', url: '/전월세전환계산기' },
+  '경매': { name: '경매비용 계산기', url: '/경매비용계산기' },
+  '재개발': { name: '리모델링수익 계산기', url: '/리모델링수익계산기' },
+  '등기': { name: '등기비용 계산기', url: '/등기비용계산기' },
+};
+
+let TERMS = [];
+let activeCat = '전체';
+let q = '';
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function highlight(text, query) {
+  const safe = escapeHtml(text);
+  if (!query) return safe;
+  const re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+  return safe.replace(re, '<mark>$1</mark>');
+}
+
+function summarize(def, n=110) {
+  if (def.length <= n) return def;
+  return def.slice(0, n) + '…';
+}
+
+function buildFilters() {
+  const cats = ['전체', ...new Set(TERMS.map(t => t.category))];
+  const el = document.getElementById('filters');
+  el.innerHTML = cats.map(c =>
+    `<button class="chip${c === activeCat ? ' active' : ''}" data-cat="${escapeHtml(c)}">${escapeHtml(c)}</button>`
+  ).join('');
+  el.querySelectorAll('.chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeCat = btn.dataset.cat;
+      buildFilters();
+      render();
+    });
+  });
+}
+
+function buildPopular() {
+  const el = document.getElementById('popularTags');
+  el.innerHTML = POPULAR.map((t, i) =>
+    `<span class="tag" data-q="${escapeHtml(t)}"><span class="rank">${i+1}</span>${escapeHtml(t)}</span>`
+  ).join('');
+  el.querySelectorAll('.tag').forEach(s => {
+    s.addEventListener('click', () => {
+      document.getElementById('q').value = s.dataset.q;
+      q = s.dataset.q;
+      render();
+    });
+  });
+}
+
+function render() {
+  const filtered = TERMS.filter(t => {
+    if (activeCat !== '전체' && t.category !== activeCat) return false;
+    if (!q) return true;
+    const hay = (t.term + ' ' + t.definition + ' ' + (t.related || []).join(' ')).toLowerCase();
+    return hay.includes(q.toLowerCase());
+  });
+
+  document.getElementById('meta').innerHTML =
+    `검색결과 <strong>${filtered.length}</strong>건` +
+    (q ? ` · 검색어 "<strong>${escapeHtml(q)}</strong>"` : '') +
+    (activeCat !== '전체' ? ` · 카테고리 <strong>${escapeHtml(activeCat)}</strong>` : '');
+
+  const html = filtered.map(t => {
+    const calc = CALC_LINK[t.category];
+    const related = (t.related || []).slice(0, 4).map(r =>
+      `<span data-rel="${escapeHtml(r)}">${escapeHtml(r)}</span>`
+    ).join('');
+    return `
+      <div class="card">
+        <div class="head">
+          <div class="term">${highlight(t.term, q)}</div>
+          <span class="cat">${escapeHtml(t.category)}</span>
+        </div>
+        <div class="def">${highlight(summarize(t.definition), q)}</div>
+        ${related ? `<div class="related"><b>관련:</b>${related}</div>` : ''}
+        <div class="actions">
+          ${calc ? `<a class="btn btn-pri" href="${calc.url}">${calc.name} 바로가기</a>` : ''}
+          <a class="btn btn-out" href="/terms/index.html#${encodeURIComponent(t.term)}">용어집에서 보기</a>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  const root = document.getElementById('results');
+  root.innerHTML = html || `<div class="empty"><div class="ic">🔍</div>검색 결과가 없습니다. 다른 키워드로 시도해보세요.</div>`;
+
+  root.querySelectorAll('[data-rel]').forEach(s => {
+    s.addEventListener('click', () => {
+      document.getElementById('q').value = s.dataset.rel;
+      q = s.dataset.rel;
+      render();
+    });
+  });
+}
+
+(async function init() {
+  try {
+    const res = await fetch('/terms/terms.json');
+    const data = await res.json();
+    TERMS = data.terms || [];
+  } catch (e) {
+    document.getElementById('results').innerHTML =
+      `<div class="empty"><div class="ic">⚠️</div>용어집 데이터를 불러오지 못했습니다.</div>`;
+    return;
+  }
+
+  const params = new URLSearchParams(location.search);
+  if (params.get('q')) {
+    q = params.get('q');
+    document.getElementById('q').value = q;
+  }
+  if (params.get('cat')) {
+    activeCat = params.get('cat');
+  }
+
+  buildFilters();
+  buildPopular();
+  render();
+
+  let timer;
+  document.getElementById('q').addEventListener('input', e => {
+    clearTimeout(timer);
+    timer = setTimeout(() => { q = e.target.value.trim(); render(); }, 120);
+  });
+})();
+</script>
+</body>
+</html>
