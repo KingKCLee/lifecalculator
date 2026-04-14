@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.15",
       "category": "전체",
+      "title": "fix: TipModal 헬퍼 라벨과 Inp/Sel/Tog label 중복 제거",
+      "desc": "fix: TipModal 헬퍼 라벨과 Inp/Sel/Tog label 중복 제거"
+    },
+    {
+      "date": "2026.04.15",
+      "category": "전체",
       "title": "refactor: TipModal 재구현 — 다크 툴팁·200ms hover delay·경계 보정",
       "desc": "refactor: TipModal 재구현 — 다크 툴팁·200ms hover delay·경계 보정"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "feat: 헤더 로고 img 추가·홈 LeftNav 숨김·드롭다운 라운딩/화살표 정리",
       "desc": "feat: 헤더 로고 img 추가·홈 LeftNav 숨김·드롭다운 라운딩/화살표 정리"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "전체",
-      "title": "refactor: Tog 컴포넌트 재작성 (pill 스타일·가로 스크롤)",
-      "desc": "refactor: Tog 컴포넌트 재작성 (pill 스타일·가로 스크롤)"
     }
   ],
   "rates": {
