@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.14",
       "category": "전체",
+      "title": "fix: Tog/Radio flexWrap:wrap 적용·홈화면 62가지 문구 통일",
+      "desc": "fix: Tog/Radio flexWrap:wrap 적용·홈화면 62가지 문구 통일"
+    },
+    {
+      "date": "2026.04.14",
+      "category": "전체",
       "title": "refactor: 시가표준액 조회 API 제거·realtyprice.kr 외부 링크로 전환",
       "desc": "refactor: 시가표준액 조회 API 제거·realtyprice.kr 외부 링크로 전환"
     },
@@ -1460,13 +1466,6 @@
       "category": "전체",
       "title": "style: RP 컴포넌트 파란 그라디언트 카드 디자인 복원",
       "desc": "style: RP 컴포넌트 파란 그라디언트 카드 디자인 복원"
-    },
-    {
-      "date": "2026.04.11",
-      "category": "세금",
-      "title": "정책 만료 D-28: transferSurchargeEnd",
-      "desc": "2026-05-10 만료 예정. 관련 계산기에 자동 반영됩니다.",
-      "urgent": true
     }
   ],
   "rates": {
