@@ -2578,8 +2578,6 @@ function EduContent({calc:calcId,eduTab}){
   // 2026.04.14 용어 클릭 팝오버
   const[openTerm,setOpenTerm]=useState(null);
   return(<div>
-    <div style={{fontSize:11,fontWeight:600,letterSpacing:1.5,textTransform:"uppercase",color:P.mt,marginBottom:12}}>EXPERT GUIDE</div>
-
     {eduTab==="rates"&&(guideSources.length>0?(<div>
       {guideSources.map(gs=>(
         gs.data.faqList?gs.data.faqList.map((f,fi)=>(
@@ -3474,78 +3472,117 @@ function NavContentPanel({navContent,setNavContent,calc,effectiveUser,lcToken,se
 
 /* ═══ 좌측 네비게이션 (Resource Hub) ═══ */
 function LeftNav({isMo,navOpen,setNavOpen,navContent,setNavContent,effectiveUser,setAuthMode,setShowAuth,navigateMyPage,calc}){
-  // 2026.04.14 Expert Guide는 기본 펼침, 나머지는 접힘
-  const[openMenu,setOpenMenu]=useState("expert");
-  // 2026.04.14 Expert Guide 인라인 아코디언 — 첫 항목(rates)만 기본 펼침
-  const[expertExp,setExpertExp]=useState("rates");
+  // 2026.04.14 LeftNav 전면 개편 — static scroll · 신규 메뉴 구조
+  const[openMenu,setOpenMenu]=useState(null); // Learning/Market 드롭다운
+  const[expertExp,setExpertExp]=useState("intro"); // Expert Guide 아코디언
+  const[openInline,setOpenInline]=useState(null); // regs/glossary 인라인
+  const[subOpen,setSubOpen]=useState({}); // {menuId: subId} Learning/Market 서브 열림
   const SV=(stroke,children)=>(<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">{children}</svg>);
   const MENU=[
-    {id:"expert",l:"Expert Guide",always:true,icon:(c)=>SV(c,<><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></>),sub:[
-      {id:"rates",l:"세율표·가이드"},
-      {id:"regs",l:"규정·법령"},
-      {id:"tips",l:"절세 팁"},
-      {id:"glossary",l:"용어 사전"}
+    {id:"expert",l:"Expert Guide",always:true,icon:(c)=>SV(c,<><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></>),items:[
+      {id:"intro",title:"취득세란 무엇인가요?",defaultOpen:true,body:"부동산을 매매·증여·상속 등으로 취득할 때 납부하는 지방세입니다. 주택의 경우 1~12% 차등 적용."},
+      {id:"tips",title:"절세 팁",body:"• 생애최초 12억↓ 200만원 감면 (2028까지)\n• 일시적 2주택 3년 내 처분 시 일반세율\n• 공시가 1억↓ 다주택 중과 제외"},
+      {id:"deadline",title:"신고 기한",body:"잔금일·등기일 중 빠른 날부터 60일 이내 (상속 6개월, 증여 3개월). 위택스(wetax.go.kr)에서 온라인 신고 가능."},
+      {id:"howto",title:"신고 방법",body:"1) 위택스 로그인 → 2) 신고하기 → 3) 매매계약서·등기필증 첨부 → 4) 세액 확인 → 5) 즉시 납부 또는 가상계좌 발급"},
+      {id:"caution",title:"주의사항",body:"• 시가표준액 ≠ 실거래가 (둘 중 큰 값이 과세표준)\n• 조정대상지역 2주택 8% / 3주택+ 12% 중과\n• 법인은 주택수 무관 12%"}
     ]},
+    {id:"regs",l:"규정·법령",inline:true,icon:(c)=>SV(c,<><rect x="4" y="2" width="16" height="20" rx="1"/><path d="M8 6h8M8 10h8M8 14h5"/></>),body:"• 지방세법 (취득세·재산세·지방교육세)\n• 소득세법 (양도소득세·종합소득세)\n• 종합부동산세법 (종부세)\n• 상속세 및 증여세법\n• 주택법·주택임대차보호법·상가건물임대차보호법\n• 은행업 감독규정 (DSR·DTI·LTV)"},
+    {id:"glossary",l:"용어 사전",inline:true,icon:(c)=>SV(c,<><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H20v15H5.5A1.5 1.5 0 0 1 4 16.5z"/><path d="M4 16.5A1.5 1.5 0 0 1 5.5 15H20"/></>),body:"• 과세표준: 세금 계산의 기준 금액\n• 시가표준액: 지자체가 고시하는 부동산 기준가\n• 공시가격: 국토부 고시 부동산 가격\n• DSR: 총부채원리금상환비율\n• LTV: 담보인정비율\n• DTI: 총부채상환비율\n• 1세대1주택: 세대 전원 기준 1주택"},
     {id:"learning",l:"Learning Center",icon:(c)=>SV(c,<><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H20v15H5.5A1.5 1.5 0 0 1 4 16.5z"/><path d="M4 16.5A1.5 1.5 0 0 1 5.5 15H20v6H5.5A1.5 1.5 0 0 1 4 19.5z"/></>),sub:[
-      {id:"rates",l:"세율표·가이드"},
-      {id:"regs",l:"규정·법령"},
-      {id:"tips",l:"절세 팁"},
-      {id:"glossary",l:"용어 사전"}
+      {id:"basics",l:"부동산 세금 기초",body:"취득세는 매매·증여·상속 시 1~12%, 양도세는 양도차익 6~45%, 종부세는 공시가 합산 0.5~5%. 재산세는 매년 6월 1일 기준 부과."},
+      {id:"loanreg",l:"대출 규제 이해하기",body:"DSR 은행 40% 비은행 50%. DTI 투기과열 40%. LTV 무주택 70% 생애최초 80%. 스트레스 DSR 변동 +1.5%p."},
+      {id:"strategy",l:"절세 전략 가이드",body:"1) 생애최초 감면 활용 2) 일시적 2주택 3년 처분 3) 공시가 1억↓ 다주택 중과 제외 4) 1세대1주택 12억 비과세 5) 장기보유특별공제"},
+      {id:"checklist",l:"부동산 투자 체크리스트",body:"✓ 시세 vs 공시가 ✓ 대출 한도 ✓ 취득세 시뮬 ✓ 양도세 시뮬 ✓ 보유세 ✓ 임대수익률 ✓ 지역 규제"},
+      {id:"howto",l:"계산기 사용법",body:"1) 카테고리 선택 → 2) 입력 → 3) 결과 확인 → 4) AI 해설 → 5) PDF 저장. 로그인 시 히스토리 자동 저장."},
+      {id:"history",l:"세법 개정 히스토리",body:"2025: 생애최초 감면 연장 / 2024: 종부세 일반 0.5~2.7% / 2023: 양도세 중과 한시 유예 / 2022: 다주택 중과 강화"}
     ]},
     {id:"market",l:"Market Data",icon:(c)=>SV(c,<><path d="M3 20h18"/><path d="M6 16V8"/><path d="M12 16V4"/><path d="M18 16v-6"/></>),sub:[
-      {id:"market_news",l:"실시간 뉴스"},
-      {id:"market_price",l:"실거래가 조회"},
-      {id:"market_stats",l:"부동산 통계"}
+      {id:"baserate",l:"기준금리 (한국은행)",body:"한국은행 기준금리 3.0% (2026.2.27 동결). 스트레스 DSR 변동 +1.5%p, 혼합 +0.75%p"},
+      {id:"kospi",l:"코스피/코스닥",body:"코스피 2,650 (▲0.3%) / 코스닥 850 (▲0.5%) — 정적 폴백 데이터"},
+      {id:"seoulapt",l:"서울 아파트 평균 거래가",body:"서울 강남 평균 12.5억 / 송파 9.8억 / 마포 8.5억 (2025년 기준)"},
+      {id:"trend",l:"전국 실거래가 동향",body:"전국 매매 거래량 월평균 5.2만건. 수도권 가격 보합세, 지방 일부 상승."},
+      {id:"jeonse",l:"전세가율",body:"서울 평균 전세가율 약 55%. 역전세 위험 지역 모니터링 필요."},
+      {id:"dsr",l:"DSR 규제 현황",body:"은행 40% / 비은행 50%. 1억 초과 대출 DSR 적용. 스트레스 가산 시행 중."},
+      {id:"zone",l:"조정대상/투기과열",body:"조정대상지역: 서울 25개구 일부. 투기과열지구: 강남 3구 + 용산. 2026년 일부 해제 예정."},
+      {id:"std",l:"공시가격 현실화율",body:"공시가격 현실화율 평균 약 70%. 정부 로드맵 90% 목표 — 2026년 인상 논의 중."}
     ]},
     {id:"history",l:"지난 계산 내역",special:"history",icon:(c)=>SV(c,<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>)}
   ];
   const tx=isMo&&!navOpen?"translateX(-100%)":"none";
+  const styleProps=isMo
+    ?{position:"fixed",top:64,left:0,width:280,height:"calc(100vh - 64px)",transform:tx,zIndex:50,overflowY:"auto",boxShadow:"4px 0 20px rgba(0,0,0,.12)",transition:"transform .25s ease"}
+    :{position:"static",width:280,flexShrink:0,alignSelf:"stretch"};
   return(<>
     {isMo&&navOpen&&<div onClick={()=>setNavOpen(false)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.5)",zIndex:9998}}/>}
-    <aside className="lc-leftnav" style={{position:"fixed",top:64,left:0,width:280,height:"calc(100vh - 64px)",background:"#FFFFFF",borderRight:"1px solid #E5E7EB",color:"#0a1628",display:"flex",flexDirection:"column",zIndex:50,fontFamily:"inherit",paddingTop:8,transform:tx,transition:"transform .25s ease",boxShadow:isMo?"4px 0 20px rgba(0,0,0,.12)":"none",overflowY:"auto",scrollbarWidth:"none",msOverflowStyle:"none",wordBreak:"keep-all",overflowWrap:"anywhere"}}>
+    <aside className="lc-leftnav" style={{...styleProps,background:"#FFFFFF",borderRight:"1px solid #E5E7EB",color:"#0a1628",display:"flex",flexDirection:"column",fontFamily:"inherit",paddingTop:8,scrollbarWidth:"none",msOverflowStyle:"none",wordBreak:"keep-all",overflowWrap:"anywhere"}}>
       {isMo&&<div style={{padding:"12px 22px",display:"flex",justifyContent:"flex-end"}}><button onClick={()=>setNavOpen(false)} aria-label="닫기" style={{background:"none",border:"none",color:"#0a1628",fontSize:22,cursor:"pointer",padding:0,lineHeight:1}}>✕</button></div>}
-      <div style={{padding:"0 22px",marginTop:24,marginBottom:8,fontSize:11,fontWeight:700,letterSpacing:1.5,color:"#6B7280",textTransform:"uppercase"}}>RESOURCE HUB</div>
       <nav style={{flex:"1 1 auto",display:"flex",flexDirection:"column"}}>
         {MENU.map(m=>{
-          const a=navContent?.menu===m.id;
-          const expanded=m.always||openMenu===m.id;
-          const hasSub=Array.isArray(m.sub)&&m.sub.length>0;
-          const isHist=m.special==="history";
-          const iconColor=a?"#0747A6":"#0a1628";
-          const handleHistoryClick=()=>{
-            if(effectiveUser){setNavContent?.({menu:"history",sub:null});if(isMo)setNavOpen(false);}
-            else{setAuthMode?.("login");setShowAuth?.(true);if(isMo)setNavOpen(false);}
-          };
+          const iconColor="#0a1628";
+          // 1) Expert Guide — 항상 펼침, 내부 아코디언
+          if(m.items){
+            return(<div key={m.id}>
+              <div style={{width:"100%",display:"flex",alignItems:"center",gap:10,padding:"12px 18px",color:"#0a1628",fontSize:13,fontWeight:700,fontFamily:"inherit",textAlign:"left"}}>
+                <span style={{width:22,height:22,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{m.icon(iconColor)}</span>
+                <span style={{flex:"1 1 auto"}}>{m.l}</span>
+              </div>
+              <div style={{background:"#F9FAFB",borderLeft:"3px solid #EFF6FF"}}>
+                {m.items.map(it=>{
+                  const active=expertExp===it.id;
+                  return(<div key={it.id}>
+                    <button onClick={()=>setExpertExp(prev=>prev===it.id?"":it.id)} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 18px 10px 44px",background:active?"#EFF6FF":"none",border:"none",color:active?"#0747A6":"#475569",fontSize:12,fontWeight:active?700:500,cursor:"pointer",fontFamily:"inherit",textAlign:"left"}} onMouseEnter={e=>{if(!active){e.currentTarget.style.background="#EFF6FF";e.currentTarget.style.color="#0747A6"}}} onMouseLeave={e=>{if(!active){e.currentTarget.style.background="none";e.currentTarget.style.color="#475569"}}}>
+                      <span>{it.title}</span>
+                      <span style={{fontSize:10,color:active?"#0747A6":"#6B7280"}}>{active?"▼":"▶"}</span>
+                    </button>
+                    {active&&<div style={{padding:"8px 18px 14px 44px",background:"#fff",borderTop:"1px solid #E5E7EB",fontSize:11,lineHeight:1.7,color:"#475569",whiteSpace:"pre-line"}}>{it.body}</div>}
+                  </div>);
+                })}
+              </div>
+            </div>);
+          }
+          // 2) 규정·법령 / 용어 사전 — 인라인 토글
+          if(m.inline){
+            const active=openInline===m.id;
+            return(<div key={m.id}>
+              <button onClick={()=>setOpenInline(prev=>prev===m.id?null:m.id)} style={{width:"100%",display:"flex",alignItems:"center",gap:10,padding:"12px 18px",background:active?"#EFF6FF":"none",border:"none",borderLeft:active?"3px solid #0747A6":"3px solid transparent",color:active?"#0747A6":"#0a1628",fontSize:13,fontWeight:active?700:500,cursor:"pointer",fontFamily:"inherit",textAlign:"left"}} onMouseEnter={e=>{if(!active)e.currentTarget.style.background="#F9FAFB"}} onMouseLeave={e=>{if(!active)e.currentTarget.style.background="none"}}>
+                <span style={{width:22,height:22,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{m.icon(active?"#0747A6":iconColor)}</span>
+                <span style={{flex:"1 1 auto"}}>{m.l}</span>
+                <span style={{fontSize:10,color:active?"#0747A6":"#6B7280"}}>{active?"▼":"▶"}</span>
+              </button>
+              {active&&<div style={{padding:"10px 22px 14px 44px",background:"#F9FAFB",borderTop:"1px solid #E5E7EB",fontSize:11,lineHeight:1.7,color:"#475569",whiteSpace:"pre-line"}}>{m.body}</div>}
+            </div>);
+          }
+          // 3) 지난 계산 내역
+          if(m.special==="history"){
+            const handleHistoryClick=()=>{
+              if(effectiveUser){setNavContent?.({menu:"history",sub:null});if(isMo)setNavOpen(false);}
+              else{setAuthMode?.("login");setShowAuth?.(true);if(isMo)setNavOpen(false);}
+            };
+            const a=navContent?.menu==="history";
+            return(<div key={m.id}>
+              <button onClick={handleHistoryClick} style={{width:"100%",display:"flex",alignItems:"center",gap:10,padding:"12px 18px",background:a?"#EFF6FF":"none",border:"none",borderLeft:a?"3px solid #0747A6":"3px solid transparent",color:a?"#0747A6":"#0a1628",fontSize:13,fontWeight:a?700:500,cursor:"pointer",fontFamily:"inherit",textAlign:"left"}} onMouseEnter={e=>{if(!a)e.currentTarget.style.background="#F9FAFB"}} onMouseLeave={e=>{if(!a)e.currentTarget.style.background="none"}}>
+                <span style={{width:22,height:22,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{m.icon(a?"#0747A6":iconColor)}</span>
+                <span style={{flex:"1 1 auto"}}>{m.l}</span>
+              </button>
+            </div>);
+          }
+          // 4) Learning Center / Market Data — 드롭다운 + 서브 인라인
+          const expanded=openMenu===m.id;
           return(<div key={m.id}>
-            <button onClick={()=>{
-              if(m.always)return;
-              if(isHist){handleHistoryClick();return;}
-              if(hasSub){setOpenMenu(expanded?null:m.id);}
-            }} style={{width:"100%",display:"flex",alignItems:"center",gap:10,padding:"12px 18px",background:a?"#EFF6FF":"none",border:"none",borderLeft:a?"3px solid #0747A6":"3px solid transparent",color:a?"#0747A6":"#0a1628",fontSize:13,fontWeight:a?700:500,cursor:m.always?"default":"pointer",fontFamily:"inherit",textAlign:"left",position:"relative"}} onMouseEnter={e=>{if(!a&&!m.always)e.currentTarget.style.background="#F9FAFB"}} onMouseLeave={e=>{if(!a)e.currentTarget.style.background="none"}}>
-              {a&&<span style={{position:"absolute",left:8,top:"50%",transform:"translateY(-50%)",width:6,height:6,borderRadius:"50%",background:"#0747A6"}}/>}
+            <button onClick={()=>setOpenMenu(expanded?null:m.id)} style={{width:"100%",display:"flex",alignItems:"center",gap:10,padding:"12px 18px",background:expanded?"#F9FAFB":"none",border:"none",borderLeft:"3px solid transparent",color:"#0a1628",fontSize:13,fontWeight:expanded?700:500,cursor:"pointer",fontFamily:"inherit",textAlign:"left"}} onMouseEnter={e=>{if(!expanded)e.currentTarget.style.background="#F9FAFB"}} onMouseLeave={e=>{if(!expanded)e.currentTarget.style.background="none"}}>
               <span style={{width:22,height:22,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{m.icon(iconColor)}</span>
               <span style={{flex:"1 1 auto"}}>{m.l}</span>
-              {!m.always&&hasSub&&<span style={{fontSize:10,color:a?"#0747A6":"#6B7280",flexShrink:0}}>{expanded?"▼":"▶"}</span>}
+              <span style={{fontSize:10,color:"#6B7280",flexShrink:0}}>{expanded?"▼":"▶"}</span>
             </button>
-            {hasSub&&expanded&&<div style={{background:"#F9FAFB",borderLeft:"3px solid #EFF6FF"}}>
+            {expanded&&<div style={{background:"#F9FAFB",borderLeft:"3px solid #EFF6FF"}}>
               {m.sub.map(s=>{
-                const isExpert=m.id==="expert";
-                // Expert Guide: 인라인 아코디언 방식 (중앙 팝업 제거)
-                const active=isExpert?(expertExp===s.id):(navContent?.menu===m.id&&navContent?.sub===s.id);
+                const sActive=subOpen[m.id]===s.id;
                 return(<div key={s.id}>
-                  <button onClick={()=>{
-                    if(isExpert){
-                      setExpertExp(prev=>prev===s.id?"":s.id);
-                      setNavContent?.(null);
-                    }else{
-                      setNavContent?.({menu:m.id,sub:s.id});
-                      if(isMo)setNavOpen(false);
-                    }
-                  }} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 18px 10px 44px",background:active?"#EFF6FF":"none",border:"none",color:active?"#0747A6":"#475569",fontSize:12,fontWeight:active?700:500,cursor:"pointer",fontFamily:"inherit",textAlign:"left"}} onMouseEnter={e=>{if(!active){e.currentTarget.style.background="#EFF6FF";e.currentTarget.style.color="#0747A6"}}} onMouseLeave={e=>{if(!active){e.currentTarget.style.background="none";e.currentTarget.style.color="#475569"}}}>
+                  <button onClick={()=>setSubOpen(prev=>({...prev,[m.id]:sActive?null:s.id}))} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 18px 10px 44px",background:sActive?"#EFF6FF":"none",border:"none",color:sActive?"#0747A6":"#475569",fontSize:12,fontWeight:sActive?700:500,cursor:"pointer",fontFamily:"inherit",textAlign:"left"}} onMouseEnter={e=>{if(!sActive){e.currentTarget.style.background="#EFF6FF";e.currentTarget.style.color="#0747A6"}}} onMouseLeave={e=>{if(!sActive){e.currentTarget.style.background="none";e.currentTarget.style.color="#475569"}}}>
                     <span>{s.l}</span>
-                    {isExpert&&<span style={{fontSize:10,color:active?"#0747A6":"#6B7280"}}>{active?"▼":"▶"}</span>}
+                    <span style={{fontSize:10,color:sActive?"#0747A6":"#6B7280"}}>{sActive?"▼":"▶"}</span>
                   </button>
-                  {isExpert&&active&&<div style={{padding:"6px 14px 14px 22px",background:"#fff",borderTop:"1px solid #E5E7EB",fontSize:11,lineHeight:1.6,maxHeight:360,overflowY:"auto"}}><EduContent calc={calc} eduTab={s.id}/></div>}
+                  {sActive&&<div style={{padding:"8px 18px 14px 44px",background:"#fff",borderTop:"1px solid #E5E7EB",fontSize:11,lineHeight:1.7,color:"#475569",whiteSpace:"pre-line"}}>{s.body}</div>}
                 </div>);
               })}
             </div>}
@@ -3789,10 +3826,11 @@ export default function App(){
   const catInfo=CATS.find(c=>c.id===cat);
   const searchResults=search.trim()?CL.filter(c=>(c.l+"|"+(DESC[c.id]||"")).includes(search.trim())):[];
 
-  return(<div style={{minHeight:"100vh",background:"#FFFFFF",fontFamily:"'Pretendard','Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif",width:"100%",maxWidth:"100vw",overflowX:"hidden",paddingLeft:(isMo||page==="home")?0:280,paddingTop:64}}>
+  return(<div style={{minHeight:"100vh",background:"#FFFFFF",fontFamily:"'Pretendard','Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif",width:"100%",maxWidth:"100vw",overflowX:"hidden",paddingTop:64}}>
     <SidePanel/>
-    {page!=="home"&&<LeftNav isMo={isMo} navOpen={navOpen} setNavOpen={setNavOpen} navContent={navContent} setNavContent={setNavContent} effectiveUser={effectiveUser} setAuthMode={setAuthMode} setShowAuth={setShowAuth} navigateMyPage={navigateMyPage} calc={calc}/>}
     {isMo&&<button onClick={()=>setNavOpen(true)} aria-label="메뉴 열기" style={{position:"fixed",top:10,left:10,zIndex:9997,width:40,height:40,background:"#0a1628",color:"#fff",border:"none",borderRadius:10,cursor:"pointer",fontSize:20,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 8px rgba(0,0,0,.2)"}}>☰</button>}
+    {/* 모바일/홈에서는 LeftNav 숨김 — 모바일은 drawer로 별도 렌더 */}
+    {page!=="home"&&isMo&&<LeftNav isMo={isMo} navOpen={navOpen} setNavOpen={setNavOpen} navContent={navContent} setNavContent={setNavContent} effectiveUser={effectiveUser} setAuthMode={setAuthMode} setShowAuth={setShowAuth} navigateMyPage={navigateMyPage} calc={calc}/>}
     <style>{`
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;overflow-x:hidden}
 body{-webkit-tap-highlight-color:transparent;font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow-x:hidden;position:relative;width:100%}
@@ -3899,7 +3937,9 @@ body.lc-embed main{padding-top:0!important}
       )}
     </nav>
     {/* 2026.04.14 상단 뉴스 틱커 제거 */}
-    <main>
+    <div style={{display:"flex",alignItems:"flex-start"}}>
+    {page!=="home"&&!isMo&&<LeftNav isMo={isMo} navOpen={navOpen} setNavOpen={setNavOpen} navContent={navContent} setNavContent={setNavContent} effectiveUser={effectiveUser} setAuthMode={setAuthMode} setShowAuth={setShowAuth} navigateMyPage={navigateMyPage} calc={calc}/>}
+    <main style={{flex:"1 1 auto",minWidth:0}}>
     {page==="mypage"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><MyPage user={effectiveUser} lcToken={lcToken} lcEmail={lcEmail} onLcLogout={()=>{try{localStorage.removeItem('lc_token');localStorage.removeItem('lc_email');}catch{}setLcToken("");setLcEmail("");}} onBack={navigateHome} onLogout={handleLogout}/></div>):page&&page.startsWith("legal_")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LegalPage type={page.replace("legal_","")} onBack={navigateHome}/></div>):page==="home"?(<>
       {favorites.length>0&&<div style={{maxWidth:1200,margin:"0 auto",padding:isMo?"16px 16px 0":"32px 24px 0",background:isMo?"#f8f9fc":"transparent"}}>
         <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12}}>
@@ -4167,8 +4207,9 @@ body.lc-embed main{padding-top:0!important}
     </div>
 
     </main>
+    </div>
     {/* 푸터 */}
-    <footer style={{background:"#F9FAFB",borderTop:"1px solid #E5E7EB",padding:"48px 24px",position:"relative",width:(isMo||page==="home")?"100%":"calc(100% + 280px)",marginLeft:(isMo||page==="home")?0:-280,boxSizing:"border-box",textAlign:"center"}}>
+    <footer style={{background:"#F9FAFB",borderTop:"1px solid #E5E7EB",padding:"48px 24px",position:"relative",width:"100%",boxSizing:"border-box",textAlign:"center"}}>
       <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:12}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10}}>
           <LogoSVG size={40}/>
