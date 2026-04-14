@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.14",
       "category": "전체",
+      "title": "refactor: 40개 계산기 레이아웃·입력 일관성 통일 (CalcAcq 기준)",
+      "desc": "refactor: 40개 계산기 레이아웃·입력 일관성 통일 (CalcAcq 기준)"
+    },
+    {
+      "date": "2026.04.14",
+      "category": "전체",
       "title": "feat: Phase A - 즐겨찾기, 2026 세법 기준 문구, KAKAO_JS_KEY 상수",
       "desc": "feat: Phase A - 즐겨찾기, 2026 세법 기준 문구, KAKAO_JS_KEY 상수"
     },
@@ -1463,12 +1469,6 @@
       "category": "전체",
       "title": "fix: PC에서 관련계산기 결과박스 아래(우측 열)로 이동",
       "desc": "fix: PC에서 관련계산기 결과박스 아래(우측 열)로 이동"
-    },
-    {
-      "date": "2026.04.06",
-      "category": "전체",
-      "title": "fix: 서브탭 비활성 버튼 반투명 흰색 배경 적용",
-      "desc": "fix: 서브탭 비활성 버튼 반투명 흰색 배경 적용"
     }
   ],
   "rates": {
