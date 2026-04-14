@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.14",
       "category": "전체",
+      "title": "feat: LeftNav 전면 개편 - static scroll·신규 메뉴 구조·푸터 풀폭",
+      "desc": "feat: LeftNav 전면 개편 - static scroll·신규 메뉴 구조·푸터 풀폭"
+    },
+    {
+      "date": "2026.04.14",
+      "category": "전체",
       "title": "refactor: LeftNav 하단 실시간 지표 블록 제거 (코스피·기준금리·서울 아파트)",
       "desc": "refactor: LeftNav 하단 실시간 지표 블록 제거 (코스피·기준금리·서울 아파트)"
     },
@@ -1459,12 +1465,6 @@
       "category": "전체",
       "title": "feat: 신규 계산기 18개 컴포넌트 파일 생성 (src/calcs/)",
       "desc": "feat: 신규 계산기 18개 컴포넌트 파일 생성 (src/calcs/)"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "전체",
-      "title": "fix: 36개 계산기 입력부·결과부 2열 그리드 레이아웃 일괄 복구",
-      "desc": "fix: 36개 계산기 입력부·결과부 2열 그리드 레이아웃 일괄 복구"
     }
   ],
   "rates": {
