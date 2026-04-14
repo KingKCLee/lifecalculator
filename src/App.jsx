@@ -1543,7 +1543,7 @@ function CalcGift({isMo=false,onNav=()=>{}}){const[rl,sRl]=useState("adult");con
       alertType={finalTax===0?"success":"warning"}
       total={finalTax} sub={"공제 "+fW(d)+" 적용"} items={[{l:"증여재산가액",v:fW(g)}].concat(burden==="yes"&&debtW>0?[{l:"채무 인수분 (양도세 대상)",v:"-"+fW(debtW)},{l:"증여세 과세 증여액",v:fW(giftPortion)}]:[]).concat(priorW>0?[{l:"10년 내 기증여 합산",v:fW(priorW)}]:[]).concat([{l:"증여재산 공제",v:"-"+fW(d)},{l:"합산 과세표준",v:fW(tb)},{l:"합산 산출세액",v:fW(fullTax)}]).concat(skipRate>0?[{l:"세대생략 할증 ("+(skipRate*100)+"%)",v:"+"+fW(surcharge)}]:[]).concat(priorW>0&&priorTax>0?[{l:"기납부 증여세 차감",v:"-"+fW(priorTax)}]:[]).concat([{l:"신고세액공제 (3%)",v:"-"+fW(Math.round(thisTax*0.03)),note:"기한 내 신고 시"},{l:"이번 납부 증여세",v:fW(finalTax)}]).concat(burden==="yes"&&debtW>0?[{l:"채무인수분 추정 양도세",v:"약 "+fW(Math.round(debtW*0.22)),note:"참고용·실제는 세무사 확인"}]:[]).concat([{l:"※ 별도 취득세 (참고)",v:rl==="spouse"?"3.5%":g>=3e8?"조정지역 주택: 12%":"3.5%",note:"실제 취득세 계산기에서 확인"}])}/><NextStep calcId="gift" onNav={onNav} isMo={isMo}/></div></div>);}
 
-function CalcInherit({isMo=false,onNav=()=>{}}){const[ta,sTa]=useState("");const[finAsset,sFA]=useState("");const[db,sDb]=useState("");const[fn,sFn]=useState("1500");const[hasSpouse,sHS]=useState("yes");const[children,sCh]=useState("2");const[cohabit,sCohab]=useState("");const[farm,sFarm]=useState("");const[priorGift,sPG]=useState("");const[onTime,sOT]=useState("yes");const t=tW(ta),finW=tW(finAsset),d=tW(db),f=Math.min(tW(fn),15000000),priorW=tW(priorGift),cohabW=tW(cohabit),farmW=tW(farm);const gross=t+priorW;const netEstate=gross-d-f;const childN=parseInt(children)||0;const basicDed=2e8;const personalDed=childN*5e7;const basicPlusPersonal=basicDed+personalDed;const lumpSum=5e8;const mainDed=Math.max(basicPlusPersonal,lumpSum);let spouseDed=0;if(hasSpouse==="yes"){const spouseShare=netEstate>0?netEstate*1.5/(1.5+childN):0;spouseDed=Math.min(Math.max(spouseShare,5e8),30e8);}let financialDed=0;if(finW>0){if(finW<=2e7)financialDed=finW;else if(finW<=1e8)financialDed=2e7;else financialDed=Math.min(Math.round(finW*0.20),2e8);}const cohabDed=cohabW>0?Math.min(cohabW,6e8):0;const farmDed=farmW>0?Math.min(farmW,15e8):0;const totalDed=mainDed+spouseDed+financialDed+cohabDed+farmDed;const tb=Math.max(0,netEstate-totalDed);const tx=pTx(tb,GB);const rebate=onTime==="yes"?0.03:0;const finalTax=Math.round(tx*(1-rebate));return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}><div>{!isMo&&<h3 style={{fontSize:isMo?16:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>상속세 계산기</h3>}
+function CalcInherit({isMo=false,onNav=()=>{}}){const[ta,sTa]=useState("");const[finAsset,sFA]=useState("");const[db,sDb]=useState("");const[fn,sFn]=useState("");const[hasSpouse,sHS]=useState("yes");const[children,sCh]=useState("2");const[cohabit,sCohab]=useState("");const[farm,sFarm]=useState("");const[priorGift,sPG]=useState("");const[onTime,sOT]=useState("yes");const t=tW(ta),finW=tW(finAsset),d=tW(db),f=Math.min(tW(fn),15000000),priorW=tW(priorGift),cohabW=tW(cohabit),farmW=tW(farm);const gross=t+priorW;const netEstate=gross-d-f;const childN=parseInt(children)||0;const basicDed=2e8;const personalDed=childN*5e7;const basicPlusPersonal=basicDed+personalDed;const lumpSum=5e8;const mainDed=Math.max(basicPlusPersonal,lumpSum);let spouseDed=0;if(hasSpouse==="yes"){const spouseShare=netEstate>0?netEstate*1.5/(1.5+childN):0;spouseDed=Math.min(Math.max(spouseShare,5e8),30e8);}let financialDed=0;if(finW>0){if(finW<=2e7)financialDed=finW;else if(finW<=1e8)financialDed=2e7;else financialDed=Math.min(Math.round(finW*0.20),2e8);}const cohabDed=cohabW>0?Math.min(cohabW,6e8):0;const farmDed=farmW>0?Math.min(farmW,15e8):0;const totalDed=mainDed+spouseDed+financialDed+cohabDed+farmDed;const tb=Math.max(0,netEstate-totalDed);const tx=pTx(tb,GB);const rebate=onTime==="yes"?0.03:0;const finalTax=Math.round(tx*(1-rebate));return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}><div>{!isMo&&<h3 style={{fontSize:isMo?16:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>상속세 계산기</h3>}
     <Inp label="총 상속재산가액" value={ta} onChange={sTa} suffix="만원" placeholder="예: 200000" error={!ta||ta==="0"}/>
     <div style={{fontSize:12,color:"#6b778c",marginBottom:-8,marginLeft:2,display:"flex",alignItems:"center",gap:4,flexWrap:"nowrap"}}>금융재산 공제 <TipModal title="금융재산 상속공제"><p>2천만원 이하: 전액 공제 / 1억 이하: 2천만 / 1억 초과: 20% (최대 2억)</p></TipModal></div>
     <Inp label="금융재산 (별도)" value={finAsset} onChange={sFA} suffix="만원" placeholder="예: 20000" note="총재산 중 금융재산만 별도 기재 (공제 계산용)"/>
@@ -1620,7 +1620,7 @@ function CalcComm({isMo=false,onNav=()=>{}}){const[ty,sTy]=useState("res");const
       alertType="info" total={totalCm} sub={"요율 "+fP(r*100)+(mf!==Infinity?" · 상한 "+fW(mf):"")+(vt>0?" · VAT "+(vatMode==="incl"?"포함":"별도"):"")} items={[{l:"거래금액 기준",v:fW(pW)},{l:"중개보수 ("+fP(r*100)+")",v:fW(cm)}].concat(mf!==Infinity&&pW*r>mf?[{l:"상한 적용",v:fW(mf)}]:[]).concat(vt>0?(vatMode==="incl"?[{l:"부가가치세 (10%)",v:fW(vt)},{l:"합계 (보수+VAT)",v:fW(cm+vt)}]:[{l:"부가가치세 (10%, 별도)",v:fW(vt),note:"총액 미반영"},{l:"보수 합계 (VAT 제외)",v:fW(cm)}]):[{l:"부가세",v:vatLabel}])}/>
       {vt>0&&<div style={{padding:"8px 12px",marginTop:8}}><Tog label="VAT 처리" value={vatMode} onChange={setVatMode} options={[{value:"incl",label:"합계 포함"},{value:"excl",label:"별도 표기"}]}/></div>}<div style={{fontSize:12,color:"#64748b",padding:"8px 16px",lineHeight:1.6,display:"flex",alignItems:"center",gap:6}}><IconBulb/> 법정 상한요율이므로 실제 수수료는 협의로 낮출 수 있습니다</div><NextStep calcId="commission" onNav={onNav} isMo={isMo}/><button onClick={()=>setShowRateTable(!showRateTable)} style={{marginTop:16,width:"100%",padding:"10px 14px",background:"#f4f5f7",border:"1px solid #dfe1e6",borderRadius:8,fontSize:13,fontWeight:600,color:"#0747A6",cursor:"pointer",fontFamily:"inherit"}}>요율표 {showRateTable?"접기 ▲":"보기 ▼"}</button>{showRateTable&&<RateTable title="중개보수 상한요율 (매매)" headers={["거래금액","상한요율","한도액"]} rows={[["5천만 미만","0.6%","25만"],["2억 미만","0.5%","80만"],["9억 미만","0.4%","-"],["12억 미만","0.5%","-"],["15억 미만","0.6%","-"],["15억 이상","0.7%","-"]]}/>}</div></div>);}
 
-function CalcConvert({isMo=false,onNav=()=>{}}){const[type,sType]=useState("m2j");const[deposit,sDep]=useState("");const[monthly,sMon]=useState("");const[rate,sRate]=useState("5");const dep=tW(deposit),mon=tW(monthly),rt=pN(rate)/100;let result=0;if(type==="m2j"){result=rt>0?mon*12/rt+dep:0;}else{result=dep>0&&rt>0?(dep*rt)/12:0;}return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}><div>{!isMo&&<h3 style={{fontSize:isMo?16:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>전월세전환 계산기</h3>}<Tog label="전환 방향" value={type} onChange={sType} options={[{value:"m2j",label:"월세 → 전세"},{value:"j2m",label:"전세 → 월세"}]}/>{type==="m2j"?<><Inp label="보증금" value={deposit} onChange={sDep} suffix="만원" placeholder="예: 5000"/><Inp label="월세" value={monthly} onChange={sMon} suffix="만원" placeholder="예: 80"/></>:<Inp label="전세보증금" value={deposit} onChange={sDep} suffix="만원" placeholder="예: 30000"/>}<div style={{fontSize:12,color:"#6b778c",marginBottom:-8,marginLeft:2,display:"flex",alignItems:"center",gap:4,flexWrap:"nowrap"}}>전환율 <TipModal title="전월세 전환율"><p>법정 상한: 기준금리(3%)+2% = 5.0% (2026년). 임대인이 초과 요구 불가.</p></TipModal></div><Inp label="전환율 (연 %)" value={rate} onChange={sRate} suffix="%" note="2025 법정 전환율 상한: 기준금리+2%"/></div><RP title={type==="m2j"?"전세 환산금액":"월세 환산금액"}
+function CalcConvert({isMo=false,onNav=()=>{}}){const[type,sType]=useState("m2j");const[deposit,sDep]=useState("");const[monthly,sMon]=useState("");const[rate,sRate]=useState("");const dep=tW(deposit),mon=tW(monthly),rt=pN(rate)/100;let result=0;if(type==="m2j"){result=rt>0?mon*12/rt+dep:0;}else{result=dep>0&&rt>0?(dep*rt)/12:0;}return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}><div>{!isMo&&<h3 style={{fontSize:isMo?16:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>전월세전환 계산기</h3>}<Tog label="전환 방향" value={type} onChange={sType} options={[{value:"m2j",label:"월세 → 전세"},{value:"j2m",label:"전세 → 월세"}]}/>{type==="m2j"?<><Inp label="보증금" value={deposit} onChange={sDep} suffix="만원" placeholder="예: 5000"/><Inp label="월세" value={monthly} onChange={sMon} suffix="만원" placeholder="예: 80"/></>:<Inp label="전세보증금" value={deposit} onChange={sDep} suffix="만원" placeholder="예: 30000"/>}<div style={{fontSize:12,color:"#6b778c",marginBottom:-8,marginLeft:2,display:"flex",alignItems:"center",gap:4,flexWrap:"nowrap"}}>전환율 <TipModal title="전월세 전환율"><p>법정 상한: 기준금리(3%)+2% = 5.0% (2026년). 임대인이 초과 요구 불가.</p></TipModal></div><Inp label="전환율 (연 %)" value={rate} onChange={sRate} suffix="%" note="2025 법정 전환율 상한: 기준금리+2%"/></div><RP title={type==="m2j"?"전세 환산금액":"월세 환산금액"}
       deadline="법정 전환율 상한: 기준금리(3%) + 2% = 5.0% (2026년)"
       alertMsg={pN(rate)>5?"법정 상한 5.0% 초과: 주택임대차보호법 위반":pN(rate)>=4.5?"법정 상한 근접: 임대인 요구 시 협의 권장":null}
       alertType={pN(rate)>5?"danger":"info"}
@@ -1775,9 +1775,9 @@ function CalcRti({isMo=false,onNav=()=>{}}){
 
 /* 2026.04.14 청약가점 계산기 (주택공급에 관한 규칙 §28) */
 function CalcSubscription({isMo=false,onNav=()=>{}}){
-  const[noHouseY,setNoHouseY]=useState("5");
-  const[family,setFamily]=useState("2");
-  const[bankY,setBankY]=useState("5");
+  const[noHouseY,setNoHouseY]=useState("0");
+  const[family,setFamily]=useState("0");
+  const[bankY,setBankY]=useState("0");
   const ny=parseInt(noHouseY);const fm=parseInt(family);const by=parseInt(bankY);
   // 무주택기간 (최대 32점): 1년 미만 2점, 이후 2점씩 증가, 15년 이상 32점
   const noHouseScore=Math.min(32,2+ny*2);
@@ -1834,7 +1834,7 @@ function CalcSubscription({isMo=false,onNav=()=>{}}){
 function CalcNetSale({isMo=false,onNav=()=>{}}){
   const[sellP,setSellP]=useState("");
   const[buyP,setBuyP]=useState("");
-  const[holdY,setHoldY]=useState("5");
+  const[holdY,setHoldY]=useState("0");
   const[autoTax,setAutoTax]=useState("yes");
   const[manualTax,setManualTax]=useState("");
   const[commRate,setCommRate]=useState("");
@@ -2016,7 +2016,7 @@ function CalcDeposit({isMo=false,onNav=()=>{}}){const[amt,sAmt]=useState("");con
 function CalcFAR({isMo=false,onNav=()=>{}}){const[land,sLand]=useState("");const[build,sBuild]=useState("");const[floor,sFloor]=useState("");const[base,sBase]=useState("");const landV=pN(land),buildV=pN(build),floorV=pN(floor),baseV=pN(base);const bcr=landV>0?buildV/landV*100:0;const far=landV>0?(floorV-baseV)/landV*100:0;const zones=[{z:"제1종 전용주거",b:"50%",f:"100%"},{z:"제2종 전용주거",b:"50%",f:"150%"},{z:"제1종 일반주거",b:"60%",f:"200%"},{z:"제2종 일반주거",b:"60%",f:"250%"},{z:"제3종 일반주거",b:"50%",f:"300%"},{z:"준주거",b:"70%",f:"500%"},{z:"일반상업",b:"80%",f:"1300%"},{z:"준공업",b:"70%",f:"400%"}];return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}><div>{!isMo&&<h3 style={{fontSize:isMo?16:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>용적률·건폐율 계산</h3>}<Inp label="대지면적" value={land} onChange={sLand} placeholder="㎡"/><Inp label="건축면적 (1층 바닥)" value={build} onChange={sBuild} placeholder="㎡"/><Inp label="연면적 (전체 층 합계)" value={floor} onChange={sFloor} placeholder="㎡"/><Inp label="지하면적" value={base} onChange={sBase} placeholder="㎡ (없으면 0)"/>{landV>0&&buildV>0&&<div style={{background:"linear-gradient(135deg, #0747A6 0%, #0052CC 50%, #0065FF 100%)",color:"#fff",borderRadius:20,padding:"28px 24px",textAlign:"center",marginTop:8,boxShadow:"0 8px 28px rgba(7,71,166,.28)"}}><div style={{fontSize:11,letterSpacing:1.5,opacity:.8,marginBottom:12,textTransform:"uppercase",fontWeight:700}}>용적률·건폐율 결과</div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}}><div><div style={{fontSize:12,opacity:.85,marginBottom:4}}>건폐율</div><div style={{fontSize:32,fontWeight:800,color:"#FFC400",fontVariantNumeric:"tabular-nums"}}>{bcr.toFixed(1)}%</div></div><div><div style={{fontSize:12,opacity:.85,marginBottom:4}}>용적률</div><div style={{fontSize:32,fontWeight:800,color:"#FFC400",fontVariantNumeric:"tabular-nums"}}>{far.toFixed(1)}%</div></div></div></div>}</div><div><h4 style={{fontSize:14,fontWeight:700,color:P.tx,margin:"0 0 12px"}}>용도지역별 법정한도</h4><div style={{background:P.card,borderRadius:12,border:`1px solid ${P.bd}`,overflow:"hidden"}}><div style={{display:"flex",padding:"8px 16px",background:P.lt,fontWeight:600,fontSize:12,color:P.pri}}><span style={{flex:1}}>용도지역</span><span style={{width:60,textAlign:"right"}}>건폐율</span><span style={{width:60,textAlign:"right"}}>용적률</span></div>{zones.map((z,i)=>(<div key={i} style={{display:"flex",padding:"8px 16px",borderBottom:i<zones.length-1?`1px solid ${P.lt}`:"none",fontSize:13}}><span style={{flex:1,color:P.tx}}>{z.z}</span><span style={{width:60,textAlign:"right",color:P.mt}}>{z.b}</span><span style={{width:60,textAlign:"right",color:P.mt}}>{z.f}</span></div>))}</div></div></div>);}
 
 /* 임대소득세 */
-function CalcRental({isMo=false,onNav=()=>{}}){const[h,sH]=useState("2");const[ri,sRi]=useState("");const[er,sEr]=useState("50");const[bd,sBd]=useState("200");const[mode,sMode]=useState("sep");const riW=tW(ri);const erV=pN(er)/100;const bdW=tW(bd);const n=parseInt(h);const sepBase=Math.max(0,riW*(1-erV)-bdW);const sepTax=Math.round(sepBase*0.14);const compBase=Math.max(0,riW-riW*0.6-2500000);const compTax=pTx(compBase,IB);const better=sepTax<=compTax?"분리과세":"종합과세";const isExempt=n===1&&riW<=0;return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}><div>{!isMo&&<h3 style={{fontSize:isMo?16:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>주택임대소득세</h3>}<Radio label="주택 수" value={h} onChange={sH} options={[{value:"1",label:"1주택 (기준시가 12억↑만 과세)"},{value:"2",label:"2주택"},{value:"3",label:"3주택 이상"}]}/><Inp label="연간 임대수입" value={ri} onChange={sRi} suffix="만원" placeholder="예: 1500" error={!ri||ri==="0"}/><Inp label="필요경비율" value={er} onChange={sEr} suffix="%" note="분리과세 시 50%, 등록임대 60%"/><Inp label="기본공제" value={bd} onChange={sBd} suffix="만원" note="미등록 200만, 등록 400만"/><Tog label="과세 방식" value={mode} onChange={sMode} options={[{value:"sep",label:"분리과세 (14%)"},{value:"comp",label:"종합과세 (6~45%)"}]}/></div><div><RP title={mode==="sep"?"분리과세 임대소득세":"종합과세 임대소득세"}
+function CalcRental({isMo=false,onNav=()=>{}}){const[h,sH]=useState("2");const[ri,sRi]=useState("");const[er,sEr]=useState("");const[bd,sBd]=useState("");const[mode,sMode]=useState("sep");const riW=tW(ri);const erV=pN(er)/100;const bdW=tW(bd);const n=parseInt(h);const sepBase=Math.max(0,riW*(1-erV)-bdW);const sepTax=Math.round(sepBase*0.14);const compBase=Math.max(0,riW-riW*0.6-2500000);const compTax=pTx(compBase,IB);const better=sepTax<=compTax?"분리과세":"종합과세";const isExempt=n===1&&riW<=0;return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}><div>{!isMo&&<h3 style={{fontSize:isMo?16:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>주택임대소득세</h3>}<Radio label="주택 수" value={h} onChange={sH} options={[{value:"1",label:"1주택 (기준시가 12억↑만 과세)"},{value:"2",label:"2주택"},{value:"3",label:"3주택 이상"}]}/><Inp label="연간 임대수입" value={ri} onChange={sRi} suffix="만원" placeholder="예: 1500" error={!ri||ri==="0"}/><Inp label="필요경비율" value={er} onChange={sEr} suffix="%" note="분리과세 시 50%, 등록임대 60%"/><Inp label="기본공제" value={bd} onChange={sBd} suffix="만원" note="미등록 200만, 등록 400만"/><Tog label="과세 방식" value={mode} onChange={sMode} options={[{value:"sep",label:"분리과세 (14%)"},{value:"comp",label:"종합과세 (6~45%)"}]}/></div><div><RP title={mode==="sep"?"분리과세 임대소득세":"종합과세 임대소득세"}
       deadline="신고기한: 다음해 5월 종합소득세 신고 시"
       deadlineLink="https://hometax.go.kr" deadlineLinkLabel="홈택스 →"
       alertMsg={riW*10000>20000000?"연 2천만 초과: 종합과세 의무":sepTax<=compTax?"분리과세가 유리 ("+fW(compTax-sepTax)+" 절감)":"종합과세가 유리 ("+fW(sepTax-compTax)+" 절감)"}
@@ -2058,7 +2058,7 @@ function CalcBldValue({isMo=false,onNav=()=>{}}){const[np,sNp]=useState("");cons
       total={remaining} sub={"잔존률 "+fP(pct)} items={[{l:"신축 가격",v:fW(npW)},{l:"내용연수",v:ulV+"년"},{l:"경과연수",v:elV+"년"},{l:"감가방법",v:mt==="line"?"정액법":"정률법 (10%)"},{l:"정액법 기준 잔존률",v:fP(Math.max(0,Math.min(1,1-elV/ulV))*100)},{l:"정률법 기준 잔존률",v:fP(Math.pow(0.9,elV)*100)},{l:"감가상각 누계",v:fW(depreciation)},{l:"잔존가치",v:fW(remaining)},{l:"잔존률",v:fP(pct)}]}/></div>);}
 
 /* 종합소득세 */
-function CalcIncTax({isMo=false,onNav=()=>{}}){const[incType,sIT]=useState("salary");const[gross,sGross]=useState("");const[deductions,sDed]=useState("");const[bizType,sBT]=useState("simple");const[bizRate,sBR]=useState("60");
+function CalcIncTax({isMo=false,onNav=()=>{}}){const[incType,sIT]=useState("salary");const[gross,sGross]=useState("");const[deductions,sDed]=useState("");const[bizType,sBT]=useState("simple");const[bizRate,sBR]=useState("");
   const[spouse,sSpouse]=useState("0");const[parents,sParents]=useState("0");const[children,sChildren]=useState("0");const[senior,sSenior]=useState("0");const[disabled,sDisabled]=useState("0");
   const grossW=tW(gross),dedW=tW(deductions);const spouseN=Math.min(parseInt(spouse)||0,1),parentsN=parseInt(parents)||0,childrenN=parseInt(children)||0,seniorN=parseInt(senior)||0,disabledN=parseInt(disabled)||0;
   let taxableIncome=0;
@@ -2143,7 +2143,7 @@ function CalcYearEnd({isMo=false,onNav=()=>{}}){const[salary,sSal]=useState("");
       total={Math.abs(refund)} sub={refund>=0?"돌려받는 금액":"더 내야 할 금액"} items={[{l:"총급여",v:fW(salW)},{l:"근로소득공제",v:"-"+fW(workDed)},{l:"기본공제 (본인+가족 "+(1+spouseN+parentsN+childN)+"명)",v:"-"+fW(basicDed)}].concat(seniorN>0?[{l:"경로우대공제 ("+seniorN+"명)",v:"-"+fW(seniorDed)}]:[]).concat(disabledN>0?[{l:"장애인공제 ("+disabledN+"명)",v:"-"+fW(disabledDed)}]:[]).concat([{l:"인적공제 합계",v:"-"+fW(personalDed)},{l:"4대보험료 공제",v:"-"+fW(socialDed),note:"국민연금+건강+고용"},{l:"신용카드 소득공제",v:"-"+fW(cardDed),note:"총급여 25% 초과분"},{l:"과세표준",v:fW(taxableIncome)},{l:"산출세액",v:fW(tax)},{l:"  연금저축 공제",v:"-"+fW(Math.round(penCredit))},{l:"  의료비 공제",v:"-"+fW(Math.round(medCredit))},{l:"  교육비 공제",v:"-"+fW(Math.round(eduCredit))},{l:"  기부금 공제",v:"-"+fW(Math.round(donCredit))},{l:"  자녀 세액공제",v:"-"+fW(childCredit)}]).concat(rentCredit>0?[{l:"  월세 세액공제",v:"-"+fW(rentCredit)}]:[]).concat([{l:"세액공제 합계",v:"-"+fW(totalCredit)},{l:"결정세액",v:fW(finalTax)},{l:"지방소득세 (10%)",v:fW(localTax)},{l:"기납부세액 (추정)",v:fW(prepaid)},{l:refund>=0?"예상 환급":"추가 납부",v:fW(Math.abs(refund)),note:refund>=0?"✓ 환급":"추가 납부"}])}/><RequiredGuide items={[{label:"연간 총급여액",filled:false}]}/><NextStep calcId="yearend" onNav={onNav} isMo={isMo}/><RateTable title="주요 공제 한도" headers={["항목","한도"]} rows={[["신용카드","7천↓300만 / 1.2억↓250만 / 1.2억↑200만"],["의료비","총급여 3% 초과분 15%"],["교육비","초중고 300만 / 대학 900만"],["기부금","법정 전액 / 지정 10~30%"],["연금저축","연 600만"],["IRP 합산","연 900만"],["월세(총급여 7천↓)","연 1000만, 5500↓17%·초과15%"]]}/></div></div>);}
 
 /* 연봉 실수령액 */
-function CalcNetSalary({isMo=false,onNav=()=>{}}){const[salary,sSal]=useState("");const[family,sFamily]=useState("1");const[child,sChild]=useState("0");const[nonTax,sNT]=useState("20");
+function CalcNetSalary({isMo=false,onNav=()=>{}}){const[salary,sSal]=useState("");const[family,sFamily]=useState("1");const[child,sChild]=useState("0");const[nonTax,sNT]=useState("");
   const salW=tW(salary),nonTaxW=tW(nonTax)*12,familyN=parseInt(family),childN=parseInt(child),taxableSal=Math.max(0,salW-nonTaxW);
   const monthlySal=taxableSal/12;const npn=Math.min(monthlySal,6370000)*.045,hi=monthlySal*.03545,ltc=hi*.1295,ei=monthlySal*.009;const monthlyIns=npn+hi+ltc+ei;const totalIns=monthlyIns*12;
   let workDed=0;if(taxableSal<=5e6)workDed=taxableSal*.7;else if(taxableSal<=15e6)workDed=3500000+(taxableSal-5e6)*.4;else if(taxableSal<=45e6)workDed=7500000+(taxableSal-15e6)*.15;else if(taxableSal<=1e8)workDed=12000000+(taxableSal-45e6)*.05;else workDed=14750000+(taxableSal-1e8)*.02;
@@ -2300,7 +2300,7 @@ function NextStep({calcId,onNav,isMo=false}){
 }
 function CalcMinWage({isMo=false,onNav=()=>{}}){
   const MIN_HOURLY=10030;
-  const[hours,setH]=useState("8");const[days,setD]=useState("5");const[customH,setCH]=useState("");
+  const[hours,setH]=useState("");const[days,setD]=useState("");const[customH,setCH]=useState("");
   const h=parseFloat(hours)||0,d=parseFloat(days)||0,w=4.345;
   const hourly=parseFloat(customH)||MIN_HOURLY;
   const weeklyH=h*d,hasPay=weeklyH>=15,payH=hasPay?(weeklyH/d):0,totalWH=weeklyH+payH;
@@ -3481,17 +3481,46 @@ function LeftNav({isMo,navOpen,setNavOpen,navContent,setNavContent,effectiveUser
   const[openInline,setOpenInline]=useState(null); // regs/glossary 인라인
   const[subOpen,setSubOpen]=useState({}); // {menuId: subId} Learning/Market 서브 열림
   const SV=(stroke,children)=>(<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">{children}</svg>);
+  // 2026.04.15 서브 메뉴 항목 SVG 아이콘 (16×16, strokeWidth 1.5)
+  const SI=(ch)=>(c)=>(<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{marginRight:8,verticalAlign:"middle",flexShrink:0}}>{ch}</svg>);
+  const SUB_ICONS={
+    expert:{
+      intro:SI(<><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.8.4-1 1-1 1.7V14"/><path d="M12 17.2v.1"/></>),
+      tips:SI(<><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.5.4 1 1 1 1.8V18h6v-1.5c0-.8.5-1.4 1-1.8A7 7 0 0 0 12 2z"/></>),
+      deadline:SI(<><rect x="3" y="5" width="18" height="16" rx="1"/><path d="M3 9h18M8 3v4M16 3v4"/></>),
+      howto:SI(<><rect x="5" y="4" width="14" height="17" rx="1"/><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M9 11h6M9 15h6"/></>),
+      caution:SI(<><path d="M12 3 2 21h20z"/><path d="M12 10v5"/><path d="M12 17.8v.1"/></>),
+    },
+    learning:{
+      basics:SI(<><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/></>),
+      loanreg:SI(<><path d="M3 10l9-6 9 6"/><path d="M4 10h16v11H4z"/><path d="M7 14v4M12 14v4M17 14v4"/></>),
+      strategy:SI(<><circle cx="12" cy="12" r="9"/><path d="M12 7v10"/><path d="M9 10h4.5a1.5 1.5 0 0 1 0 3H10.5a1.5 1.5 0 0 0 0 3H15"/></>),
+      checklist:SI(<><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></>),
+      howto:SI(<><rect x="4" y="3" width="16" height="18" rx="2"/><rect x="7" y="6" width="10" height="4"/><path d="M8 13h.01M12 13h.01M16 13h.01M8 17h.01M12 17h.01M16 17h.01"/></>),
+      history:SI(<><path d="M6 3h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6z"/><path d="M9 7h6M9 11h6M9 15h4"/></>),
+    },
+    market:{
+      baserate:SI(<><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></>),
+      kospi:SI(<><path d="M3 7l6 6 4-4 8 8"/><path d="M14 17h7v-7"/></>),
+      seoulapt:SI(<><rect x="4" y="3" width="16" height="18"/><path d="M8 7h2M14 7h2M8 11h2M14 11h2M8 15h2M14 15h2"/></>),
+      trend:SI(<><path d="M3 20h18"/><path d="M6 16V8"/><path d="M12 16V4"/><path d="M18 16v-6"/></>),
+      jeonse:SI(<><circle cx="12" cy="12" r="9"/><path d="M15 9l-6 6"/><circle cx="9.5" cy="9.5" r="1"/><circle cx="14.5" cy="14.5" r="1"/></>),
+      dsr:SI(<><path d="M4 4h16v6H4z"/><path d="M8 4v3M12 4v3M16 4v3"/></>),
+      zone:SI(<><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z"/><circle cx="12" cy="9" r="2.5"/></>),
+      std:SI(<><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></>),
+    },
+  };
   const MENU=[
-    {id:"expert",l:"Expert Guide",always:true,icon:(c)=>SV(c,<><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></>),items:[
+    {id:"expert",l:"Expert Guide",always:true,icon:(c)=>SV(c,<><path d="M4 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M8 2v20"/></>),items:[
       {id:"intro",title:"취득세란 무엇인가요?",defaultOpen:true,body:"부동산을 매매·증여·상속 등으로 취득할 때 납부하는 지방세입니다. 주택의 경우 1~12% 차등 적용."},
       {id:"tips",title:"절세 팁",body:"• 생애최초 12억↓ 200만원 감면 (2028까지)\n• 일시적 2주택 3년 내 처분 시 일반세율\n• 공시가 1억↓ 다주택 중과 제외"},
       {id:"deadline",title:"신고 기한",body:"잔금일·등기일 중 빠른 날부터 60일 이내 (상속 6개월, 증여 3개월). 위택스(wetax.go.kr)에서 온라인 신고 가능."},
       {id:"howto",title:"신고 방법",body:"1) 위택스 로그인 → 2) 신고하기 → 3) 매매계약서·등기필증 첨부 → 4) 세액 확인 → 5) 즉시 납부 또는 가상계좌 발급"},
       {id:"caution",title:"주의사항",body:"• 시가표준액 ≠ 실거래가 (둘 중 큰 값이 과세표준)\n• 조정대상지역 2주택 8% / 3주택+ 12% 중과\n• 법인은 주택수 무관 12%"}
     ]},
-    {id:"regs",l:"규정·법령",inline:true,icon:(c)=>SV(c,<><rect x="4" y="2" width="16" height="20" rx="1"/><path d="M8 6h8M8 10h8M8 14h5"/></>),body:"• 지방세법 (취득세·재산세·지방교육세)\n• 소득세법 (양도소득세·종합소득세)\n• 종합부동산세법 (종부세)\n• 상속세 및 증여세법\n• 주택법·주택임대차보호법·상가건물임대차보호법\n• 은행업 감독규정 (DSR·DTI·LTV)"},
-    {id:"glossary",l:"용어 사전",inline:true,icon:(c)=>SV(c,<><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H20v15H5.5A1.5 1.5 0 0 1 4 16.5z"/><path d="M4 16.5A1.5 1.5 0 0 1 5.5 15H20"/></>),body:"• 과세표준: 세금 계산의 기준 금액\n• 시가표준액: 지자체가 고시하는 부동산 기준가\n• 공시가격: 국토부 고시 부동산 가격\n• DSR: 총부채원리금상환비율\n• LTV: 담보인정비율\n• DTI: 총부채상환비율\n• 1세대1주택: 세대 전원 기준 1주택"},
-    {id:"learning",l:"Learning Center",icon:(c)=>SV(c,<><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H20v15H5.5A1.5 1.5 0 0 1 4 16.5z"/><path d="M4 16.5A1.5 1.5 0 0 1 5.5 15H20v6H5.5A1.5 1.5 0 0 1 4 19.5z"/></>),sub:[
+    {id:"regs",l:"규정·법령",inline:true,icon:(c)=>SV(c,<><path d="M12 3v18"/><path d="M6 7h12"/><path d="M6 7l-3 7h6z"/><path d="M18 7l3 7h-6z"/></>),body:"• 지방세법 (취득세·재산세·지방교육세)\n• 소득세법 (양도소득세·종합소득세)\n• 종합부동산세법 (종부세)\n• 상속세 및 증여세법\n• 주택법·주택임대차보호법·상가건물임대차보호법\n• 은행업 감독규정 (DSR·DTI·LTV)"},
+    {id:"glossary",l:"용어 사전",inline:true,icon:(c)=>SV(c,<><path d="M4 3h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4z"/><path d="M4 3v18"/><path d="M8 7h6M8 11h6M8 15h4"/></>),body:"• 과세표준: 세금 계산의 기준 금액\n• 시가표준액: 지자체가 고시하는 부동산 기준가\n• 공시가격: 국토부 고시 부동산 가격\n• DSR: 총부채원리금상환비율\n• LTV: 담보인정비율\n• DTI: 총부채상환비율\n• 1세대1주택: 세대 전원 기준 1주택"},
+    {id:"learning",l:"Learning Center",icon:(c)=>SV(c,<><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></>),sub:[
       {id:"basics",l:"부동산 세금 기초",body:"취득세는 매매·증여·상속 시 1~12%, 양도세는 양도차익 6~45%, 종부세는 공시가 합산 0.5~5%. 재산세는 매년 6월 1일 기준 부과."},
       {id:"loanreg",l:"대출 규제 이해하기",body:"DSR 은행 40% 비은행 50%. DTI 투기과열 40%. LTV 무주택 70% 생애최초 80%. 스트레스 DSR 변동 +1.5%p."},
       {id:"strategy",l:"절세 전략 가이드",body:"1) 생애최초 감면 활용 2) 일시적 2주택 3년 처분 3) 공시가 1억↓ 다주택 중과 제외 4) 1세대1주택 12억 비과세 5) 장기보유특별공제"},
@@ -3509,7 +3538,7 @@ function LeftNav({isMo,navOpen,setNavOpen,navContent,setNavContent,effectiveUser
       {id:"zone",l:"조정대상/투기과열",body:"조정대상지역: 서울 25개구 일부. 투기과열지구: 강남 3구 + 용산. 2026년 일부 해제 예정."},
       {id:"std",l:"공시가격 현실화율",body:"공시가격 현실화율 평균 약 70%. 정부 로드맵 90% 목표 — 2026년 인상 논의 중."}
     ]},
-    {id:"history",l:"지난 계산 내역",special:"history",icon:(c)=>SV(c,<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>)}
+    {id:"history",l:"지난 계산 내역",special:"history",icon:(c)=>SV(c,<><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></>)}
   ];
   const tx=isMo&&!navOpen?"translateX(-100%)":"none";
   const styleProps=isMo
@@ -3534,7 +3563,7 @@ function LeftNav({isMo,navOpen,setNavOpen,navContent,setNavContent,effectiveUser
                   const active=expertExp===it.id;
                   return(<div key={it.id}>
                     <button onClick={()=>setExpertExp(prev=>prev===it.id?"":it.id)} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 18px 10px 44px",background:active?"#EFF6FF":"none",border:"none",color:active?"#0747A6":"#475569",fontSize:12,fontWeight:active?700:500,cursor:"pointer",fontFamily:"inherit",textAlign:"left"}} onMouseEnter={e=>{if(!active){e.currentTarget.style.background="#EFF6FF";e.currentTarget.style.color="#0747A6"}}} onMouseLeave={e=>{if(!active){e.currentTarget.style.background="none";e.currentTarget.style.color="#475569"}}}>
-                      <span>{it.title}</span>
+                      <span style={{display:"inline-flex",alignItems:"center"}}>{SUB_ICONS.expert[it.id]&&SUB_ICONS.expert[it.id](active?"#0747A6":"#475569")}{it.title}</span>
                       <span style={{fontSize:10,color:active?"#0747A6":"#6B7280"}}>{active?"▼":"▶"}</span>
                     </button>
                     {active&&<div style={{padding:"8px 18px 14px 44px",background:"#fff",borderTop:"1px solid #E5E7EB",fontSize:11,lineHeight:1.7,color:"#475569",whiteSpace:"pre-line"}}>{it.body}</div>}
@@ -3582,7 +3611,7 @@ function LeftNav({isMo,navOpen,setNavOpen,navContent,setNavContent,effectiveUser
                 const sActive=subOpen[m.id]===s.id;
                 return(<div key={s.id}>
                   <button onClick={()=>setSubOpen(prev=>({...prev,[m.id]:sActive?null:s.id}))} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 18px 10px 44px",background:sActive?"#EFF6FF":"none",border:"none",color:sActive?"#0747A6":"#475569",fontSize:12,fontWeight:sActive?700:500,cursor:"pointer",fontFamily:"inherit",textAlign:"left"}} onMouseEnter={e=>{if(!sActive){e.currentTarget.style.background="#EFF6FF";e.currentTarget.style.color="#0747A6"}}} onMouseLeave={e=>{if(!sActive){e.currentTarget.style.background="none";e.currentTarget.style.color="#475569"}}}>
-                    <span>{s.l}</span>
+                    <span style={{display:"inline-flex",alignItems:"center"}}>{SUB_ICONS[m.id]?.[s.id]&&SUB_ICONS[m.id][s.id](sActive?"#0747A6":"#475569")}{s.l}</span>
                     <span style={{fontSize:10,color:sActive?"#0747A6":"#6B7280"}}>{sActive?"▼":"▶"}</span>
                   </button>
                   {sActive&&<div style={{padding:"8px 18px 14px 44px",background:"#fff",borderTop:"1px solid #E5E7EB",fontSize:11,lineHeight:1.7,color:"#475569",whiteSpace:"pre-line"}}>{s.body}</div>}
