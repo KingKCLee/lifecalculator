@@ -5,8 +5,15 @@
     <link>https://xn--989a00a691bdfa717h.com/</link>
     <description>취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 등 39가지 무료 계산기. 매일 자동 업데이트.</description>
     <language>ko</language>
-    <lastBuildDate>Tue, 14 Apr 2026 20:33:28 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 14 Apr 2026 20:38:32 +0900</lastBuildDate>
     <atom:link href="https://xn--989a00a691bdfa717h.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+    <title>fix: 취득세 취득가액 Slider→Inp 교체 (시가표준액과 동일한 레이블-위 풀폭 레이아웃)</title>
+    <link>https://xn--989a00a691bdfa717h.com/</link>
+    <description>fix: 취득세 취득가액 Slider→Inp 교체 (시가표준액과 동일한 레이블-위 풀폭 레이아웃)</description>
+    <pubDate>Tue, 14 Apr 2026 20:38:32 +0900</pubDate>
+    <guid>https://xn--989a00a691bdfa717h.com/#update-202604141138</guid>
+  </item>
     <item>
     <title>refactor: REGION_DATA 인라인 상수 제거·public/data/lawd.json 동적 로드·드릴다운 UI 복원</title>
     <link>https://xn--989a00a691bdfa717h.com/</link>
