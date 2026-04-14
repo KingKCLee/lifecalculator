@@ -3023,6 +3023,202 @@ function CalcSearchBar({onSelect,isMo,calcList}){
   </div>);
 }
 
+/* 2026.04.15 홈 하단 6-섹션 피드 (뉴스·정책·AI절세·Q&A·맞춤정책·용어검색) */
+function HomeSections({isMo, effectiveUser, navigateCalc, setAuthMode, setShowAuth}){
+  const WORKER="https://lc-auth-worker.noble-kclee.workers.dev";
+  const [news,setNews]=useState({l:true,d:[]});
+  const [policy,setPolicy]=useState({l:true,d:[]});
+  const [taxTips,setTaxTips]=useState({l:true,d:[]});
+  const [community,setCommunity]=useState({l:true,d:[]});
+  const [chips,setChips]=useState(()=>{try{return JSON.parse(localStorage.getItem("lc_policy_chips")||"[]")}catch{return []}});
+  const [chipNews,setChipNews]=useState({l:false,d:[]});
+  const TAX_FALLBACK=[
+    {icon:"💡",title:"혼인·출산 증여재산공제 활용법",summary:"직계존속 증여 시 1억원 추가공제 (2024년~)",calc:"gift"},
+    {icon:"💡",title:"일시적 2주택 비과세 요건 확인",summary:"종전주택 3년 내 처분 시 중과 제외",calc:"acquisition"},
+    {icon:"💡",title:"장기보유특별공제 80% 받는 법",summary:"1세대1주택 10년 보유·거주로 최대 80%",calc:"transfer"},
+    {icon:"💡",title:"임대사업자 등록 절세 효과",summary:"종부세 합산 배제·양도세 중과 배제",calc:"rental"},
+    {icon:"💡",title:"공동명의 종부세 절세 전략",summary:"부부 공동명의 특례 18억 공제",calc:"joint"},
+    {icon:"💡",title:"생애최초 취득세 감면 200만원",summary:"12억 이하 주택 첫 구매 시 2028.12.31까지",calc:"acquisition"}
+  ];
+  const SITUATION_CHIPS=["1주택자","2주택자","3주택이상","생애최초","임대사업자","법인","경매투자자","전세입자","월세입자","분양권보유"];
+  const POPULAR_TERMS=["취득세 중과","장기보유특별공제","조정대상지역","생애최초","말소기준권리","차주단위DSR","임대차신고제","명도강제집행","배당순위","무주택서민실수요자","유치권","단기양도세","공동명의","간주임대료","임대사업자","분양가상한제","재건축초과이익","전세보증보험","주택임대차보호법","경락잔금대출"];
+  const extract=o=>Array.isArray(o)?o:(o?.items||o?.data||o?.news||o?.articles||o?.posts||[]);
+  useEffect(()=>{
+    let alive=true;
+    const fj=async(u)=>{try{const r=await fetch(u,{cache:"no-store"});if(!r.ok)return null;return await r.json();}catch{return null;}};
+    Promise.all([
+      fj(WORKER+"/news?limit=6"),
+      fj(WORKER+"/policy?limit=6").then(d=>d||fj(WORKER+"/news?category=policy&limit=6")),
+      fj(WORKER+"/news?category=tax&limit=6"),
+      fj(WORKER+"/community?limit=6")
+    ]).then(([n,p,t,c])=>{
+      if(!alive)return;
+      setNews({l:false,d:extract(n).slice(0,6)});
+      setPolicy({l:false,d:extract(p).slice(0,6)});
+      setTaxTips({l:false,d:extract(t).slice(0,6)});
+      setCommunity({l:false,d:extract(c).slice(0,6)});
+    });
+    return()=>{alive=false};
+  },[]);
+  useEffect(()=>{
+    if(!effectiveUser||chips.length===0){setChipNews({l:false,d:[]});return;}
+    let alive=true;
+    try{localStorage.setItem("lc_policy_chips",JSON.stringify(chips))}catch{}
+    setChipNews({l:true,d:[]});
+    const q=chips.map(c=>encodeURIComponent(c)).join(",");
+    fetch(WORKER+"/news?tag="+q+"&limit=10",{cache:"no-store"}).then(r=>r.ok?r.json():null).then(d=>{
+      if(!alive)return;
+      setChipNews({l:false,d:extract(d).slice(0,10)});
+    }).catch(()=>alive&&setChipNews({l:false,d:[]}));
+    return()=>{alive=false};
+  },[chips.join(","),effectiveUser]);
+  const toggleChip=c=>setChips(p=>p.includes(c)?p.filter(x=>x!==c):[...p,c]);
+  const fmtDate=s=>{if(!s)return"";try{const d=new Date(s);if(isNaN(d))return s.slice(0,10);return d.getFullYear()+"."+String(d.getMonth()+1).padStart(2,"0")+"."+String(d.getDate()).padStart(2,"0");}catch{return s.slice(0,10)}};
+
+  const secStyle={background:"#FFFFFF",border:"1px solid #E5E7EB",borderRadius:12,padding:"20px 24px",marginBottom:24};
+  const hdrStyle={fontSize:16,fontWeight:700,color:"#0a1628",display:"flex",alignItems:"center",justifyContent:"space-between",borderBottom:"1px solid #F3F4F6",paddingBottom:12,marginBottom:12,gap:8};
+  const moreLnk={fontSize:12,fontWeight:600,color:"#0747A6",textDecoration:"none",flexShrink:0};
+  const itemStyle={fontSize:13,color:"#374151",padding:"10px 0",borderBottom:"1px solid #F9FAFB",cursor:"pointer",display:"block",textDecoration:"none",transition:"color .15s"};
+  const Skel=({lines=5})=>(<div>{Array.from({length:lines}).map((_,i)=>(<div key={i} style={{height:14,background:"linear-gradient(90deg,#F3F4F6,#E5E7EB,#F3F4F6)",backgroundSize:"200% 100%",borderRadius:4,marginBottom:12,animation:"lcpulse 1.4s infinite"}}/>))}</div>);
+
+  const NewsList=({state,emptyLabel})=>state.l?<Skel/>:(state.d.length===0?<div style={{fontSize:12,color:"#9CA3AF",padding:"20px 0",textAlign:"center"}}>{emptyLabel||"데이터를 불러오는 중입니다"}</div>:state.d.map((it,i)=>{
+    const t=it.title||it.name||it.subject||"";
+    const link=it.link||it.url||it.href||"#";
+    const src=it.source||it.author||it.publisher||"";
+    const dt=fmtDate(it.pubDate||it.date||it.created_at||it.publishedAt);
+    return(<a key={i} href={link} target="_blank" rel="noopener noreferrer" style={{...itemStyle,borderBottom:i===state.d.length-1?"none":itemStyle.borderBottom}} onMouseEnter={e=>e.currentTarget.style.color="#0747A6"} onMouseLeave={e=>e.currentTarget.style.color="#374151"}>
+      <div style={{fontWeight:600,marginBottom:2,lineHeight:1.4,display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical",overflow:"hidden"}}>{t}</div>
+      <div style={{fontSize:11,color:"#9CA3AF"}}>{[src,dt].filter(Boolean).join(" · ")}</div>
+    </a>);
+  }));
+
+  const PolicyList=({state})=>state.l?<Skel/>:(state.d.length===0?<div style={{fontSize:12,color:"#9CA3AF",padding:"20px 0",textAlign:"center"}}>데이터를 불러오는 중입니다</div>:state.d.map((it,i)=>{
+    const t=it.title||it.name||"";
+    const link=it.link||it.url||"#";
+    const src=it.source||it.ministry||it.publisher||"정부";
+    return(<a key={i} href={link} target="_blank" rel="noopener noreferrer" style={{...itemStyle,borderBottom:i===state.d.length-1?"none":itemStyle.borderBottom}} onMouseEnter={e=>e.currentTarget.style.color="#0747A6"} onMouseLeave={e=>e.currentTarget.style.color="#374151"}>
+      <div style={{lineHeight:1.5,display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical",overflow:"hidden"}}><span style={{color:"#0747A6",fontWeight:700,marginRight:6}}>[{src}]</span>{t}</div>
+    </a>);
+  }));
+
+  const taxData=(taxTips.l?[]:(taxTips.d.length>0?taxTips.d:TAX_FALLBACK));
+  const TaxTipList=()=>taxTips.l?<Skel/>:taxData.map((it,i)=>{
+    const t=it.title||it.name||"";
+    const summary=it.summary||it.description||it.desc||"";
+    const icon=it.icon||"💡";
+    const calcId=it.calc||it.calculator||null;
+    const onClick=e=>{if(calcId){e.preventDefault();const info=CL.find(c=>c.id===calcId);if(info)navigateCalc(info.c,info.id);}};
+    return(<a key={i} href={calcId?"#":(it.link||"#")} onClick={onClick} style={{...itemStyle,borderBottom:i===taxData.length-1?"none":itemStyle.borderBottom}} onMouseEnter={e=>e.currentTarget.style.color="#0747A6"} onMouseLeave={e=>e.currentTarget.style.color="#374151"}>
+      <div style={{display:"flex",alignItems:"flex-start",gap:8}}>
+        <span style={{fontSize:16,flexShrink:0,lineHeight:1.2}}>{icon}</span>
+        <div style={{flex:"1 1 auto",minWidth:0}}>
+          <div style={{fontWeight:600,marginBottom:2,lineHeight:1.4}}>{t}</div>
+          {summary&&<div style={{fontSize:11,color:"#9CA3AF",lineHeight:1.5}}>{summary}</div>}
+        </div>
+      </div>
+    </a>);
+  });
+
+  const CommunityList=({state})=>state.l?<Skel/>:(state.d.length===0?<div style={{fontSize:12,color:"#9CA3AF",padding:"20px 0",textAlign:"center"}}>게시글을 불러오는 중입니다</div>:state.d.map((it,i)=>{
+    const t=it.title||it.subject||"";
+    const dt=fmtDate(it.created_at||it.date||it.pubDate);
+    const isNotice=it.notice||it.pinned||it.category==="notice";
+    return(<a key={i} href={it.link||("/community/?id="+(it.id||""))} style={{...itemStyle,borderBottom:i===state.d.length-1?"none":itemStyle.borderBottom}} onMouseEnter={e=>e.currentTarget.style.color="#0747A6"} onMouseLeave={e=>e.currentTarget.style.color="#374151"}>
+      <div style={{display:"flex",alignItems:"center",gap:6,lineHeight:1.5}}>
+        {isNotice&&<span style={{fontSize:10,fontWeight:800,color:"#DE350B",background:"#FFEBE6",padding:"2px 6px",borderRadius:4,flexShrink:0}}>공지</span>}
+        <span style={{flex:"1 1 auto",minWidth:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{t}</span>
+        <span style={{fontSize:11,color:"#9CA3AF",flexShrink:0}}>{dt}</span>
+      </div>
+    </a>);
+  }));
+
+  return(<div style={{maxWidth:1200,margin:"0 auto",padding:isMo?"24px 16px 0":"32px 24px 0"}}>
+    <style>{`@keyframes lcpulse{0%,100%{background-position:200% 0}50%{background-position:-200% 0}}`}</style>
+
+    {/* 섹션 1·2 — 뉴스·정책 (2열) */}
+    <div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?0:20}}>
+      <div style={secStyle}>
+        <div style={hdrStyle}>
+          <span>📰 세금·부동산 뉴스</span>
+          <a href="/news/" style={moreLnk}>더보기 →</a>
+        </div>
+        <NewsList state={news}/>
+      </div>
+      <div style={secStyle}>
+        <div style={hdrStyle}>
+          <span>🏛 최신 규제·정책 브리핑</span>
+          <a href="/policy/" style={moreLnk}>전체 정책 →</a>
+        </div>
+        <PolicyList state={policy}/>
+      </div>
+    </div>
+
+    {/* 섹션 3·4 — AI절세·Q&A (2열) */}
+    <div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?0:20}}>
+      <div style={secStyle}>
+        <div style={hdrStyle}>
+          <span>🤖 AI 절세 가이드</span>
+          <a href="/guide/" style={moreLnk}>가이드 전체 →</a>
+        </div>
+        <TaxTipList/>
+      </div>
+      <div style={secStyle}>
+        <div style={hdrStyle}>
+          <span>💬 사용자 Q&A 게시판</span>
+          <div style={{display:"flex",gap:8,alignItems:"center"}}>
+            {effectiveUser&&<a href="/community/write.html" style={{...moreLnk,background:"#0747A6",color:"#fff",padding:"4px 10px",borderRadius:6}}>글쓰기</a>}
+            <a href="/community/" style={moreLnk}>게시판 →</a>
+          </div>
+        </div>
+        <CommunityList state={community}/>
+      </div>
+    </div>
+
+    {/* 섹션 5 — 맞춤 정책 (전체 너비, 로그인 필요) */}
+    <div style={{...secStyle,position:"relative",overflow:"hidden"}}>
+      <div style={{...hdrStyle,filter:effectiveUser?"none":"blur(4px)",pointerEvents:effectiveUser?"auto":"none"}}>
+        <span>🎯 나에게 해당되는 정책</span>
+        {effectiveUser&&chips.length>0&&<button onClick={()=>setChips([])} style={{fontSize:11,color:"#9CA3AF",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>초기화</button>}
+      </div>
+      <div style={{filter:effectiveUser?"none":"blur(4px)",pointerEvents:effectiveUser?"auto":"none"}}>
+        <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:14}}>
+          {SITUATION_CHIPS.map(c=>(<button key={c} onClick={()=>toggleChip(c)} style={{padding:"7px 14px",borderRadius:20,border:"1.5px solid "+(chips.includes(c)?"#0747A6":"#E5E7EB"),background:chips.includes(c)?"#0747A6":"#fff",color:chips.includes(c)?"#fff":"#6B7280",fontSize:12,fontWeight:chips.includes(c)?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>{c}</button>))}
+        </div>
+        {chips.length===0?<div style={{fontSize:13,color:"#9CA3AF",padding:"16px 0",textAlign:"center"}}>상황을 선택하면 해당되는 정책·뉴스를 확인할 수 있습니다</div>:(chipNews.l?<Skel lines={3}/>:(chipNews.d.length===0?<div style={{fontSize:12,color:"#9CA3AF",padding:"12px 0",textAlign:"center"}}>선택하신 조건의 정책이 준비 중입니다</div>:chipNews.d.map((it,i)=>{
+          const t=it.title||it.name||"";
+          const link=it.link||it.url||"#";
+          return(<a key={i} href={link} target="_blank" rel="noopener noreferrer" style={{...itemStyle,borderBottom:i===chipNews.d.length-1?"none":itemStyle.borderBottom}} onMouseEnter={e=>e.currentTarget.style.color="#0747A6"} onMouseLeave={e=>e.currentTarget.style.color="#374151"}>
+            <div style={{fontWeight:600,lineHeight:1.5}}>{t}</div>
+            {(it.source||it.pubDate)&&<div style={{fontSize:11,color:"#9CA3AF",marginTop:2}}>{[it.source,fmtDate(it.pubDate||it.date)].filter(Boolean).join(" · ")}</div>}
+          </a>);
+        })))}
+      </div>
+      {!effectiveUser&&<div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(255,255,255,.55)",backdropFilter:"blur(2px)"}}>
+        <div style={{textAlign:"center",padding:"24px 28px",background:"#fff",borderRadius:14,border:"1px solid #E5E7EB",boxShadow:"0 8px 28px rgba(0,0,0,.08)",maxWidth:380}}>
+          <div style={{fontSize:15,fontWeight:700,color:"#0a1628",marginBottom:8}}>🔒 맞춤 정책 필터는 회원만 이용할 수 있습니다</div>
+          <div style={{fontSize:12,color:"#6B7280",marginBottom:14,lineHeight:1.6}}>상황별로 해당되는 정책·규제·뉴스를 자동 필터링해 드립니다</div>
+          <button onClick={()=>{setAuthMode?.("signup");setShowAuth?.(true);}} style={{padding:"10px 22px",background:"#0747A6",color:"#fff",border:"none",borderRadius:8,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",marginBottom:8,width:"100%"}}>무료 회원가입</button>
+          <div style={{fontSize:11,color:"#9CA3AF"}}>이미 회원이신가요? <a onClick={e=>{e.preventDefault();setAuthMode?.("login");setShowAuth?.(true);}} href="#" style={{color:"#0747A6",fontWeight:600}}>로그인</a></div>
+        </div>
+      </div>}
+    </div>
+
+    {/* 섹션 6 — 용어 빠른 검색 (전체 너비) */}
+    <div style={secStyle}>
+      <div style={hdrStyle}>
+        <span>📖 세금·부동산 용어 빠른검색</span>
+        <a href="/terms/" style={moreLnk}>용어사전 →</a>
+      </div>
+      <form onSubmit={e=>{e.preventDefault();const q=e.target.q.value.trim();if(q)window.location.href="/terms/?q="+encodeURIComponent(q);}} style={{marginBottom:14}}>
+        <input name="q" type="text" placeholder="용어 검색..." style={{width:"100%",padding:"11px 14px",border:"1.5px solid #E5E7EB",borderRadius:10,fontSize:14,fontFamily:"inherit",outline:"none"}} onFocus={e=>e.target.style.borderColor="#0747A6"} onBlur={e=>e.target.style.borderColor="#E5E7EB"}/>
+      </form>
+      <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
+        {POPULAR_TERMS.map(t=>(<a key={t} href={"/terms/?q="+encodeURIComponent(t)} style={{padding:"6px 12px",borderRadius:16,background:"#F9FAFB",border:"1px solid #E5E7EB",color:"#374151",fontSize:12,fontWeight:500,textDecoration:"none",whiteSpace:"nowrap",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.background="#0747A6";e.currentTarget.style.color="#fff";e.currentTarget.style.borderColor="#0747A6"}} onMouseLeave={e=>{e.currentTarget.style.background="#F9FAFB";e.currentTarget.style.color="#374151";e.currentTarget.style.borderColor="#E5E7EB"}}>{t}</a>))}
+      </div>
+    </div>
+  </div>);
+}
+
 function CalcGrid({navigateCalc,isMo}){
   const[openCats,setOpenCats]=useState(["tax"]);
   const toggleCat=(c)=>setOpenCats(p=>p.includes(c)?p.filter(x=>x!==c):[...p,c]);
@@ -4309,6 +4505,7 @@ body.lc-embed main{padding-top:0!important}
       </div>
       {/* 전체 계산기 격자 그리드 */}
       <CalcGrid navigateCalc={navigateCalc} isMo={isMo}/>
+      <HomeSections isMo={isMo} effectiveUser={effectiveUser} navigateCalc={navigateCalc} setAuthMode={setAuthMode} setShowAuth={setShowAuth}/>
 
     </>):(
     <>
