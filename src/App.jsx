@@ -554,7 +554,7 @@ const addComma=v=>{const n=String(v).replace(/[^0-9]/g,"");return n?parseInt(n).
 const stripComma=v=>String(v).replace(/,/g,"");
 
 // 2026.04.14 공통 입력 레이블 스타일 (40개 계산기 전체 통일) — 세로 겹침 방지
-const lblSt=(isMo)=>({display:"block",lineHeight:1.5,marginBottom:6,whiteSpace:"normal",wordBreak:"keep-all",fontSize:isMo?13:14,color:P.tx,fontWeight:500});
+const lblSt=(isMo)=>({display:"block",lineHeight:1.6,marginBottom:8,whiteSpace:"normal",wordBreak:"keep-all",fontSize:isMo?13:14,color:P.tx,fontWeight:500});
 function Slider({label,value,onChange,min,max,step}){
   const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
   const v=pN(value);
@@ -1673,7 +1673,7 @@ function Placeholder({l}){return (<div style={{padding:40,textAlign:"center",col
 function RateTable({title,headers,rows}){
   const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
   return(
-    <div style={{marginTop:20,borderRadius:12,overflow:"hidden",border:"1px solid #dfe1e6",gridColumn:"1/-1"}}>
+    <div style={{marginTop:0,borderRadius:12,overflow:"hidden",border:"1px solid #dfe1e6"}}>
       <div style={{padding:"10px 14px",background:"#f4f5f7",fontSize:12,fontWeight:700,color:"#172B4D",display:"flex",alignItems:"center",gap:6}}><Ico.chart size={14}/>{title}</div>
       <div style={{overflowX:"auto"}}>
         <table style={{width:"100%",borderCollapse:"collapse",fontSize:12,background:"#fff"}}>
@@ -4129,7 +4129,7 @@ body.lc-embed main{padding-top:0!important}
 
     </main>
     {/* 푸터 */}
-    <footer style={{background:"#F9FAFB",borderTop:"1px solid #E5E7EB",padding:"48px 24px",width:"100vw",position:"relative",left:"50%",right:"50%",marginLeft:"-50vw",marginRight:"-50vw",boxSizing:"border-box",textAlign:"center"}}>
+    <footer style={{background:"#F9FAFB",borderTop:"1px solid #E5E7EB",padding:"48px 24px",position:"relative",width:(isMo||page==="home")?"100%":"calc(100% + 200px)",marginLeft:(isMo||page==="home")?0:-200,boxSizing:"border-box",textAlign:"center"}}>
       <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:12}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10}}>
           <LogoSVG size={40}/>
