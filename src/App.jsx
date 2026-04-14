@@ -2152,13 +2152,75 @@ function RateTable({title,headers,rows}){
 }
 let _popoverTimer=null;
 function TipModal({title,children}){
-  const isMo=useIsMobile();const[show,setShow]=useState(false);const[pos,setPos]=useState({top:0,left:0});const btnRef=useRef(null);const block=e=>{e.stopPropagation();e.preventDefault();};
-  const openPop=e=>{block(e);if(_popoverTimer){clearTimeout(_popoverTimer);_popoverTimer=null;}const rect=btnRef.current?.getBoundingClientRect();if(!rect)return;const vw=window.innerWidth;const popW=260;const popH=Math.round(window.innerHeight*0.4);let left=rect.left+rect.width/2-popW/2;if(left+popW>vw-8)left=vw-popW-8;if(left<8)left=8;let top=rect.bottom+8;if(top+popH>window.innerHeight-8)top=Math.max(8,rect.top-popH-8);setPos({top,left});setShow(true);};
-  const closePop=()=>{_popoverTimer=setTimeout(()=>setShow(false),180);};
-  const keepOpen=()=>{if(_popoverTimer){clearTimeout(_popoverTimer);_popoverTimer=null;}};
+  // 2026.04.15 재구현: 다크 툴팁 + 200ms hover delay + 팝오버 위 유지 + 화면 경계 보정
+  const isMo=useIsMobile();
+  const[show,setShow]=useState(false);
+  const[pos,setPos]=useState({top:0,left:0});
   const[mShow,setMShow]=useState(false);
-  if(isMo)return(<span onClick={block} style={{display:"inline-flex",alignItems:"center",verticalAlign:"middle",marginLeft:4,flexShrink:0}}><span onClick={e=>{block(e);setMShow(true);}} style={{cursor:"pointer",border:"1.5px solid #0747A6",borderRadius:"50%",width:16,height:16,minWidth:16,minHeight:16,display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:10,color:"#0747A6",userSelect:"none",flexShrink:0,boxSizing:"border-box",lineHeight:1,fontWeight:700}}>?</span>{mShow&&createPortal(<div onClick={()=>setMShow(false)} style={{position:"fixed",top:0,left:0,right:0,bottom:0,background:"rgba(0,0,0,0.5)",zIndex:10000,display:"flex",alignItems:"flex-end"}}><div onClick={e=>e.stopPropagation()} style={{background:"#fff",borderRadius:"16px 16px 0 0",padding:"20px 20px 40px",width:"100%",maxHeight:"70vh",overflowY:"auto",wordBreak:"keep-all"}}><div style={{width:36,height:4,background:"#dfe1e6",borderRadius:2,margin:"0 auto 16px"}}/><button onClick={()=>setMShow(false)} style={{position:"absolute",top:16,right:16,background:"none",border:"none",fontSize:20,cursor:"pointer",color:"#666"}}>✕</button><div style={{fontSize:14,lineHeight:1.8,color:"#344563"}}>{children}</div></div></div>,document.body)}</span>);
-  return(<span onClick={block} style={{display:"inline-flex",alignItems:"center",verticalAlign:"middle",marginLeft:4,flexShrink:0,position:"relative"}}><span ref={btnRef} onMouseEnter={openPop} onMouseLeave={closePop} style={{cursor:"pointer",border:"1.5px solid #0747A6",borderRadius:"50%",width:16,height:16,minWidth:16,minHeight:16,display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:10,color:"#0747A6",userSelect:"none",flexShrink:0,boxSizing:"border-box",lineHeight:1,fontWeight:700,transition:"all .15s"}}>?</span>{show&&createPortal(<div onMouseEnter={keepOpen} onMouseLeave={closePop} style={{position:"fixed",top:pos.top,left:pos.left,width:260,maxHeight:"40vh",overflowY:"auto",background:"#fff",borderRadius:12,boxShadow:"0 8px 32px rgba(0,0,0,0.18)",border:"1px solid #dfe1e6",padding:"14px 16px",zIndex:9999,wordBreak:"keep-all"}}><div style={{fontSize:13,lineHeight:1.8,color:"#344563"}}>{children}</div></div>,document.body)}</span>);
+  const btnRef=useRef(null);
+  const openTimerRef=useRef(null);
+  const block=e=>{e.stopPropagation();e.preventDefault();};
+  const computePos=()=>{
+    const rect=btnRef.current?.getBoundingClientRect();
+    if(!rect)return;
+    const vw=window.innerWidth,vh=window.innerHeight;
+    const popW=280,popH=160; // 대략 높이(maxHeight 기준 상한)
+    let left=rect.left+rect.width/2-popW/2;
+    if(left<8)left=8;
+    if(left+popW>vw-8)left=vw-popW-8;
+    let top=rect.top-popH-8; // 위로 표시
+    if(top<8)top=rect.bottom+8; // 위 공간 부족 시 아래
+    setPos({top,left});
+  };
+  const openPop=e=>{
+    block(e);
+    if(openTimerRef.current)clearTimeout(openTimerRef.current);
+    openTimerRef.current=setTimeout(()=>{computePos();setShow(true);},200);
+  };
+  const closePop=()=>{
+    if(openTimerRef.current){clearTimeout(openTimerRef.current);openTimerRef.current=null;}
+    setShow(false);
+  };
+  const btnStyle={
+    display:"inline-flex",alignItems:"center",justifyContent:"center",
+    width:16,height:16,minWidth:16,minHeight:16,
+    fontSize:11,color:"#9CA3AF",
+    border:"1px solid #D1D5DB",borderRadius:"50%",
+    cursor:"help",marginLeft:6,verticalAlign:"middle",
+    background:"#fff",userSelect:"none",
+    boxSizing:"border-box",lineHeight:1,fontFamily:"inherit",flexShrink:0
+  };
+  if(isMo){
+    return(<span onClick={block} style={{display:"inline-flex",alignItems:"center",verticalAlign:"middle",flexShrink:0}}>
+      <span onClick={e=>{block(e);setMShow(v=>!v);}} style={btnStyle}>?</span>
+      {mShow&&createPortal(
+        <div onClick={()=>setMShow(false)} style={{position:"fixed",top:0,left:0,right:0,bottom:0,background:"rgba(0,0,0,0.5)",zIndex:10000,display:"flex",alignItems:"flex-end"}}>
+          <div onClick={e=>e.stopPropagation()} style={{background:"#fff",borderRadius:"16px 16px 0 0",padding:"20px 20px 40px",width:"100%",maxHeight:"70vh",overflowY:"auto",wordBreak:"keep-all",position:"relative"}}>
+            <div style={{width:36,height:4,background:"#dfe1e6",borderRadius:2,margin:"0 auto 16px"}}/>
+            <button onClick={()=>setMShow(false)} style={{position:"absolute",top:16,right:16,background:"none",border:"none",fontSize:20,cursor:"pointer",color:"#666"}}>✕</button>
+            <div style={{fontSize:14,lineHeight:1.8,color:"#344563"}}>{children}</div>
+          </div>
+        </div>,
+        document.body
+      )}
+    </span>);
+  }
+  return(<span onClick={block} style={{display:"inline-flex",alignItems:"center",verticalAlign:"middle",flexShrink:0,position:"relative"}}>
+    <span ref={btnRef} onMouseEnter={openPop} onMouseLeave={closePop} style={btnStyle}>?</span>
+    {show&&createPortal(
+      <div onMouseEnter={()=>{if(openTimerRef.current){clearTimeout(openTimerRef.current);openTimerRef.current=null;}setShow(true);}} onMouseLeave={closePop} style={{
+        position:"fixed",top:pos.top,left:pos.left,
+        maxWidth:280,minWidth:160,
+        background:"#1F2937",color:"#fff",
+        borderRadius:8,padding:"10px 14px",
+        fontSize:13,lineHeight:1.6,
+        boxShadow:"0 4px 12px rgba(0,0,0,0.2)",
+        zIndex:9999,wordBreak:"keep-all",
+        transition:"opacity 0.15s",opacity:1
+      }}>{children}</div>,
+      document.body
+    )}
+  </span>);
 }
 function SidePanel(){return null;}
 function MobileCalcWrapper({children}){
