@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.15",
       "category": "전체",
+      "title": "fix: TipModal 모바일 bottom sheet title 헤더 제거",
+      "desc": "fix: TipModal 모바일 bottom sheet title 헤더 제거"
+    },
+    {
+      "date": "2026.04.15",
+      "category": "전체",
       "title": "fix: TipModal 데스크톱 팝오버 title 헤더 제거 — 레이블과 중복 해소",
       "desc": "fix: TipModal 데스크톱 팝오버 title 헤더 제거 — 레이블과 중복 해소"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "fix(App): 모달 타이틀 한글 전용 + 푸터 풀폭 처리",
       "desc": "fix(App): 모달 타이틀 한글 전용 + 푸터 풀폭 처리"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "전체",
-      "title": "fix: RP 그라디언트·Expert Guide 오버레이 전용·헤더 강조·SVG 교체 외 24건",
-      "desc": "fix: RP 그라디언트·Expert Guide 오버레이 전용·헤더 강조·SVG 교체 외 24건"
     }
   ],
   "rates": {
