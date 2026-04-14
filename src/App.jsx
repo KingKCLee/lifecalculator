@@ -911,14 +911,6 @@ function StdPriceLookupModal({onClose,onApply}){
 
 function CalcAcq({isMo=false,onNav=()=>{}}){
   const[acqType,sAT]=useState("sale");const[realType,sRT]=useState("house");const[areaType,sAreaType]=useState("85");const[price,sP]=useState("12500");const[stdPrice,setStdPrice]=useState("");const[own,sO]=useState("1");const[isTempTwo,sTT]=useState("no");const[inheritNone,sIN]=useState("no");const[chipDesc,setChipDesc]=useState(null);
-  // 2026.04.14 시가표준액 조회 helper — lawd.json 동적 로드 + 시/도→시군구→읍면동 드릴다운
-  const[regionData,setRegionData]=useState({});
-  const[stdSido,setStdSido]=useState("");
-  const[stdSigungu,setStdSigungu]=useState("");
-  const[stdDong,setStdDong]=useState("");
-  useEffect(()=>{
-    fetch('/data/lawd.json').then(r=>r.json()).then(d=>setRegionData(d||{})).catch(()=>setRegionData({}));
-  },[]);
   const showChipPanel=(label,desc)=>{if(_popoverTimer){clearTimeout(_popoverTimer);_popoverTimer=null;}setChipDesc({key:label,label,desc,color:"#172B4D",bg:"#f4f5f7",bc:"#dfe1e6"});};
   const hideChipPanel=()=>{_popoverTimer=setTimeout(()=>setChipDesc(null),200);};
   const[corporation,setCorporation]=useState(false);const[firstDistribution,setFirstDistribution]=useState(false);const[conArea,setConArea]=useState(false);const[metro,setMetro]=useState(false);const[populationDecline,setPopulationDecline]=useState(false);const[firstOfLife,setFirstOfLife]=useState(false);const[heavyTaxExclude,setHeavyTaxExclude]=useState(false);const[spouseChildGive,setSpouseChildGive]=useState(false);const[cultivation,setCultivation]=useState(false);const[birthChild,setBirthChild]=useState(false);
@@ -1055,46 +1047,33 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
           ))}
         </div>
       </div>}
-      {/* 2026.04.14 취득가액 — Slider 복원 (인라인 레이블+입력란 + 하단 슬라이더 트랙) */}
-      <Slider label={acqType==="sale"?"취득가액 (실거래가)":acqType==="gift"||acqType==="inherit"?"시가인정액 또는 시가표준액":acqType==="newbuild"?"건축 원가":"취득가액"} value={price} onChange={sP} min={1000} max={500000} step={500}/>
+      {/* 2026.04.14 취득가액 — 인라인 레이아웃 (width:480) */}
+      <div style={{marginBottom:12}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8,marginBottom:4,flexWrap:"wrap"}}>
+          <label style={{fontSize:isMo?13:14,fontWeight:600,color:"#0a1628",lineHeight:1.6,wordBreak:"keep-all"}}>{acqType==="sale"?"취득가액 (실거래가)":acqType==="gift"||acqType==="inherit"?"시가인정액 또는 시가표준액":acqType==="newbuild"?"건축 원가":"취득가액"}</label>
+          <div style={{display:"flex",alignItems:"center",gap:6}}>
+            <input type="text" value={price?Number(String(price).replace(/,/g,"")).toLocaleString("ko-KR"):""} onChange={e=>{const raw=e.target.value.replace(/,/g,"");if(raw===""||/^\d+$/.test(raw))sP(raw);}} placeholder="예: 12500" style={{width:480,maxWidth:"100%",textAlign:"right",padding:"8px 12px",border:"1.5px solid #dfe1e6",borderRadius:8,fontSize:15,fontWeight:700,color:P.tx,background:P.lt,outline:"none",fontFamily:"inherit"}}/>
+            <span style={{fontSize:13,color:P.mt,fontWeight:500}}>만원</span>
+          </div>
+        </div>
+      </div>
       {/* 2026.04.14 시가표준액 인라인 레이아웃 (Slider와 동일: 레이블 좌측 + 입력란 우측 같은 줄) */}
       <div style={{marginBottom:12}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8,marginBottom:4,flexWrap:"wrap"}}>
           <label style={{fontSize:isMo?13:14,fontWeight:600,color:"#0a1628",lineHeight:1.6,wordBreak:"keep-all"}}>시가표준액 (공시가격) <TipModal title="시가표준액 (공시가격)"><p>미입력 시 취득가액을 시가표준액으로 간주합니다.</p><ul style={{paddingLeft:20}}><li>취득가액보다 시가표준액이 크면 시가표준액이 과세표준</li><li>시가표준액 1억 미만이면 다주택 중과 제외</li><li>조정대상지역 증여 시 시가표준액 3억 초과하면 12% 중과</li></ul></TipModal></label>
           <div style={{display:"flex",alignItems:"center",gap:6}}>
-            <input type="text" value={stdPrice?Number(String(stdPrice).replace(/,/g,"")).toLocaleString("ko-KR"):""} onChange={e=>{const raw=e.target.value.replace(/,/g,"");if(raw===""||/^\d+$/.test(raw))setStdPrice(raw);}} placeholder="미입력 시 취득가 사용" style={{width:160,textAlign:"right",padding:"8px 12px",border:"1.5px solid #dfe1e6",borderRadius:8,fontSize:15,fontWeight:700,color:P.tx,background:P.lt,outline:"none",fontFamily:"inherit"}}/>
+            <input type="text" value={stdPrice?Number(String(stdPrice).replace(/,/g,"")).toLocaleString("ko-KR"):""} onChange={e=>{const raw=e.target.value.replace(/,/g,"");if(raw===""||/^\d+$/.test(raw))setStdPrice(raw);}} placeholder="미입력 시 취득가 사용" style={{width:480,maxWidth:"100%",textAlign:"right",padding:"8px 12px",border:"1.5px solid #dfe1e6",borderRadius:8,fontSize:15,fontWeight:700,color:P.tx,background:P.lt,outline:"none",fontFamily:"inherit"}}/>
             <span style={{fontSize:13,color:P.mt,fontWeight:500}}>만원</span>
           </div>
         </div>
         <div style={{fontSize:11,color:P.mt,lineHeight:1.6,wordBreak:"keep-all"}}>{acqType==="gift"||acqType==="inherit"?"취득가액이 없으므로 시가표준액 기준으로 계산합니다":acqType==="newbuild"?"시가표준액을 과세표준으로 계산합니다":"취득가액보다 시가표준액이 높으면 시가표준액이 과세표준이 됩니다"}</div>
       </div>
-      <div style={{marginBottom:16,padding:"12px 14px",background:"#F9FAFB",border:"1px solid #E5E7EB",borderRadius:10,maxWidth:480}}>
-        <div style={{fontSize:11,color:"#6B7280",lineHeight:1.6,marginBottom:10}}>지역을 먼저 선택하면 조회 시 편리합니다 · 조회 후 시가표준액을 직접 입력해주세요</div>
-        {(()=>{
-          const selSt={width:"100%",padding:"8px 10px",border:"1px solid #E5E7EB",borderRadius:8,fontSize:13,fontFamily:"inherit",outline:"none",color:"#0a1628",boxSizing:"border-box",background:"#fff"};
-          const sidoList=Object.keys(regionData||{});
-          const sigunguList=stdSido?Object.keys(regionData[stdSido]||{}):[];
-          const dongList=(stdSido&&stdSigungu)?(regionData[stdSido]?.[stdSigungu]||[]):[];
-          return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:6,marginBottom:10}}>
-            <select value={stdSido} onChange={e=>{setStdSido(e.target.value);setStdSigungu("");setStdDong("");}} style={selSt}>
-              <option value="">시/도</option>
-              {sidoList.map(s=><option key={s} value={s}>{s}</option>)}
-            </select>
-            <select value={stdSigungu} onChange={e=>{setStdSigungu(e.target.value);setStdDong("");}} disabled={!stdSido} style={selSt}>
-              <option value="">시/군/구</option>
-              {sigunguList.map(sg=><option key={sg} value={sg}>{sg}</option>)}
-            </select>
-            <select value={stdDong} onChange={e=>setStdDong(e.target.value)} disabled={!stdSigungu} style={selSt}>
-              <option value="">읍/면/동</option>
-              {dongList.map(d=><option key={d} value={d}>{d}</option>)}
-            </select>
-          </div>);
-        })()}
+      <div style={{marginBottom:16,maxWidth:480}}>
         <a href="https://www.realtyprice.kr:447/notice/main/mainBody.htm" target="_blank" rel="noopener noreferrer" style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,width:"100%",padding:"10px 14px",background:"#0747A6",color:"#fff",borderRadius:8,fontSize:13,fontWeight:700,textDecoration:"none",fontFamily:"inherit"}}>공시가격알리미에서 조회 →</a>
       </div>
       {isHouse&&acqType==="sale"&&<Radio label="취득 후 주택 수" value={own} onChange={sO} options={[{value:"1",label:"1주택"},{value:"2",label:"2주택"},{value:"3",label:"3주택"},{value:"4",label:"4주택+"}]} cols={4}/>}
       {/* 2026.04.14 사치성재산 칩이 항상 보이도록 무조건 노출 (모든 취득유형에서 선택 가능) */}
-      <div style={{marginBottom:14}}>
+      <div style={{marginTop:24,marginBottom:14}}>
         <div style={{fontSize:11,fontWeight:600,color:"#6b778c",letterSpacing:.5,textTransform:"uppercase",marginBottom:8}}>특수 조건 <span style={{fontWeight:400,color:"#aaa",fontSize:10}}>{isMo?"항목을 누르면 설명이 나타납니다":"마우스를 올리면 설명이 나타납니다"}</span></div>
         <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:8}}>
           {showCorp&&<button onClick={()=>{setCorporation(!corporation);setChipDesc(!corporation?{key:"corp",label:"법인",desc:"법인이 주택 취득 시 주택 수와 관계없이 취득세 12% 단일 적용.",color:"#0C447C",bg:"#E6F1FB",bc:"#378ADD"}:null)}} style={{padding:"6px 12px",borderRadius:20,fontSize:12,fontWeight:corporation?700:500,cursor:"pointer",fontFamily:"inherit",transition:"all .15s",border:corporation?"none":"1.5px solid #dfe1e6",background:corporation?"#E6F1FB":"#fff",color:corporation?"#0C447C":"#505f79"}} onMouseEnter={()=>showChipPanel("법인","법인이 주택 취득 시 주택 수와 관계없이 취득세 12% 단일 적용.")} onMouseLeave={hideChipPanel}>{corporation&&"✓ "}법인</button>}
@@ -1129,7 +1108,7 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
       alertMsg={!stdPrice?"시가표준액 미입력 시 정확도가 낮아질 수 있습니다":firstDed>0?"생애최초 감면 "+fW(firstDed)+" 적용됨":conArea&&n>=2&&!heavyTaxExclude&&!lowVal&&!tempTwo?"조정대상지역 "+n+"주택 중과세율 "+fP(r*100)+" 적용":null}
       alertType={!stdPrice?"warning":firstDed>0?"success":"danger"}
       items={[{l:"과세표준",v:fW(pW),note:stdW>0&&stdW>tW(price)?"시가표준액 기준":"취득가액 기준"},{l:"취득세율",v:fP(r*100),note:rateLabel},{l:"취득세",v:fW(ac)},{l:"지방교육세",v:fW(ed),note:isHeavy?"중과 0.4%":"취득세×10%"},{l:"농어촌특별세",v:fm>0?fW(fm):"없음 (85㎡ 이하)"},{l:"인지세",v:fW(st)}].concat(firstDed>0?[{l:"생애최초 감면",v:"-"+fW(firstDed),note:populationDecline?"인구감소 300만":"일반 200만"}]:[]).concat([{l:"합계 납부세액",v:fW(total)}])}/>
-    <NextStep calcId="acquisition" onNav={onNav} isMo={isMo}/>
+    <div style={{marginTop:32}}><NextStep calcId="acquisition" onNav={onNav} isMo={isMo}/></div>
     {/* 2026.04.14 실거래가 조회 연동 */}
     <button onClick={()=>onNav("realestate","realprice")} style={{width:"100%",marginTop:12,padding:"12px 16px",background:"#fff",border:"1.5px solid #0747A6",borderRadius:10,fontSize:14,fontWeight:700,color:"#0747A6",cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",gap:6}}><IconSearch/> 근처 실거래가 조회 →</button>
     </div>
