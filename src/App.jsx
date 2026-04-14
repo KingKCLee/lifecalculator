@@ -475,6 +475,33 @@ unemploy:{q:"실업급여란?",a:"비자발적 퇴직 시 평균임금의 60% (�
 ]},
 };
 
+/* ── 정보센터 메뉴 & 세법 변경 타임라인 ── */
+const INFO_MENU_COLS=[
+  {title:"최신 정보",items:[
+    {icon:"📰",title:"실시간 뉴스",desc:"부동산·세금 뉴스",href:"/news"},
+    {icon:"🏛",title:"부동산 정책",desc:"정부 발표 정책",href:"/policy"},
+    {icon:"📋",title:"세법 개정 히스토리",desc:"연도별 변경사항",href:"/learn/tax-history"}
+  ]},
+  {title:"학습·가이드",items:[
+    {icon:"🎓",title:"전문가 가이드",desc:"세무사 추천 가이드",href:"/guide"},
+    {icon:"📚",title:"규정·법령",desc:"관련 법령 원문",href:"/law"},
+    {icon:"💡",title:"절세 전략",desc:"세금 절감 방법",href:"/learn/tax-saving"},
+    {icon:"🔢",title:"계산기 사용법",desc:"초보자 튜토리얼",href:"/learn/calculator-guide"}
+  ]},
+  {title:"커뮤니티",items:[
+    {icon:"💬",title:"Q&A 게시판",desc:"궁금한 점 질문",href:"/community"},
+    {icon:"📖",title:"부동산 용어사전",desc:"전문 용어 검색",href:"/terms"},
+    {icon:"📊",title:"시장 데이터",desc:"실거래가·시세",href:"/market"}
+  ]}
+];
+const TAX_CHANGES=[
+  {date:"2026.04",title:"취득세 중과 완화안 입법 예고"},
+  {date:"2026.03",title:"종부세 공정시장가액 60% 유지"},
+  {date:"2026.02",title:"스트레스 DSR 3단계 전면 시행"},
+  {date:"2026.01",title:"양도세 다주택 중과 유예 5.9까지"},
+  {date:"2025.12",title:"생애최초 감면 12억 유지"}
+];
+
 /* ── 카테고리 & 계산기 ── */
 const CATS=[{id:"tax",l:"세금"},{id:"loan",l:"대출"},{id:"cost",l:"비용"},{id:"life",l:"생활"},{id:"realestate",l:"부동산"},{id:"pro",l:"PRO 분석"}];
 const CL=[
@@ -3203,7 +3230,7 @@ function CalcSearchBar({onSelect,isMo,calcList}){
 }
 
 /* 2026.04.15 홈 하단 6-섹션 피드 (뉴스·정책·AI절세·Q&A·맞춤정책·용어검색) */
-function HomeSections({isMo, effectiveUser, navigateCalc, setAuthMode, setShowAuth}){
+function HomeSections({isMo, effectiveUser, navigateCalc, setAuthMode, setShowAuth, navigateInfo}){
   const WORKER="https://lc-auth-worker.noble-kclee.workers.dev";
   const [news,setNews]=useState({l:true,d:[]});
   const [policy,setPolicy]=useState({l:true,d:[]});
@@ -3232,10 +3259,10 @@ function HomeSections({isMo, effectiveUser, navigateCalc, setAuthMode, setShowAu
       fj(WORKER+"/community?limit=6")
     ]).then(([n,p,t,c])=>{
       if(!alive)return;
-      setNews({l:false,d:extract(n).slice(0,6)});
-      setPolicy({l:false,d:extract(p).slice(0,6)});
-      setTaxTips({l:false,d:extract(t).slice(0,6)});
-      setCommunity({l:false,d:extract(c).slice(0,6)});
+      setNews({l:false,d:extract(n).slice(0,3)});
+      setPolicy({l:false,d:extract(p).slice(0,3)});
+      setTaxTips({l:false,d:extract(t).slice(0,3)});
+      setCommunity({l:false,d:extract(c).slice(0,3)});
     });
     return()=>{alive=false};
   },[]);
@@ -3322,6 +3349,7 @@ function HomeSections({isMo, effectiveUser, navigateCalc, setAuthMode, setShowAu
           <a href="/news/" style={moreLnk}>더보기 →</a>
         </div>
         <NewsList state={news}/>
+        <a onClick={()=>navigateInfo?.()} style={{display:"block",marginTop:12,fontSize:12,fontWeight:600,color:"#0747A6",textAlign:"right",cursor:"pointer"}}>정보센터에서 더보기 →</a>
       </div>
       <div style={secStyle}>
         <div style={hdrStyle}>
@@ -3329,6 +3357,7 @@ function HomeSections({isMo, effectiveUser, navigateCalc, setAuthMode, setShowAu
           <a href="/policy/" style={moreLnk}>전체 정책 →</a>
         </div>
         <PolicyList state={policy}/>
+        <a onClick={()=>navigateInfo?.()} style={{display:"block",marginTop:12,fontSize:12,fontWeight:600,color:"#0747A6",textAlign:"right",cursor:"pointer"}}>정보센터에서 더보기 →</a>
       </div>
     </div>
 
@@ -3340,6 +3369,7 @@ function HomeSections({isMo, effectiveUser, navigateCalc, setAuthMode, setShowAu
           <a href="/guide/" style={moreLnk}>가이드 전체 →</a>
         </div>
         <TaxTipList/>
+        <a onClick={()=>navigateInfo?.()} style={{display:"block",marginTop:12,fontSize:12,fontWeight:600,color:"#0747A6",textAlign:"right",cursor:"pointer"}}>정보센터에서 더보기 →</a>
       </div>
       <div style={secStyle}>
         <div style={hdrStyle}>
@@ -3350,6 +3380,7 @@ function HomeSections({isMo, effectiveUser, navigateCalc, setAuthMode, setShowAu
           </div>
         </div>
         <CommunityList state={community}/>
+        <a onClick={()=>navigateInfo?.()} style={{display:"block",marginTop:12,fontSize:12,fontWeight:600,color:"#0747A6",textAlign:"right",cursor:"pointer"}}>정보센터에서 더보기 →</a>
       </div>
     </div>
 
@@ -3396,6 +3427,145 @@ function HomeSections({isMo, effectiveUser, navigateCalc, setAuthMode, setShowAu
       </div>
     </div>
   </div>);
+}
+
+function InfoHub({isMo,navigateHome}){
+  const [newsCat,setNewsCat]=useState("all");
+  const [news,setNews]=useState({l:true,d:[]});
+  const [policy,setPolicy]=useState({l:true,d:[]});
+  const [community,setCommunity]=useState({l:true,d:[]});
+  const [termQuery,setTermQuery]=useState("");
+  const extract=o=>Array.isArray(o)?o:(o?.items||o?.data||o?.news||o?.articles||o?.posts||[]);
+  useEffect(()=>{
+    let alive=true;
+    setNews({l:true,d:[]});
+    fetch(LC_API+"/news?limit=10"+(newsCat!=="all"?"&category="+newsCat:""),{cache:"no-store"})
+      .then(r=>r.ok?r.json():null).then(j=>{if(alive)setNews({l:false,d:extract(j).slice(0,10)});})
+      .catch(()=>alive&&setNews({l:false,d:[]}));
+    return()=>{alive=false};
+  },[newsCat]);
+  useEffect(()=>{
+    let alive=true;
+    fetch(LC_API+"/policy?limit=5",{cache:"no-store"}).then(r=>r.ok?r.json():null).then(j=>{if(alive)setPolicy({l:false,d:extract(j).slice(0,5)});}).catch(()=>alive&&setPolicy({l:false,d:[]}));
+    fetch(LC_API+"/community?limit=5",{cache:"no-store"}).then(r=>r.ok?r.json():null).then(j=>{if(alive)setCommunity({l:false,d:extract(j).slice(0,5)});}).catch(()=>alive&&setCommunity({l:false,d:[]}));
+    return()=>{alive=false};
+  },[]);
+  const LEARN_CARDS=[
+    {title:"부동산 세금 기초",desc:"취득세/양도세/종부세",href:"/learn/tax-basics",icon:"📚"},
+    {title:"대출 규제 가이드",desc:"DSR/DTI/LTV 이해",href:"/learn/loan-guide",icon:"🏦"},
+    {title:"절세 전략",desc:"합법적 절세 방법",href:"/learn/tax-saving",icon:"💡"},
+    {title:"투자 체크리스트",desc:"매수 전 확인사항",href:"/learn/investment-checklist",icon:"✅"},
+    {title:"계산기 사용법",desc:"62개 계산기 튜토리얼",href:"/learn/calculator-guide",icon:"🔢"},
+    {title:"세법 개정 히스토리",desc:"연도별 주요 변경",href:"/learn/tax-history",icon:"📋"}
+  ];
+  const LAW_CARDS=[
+    {title:"취득세 법령",href:"/law/acquisition-tax"},
+    {title:"양도소득세",href:"/law/transfer-tax"},
+    {title:"종합부동산세",href:"/law/comprehensive-tax"},
+    {title:"중개보수 규정",href:"/law/brokerage"},
+    {title:"대출 규제",href:"/law/loan-regulation"},
+    {title:"임대차보호법",href:"/law/rental-protection"}
+  ];
+  const POPULAR_TERMS=["취득세","양도소득세","DSR","LTV","종부세","공시가격","시가표준액","재산세","증여세","상속세"];
+  const fmtDate=s=>{if(!s)return"";try{const d=new Date(s);if(isNaN(d))return s.slice(0,10);return d.getFullYear()+"."+String(d.getMonth()+1).padStart(2,"0")+"."+String(d.getDate()).padStart(2,"0");}catch{return s.slice(0,10)}};
+  return(
+    <div style={{maxWidth:1200,margin:"0 auto",padding:isMo?"24px 16px":"40px 24px"}}>
+      <header style={{marginBottom:32}}>
+        <h1 style={{fontSize:isMo?24:32,fontWeight:800,color:"#0a1628",margin:"0 0 8px"}}>정보센터</h1>
+        <p style={{fontSize:14,color:"#6B7280",margin:0}}>부동산 세금·정책·뉴스를 한 곳에서</p>
+      </header>
+
+      <section style={{marginBottom:40}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12,flexWrap:"wrap",gap:8}}>
+          <h2 style={{fontSize:18,fontWeight:700,color:"#0a1628",margin:0}}>📰 실시간 뉴스</h2>
+          <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+            {["all","policy","tax","loan","market"].map(c=>(
+              <button key={c} onClick={()=>setNewsCat(c)} style={{padding:"6px 12px",borderRadius:16,border:"none",background:newsCat===c?"#0747A6":"#F3F4F6",color:newsCat===c?"#fff":"#374151",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>
+                {({all:"전체",policy:"정책",tax:"세금",loan:"대출",market:"시장"})[c]}
+              </button>
+            ))}
+          </div>
+        </div>
+        {news.l?<div style={{fontSize:13,color:"#9CA3AF",padding:"20px 0"}}>로딩 중...</div>:(news.d.length===0?<div style={{fontSize:13,color:"#9CA3AF",padding:"20px 0"}}>뉴스를 불러올 수 없습니다</div>:<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:12}}>
+          {news.d.slice(0,10).map((n,i)=>(
+            <a key={i} href={n.link||n.url||"#"} target="_blank" rel="noopener noreferrer" style={{padding:"14px 16px",background:"#fff",border:"1px solid #E5E7EB",borderRadius:10,textDecoration:"none",color:"#0a1628"}}>
+              <div style={{fontSize:14,fontWeight:600,lineHeight:1.4,marginBottom:4}}>{n.title||"제목 없음"}</div>
+              <div style={{fontSize:11,color:"#9CA3AF"}}>{[n.source,fmtDate(n.pubDate||n.date)].filter(Boolean).join(" · ")}</div>
+              {n.summary&&<div style={{fontSize:12,color:"#6B7280",marginTop:4,lineHeight:1.5}}>{n.summary}</div>}
+            </a>
+          ))}
+        </div>)}
+      </section>
+
+      <section style={{marginBottom:40,display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:20}}>
+        <div>
+          <h2 style={{fontSize:18,fontWeight:700,color:"#0a1628",margin:"0 0 12px"}}>🏛 최신 정책</h2>
+          {policy.l?<div style={{fontSize:13,color:"#9CA3AF"}}>로딩 중...</div>:(policy.d.length===0?<div style={{fontSize:13,color:"#9CA3AF"}}>정책 데이터를 불러올 수 없습니다</div>:policy.d.slice(0,5).map((p,i)=>(
+            <a key={i} href={p.link||p.url||"#"} target="_blank" rel="noopener noreferrer" style={{display:"block",padding:"10px 0",borderBottom:"1px solid #F3F4F6",fontSize:13,color:"#374151",textDecoration:"none"}}>
+              <span style={{color:"#0747A6",fontWeight:600}}>[{p.source||"정부"}]</span> {p.title}
+            </a>
+          )))}
+        </div>
+        <div>
+          <h2 style={{fontSize:18,fontWeight:700,color:"#0a1628",margin:"0 0 12px"}}>📋 최근 세법 변경</h2>
+          {TAX_CHANGES.slice(0,5).map((t,i)=>(
+            <div key={i} style={{padding:"10px 0",borderBottom:"1px solid #F3F4F6"}}>
+              <div style={{fontSize:11,color:"#9CA3AF",marginBottom:2}}>{t.date}</div>
+              <div style={{fontSize:13,color:"#374151"}}>{t.title}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section style={{marginBottom:40}}>
+        <h2 style={{fontSize:18,fontWeight:700,color:"#0a1628",margin:"0 0 12px"}}>🎓 학습 센터</h2>
+        <div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr 1fr",gap:12}}>
+          {LEARN_CARDS.map(c=>(
+            <a key={c.href} href={c.href} style={{padding:"16px 18px",background:"#fff",border:"1px solid #E5E7EB",borderRadius:12,textDecoration:"none",color:"#0a1628",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.borderColor="#0747A6";e.currentTarget.style.boxShadow="0 4px 12px rgba(7,71,166,.08)";}} onMouseLeave={e=>{e.currentTarget.style.borderColor="#E5E7EB";e.currentTarget.style.boxShadow="none";}}>
+              <div style={{fontSize:24,marginBottom:8}}>{c.icon}</div>
+              <div style={{fontSize:14,fontWeight:700,marginBottom:4}}>{c.title}</div>
+              <div style={{fontSize:12,color:"#6B7280"}}>{c.desc}</div>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section style={{marginBottom:40}}>
+        <h2 style={{fontSize:18,fontWeight:700,color:"#0a1628",margin:"0 0 12px"}}>📚 규정·법령</h2>
+        <div style={{display:"grid",gridTemplateColumns:isMo?"1fr 1fr":"1fr 1fr 1fr",gap:10}}>
+          {LAW_CARDS.map(l=>(
+            <a key={l.href} href={l.href} style={{padding:"14px 16px",background:"#F9FAFB",border:"1px solid #E5E7EB",borderRadius:10,textDecoration:"none",color:"#0a1628",fontSize:13,fontWeight:600}}>
+              {l.title} →
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section style={{marginBottom:40}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12}}>
+          <h2 style={{fontSize:18,fontWeight:700,color:"#0a1628",margin:0}}>💬 Q&A 게시판</h2>
+          <a href="/community" style={{fontSize:13,fontWeight:600,color:"#0747A6",textDecoration:"none"}}>전체 게시판 →</a>
+        </div>
+        {community.l?<div style={{fontSize:13,color:"#9CA3AF"}}>로딩 중...</div>:(community.d.length===0?<div style={{fontSize:13,color:"#9CA3AF"}}>게시글을 불러올 수 없습니다</div>:community.d.slice(0,5).map((q,i)=>(
+          <a key={i} href={"/community/?id="+(q.id||"")} style={{display:"block",padding:"12px 0",borderBottom:"1px solid #F3F4F6",fontSize:14,color:"#374151",textDecoration:"none"}}>
+            {q.title||q.subject}
+          </a>
+        )))}
+      </section>
+
+      <section style={{marginBottom:40}}>
+        <h2 style={{fontSize:18,fontWeight:700,color:"#0a1628",margin:"0 0 12px"}}>📖 부동산 용어사전</h2>
+        <form onSubmit={e=>{e.preventDefault();if(termQuery)window.location.href="/terms/?q="+encodeURIComponent(termQuery);}} style={{marginBottom:12}}>
+          <input value={termQuery} onChange={e=>setTermQuery(e.target.value)} placeholder="용어 검색..." style={{width:"100%",padding:"12px 16px",border:"1.5px solid #E5E7EB",borderRadius:10,fontSize:14,fontFamily:"inherit",outline:"none",boxSizing:"border-box"}}/>
+        </form>
+        <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
+          {POPULAR_TERMS.map(t=>(
+            <a key={t} href={"/terms/?q="+encodeURIComponent(t)} style={{padding:"6px 12px",background:"#fff",border:"1px solid #E5E7EB",borderRadius:16,fontSize:13,textDecoration:"none",color:"#374151"}}>{t}</a>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
 }
 
 function CalcGrid({navigateCalc,isMo}){
@@ -4271,7 +4441,7 @@ export default function App(){
   const showToast=(msg)=>{setToast(msg);if(toastTimerRef.current)clearTimeout(toastTimerRef.current);toastTimerRef.current=setTimeout(()=>setToast(""),2200);};
   const[calcHistory,setCalcHistory]=useState(()=>{try{return JSON.parse(localStorage.getItem('calc_history')||'[]')}catch{return[]}});
   const saveHistory=(cId,name,total)=>{if(!total||total<=0)return;const item={id:cId,name,total,time:Date.now()};setCalcHistory(prev=>{const updated=[item,...prev.filter(h=>h.id!==cId)].slice(0,10);try{localStorage.setItem('calc_history',JSON.stringify(updated))}catch{}return updated;});};
-  const[showAllLog,setShowAllLog]=useState(false);const[hoverCat,setHoverCat]=useState(null);
+  const[showAllLog,setShowAllLog]=useState(false);const[hoverCat,setHoverCat]=useState(null);const[showInfoMenu,setShowInfoMenu]=useState(false);
   const[liveData,setLiveData]=useState(null);
   // 2026-04-14 좌측 네비 패널 (Expert Guide / Learning Center / Market Data / 지난 계산 내역)
   const[sidePanel,setSidePanel]=useState(null);
@@ -4307,6 +4477,7 @@ export default function App(){
   const filtered=CL.filter(c=>c.c===cat);
   const navigateCalc=(catId,calcId)=>{setCat(catId);setCalc(calcId);setPage("calc");const slug=SLUGS[calcId]||calcId;history.pushState(null,"","/"+encodeURIComponent(slug));window.scrollTo(0,0);const info=CL.find(c=>c.id===calcId);if(info)saveHistory(calcId,info.l,1);};
   const navigateHome=()=>{setPage("home");history.pushState(null,"","/");window.scrollTo(0,0);};
+  const navigateInfo=()=>{setPage("info");history.pushState(null,"","/info");window.scrollTo(0,0);setShowInfoMenu(false);};
   const navigateLegal=(type)=>{setPage("legal_"+type);history.pushState(null,"","/"+type);window.scrollTo(0,0);};
   const navigateMyPage=()=>{setPage("mypage");history.pushState(null,"","/mypage");window.scrollTo(0,0);};
   const handleLogout=async()=>{await supabase.auth.signOut();setUser(null);try{localStorage.removeItem('lc_token');localStorage.removeItem('lc_email');}catch{}setLcToken("");setLcEmail("");history.pushState(null,"","/");setPage("home");window.scrollTo(0,0);};
@@ -4451,7 +4622,7 @@ export default function App(){
   const hCat=c=>{const f=CL.find(x=>x.c===c);if(f)navigateCalc(c,f.id);};
   const goCalc=(cId)=>{const info=CL.find(c=>c.id===cId);if(info)navigateCalc(info.c,info.id);};
   const hash=usePathRoute();
-  useEffect(()=>{if(hash==="mypage"){setPage("mypage");return;}if(hash==="auth/callback"){return;}if(["privacy","contact","disclaimer","resource"].includes(hash)){setPage("legal_"+hash);}else if(hash&&SLUG_REVERSE[hash]){const cId=SLUG_REVERSE[hash];const it=CL.find(c=>c.id===cId);if(it){setCat(it.c);setCalc(cId);setPage("calc");}}else if(!hash){setPage("home");}},[hash]);
+  useEffect(()=>{if(hash==="mypage"){setPage("mypage");return;}if(hash==="info"){setPage("info");return;}if(hash==="auth/callback"){return;}if(["privacy","contact","disclaimer","resource"].includes(hash)){setPage("legal_"+hash);}else if(hash&&SLUG_REVERSE[hash]){const cId=SLUG_REVERSE[hash];const it=CL.find(c=>c.id===cId);if(it){setCat(it.c);setCalc(cId);setPage("calc");}}else if(!hash){setPage("home");}},[hash]);
   useEffect(()=>{if(page==="calc"&&calc&&PAGE_META[calc]){const m=PAGE_META[calc];document.title=m.title;document.querySelector('meta[name="description"]')?.setAttribute('content',m.desc);document.querySelector('meta[property="og:title"]')?.setAttribute('content',m.title);document.querySelector('meta[property="og:description"]')?.setAttribute('content',m.desc);}else{document.title="생활계산기 - 세금 연말정산 연봉 부동산 종합계산기";document.querySelector('meta[name="description"]')?.setAttribute('content',"취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 4대보험 국민연금 자동차세 등 62가지 무료 계산기. 2026 최신 세법 반영.");}let ld=document.getElementById('dynamic-jsonld');if(!ld){ld=document.createElement('script');ld.id='dynamic-jsonld';ld.type='application/ld+json';document.head.appendChild(ld);}if(page==="calc"&&calc&&PAGE_META[calc]){ld.textContent=JSON.stringify({"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":PAGE_META[calc].title.split(' | ')[0],"description":PAGE_META[calc].desc,"url":"https://xn--989a00a691bdfa717h.com/"+encodeURIComponent(SLUGS[calc]),"applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"홈","item":"https://xn--989a00a691bdfa717h.com/"},{"@type":"ListItem","position":2,"name":CATS.find(c=>c.id===cat)?.l||"","item":"https://xn--989a00a691bdfa717h.com/"},{"@type":"ListItem","position":3,"name":CL.find(c=>c.id===calc)?.l||"","item":"https://xn--989a00a691bdfa717h.com/"+encodeURIComponent(SLUGS[calc])}]}]});}else{ld.textContent='';}},[page,calc]);
   const Comp=CM[calc]||(()=><Placeholder l={CL.find(c=>c.id===calc)?.l||calc}/>);
   const catInfo=CATS.find(c=>c.id===cat);
@@ -4559,6 +4730,27 @@ body.lc-embed main{padding-top:0!important}
                 </div>}
               </div>
             );})}
+            <div onMouseEnter={()=>setShowInfoMenu(true)} onMouseLeave={()=>setShowInfoMenu(false)} style={{position:"relative"}}>
+              <button onClick={navigateInfo} style={{padding:"0 16px",border:"none",borderRadius:0,background:"transparent",color:page==="info"?"#0747A6":showInfoMenu?"#0a1628":"#6B7280",fontSize:16,fontWeight:page==="info"?700:600,cursor:"pointer",fontFamily:"inherit",borderBottom:page==="info"?"3px solid #0747A6":"3px solid transparent",transition:"all .15s",height:64,display:"flex",alignItems:"center"}}>정보센터</button>
+              {showInfoMenu&&<div style={{position:"absolute",top:"100%",right:0,width:720,background:"#fff",borderTop:"2px solid #0747A6",borderRadius:"0 0 12px 12px",boxShadow:"0 8px 24px rgba(0,0,0,0.12)",zIndex:1000,padding:24}}>
+                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:16}}>
+                  {INFO_MENU_COLS.map(col=>(
+                    <div key={col.title}>
+                      <div style={{fontSize:11,fontWeight:700,color:"#6B7280",marginBottom:8,textTransform:"uppercase",letterSpacing:1}}>{col.title}</div>
+                      {col.items.map(item=>(
+                        <a key={item.href} href={item.href} style={{display:"flex",alignItems:"flex-start",gap:8,padding:"10px 12px",borderRadius:8,textDecoration:"none",color:"#0a1628"}} onMouseEnter={e=>e.currentTarget.style.background="#F0F4FF"} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
+                          <span style={{fontSize:16,flexShrink:0}}>{item.icon}</span>
+                          <div style={{minWidth:0}}>
+                            <div style={{fontSize:13,fontWeight:700}}>{item.title}</div>
+                            <div style={{fontSize:11,color:"#6B7280"}}>{item.desc}</div>
+                          </div>
+                        </a>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>}
+            </div>
           </div>
           <div style={{display:"flex",alignItems:"center",gap:10,flexShrink:0,marginLeft:"auto"}}>
             <div style={{position:"relative"}}>
@@ -4574,7 +4766,7 @@ body.lc-embed main{padding-top:0!important}
     <div style={{display:"flex",alignItems:"flex-start"}}>
     {page!=="home"&&!isMo&&<LeftNav isMo={isMo} navOpen={navOpen} setNavOpen={setNavOpen} navContent={navContent} setNavContent={setNavContent} effectiveUser={effectiveUser} setAuthMode={setAuthMode} setShowAuth={setShowAuth} navigateMyPage={navigateMyPage} calc={calc}/>}
     <main style={{flex:"1 1 auto",minWidth:0}}>
-    {page==="mypage"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><MyPage user={effectiveUser} lcToken={lcToken} lcEmail={lcEmail} onLcLogout={()=>{try{localStorage.removeItem('lc_token');localStorage.removeItem('lc_email');}catch{}setLcToken("");setLcEmail("");}} onBack={navigateHome} onLogout={handleLogout}/></div>):page&&page.startsWith("legal_")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LegalPage type={page.replace("legal_","")} onBack={navigateHome}/></div>):page==="home"?(<>
+    {page==="mypage"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><MyPage user={effectiveUser} lcToken={lcToken} lcEmail={lcEmail} onLcLogout={()=>{try{localStorage.removeItem('lc_token');localStorage.removeItem('lc_email');}catch{}setLcToken("");setLcEmail("");}} onBack={navigateHome} onLogout={handleLogout}/></div>):page==="info"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><InfoHub isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("legal_")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LegalPage type={page.replace("legal_","")} onBack={navigateHome}/></div>):page==="home"?(<>
       {favorites.length>0&&<div style={{maxWidth:1200,margin:"0 auto",padding:isMo?"16px 16px 0":"32px 24px 0",background:isMo?"#f8f9fc":"transparent"}}>
         <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12}}>
           <span style={{display:"inline-flex",alignItems:"center"}}><Ico.star size={18}/></span>
@@ -4685,7 +4877,7 @@ body.lc-embed main{padding-top:0!important}
       {/* 전체 계산기 격자 그리드 */}
       <CalcGrid navigateCalc={navigateCalc} isMo={isMo}/>
       <AdSlot position="home_bottom"/>
-      <HomeSections isMo={isMo} effectiveUser={effectiveUser} navigateCalc={navigateCalc} setAuthMode={setAuthMode} setShowAuth={setShowAuth}/>
+      <HomeSections isMo={isMo} effectiveUser={effectiveUser} navigateCalc={navigateCalc} setAuthMode={setAuthMode} setShowAuth={setShowAuth} navigateInfo={navigateInfo}/>
 
     </>):(
     <>
