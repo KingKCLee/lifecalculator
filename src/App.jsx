@@ -424,7 +424,7 @@ unemploy:{q:"실업급여란?",a:"비자발적 퇴직 시 평균임금의 60% (�
 const CATS=[{id:"tax",l:"세금"},{id:"loan",l:"대출"},{id:"cost",l:"비용"},{id:"life",l:"생활"},{id:"realestate",l:"부동산"},{id:"pro",l:"PRO 분석"}];
 const CL=[
   {id:"acquisition",l:"취득세",c:"tax"},{id:"transfer",l:"양도소득세",c:"tax"},{id:"inctax",l:"종합소득세",c:"tax"},{id:"yearend",l:"연말정산",c:"tax"},{id:"compre",l:"종부세",c:"tax"},{id:"property",l:"재산세",c:"tax"},{id:"gift",l:"증여세",c:"tax"},{id:"inherit",l:"상속세",c:"tax"},{id:"holdtax",l:"보유세 통합",c:"tax"},{id:"rental",l:"임대소득세",c:"tax"},
-  {id:"bldvat",l:"건물 부가세",c:"tax"},{id:"estincome",l:"임대 추정소득",c:"tax"},{id:"goodlord",l:"착한임대인 공제",c:"tax"},{id:"imputedrent",l:"간주임대료",c:"tax"},{id:"legalinherit",l:"법정상속분",c:"tax"},{id:"progressive",l:"누진세 범용",c:"tax"},{id:"subscription",l:"청약가점",c:"tax"},
+  {id:"bldvat",l:"건물 부가세",c:"tax"},{id:"estincome",l:"임대 추정소득",c:"tax"},{id:"goodlord",l:"착한임대인 공제",c:"tax"},{id:"imputedrent",l:"간주임대료",c:"tax"},{id:"legalinherit",l:"법정상속분",c:"tax"},{id:"progressive",l:"누진세 범용",c:"tax"},{id:"subscription",l:"청약가점",c:"realestate"},
   {id:"mortgage",l:"대출이자",c:"loan"},{id:"dsr",l:"DSR",c:"loan"},{id:"dti",l:"DTI",c:"loan"},{id:"ltv",l:"LTV·대출한도",c:"loan"},{id:"loanmax",l:"대출가능액",c:"loan"},{id:"rti",l:"RTI",c:"loan"},
   {id:"auctionloan",l:"경락잔금대출",c:"loan"},{id:"refinance",l:"대환대출 비교",c:"loan"},
   {id:"commission",l:"중개보수",c:"cost"},{id:"registration",l:"등기비용",c:"cost"},{id:"legal",l:"법무사수수료",c:"cost"},{id:"stamp",l:"인지세",c:"cost"},{id:"bond",l:"채권할인료",c:"cost"},{id:"appraisal",l:"감정평가수수료",c:"cost"},
@@ -515,8 +515,8 @@ function Tog({label,value,onChange,options}){
   const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
   return(<div style={{marginBottom:16}}>
     <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:8,letterSpacing:.5,textTransform:"uppercase"}}>{label}</label>
-    <div style={{display:"flex",flexWrap:"nowrap",borderRadius:10,overflow:"visible",border:"1.5px solid #dfe1e6"}}>
-      {options.map((o,i)=>(<button key={o.value} onClick={()=>onChange(o.value)} style={{flex:1,padding:"8px 4px",border:"none",borderRight:i<options.length-1?"1px solid #dfe1e6":"none",background:value===o.value?"#0747A6":"#fff",color:value===o.value?"#fff":"#505f79",fontSize:isMo?10:12,fontWeight:value===o.value?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",wordBreak:"keep-all",overflow:"hidden",textOverflow:"ellipsis",textAlign:"center",lineHeight:1.3,transition:"background .15s,color .15s"}}>{o.label}</button>))}
+    <div style={{display:"flex",flexWrap:"nowrap",overflowX:"auto",borderRadius:10,border:"1.5px solid #dfe1e6",scrollbarWidth:"thin"}}>
+      {options.map((o,i)=>(<button key={o.value} onClick={()=>onChange(o.value)} style={{flex:"0 0 auto",minWidth:"fit-content",padding:"8px 12px",border:"none",borderRight:i<options.length-1?"1px solid #dfe1e6":"none",background:value===o.value?"#0747A6":"#fff",color:value===o.value?"#fff":"#505f79",fontSize:isMo?11:13,fontWeight:value===o.value?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",wordBreak:"normal",textAlign:"center",lineHeight:1.3,transition:"background .15s,color .15s"}}>{o.label}</button>))}
     </div>
   </div>);
 }
@@ -2189,7 +2189,7 @@ function useEduData(calcId){
 }
 
 /* ── 학습센터 사이드바 ── */
-function EduSidebar({calc:calcId,gTab,setGTab}){
+function EduSidebar({calc:calcId,eduTab,setEduTab}){
   const{calcLabel,relIds,tips,glossary,regs,relLabels}=useEduData(calcId);
   return(
     <div className="edu-sidebar sidebar-left" style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:24,marginTop:16}}>
@@ -2199,11 +2199,11 @@ function EduSidebar({calc:calcId,gTab,setGTab}){
       </div>
       <div style={{fontSize:11,letterSpacing:1,color:P.mt,marginBottom:16}}>규정 가이드</div>
       {[{id:"rates",icon:"📊",l:"세율표·가이드"},{id:"regs",icon:"📋",l:"규정·법령"},{id:"tips",icon:"💡",l:"절세 팁"},{id:"glossary",icon:"📖",l:"용어 사전"}].map(t=>(
-        <button key={t.id} onClick={()=>{setGTab(t.id);setTimeout(()=>{try{document.getElementById('edu-content-top')?.scrollIntoView({behavior:'smooth',block:'start'});}catch{}},60);}}
+        <button key={t.id} onClick={()=>setEduTab(t.id)}
           style={{width:"100%",padding:"10px 12px",border:"none",borderRadius:0,
-            background:gTab===t.id?"#deebff":"transparent",color:gTab===t.id?P.pri:P.mt,
-            borderLeft:gTab===t.id?`3px solid ${P.pri}`:"3px solid transparent",
-            fontSize:13,fontWeight:gTab===t.id?700:400,cursor:"pointer",fontFamily:"inherit",
+            background:eduTab===t.id?"#deebff":"transparent",color:eduTab===t.id?P.pri:P.mt,
+            borderLeft:eduTab===t.id?`3px solid ${P.pri}`:"3px solid transparent",
+            fontSize:13,fontWeight:eduTab===t.id?700:400,cursor:"pointer",fontFamily:"inherit",
             textAlign:"left",display:"flex",alignItems:"center",gap:8,marginBottom:2}}>
           {t.icon+" "+t.l}
           {t.id==="tips"&&tips.length>0&&<span style={{marginLeft:"auto",background:"#deebff",color:P.pri,borderRadius:10,padding:"1px 7px",fontSize:11,fontWeight:700}}>{tips.length}</span>}
@@ -2223,7 +2223,7 @@ function EduSidebar({calc:calcId,gTab,setGTab}){
 }
 
 /* ── 학습센터 콘텐츠 (우측 가이드) ── */
-function EduContent({calc:calcId,gTab}){
+function EduContent({calc:calcId,eduTab}){
   const{calcLabel,relIds,tips,glossary,regs,guideSources,relLabels}=useEduData(calcId);
   const Badge=({item})=>item.fromId!==calcId?<span style={{marginLeft:6,background:"#deebff",color:P.pl,borderRadius:8,padding:"1px 6px",fontSize:10,fontWeight:600}}>{item.from}</span>:null;
   // 2026.04.14 용어 클릭 팝오버
@@ -2231,7 +2231,7 @@ function EduContent({calc:calcId,gTab}){
   return(<div>
     <div style={{fontSize:11,fontWeight:600,letterSpacing:1.5,textTransform:"uppercase",color:P.mt,marginBottom:12}}>EXPERT GUIDE</div>
 
-    {gTab==="rates"&&(guideSources.length>0?(<div>
+    {eduTab==="rates"&&(guideSources.length>0?(<div>
       {guideSources.map(gs=>(
         gs.data.faqList?gs.data.faqList.map((f,fi)=>(
           <AccItem key={gs.id+"-"+fi} title={f.icon+" "+f.title+(gs.id!==calcId?" ("+gs.label+")":"")} defaultOpen={gs.id===calcId&&fi===0}>
@@ -2251,7 +2251,7 @@ function EduContent({calc:calcId,gTab}){
       <div style={{fontSize:24,marginBottom:6}}>📊</div><div style={{fontSize:12}}>{calcLabel} 세율표를 준비 중입니다.</div>
     </div>))}
 
-    {gTab==="regs"&&(regs.length>0?(<div style={{background:"#fff",borderRadius:12,border:`1px solid ${P.bd}`,overflow:"hidden"}}>
+    {eduTab==="regs"&&(regs.length>0?(<div style={{background:"#fff",borderRadius:12,border:`1px solid ${P.bd}`,overflow:"hidden"}}>
       {regs.map((r,i)=>(
         <div key={i} style={{padding:"10px 14px",borderBottom:i<regs.length-1?`1px solid ${P.lt}`:"none",display:"flex",gap:10,alignItems:"flex-start"}}>
           <span style={{background:r.y==="2026"||r.y==="2025"?P.pri:"#a0aec0",color:"#fff",padding:"2px 8px",borderRadius:12,fontSize:11,fontWeight:700,flexShrink:0}}>{r.y}</span>
@@ -2261,7 +2261,7 @@ function EduContent({calc:calcId,gTab}){
       <div style={{fontSize:24,marginBottom:6}}>📋</div><div style={{fontSize:12}}>규정 이력을 준비 중입니다.</div>
     </div>))}
 
-    {gTab==="tips"&&(tips.length>0?tips.map((tip,i)=>(
+    {eduTab==="tips"&&(tips.length>0?tips.map((tip,i)=>(
       <AccItem key={i} title={"💡 "+tip.title} defaultOpen={i===0}>
         <div style={{fontSize:13,lineHeight:1.8,color:"#4a5568"}}>{tip.body}<Badge item={tip}/></div>
       </AccItem>
@@ -2269,7 +2269,7 @@ function EduContent({calc:calcId,gTab}){
       <div style={{fontSize:24,marginBottom:6}}>💡</div><div style={{fontSize:12}}>절세 팁을 준비 중입니다.</div>
     </div>))}
 
-    {gTab==="glossary"&&(glossary.length>0?(<div style={{background:"#fff",borderRadius:12,border:`1px solid ${P.bd}`,overflow:"hidden"}}>
+    {eduTab==="glossary"&&(glossary.length>0?(<div style={{background:"#fff",borderRadius:12,border:`1px solid ${P.bd}`,overflow:"hidden"}}>
       {glossary.map((g2,i)=>{
         // 2026.04.14 용어 항목 클릭 시 /terms/<slug>.html로 이동 (CALC_TERMS에서 슬러그 역매핑)
         let slug=null;
@@ -2867,6 +2867,9 @@ export default function App(){
   const isMo=useIsMobile();
   const[user,setUser]=useState(null);
   const[authLoading,setAuthLoading]=useState(true);
+  // 2026.04.14 AI해설 게이트에서 Supabase 로그인 상태 참조용 ref
+  const authUserRef=useRef(null);
+  useEffect(()=>{authUserRef.current=user;},[user]);
   useEffect(()=>{
     const params=new URLSearchParams(window.location.search);
     const code=params.get("code");
@@ -2884,7 +2887,7 @@ export default function App(){
     return()=>subscription.unsubscribe();
   },[]);
   const[page,setPage]=useState("home");
-  const[cat,setCat]=useState("tax");const[calc,setCalc]=useState("acquisition");const[gTab,setGTab]=useState("rates");
+  const[cat,setCat]=useState("tax");const[calc,setCalc]=useState("acquisition");const[eduTab,setEduTab]=useState("rates");
   const[search,setSearch]=useState("");
   const[modal,setModal]=useState(null);
   const tabScrollRef=useRef(null);
@@ -3007,7 +3010,9 @@ export default function App(){
       // 2026.04.14 AI해설 게이팅: 비로그인→로그인유도 / 무료→월3회 / pro·agent→무제한
       const _tok=(()=>{try{return localStorage.getItem('lc_token')||""}catch{return""}})();
       const _plan=(()=>{try{return localStorage.getItem('lc_plan')||""}catch{return""}})();
-      if(!_tok){setAiModal({gate:"login",title:d.title});return;}
+      // 2026.04.14 lc_token 또는 Supabase 로그인(OAuth) 중 하나라도 있으면 로그인 상태로 판단
+      const _loggedIn=!!_tok||!!authUserRef.current;
+      if(!_loggedIn){setAiModal({gate:"login",title:d.title});return;}
       const isPaid=_plan==="pro"||_plan==="agent";
       const ym=new Date().toISOString().slice(0,7).replace("-","");
       const ckey="lc_ai_count_"+ym;
@@ -3303,7 +3308,7 @@ body.lc-embed main{padding-top:0!important}
         <MobileCalcWrapper><Comp isMo={true}/><NextStep calcId={calc} onNav={navigateCalc} isMo={true}/></MobileCalcWrapper>
         <div style={{padding:"0 12px 24px"}}>
           {SEO_CONTENT[calc]&&<div style={{padding:"20px 16px",background:"#fff",borderRadius:12,border:"1px solid #dfe1e6",marginBottom:12}}><div className="seo" dangerouslySetInnerHTML={{__html:SEO_CONTENT[calc]}} style={{fontSize:14,color:"#172B4D",lineHeight:1.8}}/></div>}
-          <EduContent calc={calc} gTab={gTab}/>
+          <EduContent calc={calc} eduTab={eduTab}/>
         </div>
       </div>):(
       <div className="calc-grid page-layout" style={{maxWidth:1200,margin:"0 auto",padding:isMo?"16px":"32px 24px",display:"grid",gridTemplateColumns:"minmax(0,1fr) 300px",gap:isMo?16:24,alignItems:"start"}}>
@@ -3355,8 +3360,8 @@ body.lc-embed main{padding-top:0!important}
 
         {/* 2026.04.14 Expert Guide(EduContent) 위 · 학습센터(EduSidebar) 아래 */}
         <div className="sidebar-right">
-          <div id="edu-content-top"><EduContent calc={calc} gTab={gTab}/></div>
-          <EduSidebar calc={calc} gTab={gTab} setGTab={setGTab}/>
+          <div id="edu-content-top"><EduContent calc={calc} eduTab={eduTab}/></div>
+          <EduSidebar calc={calc} eduTab={eduTab} setEduTab={setEduTab}/>
         </div>
       </div>)}
 

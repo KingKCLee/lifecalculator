@@ -119,8 +119,16 @@ export function RP({title, total, sub, items, alertMsg, alertType="info"}){
 }
 
 export function CalcShell({title, isMo, children}){
-  return(<div>
-    {!isMo&&<h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>{title}</h3>}
-    {children}
+  // 2026.04.14 2열 그리드 (입력 좌·RP 우). 모바일은 1열. RP 기준으로 children 분리.
+  const arr = React.Children.toArray(children);
+  const rpIdx = arr.findIndex(c => c && c.type === RP);
+  const left = rpIdx >= 0 ? arr.slice(0, rpIdx) : arr;
+  const right = rpIdx >= 0 ? arr.slice(rpIdx) : [];
+  return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}>
+    <div style={{minWidth:0}}>
+      {!isMo&&<h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>{title}</h3>}
+      {left}
+    </div>
+    {right.length>0 && <div style={{minWidth:0}}>{right}</div>}
   </div>);
 }
