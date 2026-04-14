@@ -1,24 +1,74 @@
 {
   "name": "생활계산기.com - 세금·대출·생활 종합 계산기",
   "short_name": "생활계산기",
-  "description": "취득세 양도세 연말정산 연봉실수령액 DSR 등 39가지 무료 계산기",
+  "description": "취득세, 양도세, 연말정산, 연봉실수령액, DSR, 중개수수료 등 40+ 무료 계산기. 2026년 최신 세법 반영.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui", "browser"],
+  "orientation": "portrait",
   "background_color": "#f8f9fc",
   "theme_color": "#0747A6",
-  "icons": [
-    {"src":"/favicon-32.png","sizes":"32x32","type":"image/png"},
-    {"src":"/apple-touch-icon.png","sizes":"180x180","type":"image/png"},
-    {"src":"/favicon.svg","type":"image/svg+xml","purpose":"any"}
-  ],
   "lang": "ko",
-  "categories": ["finance","utilities"],
+  "dir": "ltr",
+  "categories": ["finance", "utilities", "productivity", "business"],
   "prefer_related_applications": false,
-  "related_applications": [
+  "icons": [
+    {"src": "/favicon.svg", "type": "image/svg+xml", "sizes": "any", "purpose": "any"},
+    {"src": "/favicon-32.png", "type": "image/png", "sizes": "32x32", "purpose": "any"},
+    {"src": "/icons/icon-192.svg", "type": "image/svg+xml", "sizes": "192x192", "purpose": "any"},
+    {"src": "/icons/icon-192-maskable.svg", "type": "image/svg+xml", "sizes": "192x192", "purpose": "maskable"},
+    {"src": "/icons/icon-512.svg", "type": "image/svg+xml", "sizes": "512x512", "purpose": "any"},
+    {"src": "/icons/icon-512-maskable.svg", "type": "image/svg+xml", "sizes": "512x512", "purpose": "maskable"},
+    {"src": "/apple-touch-icon.png", "type": "image/png", "sizes": "180x180", "purpose": "any"},
+    {"src": "/og-image.png", "type": "image/png", "sizes": "1200x630", "purpose": "any"}
+  ],
+  "screenshots": [
     {
-      "platform": "play",
-      "url": "https://play.google.com/store/apps/details?id=com.lifecalculator.twa",
-      "id": "com.lifecalculator.twa"
+      "src": "/og-image.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "생활계산기.com 메인 화면 - 40+ 계산기"
+    },
+    {
+      "src": "/og-image.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "모바일 계산기 화면"
     }
-  ]
+  ],
+  "shortcuts": [
+    {
+      "name": "취득세 계산기",
+      "short_name": "취득세",
+      "description": "부동산 취득세 즉시 계산",
+      "url": "/#/%EC%B7%A8%EB%93%9D%EC%84%B8%EA%B3%84%EC%82%B0%EA%B8%B0",
+      "icons": [{"src": "/icons/icon-192.svg", "sizes": "192x192"}]
+    },
+    {
+      "name": "양도소득세 계산기",
+      "short_name": "양도세",
+      "description": "부동산 양도세 비과세·장특공 자동 계산",
+      "url": "/#/%EC%96%91%EB%8F%84%EC%86%8C%EB%93%9D%EC%84%B8%EA%B3%84%EC%82%B0%EA%B8%B0",
+      "icons": [{"src": "/icons/icon-192.svg", "sizes": "192x192"}]
+    },
+    {
+      "name": "DSR 계산기",
+      "short_name": "DSR",
+      "description": "스트레스 DSR 반영 대출 한도",
+      "url": "/#/DSR%EA%B3%84%EC%82%B0%EA%B8%B0",
+      "icons": [{"src": "/icons/icon-192.svg", "sizes": "192x192"}]
+    },
+    {
+      "name": "연봉 실수령액",
+      "short_name": "실수령",
+      "description": "4대보험·소득세 차감 월 실수령",
+      "url": "/#/%EC%97%B0%EB%B4%89%EC%8B%A4%EC%88%98%EB%A0%B9%EC%95%A1%EA%B3%84%EC%82%B0%EA%B8%B0",
+      "icons": [{"src": "/icons/icon-192.svg", "sizes": "192x192"}]
+    }
+  ],
+  "related_applications": [],
+  "protocol_handlers": []
 }

@@ -141,6 +141,37 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+    // PWA Service Worker 등록
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js', { scope: '/' })
+          .then(function(reg) {
+            // 업데이트 감지
+            reg.addEventListener('updatefound', function() {
+              var newWorker = reg.installing;
+              if (!newWorker) return;
+              newWorker.addEventListener('statechange', function() {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  // 새 버전 준비 완료 — 콘솔에만 알림 (강제 리로드 없음)
+                  if (window.console) console.log('[SW] 새 버전이 설치되었습니다. 다음 방문 시 자동 적용됩니다.');
+                }
+              });
+            });
+          })
+          .catch(function(err) {
+            if (window.console) console.warn('[SW] 등록 실패:', err);
+          });
+        // 오프라인/온라인 전환 로그
+        window.addEventListener('online', function() {
+          if (window.console) console.log('[Network] 온라인 복귀');
+        });
+        window.addEventListener('offline', function() {
+          if (window.console) console.log('[Network] 오프라인 전환');
+        });
+      });
+    }
+    </script>
     <noscript>
       <div style="padding:40px;text-align:center;font-family:sans-serif;background:#f7f8fc;min-height:100vh">
         <h2 style="color:#0747A6;margin-bottom:16px">생활계산기 - 39가지 세금·대출·생활 종합 계산기</h2>

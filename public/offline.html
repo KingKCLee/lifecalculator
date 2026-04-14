@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>오프라인 - 생활계산기</title>
+<meta name="description" content="네트워크 연결이 끊겼습니다. 연결을 확인하고 다시 시도하세요.">
+<meta name="robots" content="noindex,nofollow">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0747A6">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<style>
+:root{--pri:#0747A6;--pl:#0052CC;--bg:#f8f9fc;--card:#fff;--bd:#dfe1e6;--tx:#172B4D;--mt:#505f79;--lt:#f4f5f7}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",sans-serif;background:var(--bg);color:var(--tx);line-height:1.6;display:flex;flex-direction:column;min-height:100vh}
+a{color:inherit;text-decoration:none}
+.wrap{flex:1;max-width:600px;margin:0 auto;padding:48px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;width:100%}
+.icon{width:120px;height:120px;margin:0 auto 24px;background:linear-gradient(135deg,var(--pri),var(--pl));border-radius:28px;display:flex;align-items:center;justify-content:center;font-size:56px;box-shadow:0 8px 24px rgba(7,71,166,0.18);animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+h1{font-size:28px;margin:0 0 12px;color:var(--pri);letter-spacing:-0.5px;font-weight:800}
+.sub{font-size:15px;color:var(--mt);margin:0 0 28px;line-height:1.8}
+.status{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;background:#FFEBE6;border:1px solid #FFBDAD;color:#BF2600;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:28px}
+.status.online{background:#E3FCEF;border-color:#57D9A3;color:#006644}
+.status .dot{width:8px;height:8px;border-radius:50%;background:currentColor;animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.85)}}
+.actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:32px}
+.btn{padding:14px 28px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;border:none;transition:all .15s;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--pri);color:#fff}
+.btn-primary:hover{background:var(--pl)}
+.btn-ghost{background:#fff;color:var(--mt);border:1.5px solid var(--bd)}
+.btn-ghost:hover{background:var(--lt)}
+.tips{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:24px 28px;text-align:left;margin-top:8px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.tips h2{font-size:14px;font-weight:700;color:var(--pri);margin:0 0 14px;letter-spacing:.3px}
+.tips ul{list-style:none;padding:0;margin:0}
+.tips li{padding:8px 0;font-size:13px;color:var(--mt);border-bottom:1px dashed var(--bd)}
+.tips li:last-child{border-bottom:none}
+.tips li::before{content:"✓ ";color:var(--pri);font-weight:800;margin-right:4px}
+.cached{margin-top:24px;padding:16px 20px;background:#eff6ff;border:1px solid #93c5fd;border-radius:12px;font-size:12px;color:#1e40af;line-height:1.7}
+.cached strong{color:var(--pri)}
+footer{text-align:center;padding:20px 24px;font-size:11px;color:var(--mt);border-top:1px solid var(--bd);background:var(--card)}
+footer a{color:var(--mt)}
+@media(max-width:768px){
+  .wrap{padding:32px 16px}
+  .icon{width:96px;height:96px;font-size:44px}
+  h1{font-size:22px}
+  .sub{font-size:14px}
+  .tips{padding:20px}
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="icon" aria-hidden="true">📡</div>
+  <h1>오프라인 상태입니다</h1>
+  <p class="sub">네트워크 연결이 끊어져 일부 기능이 제한됩니다.<br>연결을 확인하고 다시 시도해주세요.</p>
+
+  <div class="status" id="statusBadge">
+    <span class="dot"></span>
+    <span id="statusText">오프라인</span>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="btn btn-primary" onclick="location.reload()">🔄 다시 시도</button>
+    <a href="/" class="btn btn-ghost">🏠 홈으로</a>
+  </div>
+
+  <div class="tips">
+    <h2>💡 연결 문제 해결 방법</h2>
+    <ul>
+      <li>Wi-Fi 또는 모바일 데이터 연결 상태를 확인하세요</li>
+      <li>비행기 모드가 꺼져있는지 확인하세요</li>
+      <li>라우터를 재시작하거나 다른 네트워크로 전환해보세요</li>
+      <li>브라우저를 닫고 다시 열어보세요</li>
+    </ul>
+  </div>
+
+  <div class="cached">
+    <strong>📦 오프라인에서도 이용 가능</strong><br>
+    생활계산기는 PWA(Progressive Web App)입니다. 이전에 방문한 계산기 페이지는 오프라인 상태에서도 계산이 가능합니다. 계산 로직은 로컬에서 실행되어 네트워크 없이도 정상 동작합니다.
+  </div>
+</main>
+
+<footer>
+  © 2026 생활계산기.com · <a href="/">홈</a> · PWA Offline Page
+</footer>
+
+<script>
+// 온라인 상태 감지 및 자동 복귀
+const statusEl = document.getElementById('statusBadge');
+const statusText = document.getElementById('statusText');
+
+function updateStatus(){
+  if(navigator.onLine){
+    statusEl.classList.add('online');
+    statusText.textContent = '연결 복구됨 — 3초 후 이동';
+    setTimeout(() => location.reload(), 3000);
+  } else {
+    statusEl.classList.remove('online');
+    statusText.textContent = '오프라인';
+  }
+}
+
+window.addEventListener('online', updateStatus);
+window.addEventListener('offline', updateStatus);
+updateStatus();
+
+// SW 업데이트 알림 수신 (있을 때)
+if('serviceWorker' in navigator && navigator.serviceWorker.controller){
+  navigator.serviceWorker.addEventListener('message', e => {
+    if(e.data && e.data.type === 'ONLINE_AVAILABLE'){
+      location.reload();
+    }
+  });
+}
+</script>
+</body>
+</html>

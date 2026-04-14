@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <linearGradient id="bg192m" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0747A6"/>
+      <stop offset="60%" stop-color="#0052CC"/>
+      <stop offset="100%" stop-color="#0065FF"/>
+    </linearGradient>
+  </defs>
+  <!-- Full bleed background (maskable requires no rounded corners — OS applies mask) -->
+  <rect width="192" height="192" fill="url(#bg192m)"/>
+  <!-- Safe zone: center 80% (from 19.2 to 172.8 each axis) -->
+  <g transform="translate(48 48)">
+    <rect width="96" height="96" rx="16" fill="#ffffff"/>
+    <rect x="12" y="14" width="72" height="20" rx="5" fill="#EAF2FF"/>
+    <text x="78" y="30" font-family="-apple-system, BlinkMacSystemFont, Noto Sans KR, sans-serif" font-weight="800" font-size="16" fill="#0747A6" text-anchor="end">₩</text>
+    <g fill="#0747A6">
+      <rect x="12" y="40" width="16" height="16" rx="4"/>
+      <rect x="32" y="40" width="16" height="16" rx="4"/>
+      <rect x="52" y="40" width="16" height="16" rx="4"/>
+      <rect x="72" y="40" width="14" height="36" rx="4" fill="#FF8B00"/>
+      <rect x="12" y="60" width="16" height="16" rx="4"/>
+      <rect x="32" y="60" width="16" height="16" rx="4"/>
+      <rect x="52" y="60" width="16" height="16" rx="4"/>
+      <rect x="12" y="80" width="56" height="8" rx="4" fill="#00875A"/>
+    </g>
+  </g>
+</svg>

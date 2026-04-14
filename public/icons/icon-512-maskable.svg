@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg512m" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0747A6"/>
+      <stop offset="60%" stop-color="#0052CC"/>
+      <stop offset="100%" stop-color="#0065FF"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg512m)"/>
+  <!-- Safe zone: center 80% (from 51.2 to 460.8) -->
+  <g transform="translate(128 128)">
+    <rect width="256" height="256" rx="40" fill="#ffffff"/>
+    <rect x="28" y="32" width="200" height="56" rx="12" fill="#EAF2FF"/>
+    <text x="212" y="76" font-family="-apple-system, BlinkMacSystemFont, Noto Sans KR, sans-serif" font-weight="800" font-size="42" fill="#0747A6" text-anchor="end">₩123</text>
+    <g fill="#0747A6">
+      <rect x="28" y="106" width="42" height="42" rx="10"/>
+      <rect x="82" y="106" width="42" height="42" rx="10"/>
+      <rect x="136" y="106" width="42" height="42" rx="10"/>
+      <rect x="190" y="106" width="38" height="96" rx="10" fill="#FF8B00"/>
+      <rect x="28" y="160" width="42" height="42" rx="10"/>
+      <rect x="82" y="160" width="42" height="42" rx="10"/>
+      <rect x="136" y="160" width="42" height="42" rx="10"/>
+      <rect x="28" y="214" width="42" height="22" rx="10" fill="#00875A"/>
+      <rect x="82" y="214" width="96" height="22" rx="10" fill="#00875A"/>
+    </g>
+  </g>
+  <text x="256" y="432" font-family="-apple-system, BlinkMacSystemFont, Noto Sans KR, sans-serif" font-weight="800" font-size="28" fill="#ffffff" text-anchor="middle" opacity="0.9">생활계산기</text>
+</svg>
