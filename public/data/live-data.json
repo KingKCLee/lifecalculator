@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.14",
       "category": "전체",
+      "title": "feat: LeftNav 드롭다운 확장 (Expert 기본펼침·Learning/Market 서브·History 로그인게이트)·계산기 로고 SVG",
+      "desc": "feat: LeftNav 드롭다운 확장 (Expert 기본펼침·Learning/Market 서브·History 로그인게이트)·계산기 로고 SVG"
+    },
+    {
+      "date": "2026.04.14",
+      "category": "전체",
       "title": "feat: 헤더 로고 img 추가·홈 LeftNav 숨김·드롭다운 라운딩/화살표 정리",
       "desc": "feat: 헤더 로고 img 추가·홈 LeftNav 숨김·드롭다운 라운딩/화살표 정리"
     },
@@ -1463,12 +1469,6 @@
       "category": "전체",
       "title": "fix: 전역 버튼 hover/active 효과 index.html에 추가",
       "desc": "fix: 전역 버튼 hover/active 효과 index.html에 추가"
-    },
-    {
-      "date": "2026.04.07",
-      "category": "전체",
-      "title": "feat: 전체 버튼 hover transition 추가 + active scale 효과",
-      "desc": "feat: 전체 버튼 hover transition 추가 + active scale 효과"
     }
   ],
   "rates": {
