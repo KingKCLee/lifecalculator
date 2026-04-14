@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.15",
       "category": "전체",
+      "title": "feat: SavingsGuide 컴포넌트 + 8개 주요 계산기 절세 가이드 통합",
+      "desc": "feat: SavingsGuide 컴포넌트 + 8개 주요 계산기 절세 가이드 통합"
+    },
+    {
+      "date": "2026.04.15",
+      "category": "전체",
       "title": "feat(data): 홈화면 정책 태그·최신 정책 JSON 추가",
       "desc": "feat(data): 홈화면 정책 태그·최신 정책 JSON 추가"
     },
@@ -1459,12 +1465,6 @@
       "category": "전체",
       "title": "feat: 모바일 UX 점검 자료 + viewport/아이콘 보강",
       "desc": "feat: 모바일 UX 점검 자료 + viewport/아이콘 보강"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "전체",
-      "title": "feat: 전체 계산기 2열 그리드 레이아웃 적용 (입력 좌·결과 우)",
-      "desc": "feat: 전체 계산기 2열 그리드 레이아웃 적용 (입력 좌·결과 우)"
     }
   ],
   "rates": {
