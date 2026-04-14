@@ -1137,41 +1137,26 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
         <Inp label="시가표준액 (공시가격)" value={stdPrice} onChange={setStdPrice} suffix="만원" placeholder="미입력 시 취득가 사용"/>
       </div>
       {showStdPanel&&(()=>{
-        const selSt={width:"100%",padding:"10px 12px",border:"1.5px solid #E5E7EB",borderRadius:8,fontSize:14,fontFamily:"inherit",outline:"none",color:"#0a1628",boxSizing:"border-box",background:"#fff"};
-        const detailLabel=(stdType==="land"||stdType==="house")?"지번":(stdType==="shop"||stdType==="office")?"건물명":"단지명";
-        const canLookup=stdSido&&stdSigungu&&stdDong&&stdDetail&&!stdLoading;
-        return(<div style={{marginTop:-8,marginBottom:16,padding:"16px 18px",background:"#F9FAFB",border:"1px solid #E5E7EB",borderRadius:10}}>
-          <div style={{fontSize:12,fontWeight:700,color:"#0a1628",marginBottom:10}}>시가표준액 조회</div>
-          <Tog label="부동산 유형" value={stdType} onChange={v=>{setStdType(v);setStdResult(null);setStdErr("");}} options={[
-            {value:"apt",label:"공동주택"},
-            {value:"house",label:"단독주택"},
-            {value:"officetel",label:"오피스텔"},
-            {value:"shop",label:"상가"},
-            {value:"office",label:"사무실"},
-            {value:"land",label:"토지"}
-          ]}/>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
-            <select value={stdSido} onChange={e=>{setStdSido(e.target.value);setStdSigungu("");setStdDong("");}} style={selSt}>
-              <option value="">시/도 선택</option>
-              {Object.keys(REGION_DATA).map(s=><option key={s} value={s}>{s}</option>)}
-            </select>
-            <select value={stdSigungu} onChange={e=>{setStdSigungu(e.target.value);setStdDong("");}} disabled={!stdSido} style={selSt}>
-              <option value="">시/군/구</option>
-              {stdSido&&Object.keys(REGION_DATA[stdSido]||{}).map(sg=><option key={sg} value={sg}>{sg}</option>)}
-            </select>
+        // 2026.04.14 공시가격 API 미제공 → 공식 조회처 안내 패널로 전환
+        const GUIDES=[
+          {kind:"공동주택",path:"부동산공시가격알리미(realtyprice.kr) → 공시가격열람 → 공동주택",url:"https://www.realtyprice.kr:447/notice/gsindividual/sido.htm"},
+          {kind:"단독주택",path:"부동산공시가격알리미(realtyprice.kr) → 공시가격열람 → 표준/개별주택",url:"https://www.realtyprice.kr:447/notice/main/mainBody.htm"},
+          {kind:"토지",path:"부동산공시가격알리미(realtyprice.kr) → 공시가격열람 → 표준/개별지",url:"https://www.realtyprice.kr:447/notice/main/mainBody.htm"},
+          {kind:"상가 / 오피스텔",path:"국세청 홈택스(hometax.go.kr) → 조회/발급 → 기준시가 조회",url:"https://www.hometax.go.kr"}
+        ];
+        return(<div style={{marginTop:-8,marginBottom:16,padding:"18px 20px",background:"#F9FAFB",border:"1px solid #E5E7EB",borderRadius:10}}>
+          <div style={{fontSize:13,fontWeight:800,color:"#0a1628",marginBottom:4}}>시가표준액(공시가격) 조회 방법</div>
+          <div style={{fontSize:11,color:"#6B7280",marginBottom:12,lineHeight:1.6}}>공시가격 API는 현재 제공되지 않아 공식 사이트 안내로 대체합니다. 각 항목 클릭 시 새 탭으로 열립니다.</div>
+          <div style={{display:"flex",flexDirection:"column",gap:8}}>
+            {GUIDES.map(g=>(
+              <a key={g.kind} href={g.url} target="_blank" rel="noopener noreferrer" style={{display:"flex",alignItems:"flex-start",gap:10,padding:"12px 14px",background:"#fff",border:"1px solid #E5E7EB",borderRadius:8,textDecoration:"none",cursor:"pointer",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.borderColor="#0747A6";e.currentTarget.style.background="#EFF6FF";}} onMouseLeave={e=>{e.currentTarget.style.borderColor="#E5E7EB";e.currentTarget.style.background="#fff";}}>
+                <span style={{flex:"0 0 auto",display:"inline-block",minWidth:80,padding:"3px 8px",background:"#0747A6",color:"#fff",borderRadius:12,fontSize:11,fontWeight:700,textAlign:"center"}}>{g.kind}</span>
+                <span style={{flex:"1 1 auto",fontSize:12,color:"#0a1628",lineHeight:1.5,wordBreak:"keep-all"}}>{g.path}</span>
+                <span style={{flex:"0 0 auto",color:"#6B7280",fontSize:12}}>↗</span>
+              </a>
+            ))}
           </div>
-          <select value={stdDong} onChange={e=>setStdDong(e.target.value)} disabled={!stdSigungu} style={{...selSt,marginBottom:8}}>
-            <option value="">읍/면/동</option>
-            {stdSigungu&&(REGION_DATA[stdSido]?.[stdSigungu]||[]).map(d=><option key={d} value={d}>{d}</option>)}
-          </select>
-          <Inp label={detailLabel} value={stdDetail} onChange={setStdDetail} placeholder={detailLabel+" 입력 후 조회"}/>
-          <button onClick={lookupStdPrice} disabled={!canLookup} style={{width:"100%",marginTop:4,padding:"12px 16px",background:canLookup?"#0747A6":"#E5E7EB",color:"#fff",border:"none",borderRadius:10,fontSize:14,fontWeight:700,cursor:canLookup?"pointer":"not-allowed",fontFamily:"inherit"}}>{stdLoading?"조회 중…":"시가표준액 조회"}</button>
-          {stdErr&&<div style={{marginTop:10,padding:"10px 14px",background:"#FFEBE6",border:"1px solid #FFBDAD",borderRadius:8,fontSize:12,color:"#BF2600",lineHeight:1.5}}>{stdErr}</div>}
-          {stdResult&&<div style={{marginTop:12,padding:"14px 16px",background:"#EFF6FF",border:"1px solid #0747A6",borderRadius:10}}>
-            <div style={{fontSize:11,color:"#6B7280",marginBottom:4}}>{stdResult.label}</div>
-            <div style={{fontSize:20,fontWeight:800,color:"#0747A6",marginBottom:10,fontVariantNumeric:"tabular-nums"}}>{"₩"+Number(stdResult.val).toLocaleString("ko-KR")}</div>
-            <button onClick={applyStdPrice} style={{width:"100%",padding:"10px 14px",background:"#0747A6",color:"#fff",border:"none",borderRadius:8,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>이 금액으로 적용</button>
-          </div>}
+          <div style={{marginTop:12,padding:"10px 12px",background:"#FFFAE6",border:"1px solid #FFE380",borderRadius:8,fontSize:11,color:"#7A5800",lineHeight:1.6}}>조회 후 해당 금액을 위 입력란에 직접 입력해주세요. (만원 단위)</div>
         </div>);
       })()}
       {isHouse&&acqType==="sale"&&<Radio label="취득 후 주택 수" value={own} onChange={sO} options={[{value:"1",label:"1주택"},{value:"2",label:"2주택"},{value:"3",label:"3주택"},{value:"4",label:"4주택+"}]} cols={4}/>}
