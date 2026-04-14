@@ -5,8 +5,15 @@
     <link>https://xn--989a00a691bdfa717h.com/</link>
     <description>취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 등 39가지 무료 계산기. 매일 자동 업데이트.</description>
     <language>ko</language>
-    <lastBuildDate>Tue, 14 Apr 2026 16:32:11 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 14 Apr 2026 16:58:54 +0900</lastBuildDate>
     <atom:link href="https://xn--989a00a691bdfa717h.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+    <title>feat: 시가표준액 조회 인라인 폼 복구·동번호/호번호 입력 추가</title>
+    <link>https://xn--989a00a691bdfa717h.com/</link>
+    <description>feat: 시가표준액 조회 인라인 폼 복구·동번호/호번호 입력 추가</description>
+    <pubDate>Tue, 14 Apr 2026 16:58:54 +0900</pubDate>
+    <guid>https://xn--989a00a691bdfa717h.com/#update-202604140758</guid>
+  </item>
     <item>
     <title>fix: 시가표준액 조회 → 공식 사이트 안내 패널로 전환 (API 미제공)</title>
     <link>https://xn--989a00a691bdfa717h.com/</link>
