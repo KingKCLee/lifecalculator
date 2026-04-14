@@ -733,6 +733,125 @@ const MI={
   remodel2:["매입가격을 입력해주세요"],
 };
 
+/* 2026.04.14 AIGuide — 결과 기반 정적 휴리스틱 가이드 카드 (1일 3회 제한) */
+function AIGuide({items,title}){
+  const today=new Date().toISOString().slice(0,10).replace(/-/g,"");
+  const countKey="lc_ai_guide_count_"+today;
+  const used=(()=>{try{return parseInt(localStorage.getItem(countKey)||"0")||0;}catch{return 0;}})();
+  const itemText=(items||[]).map(it=>String(it.l||"")+" "+String(it.v||"")).join(" ");
+  const has=(kw)=>itemText.includes(kw);
+  const titleStr=String(title||"");
+  // 휴리스틱 기반 3장 카드
+  const tipSave=has("감면")||has("공제")
+    ? "결과에 감면/공제 항목이 포함되어 있습니다. 생애최초·장기보유·1세대1주택 등 추가 감면 요건을 확인하면 세액을 더 낮출 수 있습니다."
+    : titleStr.includes("양도")?"1세대1주택 비과세(2년 거주), 장기보유특별공제(최대 80%), 필요경비 영수증 정리로 양도차익을 낮추세요."
+    : titleStr.includes("취득")?"생애최초 감면(12억↓ 최대 200만원, 2028.12.31까지), 신혼부부 감면, 출산·양육 가구 특례를 확인하세요."
+    : titleStr.includes("대출")||titleStr.includes("DSR")||titleStr.includes("LTV")?"스트레스 DSR은 고정금리 선택 시 +0.75%p, 혼합형은 +1.5%p로 적용됩니다. 고정금리로 한도를 더 받을 수 있는지 비교해보세요."
+    : "동일 조건을 다른 계산기로도 돌려보면 숨어있는 절세 포인트가 보입니다.";
+  const tipWarn=has("중과")||has("다주택")
+    ? "다주택 중과 구간에 해당합니다. 2026.5.9까지 유예이므로 양도 시점에 따라 세액이 크게 달라집니다."
+    : titleStr.includes("종부세")||titleStr.includes("재산세")?"6월 1일 기준 보유자가 과세 대상입니다. 잔금일·등기일을 6월 1일 전후로 조정하면 그 해 세금이 달라질 수 있습니다."
+    : titleStr.includes("상속")||titleStr.includes("증여")?"10년 합산과세(배우자 6억·성년 5천만원 등) 공제 한도를 반드시 확인하고, 가족 간 거래는 시가 산정 근거를 남겨두세요."
+    : "계산 결과는 2026년 현행 기준 참고용이며, 실제 신고 전 관할 지자체·세무사 확인을 권장합니다.";
+  const tipNext=titleStr.includes("취득")?"등기비용·중개보수 계산기로 총 구입 비용을 확인하세요."
+    : titleStr.includes("양도")?"보유세 통합 계산기로 매년 부담을 함께 검토하세요."
+    : titleStr.includes("대출")||titleStr.includes("DSR")||titleStr.includes("LTV")?"총비용 시뮬레이터로 원리금+세금+관리비 전체를 시뮬레이션해보세요."
+    : titleStr.includes("연봉")||titleStr.includes("실수령")?"4대보험료·퇴직금 계산기로 근로소득 전반을 확인하세요."
+    : "관련 계산기로 같은 시나리오를 다각도로 점검해보세요.";
+  const CARDS=[
+    {icon:"💡",title:"지금 당장 할 수 있는 절세 방법",body:tipSave},
+    {icon:"⚠",title:"주의해야 할 사항",body:tipWarn},
+    {icon:"📊",title:"다음에 확인해볼 계산기",body:tipNext}
+  ];
+  const onMore=()=>{
+    if(used>=3){try{window.dispatchEvent(new CustomEvent('lc-toast',{detail:{msg:"오늘 AI 해설 이용 한도(3회)에 도달했습니다."}}));}catch{}return;}
+    try{localStorage.setItem(countKey,String(used+1));}catch{}
+    try{window.dispatchEvent(new CustomEvent('lc-ai-explain',{detail:{title,items}}));}catch{}
+  };
+  return(
+    <div style={{marginTop:12,padding:"16px 18px",background:"#F9FAFB",border:"1px solid #E5E7EB",borderRadius:12}}>
+      <div style={{fontSize:13,fontWeight:700,color:"#0a1628",marginBottom:10,display:"flex",alignItems:"center",gap:6}}><span>🤖</span>AI 절세 가이드</div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr",gap:8}}>
+        {CARDS.map((c,i)=>(
+          <div key={i} style={{padding:"12px 14px",background:"#fff",border:"1px solid #E5E7EB",borderRadius:10}}>
+            <div style={{fontSize:13,fontWeight:700,color:"#0a1628",marginBottom:4}}>{c.icon} {c.title}</div>
+            <div style={{fontSize:12,color:"#6B7280",lineHeight:1.6}}>{c.body}</div>
+          </div>
+        ))}
+      </div>
+      <button onClick={onMore} style={{marginTop:10,width:"100%",padding:"10px 14px",background:"#0747A6",color:"#fff",border:"none",borderRadius:8,fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>더 자세한 AI 해설 →</button>
+      <div style={{fontSize:10,color:"#9CA3AF",marginTop:8}}>오늘 {used}/3 사용 · 로그인 없이 이용 가능</div>
+    </div>
+  );
+}
+
+/* 2026.04.14 MiniChart — 경량 인라인 SVG 차트 (pie / donut / bar) */
+const CHART_COLORS=["#0747A6","#0052CC","#0065FF","#4C9AFF","#B3D4FF","#FFC400","#FF8B00","#36B37E","#6554C0","#FF5630"];
+function MiniChart({type="pie",data,width="100%",height=200}){
+  if(!Array.isArray(data)||data.length===0)return null;
+  const rows=data.map((d,i)=>({...d,color:d.color||CHART_COLORS[i%CHART_COLORS.length],value:Math.abs(Number(d.value)||0)}));
+  const total=rows.reduce((s,r)=>s+r.value,0);
+  if(total<=0)return null;
+  if(type==="bar"){
+    const max=Math.max(...rows.map(r=>r.value));
+    const barH=22,gap=8,padL=110,padR=70,top=8;
+    const vbH=top+rows.length*(barH+gap)+4;
+    return(
+      <svg viewBox={`0 0 400 ${vbH}`} width={width} height={height} preserveAspectRatio="xMidYMid meet" style={{display:"block"}}>
+        {rows.map((r,i)=>{
+          const y=top+i*(barH+gap);
+          const w=max>0?(400-padL-padR)*(r.value/max):0;
+          return(<g key={i}>
+            <text x={padL-6} y={y+barH*0.7} textAnchor="end" fontSize="11" fill="#505f79" fontFamily="inherit">{String(r.label).slice(0,10)}</text>
+            <rect x={padL} y={y} width={w} height={barH} rx="3" fill={r.color}/>
+            <text x={padL+w+6} y={y+barH*0.7} fontSize="11" fill="#172B4D" fontFamily="inherit" fontWeight="700">{r.value.toLocaleString()}</text>
+          </g>);
+        })}
+      </svg>
+    );
+  }
+  // pie / donut
+  const cx=200,cy=110,r=90,ir=type==="donut"?55:0;
+  let acc=0;
+  const arcs=rows.map((row,i)=>{
+    const frac=row.value/total;
+    const a0=acc*2*Math.PI-Math.PI/2;
+    acc+=frac;
+    const a1=acc*2*Math.PI-Math.PI/2;
+    const large=frac>0.5?1:0;
+    const x0=cx+r*Math.cos(a0),y0=cy+r*Math.sin(a0);
+    const x1=cx+r*Math.cos(a1),y1=cy+r*Math.sin(a1);
+    let d;
+    if(ir>0){
+      const xi0=cx+ir*Math.cos(a0),yi0=cy+ir*Math.sin(a0);
+      const xi1=cx+ir*Math.cos(a1),yi1=cy+ir*Math.sin(a1);
+      d=`M ${x0} ${y0} A ${r} ${r} 0 ${large} 1 ${x1} ${y1} L ${xi1} ${yi1} A ${ir} ${ir} 0 ${large} 0 ${xi0} ${yi0} Z`;
+    }else{
+      d=`M ${cx} ${cy} L ${x0} ${y0} A ${r} ${r} 0 ${large} 1 ${x1} ${y1} Z`;
+    }
+    return<path key={i} d={d} fill={row.color}/>;
+  });
+  return(
+    <svg viewBox="0 0 400 220" width={width} height={height} preserveAspectRatio="xMidYMid meet" style={{display:"block"}}>
+      {arcs}
+      {rows.map((r,i)=>(
+        <g key={"l"+i} transform={`translate(300, ${20+i*18})`}>
+          <rect width="12" height="12" rx="2" fill={r.color}/>
+          <text x="18" y="10" fontSize="11" fill="#172B4D" fontFamily="inherit">{String(r.label).slice(0,8)} {(r.value/total*100).toFixed(0)}%</text>
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+function parseWonString(v){
+  if(typeof v!=="string")return 0;
+  // "₩1,250,000" or "1,250,000원" → 1250000
+  const m=v.replace(/[^0-9.\-]/g,"");
+  if(!m)return 0;
+  return parseFloat(m)||0;
+}
+
 function RP({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlineLinkLabel,alertMsg,alertType="info",consultFunnel,miss}){
   // 2026.04.14 입력값 없을 때(isExample) ₩0으로 표시 (항상 노출, 숨기지 않음)
   // 2026.04.15 miss: 필수 입력 미기재 안내 (string[]). 있으면 안내박스 표시
@@ -776,6 +895,17 @@ function RP({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlin
         </div>);
       })}
     </div>
+    {/* 2026.04.14 auto MiniChart: items 중 ₩ 금액 항목 ≥2개면 파이차트 자동 렌더 */}
+    {(()=>{
+      if(isExample||hasMiss)return null;
+      const chartData=(items||[]).filter(it=>typeof it.v==="string"&&it.v.includes("₩")&&!isTotal(it.l)).map((it,i)=>({label:String(it.l).replace(/^[\s└│]+/,"").slice(0,12),value:parseWonString(it.v),color:CHART_COLORS[i%CHART_COLORS.length]})).filter(d=>d.value>0);
+      if(chartData.length<2)return null;
+      return(<div style={{marginTop:14,padding:"12px",background:"rgba(255,255,255,0.96)",borderRadius:10}}>
+        <div style={{fontSize:11,fontWeight:700,color:"#0747A6",marginBottom:4,letterSpacing:.5}}>구성 비율</div>
+        <MiniChart type="donut" data={chartData} height={180}/>
+      </div>);
+    })()}
+    {!isExample&&!hasMiss&&total>0&&<AIGuide items={items} title={title}/>}
     {deadline&&<div style={{background:"rgba(255,255,255,0.10)",borderRadius:10,padding:"10px 14px",marginTop:14,fontSize:11,lineHeight:1.55,display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
       <span><IconCal c="#fff"/></span><span style={{opacity:.88,flex:"1 1 auto",minWidth:0}}>{deadline}</span>
       {deadlineLink&&<a href={deadlineLink} target="_blank" rel="noopener noreferrer" style={{color:"#FFC400",fontWeight:700,textDecoration:"none"}}>{deadlineLinkLabel||"바로가기 →"}</a>}
@@ -870,8 +1000,27 @@ function MarketIntel({isMo}){
   </div>);
 }
 
+/* 2026.04.14 정책 태그 → 키워드 매칭 사전 */
+const POLICY_TAG_KEYWORDS={
+  "1주택자":["1주택","일시적2주택","1세대1주택"],
+  "2주택자":["2주택","다주택"],
+  "3주택이상":["3주택","다주택","중과"],
+  "생애최초":["생애최초","신혼부부","첫 주택"],
+  "임대사업자":["임대사업자","주택임대","임대등록"],
+  "법인":["법인"],
+  "경매투자자":["경매","낙찰","공매"],
+  "전세입자":["전세","전세가","DSR","대출","보증금"],
+  "월세입자":["월세","임대료","월세 세액공제"],
+  "분양권보유":["분양권","청약","입주권"]
+};
+function matchPolicyTags(text,tags){
+  if(!tags||tags.length===0)return true;
+  const t=String(text||"").toLowerCase();
+  return tags.some(tag=>(POLICY_TAG_KEYWORDS[tag]||[]).some(k=>t.includes(String(k).toLowerCase())));
+}
+
 /* 2026.04.14 LiveNewsCards — lc-auth-worker /news RSS 실시간 뉴스 (실패시 정적 폴백) */
-function LiveNewsCards(){
+function LiveNewsCards({filterTags}={}){
   const FALLBACK=[
     {title:"양도세 다주택 중과 유예",description:"2026.5.9까지 조정대상 2·3주택 중과 유예. 양도 시점 기준 자동 반영.",link:"#",pubDate:"2026"},
     {title:"수도권 주담대 한도 축소",description:"15억↓ 6억, 25억↓ 4억, 25억↑ 2억. LTV/DSR 계산기 반영 완료.",link:"#",pubDate:"2026"},
@@ -884,12 +1033,14 @@ function LiveNewsCards(){
       .then(r=>r.ok?r.json():null)
       .then(d=>{
         if(!alive||!d?.items?.length)return;
-        setItems(d.items.slice(0,3));
+        setItems(d.items.slice(0,6));
       })
       .catch(()=>{});
     return()=>{alive=false;};
   },[]);
-  return(<>{items.map((c,i)=>(
+  const filtered=(filterTags&&filterTags.length>0)?items.filter(n=>matchPolicyTags((n.title||"")+" "+(n.description||n.desc||n.summary||""),filterTags)):items;
+  const show=(filtered.length>0?filtered:items).slice(0,3);
+  return(<>{show.map((c,i)=>(
     <a key={i} href={c.link||"#"} target="_blank" rel="noopener noreferrer" style={{display:"block",background:"#fff",borderRadius:14,padding:"20px 22px",border:`1px solid ${P.bd}`,textDecoration:"none",color:"inherit",transition:"transform .15s"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)"}} onMouseLeave={e=>{e.currentTarget.style.transform="none"}}>
       <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:8}}>
         <span style={{fontSize:10,fontWeight:700,color:"#fff",background:P.pri,padding:"2px 8px",borderRadius:10}}>뉴스</span>
@@ -3735,6 +3886,9 @@ export default function App(){
   const[favorites,setFavorites]=useState(()=>{try{return JSON.parse(localStorage.getItem('lc_favorites')||'[]')}catch{return[]}});
   const toggleFavorite=(calcId)=>{setFavorites(prev=>{const next=prev.includes(calcId)?prev.filter(x=>x!==calcId):[...prev,calcId];try{localStorage.setItem('lc_favorites',JSON.stringify(next));}catch{}return next;});};
   const[toast,setToast]=useState("");
+  // 2026.04.14 홈 정책 태그 필터 (localStorage 유지)
+  const[policyTags,setPolicyTags]=useState(()=>{try{return JSON.parse(localStorage.getItem('lc_policy_tags')||'[]')}catch{return[]}});
+  const togglePolicyTag=(tag)=>{setPolicyTags(prev=>{const next=prev.includes(tag)?prev.filter(x=>x!==tag):[...prev,tag];try{localStorage.setItem('lc_policy_tags',JSON.stringify(next));}catch{}return next;});};
   // 2026.04.14 embed 모드: ?embed=y URL 파라미터 감지 → 헤더/푸터/사이드바 숨김
   const[embedMode,setEmbedMode]=useState(()=>{try{return typeof window!=="undefined"&&new URLSearchParams(window.location.search).get("embed")==="y";}catch{return false;}});
   useEffect(()=>{if(embedMode){document.body.classList.add("lc-embed");}else{document.body.classList.remove("lc-embed");}},[embedMode]);
@@ -4240,17 +4394,33 @@ body.lc-embed main{padding-top:0!important}
         <div style={{maxWidth:1200,margin:"0 auto"}}>
           <div style={{fontSize:20,fontWeight:700,textAlign:"center",color:P.tx,marginBottom:8,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}><Ico.news size={20}/>오늘의 부동산 정보</div>
           <div style={{fontSize:12,color:P.mt,textAlign:"center",marginBottom:24}}>최근 세법 변경사항과 유용한 계산 팁</div>
+          {/* 2026.04.14 정책 태그 필터 */}
+          <div style={{marginBottom:16,padding:"14px 16px",background:"#fff",borderRadius:12,border:`1px solid ${P.bd}`}}>
+            <div style={{fontSize:13,fontWeight:700,marginBottom:10,color:P.tx,display:"flex",alignItems:"center",justifyContent:"space-between",gap:8}}>
+              <span>나에게 해당되는 정책</span>
+              {policyTags.length>0&&<button onClick={()=>{setPolicyTags([]);try{localStorage.setItem('lc_policy_tags','[]');}catch{}}} style={{padding:"4px 10px",fontSize:11,fontWeight:700,background:"#fff",color:P.mt,border:`1px solid ${P.bd}`,borderRadius:12,cursor:"pointer",fontFamily:"inherit"}}>초기화</button>}
+            </div>
+            <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
+              {["1주택자","2주택자","3주택이상","생애최초","임대사업자","법인","경매투자자","전세입자","월세입자","분양권보유"].map(tag=>(
+                <button key={tag} onClick={()=>togglePolicyTag(tag)} style={{padding:"6px 12px",borderRadius:20,fontSize:12,fontWeight:600,border:policyTags.includes(tag)?"none":"1.5px solid #E5E7EB",background:policyTags.includes(tag)?"#0747A6":"#fff",color:policyTags.includes(tag)?"#fff":"#6B7280",cursor:"pointer",fontFamily:"inherit"}}>{tag}</button>
+              ))}
+            </div>
+            {policyTags.length>0&&<div style={{marginTop:8,fontSize:11,color:P.mt}}>선택한 태그에 해당하는 뉴스·정책만 표시됩니다.</div>}
+          </div>
           <div style={{fontSize:13,fontWeight:700,color:P.pri,marginBottom:10,padding:"0 4px",display:"flex",alignItems:"center",gap:6}}><Ico.news size={16}/>실시간 부동산 뉴스</div>
           <div className="insights-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:16,marginBottom:28}}>
-            <LiveNewsCards/>
+            <LiveNewsCards filterTags={policyTags}/>
           </div>
           <div style={{fontSize:13,fontWeight:700,color:P.pri,marginBottom:10,padding:"0 4px",display:"flex",alignItems:"center",gap:6}}><IconBell/> 최근 세법 변경사항</div>
           <div className="insights-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:16,marginBottom:28}}>
-            {[
+            {(()=>{const ALL=[
               {t:"양도세 다주택 중과 유예",d:"2026.5.9까지 조정대상 2·3주택 중과 유예. 양도 시점 기준 자동 반영.",tag:"세금",date:"2026"},
               {t:"수도권 주담대 한도 축소",d:"15억↓ 6억, 25억↓ 4억, 25억↑ 2억. LTV/DSR 계산기 반영 완료.",tag:"대출",date:"2026"},
-              {t:"기준금리 3.0% 유지",d:"2026.2.27 금통위 동결. 스트레스 DSR 변동 +1.5%p.",tag:"금리",date:"2026.02"}
-            ].map((c,i)=>(
+              {t:"기준금리 3.0% 유지",d:"2026.2.27 금통위 동결. 스트레스 DSR 변동 +1.5%p.",tag:"금리",date:"2026.02"},
+              {t:"생애최초 취득세 감면 연장",d:"12억↓ 최대 200만원 감면이 2028.12.31까지 적용. 신혼부부·첫 주택 구입자 필수 확인.",tag:"세금",date:"2026"},
+              {t:"임대사업자 등록 요건 강화",d:"주택임대사업자 등록 요건 재정비. 기존 등록자 혜택 유지 여부 확인 필요.",tag:"임대",date:"2026"},
+              {t:"분양권·청약 규제 변경",d:"분양권 보유 시 주택수 산정 규정 재정비. 청약 가점 계산 시 유의.",tag:"청약",date:"2026"}
+            ];const filtered=policyTags.length===0?ALL.slice(0,3):ALL.filter(x=>matchPolicyTags(x.t+" "+x.d,policyTags));const show=(filtered.length>0?filtered:ALL).slice(0,3);return show.map((c,i)=>(
               <div key={i} style={{background:"#fff",borderRadius:16,padding:"24px 28px",border:`1px solid ${P.bd}`}}>
                 <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:8}}>
                   <span style={{fontSize:10,fontWeight:700,color:"#fff",background:P.pri,padding:"2px 8px",borderRadius:10}}>{c.tag}</span>
@@ -4259,7 +4429,7 @@ body.lc-embed main{padding-top:0!important}
                 <div style={{fontSize:15,fontWeight:700,color:P.tx,marginBottom:6,lineHeight:1.4}}>{c.t}</div>
                 <div style={{fontSize:12,color:P.mt,lineHeight:1.6}}>{c.d}</div>
               </div>
-            ))}
+            ));})()}
           </div>
           <div style={{fontSize:13,fontWeight:700,color:P.pri,marginBottom:10,padding:"0 4px",display:"flex",alignItems:"center",gap:6}}><IconBulb/> 유용한 계산 팁</div>
           <div className="insights-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:16}}>
