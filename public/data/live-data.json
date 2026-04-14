@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.14",
       "category": "전체",
+      "title": "refactor: Tog 컴포넌트 재작성 (pill 스타일·가로 스크롤)",
+      "desc": "refactor: Tog 컴포넌트 재작성 (pill 스타일·가로 스크롤)"
+    },
+    {
+      "date": "2026.04.14",
+      "category": "전체",
       "title": "fix(App): 모달 타이틀 한글 전용 + 푸터 풀폭 처리",
       "desc": "fix(App): 모달 타이틀 한글 전용 + 푸터 풀폭 처리"
     },
@@ -1463,12 +1469,6 @@
       "category": "전체",
       "title": "feat: TipModal→SidePanel(PC 마우스오버/모바일 하단시트), H3 설명문 SEO 최적화, 특수조건 안내문구 개선",
       "desc": "feat: TipModal→SidePanel(PC 마우스오버/모바일 하단시트), H3 설명문 SEO 최적화, 특수조건 안내문구 개선"
-    },
-    {
-      "date": "2026.04.06",
-      "category": "전체",
-      "title": "perf: robots.txt 정리, preconnect 4개이하, Google Fonts 비차단 preload",
-      "desc": "perf: robots.txt 정리, preconnect 4개이하, Google Fonts 비차단 preload"
     }
   ],
   "rates": {
