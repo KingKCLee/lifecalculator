@@ -703,8 +703,9 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
       {populationDecline&&<div style={{padding:"10px 14px",background:"#DEEBFF",border:"1px solid #0747A6",borderRadius:10,fontSize:12,color:"#0747A6",marginTop:8,lineHeight:1.6}}>인구감소지역 생애최초 감면 한도는 300만원입니다.</div>}
       {firstOfLife&&!isFirstHomeBenefit&&<div style={{padding:"12px 16px",background:"#FFEBE6",border:"1px solid #FFBDAD",borderRadius:10,fontSize:13,color:"#DE350B",marginTop:8,lineHeight:1.6}}>⚠️ 생애최초 취득세 감면 혜택이 종료되었습니다 (2028.12.31 만료).</div>}
     </div>
+    {/* 2026.04.14 고도화: 납부기한 취득유형별 분기 (상속 6개월 / 증여 3개월 / 그 외 60일). 기존: deadline="신고기한: 잔금일 또는 등기일 중 빠른 날부터 60일 이내" */}
     <div><RP title="취득세 계산 결과" total={total} sub={"취득세율 "+fP(r*100)+" 적용"}
-      deadline="신고기한: 잔금일 또는 등기일 중 빠른 날부터 60일 이내"
+      deadline={acqType==="inherit"?"신고기한: 상속개시일이 속하는 달의 말일부터 6개월 이내 (지방세법 §20)":acqType==="gift"?"신고기한: 취득일이 속하는 달의 말일부터 3개월 이내 (지방세법 §20)":"신고기한: 잔금일 또는 등기일 중 빠른 날부터 60일 이내 (지방세법 §20)"}
       deadlineLink="https://wetax.go.kr" deadlineLinkLabel="위택스 신고 →"
       alertMsg={!stdPrice?"시가표준액 미입력 시 정확도가 낮아질 수 있습니다":firstDed>0?"생애최초 감면 "+fW(firstDed)+" 적용됨":conArea&&n>=2&&!heavyTaxExclude&&!lowVal&&!tempTwo?"조정대상지역 "+n+"주택 중과세율 "+fP(r*100)+" 적용":null}
       alertType={!stdPrice?"warning":firstDed>0?"success":"danger"}
