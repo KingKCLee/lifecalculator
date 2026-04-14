@@ -10,7 +10,7 @@ import {tW, pN, fW, Inp, Sel, Tog, RP, CalcShell} from './_shared';
 // 간이 계산: 건물가(공급가액) × 10%
 export default function CalcBldVat({isMo=false, onNav=()=>{}}){
   const [price, setPrice] = useState("");
-  const [landRatio, setLandRatio] = useState("60");
+  const [landRatio, setLandRatio] = useState("");
   const [propType, setPropType] = useState("commercial");
   const [area, setArea] = useState("big");
   const pW = tW(price);

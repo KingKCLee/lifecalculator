@@ -8,8 +8,8 @@ import {tW, pN, fW, Inp, Tog, RP, CalcShell} from './_shared';
 export default function CalcEstIncome({isMo=false, onNav=()=>{}}){
   const [monthly, setMonthly] = useState("");
   const [deposit, setDeposit] = useState("");
-  const [houses, setHouses] = useState("2");
-  const [expenseRate, setExpenseRate] = useState("60");
+  const [houses, setHouses] = useState("");
+  const [expenseRate, setExpenseRate] = useState("");
   const mW = tW(monthly);
   const dW = tW(deposit);
   const nH = parseInt(houses)||0;

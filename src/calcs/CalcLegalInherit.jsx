@@ -9,8 +9,8 @@ import {tW, pN, fW, Inp, Tog, RP, CalcShell} from './_shared';
 export default function CalcLegalInherit({isMo=false, onNav=()=>{}}){
   const [estate, setEstate] = useState("");
   const [hasSpouse, setHasSpouse] = useState("yes");
-  const [children, setChildren] = useState("2");
-  const [parents, setParents] = useState("0");
+  const [children, setChildren] = useState("");
+  const [parents, setParents] = useState("");
   const eW = tW(estate);
   const nChild = Math.max(0, parseInt(children)||0);
   const nParent = Math.max(0, parseInt(parents)||0);

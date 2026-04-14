@@ -10,7 +10,7 @@ import {tW, pN, fW, Inp, Tog, RP, CalcShell} from './_shared';
 export default function CalcJeonseInsurance({isMo=false, onNav=()=>{}}){
   const [deposit, setDeposit] = useState("");
   const [propType, setPropType] = useState("apt");
-  const [months, setMonths] = useState("24");
+  const [months, setMonths] = useState("");
   const [discount, setDiscount] = useState("none");
   const dW = tW(deposit);
   let baseRate;

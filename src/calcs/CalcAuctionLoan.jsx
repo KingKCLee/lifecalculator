@@ -10,7 +10,7 @@ export default function CalcAuctionLoan({isMo=false, onNav=()=>{}}){
   const [appraisal, setAppraisal] = useState("");
   const [region, setRegion] = useState("normal");
   const [rate, setRate] = useState("");
-  const [years, setYears] = useState("30");
+  const [years, setYears] = useState("");
   const [rooms, setRooms] = useState("0");
   const bW = tW(bidPrice);
   const aW = tW(appraisal);

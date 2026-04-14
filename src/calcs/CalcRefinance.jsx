@@ -16,7 +16,7 @@ export default function CalcRefinance({isMo=false, onNav=()=>{}}){
   const [oldYears, setOldYears] = useState("");
   const [newRate, setNewRate] = useState("");
   const [newYears, setNewYears] = useState("");
-  const [ppFee, setPpFee] = useState("1.2");
+  const [ppFee, setPpFee] = useState("");
   const [elapsed, setElapsed] = useState("");
   const pW = tW(principal);
   const oldMonthly = Math.round(amortMonthly(pW, pN(oldRate), parseInt(oldYears)||0));

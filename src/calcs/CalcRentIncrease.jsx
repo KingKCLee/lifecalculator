@@ -7,8 +7,8 @@ import {tW, pN, fW, Inp, Tog, RP, CalcShell} from './_shared';
 export default function CalcRentIncrease({isMo=false, onNav=()=>{}}){
   const [deposit, setDeposit] = useState("");
   const [monthly, setMonthly] = useState("");
-  const [convRate, setConvRate] = useState("5.0");
-  const [cap, setCap] = useState("5");
+  const [convRate, setConvRate] = useState("");
+  const [cap, setCap] = useState("");
   const dW = tW(deposit);
   const mW = tW(monthly);
   const cr = pN(convRate)/100;

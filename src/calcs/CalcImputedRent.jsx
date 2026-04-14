@@ -7,8 +7,8 @@ import {tW, pN, fW, Inp, Tog, RP, CalcShell} from './_shared';
 // 2026년 정기예금이자율: 3.5% (국세청 고시 가정)
 export default function CalcImputedRent({isMo=false, onNav=()=>{}}){
   const [deposit, setDeposit] = useState("");
-  const [houses, setHouses] = useState("3");
-  const [rate, setRate] = useState("3.5");
+  const [houses, setHouses] = useState("");
+  const [rate, setRate] = useState("");
   const [financialIncome, setFinancialIncome] = useState("");
   const dW = tW(deposit);
   const nH = parseInt(houses)||0;
