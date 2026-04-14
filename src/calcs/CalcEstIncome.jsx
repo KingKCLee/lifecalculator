@@ -6,8 +6,8 @@ import {tW, pN, fW, Inp, Tog, RP, CalcShell} from './_shared';
 // 연 임대수입 = 월세 × 12 + 간주임대료(해당 시)
 // 추정 소득금액 = 수입 × (1 - 필요경비율)
 export default function CalcEstIncome({isMo=false, onNav=()=>{}}){
-  const [monthly, setMonthly] = useState("150");
-  const [deposit, setDeposit] = useState("10000");
+  const [monthly, setMonthly] = useState("");
+  const [deposit, setDeposit] = useState("");
   const [houses, setHouses] = useState("2");
   const [expenseRate, setExpenseRate] = useState("60");
   const mW = tW(monthly);
@@ -21,7 +21,7 @@ export default function CalcEstIncome({isMo=false, onNav=()=>{}}){
   const estIncome = Math.round(gross * (1-eRate));
 
   return(<CalcShell title="임대 추정소득 계산기" isMo={isMo}>
-    <Inp label="월 임대료 (합계)" value={monthly} onChange={setMonthly} suffix="만원"/>
+    <Inp label="월 임대료 (합계)" value={monthly} onChange={setMonthly} suffix="만원" error={!monthly||monthly==="0"}/>
     <Inp label="보증금 합계" value={deposit} onChange={setDeposit} suffix="만원"/>
     <Inp label="보유 주택 수" value={houses} onChange={setHouses}/>
     <Inp label="필요경비율" value={expenseRate} onChange={setExpenseRate} suffix="%" note="단순경비율 주택임대 60%"/>

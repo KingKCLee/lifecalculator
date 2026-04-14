@@ -7,7 +7,7 @@ import {tW, pN, fW, Inp, Tog, RP, CalcShell} from './_shared';
 // - 직계존속(부모): 각 1 (자녀 없을 때)
 // - 배우자만: 전액
 export default function CalcLegalInherit({isMo=false, onNav=()=>{}}){
-  const [estate, setEstate] = useState("100000");
+  const [estate, setEstate] = useState("");
   const [hasSpouse, setHasSpouse] = useState("yes");
   const [children, setChildren] = useState("2");
   const [parents, setParents] = useState("0");
@@ -39,7 +39,7 @@ export default function CalcLegalInherit({isMo=false, onNav=()=>{}}){
   if(nParent>0&&nChild===0) items.push({l:"부모 1인당 ("+nParent+"명)", v:fW(parUnit), note:"지분 1"});
 
   return(<CalcShell title="법정상속분 계산기" isMo={isMo}>
-    <Inp label="상속재산 총액" value={estate} onChange={setEstate} suffix="만원" placeholder="예: 100000"/>
+    <Inp label="상속재산 총액" value={estate} onChange={setEstate} suffix="만원" placeholder="예: 100000" error={!estate||estate==="0"}/>
     <Tog label="배우자 생존 여부" value={hasSpouse} onChange={setHasSpouse} options={[{value:"yes",label:"배우자 있음"},{value:"no",label:"배우자 없음"}]}/>
     <Inp label="자녀 수" value={children} onChange={setChildren} note="직계비속 (손자녀 제외)"/>
     {/* 2026.04.14 자녀 0명일 때만 부모 수 입력 노출 (1순위: 자녀 / 2순위: 부모) */}

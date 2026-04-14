@@ -9,7 +9,7 @@ import {tW, pN, fW, Inp, Sel, Tog, RP, CalcShell} from './_shared';
 // 매매가에서 토지가(공시지가 비율) 차감 후 건물가 추출 → 건물가 × 10/110 이 부가세
 // 간이 계산: 건물가(공급가액) × 10%
 export default function CalcBldVat({isMo=false, onNav=()=>{}}){
-  const [price, setPrice] = useState("90000");
+  const [price, setPrice] = useState("");
   const [landRatio, setLandRatio] = useState("60");
   const [propType, setPropType] = useState("commercial");
   const [area, setArea] = useState("big");
@@ -23,7 +23,7 @@ export default function CalcBldVat({isMo=false, onNav=()=>{}}){
   const vat = isTaxable ? bldTotalW - supplyW : 0;
 
   return(<CalcShell title="건물분 부가세 계산기" isMo={isMo}>
-    <Inp label="총 매매가" value={price} onChange={setPrice} suffix="만원" placeholder="예: 90000"/>
+    <Inp label="총 매매가" value={price} onChange={setPrice} suffix="만원" placeholder="예: 90000" error={!price||price==="0"}/>
     <Inp label="토지 비율" value={landRatio} onChange={setLandRatio} suffix="%" note="매매가 중 토지가가 차지하는 비율 (공시지가 기준)"/>
     <Tog label="매물 유형" value={propType} onChange={setPropType} options={[{value:"commercial",label:"상가·오피스텔(업무)"},{value:"house",label:"주택"},{value:"land",label:"토지"}]}/>
     {propType==="house"&&<Tog label="전용면적" value={area} onChange={setArea} options={[{value:"small",label:"85㎡ 이하 (면세)"},{value:"big",label:"85㎡ 초과 (과세)"}]}/>}

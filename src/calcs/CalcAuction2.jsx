@@ -6,9 +6,9 @@ import {tW, pN, fW, Inp, Tog, RP, CalcShell} from './_shared';
 // - 유찰 1회마다 최저가 -20% (수도권 상한) / -30% (지방)
 // - 권리분석 위험도에 따른 할인
 export default function CalcAuction2({isMo=false, onNav=()=>{}}){
-  const [appraisal, setAppraisal] = useState("80000");
+  const [appraisal, setAppraisal] = useState("");
   const [region, setRegion] = useState("metro");
-  const [fails, setFails] = useState("1");
+  const [fails, setFails] = useState("0");
   const [riskLevel, setRiskLevel] = useState("mid");
   const aW = tW(appraisal);
   const step = region==="metro" ? 0.2 : 0.3;
@@ -22,7 +22,7 @@ export default function CalcAuction2({isMo=false, onNav=()=>{}}){
   const safeBid = Math.round(marketBid * (1-riskDisc));
 
   return(<CalcShell title="경매 적정 입찰가 계산기" isMo={isMo}>
-    <Inp label="감정가" value={appraisal} onChange={setAppraisal} suffix="만원" placeholder="예: 80000"/>
+    <Inp label="감정가" value={appraisal} onChange={setAppraisal} suffix="만원" placeholder="예: 80000" error={!appraisal||appraisal==="0"}/>
     <Tog label="소재지" value={region} onChange={setRegion} options={[{value:"metro",label:"수도권 (유찰-20%)"},{value:"other",label:"지방 (유찰-30%)"}]}/>
     <Inp label="유찰 횟수" value={fails} onChange={setFails} note="1회당 최저매각가격 하락"/>
     <Tog label="권리분석 난이도" value={riskLevel} onChange={setRiskLevel} options={[{value:"low",label:"안전"},{value:"mid",label:"보통"},{value:"high",label:"위험"}]}/>

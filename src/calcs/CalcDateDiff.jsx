@@ -19,7 +19,7 @@ function fmt(d){
 }
 
 export default function CalcDateDiff({isMo=false, onNav=()=>{}}){
-  const [startDate, setStartDate] = useState("20200101");
+  const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState(()=>{
     const t=new Date();
     return t.getFullYear()+String(t.getMonth()+1).padStart(2,"0")+String(t.getDate()).padStart(2,"0");
@@ -44,7 +44,7 @@ export default function CalcDateDiff({isMo=false, onNav=()=>{}}){
 
   return(<CalcShell title="날짜 계산기" isMo={isMo}>
     <Tog label="모드" value={mode} onChange={setMode} options={[{value:"between",label:"두 날짜 간격"},{value:"dday",label:"D-day 카운트"}]}/>
-    <Inp label="시작일" value={startDate} onChange={setStartDate} placeholder="YYYYMMDD" note={fmt(s)}/>
+    <Inp label="시작일" value={startDate} onChange={setStartDate} placeholder="YYYYMMDD" note={fmt(s)} error={!startDate}/>
     <Inp label={mode==="dday"?"목표일":"종료일"} value={endDate} onChange={setEndDate} placeholder="YYYYMMDD" note={fmt(e)}/>
     <RP title={mode==="dday"?"D-day":"기간"} total={mode==="dday"?(dday>=0?"D-"+dday:"D+"+Math.abs(dday)):days+"일"}
       sub={s&&e?fmt(s)+" ~ "+fmt(e):"날짜를 입력하세요"}

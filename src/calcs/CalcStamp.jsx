@@ -16,7 +16,7 @@ function calcStamp(amountWon, electronic){
 }
 
 export default function CalcStamp({isMo=false, onNav=()=>{}}){
-  const [price, setPrice] = useState("50000");
+  const [price, setPrice] = useState("");
   const [elec, setElec] = useState("no");
   const [split, setSplit] = useState("half");
   const pW = tW(price);
@@ -25,7 +25,7 @@ export default function CalcStamp({isMo=false, onNav=()=>{}}){
   const sellerShare = stamp - buyerShare;
 
   return(<CalcShell title="인지세 계산기" isMo={isMo}>
-    <Inp label="거래금액 (매매가)" value={price} onChange={setPrice} suffix="만원" placeholder="예: 50000"/>
+    <Inp label="거래금액 (매매가)" value={price} onChange={setPrice} suffix="만원" placeholder="예: 50000" error={!price||price==="0"}/>
     <Tog label="전자계약 여부" value={elec} onChange={setElec} options={[{value:"no",label:"서면계약"},{value:"yes",label:"전자계약 (50% 감면)"}]}/>
     <Tog label="부담 방식" value={split} onChange={setSplit} options={[{value:"half",label:"반반"},{value:"buyer",label:"매수인 전액"},{value:"seller",label:"매도인 전액"}]}/>
     <RP title="인지세 결과" total={stamp}

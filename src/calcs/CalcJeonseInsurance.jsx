@@ -8,7 +8,7 @@ import {tW, pN, fW, Inp, Tog, RP, CalcShell} from './_shared';
 // 빌라/오피스텔은 +0.024%p
 // 저소득/청년 할인 최대 40%
 export default function CalcJeonseInsurance({isMo=false, onNav=()=>{}}){
-  const [deposit, setDeposit] = useState("30000");
+  const [deposit, setDeposit] = useState("");
   const [propType, setPropType] = useState("apt");
   const [months, setMonths] = useState("24");
   const [discount, setDiscount] = useState("none");
@@ -24,7 +24,7 @@ export default function CalcJeonseInsurance({isMo=false, onNav=()=>{}}){
   const premium = Math.round(dW * baseRate * yearFrac * (1-discountPct));
 
   return(<CalcShell title="전세보증보험료 계산기" isMo={isMo}>
-    <Inp label="전세보증금" value={deposit} onChange={setDeposit} suffix="만원"/>
+    <Inp label="전세보증금" value={deposit} onChange={setDeposit} suffix="만원" error={!deposit||deposit==="0"}/>
     <Tog label="주택 유형" value={propType} onChange={setPropType} options={[{value:"apt",label:"아파트"},{value:"etc",label:"빌라·오피스텔·단독"}]}/>
     <Inp label="보증 기간" value={months} onChange={setMonths} note="개월 (통상 24)"/>
     <Tog label="할인 대상" value={discount} onChange={setDiscount} options={[{value:"none",label:"해당없음"},{value:"youth",label:"청년 30%"},{value:"low",label:"저소득 40%"}]}/>

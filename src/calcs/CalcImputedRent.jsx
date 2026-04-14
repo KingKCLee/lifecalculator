@@ -6,10 +6,10 @@ import {tW, pN, fW, Inp, Tog, RP, CalcShell} from './_shared';
 // 간주임대료 = (보증금 합계 - 3억) × 60% × 정기예금이자율
 // 2026년 정기예금이자율: 3.5% (국세청 고시 가정)
 export default function CalcImputedRent({isMo=false, onNav=()=>{}}){
-  const [deposit, setDeposit] = useState("50000");
+  const [deposit, setDeposit] = useState("");
   const [houses, setHouses] = useState("3");
   const [rate, setRate] = useState("3.5");
-  const [financialIncome, setFinancialIncome] = useState("0");
+  const [financialIncome, setFinancialIncome] = useState("");
   const dW = tW(deposit);
   const nH = parseInt(houses)||0;
   const rt = pN(rate)/100;
@@ -21,7 +21,7 @@ export default function CalcImputedRent({isMo=false, onNav=()=>{}}){
   const netImputed = Math.max(0, gross - finW);
 
   return(<CalcShell title="간주임대료 계산기" isMo={isMo}>
-    <Inp label="전세보증금 합계" value={deposit} onChange={setDeposit} suffix="만원"/>
+    <Inp label="전세보증금 합계" value={deposit} onChange={setDeposit} suffix="만원" error={!deposit||deposit==="0"}/>
     <Inp label="보유 주택 수" value={houses} onChange={setHouses} note="3주택 이상부터 과세"/>
     <Inp label="정기예금이자율" value={rate} onChange={setRate} suffix="%" note="국세청 고시, 2026년 약 3.5%"/>
     <Inp label="보증금 운용 금융소득" value={financialIncome} onChange={setFinancialIncome} suffix="만원" note="보증금 예치 이자·배당 (차감)"/>

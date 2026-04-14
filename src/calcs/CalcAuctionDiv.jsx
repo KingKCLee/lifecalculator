@@ -9,13 +9,13 @@ import {tW, pN, fW, Inp, Tog, RP, CalcShell} from './_shared';
 //   3. 근저당권 (순위별)
 //   4. 일반채권
 export default function CalcAuctionDiv({isMo=false, onNav=()=>{}}){
-  const [salePrice, setSalePrice] = useState("60000");
-  const [execCost, setExecCost] = useState("300");
-  const [smallTenant, setSmallTenant] = useState("5500");
-  const [propTax, setPropTax] = useState("200");
-  const [mortgage1, setMortgage1] = useState("40000");
-  const [mortgage2, setMortgage2] = useState("10000");
-  const [general, setGeneral] = useState("5000");
+  const [salePrice, setSalePrice] = useState("");
+  const [execCost, setExecCost] = useState("");
+  const [smallTenant, setSmallTenant] = useState("");
+  const [propTax, setPropTax] = useState("");
+  const [mortgage1, setMortgage1] = useState("");
+  const [mortgage2, setMortgage2] = useState("");
+  const [general, setGeneral] = useState("");
   const sW = tW(salePrice);
 
   let remain = sW;
@@ -34,7 +34,7 @@ export default function CalcAuctionDiv({isMo=false, onNav=()=>{}}){
   dist.push({l:"잉여 (소유자 환급)", v:fW(Math.max(0,remain))});
 
   return(<CalcShell title="경매 배당표 계산기" isMo={isMo}>
-    <Inp label="매각대금 (낙찰가)" value={salePrice} onChange={setSalePrice} suffix="만원"/>
+    <Inp label="매각대금 (낙찰가)" value={salePrice} onChange={setSalePrice} suffix="만원" error={!salePrice||salePrice==="0"}/>
     <Inp label="집행비용" value={execCost} onChange={setExecCost} suffix="만원"/>
     <Inp label="최우선변제 (소액임차 보증금)" value={smallTenant} onChange={setSmallTenant} suffix="만원"/>
     <Inp label="당해세" value={propTax} onChange={setPropTax} suffix="만원"/>

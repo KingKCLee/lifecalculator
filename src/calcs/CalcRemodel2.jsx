@@ -4,13 +4,13 @@ import {tW, pN, fW, Inp, Tog, RP, CalcShell} from './_shared';
 // 리모델링 타당성 2 (레버리지 + 공사기간 기회비용 포함)
 // 순이익 = (예상 매도가 - 현 시세 - 공사비 - 공사기간 이자 - 이사/임시거주비) - 양도세 추정
 export default function CalcRemodel2({isMo=false, onNav=()=>{}}){
-  const [current, setCurrent] = useState("80000");
-  const [afterValue, setAfterValue] = useState("110000");
-  const [cost, setCost] = useState("12000");
-  const [loanAmt, setLoanAmt] = useState("5000");
-  const [rate, setRate] = useState("5");
-  const [months, setMonths] = useState("4");
-  const [tempLiving, setTempLiving] = useState("500");
+  const [current, setCurrent] = useState("");
+  const [afterValue, setAfterValue] = useState("");
+  const [cost, setCost] = useState("");
+  const [loanAmt, setLoanAmt] = useState("");
+  const [rate, setRate] = useState("");
+  const [months, setMonths] = useState("");
+  const [tempLiving, setTempLiving] = useState("");
   const cW = tW(current);
   const aW = tW(afterValue);
   const costW = tW(cost);
@@ -24,9 +24,9 @@ export default function CalcRemodel2({isMo=false, onNav=()=>{}}){
   const annualROI = m>0 ? (roi*12/m) : 0;
 
   return(<CalcShell title="리모델링 타당성 계산기" isMo={isMo}>
-    <Inp label="현재 주택 시세" value={current} onChange={setCurrent} suffix="만원"/>
-    <Inp label="리모델링 후 예상가" value={afterValue} onChange={setAfterValue} suffix="만원"/>
-    <Inp label="총 공사비" value={cost} onChange={setCost} suffix="만원"/>
+    <Inp label="현재 주택 시세" value={current} onChange={setCurrent} suffix="만원" error={!current||current==="0"}/>
+    <Inp label="리모델링 후 예상가" value={afterValue} onChange={setAfterValue} suffix="만원" error={!afterValue||afterValue==="0"}/>
+    <Inp label="총 공사비" value={cost} onChange={setCost} suffix="만원" error={!cost||cost==="0"}/>
     <Inp label="공사비 대출액" value={loanAmt} onChange={setLoanAmt} suffix="만원"/>
     <Inp label="대출 금리" value={rate} onChange={setRate} suffix="%"/>
     <Inp label="공사 기간" value={months} onChange={setMonths} note="개월"/>

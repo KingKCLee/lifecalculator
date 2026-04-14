@@ -25,9 +25,9 @@ function bondRate(stdValWon, region){
 }
 
 export default function CalcBond2({isMo=false, onNav=()=>{}}){
-  const [stdPrice, setStdPrice] = useState("30000");
+  const [stdPrice, setStdPrice] = useState("");
   const [region, setRegion] = useState("metro");
-  const [discountRate, setDiscountRate] = useState("11");
+  const [discountRate, setDiscountRate] = useState("");
   const stdW = tW(stdPrice);
   const rate = bondRate(stdW, region);
   const buyAmt = Math.round(stdW * rate);
@@ -35,7 +35,7 @@ export default function CalcBond2({isMo=false, onNav=()=>{}}){
   const discount = Math.round(buyAmt * (pN(discountRate)/100));
 
   return(<CalcShell title="국민주택채권 계산기" isMo={isMo}>
-    <Inp label="주택 공시가격 (시가표준액)" value={stdPrice} onChange={setStdPrice} suffix="만원" placeholder="예: 30000"/>
+    <Inp label="주택 공시가격 (시가표준액)" value={stdPrice} onChange={setStdPrice} suffix="만원" placeholder="예: 30000" error={!stdPrice||stdPrice==="0"}/>
     <Tog label="소재지" value={region} onChange={setRegion} options={[{value:"metro",label:"서울·광역시"},{value:"other",label:"그 외 지역"}]}/>
     <Inp label="즉시 매도(할인) 손실률" value={discountRate} onChange={setDiscountRate} suffix="%" note="시중 매입가와 액면가 차이 (통상 10~13%)"/>
     <RP title="국민주택채권 매입·할인" total={discount}

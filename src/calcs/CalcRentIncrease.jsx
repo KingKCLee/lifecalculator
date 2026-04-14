@@ -5,8 +5,8 @@ import {tW, pN, fW, Inp, Tog, RP, CalcShell} from './_shared';
 // - 계약갱신청구권 행사 시 기존 임대료 대비 5% 이내 인상만 가능
 // - 전월세전환율 = 한국은행 기준금리(3.0%)+2% = 5.0% (주임법 §7의2, 시행령 §9)
 export default function CalcRentIncrease({isMo=false, onNav=()=>{}}){
-  const [deposit, setDeposit] = useState("10000");
-  const [monthly, setMonthly] = useState("50");
+  const [deposit, setDeposit] = useState("");
+  const [monthly, setMonthly] = useState("");
   const [convRate, setConvRate] = useState("5.0");
   const [cap, setCap] = useState("5");
   const dW = tW(deposit);
@@ -23,7 +23,7 @@ export default function CalcRentIncrease({isMo=false, onNav=()=>{}}){
   const maxMonthlyOnly = mW>0 ? Math.round(mW * (1+capR)) : 0;
 
   return(<CalcShell title="임대료 5% 상한 계산기" isMo={isMo}>
-    <Inp label="기존 보증금" value={deposit} onChange={setDeposit} suffix="만원"/>
+    <Inp label="기존 보증금" value={deposit} onChange={setDeposit} suffix="만원" error={!deposit||deposit==="0"}/>
     <Inp label="기존 월세" value={monthly} onChange={setMonthly} suffix="만원"/>
     <Inp label="전월세전환율" value={convRate} onChange={setConvRate} suffix="%" note="기준금리(3.0%)+2%=5.0% (주임법 §7의2)"/>
     <Inp label="인상 한도" value={cap} onChange={setCap} suffix="%" note="주임법 5% 기본"/>

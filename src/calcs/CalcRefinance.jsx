@@ -11,13 +11,13 @@ function amortMonthly(loanW, annualRate, years){
 }
 
 export default function CalcRefinance({isMo=false, onNav=()=>{}}){
-  const [principal, setPrincipal] = useState("30000");
-  const [oldRate, setOldRate] = useState("4.8");
-  const [oldYears, setOldYears] = useState("25");
-  const [newRate, setNewRate] = useState("3.9");
-  const [newYears, setNewYears] = useState("25");
+  const [principal, setPrincipal] = useState("");
+  const [oldRate, setOldRate] = useState("");
+  const [oldYears, setOldYears] = useState("");
+  const [newRate, setNewRate] = useState("");
+  const [newYears, setNewYears] = useState("");
   const [ppFee, setPpFee] = useState("1.2");
-  const [elapsed, setElapsed] = useState("2");
+  const [elapsed, setElapsed] = useState("");
   const pW = tW(principal);
   const oldMonthly = Math.round(amortMonthly(pW, pN(oldRate), parseInt(oldYears)||0));
   const newMonthly = Math.round(amortMonthly(pW, pN(newRate), parseInt(newYears)||0));
@@ -33,8 +33,8 @@ export default function CalcRefinance({isMo=false, onNav=()=>{}}){
   const totalSave = saveMonthly*(parseInt(newYears)||0)*12 - totalCost;
 
   return(<CalcShell title="대환대출 계산기" isMo={isMo}>
-    <Inp label="남은 원금" value={principal} onChange={setPrincipal} suffix="만원"/>
-    <Inp label="기존 금리" value={oldRate} onChange={setOldRate} suffix="%"/>
+    <Inp label="남은 원금" value={principal} onChange={setPrincipal} suffix="만원" error={!principal||principal==="0"}/>
+    <Inp label="기존 금리" value={oldRate} onChange={setOldRate} suffix="%" error={!oldRate||oldRate==="0"}/>
     <Inp label="기존 잔여 기간" value={oldYears} onChange={setOldYears} note="년"/>
     <Inp label="신규 금리" value={newRate} onChange={setNewRate} suffix="%"/>
     <Inp label="신규 대출 기간" value={newYears} onChange={setNewYears} note="년"/>

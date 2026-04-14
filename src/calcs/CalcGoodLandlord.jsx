@@ -5,9 +5,9 @@ import {tW, pN, fW, Inp, Tog, RP, CalcShell} from './_shared';
 // 상가 임대료 인하액의 70% 세액공제 (소득금액 1억 이하 시)
 // 종합소득금액 1억 초과 시 50%
 export default function CalcGoodLandlord({isMo=false, onNav=()=>{}}){
-  const [originalRent, setOriginalRent] = useState("300");
-  const [reducedRent, setReducedRent] = useState("200");
-  const [months, setMonths] = useState("6");
+  const [originalRent, setOriginalRent] = useState("");
+  const [reducedRent, setReducedRent] = useState("");
+  const [months, setMonths] = useState("");
   const [incomeLevel, setIncomeLevel] = useState("low");
   const oR = tW(originalRent);
   const rR = tW(reducedRent);
@@ -19,7 +19,7 @@ export default function CalcGoodLandlord({isMo=false, onNav=()=>{}}){
   const netLoss = totalCut - credit;
 
   return(<CalcShell title="착한임대인 세액공제 계산기" isMo={isMo}>
-    <Inp label="기존 월 임대료" value={originalRent} onChange={setOriginalRent} suffix="만원"/>
+    <Inp label="기존 월 임대료" value={originalRent} onChange={setOriginalRent} suffix="만원" error={!originalRent||originalRent==="0"}/>
     <Inp label="인하 후 월 임대료" value={reducedRent} onChange={setReducedRent} suffix="만원"/>
     <Inp label="인하 기간" value={months} onChange={setMonths} note="개월"/>
     <Tog label="종합소득금액" value={incomeLevel} onChange={setIncomeLevel} options={[{value:"low",label:"1억 이하 (70%)"},{value:"high",label:"1억 초과 (50%)"}]}/>

@@ -39,7 +39,7 @@ export function useIsMobile(){
   return isMo;
 }
 
-export function Inp({label, value, onChange, suffix, placeholder, note, inputMode}){
+export function Inp({label, value, onChange, suffix, placeholder, note, inputMode, error}){
   const [focused, setFocused] = useState(false);
   const isMo = useIsMobile();
   const displayVal = (!focused && suffix==="만원" && value) ? addComma(value) : value;
@@ -54,12 +54,13 @@ export function Inp({label, value, onChange, suffix, placeholder, note, inputMod
     <div style={{position:"relative"}}>
       <input type="text" value={displayVal} onChange={handleChange} placeholder={placeholder}
         inputMode={resolvedInputMode}
-        style={{width:"100%",boxSizing:"border-box",padding:isMo?"12px 14px":"10px 14px",paddingRight:suffix?44:14,border:"1.5px solid #dfe1e6",borderRadius:10,fontSize:16,background:"#fff",color:P.tx,outline:"none",fontFamily:"inherit",height:isMo?48:44}}
-        onFocus={e=>{setFocused(true);e.target.style.borderColor=P.pri;}}
-        onBlur={e=>{setFocused(false);e.target.style.borderColor=P.bd;}}/>
+        style={{width:"100%",boxSizing:"border-box",padding:isMo?"12px 14px":"10px 14px",paddingRight:suffix?44:14,border:error?"2px solid #EF4444":"1.5px solid #dfe1e6",borderRadius:10,fontSize:16,background:"#fff",color:P.tx,outline:"none",fontFamily:"inherit",height:isMo?48:44}}
+        onFocus={e=>{setFocused(true);e.target.style.borderColor=error?"#EF4444":P.pri;}}
+        onBlur={e=>{setFocused(false);e.target.style.borderColor=error?"#EF4444":P.bd;}}/>
       {suffix&&<span style={{position:"absolute",right:14,top:"50%",transform:"translateY(-50%)",fontSize:12,color:P.mt,pointerEvents:"none"}}>{suffix}</span>}
     </div>
-    {note&&<p style={{fontSize:11,color:P.mt,marginTop:3,marginBottom:0,lineHeight:1.6}}>{note}</p>}
+    {error&&<p style={{fontSize:11,color:"#EF4444",marginTop:3,marginBottom:0,fontWeight:600}}>필수 입력 항목입니다</p>}
+    {!error&&note&&<p style={{fontSize:11,color:P.mt,marginTop:3,marginBottom:0,lineHeight:1.6}}>{note}</p>}
   </div>);
 }
 

@@ -5,7 +5,7 @@ import {Inp, Sel, Tog, RP, CalcShell} from './_shared';
 // 서울: 30년 (2014년 단축), 광역시·경기 27~30년, 지방 20~30년
 // 안전진단 통과 시 연한 무관, 정부 정책(재건축 초과이익환수) 등 변수 있음
 export default function CalcReconYear({isMo=false, onNav=()=>{}}){
-  const [builtYear, setBuiltYear] = useState("1995");
+  const [builtYear, setBuiltYear] = useState("");
   const [region, setRegion] = useState("seoul");
   const [structure, setStructure] = useState("rc");
   const by = parseInt(builtYear)||0;
@@ -20,7 +20,7 @@ export default function CalcReconYear({isMo=false, onNav=()=>{}}){
   const targetYear = by + limit;
 
   return(<CalcShell title="재건축 가능연한 계산기" isMo={isMo}>
-    <Inp label="준공연도" value={builtYear} onChange={setBuiltYear} note="예: 1995"/>
+    <Inp label="준공연도" value={builtYear} onChange={setBuiltYear} note="예: 1995" error={!builtYear}/>
     <Tog label="소재지" value={region} onChange={setRegion} options={[{value:"seoul",label:"서울"},{value:"metro",label:"광역시·경기"},{value:"other",label:"지방"}]}/>
     <Tog label="구조" value={structure} onChange={setStructure} options={[{value:"rc",label:"철근콘크리트"},{value:"brick",label:"조적·기타 (20년)"}]}/>
     <RP title={canApply?"재건축 연한 충족":"재건축 연한 미충족"} total={canApply?"신청 가능":yearsLeft+"년 남음"}

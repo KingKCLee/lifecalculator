@@ -26,7 +26,7 @@ const BRACKETS = {
 const NAMES = {income:"종합소득세", gift:"증여세", inherit:"상속세", capital:"양도소득세"};
 
 export default function CalcProgressive({isMo=false, onNav=()=>{}}){
-  const [base, setBase] = useState("50000");
+  const [base, setBase] = useState("");
   const [type, setType] = useState("income");
   const bW = tW(base);
   const brackets = BRACKETS[type];
@@ -43,7 +43,7 @@ export default function CalcProgressive({isMo=false, onNav=()=>{}}){
       {value:"income",label:"종소세"},{value:"capital",label:"양도세"},
       {value:"gift",label:"증여세"},{value:"inherit",label:"상속세"}
     ]}/>
-    <Inp label="과세표준" value={base} onChange={setBase} suffix="만원"/>
+    <Inp label="과세표준" value={base} onChange={setBase} suffix="만원" error={!base||base==="0"}/>
     <RP title={NAMES[type]+" 산출세액"} total={tax}
       sub={"한계세율 "+(marginal*100).toFixed(0)+"% / 실효세율 "+effective.toFixed(2)+"%"}
       alertMsg="단순 누진세 산출. 공제·감면·할증·지방세는 별도 적용"
