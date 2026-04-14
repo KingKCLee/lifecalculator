@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.15",
       "category": "전체",
+      "title": "refactor: TipModal 재구현 — 다크 툴팁·200ms hover delay·경계 보정",
+      "desc": "refactor: TipModal 재구현 — 다크 툴팁·200ms hover delay·경계 보정"
+    },
+    {
+      "date": "2026.04.15",
+      "category": "전체",
       "title": "fix: TipModal 모바일 bottom sheet title 헤더 제거",
       "desc": "fix: TipModal 모바일 bottom sheet title 헤더 제거"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "refactor: Tog 컴포넌트 재작성 (pill 스타일·가로 스크롤)",
       "desc": "refactor: Tog 컴포넌트 재작성 (pill 스타일·가로 스크롤)"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "전체",
-      "title": "fix(App): 모달 타이틀 한글 전용 + 푸터 풀폭 처리",
-      "desc": "fix(App): 모달 타이틀 한글 전용 + 푸터 풀폭 처리"
     }
   ],
   "rates": {

@@ -5,8 +5,15 @@
     <link>https://xn--989a00a691bdfa717h.com/</link>
     <description>취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 등 39가지 무료 계산기. 매일 자동 업데이트.</description>
     <language>ko</language>
-    <lastBuildDate>Wed, 15 Apr 2026 08:38:11 +0900</lastBuildDate>
+    <lastBuildDate>Wed, 15 Apr 2026 08:45:05 +0900</lastBuildDate>
     <atom:link href="https://xn--989a00a691bdfa717h.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+    <title>refactor: TipModal 재구현 — 다크 툴팁·200ms hover delay·경계 보정</title>
+    <link>https://xn--989a00a691bdfa717h.com/</link>
+    <description>refactor: TipModal 재구현 — 다크 툴팁·200ms hover delay·경계 보정</description>
+    <pubDate>Wed, 15 Apr 2026 08:45:05 +0900</pubDate>
+    <guid>https://xn--989a00a691bdfa717h.com/#update-202604142345</guid>
+  </item>
     <item>
     <title>fix: TipModal 모바일 bottom sheet title 헤더 제거</title>
     <link>https://xn--989a00a691bdfa717h.com/</link>
