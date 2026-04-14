@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {tW, pN, fW, Inp, Tog, RP, CalcShell} from './_shared';
+import {tW, pN, fW, Inp, Tog, RP, CalcShell, MI} from "./_shared";
 
 // 임대료 5% 상한 계산기 (주택임대차보호법 제7조)
 // - 계약갱신청구권 행사 시 기존 임대료 대비 5% 이내 인상만 가능
@@ -27,7 +27,7 @@ export default function CalcRentIncrease({isMo=false, onNav=()=>{}}){
     <Inp label="기존 월세" value={monthly} onChange={setMonthly} suffix="만원"/>
     <Inp label="전월세전환율" value={convRate} onChange={setConvRate} suffix="%" note="기준금리(3.0%)+2%=5.0% (주임법 §7의2)"/>
     <Inp label="인상 한도" value={cap} onChange={setCap} suffix="%" note="주임법 5% 기본"/>
-    <RP title="최대 인상 가능액" total={increase}
+    <RP miss={(deposit&&deposit!=="0"||monthly&&monthly!=="0")?null:MI.rentincrease} title="최대 인상 가능액" total={increase}
       sub={"환산보증금 기준 "+cap+"% 한도"}
       alertMsg="세 가지 선택지 중 하나로 인상 가능. 보증금·월세 혼합 인상도 환산보증금 기준 5% 이내면 적법"
       alertType="info"

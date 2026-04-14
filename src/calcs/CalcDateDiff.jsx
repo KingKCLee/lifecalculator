@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Inp, Tog, RP, CalcShell} from './_shared';
+import {Inp, Tog, RP, CalcShell, MI} from "./_shared";
 
 // 날짜 간격 계산기 (부동산 계약·전입·보유기간 계산용)
 // 두 날짜 간 일수, 개월, 년수 및 D-day
@@ -46,7 +46,7 @@ export default function CalcDateDiff({isMo=false, onNav=()=>{}}){
     <Tog label="모드" value={mode} onChange={setMode} options={[{value:"between",label:"두 날짜 간격"},{value:"dday",label:"D-day 카운트"}]}/>
     <Inp label="시작일" value={startDate} onChange={setStartDate} placeholder="YYYYMMDD" note={fmt(s)} error={!startDate}/>
     <Inp label={mode==="dday"?"목표일":"종료일"} value={endDate} onChange={setEndDate} placeholder="YYYYMMDD" note={fmt(e)}/>
-    <RP title={mode==="dday"?"D-day":"기간"} total={mode==="dday"?(dday>=0?"D-"+dday:"D+"+Math.abs(dday)):days+"일"}
+    <RP miss={(startDate&&startDate!=="0"||endDate&&endDate!=="0")?null:MI.datediff} title={mode==="dday"?"D-day":"기간"} total={mode==="dday"?(dday>=0?"D-"+dday:"D+"+Math.abs(dday)):days+"일"}
       sub={s&&e?fmt(s)+" ~ "+fmt(e):"날짜를 입력하세요"}
       alertMsg={mode==="dday"&&dday<0?"목표일 경과":null}
       alertType={mode==="dday"&&dday<0?"warning":"info"}

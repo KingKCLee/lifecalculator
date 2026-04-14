@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {tW, pN, fW, Inp, Tog, RP, CalcShell} from './_shared';
+import {tW, pN, fW, Inp, Tog, RP, CalcShell, MI} from "./_shared";
 
 // 법정상속분 계산기 (민법 제1009조)
 // - 배우자: 1.5 (공동상속인 중 직계비속/존속이 있을 때)
@@ -44,7 +44,7 @@ export default function CalcLegalInherit({isMo=false, onNav=()=>{}}){
     <Inp label="자녀 수" value={children} onChange={setChildren} note="직계비속 (손자녀 제외)"/>
     {/* 2026.04.14 자녀 0명일 때만 부모 수 입력 노출 (1순위: 자녀 / 2순위: 부모) */}
     {nChild===0&&<Inp label="부모 수" value={parents} onChange={setParents} note="자녀가 없을 때만 상속 (0~2)"/>}
-    <RP title="법정상속분 배분" total={eW}
+    <RP miss={(estate&&estate!=="0")?null:MI.legalinherit} title="법정상속분 배분" total={eW}
       sub={hasSpouse==="yes"&&(nChild>0||nParent>0)?"배우자 1.5, 기타 각 1":"단독 상속"}
       alertMsg={"민법 제1009조 법정상속분 기준. 유류분(배우자·자녀 1/2, 존속 1/3) 침해 여부는 별도 판단"}
       alertType="info"

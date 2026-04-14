@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {tW, pN, fW, Inp, Tog, RP, CalcShell} from './_shared';
+import {tW, pN, fW, Inp, Tog, RP, CalcShell, MI} from "./_shared";
 
 // 대환대출 (갈아타기) 비교 계산기
 // 기존 대출 vs 신규 대출 월 상환액·총 이자·중도상환수수료 포함 손익
@@ -40,7 +40,7 @@ export default function CalcRefinance({isMo=false, onNav=()=>{}}){
     <Inp label="신규 대출 기간" value={newYears} onChange={setNewYears} note="년"/>
     <Inp label="중도상환수수료율" value={ppFee} onChange={setPpFee} suffix="%" note="통상 1.2~1.5%"/>
     <Inp label="기존 대출 경과연수" value={elapsed} onChange={setElapsed} note="3년 슬라이딩 가정"/>
-    <RP title="대환 총 절감액" total={totalSave}
+    <RP miss={(principal&&principal!=="0")?null:MI.refinance} title="대환 총 절감액" total={totalSave}
       sub={saveMonthly>0?"월 "+fW(saveMonthly)+" 절감, 손익분기 "+breakEvenMonths+"개월":"절감 효과 없음"}
       alertMsg={totalSave<=0?"중도상환수수료 > 이자 절감. 대환 비권장":breakEvenMonths>36?"손익분기점이 3년 초과. 장기 보유 시에만 유리":"조기 손익분기. 대환 유리"}
       alertType={totalSave<=0?"danger":breakEvenMonths>36?"warning":"success"}

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {tW, pN, fW, Inp, Tog, RP, CalcShell} from './_shared';
+import {tW, pN, fW, Inp, Tog, RP, CalcShell, MI} from "./_shared";
 
 // 임대료 → 추정 연소득 환산 계산기
 // 주택임대사업자 필요경비율: 주택임대 60% (단순경비율) / 장부 필요경비 별도
@@ -25,7 +25,7 @@ export default function CalcEstIncome({isMo=false, onNav=()=>{}}){
     <Inp label="보증금 합계" value={deposit} onChange={setDeposit} suffix="만원"/>
     <Inp label="보유 주택 수" value={houses} onChange={setHouses}/>
     <Inp label="필요경비율" value={expenseRate} onChange={setExpenseRate} suffix="%" note="단순경비율 주택임대 60%"/>
-    <RP title="연간 추정 소득금액" total={estIncome}
+    <RP miss={(deposit&&deposit!=="0")?null:MI.estincome} title="연간 추정 소득금액" total={estIncome}
       sub={"수입 "+fW(gross)+" × (1 - "+expenseRate+"%)"}
       alertMsg="종합소득세 합산 과세 시뮬레이션용. 2000만원 이하는 분리과세 14% 선택 가능"
       alertType="info"

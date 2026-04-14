@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {tW, pN, fW, Inp, Tog, RP, CalcShell} from './_shared';
+import {tW, pN, fW, Inp, Tog, RP, CalcShell, MI} from "./_shared";
 
 // 경매 배당표 간이 계산기
 // 배당 순위:
@@ -41,7 +41,7 @@ export default function CalcAuctionDiv({isMo=false, onNav=()=>{}}){
     <Inp label="1순위 근저당" value={mortgage1} onChange={setMortgage1} suffix="만원"/>
     <Inp label="2순위 근저당" value={mortgage2} onChange={setMortgage2} suffix="만원"/>
     <Inp label="일반채권" value={general} onChange={setGeneral} suffix="만원"/>
-    <RP title="배당 순위별 결과" total={sW}
+    <RP miss={(salePrice&&salePrice!=="0")?null:MI.auctiondiv} title="배당 순위별 결과" total={sW}
       sub="민사집행법 제145조 배당 순위"
       alertMsg={remain<=0?"매각대금 소진":"잉여금 발생 (소유자 귀속)"}
       alertType={remain<=0?"warning":"success"}

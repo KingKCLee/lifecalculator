@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {tW, pN, fW, Inp, Tog, RP, CalcShell} from './_shared';
+import {tW, pN, fW, Inp, Tog, RP, CalcShell, MI} from "./_shared";
 
 // 전세보증금 반환보증 보험료 계산기 (HUG/HF)
 // HUG 아파트: 보증금 × 0.122% ~ 0.154% × 보증기간(년)
@@ -28,7 +28,7 @@ export default function CalcJeonseInsurance({isMo=false, onNav=()=>{}}){
     <Tog label="주택 유형" value={propType} onChange={setPropType} options={[{value:"apt",label:"아파트"},{value:"etc",label:"빌라·오피스텔·단독"}]}/>
     <Inp label="보증 기간" value={months} onChange={setMonths} note="개월 (통상 24)"/>
     <Tog label="할인 대상" value={discount} onChange={setDiscount} options={[{value:"none",label:"해당없음"},{value:"youth",label:"청년 30%"},{value:"low",label:"저소득 40%"}]}/>
-    <RP title="보증보험료" total={premium}
+    <RP miss={(deposit&&deposit!=="0")?null:MI.jeonseins} title="보증보험료" total={premium}
       sub={"요율 "+(baseRate*100).toFixed(3)+"% × "+m+"개월"+(discountPct>0?" × "+((1-discountPct)*100)+"%":"")}
       alertMsg="HUG 주택도시보증공사 기준. HF·SGI는 요율이 상이하니 개별 문의"
       alertType="info"

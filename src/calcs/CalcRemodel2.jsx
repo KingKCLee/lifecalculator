@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {tW, pN, fW, Inp, Tog, RP, CalcShell} from './_shared';
+import {tW, pN, fW, Inp, Tog, RP, CalcShell, MI} from "./_shared";
 
 // 리모델링 타당성 2 (레버리지 + 공사기간 기회비용 포함)
 // 순이익 = (예상 매도가 - 현 시세 - 공사비 - 공사기간 이자 - 이사/임시거주비) - 양도세 추정
@@ -31,7 +31,7 @@ export default function CalcRemodel2({isMo=false, onNav=()=>{}}){
     <Inp label="대출 금리" value={rate} onChange={setRate} suffix="%"/>
     <Inp label="공사 기간" value={months} onChange={setMonths} note="개월"/>
     <Inp label="임시거주비 총액" value={tempLiving} onChange={setTempLiving} suffix="만원"/>
-    <RP title="순이익" total={netGain}
+    <RP miss={(current&&current!=="0")?null:MI.remodel2} title="순이익" total={netGain}
       sub={"공사비 대비 수익률 "+roi.toFixed(1)+"% (연환산 "+annualROI.toFixed(1)+"%)"}
       alertMsg={netGain<=0?"공사비+금융비 > 가치상승분. 타당성 낮음":roi>=30?"공사비 대비 30% 이상 수익":"적정 수익 구간"}
       alertType={netGain<=0?"danger":roi>=30?"success":"info"}

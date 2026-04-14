@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {tW, pN, fW, Inp, Sel, Tog, RP, CalcShell} from './_shared';
+import {tW, pN, fW, Inp, Sel, Tog, RP, CalcShell, MI} from "./_shared";
 
 // 건물분 부가가치세 계산기
 // - 주택(전용 85㎡ 이하): 건물분 VAT 면세
@@ -27,7 +27,7 @@ export default function CalcBldVat({isMo=false, onNav=()=>{}}){
     <Inp label="토지 비율" value={landRatio} onChange={setLandRatio} suffix="%" note="매매가 중 토지가가 차지하는 비율 (공시지가 기준)"/>
     <Tog label="매물 유형" value={propType} onChange={setPropType} options={[{value:"commercial",label:"상가·오피스텔(업무)"},{value:"house",label:"주택"},{value:"land",label:"토지"}]}/>
     {propType==="house"&&<Tog label="전용면적" value={area} onChange={setArea} options={[{value:"small",label:"85㎡ 이하 (면세)"},{value:"big",label:"85㎡ 초과 (과세)"}]}/>}
-    <RP title="건물분 부가세" total={vat}
+    <RP miss={(price&&price!=="0")?null:MI.bldvat} title="건물분 부가세" total={vat}
       sub={isTaxable?"건물 공급가액의 10%":"면세 대상"}
       alertMsg={!isTaxable?"본 매물은 건물분 부가세 면세 대상입니다":"매도인이 일반과세자인 경우 세금계산서 발급 필요"}
       alertType={!isTaxable?"success":"warning"}

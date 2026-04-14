@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {tW, pN, fW, Inp, Tog, RP, CalcShell} from './_shared';
+import {tW, pN, fW, Inp, Tog, RP, CalcShell, MI} from './_shared';
 
 // 경매 적정 입찰가 추정기
 // - 감정가 기준 낙찰률 (지역/용도별 통계)
@@ -26,7 +26,7 @@ export default function CalcAuction2({isMo=false, onNav=()=>{}}){
     <Tog label="소재지" value={region} onChange={setRegion} options={[{value:"metro",label:"수도권 (유찰-20%)"},{value:"other",label:"지방 (유찰-30%)"}]}/>
     <Inp label="유찰 횟수" value={fails} onChange={setFails} note="1회당 최저매각가격 하락"/>
     <Tog label="권리분석 난이도" value={riskLevel} onChange={setRiskLevel} options={[{value:"low",label:"안전"},{value:"mid",label:"보통"},{value:"high",label:"위험"}]}/>
-    <RP title="권장 입찰가" total={safeBid}
+    <RP miss={(appraisal&&appraisal!=="0")?null:MI.auction2} title="권장 입찰가" total={safeBid}
       sub={"평균 낙찰률 "+(avgRate*100)+"% 기준 "+(riskDisc>0?"-"+(riskDisc*100)+"% 리스크 할인":"")}
       alertMsg={n>=3?"3회 이상 유찰: 권리상 하자 점검 필수":null}
       alertType={n>=3?"warning":"info"}

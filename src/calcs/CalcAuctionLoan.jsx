@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {tW, pN, fW, Inp, Tog, RP, CalcShell} from './_shared';
+import {tW, pN, fW, Inp, Tog, RP, CalcShell, MI} from "./_shared";
 
 // 경락잔금대출 계산기
 // - LTV: 비규제 80%, 조정 70%, 투기과열 60% (경락잔금은 일반 주담대보다 유리할 수 있음)
@@ -32,7 +32,7 @@ export default function CalcAuctionLoan({isMo=false, onNav=()=>{}}){
     <Inp label="대출 금리" value={rate} onChange={setRate} suffix="%"/>
     <Inp label="대출 기간" value={years} onChange={setYears} note="년"/>
     <Inp label="방 개수" value={rooms} onChange={setRooms} note="방공제 차감용 (소액임차보증금)"/>
-    <RP title="경락잔금대출 한도" total={maxLoan}
+    <RP miss={(bidPrice&&bidPrice!=="0")?null:MI.auctionloan} title="경락잔금대출 한도" total={maxLoan}
       sub={"LTV "+(ltv*100)+"% 기준"}
       alertMsg={bidCap<apprCap?"낙찰가 기준 LTV가 한도":"감정가 × 90% × LTV가 한도"}
       alertType="info"

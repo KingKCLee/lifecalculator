@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {tW, pN, fW, Inp, Tog, RP, CalcShell, pTx} from './_shared';
+import {tW, pN, fW, Inp, Tog, RP, CalcShell, pTx, MI} from "./_shared";
 
 // 누진세 범용 계산기
 // 선택한 세목의 과세표준 구간별 세율을 적용해 세액과 한계세율/실효세율을 계산
@@ -44,7 +44,7 @@ export default function CalcProgressive({isMo=false, onNav=()=>{}}){
       {value:"gift",label:"증여세"},{value:"inherit",label:"상속세"}
     ]}/>
     <Inp label="과세표준" value={base} onChange={setBase} suffix="만원" error={!base||base==="0"}/>
-    <RP title={NAMES[type]+" 산출세액"} total={tax}
+    <RP miss={(base&&base!=="0")?null:MI.progressive} title={NAMES[type]+" 산출세액"} total={tax}
       sub={"한계세율 "+(marginal*100).toFixed(0)+"% / 실효세율 "+effective.toFixed(2)+"%"}
       alertMsg="단순 누진세 산출. 공제·감면·할증·지방세는 별도 적용"
       alertType="info"

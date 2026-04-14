@@ -97,13 +97,42 @@ export function Tog({label, value, onChange, options}){
 
 export const Radio = Tog;
 
-export function RP({title, total, sub, items, alertMsg, alertType="info"}){
+// 2026.04.15 계산기별 필수 입력 항목 안내 (외부 calcs 공용)
+export const MI = {
+  refinance:["기존대출금액을 입력해주세요","기존금리를 입력해주세요"],
+  auctionloan:["낙찰가를 입력해주세요"],
+  auction2:["감정가를 입력해주세요"],
+  auctiondiv:["낙찰가를 입력해주세요"],
+  bldvat:["건물가액을 입력해주세요"],
+  bond2:["취득가액을 입력해주세요"],
+  datediff:["시작일을 입력해주세요","종료일을 입력해주세요"],
+  estincome:["임대보증금을 입력해주세요"],
+  goodlandlord:["임대료를 입력해주세요"],
+  imputedrent:["임대보증금을 입력해주세요"],
+  jeonseins:["전세보증금을 입력해주세요"],
+  legalinherit:["상속재산을 입력해주세요"],
+  progressive:["과세표준을 입력해주세요"],
+  reconyear:["준공연도를 입력해주세요"],
+  remodel2:["매입가격을 입력해주세요"],
+  rentincrease:["현재임대료를 입력해주세요"],
+  stamp:["계약금액을 입력해주세요"],
+  luckyday:["이사 예정 월을 입력해주세요"],
+};
+
+export function RP({title, total, sub, items, alertMsg, alertType="info", miss}){
   const isMo = useIsMobile();
   // 2026.04.14 App.jsx의 메인 RP와 동일한 그라디언트 + 흰색 텍스트 스타일
+  // 2026.04.15 miss: 필수 입력 미기재 시 회색 안내박스 표시 (string[])
+  const hasMiss = Array.isArray(miss) && miss.length>0;
+  if(hasMiss){ total = 0; items = []; sub = "필수 항목을 입력해주세요"; }
   const alertAccent = alertType==="danger"?"#FFC400":alertType==="success"?"#57D9A3":alertType==="warning"?"#FFE380":"#fff";
   const isTotal = (l) => typeof l==="string" && (l.includes("합계")||l.includes("총")||l.includes("최종")||l.includes("세후")||l.includes("순")||l.includes("최대"));
   return(<div style={{background:"linear-gradient(135deg, #0747A6 0%, #0052CC 50%, #0065FF 100%)",borderRadius:20,padding:isMo?"22px 20px":"28px 24px",color:"#fff",position:isMo?"relative":"sticky",top:isMo?0:80,alignSelf:"start",boxShadow:"0 8px 28px rgba(7,71,166,.28)",width:"100%",minWidth:isMo?"auto":320,boxSizing:"border-box",marginTop:isMo?16:0}}>
-    {alertMsg&&<div style={{background:"rgba(255,255,255,0.15)",borderRadius:10,padding:"10px 14px",marginBottom:14,fontSize:12,display:"flex",gap:8,alignItems:"flex-start",lineHeight:1.5,color:alertAccent}}>
+    {hasMiss&&<div style={{background:"rgba(255,255,255,0.95)",border:"1px solid #E5E7EB",borderRadius:10,padding:"14px 16px",marginBottom:16,color:"#374151",fontSize:13,lineHeight:1.6}}>
+      <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:6}}><span style={{fontSize:16}}>📝</span><strong style={{color:"#0747A6",fontSize:13}}>필수 항목을 입력하면 자동으로 계산됩니다</strong></div>
+      <ul style={{margin:"6px 0 0 20px",padding:0,color:"#6B7280",fontSize:12}}>{miss.map((m,i)=>(<li key={i} style={{marginTop:2}}>{m}</li>))}</ul>
+    </div>}
+    {alertMsg&&!hasMiss&&<div style={{background:"rgba(255,255,255,0.15)",borderRadius:10,padding:"10px 14px",marginBottom:14,fontSize:12,display:"flex",gap:8,alignItems:"flex-start",lineHeight:1.5,color:alertAccent}}>
       <span style={{flexShrink:0,fontWeight:800}}>{alertType==="danger"?"⚠":alertType==="success"?"✓":alertType==="warning"?"!":"ℹ"}</span><span>{alertMsg}</span>
     </div>}
     <div style={{marginBottom:16}}>

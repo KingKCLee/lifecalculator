@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {tW, fW, Inp, Tog, RP, CalcShell} from './_shared';
+import {tW, fW, Inp, Tog, RP, CalcShell, MI} from "./_shared";
 
 // 부동산 매매계약서 인지세 (지방세법 + 인지세법)
 // 과세표준: 1천만원 이하 비과세, 1천만~3천만 2만, 3천만~5천만 4만, 5천만~1억 7만,
@@ -28,7 +28,7 @@ export default function CalcStamp({isMo=false, onNav=()=>{}}){
     <Inp label="거래금액 (매매가)" value={price} onChange={setPrice} suffix="만원" placeholder="예: 50000" error={!price||price==="0"}/>
     <Tog label="전자계약 여부" value={elec} onChange={setElec} options={[{value:"no",label:"서면계약"},{value:"yes",label:"전자계약 (50% 감면)"}]}/>
     <Tog label="부담 방식" value={split} onChange={setSplit} options={[{value:"half",label:"반반"},{value:"buyer",label:"매수인 전액"},{value:"seller",label:"매도인 전액"}]}/>
-    <RP title="인지세 결과" total={stamp}
+    <RP miss={(price&&price!=="0")?null:MI.stamp} title="인지세 결과" total={stamp}
       sub={pW>0?"거래금액 "+fW(pW)+" 기준":"거래금액을 입력하세요"}
       alertMsg={pW<=1e7?"1천만원 이하 비과세":elec==="yes"?"전자계약 50% 감면 적용":null}
       alertType={pW<=1e7?"success":elec==="yes"?"info":"info"}
