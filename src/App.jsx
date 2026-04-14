@@ -3328,6 +3328,8 @@ function NavContentPanel({navContent,setNavContent,calc,effectiveUser,lcToken,se
       .finally(()=>setHistoryLoading(false));
   },[menu,lcToken]);
   if(!navContent)return null;
+  // 2026.04.14 Expert Guide는 LeftNav 내부 인라인 아코디언으로 이동 — 중앙 패널 미표시
+  if(navContent.menu==="expert")return null;
   const lookupPrice=async()=>{
     if(!priceLawdCd)return;
     setPriceLoading(true);setPriceErr("");setPriceData(null);
@@ -3424,9 +3426,11 @@ function NavContentPanel({navContent,setNavContent,calc,effectiveUser,lcToken,se
 }
 
 /* ═══ 좌측 네비게이션 (Resource Hub) ═══ */
-function LeftNav({isMo,navOpen,setNavOpen,navContent,setNavContent,effectiveUser,setAuthMode,setShowAuth,navigateMyPage}){
+function LeftNav({isMo,navOpen,setNavOpen,navContent,setNavContent,effectiveUser,setAuthMode,setShowAuth,navigateMyPage,calc}){
   // 2026.04.14 Expert Guide는 기본 펼침, 나머지는 접힘
   const[openMenu,setOpenMenu]=useState("expert");
+  // 2026.04.14 Expert Guide 인라인 아코디언 — 첫 항목(rates)만 기본 펼침
+  const[expertExp,setExpertExp]=useState("rates");
   const SV=(stroke,children)=>(<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">{children}</svg>);
   const MENU=[
     {id:"expert",l:"Expert Guide",always:true,icon:(c)=>SV(c,<><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></>),sub:[
@@ -3478,11 +3482,24 @@ function LeftNav({isMo,navOpen,setNavOpen,navContent,setNavContent,effectiveUser
             </button>
             {hasSub&&expanded&&<div style={{background:"#F9FAFB",borderLeft:"3px solid #EFF6FF"}}>
               {m.sub.map(s=>{
-                const active=navContent?.menu===m.id&&navContent?.sub===s.id;
-                return(<button key={s.id} onClick={()=>{
-                  setNavContent?.({menu:m.id,sub:s.id});
-                  if(isMo)setNavOpen(false);
-                }} style={{width:"100%",display:"flex",alignItems:"center",padding:"10px 18px 10px 44px",background:active?"#EFF6FF":"none",border:"none",color:active?"#0747A6":"#475569",fontSize:12,fontWeight:active?700:500,cursor:"pointer",fontFamily:"inherit",textAlign:"left"}} onMouseEnter={e=>{if(!active){e.currentTarget.style.background="#EFF6FF";e.currentTarget.style.color="#0747A6"}}} onMouseLeave={e=>{if(!active){e.currentTarget.style.background="none";e.currentTarget.style.color="#475569"}}}>{s.l}</button>);
+                const isExpert=m.id==="expert";
+                // Expert Guide: 인라인 아코디언 방식 (중앙 팝업 제거)
+                const active=isExpert?(expertExp===s.id):(navContent?.menu===m.id&&navContent?.sub===s.id);
+                return(<div key={s.id}>
+                  <button onClick={()=>{
+                    if(isExpert){
+                      setExpertExp(prev=>prev===s.id?"":s.id);
+                      setNavContent?.(null);
+                    }else{
+                      setNavContent?.({menu:m.id,sub:s.id});
+                      if(isMo)setNavOpen(false);
+                    }
+                  }} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 18px 10px 44px",background:active?"#EFF6FF":"none",border:"none",color:active?"#0747A6":"#475569",fontSize:12,fontWeight:active?700:500,cursor:"pointer",fontFamily:"inherit",textAlign:"left"}} onMouseEnter={e=>{if(!active){e.currentTarget.style.background="#EFF6FF";e.currentTarget.style.color="#0747A6"}}} onMouseLeave={e=>{if(!active){e.currentTarget.style.background="none";e.currentTarget.style.color="#475569"}}}>
+                    <span>{s.l}</span>
+                    {isExpert&&<span style={{fontSize:10,color:active?"#0747A6":"#6B7280"}}>{active?"▼":"▶"}</span>}
+                  </button>
+                  {isExpert&&active&&<div style={{padding:"6px 14px 14px 22px",background:"#fff",borderTop:"1px solid #E5E7EB",fontSize:11,lineHeight:1.6,maxHeight:360,overflowY:"auto"}}><EduContent calc={calc} eduTab={s.id}/></div>}
+                </div>);
               })}
             </div>}
           </div>);
@@ -3737,7 +3754,7 @@ export default function App(){
 
   return(<div style={{minHeight:"100vh",background:"#FFFFFF",fontFamily:"'Pretendard','Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif",width:"100%",maxWidth:"100vw",overflowX:"hidden",paddingLeft:(isMo||page==="home")?0:200,paddingTop:64}}>
     <SidePanel/>
-    {page!=="home"&&<LeftNav isMo={isMo} navOpen={navOpen} setNavOpen={setNavOpen} navContent={navContent} setNavContent={setNavContent} effectiveUser={effectiveUser} setAuthMode={setAuthMode} setShowAuth={setShowAuth} navigateMyPage={navigateMyPage}/>}
+    {page!=="home"&&<LeftNav isMo={isMo} navOpen={navOpen} setNavOpen={setNavOpen} navContent={navContent} setNavContent={setNavContent} effectiveUser={effectiveUser} setAuthMode={setAuthMode} setShowAuth={setShowAuth} navigateMyPage={navigateMyPage} calc={calc}/>}
     {isMo&&<button onClick={()=>setNavOpen(true)} aria-label="메뉴 열기" style={{position:"fixed",top:10,left:10,zIndex:9997,width:40,height:40,background:"#0a1628",color:"#fff",border:"none",borderRadius:10,cursor:"pointer",fontSize:20,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 8px rgba(0,0,0,.2)"}}>☰</button>}
     <style>{`
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;overflow-x:hidden}
@@ -3999,15 +4016,12 @@ body.lc-embed main{padding-top:0!important}
               <span style={{color:P.tx,fontWeight:600}}>{CL.find(c=>c.id===calc)?.l||""}</span>
             </nav>
           </div>
-          <div style={{marginBottom:24}}>
-            <div style={{fontSize:11,fontWeight:600,color:"#6B7280",textTransform:"uppercase",letterSpacing:1.5,marginBottom:6}}>2026년 최신 세법 기준</div>
-            <div style={{display:"flex",alignItems:"center",gap:12,flexWrap:"wrap"}}>
-              <h1 style={{fontSize:isMo?28:36,fontWeight:800,color:"#0a1628",margin:0,letterSpacing:-1}}>{CL.find(c=>c.id===calc)?.l||catInfo?.l+" 계산기"}</h1>
-              <button onClick={()=>toggleFavorite(calc)} aria-label={favorites.includes(calc)?"즐겨찾기 해제":"즐겨찾기 추가"} style={{background:favorites.includes(calc)?"#FFFBEA":"#fff",border:"1px solid "+(favorites.includes(calc)?"#F59E0B":"#dfe1e6"),borderRadius:20,padding:"6px 12px",cursor:"pointer",fontSize:13,fontWeight:700,color:favorites.includes(calc)?"#B78100":"#6b778c",display:"inline-flex",alignItems:"center",gap:4,fontFamily:"inherit"}}>{favorites.includes(calc)?<IconStar c="#F59E0B"/>:<IconStar c="#c1c7cd"/>} {favorites.includes(calc)?"즐겨찾기 해제":"즐겨찾기"}</button>
-              {/* 2026.04.14 embed 퍼가기 버튼 */}
-              <button onClick={()=>{const slug=SLUGS[calc]||calc;const url=window.location.origin+"/"+encodeURIComponent(slug)+"?embed=y";const code='<iframe src="'+url+'" style="width:100%;height:700px;border:none" title="생활계산기 '+(CL.find(c=>c.id===calc)?.l||"")+'"></iframe>';if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(code).then(()=>showToast("퍼가기 코드가 복사되었습니다")).catch(()=>showToast("복사 실패"));}else{const ta=document.createElement("textarea");ta.value=code;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);showToast("퍼가기 코드가 복사되었습니다");}}} aria-label="퍼가기 코드 복사" style={{background:"#fff",border:"1px solid #dfe1e6",borderRadius:20,padding:"6px 12px",cursor:"pointer",fontSize:13,fontWeight:700,color:"#6b778c",display:"inline-flex",alignItems:"center",gap:4,fontFamily:"inherit"}}><IconPin/> 퍼가기</button>
-            </div>
-            <p style={{fontSize:14,color:P.mt,margin:"4px 0 16px"}}>2026년 최신 세법 기반 정밀 계산</p>
+          <div style={{marginBottom:24,display:"flex",alignItems:"center",gap:12,flexWrap:"wrap"}}>
+            <h1 style={{fontSize:28,fontWeight:700,color:"#0a1628",margin:0,letterSpacing:-1}}>{CL.find(c=>c.id===calc)?.l||catInfo?.l+" 계산기"}</h1>
+            <span style={{fontSize:13,color:"#6B7280",flex:"1 1 auto",minWidth:0}}>2026년 최신 세법 기반 정밀 계산</span>
+            <button onClick={()=>toggleFavorite(calc)} aria-label={favorites.includes(calc)?"즐겨찾기 해제":"즐겨찾기 추가"} style={{background:favorites.includes(calc)?"#FFFBEA":"#fff",border:"1px solid "+(favorites.includes(calc)?"#F59E0B":"#dfe1e6"),borderRadius:20,padding:"6px 12px",cursor:"pointer",fontSize:13,fontWeight:700,color:favorites.includes(calc)?"#B78100":"#6b778c",display:"inline-flex",alignItems:"center",gap:4,fontFamily:"inherit"}}>{favorites.includes(calc)?<IconStar c="#F59E0B"/>:<IconStar c="#c1c7cd"/>} {favorites.includes(calc)?"즐겨찾기 해제":"즐겨찾기"}</button>
+            {/* 2026.04.14 embed 퍼가기 버튼 */}
+            <button onClick={()=>{const slug=SLUGS[calc]||calc;const url=window.location.origin+"/"+encodeURIComponent(slug)+"?embed=y";const code='<iframe src="'+url+'" style="width:100%;height:700px;border:none" title="생활계산기 '+(CL.find(c=>c.id===calc)?.l||"")+'"></iframe>';if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(code).then(()=>showToast("퍼가기 코드가 복사되었습니다")).catch(()=>showToast("복사 실패"));}else{const ta=document.createElement("textarea");ta.value=code;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);showToast("퍼가기 코드가 복사되었습니다");}}} aria-label="퍼가기 코드 복사" style={{background:"#fff",border:"1px solid #dfe1e6",borderRadius:20,padding:"6px 12px",cursor:"pointer",fontSize:13,fontWeight:700,color:"#6b778c",display:"inline-flex",alignItems:"center",gap:4,fontFamily:"inherit"}}><IconPin/> 퍼가기</button>
           </div>
           <div className="calc-container" style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:isMo?16:32,marginBottom:24,boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
             {isMo?(<MobileCalcWrapper><Comp isMo={true} onNav={navigateCalc}/></MobileCalcWrapper>):(<div><Comp isMo={false} onNav={navigateCalc}/></div>)}
