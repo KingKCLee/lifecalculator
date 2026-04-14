@@ -883,6 +883,49 @@ function SavingsGuide({tips}){
   );
 }
 
+// 2026.04.15 동적 광고 슬롯 — lc-auth-worker /ads?position= 호출, 없으면 숨김
+function AdSlot({position}){
+  const[ads,setAds]=useState(null);
+  useEffect(()=>{
+    let cancelled=false;
+    fetch(LC_API+"/ads?position="+encodeURIComponent(position))
+      .then(r=>r.ok?r.json():null)
+      .then(j=>{if(cancelled)return;const items=(j&&(j.items||j.data||j.ads))||[];setAds(Array.isArray(items)?items:[]);})
+      .catch(()=>{if(!cancelled)setAds([]);});
+    return()=>{cancelled=true;};
+  },[position]);
+  useEffect(()=>{
+    if(!ads||ads.length===0)return;
+    ads.forEach(a=>{
+      const id=a.id;
+      if(id==null)return;
+      fetch(LC_API+"/ads/"+encodeURIComponent(id)+"/impression",{method:"POST"}).catch(()=>{});
+    });
+  },[ads]);
+  if(!ads||ads.length===0)return null;
+  const handleClick=(a,e)=>{
+    const id=a.id;
+    const url=a.link_url||a.url;
+    if(id!=null)fetch(LC_API+"/ads/"+encodeURIComponent(id)+"/click",{method:"POST"}).catch(()=>{});
+    if(!url){e.preventDefault();return;}
+  };
+  return(<div style={{maxWidth:1200,margin:"24px auto",padding:"0 24px"}}>
+    <div style={{display:"grid",gridTemplateColumns:ads.length>1?"1fr 1fr":"1fr",gap:12}}>
+      {ads.map((a,i)=>(
+        <a key={a.id||i} href={a.link_url||a.url||"#"} target="_blank" rel="noopener noreferrer sponsored" onClick={e=>handleClick(a,e)} style={{display:"flex",gap:12,background:"#F9FAFB",border:"1px solid #E5E7EB",borderRadius:8,padding:12,textDecoration:"none",color:"#0a1628",alignItems:"center"}}>
+          {(a.image_url||a.img)&&<img src={a.image_url||a.img} alt={a.title||a.partner_name||""} style={{width:64,height:64,objectFit:"cover",borderRadius:6,flexShrink:0}} onError={e=>{e.currentTarget.style.display="none";}}/>}
+          <div style={{flex:"1 1 auto",minWidth:0}}>
+            <div style={{fontSize:10,color:"#9CA3AF",marginBottom:2}}>광고 · {a.partner_name||a.sponsor||"파트너"}</div>
+            <div style={{fontSize:14,fontWeight:700,color:"#0a1628",lineHeight:1.4,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{a.title||a.headline||"(제목 없음)"}</div>
+            {a.description&&<div style={{fontSize:12,color:"#6B7280",marginTop:2,lineHeight:1.5,display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical",overflow:"hidden"}}>{a.description}</div>}
+          </div>
+          <span style={{flexShrink:0,color:"#9CA3AF",fontSize:14}}>→</span>
+        </a>
+      ))}
+    </div>
+  </div>);
+}
+
 function RP({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlineLinkLabel,alertMsg,alertType="info",consultFunnel,miss}){
   // 2026.04.14 입력값 없을 때(isExample) ₩0으로 표시 (항상 노출, 숨기지 않음)
   // 2026.04.15 miss: 필수 입력 미기재 안내 (string[]). 있으면 안내박스 표시
@@ -4641,6 +4684,7 @@ body.lc-embed main{padding-top:0!important}
       </div>
       {/* 전체 계산기 격자 그리드 */}
       <CalcGrid navigateCalc={navigateCalc} isMo={isMo}/>
+      <AdSlot position="home_bottom"/>
       <HomeSections isMo={isMo} effectiveUser={effectiveUser} navigateCalc={navigateCalc} setAuthMode={setAuthMode} setShowAuth={setShowAuth}/>
 
     </>):(
@@ -4698,6 +4742,7 @@ body.lc-embed main{padding-top:0!important}
           </div>
 
           <MarketIntel isMo={isMo}/>
+          <AdSlot position="calc_bottom"/>
 
           {FUN_STATS[calc]&&<div style={{marginBottom:16,padding:"20px 24px",background:"linear-gradient(135deg,#deebff,#EAE6FF)",borderRadius:12}}>
             <div style={{fontSize:14,fontWeight:700,color:"#172B4D",marginBottom:10,display:"flex",alignItems:"center",gap:6}}>{FUN_STATS[calc].icon}{FUN_STATS[calc].title}</div>
