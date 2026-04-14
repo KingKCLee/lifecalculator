@@ -1168,6 +1168,12 @@
   "updateLog": [
     {
       "date": "2026.04.14",
+      "category": "세금",
+      "title": "fix: 취득세 시가표준액 입력 전 유형 노출·유형별 안내 문구 분기",
+      "desc": "fix: 취득세 시가표준액 입력 전 유형 노출·유형별 안내 문구 분기"
+    },
+    {
+      "date": "2026.04.14",
       "category": "전체",
       "title": "feat: CalcGrid 62개 계산기 개별 SVG 아이콘 추가",
       "desc": "feat: CalcGrid 62개 계산기 개별 SVG 아이콘 추가"
@@ -1463,12 +1469,6 @@
       "category": "세금",
       "title": "feat: RequiredGuide 연말정산/퇴직금/4대보험 필수항목 안내 추가",
       "desc": "feat: RequiredGuide 연말정산/퇴직금/4대보험 필수항목 안내 추가"
-    },
-    {
-      "date": "2026.04.08",
-      "category": "생활",
-      "title": "feat: RequiredGuide 실업급여 필수항목 안내 추가",
-      "desc": "feat: RequiredGuide 실업급여 필수항목 안내 추가"
     }
   ],
   "rates": {
