@@ -6,7 +6,7 @@ import { createPortal } from "react-dom";
 
 // 중앙 집중 세율·요율 관리. live-data.json의 rates에서 로드됨. 로드 전 빈 객체 → 각 계산기는 하드코딩 fallback 사용.
 // 점진적 교체: 각 계산기가 RATES.xxx ?? 하드코딩값 형태로 참조하도록 변환.
-let RATES = {};const BUILD_ID="2026.04.06.001";const LC_API="https://lc-auth-worker.noble-kclee.workers.dev";
+let RATES = {};const BUILD_ID="2026.04.06.001";const LC_API="https://lc-auth-worker.noble-kclee.workers.dev";const KAKAO_JS_KEY="";
 
 function useIsMobile(bp=768){
   const[m,setM]=useState(typeof window!=="undefined"&&window.innerWidth<=bp);
@@ -515,7 +515,7 @@ function RP({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlin
           <span style={{fontSize:14}}>{b.icon}</span>{b.l}
         </button>))}
     </div>
-    <div style={{marginTop:10,fontSize:10,opacity:.5,lineHeight:1.5,textAlign:"center"}}>※ 참고용 계산이며 법적 효력 없음 (v2026.04.06)</div>
+    <div style={{marginTop:10,fontSize:10,opacity:.5,lineHeight:1.5,textAlign:"center"}}>※ 2026년 세법 기준 · 참고용 계산이며 법적 효력 없음 (v2026.04.06)</div>
   </div>);
 }
 function RequiredGuide({items}){const missing=items.filter(i=>!i.filled);if(missing.length===0)return null;return(<div style={{background:"#F4F5F7",borderRadius:12,padding:"16px 20px",marginTop:8}}><div style={{fontSize:12,fontWeight:700,color:"#505f79",marginBottom:10}}>필수 입력 항목</div>{missing.map((item,i)=>(<div key={i} style={{display:"flex",alignItems:"center",gap:8,marginBottom:6,fontSize:13,color:"#172B4D"}}><span style={{width:6,height:6,borderRadius:"50%",background:"#0747A6",flexShrink:0,display:"inline-block"}}/>{item.label}</div>))}</div>);}
@@ -2500,6 +2500,8 @@ export default function App(){
   const[showAuth,setShowAuth]=useState(false);const[authMode,setAuthMode]=useState("login");const[isLoggedIn,setIsLoggedIn]=useState(false);
   const[lcToken,setLcToken]=useState(()=>{try{return localStorage.getItem('lc_token')||""}catch{return""}});
   const[lcEmail,setLcEmail]=useState(()=>{try{return localStorage.getItem('lc_email')||""}catch{return""}});
+  const[favorites,setFavorites]=useState(()=>{try{return JSON.parse(localStorage.getItem('lc_favorites')||'[]')}catch{return[]}});
+  const toggleFavorite=(calcId)=>{setFavorites(prev=>{const next=prev.includes(calcId)?prev.filter(x=>x!==calcId):[...prev,calcId];try{localStorage.setItem('lc_favorites',JSON.stringify(next));}catch{}return next;});};
   const[calcHistory,setCalcHistory]=useState(()=>{try{return JSON.parse(localStorage.getItem('calc_history')||'[]')}catch{return[]}});
   const saveHistory=(cId,name,total)=>{if(!total||total<=0)return;const item={id:cId,name,total,time:Date.now()};setCalcHistory(prev=>{const updated=[item,...prev.filter(h=>h.id!==cId)].slice(0,10);try{localStorage.setItem('calc_history',JSON.stringify(updated))}catch{}return updated;});};
   const[showAllLog,setShowAllLog]=useState(false);const[hoverCat,setHoverCat]=useState(null);
@@ -2641,6 +2643,24 @@ button:active{transform:scale(0.98)}
     {liveData&&!isMo&&<IndicatorTicker liveData={liveData} onNav={navigateCalc}/>}
     <main>
     {page==="mypage"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><MyPage user={effectiveUser} lcToken={lcToken} lcEmail={lcEmail} onLcLogout={()=>{try{localStorage.removeItem('lc_token');localStorage.removeItem('lc_email');}catch{}setLcToken("");setLcEmail("");}} onBack={navigateHome} onLogout={handleLogout}/></div>):page&&page.startsWith("legal_")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LegalPage type={page.replace("legal_","")} onBack={navigateHome}/></div>):page==="home"?(<>
+      {favorites.length>0&&<div style={{maxWidth:1200,margin:"0 auto",padding:isMo?"16px 16px 0":"32px 24px 0",background:isMo?"#f8f9fc":"transparent"}}>
+        <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12}}>
+          <span style={{fontSize:18}}>⭐</span>
+          <span style={{fontSize:isMo?15:18,fontWeight:800,color:"#172B4D"}}>내 즐겨찾기</span>
+          <span style={{fontSize:12,color:"#6b778c"}}>({favorites.length})</span>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:isMo?"repeat(2,1fr)":"repeat(4,1fr)",gap:isMo?10:12}}>
+          {favorites.map(fid=>{const info=CL.find(c=>c.id===fid);if(!info)return null;return(
+            <div key={fid} onClick={()=>navigateCalc(info.c,fid)} style={{background:"#fff",border:"1px solid #dfe1e6",borderRadius:12,padding:"14px 16px",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"space-between",gap:8,transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.borderColor="#0747A6";e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 6px 16px rgba(7,71,166,.08)";}} onMouseLeave={e=>{e.currentTarget.style.borderColor="#dfe1e6";e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";}}>
+              <div style={{minWidth:0,flex:1}}>
+                <div style={{fontSize:14,fontWeight:700,color:"#172B4D",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{info.l}</div>
+                <div style={{fontSize:11,color:"#6b778c",marginTop:2}}>{CATS.find(c=>c.id===info.c)?.l}</div>
+              </div>
+              <button onClick={e=>{e.stopPropagation();toggleFavorite(fid);}} aria-label="즐겨찾기 해제" style={{background:"none",border:"none",fontSize:18,cursor:"pointer",color:"#FFC400",padding:4,lineHeight:1,fontFamily:"inherit"}}>★</button>
+            </div>
+          );})}
+        </div>
+      </div>}
       {isMo?(<>
         {/* 모바일: 검색창 즉시 노출 */}
         <div style={{padding:"16px 16px 8px",background:"#f8f9fc"}}>
@@ -2726,7 +2746,10 @@ button:active{transform:scale(0.98)}
     <>
       {isMo?(<div style={{padding:"8px 0",background:"#fff"}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 16px"}}>
-          <h1 style={{fontSize:20,fontWeight:800,color:P.tx,margin:0,letterSpacing:-1,flexShrink:0,maxWidth:"55%",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{CL.find(c=>c.id===calc)?.l||catInfo?.l+" 계산기"}</h1>
+          <div style={{display:"flex",alignItems:"center",gap:8,minWidth:0,flexShrink:1}}>
+            <h1 style={{fontSize:20,fontWeight:800,color:P.tx,margin:0,letterSpacing:-1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{CL.find(c=>c.id===calc)?.l||catInfo?.l+" 계산기"}</h1>
+            <button onClick={()=>toggleFavorite(calc)} aria-label={favorites.includes(calc)?"즐겨찾기 해제":"즐겨찾기 추가"} style={{background:"none",border:"none",fontSize:20,cursor:"pointer",color:favorites.includes(calc)?"#FFC400":"#c1c7cd",padding:2,lineHeight:1,flexShrink:0,fontFamily:"inherit"}}>{favorites.includes(calc)?"★":"☆"}</button>
+          </div>
           <div style={{fontSize:11,color:P.mt,textAlign:"right",lineHeight:1.6,flexShrink:0}}>
             <span onClick={navigateHome} style={{cursor:"pointer",color:"#0747A6"}}>홈</span>
             <span> › </span>
@@ -2757,7 +2780,10 @@ button:active{transform:scale(0.98)}
             <span style={{color:P.tx,fontWeight:600}}>{CL.find(c=>c.id===calc)?.l||""}</span>
           </nav>
           <div style={{marginBottom:24}}>
-            <h1 style={{fontSize:28,fontWeight:800,color:P.tx,margin:0,letterSpacing:-1}}>{CL.find(c=>c.id===calc)?.l||catInfo?.l+" 계산기"}</h1>
+            <div style={{display:"flex",alignItems:"center",gap:12,flexWrap:"wrap"}}>
+              <h1 style={{fontSize:28,fontWeight:800,color:P.tx,margin:0,letterSpacing:-1}}>{CL.find(c=>c.id===calc)?.l||catInfo?.l+" 계산기"}</h1>
+              <button onClick={()=>toggleFavorite(calc)} aria-label={favorites.includes(calc)?"즐겨찾기 해제":"즐겨찾기 추가"} style={{background:favorites.includes(calc)?"#FFFBEA":"#fff",border:"1px solid "+(favorites.includes(calc)?"#FFC400":"#dfe1e6"),borderRadius:20,padding:"6px 12px",cursor:"pointer",fontSize:13,fontWeight:700,color:favorites.includes(calc)?"#B78100":"#6b778c",display:"inline-flex",alignItems:"center",gap:4,fontFamily:"inherit"}}>{favorites.includes(calc)?"★":"☆"} {favorites.includes(calc)?"즐겨찾기 해제":"즐겨찾기"}</button>
+            </div>
             <p style={{fontSize:14,color:P.mt,margin:"4px 0 16px"}}>2026년 최신 세법 기반 정밀 계산</p>
             <div className="sub-tabs" style={{display:"flex",gap:6,flexWrap:"wrap"}}>
               {filtered.map(c=>(<button key={c.id} onClick={()=>navigateCalc(cat,c.id)} style={{padding:"8px 16px",border:calc===c.id?"none":`1px solid ${P.bd}`,borderRadius:20,background:calc===c.id?P.pri:"rgba(255,255,255,0.75)",color:calc===c.id?"#fff":P.mt,fontSize:13,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0,marginBottom:4,display:"inline-flex",alignItems:"center",justifyContent:"center",height:36,boxSizing:"border-box"}}>{c.l}</button>))}
