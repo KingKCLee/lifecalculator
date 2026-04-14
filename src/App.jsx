@@ -654,7 +654,7 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
   if(heavyTaxExclude)basisText+="중과 배제 적용: 일반세율 1~3% 적용\n";
   if(spouseChildGive)basisText+="1세대1주택자 배우자·직계비속 증여: 조정지역 3억 초과여도 3.5% 일반세율\n";
   if(cultivation)basisText+="2년 이상 자경 농지 감면: 3% → 1.5%\n";
-  return(<div><div>
+  return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}><div>
       {!isMo&&<h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>취득세 계산기</h3>}
       <div style={{marginBottom:16}}>
         <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>취득 유형</label>
