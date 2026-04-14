@@ -59,13 +59,22 @@ th{background:var(--lt);font-weight:600;color:var(--tx)}
 .calcgrid a{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:var(--pri);color:#fff;text-decoration:none;border-radius:10px;font-weight:600;font-size:14px}
 .calcgrid a:hover{background:var(--pl)}
 .calcgrid a::after{content:"→";margin-left:8px}
-.hubgrid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:14px}
-.hubgrid a{display:block;padding:22px 26px;background:var(--card);border:1px solid var(--bd);border-radius:12px;text-decoration:none;transition:all .15s}
-.hubgrid a:hover{border-color:var(--pri);transform:translateY(-1px);box-shadow:0 4px 12px rgba(7,71,166,0.12)}
-.hubgrid .htag{display:inline-block;background:#e6f0ff;color:var(--pri);font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px;margin-bottom:6px;letter-spacing:0.3px}
-.hubgrid h3{font-size:18px;margin:4px 0 8px;color:var(--tx)}
-.hubgrid p{color:var(--mt);font-size:14px;margin:0}
-.hubgrid .more{display:inline-block;margin-top:10px;color:var(--pri);font-weight:600;font-size:13px}
+.hubgrid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:14px}
+.hubcard{background:var(--card);border:1.5px solid var(--bd);border-radius:14px;padding:24px 28px;transition:all .18s;position:relative;overflow:hidden}
+.hubcard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(180deg,var(--pri),var(--pl));transition:width .2s;border-radius:14px 0 0 14px}
+.hubcard:hover{border-color:var(--pri);transform:translateY(-2px);box-shadow:0 8px 24px rgba(7,71,166,0.12)}
+.hubcard:hover::before{width:5px}
+.hubcard .hublink{display:block;text-decoration:none;color:inherit}
+.hubcard .htag{display:inline-block;background:#e6f0ff;color:var(--pri);font-size:11px;font-weight:700;padding:4px 12px;border-radius:12px;margin-bottom:10px;letter-spacing:0.3px}
+.hubcard h3{font-size:19px;margin:4px 0 10px;color:var(--tx);font-weight:800;letter-spacing:-0.3px}
+.hubcard p{color:var(--mt);font-size:14px;margin:0 0 8px;line-height:1.7}
+.hubcard .preview{background:var(--lt);border-left:3px solid var(--pri);padding:10px 14px;margin:12px 0;border-radius:0 6px 6px 0;font-size:13px;color:var(--tx);line-height:1.6}
+.hubcard .more{display:inline-block;margin-top:6px;color:var(--pri);font-weight:700;font-size:13px}
+.hubcard .calc-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding-top:14px;border-top:1px dashed var(--bd)}
+.hubcard .calc-links span{font-size:11px;color:var(--mt);font-weight:700;margin-right:4px;align-self:center;text-transform:uppercase;letter-spacing:.5px}
+.hubcard .calc-links a{display:inline-flex;align-items:center;gap:4px;padding:7px 13px;background:#e6f0ff;color:var(--pri);border-radius:18px;font-size:12px;font-weight:600;text-decoration:none;transition:all .15s}
+.hubcard .calc-links a:hover{background:var(--pri);color:#fff;transform:translateY(-1px);box-shadow:0 2px 8px rgba(7,71,166,.2)}
+.hubcard .calc-links a::after{content:" →";font-weight:400}
 @media(max-width:600px){.calcgrid{grid-template-columns:1fr}.hero{padding:32px 24px}.hero h1{font-size:24px}section{padding:22px 20px}}
 .consult{background:linear-gradient(135deg,#172B4D,#0747A6);color:#fff;border:none;margin-top:24px}
 .consult h2{color:#fff}
@@ -96,24 +105,53 @@ th{background:var(--lt);font-weight:600;color:var(--tx)}
   <section>
     <h2>주제별 가이드</h2>
     <div class="hubgrid">
-      <a href="/guide/%EC%A0%88%EC%84%B8%EC%A0%84%EB%9E%B5.html">
-        <span class="htag">절세 전략</span>
-        <h3>2026 부동산 절세 전략 완벽 가이드</h3>
-        <p>취득세·양도세·보유세 단계별 절세 방법. 공동명의·일시적2주택·장기보유특별공제 활용.</p>
-        <span class="more">가이드 보기 →</span>
-      </a>
-      <a href="/guide/%EB%8B%A4%EC%A3%BC%ED%83%9D%EC%9E%90.html">
-        <span class="htag">다주택자</span>
-        <h3>다주택자 세금 완벽 가이드 2026</h3>
-        <p>종부세·재산세 부담 계산, 양도세 중과유예, 매도·증여·임대 전략 비교.</p>
-        <span class="more">가이드 보기 →</span>
-      </a>
-      <a href="/guide/%EC%B2%AB%EC%A7%91%EA%B5%AC%EB%A7%A4.html">
-        <span class="htag">첫 집 구매</span>
-        <h3>생애최초 주택구입 완벽 가이드</h3>
-        <p>취득세 감면 200만원, LTV 80% 완화, 디딤돌·보금자리 대출, 총비용 체크리스트.</p>
-        <span class="more">가이드 보기 →</span>
-      </a>
+      <div class="hubcard">
+        <a class="hublink" href="/guide/%EC%A0%88%EC%84%B8%EC%A0%84%EB%9E%B5.html">
+          <span class="htag">💰 절세 전략</span>
+          <h3>2026 부동산 절세 전략 완벽 가이드</h3>
+          <p>취득세·양도세·보유세 단계별 절세 방법. 공동명의·일시적2주택·장기보유특별공제 활용.</p>
+          <div class="preview">📌 1세대1주택 비과세 12억 + 장특공 80%(보유 40+거주 40) 조합으로 양도차익 5억까지 합법적 전액 비과세 가능. 일시적 2주택은 종전주택 3년 내 처분 시 신규주택도 비과세 적용.</div>
+          <span class="more">가이드 보기 →</span>
+        </a>
+        <div class="calc-links">
+          <span>관련 계산기</span>
+          <a href="/취득세계산기">취득세</a>
+          <a href="/양도소득세계산기">양도세</a>
+          <a href="/세금비교분석계산기">세금 비교</a>
+        </div>
+      </div>
+      <div class="hubcard">
+        <a class="hublink" href="/guide/%EB%8B%A4%EC%A3%BC%ED%83%9D%EC%9E%90.html">
+          <span class="htag">🏘️ 다주택자</span>
+          <h3>다주택자 세금 완벽 가이드 2026</h3>
+          <p>종부세·재산세 부담 계산, 양도세 중과유예, 매도·증여·임대 전략 비교.</p>
+          <div class="preview">📌 양도세 다주택 중과 2026.5.9까지 유예. 조정지역 2주택 +20%p, 3주택 +30%p 가산세율은 유예 종료 후 부활. 유예 기간 내 정리 vs 임대등록 vs 증여 시나리오를 세후 수익으로 비교 필수.</div>
+          <span class="more">가이드 보기 →</span>
+        </a>
+        <div class="calc-links">
+          <span>관련 계산기</span>
+          <a href="/종부세계산기">종부세</a>
+          <a href="/양도소득세계산기">양도세</a>
+          <a href="/증여세계산기">증여세</a>
+          <a href="/세금비교분석계산기">세금 비교</a>
+        </div>
+      </div>
+      <div class="hubcard">
+        <a class="hublink" href="/guide/%EC%B2%AB%EC%A7%91%EA%B5%AC%EB%A7%A4.html">
+          <span class="htag">🏠 첫 집 구매</span>
+          <h3>생애최초 주택구입 완벽 가이드</h3>
+          <p>취득세 감면 200만원, LTV 80% 완화, 디딤돌·보금자리 대출, 총비용 체크리스트.</p>
+          <div class="preview">📌 12억 이하 주택 생애최초 구입 시 취득세 최대 200만원 감면 (2028.12.31까지 연장). LTV 80% 우대 + 디딤돌(2.5~3.5%)·보금자리(4%)·청년전용 대출 활용 시 자기자본 부담 최소화.</div>
+          <span class="more">가이드 보기 →</span>
+        </a>
+        <div class="calc-links">
+          <span>관련 계산기</span>
+          <a href="/취득세계산기">취득세</a>
+          <a href="/LTV·대출한도계산기">LTV·한도</a>
+          <a href="/총비용시뮬레이터계산기">총비용</a>
+          <a href="/등기비용계산기">등기비용</a>
+        </div>
+      </div>
     </div>
   </section>
 
