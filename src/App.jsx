@@ -565,14 +565,56 @@ function Sel({label,value,onChange,options}){
     </select>
   </div>);
 }
-function Tog({label,value,onChange,options}){
-  const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
-  return(<div style={{marginBottom:16}}>
-    <label style={lblSt(isMo)}>{label}</label>
-    <div style={{display:"flex",flexWrap:"nowrap",borderRadius:10,border:"1.5px solid #E5E7EB",overflow:"hidden"}}>
-      {options.map((o,i)=>(<button key={o.value} onClick={()=>onChange(o.value)} style={{flex:"1 1 0",minWidth:0,padding:isMo?"8px 6px":"8px 10px",border:"none",borderRight:i<options.length-1?"1px solid #E5E7EB":"none",background:value===o.value?"#0a1628":"#fff",color:value===o.value?"#fff":"#6B7280",fontSize:isMo?10:12,fontWeight:value===o.value?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",wordBreak:"keep-all",overflow:"hidden",textOverflow:"ellipsis",textAlign:"center",lineHeight:1.3,transition:"background .15s,color .15s"}}>{o.label}</button>))}
+const Tog = ({label, options, value, onChange, isMo:isMoProp}) => {
+  const isMo = isMoProp ?? (typeof window!=="undefined" && window.innerWidth<=768);
+  return (
+    <div style={{marginBottom:16, overflow:"visible"}}>
+      {label && (
+        <label style={{
+          display:"block",
+          fontSize:isMo?13:14,
+          fontWeight:500,
+          color:P.tx,
+          marginBottom:8,
+          lineHeight:1.6,
+          wordBreak:"keep-all",
+          whiteSpace:"normal"
+        }}>{label}</label>
+      )}
+      <div style={{
+        display:"flex",
+        flexWrap:"nowrap",
+        overflowX:"auto",
+        gap:4,
+        scrollbarWidth:"none",
+        WebkitOverflowScrolling:"touch"
+      }}>
+        {options.map(opt => (
+          <button
+            key={opt.value}
+            onClick={() => onChange(opt.value)}
+            style={{
+              flex:"0 0 auto",
+              padding:isMo?"8px 10px":"10px 14px",
+              fontSize:isMo?11:13,
+              fontWeight:value===opt.value?700:400,
+              whiteSpace:"nowrap",
+              overflow:"visible",
+              lineHeight:1.3,
+              borderRadius:6,
+              border:"1.5px solid",
+              borderColor:value===opt.value?P.pri:"#DFE1E6",
+              backgroundColor:value===opt.value?P.pri:"#fff",
+              color:value===opt.value?"#fff":P.tx,
+              cursor:"pointer",
+              fontFamily:"inherit",
+              transition:"all 0.15s"
+            }}
+          >{opt.label}</button>
+        ))}
+      </div>
     </div>
-  </div>);
+  );
 }
 function generateReportHTML(title,total,sub,items){
   const now=new Date();const ds=now.getFullYear()+'.'+(now.getMonth()+1).toString().padStart(2,'0')+'.'+now.getDate().toString().padStart(2,'0');const ts=now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
