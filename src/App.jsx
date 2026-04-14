@@ -29,63 +29,6 @@ import CalcRealPrice from './calcs/CalcRealPrice';
 // 점진적 교체: 각 계산기가 RATES.xxx ?? 하드코딩값 형태로 참조하도록 변환.
 let RATES = {};const BUILD_ID="2026.04.06.001";const LC_API="https://lc-auth-worker.noble-kclee.workers.dev";const LC_REALESTATE_WORKER="https://lc-realestate-worker.noble-kclee.workers.dev";const KAKAO_JS_KEY="";
 
-// 2026.04.14 시가표준액 조회 인라인 패널용 지역 데이터 (계단식 드롭다운)
-const REGION_DATA = {
-  "서울특별시": {
-    "강남구": ["역삼동","개포동","도곡동","삼성동","청담동","논현동","대치동","압구정동","신사동","세곡동","수서동","율현동","일원동"],
-    "서초구": ["서초동","방배동","반포동","잠원동","양재동","내곡동","염곡동"],
-    "송파구": ["잠실동","신천동","풍납동","송파동","석촌동","삼전동","가락동","문정동","장지동","방이동","오금동","거여동","마천동"],
-    "강동구": ["천호동","성내동","길동","둔촌동","암사동","상일동","명일동","고덕동","강일동"],
-    "마포구": ["공덕동","아현동","도화동","용강동","대흥동","염리동","신공덕동","마포동","현석동","상수동","당인동","서교동","합정동","망원동","연남동","성산동","상암동"],
-    "용산구": ["후암동","용산동","남영동","청파동","원효로동","한강로동","이촌동","이태원동","한남동","서빙고동","보광동"],
-    "성동구": ["왕십리동","상왕십리동","하왕십리동","홍익동","도선동","마장동","사근동","행당동","응봉동","금호동","옥수동","성수동","송정동"],
-    "광진구": ["중곡동","능동","구의동","광장동","자양동","화양동","군자동"],
-    "영등포구": ["영등포동","여의도동","당산동","도림동","문래동","양평동","신길동","대림동"],
-    "강서구": ["염창동","등촌동","화곡동","가양동","발산동","공항동","방화동","마곡동","내발산동","외발산동","과해동","오쇠동","오곡동"],
-    "종로구": ["청운동","신교동","궁정동","효자동","창성동","통의동","적선동","사직동","내자동","내수동","세종로","신문로","경운동","운니동","익선동"],
-    "중구": ["무교동","다동","태평로","을지로","남대문로","명동","장충동","묵정동","필동","예장동","충무로","회현동","광희동","쌍림동","주교동","방산동","오장동","예관동","인현동","저동","신당동","흥인동","동화동","황학동"]
-  },
-  "경기도": {
-    "수원시 영통구": ["영통동","이의동","망포동","원천동","매탄동"],
-    "성남시 분당구": ["정자동","서현동","이매동","야탑동","구미동","금곡동","판교동","삼평동","백현동","수내동"],
-    "성남시 수정구": ["신흥동","태평동","수진동","산성동","양지동","창곡동","복정동","단대동","시흥동"],
-    "성남시 중원구": ["성남동","중앙동","금광동","은행동","상대원동","하대원동","여수동","도촌동","갈현동"],
-    "고양시 일산동구": ["식사동","중산동","정발산동","장항동","마두동","백석동","풍동","사리현동","설문동","지영동","성석동","문봉동"],
-    "고양시 일산서구": ["일산동","주엽동","대화동","덕이동","가좌동","구산동","법곳동","탄현동"],
-    "용인시 수지구": ["풍덕천동","죽전동","동천동","고기동","신봉동","성복동","상현동"],
-    "용인시 기흥구": ["신갈동","보정동","마북동","구성동","언남동","청덕동","상하동","보라동","중동","영덕동"],
-    "안양시 동안구": ["비산동","관양동","평촌동","호계동"],
-    "안양시 만안구": ["안양동","석수동","박달동"]
-  },
-  "인천광역시": {
-    "중구": ["운서동","영종동","용유동"],
-    "연수구": ["옥련동","선학동","연수동","청학동","동춘동","송도동"],
-    "남동구": ["구월동","간석동","만수동","장수동","서창동","논현동","고잔동","남촌동","수산동"],
-    "부평구": ["부평동","십정동","산곡동","청천동","삼산동","일신동","부개동","갈산동"],
-    "서구": ["검암동","경서동","연희동","심곡동","공촌동","석남동","가정동","신현동","원창동","당하동","원당동","검단동","마전동","오류동","금곡동"],
-    "계양구": ["계산동","작전동","효성동","서운동","병방동","임학동"]
-  },
-  "부산광역시": {
-    "해운대구": ["우동","중동","좌동","송정동","반여동","반송동","석대동"],
-    "수영구": ["남천동","수영동","망미동","광안동","민락동"],
-    "연제구": ["거제동","연산동"],
-    "남구": ["대연동","용호동","용당동","문현동","우암동","감만동"],
-    "부산진구": ["부전동","범전동","연지동","초읍동","양정동","전포동","부암동","당감동","가야동","개금동","범천동"]
-  },
-  "대구광역시": {
-    "수성구": ["범어동","만촌동","수성동","황금동","중동","상동","파동","두산동","지산동","범물동"],
-    "중구": ["동인동","삼덕동","성내동","대신동","남산동","동산동","달성동"]
-  },
-  "광주광역시": {
-    "서구": ["양동","농성동","광천동","유덕동","치평동","상무동","화정동","서창동","금호동","풍암동","동천동"]
-  },
-  "대전광역시": {
-    "서구": ["복수동","변동","도마동","정림동","용문동","탄방동","내동","갈마동","월평동","만년동","둔산동","괴정동","가장동","가수원동","관저동","흑석동","매노동","산직동","장안동","평촌동","오동","우명동","금고동","원정동","용촌동","계백동","용운동","괴곡동"]
-  },
-  "울산광역시": {
-    "남구": ["삼산동","신정동","달동","무거동","옥동","야음동","선암동","용연동"]
-  }
-};
 
 const _svg = (color, children) => (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{display:"inline-block",verticalAlign:"-3px",flexShrink:0}}>{children}</svg>);
 const IconHome = ({c="#0747A6"}={}) => _svg(c, <><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></>);
@@ -968,7 +911,14 @@ function StdPriceLookupModal({onClose,onApply}){
 
 function CalcAcq({isMo=false,onNav=()=>{}}){
   const[acqType,sAT]=useState("sale");const[realType,sRT]=useState("house");const[areaType,sAreaType]=useState("85");const[price,sP]=useState("12500");const[stdPrice,setStdPrice]=useState("");const[own,sO]=useState("1");const[isTempTwo,sTT]=useState("no");const[inheritNone,sIN]=useState("no");const[chipDesc,setChipDesc]=useState(null);
-  // 2026.04.14 시가표준액 조회 — API 연동 제거, 외부 링크 안내로 단순화
+  // 2026.04.14 시가표준액 조회 helper — lawd.json 동적 로드 + 시/도→시군구→읍면동 드릴다운
+  const[regionData,setRegionData]=useState({});
+  const[stdSido,setStdSido]=useState("");
+  const[stdSigungu,setStdSigungu]=useState("");
+  const[stdDong,setStdDong]=useState("");
+  useEffect(()=>{
+    fetch('/data/lawd.json').then(r=>r.json()).then(d=>setRegionData(d||{})).catch(()=>setRegionData({}));
+  },[]);
   const showChipPanel=(label,desc)=>{if(_popoverTimer){clearTimeout(_popoverTimer);_popoverTimer=null;}setChipDesc({key:label,label,desc,color:"#172B4D",bg:"#f4f5f7",bc:"#dfe1e6"});};
   const hideChipPanel=()=>{_popoverTimer=setTimeout(()=>setChipDesc(null),200);};
   const[corporation,setCorporation]=useState(false);const[firstDistribution,setFirstDistribution]=useState(false);const[conArea,setConArea]=useState(false);const[metro,setMetro]=useState(false);const[populationDecline,setPopulationDecline]=useState(false);const[firstOfLife,setFirstOfLife]=useState(false);const[heavyTaxExclude,setHeavyTaxExclude]=useState(false);const[spouseChildGive,setSpouseChildGive]=useState(false);const[cultivation,setCultivation]=useState(false);const[birthChild,setBirthChild]=useState(false);
@@ -1113,7 +1063,27 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
         <Inp label="시가표준액 (공시가격)" value={stdPrice} onChange={setStdPrice} suffix="만원" placeholder="미입력 시 취득가 사용" note={acqType==="gift"||acqType==="inherit"?"취득가액이 없으므로 시가표준액 기준으로 계산합니다":acqType==="newbuild"?"시가표준액을 과세표준으로 계산합니다":"취득가액보다 시가표준액이 높으면 시가표준액이 과세표준이 됩니다"}/>
       </div>
       <div style={{marginTop:-8,marginBottom:16,padding:"12px 14px",background:"#F9FAFB",border:"1px solid #E5E7EB",borderRadius:10}}>
-        <div style={{fontSize:11,color:"#6B7280",lineHeight:1.6,marginBottom:10}}>조회 후 시가표준액을 직접 입력해주세요</div>
+        <div style={{fontSize:11,color:"#6B7280",lineHeight:1.6,marginBottom:10}}>지역을 먼저 선택하면 조회 시 편리합니다 · 조회 후 시가표준액을 직접 입력해주세요</div>
+        {(()=>{
+          const selSt={width:"100%",padding:"8px 10px",border:"1px solid #E5E7EB",borderRadius:8,fontSize:13,fontFamily:"inherit",outline:"none",color:"#0a1628",boxSizing:"border-box",background:"#fff"};
+          const sidoList=Object.keys(regionData||{});
+          const sigunguList=stdSido?Object.keys(regionData[stdSido]||{}):[];
+          const dongList=(stdSido&&stdSigungu)?(regionData[stdSido]?.[stdSigungu]||[]):[];
+          return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:6,marginBottom:10}}>
+            <select value={stdSido} onChange={e=>{setStdSido(e.target.value);setStdSigungu("");setStdDong("");}} style={selSt}>
+              <option value="">시/도</option>
+              {sidoList.map(s=><option key={s} value={s}>{s}</option>)}
+            </select>
+            <select value={stdSigungu} onChange={e=>{setStdSigungu(e.target.value);setStdDong("");}} disabled={!stdSido} style={selSt}>
+              <option value="">시/군/구</option>
+              {sigunguList.map(sg=><option key={sg} value={sg}>{sg}</option>)}
+            </select>
+            <select value={stdDong} onChange={e=>setStdDong(e.target.value)} disabled={!stdSigungu} style={selSt}>
+              <option value="">읍/면/동</option>
+              {dongList.map(d=><option key={d} value={d}>{d}</option>)}
+            </select>
+          </div>);
+        })()}
         <a href="https://www.realtyprice.kr:447/notice/main/mainBody.htm" target="_blank" rel="noopener noreferrer" style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,width:"100%",padding:"10px 14px",background:"#0747A6",color:"#fff",borderRadius:8,fontSize:13,fontWeight:700,textDecoration:"none",fontFamily:"inherit"}}>공시가격알리미에서 조회 →</a>
       </div>
       {isHouse&&acqType==="sale"&&<Radio label="취득 후 주택 수" value={own} onChange={sO} options={[{value:"1",label:"1주택"},{value:"2",label:"2주택"},{value:"3",label:"3주택"},{value:"4",label:"4주택+"}]} cols={4}/>}
