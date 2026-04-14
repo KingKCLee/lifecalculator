@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.14",
       "category": "전체",
+      "title": "feat: 62개 계산기 초기값 0 통일 + 필수 입력 검증 (Inp error prop·필수 안내문구)",
+      "desc": "feat: 62개 계산기 초기값 0 통일 + 필수 입력 검증 (Inp error prop·필수 안내문구)"
+    },
+    {
+      "date": "2026.04.14",
+      "category": "전체",
       "title": "fix: 62개 계산기 전수 법령 검증 — 크리티컬 버그 10건 수정",
       "desc": "fix: 62개 계산기 전수 법령 검증 — 크리티컬 버그 10건 수정"
     },
@@ -1459,12 +1465,6 @@
       "category": "전체",
       "title": "docs(calcs): src/calcs/ custom result 렌더링 감사 문서 추가",
       "desc": "docs(calcs): src/calcs/ custom result 렌더링 감사 문서 추가"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "전체",
-      "title": "fix: Tog 버튼 텍스트 세로겹침 수정 + 18개 신규 계산기 PAGE_META 추가",
-      "desc": "fix: Tog 버튼 텍스트 세로겹침 수정 + 18개 신규 계산기 PAGE_META 추가"
     }
   ],
   "rates": {
