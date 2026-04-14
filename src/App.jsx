@@ -6,7 +6,7 @@ import { createPortal } from "react-dom";
 
 // 중앙 집중 세율·요율 관리. live-data.json의 rates에서 로드됨. 로드 전 빈 객체 → 각 계산기는 하드코딩 fallback 사용.
 // 점진적 교체: 각 계산기가 RATES.xxx ?? 하드코딩값 형태로 참조하도록 변환.
-let RATES = {};const BUILD_ID="2026.04.06.001";
+let RATES = {};const BUILD_ID="2026.04.06.001";const LC_API="https://lc-auth-worker.noble-kclee.workers.dev";
 
 function useIsMobile(bp=768){
   const[m,setM]=useState(typeof window!=="undefined"&&window.innerWidth<=bp);
@@ -483,7 +483,7 @@ function RP({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlin
   const isSub=(l)=>l.startsWith("  ")||l.startsWith("└")||l.startsWith("│");
   const alertAccent=alertType==="danger"?"#FFC400":alertType==="success"?"#57D9A3":alertType==="warning"?"#FFE380":"#fff";
   return(
-  <div style={{background:"linear-gradient(180deg,#0747A6 0%,#0052CC 100%)",borderRadius:20,padding:"28px 24px",color:"#fff",position:isMo?"relative":"sticky",top:isMo?0:80,alignSelf:"start",boxShadow:"0 8px 28px rgba(7,71,166,.22)",width:"100%",boxSizing:"border-box"}}>
+  <div style={{background:"linear-gradient(180deg,#0747A6 0%,#0052CC 100%)",borderRadius:20,padding:"28px 24px",color:"#fff",position:isMo?"relative":"sticky",top:isMo?0:80,alignSelf:"start",boxShadow:"0 8px 28px rgba(7,71,166,.22)",width:"100%",minWidth:isMo?"auto":320,boxSizing:"border-box"}}>
     {isExample&&<div style={{background:"rgba(255,255,255,0.18)",borderRadius:6,padding:"4px 10px",marginBottom:12,fontSize:11,display:"inline-flex",alignItems:"center",gap:5}}>📋 예시값 · 직접 입력하면 즉시 업데이트</div>}
     {alertMsg&&<div style={{background:"rgba(255,255,255,0.15)",borderRadius:10,padding:"10px 14px",marginBottom:14,fontSize:12,display:"flex",gap:8,alignItems:"flex-start",lineHeight:1.5,color:alertAccent}}><span style={{flexShrink:0,fontWeight:800}}>{alertType==="danger"?"⚠":alertType==="success"?"✓":alertType==="warning"?"!":"ℹ"}</span><span>{alertMsg}</span></div>}
     <div style={{marginBottom:16}}>
@@ -508,8 +508,8 @@ function RP({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlin
       <span>📅</span><span style={{opacity:.88,flex:"1 1 auto",minWidth:0}}>{deadline}</span>
       {deadlineLink&&<a href={deadlineLink} target="_blank" rel="noopener noreferrer" style={{color:"#FFC400",fontWeight:700,textDecoration:"none"}}>{deadlineLinkLabel||"바로가기 →"}</a>}
     </div>}
-    <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6,marginTop:14}}>
-      {[{fn:()=>downloadPDF(title,total,sub,items),icon:"📄",l:"PDF"},{fn:()=>downloadImage(title,total,sub,items),icon:"🖼",l:"이미지"},{fn:()=>shareKakao(title,total,sub,items),icon:"💬",l:"카카오"},{fn:()=>copyLink(),icon:"🔗",l:"링크"}].map((b,i)=>(
+    <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:6,marginTop:14}}>
+      {[{fn:()=>downloadPDF(title,total,sub,items),icon:"📄",l:"PDF"},{fn:()=>downloadImage(title,total,sub,items),icon:"🖼",l:"이미지"},{fn:()=>shareKakao(title,total,sub,items),icon:"💬",l:"카카오"},{fn:()=>copyLink(),icon:"🔗",l:"링크"},{fn:()=>window.dispatchEvent(new CustomEvent('lc-save-calc',{detail:{title,total,sub,items}})),icon:"💾",l:"저장"}].map((b,i)=>(
         <button key={i} onClick={b.fn} style={{padding:"9px 4px",background:"#fff",color:"#0747A6",border:"none",borderRadius:8,fontSize:11,fontWeight:700,cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:2,fontFamily:"inherit",transition:"transform .15s"}}
           onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-1px)"}} onMouseLeave={e=>{e.currentTarget.style.transform="translateY(0)"}}>
           <span style={{fontSize:14}}>{b.icon}</span>{b.l}
@@ -1834,12 +1834,12 @@ function useEduData(calcId){
 function EduSidebar({calc:calcId,gTab,setGTab}){
   const{calcLabel,relIds,tips,glossary,regs,relLabels}=useEduData(calcId);
   return(
-    <div className="edu-sidebar sidebar-left" style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:24,position:"sticky",top:80,alignSelf:"start"}}>
+    <div className="edu-sidebar sidebar-left" style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:24,marginTop:16}}>
       <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:4}}>
         <span style={{fontSize:18}}>📘</span>
         <span style={{fontSize:14,fontWeight:700,color:P.pri}}>학습 센터</span>
       </div>
-      <div style={{fontSize:11,letterSpacing:1,textTransform:"uppercase",color:P.mt,marginBottom:16}}>REGULATORY GUIDANCE</div>
+      <div style={{fontSize:11,letterSpacing:1,color:P.mt,marginBottom:16}}>규정 가이드</div>
       {[{id:"rates",icon:"📊",l:"세율표·가이드"},{id:"regs",icon:"📋",l:"규정·법령"},{id:"tips",icon:"💡",l:"절세 팁"},{id:"glossary",icon:"📖",l:"용어 사전"}].map(t=>(
         <button key={t.id} onClick={()=>setGTab(t.id)}
           style={{width:"100%",padding:"10px 12px",border:"none",borderRadius:0,
@@ -2140,11 +2140,15 @@ function ScrollTop(){
   return(<button aria-label="맨 위로 스크롤" onClick={()=>window.scrollTo({top:0,behavior:'smooth'})} style={{position:"fixed",bottom:80,right:24,width:44,height:44,borderRadius:"50%",background:"#0747A6",color:"#fff",border:"none",cursor:"pointer",fontSize:18,boxShadow:"0 4px 12px rgba(0,0,0,0.15)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center"}}>↑</button>);
 }
 
-function AuthModal({mode,setMode,onClose,isMo}){
+function AuthModal({mode,setMode,onClose,isMo,onAuthSuccess}){
   const[agreeAll,setAgreeAll]=useState(false);
   const[agreeService,setAgreeService]=useState(false);
   const[agreePrivacy,setAgreePrivacy]=useState(false);
   const[agreeMarketing,setAgreeMarketing]=useState(false);
+  const[authEmail,setAuthEmail]=useState("");
+  const[authPw,setAuthPw]=useState("");
+  const[authBusy,setAuthBusy]=useState(false);
+  const[authErr,setAuthErr]=useState("");
   const handleSocialLogin=async(provider)=>{
     if(mode==="signup"&&!agreeAll){alert("서비스 이용을 위해 전체 동의가 필요합니다.");return;}
     try{
@@ -2153,10 +2157,26 @@ function AuthModal({mode,setMode,onClose,isMo}){
         if(error)throw error;
       } else if(provider==="네이버"){
         alert("네이버 로그인은 심사 진행 중입니다. 구글 로그인을 이용해주세요.");
-      } else {
-        alert("이메일 로그인 준비 중입니다.");
       }
     }catch(e){alert("로그인 오류: "+e.message);}
+  };
+  const handleEmailAuth=async()=>{
+    if(!authEmail||!authPw){setAuthErr("이메일과 비밀번호를 입력하세요.");return;}
+    if(mode==="signup"&&!agreeAll){setAuthErr("전체 동의가 필요합니다.");return;}
+    if(mode==="signup"&&authPw.length<8){setAuthErr("비밀번호는 8자 이상이어야 합니다.");return;}
+    setAuthBusy(true);setAuthErr("");
+    try{
+      if(mode==="signup"){
+        const r=await fetch(LC_API+"/auth/register",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:authEmail,password:authPw})});
+        const d=await r.json().catch(()=>({}));
+        if(!r.ok){setAuthErr(d.error||"가입 실패");setAuthBusy(false);return;}
+      }
+      const r2=await fetch(LC_API+"/auth/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:authEmail,password:authPw})});
+      const d2=await r2.json().catch(()=>({}));
+      if(!r2.ok||!d2.token){setAuthErr(d2.error||"로그인 실패");setAuthBusy(false);return;}
+      onAuthSuccess&&onAuthSuccess(d2.token,authEmail);
+    }catch{setAuthErr("네트워크 오류가 발생했습니다.");}
+    setAuthBusy(false);
   };
   return(<div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.5)",zIndex:10000,display:"flex",alignItems:"center",justifyContent:"center",padding:16,overflowY:"auto"}}>
     <div onClick={e=>e.stopPropagation()} style={{background:"#fff",borderRadius:20,padding:isMo?24:40,maxWidth:420,width:"100%",position:"relative",margin:"auto"}}>
@@ -2183,18 +2203,31 @@ function AuthModal({mode,setMode,onClose,isMo}){
       </div>
       <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:20}}><div style={{flex:1,height:1,background:"#dfe1e6"}}/><span style={{fontSize:12,color:"#6b778c"}}>또는</span><div style={{flex:1,height:1,background:"#dfe1e6"}}/></div>
       <div style={{display:"flex",flexDirection:"column",gap:10}}>
-        <input type="email" placeholder="이메일 주소" style={{padding:"12px 16px",border:"1.5px solid #dfe1e6",borderRadius:10,fontSize:14,outline:"none",fontFamily:"inherit"}}/>
-        <input type="password" placeholder="비밀번호" style={{padding:"12px 16px",border:"1.5px solid #dfe1e6",borderRadius:10,fontSize:14,outline:"none",fontFamily:"inherit"}}/>
-        <button onClick={()=>handleSocialLogin("이메일")} style={{padding:12,background:"#f4f5f7",color:"#505f79",border:"none",borderRadius:10,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>이메일로 {mode==="login"?"로그인":"가입하기"}</button>
+        <input type="email" placeholder="이메일 주소" value={authEmail} onChange={e=>setAuthEmail(e.target.value)} disabled={authBusy} style={{padding:"12px 16px",border:"1.5px solid #dfe1e6",borderRadius:10,fontSize:14,outline:"none",fontFamily:"inherit"}}/>
+        <input type="password" placeholder={mode==="signup"?"비밀번호 (8자 이상)":"비밀번호"} value={authPw} onChange={e=>setAuthPw(e.target.value)} disabled={authBusy} onKeyDown={e=>{if(e.key==="Enter")handleEmailAuth();}} style={{padding:"12px 16px",border:"1.5px solid #dfe1e6",borderRadius:10,fontSize:14,outline:"none",fontFamily:"inherit"}}/>
+        {authErr&&<div style={{fontSize:12,color:"#DE350B",padding:"4px 2px"}}>{authErr}</div>}
+        <button onClick={handleEmailAuth} disabled={authBusy} style={{padding:12,background:authBusy?"#dfe1e6":"#0747A6",color:"#fff",border:"none",borderRadius:10,fontSize:14,fontWeight:700,cursor:authBusy?"not-allowed":"pointer",fontFamily:"inherit"}}>{authBusy?"처리 중...":`이메일로 ${mode==="login"?"로그인":"가입하기"}`}</button>
       </div>
       <div style={{textAlign:"center",fontSize:13,color:"#505f79",marginTop:16}}>{mode==="login"?(<>계정이 없으신가요? <span onClick={()=>setMode("signup")} style={{color:"#0747A6",fontWeight:700,cursor:"pointer"}}>무료 가입</span></>):(<>이미 계정이 있으신가요? <span onClick={()=>setMode("login")} style={{color:"#0747A6",fontWeight:700,cursor:"pointer"}}>로그인</span></>)}</div>
     </div>
   </div>);
 }
 
-function MyPage({user,onBack,onLogout}){
+function MyPage({user,lcToken,lcEmail,onBack,onLogout,onLcLogout}){
   const[tab,setTab]=useState("profile");const[delConfirm,setDelConfirm]=useState(false);
+  const[lcHistory,setLcHistory]=useState(null);const[lcHistErr,setLcHistErr]=useState("");
   const deleteAccount=async()=>{await supabase.auth.signOut();onLogout();onBack();};
+  useEffect(()=>{
+    if(tab!=="history"||!lcToken)return;
+    setLcHistory(null);setLcHistErr("");
+    fetch(LC_API+"/history/list",{headers:{"Authorization":"Bearer "+lcToken}})
+      .then(r=>r.json().then(d=>({ok:r.ok,status:r.status,d})))
+      .then(({ok,status,d})=>{
+        if(ok){setLcHistory(d.items||[]);}
+        else if(status===401){setLcHistErr("세션이 만료되었습니다. 다시 로그인해주세요.");onLcLogout&&onLcLogout();}
+        else{setLcHistErr(d.error||"불러오기 실패");}
+      }).catch(()=>setLcHistErr("네트워크 오류"));
+  },[tab,lcToken]);
   const tabs=[{id:"profile",label:"프로필"},{id:"history",label:"계산 기록"},{id:"favorites",label:"즐겨찾기"},{id:"saved",label:"저장된 계산"},{id:"notif",label:"알림 설정"}];
   return(<div style={{maxWidth:800,margin:"0 auto",padding:"40px 24px",minHeight:"80vh"}}>
     <button onClick={onBack} style={{display:"flex",alignItems:"center",gap:8,background:"none",border:"none",color:"#0747A6",fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit",marginBottom:24,padding:0}}>← 홈으로</button>
@@ -2211,7 +2244,7 @@ function MyPage({user,onBack,onLogout}){
       <button onClick={onLogout} style={{width:"100%",padding:14,background:"#f4f5f7",color:"#505f79",border:"none",borderRadius:10,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit",marginBottom:8}}>로그아웃</button>
       {!delConfirm?(<button onClick={()=>setDelConfirm(true)} style={{width:"100%",padding:14,background:"none",color:"#DE350B",border:"1px solid #FFBDAD",borderRadius:10,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>회원 탈퇴</button>):(<div style={{padding:16,background:"#FFEBE6",borderRadius:10,border:"1px solid #FFBDAD"}}><p style={{fontSize:13,color:"#DE350B",marginBottom:12}}>탈퇴 시 모든 데이터가 삭제됩니다.</p><div style={{display:"flex",gap:8}}><button onClick={()=>setDelConfirm(false)} style={{flex:1,padding:10,background:"#fff",border:"1px solid #dfe1e6",borderRadius:8,fontSize:13,cursor:"pointer",fontFamily:"inherit"}}>취소</button><button onClick={deleteAccount} style={{flex:1,padding:10,background:"#DE350B",color:"#fff",border:"none",borderRadius:8,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>탈퇴 확인</button></div></div>)}
     </div>)}
-    {tab==="history"&&(<div style={{textAlign:"center",padding:60,color:"#6b778c"}}><div style={{fontSize:40,marginBottom:12}}>📋</div><div>계산 기록이 없습니다.</div><div style={{fontSize:12,marginTop:8}}>로그인 후 계산하면 자동 저장됩니다.</div></div>)}
+    {tab==="history"&&(!lcToken?(<div style={{textAlign:"center",padding:60,color:"#6b778c"}}><div style={{fontSize:40,marginBottom:12}}>📋</div><div>이메일 계정으로 로그인하면 계산 기록이 저장됩니다.</div></div>):lcHistErr?(<div style={{textAlign:"center",padding:60,color:"#DE350B"}}><div style={{fontSize:40,marginBottom:12}}>⚠</div><div>{lcHistErr}</div></div>):lcHistory===null?(<div style={{textAlign:"center",padding:60,color:"#6b778c"}}>불러오는 중...</div>):lcHistory.length===0?(<div style={{textAlign:"center",padding:60,color:"#6b778c"}}><div style={{fontSize:40,marginBottom:12}}>📋</div><div>저장된 계산 기록이 없습니다.</div><div style={{fontSize:12,marginTop:8}}>계산 결과의 💾 저장 버튼을 눌러보세요.</div></div>):(<div style={{display:"flex",flexDirection:"column",gap:10}}>{lcHistory.map(h=>{const t=(h.result&&h.result.total)||0;const title=(h.inputs&&h.inputs.title)||h.calc_type;return(<div key={h.id} style={{background:"#fff",borderRadius:12,border:"1px solid #dfe1e6",padding:"14px 18px"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",gap:10}}><div style={{minWidth:0,flex:1}}><div style={{fontSize:14,fontWeight:700,color:"#172B4D",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{title}</div><div style={{fontSize:11,color:"#6b778c",marginTop:4}}>{new Date(h.created_at.replace(" ","T")+"Z").toLocaleString("ko-KR")}</div></div><div style={{fontSize:15,fontWeight:800,color:"#0747A6",fontVariantNumeric:"tabular-nums",whiteSpace:"nowrap"}}>{fW(t)}</div></div></div>);})}</div>))}
     {tab==="favorites"&&(<div style={{textAlign:"center",padding:60,color:"#6b778c"}}><div style={{fontSize:40,marginBottom:12}}>⭐</div><div>즐겨찾기한 계산기가 없습니다.</div></div>)}
     {tab==="saved"&&(<div style={{textAlign:"center",padding:60,color:"#6b778c"}}><div style={{fontSize:40,marginBottom:12}}>💾</div><div>저장된 계산이 없습니다.</div></div>)}
     {tab==="notif"&&(<div style={{background:"#fff",borderRadius:12,border:"1px solid #dfe1e6",padding:24}}><div style={{fontSize:13,fontWeight:600,color:"#6b778c",marginBottom:16}}>이메일 알림 (추후 오픈 예정)</div><div style={{fontSize:13,color:"#6b778c",lineHeight:1.8}}>세금 신고 기한 알림, 세법 개정 안내 등 이메일 알림 기능은 준비 중입니다.</div></div>)}
@@ -2466,6 +2499,8 @@ export default function App(){
   const checkTabScroll=(el)=>{if(!el)return;setTabScroll({right:el.scrollLeft<el.scrollWidth-el.clientWidth-4});};
   const[mobileMenu,setMobileMenu]=useState(false);const[menuExpand,setMenuExpand]=useState(null);
   const[showAuth,setShowAuth]=useState(false);const[authMode,setAuthMode]=useState("login");const[isLoggedIn,setIsLoggedIn]=useState(false);
+  const[lcToken,setLcToken]=useState(()=>{try{return localStorage.getItem('lc_token')||""}catch{return""}});
+  const[lcEmail,setLcEmail]=useState(()=>{try{return localStorage.getItem('lc_email')||""}catch{return""}});
   const[calcHistory,setCalcHistory]=useState(()=>{try{return JSON.parse(localStorage.getItem('calc_history')||'[]')}catch{return[]}});
   const saveHistory=(cId,name,total)=>{if(!total||total<=0)return;const item={id:cId,name,total,time:Date.now()};setCalcHistory(prev=>{const updated=[item,...prev.filter(h=>h.id!==cId)].slice(0,10);try{localStorage.setItem('calc_history',JSON.stringify(updated))}catch{}return updated;});};
   const[showAllLog,setShowAllLog]=useState(false);const[hoverCat,setHoverCat]=useState(null);
@@ -2478,7 +2513,23 @@ export default function App(){
   const navigateHome=()=>{setPage("home");history.pushState(null,"","/");window.scrollTo(0,0);};
   const navigateLegal=(type)=>{setPage("legal_"+type);history.pushState(null,"","/"+type);window.scrollTo(0,0);};
   const navigateMyPage=()=>{setPage("mypage");history.pushState(null,"","/mypage");window.scrollTo(0,0);};
-  const handleLogout=async()=>{await supabase.auth.signOut();setUser(null);history.pushState(null,"","/");setPage("home");window.scrollTo(0,0);};
+  const handleLogout=async()=>{await supabase.auth.signOut();setUser(null);try{localStorage.removeItem('lc_token');localStorage.removeItem('lc_email');}catch{}setLcToken("");setLcEmail("");history.pushState(null,"","/");setPage("home");window.scrollTo(0,0);};
+  const effectiveUser=user||(lcEmail?{email:lcEmail,user_metadata:{full_name:lcEmail.split("@")[0]},created_at:new Date().toISOString()}:null);
+  const lcTokenRef=useRef(lcToken);useEffect(()=>{lcTokenRef.current=lcToken},[lcToken]);
+  const calcSaveRef=useRef(calc);useEffect(()=>{calcSaveRef.current=calc},[calc]);
+  useEffect(()=>{
+    const h=async(e)=>{
+      if(!lcTokenRef.current){setAuthMode("login");setShowAuth(true);return;}
+      try{
+        const r=await fetch(LC_API+"/history/save",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+lcTokenRef.current},body:JSON.stringify({calc_type:calcSaveRef.current,inputs:{title:e.detail.title,sub:e.detail.sub||""},result:{total:e.detail.total,items:e.detail.items}})});
+        if(r.ok){alert("계산 결과가 저장되었습니다.");}
+        else if(r.status===401){try{localStorage.removeItem('lc_token');localStorage.removeItem('lc_email');}catch{}setLcToken("");setLcEmail("");setAuthMode("login");setShowAuth(true);}
+        else{alert("저장에 실패했습니다.");}
+      }catch{alert("저장에 실패했습니다.");}
+    };
+    window.addEventListener('lc-save-calc',h);
+    return()=>window.removeEventListener('lc-save-calc',h);
+  },[]);
   const hCat=c=>{const f=CL.find(x=>x.c===c);if(f)navigateCalc(c,f.id);};
   const goCalc=(cId)=>{const info=CL.find(c=>c.id===cId);if(info)navigateCalc(info.c,info.id);};
   const hash=usePathRoute();
@@ -2531,7 +2582,7 @@ button:active{transform:scale(0.98)}
             <span style={{fontSize:15,fontWeight:800,color:P.pri}}>생활계산기.com</span>
           </div>
           <div style={{display:"flex",alignItems:"center",gap:8}}>
-            {user?(<span style={{fontSize:12,fontWeight:600,color:P.pri}}>{user.user_metadata?.full_name?.split(" ")[0]||user.email?.split("@")[0]}</span>):(<button onClick={()=>{setAuthMode("signup");setShowAuth(true);}} style={{fontSize:12,fontWeight:700,color:"#fff",background:P.pri,border:"none",borderRadius:8,padding:"6px 12px",cursor:"pointer",fontFamily:"inherit"}}>무료 가입</button>)}
+            {effectiveUser?(<span onClick={navigateMyPage} style={{fontSize:12,fontWeight:600,color:P.pri,cursor:"pointer"}}>{effectiveUser.user_metadata?.full_name?.split(" ")[0]||effectiveUser.email?.split("@")[0]}</span>):(<button onClick={()=>{setAuthMode("signup");setShowAuth(true);}} style={{fontSize:12,fontWeight:700,color:"#fff",background:P.pri,border:"none",borderRadius:8,padding:"6px 12px",cursor:"pointer",fontFamily:"inherit"}}>무료 가입</button>)}
             <button aria-label="메뉴" onClick={()=>setMobileMenu(!mobileMenu)} style={{background:"none",border:"none",fontSize:22,cursor:"pointer",color:"#172B4D",padding:8,lineHeight:1,minWidth:40,minHeight:40}}>{mobileMenu?"✕":"☰"}</button>
           </div>
         </div>
@@ -2556,7 +2607,7 @@ button:active{transform:scale(0.98)}
               </div>
             );})}
             <div style={{padding:"20px",borderTop:"1px solid #e8eaed",marginTop:8}}>
-              {user?(<><div style={{padding:"12px 16px",background:"#f4f5f7",borderRadius:10,marginBottom:8,fontSize:14,color:"#172B4D",fontWeight:600}}>{user.user_metadata?.full_name||user.email?.split("@")[0]} 님</div><button onClick={()=>{navigateMyPage();setMobileMenu(false);}} style={{width:"100%",padding:14,background:"#0747A6",color:"#fff",border:"none",borderRadius:10,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit",marginBottom:8}}>마이페이지</button><button onClick={()=>{handleLogout();setMobileMenu(false);}} style={{width:"100%",padding:"14px",background:"#f4f5f7",color:"#505f79",border:"none",borderRadius:10,fontSize:15,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>로그아웃</button></>):(<><button onClick={()=>{setAuthMode("signup");setShowAuth(true);setMobileMenu(false);}} style={{width:"100%",padding:"14px",background:"#0747A6",color:"#fff",border:"none",borderRadius:10,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>무료 가입</button><button onClick={()=>{setAuthMode("login");setShowAuth(true);setMobileMenu(false);}} style={{width:"100%",padding:"14px",background:"transparent",color:"#505f79",border:"none",borderRadius:10,fontSize:14,fontWeight:500,cursor:"pointer",fontFamily:"inherit",marginTop:8}}>로그인</button></>)}
+              {effectiveUser?(<><div style={{padding:"12px 16px",background:"#f4f5f7",borderRadius:10,marginBottom:8,fontSize:14,color:"#172B4D",fontWeight:600}}>{effectiveUser.user_metadata?.full_name||effectiveUser.email?.split("@")[0]} 님</div><button onClick={()=>{navigateMyPage();setMobileMenu(false);}} style={{width:"100%",padding:14,background:"#0747A6",color:"#fff",border:"none",borderRadius:10,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit",marginBottom:8}}>마이페이지</button><button onClick={()=>{handleLogout();setMobileMenu(false);}} style={{width:"100%",padding:"14px",background:"#f4f5f7",color:"#505f79",border:"none",borderRadius:10,fontSize:15,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>로그아웃</button></>):(<><button onClick={()=>{setAuthMode("signup");setShowAuth(true);setMobileMenu(false);}} style={{width:"100%",padding:"14px",background:"#0747A6",color:"#fff",border:"none",borderRadius:10,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>무료 가입</button><button onClick={()=>{setAuthMode("login");setShowAuth(true);setMobileMenu(false);}} style={{width:"100%",padding:"14px",background:"transparent",color:"#505f79",border:"none",borderRadius:10,fontSize:14,fontWeight:500,cursor:"pointer",fontFamily:"inherit",marginTop:8}}>로그인</button></>)}
             </div>
           </div>
         </div>}
@@ -2582,15 +2633,15 @@ button:active{transform:scale(0.98)}
             );})}
           </div>
           <div style={{display:"flex",alignItems:"center",gap:10,flexShrink:0}}>
-            {!user&&<button onClick={()=>{setAuthMode("login");setShowAuth(true);}} style={{background:"none",border:"none",fontSize:14,color:"#505f79",cursor:"pointer",fontFamily:"inherit",fontWeight:500}}>로그인</button>}
-            {user?(<div style={{display:"flex",alignItems:"center",gap:8}}><button onClick={navigateMyPage} style={{padding:"8px 14px",background:"#f4f5f7",color:"#172B4D",border:"none",borderRadius:8,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>{user.user_metadata?.full_name?.split(" ")[0]||user.email?.split("@")[0]} ▾</button><button onClick={handleLogout} style={{padding:"8px 14px",background:"none",color:"#6b778c",border:"1px solid #dfe1e6",borderRadius:8,fontSize:13,fontWeight:500,cursor:"pointer",fontFamily:"inherit"}}>로그아웃</button></div>):(<button onClick={()=>{setAuthMode("signup");setShowAuth(true);}} style={{padding:"8px 20px",background:"#0747A6",color:"#fff",border:"none",borderRadius:8,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>무료 가입</button>)}
+            {!effectiveUser&&<button onClick={()=>{setAuthMode("login");setShowAuth(true);}} style={{background:"none",border:"none",fontSize:14,color:"#505f79",cursor:"pointer",fontFamily:"inherit",fontWeight:500}}>로그인</button>}
+            {effectiveUser?(<div style={{display:"flex",alignItems:"center",gap:8}}><button onClick={navigateMyPage} style={{padding:"8px 14px",background:"#f4f5f7",color:"#172B4D",border:"none",borderRadius:8,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>{effectiveUser.user_metadata?.full_name?.split(" ")[0]||effectiveUser.email?.split("@")[0]} ▾</button><button onClick={handleLogout} style={{padding:"8px 14px",background:"none",color:"#6b778c",border:"1px solid #dfe1e6",borderRadius:8,fontSize:13,fontWeight:500,cursor:"pointer",fontFamily:"inherit"}}>로그아웃</button></div>):(<button onClick={()=>{setAuthMode("signup");setShowAuth(true);}} style={{padding:"8px 20px",background:"#0747A6",color:"#fff",border:"none",borderRadius:8,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>무료 가입</button>)}
           </div>
         </div>
       )}
     </nav>
     {liveData&&!isMo&&<IndicatorTicker liveData={liveData} onNav={navigateCalc}/>}
     <main>
-    {page==="mypage"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><MyPage user={user} onBack={navigateHome} onLogout={handleLogout}/></div>):page&&page.startsWith("legal_")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LegalPage type={page.replace("legal_","")} onBack={navigateHome}/></div>):page==="home"?(<>
+    {page==="mypage"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><MyPage user={effectiveUser} lcToken={lcToken} lcEmail={lcEmail} onLcLogout={()=>{try{localStorage.removeItem('lc_token');localStorage.removeItem('lc_email');}catch{}setLcToken("");setLcEmail("");}} onBack={navigateHome} onLogout={handleLogout}/></div>):page&&page.startsWith("legal_")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LegalPage type={page.replace("legal_","")} onBack={navigateHome}/></div>):page==="home"?(<>
       {isMo?(<>
         {/* 모바일: 검색창 즉시 노출 */}
         <div style={{padding:"16px 16px 8px",background:"#f8f9fc"}}>
@@ -2696,11 +2747,8 @@ button:active{transform:scale(0.98)}
           <EduContent calc={calc} gTab={gTab}/>
         </div>
       </div>):(
-      <div className="calc-grid page-layout" style={{maxWidth:1200,margin:"0 auto",padding:isMo?"16px":"32px 24px",display:"grid",gridTemplateColumns:"220px minmax(0,1fr) 280px",gap:isMo?16:24,alignItems:"start"}}>
-        {/* 좌측: 학습센터 사이드바 */}
-        <EduSidebar calc={calc} gTab={gTab} setGTab={setGTab}/>
-
-        {/* 중앙: 헤더 + 서브탭 + 계산기 + PRO */}
+      <div className="calc-grid page-layout" style={{maxWidth:1200,margin:"0 auto",padding:isMo?"16px":"32px 24px",display:"grid",gridTemplateColumns:"minmax(0,1fr) 300px",gap:isMo?16:24,alignItems:"start"}}>
+        {/* 좌측: 헤더 + 서브탭 + 계산기 + PRO */}
         <div>
           <nav aria-label="breadcrumb" style={{fontSize:12,color:P.mt,marginBottom:8,display:"flex",alignItems:"center",gap:6}}>
             <span onClick={navigateHome} style={{cursor:"pointer",color:P.pri}}>홈</span>
@@ -2741,9 +2789,10 @@ button:active{transform:scale(0.98)}
           </div>}
         </div>
 
-        {/* 우측: 가이드 콘텐츠 */}
-        <div className="sidebar-right" style={{position:isMo?"static":"sticky",top:80}}>
+        {/* 우측: Expert Guide + 학습센터(아래) */}
+        <div className="sidebar-right">
           <EduContent calc={calc} gTab={gTab}/>
+          <EduSidebar calc={calc} gTab={gTab} setGTab={setGTab}/>
         </div>
       </div>)}
 
@@ -2762,8 +2811,8 @@ button:active{transform:scale(0.98)}
       </div>}
     </>)}
 
-    {/* 업데이트 내역 */}
-    <div style={{maxWidth:1200,margin:"0 auto",padding:"48px 24px"}}>
+    {/* 업데이트 내역 (사용자 노출 제외) */}
+    <div style={{display:"none",maxWidth:1200,margin:"0 auto",padding:"48px 24px"}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:24,flexWrap:"wrap",gap:8}}>
         <div>
           <h3 style={{fontSize:20,fontWeight:800,color:"#172B4D",margin:0}}>업데이트 내역</h3>
@@ -2813,7 +2862,7 @@ button:active{transform:scale(0.98)}
       </div>
     </footer>
     {modal&&<LegalModal type={modal} onClose={()=>setModal(null)}/>}
-    {showAuth&&<AuthModal mode={authMode} setMode={setAuthMode} onClose={()=>setShowAuth(false)} isMo={isMo}/>}
+    {showAuth&&<AuthModal mode={authMode} setMode={setAuthMode} onClose={()=>setShowAuth(false)} isMo={isMo} onAuthSuccess={(token,email)=>{try{localStorage.setItem('lc_token',token);localStorage.setItem('lc_email',email);}catch{}setLcToken(token);setLcEmail(email);setShowAuth(false);}}/>}
     <ScrollTop/>
     <CookieBanner onPrivacy={()=>setModal("privacy")}/>
   </div>);
