@@ -43,7 +43,7 @@ function useIsMobile(bp=768){
   return m;
 }
 
-const SLUGS={acquisition:"취득세계산기",transfer:"양도소득세계산기",inctax:"종합소득세계산기",yearend:"연말정산계산기",compre:"종부세계산기",property:"재산세계산기",gift:"증여세계산기",inherit:"상속세계산기",holdtax:"보유세계산기",rental:"임대소득세계산기",mortgage:"대출이자계산기",dsr:"DSR계산기",dti:"DTI계산기",ltv:"LTV계산기",loanmax:"대출가능액계산기",rti:"RTI계산기",commission:"중개수수료계산기",registration:"등기비용계산기",legal:"법무사수수료계산기",stamp:"인지세계산기",bond:"채권할인료계산기",appraisal:"감정평가수수료계산기",netsalary:"연봉실수령액",insurance4:"4대보험료계산기",pension:"국민연금수령액",cartax:"자동차세계산기",deposit:"예적금이자계산기",convert:"전월세전환계산기",yield:"임대수익률계산기",joint:"공동명의계산기",area:"평수변환계산기",far:"용적률건폐율계산기",auction:"경매비용계산기",remodel:"리모델링수익계산기",bldvalue:"건물잔존가치계산기",totalcost:"총비용시뮬레이터",compare:"세금비교분석",invest:"투자수익분석",retire:"퇴직금계산기",unemploy:"실업급여계산기",minwage:"최저임금계산기",auction2:"경매적정입찰가",auctiondiv:"경매배당분석",auctionloan:"경락잔금대출",bldvat:"건물부가세계산기",bond2:"국민주택채권매입",datediff:"날짜계산기",estincome:"임대추정소득",goodlord:"착한임대인공제",imputedrent:"간주임대료계산기",jeonseins:"전세보증금보험료",legalinherit:"법정상속분계산기",luckyday:"손없는날달력",progressive:"누진세계산기",reconyear:"재건축연한계산기",refinance:"대환대출비교",remodel2:"리모델링ROI",rentincrease:"임대료인상률",stamp2:"인지세전자계약",realprice:"실거래가조회",subscription:"청약가점계산기",netsale:"매도실수령액계산기"};
+const SLUGS={acquisition:"취득세계산기",transfer:"양도소득세계산기",inctax:"종합소득세계산기",yearend:"연말정산계산기",compre:"종부세계산기",property:"재산세계산기",gift:"증여세계산기",inherit:"상속세계산기",holdtax:"보유세계산기",rental:"임대소득세계산기",mortgage:"대출이자계산기",dsr:"DSR계산기",dti:"DTI계산기",ltv:"LTV계산기",loanmax:"대출가능액계산기",rti:"RTI계산기",commission:"중개수수료계산기",registration:"등기비용계산기",legal:"법무사수수료계산기",stamp:"인지세계산기",bond:"채권할인료계산기",appraisal:"감정평가수수료계산기",netsalary:"연봉실수령액",insurance4:"4대보험료계산기",pension:"국민연금수령액",cartax:"자동차세계산기",deposit:"예적금이자계산기",convert:"전월세전환계산기",yield:"임대수익률계산기",joint:"공동명의계산기",area:"평수변환계산기",far:"용적률건폐율계산기",auction:"경매비용계산기",remodel:"리모델링수익계산기",bldvalue:"건물잔존가치계산기",totalcost:"총비용시뮬레이터",compare:"세금비교분석",invest:"투자수익분석",retire:"퇴직금계산기",unemploy:"실업급여계산기",minwage:"최저임금계산기",auction2:"경매적정입찰가",auctiondiv:"경매배당분석",auctionloan:"경락잔금대출",bldvat:"건물부가세계산기",bond2:"국민주택채권매입",datediff:"날짜계산기",estincome:"임대추정소득",goodlord:"착한임대인공제",imputedrent:"간주임대료계산기",jeonseins:"전세보증금보험료",legalinherit:"법정상속분계산기",luckyday:"손없는날달력",progressive:"누진세계산기",reconyear:"재건축연한계산기",refinance:"대환대출비교",remodel2:"리모델링ROI",rentincrease:"임대료인상률",stamp2:"인지세전자계약",realprice:"실거래가조회",subscription:"청약가점계산기",netsale:"매도실수령액계산기",terms:"부동산용어사전"};
 const SLUG_REVERSE=Object.fromEntries(Object.entries(SLUGS).map(([k,v])=>[decodeURIComponent(v),k]));
 
 const PAGE_META={
@@ -107,7 +107,8 @@ rentincrease:{title:"임대료 5% 상한 계산기 - 갱신청구권 | 생활계
 stamp2:{title:"인지세 계산기 (전자계약) - 50% 감면 | 생활계산기",desc:"부동산 매매계약서 인지세 계산. 구간별 2만~35만원. 전자계약 시 50% 감면. 매수·매도 부담 분할."},
 realprice:{title:"실거래가 조회 - 국토부 호갱노노 네이버 | 생활계산기",desc:"부동산 실거래가 통합 조회. 국토부 실거래가 공개시스템, 호갱노노, 네이버 부동산, 직방 딥링크 제공. 매매·전세 시세 확인."},
 subscription:{title:"청약가점 계산기 2026 - 무주택기간 부양가족 통장 | 생활계산기",desc:"아파트 청약 가점제 84점 자동 계산. 무주택기간 32점 + 부양가족 35점 + 청약통장 17점. 당첨 가능 단지 수준 안내."},
-netsale:{title:"매도 실수령액 계산기 - 양도세·중개수수료 차감 | 생활계산기",desc:"부동산 매도 시 실수령액 자동 계산. 매도가 - 양도소득세 - 중개수수료 - 기타비용. 자동 추정 또는 직접 입력."}
+netsale:{title:"매도 실수령액 계산기 - 양도세·중개수수료 차감 | 생활계산기",desc:"부동산 매도 시 실수령액 자동 계산. 매도가 - 양도소득세 - 중개수수료 - 기타비용. 자동 추정 또는 직접 입력."},
+terms:{title:"부동산 용어사전 - 100+ 전문 용어 해설 | 생활계산기",desc:"부동산·세금·대출 전문 용어 100+개 상세 설명. 취득세·양도세·DSR·LTV·전세·임대차보호법 등 검색 가능한 용어 사전."}
 };
 
 const INTERNAL_LINKS={
@@ -1532,6 +1533,17 @@ function CalcNetSale({isMo=false,onNav=()=>{}}){
   </div></div>);
 }
 
+/* 2026.04.14 부동산 용어사전 진입: 정적 HTML로 리다이렉트 */
+function CalcTerms({isMo=false,onNav=()=>{}}){
+  useEffect(()=>{if(typeof window!=="undefined")window.location.href="/terms/";},[]);
+  return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"60px 24px",textAlign:"center"}}>
+    <div style={{fontSize:48,marginBottom:16}}>📖</div>
+    <h3 style={{fontSize:20,fontWeight:800,color:P.tx,margin:"0 0 8px"}}>부동산 용어사전</h3>
+    <p style={{fontSize:14,color:P.mt,margin:"0 0 16px"}}>용어사전 페이지로 이동 중입니다...</p>
+    <a href="/terms/" style={{padding:"12px 24px",background:"#0747A6",color:"#fff",borderRadius:10,textDecoration:"none",fontSize:14,fontWeight:700}}>바로 이동 →</a>
+  </div>);
+}
+
 /* 등기비용 */
 function CalcReg({isMo=false,onNav=()=>{}}){const[tx,sTx]=useState("sale");const[propType,sPT]=useState("house");const[p,sP]=useState("");const[loan,sLoan]=useState("");const pW=tW(p),loanW=tW(loan);
   const acqR=tx==="sale"?0.01:tx==="gift"?0.035:0.028;const acqTax=Math.round(pW*acqR);const acqEdu=Math.round(acqTax*0.1);const acqFarm=acqR>=0.08?Math.round(pW*0.002):0;const acqTotal=acqTax+acqEdu+acqFarm;
@@ -1960,7 +1972,7 @@ function CalcMinWage({isMo=false,onNav=()=>{}}){
     </div>
   </div>);
 }
-const CM={auction2:CalcAuction2,auctiondiv:CalcAuctionDiv,auctionloan:CalcAuctionLoan,bldvat:CalcBldVat,bond2:CalcBond2,datediff:CalcDateDiff,estincome:CalcEstIncome,goodlord:CalcGoodLandlord,imputedrent:CalcImputedRent,jeonseins:CalcJeonseInsurance,legalinherit:CalcLegalInherit,luckyday:CalcLuckyDay,progressive:CalcProgressive,reconyear:CalcReconYear,refinance:CalcRefinance,remodel2:CalcRemodel2,rentincrease:CalcRentIncrease,stamp2:CalcStampNew,realprice:CalcRealPrice,subscription:CalcSubscription,netsale:CalcNetSale,acquisition:CalcAcq,transfer:CalcTrans,compre:CalcCompre,property:CalcProp,gift:CalcGift,inherit:CalcInherit,mortgage:CalcMort,dsr:CalcDSR,dti:CalcDTI,ltv:CalcLTV,rti:CalcRti,commission:CalcComm,registration:CalcReg,legal:CalcLegal,yield:CalcYield,area:CalcArea,convert:CalcConvert,joint:CalcJoint,totalcost:CalcTotalCost,compare:CalcCompare,invest:CalcInvest,loanmax:CalcLoanMax,holdtax:CalcHoldTax,stamp:CalcStamp,bond:CalcBond,deposit:CalcDeposit,far:CalcFAR,rental:CalcRental,inctax:CalcIncTax,yearend:CalcYearEnd,netsalary:CalcNetSalary,cartax:CalcCarTax,insurance4:CalcInsurance4,pension:CalcPension,retire:CalcRetire,unemploy:CalcUnemploy,minwage:CalcMinWage,appraisal:CalcAppraisal,auction:CalcAuction,remodel:CalcRemodel,bldvalue:CalcBldValue};
+const CM={auction2:CalcAuction2,auctiondiv:CalcAuctionDiv,auctionloan:CalcAuctionLoan,bldvat:CalcBldVat,bond2:CalcBond2,datediff:CalcDateDiff,estincome:CalcEstIncome,goodlord:CalcGoodLandlord,imputedrent:CalcImputedRent,jeonseins:CalcJeonseInsurance,legalinherit:CalcLegalInherit,luckyday:CalcLuckyDay,progressive:CalcProgressive,reconyear:CalcReconYear,refinance:CalcRefinance,remodel2:CalcRemodel2,rentincrease:CalcRentIncrease,stamp2:CalcStampNew,realprice:CalcRealPrice,subscription:CalcSubscription,netsale:CalcNetSale,terms:CalcTerms,acquisition:CalcAcq,transfer:CalcTrans,compre:CalcCompre,property:CalcProp,gift:CalcGift,inherit:CalcInherit,mortgage:CalcMort,dsr:CalcDSR,dti:CalcDTI,ltv:CalcLTV,rti:CalcRti,commission:CalcComm,registration:CalcReg,legal:CalcLegal,yield:CalcYield,area:CalcArea,convert:CalcConvert,joint:CalcJoint,totalcost:CalcTotalCost,compare:CalcCompare,invest:CalcInvest,loanmax:CalcLoanMax,holdtax:CalcHoldTax,stamp:CalcStamp,bond:CalcBond,deposit:CalcDeposit,far:CalcFAR,rental:CalcRental,inctax:CalcIncTax,yearend:CalcYearEnd,netsalary:CalcNetSalary,cartax:CalcCarTax,insurance4:CalcInsurance4,pension:CalcPension,retire:CalcRetire,unemploy:CalcUnemploy,minwage:CalcMinWage,appraisal:CalcAppraisal,auction:CalcAuction,remodel:CalcRemodel,bldvalue:CalcBldValue};
 
 
 /* ── 관련 계산기 매핑 ── */
@@ -2099,6 +2111,33 @@ const GLOSSARY={
   auction:[{term:"낙찰가",def:"경매에서 최종 매수인이 제시한 금액"},{term:"유찰",def:"입찰자가 없거나 최저가 미달로 경매 불성립"},{term:"명도",def:"낙찰 후 점유자를 퇴거시키는 절차"}],
   remodel:[{term:"리모델링",def:"기존 건물의 구조를 유지하며 증축·개축하는 행위"},{term:"분담금",def:"조합원이 추가로 부담하는 공사비 차액"},{term:"수직증축",def:"기존 건물 위에 층수를 추가하는 리모델링 방식"}],
   bldvalue:[{term:"내용연수",def:"건물이 경제적으로 사용 가능한 기간 (RC 40년)"},{term:"감가상각",def:"시간 경과에 따른 자산 가치 감소분"},{term:"잔존가치",def:"내용연수 경과 후 남은 자산 가치"}],
+};
+
+/* 2026.04.14 계산기별 핵심 용어 3개 → /terms/<slug>.html 연결 */
+const CALC_TERMS={
+  acquisition:[{t:"취득세",s:"acquisition-tax"},{t:"과세표준",s:"tax-base"},{t:"취득세 중과세율",s:"acquisition-heavy-tax-rate"}],
+  transfer:[{t:"양도소득세",s:"transfer-income-tax"},{t:"양도차익",s:"capital-gain"},{t:"장기보유특별공제",s:"long-term-holding-deduction"}],
+  property:[{t:"과세표준",s:"tax-base"},{t:"표준시가",s:"standard-market-price"},{t:"지방교육세",s:"local-education-tax"}],
+  compre:[{t:"과세표준",s:"tax-base"},{t:"고가주택",s:"high-value-house"},{t:"주택수 산정",s:"housing-count-calculation"}],
+  gift:[{t:"증여추정",s:"gift-presumption"},{t:"과세표준",s:"tax-base"},{t:"승계취득",s:"succession-acquisition"}],
+  inherit:[{t:"승계취득",s:"succession-acquisition"},{t:"과세표준",s:"tax-base"},{t:"장기보유특별공제",s:"long-term-holding-deduction"}],
+  commission:[{t:"중개수수료",s:"brokerage-fee"},{t:"중개수수료 요율",s:"brokerage-fee-rate"},{t:"중개수수료 부가세",s:"brokerage-vat"}],
+  registration:[{t:"중개수수료",s:"brokerage-fee"},{t:"지방교육세",s:"local-education-tax"},{t:"국민주택채권",s:"mortgage-right"}],
+  dsr:[{t:"DSR",s:"dsr"},{t:"스트레스 DSR",s:"stress-dsr"},{t:"DTI",s:"dti"}],
+  dti:[{t:"DTI",s:"dti"},{t:"DSR",s:"dsr"},{t:"LTV",s:"ltv"}],
+  ltv:[{t:"LTV",s:"ltv"},{t:"수도권 주담대 한도",s:"capital-area-mortgage-limit"},{t:"생애최초 주담대",s:"first-time-mortgage"}],
+  mortgage:[{t:"주택담보대출",s:"mortgage-loan"},{t:"원리금균등상환",s:"equal-principal-interest-repayment"},{t:"원금균등상환",s:"equal-principal-repayment"}],
+  loanmax:[{t:"DSR",s:"dsr"},{t:"LTV",s:"ltv"},{t:"주택담보대출",s:"mortgage-loan"}],
+  stamp:[{t:"인지세",s:"rural-special-tax"},{t:"거래금액",s:"transaction-amount"},{t:"실거래가",s:"actual-transaction-price"}],
+  bond:[{t:"국민주택채권",s:"mortgage-right"},{t:"근저당권",s:"mortgage-right"},{t:"과세표준",s:"tax-base"}],
+  rental:[{t:"주택임대사업자",s:"housing-rental-business"},{t:"주택임대등록",s:"rental-housing-registration"},{t:"간주임대료",s:"housing-rental-business"}],
+  yearend:[{t:"과세표준",s:"tax-base"},{t:"원천징수",s:"prepaid-tax"},{t:"지방교육세",s:"local-education-tax"}],
+  inctax:[{t:"원천징수",s:"prepaid-tax"},{t:"과세표준",s:"tax-base"},{t:"필요경비",s:"necessary-expenses"}],
+  convert:[{t:"전월세 전환율",s:"jeonse-wolse-conversion-rate"},{t:"전세",s:"jeonse"},{t:"월세",s:"wolse"}],
+  yield:[{t:"임대수익률",s:"housing-rental-business"},{t:"전세",s:"jeonse"},{t:"월세",s:"wolse"}],
+  auction:[{t:"경매",s:"auction-tax"},{t:"선순위 변제권",s:"priority-repayment-right"},{t:"최우선변제권",s:"top-priority-repayment"}],
+  jeonseins:[{t:"전세보증금 반환보증",s:"jeonse-deposit-insurance"},{t:"전세",s:"jeonse"},{t:"대항력",s:"opposing-power"}],
+  rentincrease:[{t:"임대료 상한제",s:"rent-cap-system"},{t:"계약갱신청구권",s:"contract-renewal-right"},{t:"주택임대차보호법",s:"housing-lease-protection-act"}]
 };
 
 /* ── 규정 타임라인 (계산기별) ── */
@@ -2247,6 +2286,16 @@ function EduContent({calc:calcId,gTab}){
         {openTerm.from&&openTerm.fromId!==calcId&&<div style={{marginTop:16,padding:"8px 12px",background:P.lt,borderRadius:8,fontSize:11,color:P.mt}}>📍 {openTerm.from} 계산기 관련 용어</div>}
       </div>
     </div>,document.body)}
+    {/* 2026.04.14 계산기별 관련 용어 3개 → /terms/<slug>.html */}
+    {CALC_TERMS[calcId]&&CALC_TERMS[calcId].length>0&&<div style={{marginTop:16,padding:"14px 16px",background:"#fff",borderRadius:12,border:`1px solid ${P.bd}`}}>
+      <div style={{fontSize:11,fontWeight:700,letterSpacing:1,color:P.mt,marginBottom:10,textTransform:"uppercase",display:"flex",alignItems:"center",gap:6}}><span>📖</span><span>이 계산기 관련 용어</span></div>
+      <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
+        {CALC_TERMS[calcId].map(ct=>(
+          <a key={ct.s} href={"/terms/"+ct.s+".html"} style={{padding:"8px 14px",background:"#f4f5f7",borderRadius:20,fontSize:13,fontWeight:600,color:P.pri,textDecoration:"none",border:"1px solid #dfe1e6",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.background="#deebff";e.currentTarget.style.borderColor=P.pri}} onMouseLeave={e=>{e.currentTarget.style.background="#f4f5f7";e.currentTarget.style.borderColor="#dfe1e6"}}>{ct.t} →</a>
+        ))}
+        <a href="/terms/" style={{padding:"8px 14px",background:"transparent",borderRadius:20,fontSize:13,fontWeight:600,color:P.mt,textDecoration:"none",border:"1px dashed #dfe1e6"}}>전체 용어사전 →</a>
+      </div>
+    </div>}
   </div>);
 }
 
@@ -2378,12 +2427,18 @@ function CalcSearchBar({onSelect,isMo,calcList}){
       <input value={query} onChange={e=>setQuery(e.target.value)} placeholder="어떤 계산이 필요하세요? (예: 양도세, 실수령액)" style={{flex:1,border:"none",outline:"none",padding:"14px 0",fontSize:15,color:"#172B4D",background:"transparent",fontFamily:"inherit",minWidth:0,width:"100%",maxWidth:"100%"}}/>
       {query&&<button aria-label="검색어 지우기" onClick={()=>{setQuery("");setResults([]);}} style={{background:"none",border:"none",fontSize:16,color:"#6b778c",cursor:"pointer"}}>✕</button>}
     </div>
-    {results.length>0&&<div style={{position:"absolute",top:"100%",left:0,right:0,background:"#fff",borderRadius:12,border:"1px solid #dfe1e6",boxShadow:"0 8px 24px rgba(0,0,0,0.12)",zIndex:100,marginTop:4,overflow:"hidden"}}>
-      {results.map((r,i)=>(<div key={r.id} onClick={()=>{onSelect(r.cat,r.id);setQuery("");setResults([]);}} style={{padding:"12px 16px",cursor:"pointer",borderBottom:i<results.length-1?"1px solid #f4f5f7":"none",display:"flex",alignItems:"center",gap:10}} onMouseEnter={e=>{e.currentTarget.style.background="#deebff"}} onMouseLeave={e=>{e.currentTarget.style.background="#fff"}}>
+    {(results.length>0||query.trim().length>0)&&<div style={{position:"absolute",top:"100%",left:0,right:0,background:"#fff",borderRadius:12,border:"1px solid #dfe1e6",boxShadow:"0 8px 24px rgba(0,0,0,0.12)",zIndex:100,marginTop:4,overflow:"hidden"}}>
+      {results.map((r,i)=>(<div key={r.id} onClick={()=>{onSelect(r.cat,r.id);setQuery("");setResults([]);}} style={{padding:"12px 16px",cursor:"pointer",borderBottom:"1px solid #f4f5f7",display:"flex",alignItems:"center",gap:10}} onMouseEnter={e=>{e.currentTarget.style.background="#deebff"}} onMouseLeave={e=>{e.currentTarget.style.background="#fff"}}>
         <span style={{fontSize:12,color:"#fff",background:catColors[r.cat],padding:"2px 8px",borderRadius:4,fontWeight:600}}>{catLabels[r.cat]}</span>
         <span style={{fontSize:14,fontWeight:600,color:"#172B4D"}}>{r.name}</span>
         <span style={{fontSize:12,color:"#6b778c",marginLeft:"auto"}}>→</span>
       </div>))}
+      {/* 2026.04.14 용어사전 검색 링크 */}
+      {query.trim().length>0&&<a href={"/terms/search.html?q="+encodeURIComponent(query.trim())} style={{display:"flex",alignItems:"center",gap:10,padding:"12px 16px",cursor:"pointer",background:"#f8f9fc",textDecoration:"none"}} onMouseEnter={e=>{e.currentTarget.style.background="#EAE6FF"}} onMouseLeave={e=>{e.currentTarget.style.background="#f8f9fc"}}>
+        <span style={{fontSize:12,color:"#fff",background:"#6554C0",padding:"2px 8px",borderRadius:4,fontWeight:600}}>용어사전</span>
+        <span style={{fontSize:14,fontWeight:600,color:"#172B4D"}}>『{query.trim()}』 용어 검색 결과 보기</span>
+        <span style={{fontSize:12,color:"#6b778c",marginLeft:"auto"}}>→</span>
+      </a>}
     </div>}
   </div>);
 }
@@ -3179,6 +3234,20 @@ body.lc-embed main{padding-top:0!important}
         </div>
       </div>}
 
+      {/* 2026.04.14 부동산 용어사전 섹션 */}
+      <div style={{maxWidth:1200,margin:"0 auto",padding:isMo?"24px 16px 0":"48px 24px 0"}}>
+        <a href="/terms/index.html" style={{display:"block",textDecoration:"none",background:"linear-gradient(135deg,#0747A6 0%,#6554C0 100%)",borderRadius:16,padding:isMo?"24px 20px":"32px 36px",color:"#fff",transition:"transform .2s,box-shadow .2s"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 12px 32px rgba(7,71,166,.25)"}} onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none"}}>
+          <div style={{display:"flex",alignItems:"center",gap:isMo?12:20,flexWrap:"wrap"}}>
+            <div style={{fontSize:isMo?40:56,flexShrink:0}}>📖</div>
+            <div style={{flex:"1 1 auto",minWidth:0}}>
+              <div style={{fontSize:11,fontWeight:700,letterSpacing:1.5,opacity:.8,textTransform:"uppercase",marginBottom:4}}>GLOSSARY</div>
+              <div style={{fontSize:isMo?20:26,fontWeight:800,marginBottom:4,letterSpacing:-.5}}>부동산 용어사전</div>
+              <div style={{fontSize:isMo?13:14,opacity:.9,lineHeight:1.6}}>취득세·양도세·DSR·전세 등 100+개 부동산·세금·대출 전문 용어 해설. 한 곳에서 모두 확인하세요.</div>
+            </div>
+            <div style={{flexShrink:0,padding:"10px 18px",background:"rgba(255,255,255,.18)",borderRadius:10,fontSize:13,fontWeight:700,whiteSpace:"nowrap"}}>전체 보기 →</div>
+          </div>
+        </a>
+      </div>
       {/* 전체 계산기 격자 그리드 */}
       <CalcGrid navigateCalc={navigateCalc} isMo={isMo}/>
 
