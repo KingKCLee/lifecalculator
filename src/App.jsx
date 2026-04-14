@@ -483,6 +483,10 @@ function shareKakao(title,total,sub,items){const currentUrl=typeof window!=="und
 
 function RP({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlineLinkLabel,alertMsg,alertType="info"}){
   const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
+  const rpKey=typeof window!=="undefined"?window.location.pathname:"";
+  const[snapshot,setSnapshot]=useState(()=>{try{if(typeof localStorage==="undefined")return null;const s=localStorage.getItem('lc_snap_'+rpKey);return s?JSON.parse(s):null;}catch{return null;}});
+  const saveSnapshot=()=>{const snap={total,title,at:Date.now()};try{localStorage.setItem('lc_snap_'+rpKey,JSON.stringify(snap));}catch{}setSnapshot(snap);};
+  const clearSnapshot=()=>{try{localStorage.removeItem('lc_snap_'+rpKey);}catch{}setSnapshot(null);};
   const isTotal=(l)=>l.includes("합계")||l.includes("납부세액")||l.includes("총 납부")||l.includes("총비용")||l.includes("최종")||l.includes("세후")||l.includes("잔존가치")||l.includes("순수익")||l.includes("환산")||l.includes("실투자")||l.includes("최대 대출");
   const isSub=(l)=>l.startsWith("  ")||l.startsWith("└")||l.startsWith("│");
   const alertAccent=alertType==="danger"?"#FFC400":alertType==="success"?"#57D9A3":alertType==="warning"?"#FFE380":"#fff";
@@ -513,12 +517,22 @@ function RP({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlin
       {deadlineLink&&<a href={deadlineLink} target="_blank" rel="noopener noreferrer" style={{color:"#FFC400",fontWeight:700,textDecoration:"none"}}>{deadlineLinkLabel||"바로가기 →"}</a>}
     </div>}
     <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:6,marginTop:14}}>
-      {[{fn:()=>downloadPDF(title,total,sub,items),icon:"📄",l:"PDF"},{fn:()=>downloadImage(title,total,sub,items),icon:"🖼",l:"이미지"},{fn:()=>shareKakao(title,total,sub,items),icon:"💬",l:"카카오"},{fn:()=>copyLink(),icon:"🔗",l:"링크"},{fn:()=>window.dispatchEvent(new CustomEvent('lc-save-calc',{detail:{title,total,sub,items}})),icon:"💾",l:"저장"}].map((b,i)=>(
+      {[{fn:()=>downloadPDF(title,total,sub,items),icon:"📄",l:"PDF"},{fn:()=>downloadImage(title,total,sub,items),icon:"🖼",l:"이미지"},{fn:()=>shareKakao(title,total,sub,items),icon:"💬",l:"카카오"},{fn:()=>window.dispatchEvent(new CustomEvent('lc-share-url')),icon:"🔗",l:"링크"},{fn:()=>window.dispatchEvent(new CustomEvent('lc-save-calc',{detail:{title,total,sub,items}})),icon:"💾",l:"저장"}].map((b,i)=>(
         <button key={i} onClick={b.fn} style={{padding:"9px 4px",background:"#fff",color:"#0747A6",border:"none",borderRadius:8,fontSize:11,fontWeight:700,cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:2,fontFamily:"inherit",transition:"transform .15s"}}
           onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-1px)"}} onMouseLeave={e=>{e.currentTarget.style.transform="translateY(0)"}}>
           <span style={{fontSize:14}}>{b.icon}</span>{b.l}
         </button>))}
     </div>
+    <div style={{display:"flex",gap:6,marginTop:10,flexWrap:"wrap"}}>
+      {[{m:0.9,l:"−10%"},{m:1,l:"원래"},{m:1.1,l:"+10%"}].map(s=>(
+        <button key={s.l} onClick={()=>window.dispatchEvent(new CustomEvent('lc-scenario',{detail:{mult:s.m}}))} style={{flex:"1 1 0",minWidth:0,padding:"8px 4px",background:"rgba(255,255,255,.12)",color:"#fff",border:"1px solid rgba(255,255,255,.28)",borderRadius:8,fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>{s.l}</button>
+      ))}
+      <button onClick={snapshot?clearSnapshot:saveSnapshot} style={{flex:"1.2 1 0",minWidth:0,padding:"8px 4px",background:snapshot?"rgba(255,196,0,.18)":"rgba(255,255,255,.12)",color:snapshot?"#FFC400":"#fff",border:"1px solid "+(snapshot?"#FFC400":"rgba(255,255,255,.28)"),borderRadius:8,fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>{snapshot?"스냅샷 제거":"📸 스냅샷"}</button>
+    </div>
+    {snapshot&&snapshot.total!==total&&<div style={{marginTop:8,padding:"8px 12px",background:"rgba(255,255,255,.12)",borderRadius:8,fontSize:11,display:"flex",justifyContent:"space-between",alignItems:"center",gap:8}}>
+      <span style={{opacity:.82}}>스냅샷 {new Date(snapshot.at).toLocaleTimeString("ko-KR",{hour:"2-digit",minute:"2-digit"})}: {fW(snapshot.total)}</span>
+      <span style={{fontWeight:800,color:total>snapshot.total?"#FF8F73":"#79F2C0",fontVariantNumeric:"tabular-nums"}}>{total>snapshot.total?"▲ +":"▼ "}{fW(Math.abs(total-snapshot.total))}</span>
+    </div>}
     <div style={{marginTop:10,fontSize:10,opacity:.5,lineHeight:1.5,textAlign:"center"}}>※ 2026년 세법 기준 · 참고용 계산이며 법적 효력 없음 (v2026.04.06)</div>
   </div>);
 }
@@ -2538,6 +2552,70 @@ export default function App(){
     window.addEventListener('lc-save-calc',h);
     return()=>window.removeEventListener('lc-save-calc',h);
   },[]);
+  // Phase B: 입력값 autosave (delegated input listener)
+  useEffect(()=>{
+    const h=(e)=>{
+      const t=e.target;
+      if(!t||!t.matches||!t.matches('input[type="text"],input[type="number"]'))return;
+      if(!t.closest('.calc-container,.mobile-calc-wrap'))return;
+      const cid=calcSaveRef.current;if(!cid)return;
+      try{localStorage.setItem('lc_input_'+cid,JSON.stringify(lcGetCalcInputs().map(el=>el.value)));}catch{}
+    };
+    document.addEventListener('input',h,true);
+    return()=>document.removeEventListener('input',h,true);
+  },[]);
+  // Phase B: 입력값 복원 (URL ?in= 우선, 아니면 localStorage)
+  useEffect(()=>{
+    if(page!=="calc"||!calc)return;
+    const urlParams=new URLSearchParams(window.location.search);
+    const urlIn=urlParams.get('in');
+    let values=null;
+    if(urlIn){values=lcDecodeInputs(urlIn);}
+    else{try{const s=localStorage.getItem('lc_input_'+calc);if(s)values=JSON.parse(s);}catch{}}
+    if(!values||!Array.isArray(values))return;
+    const apply=()=>{
+      const inputs=lcGetCalcInputs();
+      inputs.forEach((el,i)=>{if(values[i]!==undefined&&el.value!==values[i])lcSetInputValue(el,values[i]);});
+      if(urlIn){urlParams.delete('in');const qs=urlParams.toString();history.replaceState(null,'',window.location.pathname+(qs?'?'+qs:''));showToast("입력값이 복원되었습니다");}
+    };
+    const t1=setTimeout(apply,80);
+    const t2=setTimeout(apply,320);
+    return()=>{clearTimeout(t1);clearTimeout(t2);};
+  },[page,calc]);
+  // Phase B: URL 공유 (입력값 인코딩 → 클립보드)
+  useEffect(()=>{
+    const h=()=>{
+      const enc=lcEncodeInputs();
+      const cid=calcSaveRef.current;
+      const slug=cid?(SLUGS[cid]||cid):"";
+      const url=window.location.origin+"/"+(slug?encodeURIComponent(slug):"")+(enc?"?in="+enc:"");
+      const done=()=>showToast("링크가 복사되었습니다");
+      const fail=()=>showToast("복사에 실패했습니다");
+      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(url).then(done).catch(fail);}
+      else{try{const ta=document.createElement('textarea');ta.value=url;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);done();}catch{fail();}}
+    };
+    window.addEventListener('lc-share-url',h);
+    return()=>window.removeEventListener('lc-share-url',h);
+  },[]);
+  // Phase B: 시나리오 ±10% (주 입력값 배율 조정)
+  const scenarioOrigRef=useRef(null);
+  useEffect(()=>{scenarioOrigRef.current=null;},[calc]);
+  useEffect(()=>{
+    const h=(e)=>{
+      const mult=e.detail&&typeof e.detail.mult==="number"?e.detail.mult:null;
+      if(mult===null)return;
+      const inputs=lcGetCalcInputs();
+      let primary=null;let primaryVal=0;
+      for(const el of inputs){const n=parseFloat((el.value||"").replace(/,/g,''));if(!isNaN(n)&&n>primaryVal){primary=el;primaryVal=n;}}
+      if(!primary){showToast("조정할 입력값이 없습니다");return;}
+      if(scenarioOrigRef.current===null)scenarioOrigRef.current=primaryVal;
+      const next=Math.round(scenarioOrigRef.current*mult);
+      lcSetInputValue(primary,String(next));
+      showToast(mult===1?"원래 값으로 복원":mult<1?"−10% 적용":"+10% 적용");
+    };
+    window.addEventListener('lc-scenario',h);
+    return()=>window.removeEventListener('lc-scenario',h);
+  },[]);
   const hCat=c=>{const f=CL.find(x=>x.c===c);if(f)navigateCalc(c,f.id);};
   const goCalc=(cId)=>{const info=CL.find(c=>c.id===cId);if(info)navigateCalc(info.c,info.id);};
   const hash=usePathRoute();
@@ -2895,6 +2973,7 @@ button:active{transform:scale(0.98)}
     </footer>
     {modal&&<LegalModal type={modal} onClose={()=>setModal(null)}/>}
     {showAuth&&<AuthModal mode={authMode} setMode={setAuthMode} onClose={()=>setShowAuth(false)} isMo={isMo} onAuthSuccess={(token,email)=>{try{localStorage.setItem('lc_token',token);localStorage.setItem('lc_email',email);}catch{}setLcToken(token);setLcEmail(email);setShowAuth(false);}}/>}
+    {toast&&<div style={{position:"fixed",left:"50%",bottom:isMo?80:40,transform:"translateX(-50%)",background:"rgba(23,43,77,.95)",color:"#fff",padding:"12px 20px",borderRadius:10,fontSize:14,fontWeight:600,boxShadow:"0 8px 24px rgba(0,0,0,.25)",zIndex:10001,fontFamily:"inherit",pointerEvents:"none"}}>{toast}</div>}
     <ScrollTop/>
     <CookieBanner onPrivacy={()=>setModal("privacy")}/>
   </div>);
