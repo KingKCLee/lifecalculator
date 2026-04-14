@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.14",
       "category": "전체",
+      "title": "refactor: LeftNav 하단 실시간 지표 블록 제거 (코스피·기준금리·서울 아파트)",
+      "desc": "refactor: LeftNav 하단 실시간 지표 블록 제거 (코스피·기준금리·서울 아파트)"
+    },
+    {
+      "date": "2026.04.14",
+      "category": "전체",
       "title": "feat: CalcTrans/Compre/Gift/Inherit 2열 레이아웃 + hr 구분선 이식",
       "desc": "feat: CalcTrans/Compre/Gift/Inherit 2열 레이아웃 + hr 구분선 이식"
     },
@@ -1459,12 +1465,6 @@
       "category": "전체",
       "title": "fix: 36개 계산기 입력부·결과부 2열 그리드 레이아웃 일괄 복구",
       "desc": "fix: 36개 계산기 입력부·결과부 2열 그리드 레이아웃 일괄 복구"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "세금",
-      "title": "fix: CalcAcq 취득세 계산기 입력부·결과부 2열 그리드 레이아웃 복구",
-      "desc": "fix: CalcAcq 취득세 계산기 입력부·결과부 2열 그리드 레이아웃 복구"
     }
   ],
   "rates": {
