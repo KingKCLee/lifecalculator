@@ -1055,14 +1055,20 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
           ))}
         </div>
       </div>}
-      {/* 2026.04.14 취득 유형별 입력 레이블 분기 — Slider → Inp 통일 (레이블 위·입력란 풀폭) */}
-      <Inp label={acqType==="sale"?"취득가액 (실거래가)":acqType==="gift"||acqType==="inherit"?"시가인정액 또는 시가표준액":acqType==="newbuild"?"건축 원가":"취득가액"} value={price} onChange={sP} suffix="만원" placeholder="예: 12500"/>
-      {/* 2026.04.14 시가표준액: 직접 입력 + 외부 조회 링크 (API 연동 제거) */}
-      <div style={{position:"relative"}}>
-        <div style={{position:"absolute",top:-2,right:0,zIndex:2}}><TipModal title="시가표준액 (공시가격)"><p>미입력 시 취득가액을 시가표준액으로 간주합니다.</p><ul style={{paddingLeft:20}}><li>취득가액보다 시가표준액이 크면 시가표준액이 과세표준</li><li>시가표준액 1억 미만이면 다주택 중과 제외</li><li>조정대상지역 증여 시 시가표준액 3억 초과하면 12% 중과</li></ul></TipModal></div>
-        <Inp label="시가표준액 (공시가격)" value={stdPrice} onChange={setStdPrice} suffix="만원" placeholder="미입력 시 취득가 사용" note={acqType==="gift"||acqType==="inherit"?"취득가액이 없으므로 시가표준액 기준으로 계산합니다":acqType==="newbuild"?"시가표준액을 과세표준으로 계산합니다":"취득가액보다 시가표준액이 높으면 시가표준액이 과세표준이 됩니다"}/>
+      {/* 2026.04.14 취득가액 — Slider 복원 (인라인 레이블+입력란 + 하단 슬라이더 트랙) */}
+      <Slider label={acqType==="sale"?"취득가액 (실거래가)":acqType==="gift"||acqType==="inherit"?"시가인정액 또는 시가표준액":acqType==="newbuild"?"건축 원가":"취득가액"} value={price} onChange={sP} min={1000} max={500000} step={500}/>
+      {/* 2026.04.14 시가표준액 인라인 레이아웃 (Slider와 동일: 레이블 좌측 + 입력란 우측 같은 줄) */}
+      <div style={{marginBottom:12}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8,marginBottom:4,flexWrap:"wrap"}}>
+          <label style={{fontSize:isMo?13:14,fontWeight:600,color:"#0a1628",lineHeight:1.6,wordBreak:"keep-all"}}>시가표준액 (공시가격) <TipModal title="시가표준액 (공시가격)"><p>미입력 시 취득가액을 시가표준액으로 간주합니다.</p><ul style={{paddingLeft:20}}><li>취득가액보다 시가표준액이 크면 시가표준액이 과세표준</li><li>시가표준액 1억 미만이면 다주택 중과 제외</li><li>조정대상지역 증여 시 시가표준액 3억 초과하면 12% 중과</li></ul></TipModal></label>
+          <div style={{display:"flex",alignItems:"center",gap:6}}>
+            <input type="text" value={stdPrice?Number(String(stdPrice).replace(/,/g,"")).toLocaleString("ko-KR"):""} onChange={e=>{const raw=e.target.value.replace(/,/g,"");if(raw===""||/^\d+$/.test(raw))setStdPrice(raw);}} placeholder="미입력 시 취득가 사용" style={{width:160,textAlign:"right",padding:"8px 12px",border:"1.5px solid #dfe1e6",borderRadius:8,fontSize:15,fontWeight:700,color:P.tx,background:P.lt,outline:"none",fontFamily:"inherit"}}/>
+            <span style={{fontSize:13,color:P.mt,fontWeight:500}}>만원</span>
+          </div>
+        </div>
+        <div style={{fontSize:11,color:P.mt,lineHeight:1.6,wordBreak:"keep-all"}}>{acqType==="gift"||acqType==="inherit"?"취득가액이 없으므로 시가표준액 기준으로 계산합니다":acqType==="newbuild"?"시가표준액을 과세표준으로 계산합니다":"취득가액보다 시가표준액이 높으면 시가표준액이 과세표준이 됩니다"}</div>
       </div>
-      <div style={{marginTop:-8,marginBottom:16,padding:"12px 14px",background:"#F9FAFB",border:"1px solid #E5E7EB",borderRadius:10}}>
+      <div style={{marginBottom:16,padding:"12px 14px",background:"#F9FAFB",border:"1px solid #E5E7EB",borderRadius:10,maxWidth:480}}>
         <div style={{fontSize:11,color:"#6B7280",lineHeight:1.6,marginBottom:10}}>지역을 먼저 선택하면 조회 시 편리합니다 · 조회 후 시가표준액을 직접 입력해주세요</div>
         {(()=>{
           const selSt={width:"100%",padding:"8px 10px",border:"1px solid #E5E7EB",borderRadius:8,fontSize:13,fontFamily:"inherit",outline:"none",color:"#0a1628",boxSizing:"border-box",background:"#fff"};
@@ -1105,7 +1111,7 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
           <button onClick={()=>{setLuxury(!luxury);setChipDesc(!luxury?{key:"luxury",label:"사치성재산",desc:"별장·골프장·고급주택·고급오락장 취득 시 표준세율 + 중과기준세율(2%)×4 = +8%p 중과. 지방세법 §13②.",color:"#A32D2D",bg:"#FCEBEB",bc:"#E24B4A"}:null)}} style={{padding:"6px 12px",borderRadius:20,fontSize:12,fontWeight:luxury?700:500,cursor:"pointer",fontFamily:"inherit",transition:"all .15s",border:luxury?"none":"1.5px solid #dfe1e6",background:luxury?"#FCEBEB":"#fff",color:luxury?"#A32D2D":"#505f79"}} onMouseEnter={()=>showChipPanel("사치성재산","별장·골프장·고급주택·고급오락장 취득 시 +8%p 중과. 지방세법 §13②.")} onMouseLeave={hideChipPanel}>{luxury&&"✓ "}사치성재산</button>
         </div>
         {chipDesc&&<div style={{padding:"8px 12px",background:chipDesc.bg||"#f4f5f7",borderRadius:8,border:"0.5px solid "+(chipDesc.bc||"#dfe1e6"),fontSize:12,color:chipDesc.color,lineHeight:1.6,transition:"all .2s"}}><span style={{fontWeight:700}}>{chipDesc.label}</span> — {chipDesc.desc}</div>}
-      </div>}
+      </div>
       {isHouse&&acqType==="sale"&&n===2&&<Tog label="일시적 2주택" value={isTempTwo} onChange={sTT} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (3년 내 처분)"}]}/>}
       {isHouse&&acqType==="inherit"&&<Tog label="무주택가구 상속" value={inheritNone} onChange={sIN} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (0.8% 특례)"}]}/>}
       {tempTwo&&<div style={{padding:"10px 14px",background:"#FFF8E1",border:"1px solid #FFE082",borderRadius:10,fontSize:12,color:"#F57F17",marginTop:8,lineHeight:1.6}}>종전주택을 신규취득일로부터 3년 이내 처분해야 일반세율이 적용됩니다.</div>}
