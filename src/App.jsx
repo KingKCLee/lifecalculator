@@ -852,6 +852,37 @@ function parseWonString(v){
   return parseFloat(m)||0;
 }
 
+function SavingsGuide({tips}){
+  if(!tips || tips.length === 0) return null;
+  return (
+    <div style={{
+      background:"#EFF6FF",
+      border:"1px solid #BFDBFE",
+      borderRadius:10,
+      padding:"16px 20px",
+      marginTop:16
+    }}>
+      <div style={{fontWeight:700, color:"#1E40AF", marginBottom:8, fontSize:13}}>
+        💡 절세 가이드
+      </div>
+      {tips.slice(0,3).map((t,i) => (
+        <div key={i} style={{
+          padding:"10px 12px",
+          background:"#fff",
+          borderRadius:8,
+          marginTop:i===0?4:6,
+          fontSize:12,
+          color:"#1E40AF",
+          lineHeight:1.6,
+          wordBreak:"keep-all"
+        }}>
+          {t}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function RP({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlineLinkLabel,alertMsg,alertType="info",consultFunnel,miss}){
   // 2026.04.14 입력값 없을 때(isExample) ₩0으로 표시 (항상 노출, 숨기지 않음)
   // 2026.04.15 miss: 필수 입력 미기재 안내 (string[]). 있으면 안내박스 표시
@@ -1249,6 +1280,21 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
   if(heavyTaxExclude)basisText+="중과 배제 적용: 일반세율 1~3% 적용\n";
   if(spouseChildGive)basisText+="1세대1주택자 배우자·직계비속 증여: 조정지역 3억 초과여도 3.5% 일반세율\n";
   if(cultivation)basisText+="2년 이상 자경 농지 감면: 3% → 1.5%\n";
+  const _tips = [];
+  if (tW(price) > 0 && total > 0) {
+    if (acqType === "sale" && isHouse && n === 1 && !firstOfLife && pW <= 12e8 && isFirstHomeBenefit) {
+      _tips.push("📌 생애최초 주택구입자는 12억 이하 주택에 대해 최대 200만원(인구감소지역 300만원) 취득세 감면을 받을 수 있습니다 (2028.12.31까지).");
+    }
+    if (acqType === "sale" && isHouse && areaType === "big") {
+      _tips.push("📌 전용면적 85㎡ 이하 서민주택은 농어촌특별세가 비과세됩니다. 현재 85㎡ 초과로 농특세 " + fW(fm) + "이 추가되었습니다.");
+    }
+    if (acqType === "sale" && isHouse && n === 2 && isAdj && !tempTwo && !heavyTaxExclude) {
+      _tips.push("📌 일시적 2주택(종전주택 3년 내 처분 예정)이라면 중과 제외로 1~3% 일반세율 적용 가능합니다. '일시적 2주택' 옵션을 확인하세요.");
+    }
+    if (acqType === "gift" && isHouse && isAdj && stdW >= 3e8 && !spouseChildGive) {
+      _tips.push("📌 1세대1주택자가 배우자·직계비속에게 증여하는 경우 조정지역+공시3억 초과여도 3.5% 일반세율 적용이 가능합니다.");
+    }
+  }
   return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}><div>
       {!isMo&&<h3 style={{fontSize:isMo?16:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>취득세 계산기</h3>}
       <div style={{marginBottom:16}}>
@@ -1335,6 +1381,7 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
       alertMsg={!stdPrice?"시가표준액 미입력 시 정확도가 낮아질 수 있습니다":firstDed>0?"생애최초 감면 "+fW(firstDed)+" 적용됨":conArea&&n>=2&&!heavyTaxExclude&&!lowVal&&!tempTwo?"조정대상지역 "+n+"주택 중과세율 "+fP(r*100)+" 적용":null}
       alertType={!stdPrice?"warning":firstDed>0?"success":"danger"}
       items={[{l:"과세표준",v:fW(pW),note:stdW>0&&stdW>tW(price)?"시가표준액 기준":"취득가액 기준"},{l:"취득세율",v:fP(r*100),note:rateLabel},{l:"취득세",v:fW(ac)},{l:"지방교육세",v:fW(ed),note:isHeavy?"중과 0.4%":"취득세×10%"},{l:"농어촌특별세",v:fm>0?fW(fm):"없음 (85㎡ 이하)"},{l:"인지세",v:fW(st)}].concat(firstDed>0?[{l:"생애최초 감면",v:"-"+fW(firstDed),note:populationDecline?"인구감소 300만":"일반 200만"}]:[]).concat([{l:"합계 납부세액",v:fW(total)}])}/>
+    <SavingsGuide tips={_tips}/>
     <div style={{marginTop:32}}><NextStep calcId="acquisition" onNav={onNav} isMo={isMo}/></div>
     {/* 2026.04.14 실거래가 조회 연동 */}
     <button onClick={()=>onNav("realestate","realprice")} style={{width:"100%",marginTop:12,padding:"12px 16px",background:"#fff",border:"1.5px solid #0747A6",borderRadius:10,fontSize:14,fontWeight:700,color:"#0747A6",cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",gap:6}}><IconSearch/> 근처 실거래가 조회 →</button>
@@ -1506,6 +1553,25 @@ function CalcTrans({isMo=false,onNav=()=>{}}){
     items.push({l:"총 납부세액",v:fW(totalTax)});
     setResult({items,basis,totalTax,own,conArea});
   }
+  const _tips = [];
+  if (result && result.totalTax > 0) {
+    if (own === "one" && assetType === "house" && !is1HouseExempt && tW(sellAmt) <= 12e4) {
+      _tips.push("📌 1주택자이고 양도가 12억 이하인 경우 '1세대1주택 비과세' 특수조건을 체크하면 전액 비과세됩니다. 2년 이상 보유(조정지역은 2년 거주) 필수.");
+    }
+    if (own === "one" && conArea && !realLive) {
+      _tips.push("📌 조정대상지역 1주택은 '2년 거주' 요건을 충족해야 1세대1주택 비과세가 적용됩니다. 현재 거주 요건 미충족 상태입니다.");
+    }
+    if (assetType === "house" && buyDate.length >= 8 && sellDate.length >= 8) {
+      const bd = new Date(buyDate.slice(0,4)+"-"+buyDate.slice(4,6)+"-"+buyDate.slice(6,8));
+      const sd = new Date(sellDate.slice(0,4)+"-"+sellDate.slice(4,6)+"-"+sellDate.slice(6,8));
+      const hy = (sd - bd) / (86400000 * 365.25);
+      if (hy >= 1 && hy < 2) _tips.push("📌 보유 2년 미만으로 60% 단기세율이 적용 중입니다. 2년 경과 후 양도 시 누진세율로 전환되어 수백~수천만원 절감 가능합니다.");
+      else if (hy < 1) _tips.push("📌 보유 1년 미만 70% 단기세율 적용 중입니다. 1년 경과 시 60%, 2년 경과 시 기본세율로 전환됩니다.");
+    }
+    if ((own === "two" || own === "more") && conArea) {
+      _tips.push("📌 다주택 중과 유예 기간 (2022.5.10~2026.5.9) 내 양도 시 기본세율이 적용됩니다. 유예 종료 전 양도 전략 검토 필요.");
+    }
+  }
   return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}><div>{!isMo&&<h3 style={{fontSize:isMo?16:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>양도소득세 계산기</h3>}
     <div style={{marginBottom:12}}><div style={{fontSize:isMo?14:12,fontWeight:600,color:"#505f79",marginBottom:6}}>양도물건 종류<TipModal title="양도물건 종류별 과세"><ul style={{paddingLeft:20}}><li><b>분양권:</b> 1년 미만 70%, 1년 이상 60%</li><li><b>입주권:</b> 관리처분인가일 기준 분리 계산</li><li><b>비사업용토지:</b> 기본세율 + 10%p 추가과세</li><li><b>주택·일반:</b> 기본 누진세율 적용</li></ul></TipModal></div><div className="radio-grid" style={{display:"grid",gridTemplateColumns:isMo?"repeat(3,1fr)":"repeat(5,1fr)",gap:6}}>
       {[["house","주택"],["right","분양권"],["union","입주권"],["land","비사업토지"],["other","기타"]].map(([v,l])=>(<button key={v} onClick={()=>{setAssetType(v);if(v==="land"||v==="other"){setOwn("one");setConArea(false)}}} style={{padding:"10px",border:assetType===v?"2px solid #0747A6":"1.5px solid #dfe1e6",borderRadius:8,background:assetType===v?"#deebff":"#fff",color:assetType===v?"#0747A6":"#505f79",fontWeight:assetType===v?700:400,fontSize:isMo?14:13,cursor:"pointer",whiteSpace:"nowrap",wordBreak:"keep-all",fontFamily:"inherit"}}>{l}</button>))}
@@ -1588,6 +1654,7 @@ function CalcTrans({isMo=false,onNav=()=>{}}){
         alertMsg={inMoratoriumRender&&(result.own==="two"||result.own==="more")&&result.conArea?"다주택 중과 한시배제 (~2026.5.9): 기본세율 적용 중":null}
         alertType="info"
       />
+      <SavingsGuide tips={_tips}/>
       {result.basis&&<div style={{background:"#e3f2fd",borderRadius:10,padding:16,marginTop:16,fontSize:isMo?13:12,lineHeight:1.8,whiteSpace:"pre-line"}}><b>계산결과 해설</b><br/>{result.basis}</div>}
       <div style={{marginTop:12,padding:"10px 14px",background:"#f8f9fc",border:"1px solid #dfe1e6",borderRadius:8,fontSize:12,color:"#505f79",lineHeight:1.6,display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:8}}><span style={{display:"inline-flex",alignItems:"center",gap:4}}><IconCal/> 신고기한: 양도일이 속한 달 말일로부터 2개월 이내</span><a href="https://hometax.go.kr" target="_blank" rel="noopener noreferrer" style={{color:"#0747A6",fontWeight:700,textDecoration:"none"}}>홈택스 신고 →</a></div>
       {/* 2026.04.14 양도세 상담 퍼널: 1억↑ 또는 다주택+조정 */}
@@ -1647,6 +1714,21 @@ function CalcCompre({isMo=false,onNav=()=>{}}){
   if(cappedApplied)rpItems.push({l:"세부담상한 적용",v:"전년 "+(n<=2?"150%":"300%")});
   rpItems.push({l:"종부세 (공제후)",v:fW(finalCt)});
   rpItems.push({l:"농어촌특별세 (20%)",v:fW(fm)});
+  const _tips = [];
+  if (!isDefault && total > 0) {
+    if (!isCorp && n === 1 && ageV < 60 && holdV < 5) {
+      _tips.push("📌 1주택자는 고령자(60세+20%, 65세+30%, 70세+40%)·장기보유(5년+20%, 10년+40%, 15년+50%) 합산 최대 80% 세액공제 가능합니다.");
+    }
+    if (!isCorp && nRaw >= 2 && items.some(i => !i.exclude)) {
+      _tips.push("📌 임대사업자 등록 후 장기일반민간임대주택으로 등록하면 합산배제되어 종부세 부담이 크게 줄어듭니다. 각 물건별 '합산배제' 체크 확인.");
+    }
+    if (!isCorp && nRaw >= 3) {
+      _tips.push("📌 3주택 이상은 중과세율(최대 5.0%)이 적용됩니다. 일부 주택 매각·증여·임대등록 합산배제로 2주택 이하 전환 시 일반세율 전환됩니다.");
+    }
+    if (!isCorp && prev === 0 && total > 5e6) {
+      _tips.push("📌 전년도 종부세액을 입력하면 세부담 상한(1·2주택 150%, 3주택+ 300%)이 적용되어 실제 납부액이 줄어들 수 있습니다.");
+    }
+  }
   return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}><div>{!isMo&&<h3 style={{fontSize:isMo?16:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>종합부동산세 계산기</h3>}
     <Tog label="납세자 유형" value={taxpayer} onChange={sTP} options={[{value:"indi",label:"개인"},{value:"corp",label:"법인"}]}/>
     <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"16px 0"}}/>
@@ -1692,7 +1774,7 @@ function CalcCompre({isMo=false,onNav=()=>{}}){
       deadlineLink="https://hometax.go.kr" deadlineLinkLabel="홈택스 신고 →"
       alertMsg={cappedApplied?"세부담상한 적용: 전년 "+(n<=2?"150%":"300%")+"까지":isCorp?"법인: 공제·세부담상한 미적용":pp<=d?"공제 한도 이내 (과세 없음)":combinedCredit>=0.8?"공제 한도 80% 도달":null}
       alertType={cappedApplied?"success":pp<=d?"success":"warning"}
-      total={total} sub={rateLabel+" ("+calcYear+"년 기준)"} items={rpItems}/><NextStep calcId="compre" onNav={onNav} isMo={isMo}/></div></div>);}
+      total={total} sub={rateLabel+" ("+calcYear+"년 기준)"} items={rpItems}/><SavingsGuide tips={_tips}/><NextStep calcId="compre" onNav={onNav} isMo={isMo}/></div></div>);}
 
 function CalcProp({isMo=false,onNav=()=>{}}){
   const[pt,sPt]=useState("house");const[p,sP]=useState("");const[isDefault,setIsDefault]=useState(true);const markModified=()=>setIsDefault(false);const[one,sOne]=useState("no");const[prevTax,sPT]=useState("");
@@ -1739,7 +1821,23 @@ function CalcProp({isMo=false,onNav=()=>{}}){
       alertType={capApplied?"success":"info"}
       total={total} sub={"공정시장가액비율 "+(fr*100).toFixed(0)+"% 적용"} items={rpItems}/><NextStep calcId="property" onNav={onNav} isMo={isMo}/><RateTable title="재산세율표 (주택)" headers={["과세표준","세율"]} rows={[["6천만 이하","0.1%"],["1.5억 이하","0.15%"],["3억 이하","0.25%"],["3억 초과","0.4%"]]}/></div></div>);}
 
-function CalcGift({isMo=false,onNav=()=>{}}){const[rl,sRl]=useState("adult");const[p,sP]=useState("");const[isMarriage,sM]=useState("no");const[priorGift,sPG]=useState("");const[skip,sSkip]=useState("no");const[burden,sBurden]=useState("no");const[debt,sDebt]=useState("");const g=tW(p),priorW=tW(priorGift),debtW=tW(debt);const ds={spouse:6e8,adult:5e7,minor:2e7,asc:5e7,relative:1e7,other:0};let d=ds[rl];const hasMarriageBonus=isMarriage==="yes"&&(rl==="adult"||rl==="minor"||rl==="asc");if(hasMarriageBonus)d+=1e8;const giftPortion=burden==="yes"?Math.max(0,g-debtW):g;const totalGift=giftPortion+priorW;const tb=Math.max(0,totalGift-d);const priorTax=priorW>0?pTx(Math.max(0,priorW-d),GB):0;const fullTax=pTx(tb,GB);const skipRate=skip==="minor"?0.4:skip==="adult"?0.3:0;const surcharge=Math.round(fullTax*skipRate);const thisTax=Math.max(0,fullTax+surcharge-priorTax);const finalTax=Math.round(thisTax*.97);return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}><div>{!isMo&&<h3 style={{fontSize:isMo?16:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>증여세 계산기</h3>}
+function CalcGift({isMo=false,onNav=()=>{}}){const[rl,sRl]=useState("adult");const[p,sP]=useState("");const[isMarriage,sM]=useState("no");const[priorGift,sPG]=useState("");const[skip,sSkip]=useState("no");const[burden,sBurden]=useState("no");const[debt,sDebt]=useState("");const g=tW(p),priorW=tW(priorGift),debtW=tW(debt);const ds={spouse:6e8,adult:5e7,minor:2e7,asc:5e7,relative:1e7,other:0};let d=ds[rl];const hasMarriageBonus=isMarriage==="yes"&&(rl==="adult"||rl==="minor"||rl==="asc");if(hasMarriageBonus)d+=1e8;const giftPortion=burden==="yes"?Math.max(0,g-debtW):g;const totalGift=giftPortion+priorW;const tb=Math.max(0,totalGift-d);const priorTax=priorW>0?pTx(Math.max(0,priorW-d),GB):0;const fullTax=pTx(tb,GB);const skipRate=skip==="minor"?0.4:skip==="adult"?0.3:0;const surcharge=Math.round(fullTax*skipRate);const thisTax=Math.max(0,fullTax+surcharge-priorTax);const finalTax=Math.round(thisTax*.97);
+const _tips=[];
+if(g>0&&finalTax>0){
+  if((rl==="adult"||rl==="minor"||rl==="asc")&&!hasMarriageBonus){
+    _tips.push("📌 혼인·출산 시 직계존비속으로부터 추가 1억 공제(2024.1.1~)를 받을 수 있습니다. 혼인신고 전후 2년 내 증여라면 '혼인·출산 증여'를 체크하세요.");
+  }
+  if(rl==="spouse"&&g<=6e8){
+    _tips.push("📌 배우자 증여 공제는 6억원입니다. 현재 공제 한도 이내이므로 납부세액이 발생하지 않습니다.");
+  }
+  if(rl==="adult"&&g>5e7&&g<=1.5e8&&!hasMarriageBonus){
+    _tips.push("📌 10년 단위로 증여하면 공제 한도(성년 5천만) 초과분을 분할하여 세율 구간을 낮출 수 있습니다. 장기 증여 계획 수립 권장.");
+  }
+  if(skip!=="no"){
+    _tips.push("📌 세대생략 증여는 30~40% 할증 과세됩니다. 부모를 거쳐 손자녀로 증여하는 것이 장기적으로 세액 부담이 더 적을 수 있습니다.");
+  }
+}
+return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}><div>{!isMo&&<h3 style={{fontSize:isMo?16:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>증여세 계산기</h3>}
     <div style={{marginBottom:14}}><div style={{fontSize:12,color:"#6b778c",marginBottom:8}}>수증자와의 관계</div><div style={{display:"flex",flexWrap:"wrap",gap:6}}>{[{v:"spouse",l:"배우자",d:"6억"},{v:"adult",l:"성년 자녀",d:"5천만"},{v:"minor",l:"미성년 자녀",d:"2천만"},{v:"asc",l:"직계존속",d:"5천만"},{v:"relative",l:"기타 친족",d:"1천만"},{v:"other",l:"타인",d:"공제없음"}].map(opt=>(<button key={opt.v} onClick={()=>sRl(opt.v)} title={"공제한도 "+opt.d} style={{padding:"6px 12px",borderRadius:20,fontSize:12,fontWeight:rl===opt.v?700:500,cursor:"pointer",fontFamily:"inherit",transition:"all .15s",border:rl===opt.v?"none":"1.5px solid #dfe1e6",background:rl===opt.v?"#DEEBFF":"#fff",color:rl===opt.v?"#0C447C":"#505f79"}}>{rl===opt.v&&"✓ "}{opt.l}<span style={{opacity:.6,marginLeft:4,fontSize:10}}>({opt.d})</span></button>))}</div></div>
     <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"16px 0"}}/>
     <Inp label="증여 재산가액" value={p} onChange={sP} suffix="만원" placeholder="예: 100000" error={!p||p==="0"}/>
@@ -1762,7 +1860,7 @@ function CalcGift({isMo=false,onNav=()=>{}}){const[rl,sRl]=useState("adult");con
       deadlineLink="https://hometax.go.kr" deadlineLinkLabel="홈택스 신고 →"
       alertMsg={finalTax===0?"공제 한도 이내: 납부세액 없음":skip!=="no"?"세대생략 할증 "+(skip==="minor"?40:30)+"% 적용됨":null}
       alertType={finalTax===0?"success":"warning"}
-      total={finalTax} sub={"공제 "+fW(d)+" 적용"} items={[{l:"증여재산가액",v:fW(g)}].concat(burden==="yes"&&debtW>0?[{l:"채무 인수분 (양도세 대상)",v:"-"+fW(debtW)},{l:"증여세 과세 증여액",v:fW(giftPortion)}]:[]).concat(priorW>0?[{l:"10년 내 기증여 합산",v:fW(priorW)}]:[]).concat([{l:"증여재산 공제",v:"-"+fW(d)},{l:"합산 과세표준",v:fW(tb)},{l:"합산 산출세액",v:fW(fullTax)}]).concat(skipRate>0?[{l:"세대생략 할증 ("+(skipRate*100)+"%)",v:"+"+fW(surcharge)}]:[]).concat(priorW>0&&priorTax>0?[{l:"기납부 증여세 차감",v:"-"+fW(priorTax)}]:[]).concat([{l:"신고세액공제 (3%)",v:"-"+fW(Math.round(thisTax*0.03)),note:"기한 내 신고 시"},{l:"이번 납부 증여세",v:fW(finalTax)}]).concat(burden==="yes"&&debtW>0?[{l:"채무인수분 추정 양도세",v:"약 "+fW(Math.round(debtW*0.22)),note:"참고용·실제는 세무사 확인"}]:[]).concat([{l:"※ 별도 취득세 (참고)",v:rl==="spouse"?"3.5%":g>=3e8?"조정지역 주택: 12%":"3.5%",note:"실제 취득세 계산기에서 확인"}])}/><NextStep calcId="gift" onNav={onNav} isMo={isMo}/></div></div>);}
+      total={finalTax} sub={"공제 "+fW(d)+" 적용"} items={[{l:"증여재산가액",v:fW(g)}].concat(burden==="yes"&&debtW>0?[{l:"채무 인수분 (양도세 대상)",v:"-"+fW(debtW)},{l:"증여세 과세 증여액",v:fW(giftPortion)}]:[]).concat(priorW>0?[{l:"10년 내 기증여 합산",v:fW(priorW)}]:[]).concat([{l:"증여재산 공제",v:"-"+fW(d)},{l:"합산 과세표준",v:fW(tb)},{l:"합산 산출세액",v:fW(fullTax)}]).concat(skipRate>0?[{l:"세대생략 할증 ("+(skipRate*100)+"%)",v:"+"+fW(surcharge)}]:[]).concat(priorW>0&&priorTax>0?[{l:"기납부 증여세 차감",v:"-"+fW(priorTax)}]:[]).concat([{l:"신고세액공제 (3%)",v:"-"+fW(Math.round(thisTax*0.03)),note:"기한 내 신고 시"},{l:"이번 납부 증여세",v:fW(finalTax)}]).concat(burden==="yes"&&debtW>0?[{l:"채무인수분 추정 양도세",v:"약 "+fW(Math.round(debtW*0.22)),note:"참고용·실제는 세무사 확인"}]:[]).concat([{l:"※ 별도 취득세 (참고)",v:rl==="spouse"?"3.5%":g>=3e8?"조정지역 주택: 12%":"3.5%",note:"실제 취득세 계산기에서 확인"}])}/><SavingsGuide tips={_tips}/><NextStep calcId="gift" onNav={onNav} isMo={isMo}/></div></div>);}
 
 function CalcInherit({isMo=false,onNav=()=>{}}){const[ta,sTa]=useState("");const[finAsset,sFA]=useState("");const[db,sDb]=useState("");const[fn,sFn]=useState("");const[hasSpouse,sHS]=useState("yes");const[children,sCh]=useState("2");const[cohabit,sCohab]=useState("");const[farm,sFarm]=useState("");const[priorGift,sPG]=useState("");const[onTime,sOT]=useState("yes");const t=tW(ta),finW=tW(finAsset),d=tW(db),f=Math.min(tW(fn),15000000),priorW=tW(priorGift),cohabW=tW(cohabit),farmW=tW(farm);const gross=t+priorW;const netEstate=gross-d-f;const childN=parseInt(children)||0;const basicDed=2e8;const personalDed=childN*5e7;const basicPlusPersonal=basicDed+personalDed;const lumpSum=5e8;const mainDed=Math.max(basicPlusPersonal,lumpSum);let spouseDed=0;if(hasSpouse==="yes"){const spouseShare=netEstate>0?netEstate*1.5/(1.5+childN):0;spouseDed=Math.min(Math.max(spouseShare,5e8),30e8);}let financialDed=0;if(finW>0){if(finW<=2e7)financialDed=finW;else if(finW<=1e8)financialDed=2e7;else financialDed=Math.min(Math.round(finW*0.20),2e8);}const cohabDed=cohabW>0?Math.min(cohabW,6e8):0;const farmDed=farmW>0?Math.min(farmW,15e8):0;const totalDed=mainDed+spouseDed+financialDed+cohabDed+farmDed;const tb=Math.max(0,netEstate-totalDed);const tx=pTx(tb,GB);const rebate=onTime==="yes"?0.03:0;const finalTax=Math.round(tx*(1-rebate));return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}><div>{!isMo&&<h3 style={{fontSize:isMo?16:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>상속세 계산기</h3>}
     <Inp label="총 상속재산가액" value={ta} onChange={sTa} suffix="만원" placeholder="예: 200000" error={!ta||ta==="0"}/>
@@ -1801,18 +1899,41 @@ function CalcMort({isMo=false,onNav=()=>{}}){const[pr,sPr]=useState("");const[rt
     return{mp,tp,ti,firstPay};}
   const eq=calc("equal"),pr2=calc("principal"),bl=calc("bullet");
   const sel=mt==="equal"?eq:mt==="principal"?pr2:bl;
+  const _tips=[];
+  if(PP>0&&r>0){
+    const savings=Math.max(eq.ti,pr2.ti,bl.ti)-Math.min(eq.ti,pr2.ti,bl.ti);
+    if(mt!=="principal"&&pr2.ti<sel.ti){
+      _tips.push("📌 원금균등 상환이 원리금균등 대비 총 이자를 "+fW(sel.ti-pr2.ti)+" 절감합니다. 초기 부담이 크지만 장기적으로 유리합니다.");
+    }
+    if(mt==="bullet"){
+      _tips.push("📌 만기일시 상환은 총 이자가 가장 많습니다. 원금 분할상환 방식 전환 시 수백~수천만원 이자 절약 가능.");
+    }
+    if(pN(rt)>=4.5){
+      _tips.push("📌 금리 4.5% 이상은 고금리 구간입니다. 보금자리론(연 3.8~4.3%)·디딤돌(2.45~3.55%) 정책자금 대환 검토 권장.");
+    }
+    if(parseInt(gr)>0){
+      _tips.push("📌 거치기간 중에는 이자만 납부되어 원금이 줄지 않습니다. 거치 없이 즉시 원금 상환 시 총 이자 부담이 크게 줄어듭니다.");
+    }
+  }
   let prepayFee=0;if(ppFeeRate>0&&ppYr>0&&ppYr<parseInt(yr)){const remainMonths=(parseInt(yr)-ppYr)*12;prepayFee=Math.round(PP*ppFeeRate*(remainMonths/n));}
   const schedule=[];if(PP>0&&r>0&&rm>0&&sel.mp>0){let balance=PP;const years=Math.min(parseInt(yr),40);for(let y=1;y<=years;y++){let yearInterest=0,yearPrincipal=0;for(let m=0;m<12;m++){if(balance<=0)break;const interest=balance*r;const principal=sel.mp-interest;yearInterest+=interest;yearPrincipal+=Math.min(principal,balance);balance=Math.max(0,balance-principal);}schedule.push({year:y,interest:Math.round(yearInterest),principal:Math.round(yearPrincipal),balance:Math.round(balance)});if(balance<=0)break;}}
   return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}><div>{!isMo&&<h3 style={{fontSize:isMo?16:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>대출이자 계산기</h3>}<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?0:12}}><Inp label="대출 원금" value={pr} onChange={sPr} suffix="만원" placeholder="예: 30000" error={!pr||pr==="0"}/><Inp label="연이자율" value={rt} onChange={sRt} suffix="%" placeholder="예: 3.5" error={!rt||rt==="0"}/></div><div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?8:12}}><Sel label="대출 기간" value={yr} onChange={sYr} options={[1,2,3,5,10,15,20,25,30,35,40].map(y=>({value:String(y),label:y+"년"}))}/><Sel label="거치기간" value={gr} onChange={sGr} options={[0,1,2,3,5,10].map(y=>({value:String(y),label:y===0?"없음":y+"년"}))}/></div><Tog label="상환 방식" value={mt} onChange={sMt} options={[{value:"equal",label:"원리금균등"},{value:"principal",label:"원금균등"},{value:"bullet",label:"만기일시"}]}/><div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?8:12}}><div style={{fontSize:12,color:"#6b778c",marginBottom:6,marginLeft:2,display:"flex",alignItems:"center",gap:4,flexWrap:"nowrap"}}>중도상환 <TipModal title="중도상환수수료"><p>대출 만기 전 상환 시 0.5~1.5% 부과. 통상 3년 후 면제.</p></TipModal></div><Inp label="중도상환수수료율" value={ppFee} onChange={sPP} suffix="%" placeholder="1.4"/><Sel label="중도상환 시기" value={ppYear} onChange={sPY} options={[0,1,2,3,5,7,10].map(y=>({value:String(y),label:y===0?"없음":y+"년차"}))}/></div></div><div>{PP>0&&r>0?<><RP miss={isDefault?MI.mortgage:null} isExample={isDefault} title={mt==="equal"?"원리금균등 월납입액":mt==="principal"?"원금균등 첫달 납입액":"만기일시 월이자"}
       deadline="※ 중도상환수수료: 대출 후 3년 이내 상환 시 보통 0.6~1.5% 부과"
       alertMsg={parseInt(gr)>0?"거치기간 "+gr+"년 설정: 거치 중 이자만 납부, 원금 상환 없음":null}
       alertType="warning"
-      total={sel.firstPay} sub={mt==="equal"?"원리금균등 월납":mt==="principal"?"원금균등 첫달":"만기일시 월이자"} items={[{l:"첫 달 납입금",v:fW(sel.firstPay)}].concat(gm>0?[{l:"거치기간 "+gr+"년 월이자",v:fW(PP*r)},{l:"거치 후 월납입액",v:fW(sel.mp)},{l:"거치기간 총이자",v:fW(PP*r*gm)}]:[]).concat([{l:"총 이자",v:fW(sel.ti)},{l:"총 상환액",v:fW(sel.tp)},{l:"이자 비율",v:fP(sel.ti/PP*100)}]).concat(prepayFee>0?[{l:"중도상환수수료 ("+ppYr+"년차)",v:fW(prepayFee)}]:[]).concat([{l:"─ 상환방식 비교 ─",v:""},{l:"원리금균등 총이자",v:fW(eq.ti),note:eq.ti===Math.min(eq.ti,pr2.ti,bl.ti)?"✓ 이자 최소":""},{l:"원금균등 총이자",v:fW(pr2.ti),note:pr2.ti===Math.min(eq.ti,pr2.ti,bl.ti)?"✓ 이자 최소":""},{l:"만기일시 총이자",v:fW(bl.ti),note:bl.ti===Math.min(eq.ti,pr2.ti,bl.ti)?"✓ 이자 최소":""}])}/>{schedule.length>0&&<div style={{marginTop:16}}><button onClick={()=>setShowSchedule(!showSchedule)} style={{width:"100%",padding:"10px",background:"#f4f5f7",border:"1px solid #dfe1e6",borderRadius:8,fontSize:13,fontWeight:600,color:"#0747A6",cursor:"pointer",fontFamily:"inherit"}}>상환 스케줄 {showSchedule?"접기 ▲":"보기 ▼"}</button>{showSchedule&&<div style={{marginTop:8,overflowX:"auto",border:"1px solid #dfe1e6",borderRadius:8}}><table style={{width:"100%",borderCollapse:"collapse",fontSize:12}}><thead><tr style={{background:"#f4f5f7"}}><th style={{padding:"8px 6px",textAlign:"center",borderBottom:"1px solid #dfe1e6"}}>연차</th><th style={{padding:"8px 6px",textAlign:"right",borderBottom:"1px solid #dfe1e6"}}>연간 이자</th><th style={{padding:"8px 6px",textAlign:"right",borderBottom:"1px solid #dfe1e6"}}>연간 원금</th><th style={{padding:"8px 6px",textAlign:"right",borderBottom:"1px solid #dfe1e6"}}>잔액</th></tr></thead><tbody>{schedule.map((row,i)=>(<tr key={i} style={{background:i%2===0?"#fff":"#fafbfc"}}><td style={{padding:"6px",textAlign:"center",color:"#505f79"}}>{row.year}년차</td><td style={{padding:"6px",textAlign:"right",color:"#BF2600"}}>{fW(row.interest)}</td><td style={{padding:"6px",textAlign:"right",color:"#0747A6"}}>{fW(row.principal)}</td><td style={{padding:"6px",textAlign:"right",fontWeight:600}}>{fW(row.balance)}</td></tr>))}</tbody></table></div>}</div>}</>:<StepsGuide steps={[{label:"대출 원금 입력",filled:PP>0},{label:"연이자율 입력",filled:pN(rt)>0},{label:"대출 기간 선택",filled:true}]}/>}<NextStep calcId="mortgage" onNav={onNav} isMo={isMo}/><RateTable title="대출상환 방식 비교" headers={["방식","초기부담","총이자"]} rows={[["원리금균등","중간","중간"],["원금균등","높음","적음"],["만기일시","낮음","많음"]]}/></div></div>);}
+      total={sel.firstPay} sub={mt==="equal"?"원리금균등 월납":mt==="principal"?"원금균등 첫달":"만기일시 월이자"} items={[{l:"첫 달 납입금",v:fW(sel.firstPay)}].concat(gm>0?[{l:"거치기간 "+gr+"년 월이자",v:fW(PP*r)},{l:"거치 후 월납입액",v:fW(sel.mp)},{l:"거치기간 총이자",v:fW(PP*r*gm)}]:[]).concat([{l:"총 이자",v:fW(sel.ti)},{l:"총 상환액",v:fW(sel.tp)},{l:"이자 비율",v:fP(sel.ti/PP*100)}]).concat(prepayFee>0?[{l:"중도상환수수료 ("+ppYr+"년차)",v:fW(prepayFee)}]:[]).concat([{l:"─ 상환방식 비교 ─",v:""},{l:"원리금균등 총이자",v:fW(eq.ti),note:eq.ti===Math.min(eq.ti,pr2.ti,bl.ti)?"✓ 이자 최소":""},{l:"원금균등 총이자",v:fW(pr2.ti),note:pr2.ti===Math.min(eq.ti,pr2.ti,bl.ti)?"✓ 이자 최소":""},{l:"만기일시 총이자",v:fW(bl.ti),note:bl.ti===Math.min(eq.ti,pr2.ti,bl.ti)?"✓ 이자 최소":""}])}/><SavingsGuide tips={_tips}/>{schedule.length>0&&<div style={{marginTop:16}}><button onClick={()=>setShowSchedule(!showSchedule)} style={{width:"100%",padding:"10px",background:"#f4f5f7",border:"1px solid #dfe1e6",borderRadius:8,fontSize:13,fontWeight:600,color:"#0747A6",cursor:"pointer",fontFamily:"inherit"}}>상환 스케줄 {showSchedule?"접기 ▲":"보기 ▼"}</button>{showSchedule&&<div style={{marginTop:8,overflowX:"auto",border:"1px solid #dfe1e6",borderRadius:8}}><table style={{width:"100%",borderCollapse:"collapse",fontSize:12}}><thead><tr style={{background:"#f4f5f7"}}><th style={{padding:"8px 6px",textAlign:"center",borderBottom:"1px solid #dfe1e6"}}>연차</th><th style={{padding:"8px 6px",textAlign:"right",borderBottom:"1px solid #dfe1e6"}}>연간 이자</th><th style={{padding:"8px 6px",textAlign:"right",borderBottom:"1px solid #dfe1e6"}}>연간 원금</th><th style={{padding:"8px 6px",textAlign:"right",borderBottom:"1px solid #dfe1e6"}}>잔액</th></tr></thead><tbody>{schedule.map((row,i)=>(<tr key={i} style={{background:i%2===0?"#fff":"#fafbfc"}}><td style={{padding:"6px",textAlign:"center",color:"#505f79"}}>{row.year}년차</td><td style={{padding:"6px",textAlign:"right",color:"#BF2600"}}>{fW(row.interest)}</td><td style={{padding:"6px",textAlign:"right",color:"#0747A6"}}>{fW(row.principal)}</td><td style={{padding:"6px",textAlign:"right",fontWeight:600}}>{fW(row.balance)}</td></tr>))}</tbody></table></div>}</div>}</>:<StepsGuide steps={[{label:"대출 원금 입력",filled:PP>0},{label:"연이자율 입력",filled:pN(rt)>0},{label:"대출 기간 선택",filled:true}]}/>}<NextStep calcId="mortgage" onNav={onNav} isMo={isMo}/><RateTable title="대출상환 방식 비교" headers={["방식","초기부담","총이자"]} rows={[["원리금균등","중간","중간"],["원금균등","높음","적음"],["만기일시","낮음","많음"]]}/></div></div>);}
 
 function CalcDSR({isMo=false,onNav=()=>{}}){const[inc,sInc]=useState("");const[nl,sNl]=useState("");const[nr,sNr]=useState("");const[isDefault,setIsDefault]=useState(true);const markModified=()=>setIsDefault(false);const[ny,sNy]=useState("30");const[ep,sEp]=useState("");const[loanType,sLT]=useState("fixed");const[age,sAge]=useState("30");const ai=tW(inc),nlW=tW(nl),epW=tW(ep);const stressRate=loanType==="fixed"?0:loanType==="mixed"?0.0075:0.015;const adjRate=pN(nr)/100+stressRate;const nrV=adjRate/12;const ageVal=parseInt(age);let maxTerm=40;if(ageVal>=50)maxTerm=20;else if(ageVal>=40)maxTerm=30;else if(ageVal>=30)maxTerm=35;const adjYear=Math.min(parseInt(ny),maxTerm);const nn=adjYear*12;let nm=0;if(nlW>0&&nrV>0&&nn>0)nm=nlW*nrV*Math.pow(1+nrV,nn)/(Math.pow(1+nrV,nn)-1);const tot=nm*12+epW*12,dsr=ai>0?tot/ai*100:0;let st="양호",sc="#00875A";if(dsr>40){st="한도 초과";sc="#DE350B";}else if(dsr>30){st="주의";sc="#FF8B00";}
   const dsrLimitAmt40=ai>0&&nrV>0&&nn>0?Math.max(0,(ai*0.4-epW*12)/12)*(Math.pow(1+nrV,nn)-1)/(nrV*Math.pow(1+nrV,nn)):0;
   const dsrLimitAmt50=ai>0&&nrV>0&&nn>0?Math.max(0,(ai*0.5-epW*12)/12)*(Math.pow(1+nrV,nn)-1)/(nrV*Math.pow(1+nrV,nn)):0;
-  return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}><div>{!isMo&&<h3 style={{fontSize:isMo?16:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>DSR 계산기</h3>}<Inp label="연 소득" value={inc} onChange={sInc} suffix="만원" placeholder="예: 5000" error={!inc||inc==="0"}/><Inp label="신규 대출금액" value={nl} onChange={sNl} suffix="만원" placeholder="예: 30000" error={!nl||nl==="0"}/><Inp label="신규 대출 금리" value={nr} onChange={sNr} suffix="%" placeholder="예: 3.5" error={!nr||nr==="0"}/><Tog label={<>대출 유형 <TipModal title="스트레스 DSR"><p>스트레스 DSR: 변동금리 +1.5%p, 혼합형 +0.75%p 가산금리 추가. 고정금리는 가산 없음.</p></TipModal></>} value={loanType} onChange={sLT} options={[{value:"fixed",label:"고정"},{value:"mixed",label:"혼합(+0.75p)"},{value:"variable",label:"변동(+1.5p)"}]}/><Sel label="대출 기간" value={ny} onChange={sNy} options={[5,10,15,20,25,30,35,40].map(y=>({value:String(y),label:y+"년"}))}/><Sel label="차주 연령대" value={age} onChange={sAge} options={[{value:"20",label:"20대"},{value:"30",label:"30대"},{value:"40",label:"40대"},{value:"50",label:"50대"},{value:"60",label:"60대"}]}/><Inp label="기존 대출 월 상환액 합계" value={ep} onChange={sEp} suffix="만원" placeholder="없으면 0"/></div><div>{ai>0&&nlW>0?<><div style={{background:"linear-gradient(135deg, #0747A6 0%, #0052CC 50%, #0065FF 100%)",borderRadius:20,padding:"28px 24px",color:"#fff",textAlign:"center",boxShadow:"0 8px 28px rgba(7,71,166,.28)"}}><div style={{fontSize:11,letterSpacing:1.5,opacity:.8,marginBottom:16}}>DSR 진단 결과 (스트레스 DSR 반영)</div><div style={{fontSize:52,fontWeight:800,color:sc==="#00875A"?"#57D9A3":sc==="#FF8B00"?"#FFC400":"#FF5630"}}>{fP(dsr)}</div><div style={{fontSize:16,fontWeight:600,marginTop:4,color:sc==="#00875A"?"#57D9A3":sc==="#FF8B00"?"#FFC400":"#FF5630"}}>{st}</div><div style={{background:"rgba(255,255,255,.2)",borderRadius:8,height:12,margin:"12px 0 4px"}}><div style={{height:"100%",borderRadius:8,width:Math.min(dsr,100)+"%",background:dsr>40?"#ef4444":dsr>30?"#f59e0b":"#22c55e",transition:"width .4s"}}/></div><div style={{display:"flex",justifyContent:"space-between",fontSize:10,opacity:.7,marginBottom:8}}><span>0%</span><span>40% 한도</span><span>100%</span></div><div style={{fontSize:12,opacity:.7,marginTop:8}}>은행권 40% / 비은행권 50% 기준</div><div style={{borderTop:"1px solid rgba(255,255,255,.2)",marginTop:16,paddingTop:12,textAlign:"left",fontSize:13}}><div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",opacity:.85}}><span>신규 월 상환액</span><span style={{fontWeight:600}}>{fW(nm)}</span></div><div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",opacity:.85}}><span>연간 총 원리금</span><span style={{fontWeight:600}}>{fW(tot)}</span></div><div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",opacity:.85}}><span>스트레스 가산</span><span style={{fontWeight:600}}>{stressRate>0?"+"+fP(stressRate*100)+"p":"없음 (고정)"}</span></div><div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",opacity:.85}}><span>실제 적용 금리</span><span style={{fontWeight:600}}>{fP(pN(nr)+stressRate*100)} {stressRate>0?"(+"+(stressRate*100).toFixed(2)+"p)":"(가산 없음)"}</span></div><div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",opacity:.85}}><span>연령별 최대 만기</span><span style={{fontWeight:600}}>{maxTerm}년{parseInt(ny)>maxTerm?" (초과)":"" }</span></div><div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",opacity:.85}}><span>은행권 40% 기준 최대 대출</span><span style={{fontWeight:600}}>{fW(dsrLimitAmt40)}</span></div><div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",opacity:.85}}><span>비은행 50% 기준 최대 대출</span><span style={{fontWeight:600}}>{fW(dsrLimitAmt50)}</span></div></div></div>{(dsr>30||true)&&<div style={{marginTop:12,padding:"10px 14px",background:dsr>40?"#FFEBE6":dsr>30?"#FFF8E1":"#f8f9fc",border:"1px solid "+(dsr>40?"#FFBDAD":dsr>30?"#FFE082":"#dfe1e6"),borderRadius:8,fontSize:12,color:dsr>40?"#BF2600":dsr>30?"#F57F17":"#505f79",lineHeight:1.6}}>{dsr>40?"DSR 한도 초과: 대출 승인 어려울 수 있습니다":dsr>30?"DSR 30% 초과: 추가 대출 시 주의":"DSR 규제: 은행 40% / 비은행 50% / 스트레스DSR 변동금리 +1.5%p 가산"}</div>}<div style={{marginTop:8,padding:"10px 14px",background:"#f8f9fc",border:"1px solid #dfe1e6",borderRadius:8,fontSize:12,color:"#505f79",lineHeight:1.6,display:"flex",alignItems:"center",gap:6}}><span><IconCal/></span><span>은행 주담대 심사 통상 3~7영업일 · 본 계산은 2026년 스트레스 DSR 기준</span></div></>:<StepsGuide steps={[{label:"연 소득 입력",filled:ai>0},{label:"신규 대출금액 입력",filled:nlW>0},{label:"대출 금리 입력",filled:pN(nr)>0}]}/>}{dsr>40&&<button onClick={()=>window.dispatchEvent(new CustomEvent('lc-consult',{detail:{title:"DSR 한도 초과",total:Math.round(nlW)}}))} style={{display:"block",width:"100%",marginTop:12,padding:"14px 16px",background:"#FF8B00",color:"#fff",border:"none",borderRadius:12,fontSize:14,fontWeight:800,cursor:"pointer",fontFamily:"inherit",boxShadow:"0 4px 12px rgba(0,0,0,.15)",textAlign:"left",lineHeight:1.5}}><div style={{fontSize:15,fontWeight:800,marginBottom:2,display:"flex",alignItems:"center",gap:6}}><IconBank c="#fff"/> 대출 전문가 연결 →</div><div style={{fontSize:11,fontWeight:500,opacity:.92}}>DSR 40% 초과 — 보금자리·디딤돌·정책자금 대안 상담</div></button>}<NextStep calcId="dsr" onNav={onNav} isMo={isMo}/><RateTable title="DSR 규제 기준" headers={["구분","DSR"]} rows={[["은행권","40%"],["비은행권(보험·저축은행)","50%"],["스트레스 DSR 가산","변동+1.5%p / 혼합+0.75%p"]]}/></div></div>);}
+  const _tips=[];
+  if(ai>0&&nlW>0){
+    if(dsr>40){_tips.push("📌 DSR "+fP(dsr)+"로 은행권 한도 40% 초과. 비은행권(50%) 활용 또는 대출 기간 연장(월 부담 감소)로 한도 내 진입 가능.");}
+    if(loanType==="variable"){_tips.push("📌 변동금리 스트레스 DSR +1.5%p 가산 중입니다. 고정금리 선택 시 한도가 늘어나고 금리 변동 리스크도 회피됩니다.");}
+    if(ageVal<40&&parseInt(ny)<40){_tips.push("📌 30대 이하는 최대 40년 만기 선택이 가능합니다. 만기 연장 시 월 원리금 부담이 줄어 DSR 여유가 생깁니다.");}
+    if(epW>0&&epW*12/ai*100>10){_tips.push("📌 기존 대출 월 상환액이 연소득의 10% 이상을 차지합니다. 기존 대출 통합·정리 후 신규 대출 신청 권장.");}
+  }
+  return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}><div>{!isMo&&<h3 style={{fontSize:isMo?16:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>DSR 계산기</h3>}<Inp label="연 소득" value={inc} onChange={sInc} suffix="만원" placeholder="예: 5000" error={!inc||inc==="0"}/><Inp label="신규 대출금액" value={nl} onChange={sNl} suffix="만원" placeholder="예: 30000" error={!nl||nl==="0"}/><Inp label="신규 대출 금리" value={nr} onChange={sNr} suffix="%" placeholder="예: 3.5" error={!nr||nr==="0"}/><Tog label={<>대출 유형 <TipModal title="스트레스 DSR"><p>스트레스 DSR: 변동금리 +1.5%p, 혼합형 +0.75%p 가산금리 추가. 고정금리는 가산 없음.</p></TipModal></>} value={loanType} onChange={sLT} options={[{value:"fixed",label:"고정"},{value:"mixed",label:"혼합(+0.75p)"},{value:"variable",label:"변동(+1.5p)"}]}/><Sel label="대출 기간" value={ny} onChange={sNy} options={[5,10,15,20,25,30,35,40].map(y=>({value:String(y),label:y+"년"}))}/><Sel label="차주 연령대" value={age} onChange={sAge} options={[{value:"20",label:"20대"},{value:"30",label:"30대"},{value:"40",label:"40대"},{value:"50",label:"50대"},{value:"60",label:"60대"}]}/><Inp label="기존 대출 월 상환액 합계" value={ep} onChange={sEp} suffix="만원" placeholder="없으면 0"/></div><div>{ai>0&&nlW>0?<><div style={{background:"linear-gradient(135deg, #0747A6 0%, #0052CC 50%, #0065FF 100%)",borderRadius:20,padding:"28px 24px",color:"#fff",textAlign:"center",boxShadow:"0 8px 28px rgba(7,71,166,.28)"}}><div style={{fontSize:11,letterSpacing:1.5,opacity:.8,marginBottom:16}}>DSR 진단 결과 (스트레스 DSR 반영)</div><div style={{fontSize:52,fontWeight:800,color:sc==="#00875A"?"#57D9A3":sc==="#FF8B00"?"#FFC400":"#FF5630"}}>{fP(dsr)}</div><div style={{fontSize:16,fontWeight:600,marginTop:4,color:sc==="#00875A"?"#57D9A3":sc==="#FF8B00"?"#FFC400":"#FF5630"}}>{st}</div><div style={{background:"rgba(255,255,255,.2)",borderRadius:8,height:12,margin:"12px 0 4px"}}><div style={{height:"100%",borderRadius:8,width:Math.min(dsr,100)+"%",background:dsr>40?"#ef4444":dsr>30?"#f59e0b":"#22c55e",transition:"width .4s"}}/></div><div style={{display:"flex",justifyContent:"space-between",fontSize:10,opacity:.7,marginBottom:8}}><span>0%</span><span>40% 한도</span><span>100%</span></div><div style={{fontSize:12,opacity:.7,marginTop:8}}>은행권 40% / 비은행권 50% 기준</div><div style={{borderTop:"1px solid rgba(255,255,255,.2)",marginTop:16,paddingTop:12,textAlign:"left",fontSize:13}}><div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",opacity:.85}}><span>신규 월 상환액</span><span style={{fontWeight:600}}>{fW(nm)}</span></div><div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",opacity:.85}}><span>연간 총 원리금</span><span style={{fontWeight:600}}>{fW(tot)}</span></div><div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",opacity:.85}}><span>스트레스 가산</span><span style={{fontWeight:600}}>{stressRate>0?"+"+fP(stressRate*100)+"p":"없음 (고정)"}</span></div><div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",opacity:.85}}><span>실제 적용 금리</span><span style={{fontWeight:600}}>{fP(pN(nr)+stressRate*100)} {stressRate>0?"(+"+(stressRate*100).toFixed(2)+"p)":"(가산 없음)"}</span></div><div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",opacity:.85}}><span>연령별 최대 만기</span><span style={{fontWeight:600}}>{maxTerm}년{parseInt(ny)>maxTerm?" (초과)":"" }</span></div><div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",opacity:.85}}><span>은행권 40% 기준 최대 대출</span><span style={{fontWeight:600}}>{fW(dsrLimitAmt40)}</span></div><div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",opacity:.85}}><span>비은행 50% 기준 최대 대출</span><span style={{fontWeight:600}}>{fW(dsrLimitAmt50)}</span></div></div></div>{(dsr>30||true)&&<div style={{marginTop:12,padding:"10px 14px",background:dsr>40?"#FFEBE6":dsr>30?"#FFF8E1":"#f8f9fc",border:"1px solid "+(dsr>40?"#FFBDAD":dsr>30?"#FFE082":"#dfe1e6"),borderRadius:8,fontSize:12,color:dsr>40?"#BF2600":dsr>30?"#F57F17":"#505f79",lineHeight:1.6}}>{dsr>40?"DSR 한도 초과: 대출 승인 어려울 수 있습니다":dsr>30?"DSR 30% 초과: 추가 대출 시 주의":"DSR 규제: 은행 40% / 비은행 50% / 스트레스DSR 변동금리 +1.5%p 가산"}</div>}<div style={{marginTop:8,padding:"10px 14px",background:"#f8f9fc",border:"1px solid #dfe1e6",borderRadius:8,fontSize:12,color:"#505f79",lineHeight:1.6,display:"flex",alignItems:"center",gap:6}}><span><IconCal/></span><span>은행 주담대 심사 통상 3~7영업일 · 본 계산은 2026년 스트레스 DSR 기준</span></div></>:<StepsGuide steps={[{label:"연 소득 입력",filled:ai>0},{label:"신규 대출금액 입력",filled:nlW>0},{label:"대출 금리 입력",filled:pN(nr)>0}]}/>}<SavingsGuide tips={_tips}/>{dsr>40&&<button onClick={()=>window.dispatchEvent(new CustomEvent('lc-consult',{detail:{title:"DSR 한도 초과",total:Math.round(nlW)}}))} style={{display:"block",width:"100%",marginTop:12,padding:"14px 16px",background:"#FF8B00",color:"#fff",border:"none",borderRadius:12,fontSize:14,fontWeight:800,cursor:"pointer",fontFamily:"inherit",boxShadow:"0 4px 12px rgba(0,0,0,.15)",textAlign:"left",lineHeight:1.5}}><div style={{fontSize:15,fontWeight:800,marginBottom:2,display:"flex",alignItems:"center",gap:6}}><IconBank c="#fff"/> 대출 전문가 연결 →</div><div style={{fontSize:11,fontWeight:500,opacity:.92}}>DSR 40% 초과 — 보금자리·디딤돌·정책자금 대안 상담</div></button>}<NextStep calcId="dsr" onNav={onNav} isMo={isMo}/><RateTable title="DSR 규제 기준" headers={["구분","DSR"]} rows={[["은행권","40%"],["비은행권(보험·저축은행)","50%"],["스트레스 DSR 가산","변동+1.5%p / 혼합+0.75%p"]]}/></div></div>);}
 
 function CalcComm({isMo=false,onNav=()=>{}}){const[ty,sTy]=useState("res");const[tx,sTx]=useState("sale");const[p,sP]=useState("0");const[isDefault,setIsDefault]=useState(true);const markModified=()=>setIsDefault(false);const[dep,sDep]=useState("");const[mon,sMon]=useState("");const[mult,sMult]=useState("100");const[showRateTable,setShowRateTable]=useState(false);
   // 2026.04.14 고도화: 오피스텔 주거/업무 구분 + VAT 포함/별도 토글
@@ -2151,11 +2272,19 @@ function CalcLegal({isMo=false,onNav=()=>{}}){const[tx,sTx]=useState("sale");con
       total={total} sub="보수 + VAT + 부대비용" items={[{l:"업무 유형",v:tx==="sale"?"소유권이전(매매)":tx==="gift"?"소유권이전(증여)":tx==="inherit"?"소유권이전(상속)":tx==="mortgage"?"근저당 설정등기":"말소등기"},{l:"기본 보수",v:fW(bf),note:"법무사협회 기준"},{l:"교통비·일당",v:fW(travel)},{l:"서류발급비",v:fW(doc)},{l:"부가가치세 (10%)",v:fW(vat),note:"기본 보수 기준"},{l:"총 합계 (보수+경비+VAT)",v:fW(total)}]}/><NextStep calcId="legal" onNav={onNav} isMo={isMo}/><RateTable title="법무사 보수 기준" headers={["거래금액","기본보수"]} rows={[["1억 이하","30~50만"],["3억 이하","50~70만"],["5억 이하","70~90만"],["10억 이하","90~120만"],["10억 초과","협의"]]}/></div></div>);}
 
 /* 임대수익률 */
-function CalcYield({isMo=false,onNav=()=>{}}){const[pp,sPP]=useState("");const[dp,sDp]=useState("");const[rn,sRn]=useState("");const[ex,sEx]=useState("");const[ln,sLn]=useState("");const[lr,sLr]=useState("");const[isDefault,setIsDefault]=useState(true);const markModified=()=>setIsDefault(false);const ppW=tW(pp),dpW=tW(dp),rnW=tW(rn),exW=tW(ex),lnW=tW(ln),lrV=pN(lr)/100;const aR=rnW*12,aI=lnW*lrV,aE=exW*12,ni=aR-aE-aI,inv=ppW-dpW-lnW;const gr=ppW>0?aR/ppW*100:0,nt=inv>0?ni/inv*100:0;return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}><div>{!isMo&&<h3 style={{fontSize:isMo?16:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>임대수익률 계산기</h3>}<div style={{fontSize:12,color:"#6b778c",marginBottom:-8,marginLeft:2,display:"flex",alignItems:"center",gap:4,flexWrap:"nowrap"}}>수익률 <TipModal title="임대수익률 계산법"><p><b>Gross:</b> 연임대료÷매입가 / <b>Net:</b> 순수익÷자기자본</p></TipModal></div><Inp label="매입가" value={pp} onChange={sPP} suffix="만원" placeholder="예: 50000" error={!pp||pp==="0"}/><Inp label="보증금 (전세금)" value={dp} onChange={sDp} suffix="만원" placeholder="예: 10000"/><Inp label="월세" value={rn} onChange={sRn} suffix="만원" placeholder="예: 100"/><Inp label="월 관리비·경비" value={ex} onChange={sEx} suffix="만원" placeholder="예: 20"/><Inp label="대출금액" value={ln} onChange={sLn} suffix="만원" placeholder="예: 20000"/><Inp label="대출 금리" value={lr} onChange={sLr} suffix="%" placeholder="예: 4.0"/></div><RP miss={isDefault?MI.yield:null} isExample={isDefault} title="임대수익률"
+function CalcYield({isMo=false,onNav=()=>{}}){const[pp,sPP]=useState("");const[dp,sDp]=useState("");const[rn,sRn]=useState("");const[ex,sEx]=useState("");const[ln,sLn]=useState("");const[lr,sLr]=useState("");const[isDefault,setIsDefault]=useState(true);const markModified=()=>setIsDefault(false);const ppW=tW(pp),dpW=tW(dp),rnW=tW(rn),exW=tW(ex),lnW=tW(ln),lrV=pN(lr)/100;const aR=rnW*12,aI=lnW*lrV,aE=exW*12,ni=aR-aE-aI,inv=ppW-dpW-lnW;const gr=ppW>0?aR/ppW*100:0,nt=inv>0?ni/inv*100:0;
+const _tips=[];
+if(ppW>0&&rnW>0){
+  if(lnW>0&&pN(lr)>=4.5){_tips.push("📌 대출 금리 "+fP(pN(lr))+"는 고금리입니다. 대환대출·임대사업자 등록 후 정책자금 전환 시 이자 부담이 줄어 수익률이 개선됩니다.");}
+  if(nt<3&&inv>0){_tips.push("📌 순수익률 "+fP(nt)+"는 저조합니다. 임대료 인상(5% 상한)·관리비 절감·리모델링으로 수익률 개선 전략 검토.");}
+  if(aI>=aR*0.5){_tips.push("📌 대출이자가 연간 임대수입의 50% 이상을 차지합니다. 대출 원금 상환·금리 낮은 상품으로 대환 검토 권장.");}
+  if(nt>=10){_tips.push("📌 순수익률 10% 이상으로 우수합니다. 임대사업자 등록 시 종부세 합산배제·양도세 중과배제 등 혜택 적용 가능.");}
+}
+return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}><div>{!isMo&&<h3 style={{fontSize:isMo?16:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>임대수익률 계산기</h3>}<div style={{fontSize:12,color:"#6b778c",marginBottom:-8,marginLeft:2,display:"flex",alignItems:"center",gap:4,flexWrap:"nowrap"}}>수익률 <TipModal title="임대수익률 계산법"><p><b>Gross:</b> 연임대료÷매입가 / <b>Net:</b> 순수익÷자기자본</p></TipModal></div><Inp label="매입가" value={pp} onChange={sPP} suffix="만원" placeholder="예: 50000" error={!pp||pp==="0"}/><Inp label="보증금 (전세금)" value={dp} onChange={sDp} suffix="만원" placeholder="예: 10000"/><Inp label="월세" value={rn} onChange={sRn} suffix="만원" placeholder="예: 100"/><Inp label="월 관리비·경비" value={ex} onChange={sEx} suffix="만원" placeholder="예: 20"/><Inp label="대출금액" value={ln} onChange={sLn} suffix="만원" placeholder="예: 20000"/><Inp label="대출 금리" value={lr} onChange={sLr} suffix="%" placeholder="예: 4.0"/></div><RP miss={isDefault?MI.yield:null} isExample={isDefault} title="임대수익률"
       deadline="※ 세전 수익률 기준 / 양도세·종합소득세 등 별도 고려 필요"
       alertMsg={ni<=0?"순수익 마이너스: 대출이자+경비 초과":inv<=0?"자기자본 없음: 레버리지 투자":nt>=10?"우수한 순수익률":nt<3?"기대 수익률 낮음":null}
       alertType={ni<=0?"danger":nt>=10?"success":"warning"}
-      total={ni} sub={"자기자본 "+fW(inv)+" 기준"} items={[{l:"매입가",v:fW(ppW)},{l:"자기자본 투입",v:fW(inv),note:"매입가-보증금-대출"},{l:"연간 임대수입",v:fW(aR)},{l:"연간 관리비·경비",v:"-"+fW(aE)},{l:"연간 대출이자",v:"-"+fW(aI)},{l:"연간 순수익",v:fW(ni)},{l:"총수익률 (Gross)",v:fP(gr),note:"연임대료/매입가"},{l:"순수익률 (Net)",v:fP(nt),note:"순수익/자기자본"},{l:"자기자본수익률 (ROE)",v:inv>0?fP(ni/inv*100):"N/A"},{l:"손익분기점 (원금 회수)",v:ni>0?Math.ceil(inv/ni)+"년":"N/A",note:"순수익 기준"}]} consultFunnel={inv>0&&nt<3?{label:<><IconChart c="#fff"/> 수익성 개선 전략 상담</>,color:"#FF8B00",subtitle:"순수익률 3% 미만 — 임대료 인상·대환대출·리모델링으로 수익률 개선 전략"}:null}/><NextStep calcId="yield" onNav={onNav} isMo={isMo}/></div>);}
+      total={ni} sub={"자기자본 "+fW(inv)+" 기준"} items={[{l:"매입가",v:fW(ppW)},{l:"자기자본 투입",v:fW(inv),note:"매입가-보증금-대출"},{l:"연간 임대수입",v:fW(aR)},{l:"연간 관리비·경비",v:"-"+fW(aE)},{l:"연간 대출이자",v:"-"+fW(aI)},{l:"연간 순수익",v:fW(ni)},{l:"총수익률 (Gross)",v:fP(gr),note:"연임대료/매입가"},{l:"순수익률 (Net)",v:fP(nt),note:"순수익/자기자본"},{l:"자기자본수익률 (ROE)",v:inv>0?fP(ni/inv*100):"N/A"},{l:"손익분기점 (원금 회수)",v:ni>0?Math.ceil(inv/ni)+"년":"N/A",note:"순수익 기준"}]} consultFunnel={inv>0&&nt<3?{label:<><IconChart c="#fff"/> 수익성 개선 전략 상담</>,color:"#FF8B00",subtitle:"순수익률 3% 미만 — 임대료 인상·대환대출·리모델링으로 수익률 개선 전략"}:null}/><SavingsGuide tips={_tips}/><NextStep calcId="yield" onNav={onNav} isMo={isMo}/></div>);}
 
 /* 평수변환 */
 function CalcArea({isMo=false,onNav=()=>{}}){const[dir,sDir]=useState("s2p");const[v,sV]=useState("");const val=pN(v),py=3.305785,res=dir==="s2p"?val/py:val*py;const sizes=[{p:18,s:59},{p:24,s:79},{p:25,s:84},{p:32,s:106},{p:34,s:112},{p:43,s:142},{p:50,s:165}];return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}><div>{!isMo&&<h3 style={{fontSize:isMo?16:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>평수 변환</h3>}<Tog label="변환 방향" value={dir} onChange={sDir} options={[{value:"s2p",label:"㎡ → 평"},{value:"p2s",label:"평 → ㎡"}]}/><Inp label={"면적 ("+(dir==="s2p"?"㎡":"평")+")"} value={v} onChange={sV} placeholder="숫자 입력"/>{val>0&&<div style={{background:"linear-gradient(135deg, #0747A6 0%, #0052CC 50%, #0065FF 100%)",color:"#fff",borderRadius:20,padding:"28px 24px",textAlign:"center",marginTop:8,boxShadow:"0 8px 28px rgba(7,71,166,.28)"}}><div style={{fontSize:11,letterSpacing:1.5,opacity:.8,marginBottom:8,textTransform:"uppercase",fontWeight:700}}>평수 변환 결과</div><div style={{fontSize:14,opacity:.88}}>{val} {dir==="s2p"?"㎡":"평"} =</div><div style={{fontSize:38,fontWeight:800,color:"#FFC400",marginTop:4,fontVariantNumeric:"tabular-nums"}}>{res.toFixed(2)} {dir==="s2p"?"평":"㎡"}</div></div>}</div><div><h4 style={{fontSize:14,fontWeight:700,color:P.tx,margin:"0 0 12px"}}>주요 아파트 평형 참고</h4><div style={{background:P.card,borderRadius:12,border:`1px solid ${P.bd}`,overflow:"hidden"}}>{sizes.map((s,i)=>(<div key={s.p} style={{display:"flex",justifyContent:"space-between",padding:"10px 16px",borderBottom:i<sizes.length-1?`1px solid ${P.lt}`:"none",fontSize:14}}><span style={{fontWeight:700,color:P.pri}}>{s.p}평형</span><span style={{color:P.mt}}>전용 {s.s}㎡</span></div>))}</div><div style={{marginTop:12,padding:"12px 16px",background:P.lt,borderRadius:10,fontSize:12,color:P.mt,lineHeight:1.6}}>※ 1평 = 3.305785㎡ (정확히 400/121)<br/>※ 전용면적 기준이며, 공급면적은 주거공용 포함</div><NextStep calcId="area" onNav={onNav} isMo={isMo}/><RateTable title="주요 아파트 평형 (전용면적)" headers={["평형","전용㎡","공급㎡(약)"]} rows={[["18평","59㎡","84㎡"],["24평","79㎡","112㎡"],["25평","84㎡","119㎡"],["32평","106㎡","149㎡"],["34평","112㎡","157㎡"],["43평","142㎡","198㎡"],["50평","165㎡","231㎡"]]}/></div></div>);}
@@ -2370,6 +2499,13 @@ function CalcNetSalary({isMo=false,onNav=()=>{}}){const[salary,sSal]=useState(""
   let workDed=0;if(taxableSal<=5e6)workDed=taxableSal*.7;else if(taxableSal<=15e6)workDed=3500000+(taxableSal-5e6)*.4;else if(taxableSal<=45e6)workDed=7500000+(taxableSal-15e6)*.15;else if(taxableSal<=1e8)workDed=12000000+(taxableSal-45e6)*.05;else workDed=14750000+(taxableSal-1e8)*.02;
   const personalDed=1500000*familyN+1500000*childN;const taxableIncome=Math.max(0,taxableSal-workDed-personalDed-totalIns);const tax=pTx(taxableIncome,IB);const localTax=tax*.1;
   const monthlyGross=salW/12,monthlyTax=(tax+localTax)/12,monthlyNet=monthlyGross-monthlyIns-monthlyTax;
+  const _tips=[];
+  if(salW>0){
+    if(nonTaxW===0){_tips.push("📌 식대 월 20만원은 비과세 항목입니다. 회사가 식대를 별도 지급한다면 비과세액 입력 시 실수령액이 늘어납니다.");}
+    if(childN===0&&familyN>1){_tips.push("📌 20세 이하 자녀가 있다면 자녀 수를 입력하세요. 자녀세액공제(첫째 15만, 둘째 20만, 셋째↑ 30만)가 추가됩니다.");}
+    if(salW>=5e3){_tips.push("📌 연 600만원 연금저축(세액공제 13.2~16.5%) + IRP 300만원 추가 납입 시 연말정산 환급액이 최대 99만원 늘어납니다.");}
+    if(salW>=7e3){_tips.push("📌 고소득자는 신용카드보다 체크카드·현금영수증(공제율 30%)이 소득공제에 유리합니다. 총급여 25% 초과분부터 공제.");}
+  }
   return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}><div>{!isMo&&<h3 style={{fontSize:isMo?16:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>연봉 실수령액</h3>}
     <Inp label="연봉 (세전)" value={salary} onChange={sSal} suffix="만원" placeholder="예: 5000" error={!salary||salary==="0"}/>
     <div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?8:12}}><Sel label="부양가족 (본인 포함)" value={family} onChange={sFamily} options={[1,2,3,4,5,6].map(n=>({value:String(n),label:n+"명"}))}/><Sel label="20세 이하 자녀" value={child} onChange={sChild} options={[0,1,2,3,4].map(n=>({value:String(n),label:n+"명"}))}/></div>
@@ -2392,7 +2528,7 @@ function CalcNetSalary({isMo=false,onNav=()=>{}}){const[salary,sSal]=useState(""
       <div style={{fontSize:13,fontWeight:600,color:P.mt,marginBottom:10}}>연봉 구간별 월 실수령액 비교</div>
       {[3000,4000,5000,6000,7000,8000,10000].map(salManwon=>{const sy=salManwon*10000;const taxS=Math.max(0,sy-240*10000);const mS=taxS/12;const iP=Math.min(mS,6370000)*.045+mS*.03545+mS*.03545*.1295+mS*.009;let wD=0;if(taxS<=5e6)wD=taxS*.7;else if(taxS<=15e6)wD=3500000+(taxS-5e6)*.4;else if(taxS<=45e6)wD=7500000+(taxS-15e6)*.15;else if(taxS<=1e8)wD=12000000+(taxS-45e6)*.05;else wD=14750000+(taxS-1e8)*.02;const pD=1500000*familyN+1500000*childN;const tI=Math.max(0,taxS-wD-pD-iP*12);const t=pTx(tI,IB);const mT=(t+t*.1)/12;const mN=sy/12-iP-mT;return(<div key={salManwon} style={{display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:"1px solid "+P.lt,fontSize:13}}><span style={{color:P.mt}}>{salManwon<10000?salManwon+"만":(salManwon/10000)+"억"}</span><span style={{fontWeight:600}}>{fW(Math.round(mN))}/월</span></div>);})}
     </div>
-  </div><NextStep calcId="netsalary" onNav={onNav} isMo={isMo}/><RateTable title="4대보험 요율 (2025)" headers={["보험","근로자"]} rows={[["국민연금","4.75%"],["건강보험","3.595%"],["장기요양","건보의 12.95%"],["고용보험","0.9%"],["합계(근로자)","약 9.7%"]]}/></div></div>);}
+  </div><SavingsGuide tips={_tips}/><NextStep calcId="netsalary" onNav={onNav} isMo={isMo}/><RateTable title="4대보험 요율 (2025)" headers={["보험","근로자"]} rows={[["국민연금","4.75%"],["건강보험","3.595%"],["장기요양","건보의 12.95%"],["고용보험","0.9%"],["합계(근로자)","약 9.7%"]]}/></div></div>);}
 
 /* 국민연금 수령액 */
 function CalcPension({isMo=false,onNav=()=>{}}){const[age,sAge]=useState("35");const[salary,sSal]=useState("");const[paidYears,sPY]=useState("0");const[retireAge,sRA]=useState("65");
