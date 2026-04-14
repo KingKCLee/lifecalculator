@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.15",
       "category": "전체",
+      "title": "fix: Tog 버튼 flex:0 0 auto + overflow 제거 — 긴 라벨 wrap 허용",
+      "desc": "fix: Tog 버튼 flex:0 0 auto + overflow 제거 — 긴 라벨 wrap 허용"
+    },
+    {
+      "date": "2026.04.15",
+      "category": "전체",
       "title": "fix: CalcIncTax 인적공제 모든 소득유형 공통 노출 (소득세법 §50~§52)",
       "desc": "fix: CalcIncTax 인적공제 모든 소득유형 공통 노출 (소득세법 §50~§52)"
     },
@@ -1459,12 +1465,6 @@
       "category": "전체",
       "title": "feat: UI 강화 - 타이포·Market Intel·실시간 뉴스·Compliance Note",
       "desc": "feat: UI 강화 - 타이포·Market Intel·실시간 뉴스·Compliance Note"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "대출",
-      "title": "feat(app): 서브메뉴 가로 스크롤 탭바 + 경락잔금대출 카테고리 이동",
-      "desc": "feat(app): 서브메뉴 가로 스크롤 탭바 + 경락잔금대출 카테고리 이동"
     }
   ],
   "rates": {
