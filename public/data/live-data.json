@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.14",
       "category": "전체",
+      "title": "feat: 전체 계산기 아코디언 카테고리 SVG 라인 아이콘 6종 교체",
+      "desc": "feat: 전체 계산기 아코디언 카테고리 SVG 라인 아이콘 6종 교체"
+    },
+    {
+      "date": "2026.04.14",
+      "category": "전체",
       "title": "fix: RP 그라디언트 전수·Sel→Tog 6개 계산기·특수조건 칩 5개 계산기",
       "desc": "fix: RP 그라디언트 전수·Sel→Tog 6개 계산기·특수조건 칩 5개 계산기"
     },
@@ -1463,12 +1469,6 @@
       "category": "비용",
       "title": "feat: 인지세 TipModal·중개보수 부동산유형 TipModal·평수변환 RateTable 추가 (마무리)",
       "desc": "feat: 인지세 TipModal·중개보수 부동산유형 TipModal·평수변환 RateTable 추가 (마무리)"
-    },
-    {
-      "date": "2026.04.08",
-      "category": "비용",
-      "title": "feat: 전체 계산기 TipModal·NextStep 추가 완료 (3탄 - 수익률/예적금/채권/공동명의/인지세/평수)",
-      "desc": "feat: 전체 계산기 TipModal·NextStep 추가 완료 (3탄 - 수익률/예적금/채권/공동명의/인지세/평수)"
     }
   ],
   "rates": {
