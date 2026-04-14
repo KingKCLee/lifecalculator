@@ -27,7 +27,7 @@ import CalcRealPrice from './calcs/CalcRealPrice';
 
 // 중앙 집중 세율·요율 관리. live-data.json의 rates에서 로드됨. 로드 전 빈 객체 → 각 계산기는 하드코딩 fallback 사용.
 // 점진적 교체: 각 계산기가 RATES.xxx ?? 하드코딩값 형태로 참조하도록 변환.
-let RATES = {};const BUILD_ID="2026.04.06.001";const LC_API="https://lc-auth-worker.noble-kclee.workers.dev";const KAKAO_JS_KEY="";
+let RATES = {};const BUILD_ID="2026.04.06.001";const LC_API="https://lc-auth-worker.noble-kclee.workers.dev";const LC_REALESTATE_WORKER="https://lc-realestate-worker.noble-kclee.workers.dev";const KAKAO_JS_KEY="";
 function lcGetCalcInputs(){if(typeof document==="undefined")return[];const scopes=document.querySelectorAll('.calc-container, .mobile-calc-wrap');const out=[];scopes.forEach(s=>s.querySelectorAll('input[type="text"],input[type="number"]').forEach(el=>out.push(el)));return out;}
 function lcSetInputValue(el,val){try{const setter=Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype,'value').set;setter.call(el,val);el.dispatchEvent(new Event('input',{bubbles:true}));}catch{}}
 function lcEncodeInputs(){try{return btoa(encodeURIComponent(JSON.stringify(lcGetCalcInputs().map(el=>el.value))));}catch{return"";}}
@@ -2280,7 +2280,7 @@ function CalcGrid({navigateCalc,isMo}){
     {cat:"loan",label:"대출 계산기",color:"#00875A",items:[{id:"mortgage",name:"대출이자",desc:"원리금균등·원금균등·만기일시"},{id:"dsr",name:"DSR",desc:"총부채원리금상환비율"},{id:"dti",name:"DTI",desc:"총부채상환비율"},{id:"ltv",name:"LTV·대출한도",desc:"담보인정비율 최대 대출액"},{id:"loanmax",name:"대출가능액",desc:"소득 기준 최대 대출 역산"}]},
     {cat:"cost",label:"비용 계산기",color:"#FF8B00",items:[{id:"commission",name:"중개수수료",desc:"매매·전세·월세 중개보수"},{id:"registration",name:"등기비용",desc:"등록면허세·인지세 합산"},{id:"legal",name:"법무사수수료",desc:"소유권이전 등기 대행"},{id:"stamp",name:"인지세",desc:"거래가액별 인지세"},{id:"bond",name:"채권할인료",desc:"국민주택채권 할인비용"},{id:"appraisal",name:"감정평가수수료",desc:"감정평가사 공식 수수료"}]},
     {cat:"life",label:"생활 계산기",color:"#6554C0",items:[{id:"netsalary",name:"연봉 실수령액",desc:"세금·4대보험 공제 후 월급"},{id:"insurance4",name:"4대보험료",desc:"국민연금·건강·고용 보험료"},{id:"pension",name:"국민연금 수령액",desc:"예상 월 연금 수령액"},{id:"cartax",name:"자동차세",desc:"배기량·연식별 자동차세"},{id:"retire",name:"퇴직금",desc:"근속연수별 퇴직금"},{id:"unemploy",name:"실업급여",desc:"고용보험 실업급여"},{id:"minwage",name:"최저임금",desc:"시급→월급→연봉 환산"},{id:"deposit",name:"예적금이자",desc:"예금·적금 세후 이자"},{id:"convert",name:"전월세전환",desc:"전세↔월세 상호 전환"}]},
-    {cat:"realestate",label:"부동산 계산기",color:"#008DA6",items:[{id:"yield",name:"임대수익률",desc:"임대수입 순수익률 분석"},{id:"joint",name:"공동명의",desc:"단독 vs 공동 종부세 비교"},{id:"area",name:"평수변환",desc:"㎡ ↔ 평 상호 변환"},{id:"far",name:"용적률·건폐율",desc:"대지면적 기준 건축 규제"},{id:"auction",name:"경매비용",desc:"낙찰가 기준 총비용"},{id:"remodel",name:"리모델링수익",desc:"분담금 대비 수익률"},{id:"bldvalue",name:"건물잔존가치",desc:"경과연수별 감가상각"}]},
+    {cat:"realestate",label:"부동산 계산기",color:"#008DA6",items:[{id:"realprice",name:"실거래가 조회",desc:"국토부·호갱노노·네이버 통합 조회"},{id:"yield",name:"임대수익률",desc:"임대수입 순수익률 분석"},{id:"joint",name:"공동명의",desc:"단독 vs 공동 종부세 비교"},{id:"area",name:"평수변환",desc:"㎡ ↔ 평 상호 변환"},{id:"far",name:"용적률·건폐율",desc:"대지면적 기준 건축 규제"},{id:"auction",name:"경매비용",desc:"낙찰가 기준 총비용"},{id:"remodel",name:"리모델링수익",desc:"분담금 대비 수익률"},{id:"bldvalue",name:"건물잔존가치",desc:"경과연수별 감가상각"}]},
     {cat:"pro",label:"PRO 분석",color:"#DE350B",items:[{id:"totalcost",name:"총비용 시뮬레이터",desc:"매수 시 총비용 한번에"},{id:"compare",name:"세금비교 분석",desc:"매매 vs 증여 vs 상속 비교"},{id:"invest",name:"투자수익 분석",desc:"매수→보유→매도 전체 분석"}]}
   ];
   return(<div id="allCalcs" style={{maxWidth:1200,margin:"0 auto",padding:isMo?"24px 12px":"48px 24px"}}>
