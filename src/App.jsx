@@ -579,11 +579,12 @@ function Radio({label,value,onChange,options,cols}){
   const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
   return(<div style={{marginBottom:20}}>
     <label style={lblSt(isMo)}>{label}</label>
-    <div style={{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6"}}>
+    <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
       {options.map((o,i)=>(
         <button key={o.value} onClick={()=>onChange(o.value)} style={{
-          flex:1,padding:"10px 2px",border:"none",
-          borderRight:i<options.length-1?"1px solid #dfe1e6":"none",
+          flex:"1 1 auto",padding:"10px 12px",
+          border:value===o.value?"none":"1.5px solid #dfe1e6",
+          borderRadius:8,
           background:value===o.value?"#0747A6":"#fff",
           color:value===o.value?"#fff":"#505f79",
           fontWeight:value===o.value?700:500,
@@ -646,9 +647,8 @@ const Tog = ({label, options, value, onChange, isMo:isMoProp}) => {
       )}
       <div style={{
         display:"flex",
-        flexWrap:"nowrap",
-        overflowX:"auto",
-        gap:4,
+        flexWrap:"wrap",
+        gap:6,
         scrollbarWidth:"none",
         WebkitOverflowScrolling:"touch"
       }}>
@@ -657,7 +657,7 @@ const Tog = ({label, options, value, onChange, isMo:isMoProp}) => {
             key={opt.value}
             onClick={() => onChange(opt.value)}
             style={{
-              flex:"0 0 auto",
+              flex:"1 1 auto",
               padding:isMo?"8px 10px":"10px 14px",
               fontSize:isMo?11:13,
               fontWeight:value===opt.value?700:400,
@@ -3772,7 +3772,7 @@ export default function App(){
   const goCalc=(cId)=>{const info=CL.find(c=>c.id===cId);if(info)navigateCalc(info.c,info.id);};
   const hash=usePathRoute();
   useEffect(()=>{if(hash==="mypage"){setPage("mypage");return;}if(hash==="auth/callback"){return;}if(["privacy","contact","disclaimer","resource"].includes(hash)){setPage("legal_"+hash);}else if(hash&&SLUG_REVERSE[hash]){const cId=SLUG_REVERSE[hash];const it=CL.find(c=>c.id===cId);if(it){setCat(it.c);setCalc(cId);setPage("calc");}}else if(!hash){setPage("home");}},[hash]);
-  useEffect(()=>{if(page==="calc"&&calc&&PAGE_META[calc]){const m=PAGE_META[calc];document.title=m.title;document.querySelector('meta[name="description"]')?.setAttribute('content',m.desc);document.querySelector('meta[property="og:title"]')?.setAttribute('content',m.title);document.querySelector('meta[property="og:description"]')?.setAttribute('content',m.desc);}else{document.title="생활계산기 - 세금 연말정산 연봉 부동산 종합계산기";document.querySelector('meta[name="description"]')?.setAttribute('content',"취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 4대보험 국민연금 자동차세 등 39가지 무료 계산기. 2026 최신 세법 반영.");}let ld=document.getElementById('dynamic-jsonld');if(!ld){ld=document.createElement('script');ld.id='dynamic-jsonld';ld.type='application/ld+json';document.head.appendChild(ld);}if(page==="calc"&&calc&&PAGE_META[calc]){ld.textContent=JSON.stringify({"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":PAGE_META[calc].title.split(' | ')[0],"description":PAGE_META[calc].desc,"url":"https://xn--989a00a691bdfa717h.com/"+encodeURIComponent(SLUGS[calc]),"applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"홈","item":"https://xn--989a00a691bdfa717h.com/"},{"@type":"ListItem","position":2,"name":CATS.find(c=>c.id===cat)?.l||"","item":"https://xn--989a00a691bdfa717h.com/"},{"@type":"ListItem","position":3,"name":CL.find(c=>c.id===calc)?.l||"","item":"https://xn--989a00a691bdfa717h.com/"+encodeURIComponent(SLUGS[calc])}]}]});}else{ld.textContent='';}},[page,calc]);
+  useEffect(()=>{if(page==="calc"&&calc&&PAGE_META[calc]){const m=PAGE_META[calc];document.title=m.title;document.querySelector('meta[name="description"]')?.setAttribute('content',m.desc);document.querySelector('meta[property="og:title"]')?.setAttribute('content',m.title);document.querySelector('meta[property="og:description"]')?.setAttribute('content',m.desc);}else{document.title="생활계산기 - 세금 연말정산 연봉 부동산 종합계산기";document.querySelector('meta[name="description"]')?.setAttribute('content',"취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 4대보험 국민연금 자동차세 등 62가지 무료 계산기. 2026 최신 세법 반영.");}let ld=document.getElementById('dynamic-jsonld');if(!ld){ld=document.createElement('script');ld.id='dynamic-jsonld';ld.type='application/ld+json';document.head.appendChild(ld);}if(page==="calc"&&calc&&PAGE_META[calc]){ld.textContent=JSON.stringify({"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":PAGE_META[calc].title.split(' | ')[0],"description":PAGE_META[calc].desc,"url":"https://xn--989a00a691bdfa717h.com/"+encodeURIComponent(SLUGS[calc]),"applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"홈","item":"https://xn--989a00a691bdfa717h.com/"},{"@type":"ListItem","position":2,"name":CATS.find(c=>c.id===cat)?.l||"","item":"https://xn--989a00a691bdfa717h.com/"},{"@type":"ListItem","position":3,"name":CL.find(c=>c.id===calc)?.l||"","item":"https://xn--989a00a691bdfa717h.com/"+encodeURIComponent(SLUGS[calc])}]}]});}else{ld.textContent='';}},[page,calc]);
   const Comp=CM[calc]||(()=><Placeholder l={CL.find(c=>c.id===calc)?.l||calc}/>);
   const catInfo=CATS.find(c=>c.id===cat);
   const searchResults=search.trim()?CL.filter(c=>(c.l+"|"+(DESC[c.id]||"")).includes(search.trim())):[];
@@ -3922,7 +3922,7 @@ body.lc-embed main{padding-top:0!important}
               </button>
             ))}
           </div>
-          <button onClick={()=>{document.getElementById("allCalcs")?.scrollIntoView({behavior:"smooth"})}} style={{width:"100%",marginTop:10,padding:"14px",background:"#fff",border:"1px solid #dfe1e6",borderRadius:10,fontSize:14,fontWeight:700,color:"#505f79",cursor:"pointer",fontFamily:"inherit"}}>전체 39가지 계산기 보기</button>
+          <button onClick={()=>{document.getElementById("allCalcs")?.scrollIntoView({behavior:"smooth"})}} style={{width:"100%",marginTop:10,padding:"14px",background:"#fff",border:"1px solid #dfe1e6",borderRadius:10,fontSize:14,fontWeight:700,color:"#505f79",cursor:"pointer",fontFamily:"inherit"}}>전체 62가지 계산기 보기</button>
         </div>
       </>):(
       <div style={{background:"#f8f9fc",maxWidth:"100%",overflow:"hidden"}}>
@@ -3931,13 +3931,13 @@ body.lc-embed main{padding-top:0!important}
             <div>
               <div style={{display:"inline-block",background:"#deebff",padding:"6px 16px",borderRadius:20,fontSize:13,fontWeight:700,color:"#0747A6",marginBottom:20}}>대한민국 NO.1 생활 계산기</div>
               <h1 style={{fontSize:44,fontWeight:900,color:"#172B4D",lineHeight:1.15,letterSpacing:-2,margin:"0 0 16px"}}>복잡한 세법·대출 규제,<br/><span style={{color:"#0747A6"}}>10초 만에</span><br/>완벽 계산</h1>
-              <p style={{fontSize:16,color:"#505f79",lineHeight:1.7,margin:0,wordBreak:"keep-all"}}>부동산 세금, 대출, 비용부터 연말정산, 연봉 실수령액, 4대보험까지. 39가지 전문 계산기로 일상의 재정 판단을 도와드립니다. 2026년 최신 세법 반영.</p>
+              <p style={{fontSize:16,color:"#505f79",lineHeight:1.7,margin:0,wordBreak:"keep-all"}}>부동산 세금, 대출, 비용부터 연말정산, 연봉 실수령액, 4대보험까지. 62가지 전문 계산기로 일상의 재정 판단을 도와드립니다. 2026년 최신 세법 반영.</p>
             </div>
             <div style={{background:"#fff",borderRadius:20,padding:"40px 32px",border:"1px solid #dfe1e6",boxShadow:"0 4px 20px rgba(0,0,0,0.06)"}}>
               <div style={{fontSize:18,fontWeight:700,color:"#172B4D",marginBottom:16}}>어떤 계산이 필요하세요?</div>
               <CalcSearchBar onSelect={navigateCalc} isMo={false} calcList={CL.map(c=>({id:c.id,name:c.l,keywords:c.l+" "+(DESC[c.id]||""),cat:c.c}))}/>
               <button onClick={()=>navigateCalc("tax","acquisition")} style={{width:"100%",padding:"16px",background:"#0747A6",color:"#fff",border:"none",borderRadius:12,fontSize:16,fontWeight:700,cursor:"pointer",marginTop:12,boxShadow:"0 4px 14px rgba(7,71,166,0.3)",fontFamily:"inherit"}}>지금 계산하기 →</button>
-              <div style={{display:"flex",justifyContent:"center",gap:16,marginTop:16,fontSize:13,color:"#505f79"}}><span style={{display:"inline-flex",alignItems:"center",gap:4}}><Ico.check size={14}/>매일 자동 검증</span><span style={{display:"inline-flex",alignItems:"center",gap:4}}><IconCheck c="#505f79"/> 39가지 무료</span></div>
+              <div style={{display:"flex",justifyContent:"center",gap:16,marginTop:16,fontSize:13,color:"#505f79"}}><span style={{display:"inline-flex",alignItems:"center",gap:4}}><Ico.check size={14}/>매일 자동 검증</span><span style={{display:"inline-flex",alignItems:"center",gap:4}}><IconCheck c="#505f79"/> 62가지 무료</span></div>
             </div>
           </div>
         </div>
