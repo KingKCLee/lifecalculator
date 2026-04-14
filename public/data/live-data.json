@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.14",
       "category": "전체",
+      "title": "fix: RP 그라디언트 전수·Sel→Tog 6개 계산기·특수조건 칩 5개 계산기",
+      "desc": "fix: RP 그라디언트 전수·Sel→Tog 6개 계산기·특수조건 칩 5개 계산기"
+    },
+    {
+      "date": "2026.04.14",
+      "category": "전체",
       "title": "fix: 브레드크럼브·서브메뉴 한 줄 배치 (좌 탭·우 breadcrumb)",
       "desc": "fix: 브레드크럼브·서브메뉴 한 줄 배치 (좌 탭·우 breadcrumb)"
     },
@@ -1463,12 +1469,6 @@
       "category": "비용",
       "title": "feat: 전체 계산기 TipModal·NextStep 추가 완료 (3탄 - 수익률/예적금/채권/공동명의/인지세/평수)",
       "desc": "feat: 전체 계산기 TipModal·NextStep 추가 완료 (3탄 - 수익률/예적금/채권/공동명의/인지세/평수)"
-    },
-    {
-      "date": "2026.04.08",
-      "category": "대출",
-      "title": "feat: DTI/대출가능액/보유세/중개보수 H3+TipModal 추가 (2탄 완료)",
-      "desc": "feat: DTI/대출가능액/보유세/중개보수 H3+TipModal 추가 (2탄 완료)"
     }
   ],
   "rates": {
