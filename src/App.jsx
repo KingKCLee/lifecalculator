@@ -1188,7 +1188,8 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
         </div>);
       })()}
       {isHouse&&acqType==="sale"&&<Radio label="취득 후 주택 수" value={own} onChange={sO} options={[{value:"1",label:"1주택"},{value:"2",label:"2주택"},{value:"3",label:"3주택"},{value:"4",label:"4주택+"}]} cols={4}/>}
-      {(showCorp||showFirstDist||showConArea||showMetro||showPopDecline||showHeavyExclude||showSpouseChild||showFirstOfLife||showCultivation||showBirthChild)&&<div style={{marginBottom:14}}>
+      {/* 2026.04.14 사치성재산 칩이 항상 보이도록 무조건 노출 (모든 취득유형에서 선택 가능) */}
+      <div style={{marginBottom:14}}>
         <div style={{fontSize:11,fontWeight:600,color:"#6b778c",letterSpacing:.5,textTransform:"uppercase",marginBottom:8}}>특수 조건 <span style={{fontWeight:400,color:"#aaa",fontSize:10}}>{isMo?"항목을 누르면 설명이 나타납니다":"마우스를 올리면 설명이 나타납니다"}</span></div>
         <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:8}}>
           {showCorp&&<button onClick={()=>{setCorporation(!corporation);setChipDesc(!corporation?{key:"corp",label:"법인",desc:"법인이 주택 취득 시 주택 수와 관계없이 취득세 12% 단일 적용.",color:"#0C447C",bg:"#E6F1FB",bc:"#378ADD"}:null)}} style={{padding:"6px 12px",borderRadius:20,fontSize:12,fontWeight:corporation?700:500,cursor:"pointer",fontFamily:"inherit",transition:"all .15s",border:corporation?"none":"1.5px solid #dfe1e6",background:corporation?"#E6F1FB":"#fff",color:corporation?"#0C447C":"#505f79"}} onMouseEnter={()=>showChipPanel("법인","법인이 주택 취득 시 주택 수와 관계없이 취득세 12% 단일 적용.")} onMouseLeave={hideChipPanel}>{corporation&&"✓ "}법인</button>}
@@ -1261,7 +1262,7 @@ function CalcTrans({isMo=false,onNav=()=>{}}){
   const[mixedHouse,setMixedHouse]=useState(false);
   const[houseArea,setHouseArea]=useState("");
   const[shopArea,setShopArea]=useState("");
-  const[jointSimple,setJointSimple]=useState(false);
+  const[useManualGain,setUseManualGain]=useState(false);
   const[manualGain,setManualGain]=useState(""); // 2026.04.14 고도화: 차익조정 수동 입력 (빈 값이면 자동 계산)
   const[result,setResult]=useState(null);
   const showOwn=assetType==="house"||assetType==="right"||assetType==="union";
@@ -1283,7 +1284,7 @@ function CalcTrans({isMo=false,onNav=()=>{}}){
   const holdText=(()=>{if(buyDate.length<8||sellDate.length<8)return null;const bd=new Date(buyDate.slice(0,4)+"-"+buyDate.slice(4,6)+"-"+buyDate.slice(6,8));const sd=new Date(sellDate.slice(0,4)+"-"+sellDate.slice(4,6)+"-"+sellDate.slice(6,8));const hd=Math.floor((sd-bd)/86400000);if(isNaN(hd)||hd<0)return null;const hy=Math.floor(hd/365);const hm=Math.floor((hd%365)/30);return"보유기간: "+hy+"년 "+hm+"개월";})();
   const sellNumRender=parseInt(sellDate)||0;
   const inMoratoriumRender=sellNumRender>=20220510&&sellNumRender<=20260509;
-  useEffect(()=>{if(tW(buyAmt)&&tW(sellAmt)&&buyDate.length>=8&&sellDate.length>=8)calculate();else setResult(null);},[assetType,own,baseDeduct,jointOwn,jointRate,conArea,realLive,liveYear,rentBiz,longRentEx,unregistered,inherited,nonBizLand,is1HouseExempt,isHeavy2,isHeavy3,buyAmt,sellAmt,costTotal,buyDate,sellDate,inheritBuyDate,sangSaeng,mixedHouse,houseArea,shopArea,jointSimple,manualGain]);
+  useEffect(()=>{if(tW(buyAmt)&&tW(sellAmt)&&buyDate.length>=8&&sellDate.length>=8)calculate();else setResult(null);},[assetType,own,baseDeduct,jointOwn,jointRate,conArea,realLive,liveYear,rentBiz,longRentEx,unregistered,inherited,nonBizLand,is1HouseExempt,isHeavy2,isHeavy3,buyAmt,sellAmt,costTotal,buyDate,sellDate,inheritBuyDate,sangSaeng,mixedHouse,houseArea,shopArea,useManualGain,manualGain]);
   function calculate(){
     const buy=tW(buyAmt);const sell=tW(sellAmt);const expenses=tW(costTotal);
     if(!buy||!sell||!buyDate||!sellDate||buyDate.length<8||sellDate.length<8)return;
@@ -1438,8 +1439,13 @@ function CalcTrans({isMo=false,onNav=()=>{}}){
       {showJoint&&<Inp label="공동명의 지분" value={jointRate} onChange={setJointRate} suffix="%" placeholder="1~99"/>}
     </div>
     {/* 2026.04.14 고도화: 차익조정 수동 입력 */}
-    <div style={{marginBottom:12}}><Inp label="양도차익 수동 조정 (선택)" value={manualGain} onChange={setManualGain} suffix="만원" placeholder="비워두면 자동 계산" note="입력 시 양도가액-취득가액-필요경비 대신 이 값이 차익으로 사용됨"/></div>
-    {showJoint&&<div style={{marginBottom:12}}><label style={{display:"flex",alignItems:"center",gap:6,fontSize:isMo?14:13,cursor:"pointer",whiteSpace:"nowrap",wordBreak:"keep-all"}}><input type="checkbox" checked={jointSimple} onChange={e=>{setJointSimple(e.target.checked);if(e.target.checked)setJointRate("50");}} style={{width:18,height:18}}/> 공동명의 간편계산 (50:50)</label>{jointSimple&&<div style={{marginTop:6,padding:"8px 12px",background:"#E6F1FB",border:"1px solid #93c5fd",borderRadius:8,fontSize:12,color:"#0C447C"}}>부부 등 공동명의 50:50 지분 기준으로 자동 계산됩니다.</div>}</div>}
+    {/* 2026.04.14 양도차익 직접입력 체크박스 — 미체크 시 자동 계산 */}
+    <div style={{marginBottom:12}}>
+      <label style={{display:"flex",alignItems:"center",gap:6,fontSize:isMo?14:13,cursor:"pointer",whiteSpace:"nowrap",wordBreak:"keep-all"}}>
+        <input type="checkbox" checked={useManualGain} onChange={e=>{setUseManualGain(e.target.checked);if(!e.target.checked)setManualGain("");}} style={{width:18,height:18}}/> 양도차익 직접입력
+      </label>
+      {useManualGain&&<div style={{marginTop:8}}><Inp label="양도차익 (수동)" value={manualGain} onChange={setManualGain} suffix="만원" placeholder="직접 입력한 금액 적용" note="입력 시 양도가액-취득가액-필요경비 대신 이 값이 차익으로 사용됨"/></div>}
+    </div>
     {mixedHouse&&<div className="calc-inner" style={{display:"grid",gridTemplateColumns:isMo?"1fr 1fr":"1fr 1fr",gap:12,marginBottom:12}}>
       <Inp label="주택 면적" value={houseArea} onChange={setHouseArea} suffix="㎡"/>
       <Inp label="상가 면적" value={shopArea} onChange={setShopArea} suffix="㎡"/>
@@ -1544,7 +1550,18 @@ function CalcCompre({isMo=false,onNav=()=>{}}){
     </div>
     <div style={{padding:"10px 14px",background:P.lt,borderRadius:8,fontSize:12,color:"#172B4D",marginBottom:12}}>합산 공시가격: <b>{fW(pp)}</b>{nRaw!==items.length&&<span style={{color:"#94a3b8",marginLeft:8}}>(제외 {items.length-nRaw}건)</span>}</div>
     <label style={{display:"flex",alignItems:"center",gap:6,fontSize:12,cursor:"pointer",marginBottom:8}}><input type="checkbox" checked={showYearAdj} onChange={e=>setShowYearAdj(e.target.checked)}/> 기준연도 및 값 직접 조정</label>
-    {showYearAdj&&<Inp label="기준연도" value={String(calcYear)} onChange={v=>setCalcYear(parseInt(v)||new Date().getFullYear())} suffix="년" note="현재 세율은 2026년 기준으로 계산됩니다"/>}
+    {showYearAdj&&<>
+      <Inp label="기준연도" value={String(calcYear)} onChange={v=>setCalcYear(parseInt(v)||new Date().getFullYear())} suffix="년" note="현재 세율은 2026년 기준으로 계산됩니다"/>
+      {/* 2026.04.14 연도 조정 토글 시 관련 파라미터 info card 노출 */}
+      <div style={{marginBottom:12,padding:"12px 14px",background:"#F9FAFB",border:"1px solid #E5E7EB",borderRadius:10,fontSize:11,color:"#475569",lineHeight:1.7}}>
+        <div style={{fontWeight:700,color:"#0a1628",marginBottom:6}}>{calcYear}년 종부세 기준 파라미터</div>
+        <div>• 공정시장가액비율: <strong>60%</strong> (2023년부터 유지)</div>
+        <div>• 1주택자 기본공제: <strong>12억원</strong></div>
+        <div>• 다주택자 기본공제: <strong>9억원</strong></div>
+        <div>• 세부담 상한: 1·2주택 <strong>150%</strong>, 3주택+ <strong>300%</strong></div>
+        <div>• 세율: 1·2주택 누진 0.5~2.7% / 3주택+ 중과 0.5~5.0%</div>
+      </div>
+    </>}
     {!isCorp&&n===1&&<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?8:12}}><Sel label="만 나이" value={age} onChange={sAge} options={[{value:"0",label:"60세 미만"},{value:"60",label:"60~64세 (20%)"},{value:"65",label:"65~69세 (30%)"},{value:"70",label:"70세 이상 (40%)"}]}/><Sel label="보유기간" value={hold} onChange={sHold} options={[{value:"0",label:"5년 미만"},{value:"5",label:"5~10년 (20%)"},{value:"10",label:"10~15년 (40%)"},{value:"15",label:"15년 이상 (50%)"}]}/></div>}
     {!isCorp&&<Inp label="전년도 종부세액 (선택)" value={prevTax} onChange={sPrev} suffix="만원" placeholder="세부담상한용" note="2주택↓ 150% / 3주택↑ 300%"/>}
     {!isCorp&&n===1&&<div style={{padding:"10px 14px",background:P.lt,borderRadius:8,fontSize:11,color:"#6b778c",lineHeight:1.5,marginTop:8}}>※ 고령자+장기보유 합산 최대 80% 세액공제 (1주택자만)</div>}
@@ -1769,7 +1786,7 @@ function CalcLTV({isMo=false,onNav=()=>{}}){
   rpItems.push({l:"실제 대출 가능액",v:fW(Math.max(0,ml))});
   rpItems.push({l:"필요 자기자본",v:fW(equity),note:"매수가 - 최대대출"});
   rpItems.push({l:"자기자본 비율",v:fP(pvW>0?equity/pvW*100:0)});
-  return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}><div>{!isMo&&<h3 style={{fontSize:isMo?16:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>LTV 계산기</h3>}<Inp label="주택 가격 (시세)" value={pv} onChange={sPv} suffix="만원" placeholder="예: 90000"/><Tog label="규제지역" value={a} onChange={sA} options={[{value:"non",label:"비규제"},{value:"adj",label:"조정대상"},{value:"spec",label:"투기과열"}]}/><Sel label="주택 수" value={h} onChange={sH} options={[{value:"1",label:"1주택 (무주택 포함)"},{value:"2",label:"2주택"},{value:"3",label:"3주택 이상"}]}/><Tog label="생애최초 구입자" value={first} onChange={sFirst} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (비규제80%/규제70%, 한도6억)"}]}/><Tog label="서민실수요자" value={seomin} onChange={sSeomin} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (투기60%/조정70%)"}]}/><Inp label="기존 담보대출 잔액" value={ex} onChange={sEx} suffix="만원" placeholder="없으면 0"/>{isCappedByRegulation&&<div style={{padding:"12px 16px",background:"#FFF8E1",border:"1px solid #FFE082",borderRadius:10,fontSize:13,color:"#F57F17",marginTop:12,lineHeight:1.6,display:"flex",alignItems:"center",gap:6}}><IconWarn c="#F57F17"/> LTV 기준 {fW(ltvLoan)} 가능하나, 수도권·규제지역 주담대 한도({metroCap===6e8?"6억":metroCap===4e8?"4억":"2억"})로 제한됩니다. (2025.6.28~ 시행)</div>}</div><div>{pvW<=0&&<RequiredGuide items={[{label:"주택 가격 (시세)",filled:pvW>0}]}/>}<><div style={{margin:"0 0 16px"}}><div style={{display:"flex",justifyContent:"space-between",fontSize:11,marginBottom:4,color:"#475569"}}><span style={{fontWeight:600}}>LTV {fP(ltv*100)}</span><span style={{color:"#64748b"}}>{ltv===0?"대출 제한":"한도 내"}</span></div><div style={{background:"#e2e8f0",borderRadius:6,height:10,overflow:"hidden"}}><div style={{height:"100%",borderRadius:6,width:Math.min(ltv*100,100)+"%",background:ltvBarColor,transition:"width .4s"}}/></div><div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:"#94a3b8",marginTop:4}}><span>0%</span><span>50%</span><span>100%</span></div></div><RP title={ltv===0?"대출 제한":"LTV·대출한도 분석"}
+  return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}><div>{!isMo&&<h3 style={{fontSize:isMo?16:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>LTV 계산기</h3>}<Inp label="주택 가격 (시세)" value={pv} onChange={sPv} suffix="만원" placeholder="예: 90000"/><Tog label="규제지역" value={a} onChange={sA} options={[{value:"non",label:"비규제"},{value:"adj",label:"조정대상"},{value:"spec",label:"투기과열"}]}/><Sel label="주택 수" value={h} onChange={sH} options={[{value:"1",label:"1주택 (무주택 포함)"},{value:"2",label:"2주택"},{value:"3",label:"3주택 이상"}]}/><Radio label="우대 조건 (상호배타)" value={first==="yes"?"first":seomin==="yes"?"seomin":"none"} onChange={v=>{sFirst(v==="first"?"yes":"no");sSeomin(v==="seomin"?"yes":"no");}} options={[{value:"none",label:"해당없음"},{value:"first",label:"생애최초 (비규제80%/규제70%, 한도6억)"},{value:"seomin",label:"서민실수요자 (투기60%/조정70%)"}]} cols={3}/><Inp label="기존 담보대출 잔액" value={ex} onChange={sEx} suffix="만원" placeholder="없으면 0"/>{isCappedByRegulation&&<div style={{padding:"12px 16px",background:"#FFF8E1",border:"1px solid #FFE082",borderRadius:10,fontSize:13,color:"#F57F17",marginTop:12,lineHeight:1.6,display:"flex",alignItems:"center",gap:6}}><IconWarn c="#F57F17"/> LTV 기준 {fW(ltvLoan)} 가능하나, 수도권·규제지역 주담대 한도({metroCap===6e8?"6억":metroCap===4e8?"4억":"2억"})로 제한됩니다. (2025.6.28~ 시행)</div>}</div><div>{pvW<=0&&<RequiredGuide items={[{label:"주택 가격 (시세)",filled:pvW>0}]}/>}<><div style={{margin:"0 0 16px"}}><div style={{display:"flex",justifyContent:"space-between",fontSize:11,marginBottom:4,color:"#475569"}}><span style={{fontWeight:600}}>LTV {fP(ltv*100)}</span><span style={{color:"#64748b"}}>{ltv===0?"대출 제한":"한도 내"}</span></div><div style={{background:"#e2e8f0",borderRadius:6,height:10,overflow:"hidden"}}><div style={{height:"100%",borderRadius:6,width:Math.min(ltv*100,100)+"%",background:ltvBarColor,transition:"width .4s"}}/></div><div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:"#94a3b8",marginTop:4}}><span>0%</span><span>50%</span><span>100%</span></div></div><RP title={ltv===0?"대출 제한":"LTV·대출한도 분석"}
       deadline="LTV 초과 시 자기자본으로 충당 / 잔금일 전 대출 승인 필요 (최소 2~3주 전 신청)"
       alertMsg={alertMsg} alertType={alertType}
       total={ml} sub={ltv===0?(n>=3&&a!=="non"?"규제지역 3주택 이상 주담대 금지":"규제지역 다주택자 주택담보대출 제한"):"LTV "+fP(ltv*100)+(isCappedByRegulation?" + 주담대 한도":"")+" 적용"} items={rpItems} consultFunnel={ltv===0||specBlocked?{label:<><IconWarn c="#fff"/> 추가 대출 방법 상담</>,color:"#FF8B00",subtitle:"LTV 한도 초과·주담대 제한 — 보금자리론·신혼부부 특례 등 대안 상담"}:isCappedByRegulation?{label:<><IconMoney c="#fff"/> 추가 대출 방법 상담</>,color:"#FF8B00",subtitle:"수도권 주담대 한도 적용 — LTV 초과분 충당 전략 상담"}:null}/></><NextStep calcId="ltv" onNav={onNav} isMo={isMo}/><RateTable title="LTV 규제 비율 (2026)" headers={["지역","무주택","서민실수요","생애최초","1주택자추가"]} rows={[["투기과열","40%","60%","70%(한도6억)","불가"],["조정대상","50%","70%","70%(한도6억)","불가"],["비규제","70%","-","80%(한도6억)","60%"]]}/></div></div>);}
@@ -2120,7 +2137,8 @@ function CalcIncTax({isMo=false,onNav=()=>{}}){const[incType,sIT]=useState("sala
     <Inp label={incType==="salary"?"총급여(연봉)":"총수입금액"} value={gross} onChange={sGross} suffix="만원" placeholder={incType==="salary"?"예: 5000":"예: 8000"}/>
     {(incType==="biz"||incType==="freelance")&&<><Tog label="경비 산정 방식" value={bizType} onChange={sBT} options={[{value:"simple",label:"단순경비율 적용"},{value:"actual",label:"실제 경비 입력"}]}/>{bizType==="simple"?<Sel label="단순경비율" value={bizRate} onChange={sBR} options={[{value:"90",label:"90% (소매업)"},{value:"80",label:"80% (음식점)"},{value:"70",label:"70% (제조업)"},{value:"60",label:"60% (서비스업)"},{value:"50",label:"50% (전문직)"},{value:"40",label:"40% (고소득 전문직)"}]}/>:<Inp label="필요경비 합계" value={deductions} onChange={sDed} suffix="만원" placeholder="실제 지출한 경비"/>}</>}
     {incType==="etc"&&<Inp label="필요경비" value={deductions} onChange={sDed} suffix="만원" note="기타소득은 수입의 60%와 실제 경비 중 큰 금액 적용"/>}
-    <div style={{background:P.lt,borderRadius:12,padding:16,marginBottom:16}}>
+    {/* 2026.04.14 인적공제는 근로소득(salary)에만 노출 — 사업/프리랜서/기타는 숨김 */}
+    {incType==="salary"&&<div style={{background:P.lt,borderRadius:12,padding:16,marginBottom:16}}>
       <div style={{fontSize:14,fontWeight:700,color:P.tx,marginBottom:12,display:"flex",alignItems:"center",gap:6}}><IconUser/> 인적공제 대상</div>
       <div style={{display:"grid",gridTemplateColumns:"1fr",gap:10}}>
         <Inp label="배우자" value={spouse} onChange={sSpouse} suffix="명" placeholder="0 또는 1" note="연소득 100만원 이하"/>
@@ -2129,7 +2147,7 @@ function CalcIncTax({isMo=false,onNav=()=>{}}){const[incType,sIT]=useState("sala
         <Inp label="70세 이상 (경로우대)" value={senior} onChange={sSenior} suffix="명" placeholder="0" note="추가 100만원"/>
         <Inp label="장애인" value={disabled} onChange={sDisabled} suffix="명" placeholder="0" note="추가 200만원"/>
       </div>
-    </div>
+    </div>}
     {incType==="salary"&&<div style={{padding:"12px 16px",background:P.lt,borderRadius:10,fontSize:12,color:"#6b778c",lineHeight:1.6,marginTop:8}}>※ 4대보험료, 신용카드·의료비·교육비 등 특별공제는 반영되지 않은 간이 계산입니다.</div>}
   </div><div><RP title="종합소득세"
       deadline="신고기한: 매년 5월 1일 ~ 5월 31일 (성실신고확인 시 6월 30일)"

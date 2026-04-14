@@ -42,7 +42,8 @@ export default function CalcLegalInherit({isMo=false, onNav=()=>{}}){
     <Inp label="상속재산 총액" value={estate} onChange={setEstate} suffix="만원" placeholder="예: 100000"/>
     <Tog label="배우자 생존 여부" value={hasSpouse} onChange={setHasSpouse} options={[{value:"yes",label:"배우자 있음"},{value:"no",label:"배우자 없음"}]}/>
     <Inp label="자녀 수" value={children} onChange={setChildren} note="직계비속 (손자녀 제외)"/>
-    <Inp label="부모 수" value={parents} onChange={setParents} note="자녀가 없을 때만 상속 (0~2)"/>
+    {/* 2026.04.14 자녀 0명일 때만 부모 수 입력 노출 (1순위: 자녀 / 2순위: 부모) */}
+    {nChild===0&&<Inp label="부모 수" value={parents} onChange={setParents} note="자녀가 없을 때만 상속 (0~2)"/>}
     <RP title="법정상속분 배분" total={eW}
       sub={hasSpouse==="yes"&&(nChild>0||nParent>0)?"배우자 1.5, 기타 각 1":"단독 상속"}
       alertMsg={"민법 제1009조 법정상속분 기준. 유류분(배우자·자녀 1/2, 존속 1/3) 침해 여부는 별도 판단"}
