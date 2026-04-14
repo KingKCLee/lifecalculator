@@ -441,13 +441,16 @@ const CL=[
 const addComma=v=>{const n=String(v).replace(/[^0-9]/g,"");return n?parseInt(n).toLocaleString("ko-KR"):"";}
 const stripComma=v=>String(v).replace(/,/g,"");
 
+// 2026.04.14 공통 입력 레이블 스타일 (40개 계산기 전체 통일) — 세로 겹침 방지
+const lblSt=(isMo)=>({display:"block",lineHeight:1.5,marginBottom:6,whiteSpace:"normal",wordBreak:"keep-all",fontSize:isMo?13:14,color:P.tx,fontWeight:500});
 function Slider({label,value,onChange,min,max,step}){
+  const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
   const v=pN(value);
   const displayVal=v?addComma(v):"";
   const handleText=e=>{const raw=stripComma(e.target.value);if(raw===""||/^\d+$/.test(raw))onChange(raw);};
   return(<div style={{marginBottom:20}}>
-    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
-      <label style={{fontSize:13,fontWeight:600,color:P.mt}}>{label}</label>
+    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8,gap:8,flexWrap:"wrap"}}>
+      <label style={{...lblSt(isMo),marginBottom:0,flex:"1 1 auto",minWidth:0}}>{label}</label>
       <div style={{display:"flex",alignItems:"center",gap:6}}>
         <input type="text" value={displayVal} onChange={handleText} placeholder="직접 입력"
           style={{width:120,textAlign:"right",padding:"6px 10px",border:`1.5px solid ${P.bd}`,borderRadius:8,fontSize:16,fontWeight:700,color:P.tx,background:P.lt,outline:"none",fontFamily:"inherit"}}
@@ -463,7 +466,7 @@ function Slider({label,value,onChange,min,max,step}){
 function Radio({label,value,onChange,options,cols}){
   const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
   return(<div style={{marginBottom:20}}>
-    <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:8,letterSpacing:.5,textTransform:"uppercase"}}>{label}</label>
+    <label style={lblSt(isMo)}>{label}</label>
     <div style={{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6"}}>
       {options.map((o,i)=>(
         <button key={o.value} onClick={()=>onChange(o.value)} style={{
@@ -482,6 +485,7 @@ function Radio({label,value,onChange,options,cols}){
 }
 
 function Inp({label,value,onChange,suffix,placeholder,note}){
+  const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
   const[focused,setFocused]=useState(false);
   const displayVal=(!focused&&suffix==="만원"&&value)?addComma(value):value;
   const handleChange=e=>{
@@ -491,7 +495,7 @@ function Inp({label,value,onChange,suffix,placeholder,note}){
   };
   const numVal=pN(value);
   return(<div style={{marginBottom:16}}>
-    <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5,whiteSpace:"nowrap"}}>{label}</label>
+    <label style={lblSt(isMo)}>{label}</label>
     <div style={{position:"relative"}}>
       <input type="text" value={displayVal} onChange={handleChange} placeholder={placeholder}
         style={{width:"100%",boxSizing:"border-box",padding:"10px 14px",paddingRight:suffix?44:14,border:"1.5px solid #dfe1e6",borderRadius:10,fontSize:15,background:"#fff",color:P.tx,outline:"none",fontFamily:"inherit",height:44}}
@@ -504,8 +508,9 @@ function Inp({label,value,onChange,suffix,placeholder,note}){
   </div>);
 }
 function Sel({label,value,onChange,options}){
+  const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
   return(<div style={{marginBottom:16}}>
-    <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>{label}</label>
+    <label style={lblSt(isMo)}>{label}</label>
     <select value={value} onChange={e=>onChange(e.target.value)} style={{width:"100%",padding:"10px 14px",border:"1.5px solid #dfe1e6",borderRadius:10,fontSize:15,background:"#fff",color:P.tx,outline:"none",fontFamily:"inherit",cursor:"pointer",appearance:"none",height:44,backgroundImage:`url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10'%3E%3Cpath fill='%23718096' d='M5 7L0 2h10z'/%3E%3C/svg%3E")`,backgroundRepeat:"no-repeat",backgroundPosition:"right 14px center"}}>
       {options.map(o=><option key={o.value} value={o.value}>{o.label}</option>)}
     </select>
@@ -514,7 +519,7 @@ function Sel({label,value,onChange,options}){
 function Tog({label,value,onChange,options}){
   const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
   return(<div style={{marginBottom:16}}>
-    <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:8,letterSpacing:.5,textTransform:"uppercase"}}>{label}</label>
+    <label style={lblSt(isMo)}>{label}</label>
     <div style={{display:"flex",flexWrap:"nowrap",overflowX:"auto",borderRadius:10,border:"1.5px solid #dfe1e6",scrollbarWidth:"thin"}}>
       {options.map((o,i)=>(<button key={o.value} onClick={()=>onChange(o.value)} style={{flex:"0 0 auto",minWidth:"fit-content",padding:"8px 12px",border:"none",borderRight:i<options.length-1?"1px solid #dfe1e6":"none",background:value===o.value?"#0747A6":"#fff",color:value===o.value?"#fff":"#505f79",fontSize:isMo?11:13,fontWeight:value===o.value?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",wordBreak:"normal",textAlign:"center",lineHeight:1.3,transition:"background .15s,color .15s"}}>{o.label}</button>))}
     </div>
