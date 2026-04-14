@@ -743,13 +743,13 @@ function main(){
     if(m) slugMap[m[1]] = f.replace('.html', '');
   }
 
-  // 기존 용어 enrichment 병합
+  // 기존 용어 enrichment 병합 (terms.json 기존 필드 우선 보존)
   const enrichedExisting = existing.map(t => ({
     ...t,
     slug: slugMap[t.term] || t.term.toLowerCase().replace(/\s+/g, '-'),
-    law_ref: (ENRICH[t.term] && ENRICH[t.term].law_ref) || '',
-    example: (ENRICH[t.term] && ENRICH[t.term].example) || '',
-    recent: (ENRICH[t.term] && ENRICH[t.term].recent) || null,
+    law_ref: (ENRICH[t.term] && ENRICH[t.term].law_ref) || t.law_ref || '',
+    example: (ENRICH[t.term] && ENRICH[t.term].example) || t.example || '',
+    recent: (ENRICH[t.term] && ENRICH[t.term].recent) || t.recent || null,
     updated: TODAY
   }));
 
