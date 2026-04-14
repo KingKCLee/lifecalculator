@@ -3381,9 +3381,9 @@ export default function App(){
   const catInfo=CATS.find(c=>c.id===cat);
   const searchResults=search.trim()?CL.filter(c=>(c.l+"|"+(DESC[c.id]||"")).includes(search.trim())):[];
 
-  return(<div style={{minHeight:"100vh",background:"#FFFFFF",fontFamily:"'Pretendard','Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif",width:"100%",maxWidth:"100vw",overflowX:"hidden",paddingLeft:isMo?0:200,paddingTop:64}}>
+  return(<div style={{minHeight:"100vh",background:"#FFFFFF",fontFamily:"'Pretendard','Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif",width:"100%",maxWidth:"100vw",overflowX:"hidden",paddingLeft:(isMo||page==="home")?0:200,paddingTop:64}}>
     <SidePanel/>
-    <LeftNav isMo={isMo} navOpen={navOpen} setNavOpen={setNavOpen} sidePanel={sidePanel} setSidePanel={setSidePanel} setEduTab={setEduTab}/>
+    {page!=="home"&&<LeftNav isMo={isMo} navOpen={navOpen} setNavOpen={setNavOpen} sidePanel={sidePanel} setSidePanel={setSidePanel} setEduTab={setEduTab}/>}
     <SidePanelOverlay sidePanel={sidePanel} setSidePanel={setSidePanel} calc={calc} isMo={isMo} sideMarketNews={sideMarketNews} sideMarketLoading={sideMarketLoading} sideHistory={sideHistory} sideHistoryLoading={sideHistoryLoading} sideHistoryErr={sideHistoryErr} lcToken={lcToken} setAuthMode={setAuthMode} setShowAuth={setShowAuth} eduTab={eduTab} setEduTab={setEduTab}/>
     {isMo&&<button onClick={()=>setNavOpen(true)} aria-label="메뉴 열기" style={{position:"fixed",top:10,left:10,zIndex:9997,width:40,height:40,background:"#0a1628",color:"#fff",border:"none",borderRadius:10,cursor:"pointer",fontSize:20,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 8px rgba(0,0,0,.2)"}}>☰</button>}
     <style>{`
@@ -3462,6 +3462,7 @@ body.lc-embed main{padding-top:0!important}
       </>):(
         <div style={{display:"flex",alignItems:"center",height:64,padding:"0 24px",gap:16}}>
           <div onClick={()=>{navigateHome();setSearch("");}} style={{width:200-24,display:"flex",alignItems:"center",gap:8,cursor:"pointer",flexShrink:0}}>
+            <img src="/logo.png" alt="생활계산기" height={32} style={{marginRight:8,verticalAlign:"middle"}} onError={e=>{e.currentTarget.style.display="none";}}/>
             <span style={{fontSize:20,fontWeight:800,color:"#0a1628",letterSpacing:-.3}}>생활계산기.com</span>
           </div>
           <div style={{flex:"1 1 auto",display:"flex",gap:4,position:"relative",justifyContent:"flex-start"}}>
@@ -3469,10 +3470,10 @@ body.lc-embed main{padding-top:0!important}
               <div key={c.id} onMouseEnter={()=>setHoverCat(c.id)} onMouseLeave={()=>setHoverCat(null)} style={{position:"relative"}}>
                 <button onClick={()=>{hCat(c.id);setPage("calc");}} style={{padding:"0 16px",border:"none",borderRadius:0,background:"transparent",color:active?"#0747A6":hot?"#0a1628":"#6B7280",fontSize:14,fontWeight:active?700:500,cursor:"pointer",fontFamily:"inherit",borderBottom:active?"3px solid #0747A6":"3px solid transparent",transition:"all .15s",height:64,display:"flex",alignItems:"center"}}>{c.l}</button>
                 {hot&&<div style={{position:"absolute",top:"100%",left:0,paddingTop:0,zIndex:1000}}>
-                  <div style={{background:"#fff",borderRadius:12,border:"1px solid #E5E7EB",boxShadow:"0 8px 24px rgba(0,0,0,0.12)",padding:"8px 0",minWidth:220}}>
+                  <div style={{background:"#fff",borderRadius:"0 0 8px 8px",border:"1px solid #E5E7EB",borderTop:"none",boxShadow:"0 8px 24px rgba(0,0,0,0.12)",padding:"8px 0",minWidth:220}}>
                     <div style={{padding:"8px 16px 6px",fontSize:11,fontWeight:700,color:"#6B7280",letterSpacing:1}}>{c.l} — {items.length}개</div>
-                    {items.map(item=>(<div key={item.id} onClick={()=>{navigateCalc(c.id,item.id);setHoverCat(null);}} style={{padding:"10px 16px",fontSize:14,cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center",fontWeight:calc===item.id?700:400,color:calc===item.id?"#0a1628":"#0a1628"}} onMouseEnter={e=>{e.currentTarget.style.background="#EFF6FF"}} onMouseLeave={e=>{e.currentTarget.style.background="transparent"}}>
-                      <span>{item.l}</span><span style={{fontSize:11,color:"#6B7280"}}>→</span>
+                    {items.map(item=>(<div key={item.id} onClick={()=>{navigateCalc(c.id,item.id);setHoverCat(null);}} style={{padding:"10px 16px",fontSize:14,cursor:"pointer",fontWeight:calc===item.id?700:400,color:"#0a1628"}} onMouseEnter={e=>{e.currentTarget.style.background="#EFF6FF"}} onMouseLeave={e=>{e.currentTarget.style.background="transparent"}}>
+                      {item.l}
                     </div>))}
                   </div>
                 </div>}
