@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>생활계산기 관리자</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Segoe UI', sans-serif; background: #f4f5f7; color: #172B4D; }
+  header { background: #0747A6; color: #fff; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+  header h1 { margin: 0; font-size: 18px; font-weight: 700; }
+  header .me { font-size: 13px; opacity: .9; }
+  header button { background: #fff; color: #0747A6; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+  .tabs { display: flex; gap: 4px; flex-wrap: wrap; border-bottom: 2px solid #dfe1e6; margin-bottom: 20px; }
+  .tab { padding: 10px 16px; cursor: pointer; font-weight: 600; color: #505f79; border: none; background: none; font-size: 14px; border-bottom: 3px solid transparent; margin-bottom: -2px; }
+  .tab.active { color: #0747A6; border-bottom-color: #0747A6; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; margin-bottom: 20px; }
+  .card { background: #fff; border: 1px solid #dfe1e6; border-radius: 10px; padding: 18px; }
+  .card .label { font-size: 12px; color: #505f79; margin-bottom: 6px; font-weight: 600; }
+  .card .value { font-size: 26px; font-weight: 800; color: #0747A6; }
+  .card .sub { font-size: 12px; color: #6b778c; margin-top: 4px; }
+  .reply-item { background: #fff; border: 1px solid #dfe1e6; border-radius: 10px; padding: 16px; margin-bottom: 12px; }
+  .reply-item .post { background: #f4f5f7; padding: 10px; border-radius: 6px; margin-bottom: 10px; font-size: 13px; color: #505f79; }
+  .reply-item .post b { color: #172B4D; display: block; margin-bottom: 4px; }
+  .reply-item .content { white-space: pre-wrap; font-size: 14px; line-height: 1.6; padding: 10px 0; }
+  .reply-item .meta { font-size: 12px; color: #6b778c; margin-bottom: 8px; }
+  .actions { display: flex; gap: 8px; margin-top: 10px; }
+  .btn { padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; }
+  .btn-ok { background: #0747A6; color: #fff; }
+  .btn-no { background: #de350b; color: #fff; }
+  .btn-sm { padding: 6px 10px; font-size: 12px; }
+  .muted { color: #6b778c; font-size: 14px; padding: 40px; text-align: center; }
+  .gate { max-width: 420px; margin: 80px auto; background: #fff; padding: 30px; border-radius: 10px; border: 1px solid #dfe1e6; text-align: center; }
+  .gate h2 { margin: 0 0 10px; color: #172B4D; }
+  .gate p { color: #505f79; margin: 8px 0 20px; }
+  .gate a { display: inline-block; background: #0747A6; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 6px; font-weight: 600; }
+  table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #dfe1e6; border-radius: 8px; overflow: hidden; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #dfe1e6; font-size: 13px; }
+  th { background: #f4f5f7; color: #505f79; font-weight: 700; }
+  tr:last-child td { border-bottom: none; }
+  .coming { background: #fff; border: 1px dashed #dfe1e6; border-radius: 10px; padding: 60px 20px; text-align: center; color: #6b778c; }
+</style>
+</head>
+<body>
+<div id="gate" class="gate" style="display:none"></div>
+
+<div id="dash" style="display:none">
+  <header>
+    <h1>생활계산기 관리자 대시보드</h1>
+    <div>
+      <span class="me" id="meEmail"></span>
+      &nbsp;
+      <button onclick="location.href='/'">홈으로</button>
+    </div>
+  </header>
+  <div class="container">
+    <div class="tabs">
+      <button class="tab active" data-tab="stats">종합 현황</button>
+      <button class="tab" data-tab="replies">Q&amp;A 답변 관리</button>
+      <button class="tab" data-tab="users">회원 관리</button>
+      <button class="tab" data-tab="community">커뮤니티 관리</button>
+      <button class="tab" data-tab="calcs">계산기 통계</button>
+      <button class="tab" data-tab="ads">광고 관리</button>
+      <button class="tab" data-tab="revenue">수익 관리</button>
+    </div>
+
+    <div id="panel-stats" class="panel active">
+      <div class="cards" id="statsCards"><div class="muted">불러오는 중...</div></div>
+    </div>
+
+    <div id="panel-replies" class="panel">
+      <div id="repliesList"><div class="muted">불러오는 중...</div></div>
+    </div>
+
+    <div id="panel-users" class="panel">
+      <div id="usersList"><div class="muted">탭을 선택하면 불러옵니다.</div></div>
+    </div>
+
+    <div id="panel-community" class="panel">
+      <div id="communityList"><div class="muted">탭을 선택하면 불러옵니다.</div></div>
+    </div>
+
+    <div id="panel-calcs" class="panel">
+      <div id="calcsList"><div class="muted">탭을 선택하면 불러옵니다.</div></div>
+    </div>
+
+    <div id="panel-ads" class="panel">
+      <div class="coming">광고 관리 - 기본 CRUD API는 준비되었습니다. (POST/PUT/DELETE /admin/ads)<br>UI는 다음 업데이트에서 제공됩니다.</div>
+    </div>
+
+    <div id="panel-revenue" class="panel">
+      <div id="revenueList"><div class="muted">탭을 선택하면 불러옵니다.</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = 'https://lc-auth-worker.noble-kclee.workers.dev';
+const token = localStorage.getItem('lc_token') || localStorage.getItem('lc_auth_token') || '';
+
+function h(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function auth() { return { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' }; }
+
+async function api(path, opts = {}) {
+  const res = await fetch(API + path, { ...opts, headers: { ...auth(), ...(opts.headers || {}) } });
+  return res.json();
+}
+
+function showGate(msg, link) {
+  const g = document.getElementById('gate');
+  g.style.display = 'block';
+  g.innerHTML = '<h2>' + h(msg) + '</h2><p>관리자 계정으로 로그인이 필요합니다.</p><a href="' + link + '">홈으로</a>';
+}
+
+async function init() {
+  if (!token) { showGate('로그인이 필요합니다', '/'); return; }
+  let me;
+  try { me = await api('/auth/me'); } catch { showGate('연결 오류', '/'); return; }
+  if (!me || !me.ok || !me.user || !me.user.isAdmin) {
+    showGate('접근 권한이 없습니다', '/');
+    return;
+  }
+  document.getElementById('dash').style.display = 'block';
+  document.getElementById('meEmail').textContent = me.user.email;
+  bindTabs();
+  loadStats();
+}
+
+function bindTabs() {
+  document.querySelectorAll('.tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      const id = btn.dataset.tab;
+      document.getElementById('panel-' + id).classList.add('active');
+      loaders[id] && loaders[id]();
+    });
+  });
+}
+
+async function loadStats() {
+  const el = document.getElementById('statsCards');
+  el.innerHTML = '<div class="muted">불러오는 중...</div>';
+  const r = await api('/admin/stats');
+  if (!r.ok) { el.innerHTML = '<div class="muted">통계 로드 실패: ' + h(r.error || '') + '</div>'; return; }
+  const s = r.stats;
+  const card = (l, v, sub) => '<div class="card"><div class="label">' + h(l) + '</div><div class="value">' + h(v) + '</div>' + (sub ? '<div class="sub">' + h(sub) + '</div>' : '') + '</div>';
+  const fmt = n => Number(n || 0).toLocaleString();
+  el.innerHTML = [
+    card('누적 회원', fmt(s.users_total), '오늘 +' + fmt(s.users_today)),
+    card('누적 계산', fmt(s.calcs_total), '오늘 +' + fmt(s.calcs_today)),
+    card('답변 대기', fmt(s.pending_replies_count), '승인 필요'),
+    card('게시글', fmt(s.posts_total), '전체 커뮤니티'),
+    card('이달 수익', '₩' + fmt(Math.round(s.revenue_this_month)), new Date().toISOString().slice(0,7)),
+  ].join('');
+}
+
+async function loadReplies() {
+  const el = document.getElementById('repliesList');
+  el.innerHTML = '<div class="muted">불러오는 중...</div>';
+  const r = await api('/admin/replies/pending');
+  if (!r.ok) { el.innerHTML = '<div class="muted">로드 실패</div>'; return; }
+  if (!r.items.length) { el.innerHTML = '<div class="muted">대기 중인 답변이 없습니다.</div>'; return; }
+  el.innerHTML = r.items.map(it => (
+    '<div class="reply-item">' +
+    '<div class="post"><b>원문 질문 (#' + it.post_id + ')</b>' + h(it.post_title || '') + '<div style="margin-top:4px;font-size:12px;">' + h((it.post_content || '').slice(0, 200)) + '</div></div>' +
+    '<div class="meta">작성자: ' + h(it.author) + ' · ' + h(it.created_at) + '</div>' +
+    '<div class="content">' + h(it.content) + '</div>' +
+    '<div class="actions">' +
+    '<button class="btn btn-ok" onclick="approveReply(' + it.id + ')">승인 게시</button>' +
+    '<button class="btn btn-no" onclick="rejectReply(' + it.id + ')">거절</button>' +
+    '</div>' +
+    '</div>'
+  )).join('');
+}
+
+async function approveReply(id) {
+  const r = await api('/admin/replies/' + id + '/approve', { method: 'PUT' });
+  if (r.ok) loadReplies(); else alert('실패: ' + (r.error || ''));
+}
+async function rejectReply(id) {
+  if (!confirm('거절하시겠습니까?')) return;
+  const r = await api('/admin/replies/' + id + '/reject', { method: 'PUT' });
+  if (r.ok) loadReplies(); else alert('실패: ' + (r.error || ''));
+}
+
+async function loadUsers() {
+  const el = document.getElementById('usersList');
+  el.innerHTML = '<div class="muted">불러오는 중...</div>';
+  const r = await api('/admin/users');
+  if (!r.ok) { el.innerHTML = '<div class="muted">로드 실패</div>'; return; }
+  if (!r.items.length) { el.innerHTML = '<div class="muted">회원이 없습니다.</div>'; return; }
+  el.innerHTML = '<table><thead><tr><th>ID</th><th>이메일</th><th>가입일</th></tr></thead><tbody>' +
+    r.items.map(u => '<tr><td>' + u.id + '</td><td>' + h(u.email) + '</td><td>' + h(u.created_at) + '</td></tr>').join('') +
+    '</tbody></table>';
+}
+
+async function loadCommunity() {
+  const el = document.getElementById('communityList');
+  el.innerHTML = '<div class="muted">불러오는 중...</div>';
+  const r = await api('/admin/community');
+  if (!r.ok) { el.innerHTML = '<div class="muted">로드 실패</div>'; return; }
+  if (!r.items.length) { el.innerHTML = '<div class="muted">게시글이 없습니다.</div>'; return; }
+  el.innerHTML = '<table><thead><tr><th>ID</th><th>제목</th><th>카테고리</th><th>작성자</th><th>작성일</th><th></th></tr></thead><tbody>' +
+    r.items.map(p => '<tr><td>' + p.id + '</td><td>' + h(p.title) + '</td><td>' + h(p.category || '') + '</td><td>' + h(p.author || '') + '</td><td>' + h(p.created_at) + '</td><td><button class="btn btn-no btn-sm" onclick="delPost(' + p.id + ')">삭제</button></td></tr>').join('') +
+    '</tbody></table>';
+}
+
+async function delPost(id) {
+  if (!confirm('게시글을 삭제하시겠습니까?')) return;
+  const r = await api('/admin/community/' + id, { method: 'DELETE' });
+  if (r.ok) loadCommunity(); else alert('실패');
+}
+
+async function loadCalcs() {
+  const el = document.getElementById('calcsList');
+  el.innerHTML = '<div class="muted">불러오는 중...</div>';
+  const r = await api('/admin/calculations');
+  if (!r.ok) { el.innerHTML = '<div class="muted">로드 실패</div>'; return; }
+  if (!r.items.length) { el.innerHTML = '<div class="muted">데이터가 없습니다.</div>'; return; }
+  el.innerHTML = '<table><thead><tr><th>계산기</th><th>실행 횟수</th></tr></thead><tbody>' +
+    r.items.map(c => '<tr><td>' + h(c.calc_type) + '</td><td>' + Number(c.count).toLocaleString() + '</td></tr>').join('') +
+    '</tbody></table>';
+}
+
+async function loadRevenue() {
+  const el = document.getElementById('revenueList');
+  el.innerHTML = '<div class="muted">불러오는 중...</div>';
+  const r = await api('/admin/revenue');
+  if (!r.ok) { el.innerHTML = '<div class="muted">로드 실패</div>'; return; }
+  const monthly = (r.monthly || []).map(m => '<tr><td>' + h(m.month) + '</td><td>₩' + Number(m.total || 0).toLocaleString() + '</td></tr>').join('') || '<tr><td colspan="2" class="muted" style="padding:20px;text-align:center">데이터 없음</td></tr>';
+  el.innerHTML = '<h3 style="margin-top:0">월별 수익</h3><table><thead><tr><th>월</th><th>합계</th></tr></thead><tbody>' + monthly + '</tbody></table>';
+}
+
+const loaders = {
+  stats: loadStats,
+  replies: loadReplies,
+  users: loadUsers,
+  community: loadCommunity,
+  calcs: loadCalcs,
+  revenue: loadRevenue,
+};
+
+init();
+</script>
+</body>
+</html>
