@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.14",
       "category": "전체",
+      "title": "data: 전국 법정동 코드 데이터셋 (lawd.json) 추가",
+      "desc": "data: 전국 법정동 코드 데이터셋 (lawd.json) 추가"
+    },
+    {
+      "date": "2026.04.14",
+      "category": "전체",
       "title": "fix: RP 그라디언트 전수·CalcTrans RP 교체·Area/FAR 그라디언트·Compare/Invest/Terms 2열·RateTable 풀폭",
       "desc": "fix: RP 그라디언트 전수·CalcTrans RP 교체·Area/FAR 그라디언트·Compare/Invest/Terms 2열·RateTable 풀폭"
     },
@@ -1463,12 +1469,6 @@
       "category": "비용",
       "title": "feat: 전체 계산기 H3통일·NextStep 일괄 적용 (전월세/수익률/공동명의/인지세/채권/예적금)",
       "desc": "feat: 전체 계산기 H3통일·NextStep 일괄 적용 (전월세/수익률/공동명의/인지세/채권/예적금)"
-    },
-    {
-      "date": "2026.04.07",
-      "category": "전체",
-      "title": "feat: 틱커 뉴스+지표 통합 표시, 뉴스 클릭 시 계산기 이동",
-      "desc": "feat: 틱커 뉴스+지표 통합 표시, 뉴스 클릭 시 계산기 이동"
     }
   ],
   "rates": {
