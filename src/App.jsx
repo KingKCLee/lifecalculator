@@ -516,7 +516,7 @@ function Tog({label,value,onChange,options}){
   return(<div style={{marginBottom:16}}>
     <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:8,letterSpacing:.5,textTransform:"uppercase"}}>{label}</label>
     <div style={{display:"flex",flexWrap:"nowrap",borderRadius:10,overflow:"visible",border:"1.5px solid #dfe1e6"}}>
-      {options.map((o,i)=>(<button key={o.value} onClick={()=>onChange(o.value)} style={{flex:"1 1 auto",minWidth:isMo?60:80,padding:isMo?"11px 6px":"11px 10px",border:"none",borderRight:i<options.length-1?"1px solid #dfe1e6":"none",background:value===o.value?"#0747A6":"#fff",color:value===o.value?"#fff":"#505f79",fontSize:isMo?11:13,fontWeight:value===o.value?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",wordBreak:"keep-all",overflow:"visible",textAlign:"center",lineHeight:1.3,transition:"background .15s,color .15s"}}>{o.label}</button>))}
+      {options.map((o,i)=>(<button key={o.value} onClick={()=>onChange(o.value)} style={{flex:1,padding:isMo?"8px 4px":"10px 8px",border:"none",borderRight:i<options.length-1?"1px solid #dfe1e6":"none",background:value===o.value?"#0747A6":"#fff",color:value===o.value?"#fff":"#505f79",fontSize:isMo?10:12,fontWeight:value===o.value?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",wordBreak:"keep-all",overflow:"visible",textAlign:"center",lineHeight:1.3,transition:"background .15s,color .15s"}}>{o.label}</button>))}
     </div>
   </div>);
 }
@@ -566,8 +566,8 @@ function getConsultFunnel(calcId,total){
   return null;
 }
 function RP({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlineLinkLabel,alertMsg,alertType="info",consultFunnel}){
-  // 2026.04.14 입력값 없을 때(isExample) 결과 0 + 빈 항목으로 표시
-  if(isExample){total=0;items=[];sub="입력값을 입력하면 결과가 표시됩니다";}
+  // 2026.04.14 입력값 없을 때(isExample) RP 숨김 처리
+  if(isExample)return null;
   const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
   const rpKey=typeof window!=="undefined"?window.location.pathname:"";
   // 2026.04.14 상담 퍼널: pathname → calcId 역추적 후 규칙 매칭, prop override 우선
@@ -2198,7 +2198,7 @@ function EduSidebar({calc:calcId,gTab,setGTab}){
       </div>
       <div style={{fontSize:11,letterSpacing:1,color:P.mt,marginBottom:16}}>규정 가이드</div>
       {[{id:"rates",icon:"📊",l:"세율표·가이드"},{id:"regs",icon:"📋",l:"규정·법령"},{id:"tips",icon:"💡",l:"절세 팁"},{id:"glossary",icon:"📖",l:"용어 사전"}].map(t=>(
-        <button key={t.id} onClick={()=>{setGTab(t.id);try{document.getElementById('edu-content-top')?.scrollIntoView({behavior:'smooth',block:'start'});}catch{}}}
+        <button key={t.id} onClick={()=>{setGTab(t.id);setTimeout(()=>{try{document.getElementById('edu-content-top')?.scrollIntoView({behavior:'smooth',block:'start'});}catch{}},60);}}
           style={{width:"100%",padding:"10px 12px",border:"none",borderRadius:0,
             background:gTab===t.id?"#deebff":"transparent",color:gTab===t.id?P.pri:P.mt,
             borderLeft:gTab===t.id?`3px solid ${P.pri}`:"3px solid transparent",
@@ -3352,10 +3352,10 @@ body.lc-embed main{padding-top:0!important}
           </div>}
         </div>
 
-        {/* 2026.04.14 버그 수정: Expert Guide(EduContent) 위 · 학습센터(EduSidebar) 아래 순서 */}
+        {/* 2026.04.14 버그 수정: Expert Guide(EduSidebar 탭) 위 · 학습센터(EduContent) 아래 순서 */}
         <div className="sidebar-right">
-          <div id="edu-content-top"><EduContent calc={calc} gTab={gTab}/></div>
           <EduSidebar calc={calc} gTab={gTab} setGTab={setGTab}/>
+          <div id="edu-content-top"><EduContent calc={calc} gTab={gTab}/></div>
         </div>
       </div>)}
 
