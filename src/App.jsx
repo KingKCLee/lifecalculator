@@ -85,7 +85,25 @@ compare:{title:"매매 vs 증여 vs 상속 세금 비교 | 생활계산기",desc
 invest:{title:"부동산 투자수익 분석기 | 생활계산기",desc:"매수→보유→매도 전체 투자 수익률(IRR) 분석. 보유세, 대출이자, 양도세 반영. PRO 분석."},
 retire:{title:"퇴직금 계산기 - 예상 퇴직금 계산 | 생활계산기",desc:"근속연수별 퇴직금 자동 계산. 최근 3개월 평균임금 기준. 퇴직소득세 추정. 2026년 최신."},
 unemploy:{title:"실업급여 계산기 - 예상 수급액 확인 | 생활계산기",desc:"실업급여 일액·수급기간·총수령액 자동 계산. 퇴직 전 평균임금의 60%. 2026년 최저임금 기준 하한액 반영."},
-minwage:{title:"최저임금 계산기 2026 - 시급 월급 연봉 환산 | 생활계산기",desc:"2026년 최저임금 시급 10,030원 기준. 시급→월급→연봉 자동 환산. 주휴수당 포함 실수령액 계산."}
+minwage:{title:"최저임금 계산기 2026 - 시급 월급 연봉 환산 | 생활계산기",desc:"2026년 최저임금 시급 10,030원 기준. 시급→월급→연봉 자동 환산. 주휴수당 포함 실수령액 계산."},
+auction2:{title:"경매 적정입찰가 계산기 - 낙찰률 추정 | 생활계산기",desc:"부동산 경매 적정 입찰가 추정기. 감정가·지역·용도별 낙찰률 통계 반영. 과열 경쟁 방지 기준선 제시."},
+auctiondiv:{title:"경매 배당 분석 계산기 - 근저당 우선순위 | 생활계산기",desc:"경매 낙찰 후 배당표 간이 계산. 집행비용, 최우선변제, 근저당·임차인 우선순위별 배당액 시뮬레이션."},
+auctionloan:{title:"경락잔금대출 계산기 - 낙찰가 대출한도 | 생활계산기",desc:"경매 낙찰 시 경락잔금대출 한도 계산. 비규제 80%, 조정 70%, 투기과열 60% LTV. 방공제 반영."},
+bldvat:{title:"건물 부가세 계산기 - 85㎡ 초과 주택 VAT | 생활계산기",desc:"부동산 거래 시 건물분 부가가치세 10% 계산. 전용 85㎡ 이하 주택은 면세. 상가·오피스텔 과세."},
+bond2:{title:"국민주택채권 매입 계산기 - 공시가격 기준 | 생활계산기",desc:"주택도시기금 국민주택채권 매입·할인 계산. 공시지가 구간별 매입요율, 매도 시 할인손실 자동 산출."},
+datediff:{title:"날짜 계산기 - 보유기간 D-day | 생활계산기",desc:"두 날짜 간 일수·개월·년 계산. 부동산 계약일, 전입일, 보유기간, 양도세 2년 요건 확인용."},
+estincome:{title:"임대 추정소득 계산기 - 월세 경비율 역산 | 생활계산기",desc:"월 임대료를 연 추정소득으로 환산. 주택임대사업자 단순경비율 60% 또는 장부 경비 적용."},
+goodlord:{title:"착한임대인 세액공제 계산기 - 임대료 인하 70% | 생활계산기",desc:"조세특례제한법 제96조의3 착한임대인 세액공제. 상가 임대료 인하액의 70%(소득 1억 이하) 공제."},
+imputedrent:{title:"간주임대료 계산기 - 3주택 전세 3억 초과 | 생활계산기",desc:"소득세법 제25조 간주임대료. 3주택 이상 + 전세보증금 합계 3억 초과 시 과세. 정기예금 이자율 적용."},
+jeonseins:{title:"전세보증금 반환보증 보험료 계산기 - HUG HF | 생활계산기",desc:"전세보증금 반환보증 보험료 자동 계산. HUG·HF 구간별 요율, 보증기간 환산. 아파트·다세대 구분."},
+legalinherit:{title:"법정상속분 계산기 - 민법 제1009조 | 생활계산기",desc:"민법 법정상속분 자동 계산. 배우자 1.5 + 직계비속 각 1. 배우자 단독 상속, 형제자매 상속 분기."},
+luckyday:{title:"손없는날 달력 - 이사 개업 좋은 날 | 생활계산기",desc:"음력 기준 손없는날 달력. 전통적으로 손(귀신)이 없는 음력 9·10·19·20·29·30일. 이사·개업·입주일 참고."},
+progressive:{title:"누진세 계산기 - 과세표준 세율 한계세율 | 생활계산기",desc:"누진세 범용 계산기. 세목 선택 후 과세표준 입력하면 구간별 세율·세액·한계세율·실효세율 자동 계산."},
+reconyear:{title:"재건축 연한 계산기 - 준공일 기준 | 생활계산기",desc:"재건축 가능연한 자동 계산. 서울 30년, 광역시·경기 27~30년, 지방 20~30년. 준공연도 입력으로 D-day."},
+refinance:{title:"대환대출 비교 계산기 - 갈아타기 손익 | 생활계산기",desc:"기존 대출 vs 신규 대출 월 상환액·총 이자·중도상환수수료 비교. 대환 손익분기점 자동 계산."},
+remodel2:{title:"리모델링 ROI 계산기 - 공사기간 기회비용 | 생활계산기",desc:"리모델링 순이익 = 예상 매도가 - 현 시세 - 공사비 - 공사기간 이자 - 임시거주비 - 양도세 추정."},
+rentincrease:{title:"임대료 5% 상한 계산기 - 갱신청구권 | 생활계산기",desc:"주택임대차보호법 제7조 임대료 5% 상한. 계약갱신청구권 행사 시 법정 최대 인상액·전월세전환 시뮬레이션."},
+stamp2:{title:"인지세 계산기 (전자계약) - 50% 감면 | 생활계산기",desc:"부동산 매매계약서 인지세 계산. 구간별 2만~35만원. 전자계약 시 50% 감면. 매수·매도 부담 분할."}
 };
 
 const INTERNAL_LINKS={
@@ -493,7 +511,7 @@ function Tog({label,value,onChange,options}){
   return(<div style={{marginBottom:16}}>
     <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:8,letterSpacing:.5,textTransform:"uppercase"}}>{label}</label>
     <div style={{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6"}}>
-      {options.map((o,i)=>(<button key={o.value} onClick={()=>onChange(o.value)} style={{flex:"1 1 0",minWidth:0,padding:"10px 2px",border:"none",borderRight:i<options.length-1?"1px solid #dfe1e6":"none",background:value===o.value?"#0747A6":"#fff",color:value===o.value?"#fff":"#505f79",fontSize:isMo?12:13,fontWeight:value===o.value?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s"}}>{o.label}</button>))}
+      {options.map((o,i)=>(<button key={o.value} onClick={()=>onChange(o.value)} style={{flex:"1 1 auto",minWidth:isMo?48:72,padding:isMo?"11px 8px":"11px 12px",border:"none",borderRight:i<options.length-1?"1px solid #dfe1e6":"none",background:value===o.value?"#0747A6":"#fff",color:value===o.value?"#fff":"#505f79",fontSize:isMo?12:13,fontWeight:value===o.value?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",wordBreak:"keep-all",overflow:"hidden",textOverflow:"ellipsis",textAlign:"center",lineHeight:1.3,transition:"background .15s,color .15s"}}>{o.label}</button>))}
     </div>
   </div>);
 }

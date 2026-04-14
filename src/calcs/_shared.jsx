@@ -81,14 +81,14 @@ export function Tog({label, value, onChange, options}){
     <div style={{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6",flexWrap:options.length>=4?"wrap":"nowrap"}}>
       {options.map((o,i)=>(
         <button key={o.value} onClick={()=>onChange(o.value)}
-          style={{flex:"1 1 0",minWidth:isMo?"25%":0,padding:isMo?"12px 2px":"10px 2px",border:"none",
+          style={{flex:"1 1 auto",minWidth:isMo?48:72,padding:isMo?"11px 8px":"11px 12px",border:"none",
             borderRight:i<options.length-1?"1px solid #dfe1e6":"none",
             background:value===o.value?"#0747A6":"#fff",
             color:value===o.value?"#fff":"#505f79",
             fontSize:isMo?12:13,
             fontWeight:value===o.value?700:500,
-            cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",
-            lineHeight:1.4,transition:"background .15s,color .15s"}}>{o.label}</button>
+            cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",wordBreak:"keep-all",overflow:"hidden",textOverflow:"ellipsis",textAlign:"center",
+            lineHeight:1.3,transition:"background .15s,color .15s"}}>{o.label}</button>
       ))}
     </div>
   </div>);
