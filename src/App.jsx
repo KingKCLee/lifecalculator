@@ -636,8 +636,7 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
   if(heavyTaxExclude)basisText+="중과 배제 적용: 일반세율 1~3% 적용\n";
   if(spouseChildGive)basisText+="1세대1주택자 배우자·직계비속 증여: 조정지역 3억 초과여도 3.5% 일반세율\n";
   if(cultivation)basisText+="2년 이상 자경 농지 감면: 3% → 1.5%\n";
-  return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?12:32,alignItems:"start",minWidth:0}}>
-    <div>
+  return(<div><div>
       {!isMo&&<h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>취득세 계산기</h3>}
       <div style={{marginBottom:16}}>
         <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>취득 유형</label>
@@ -694,7 +693,7 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
       items={[{l:"과세표준",v:fW(pW),note:stdW>0&&stdW>tW(price)?"시가표준액 기준":"취득가액 기준"},{l:"취득세율",v:fP(r*100),note:rateLabel},{l:"취득세",v:fW(ac)},{l:"지방교육세",v:fW(ed),note:isHeavy?"중과 0.4%":"취득세×10%"},{l:"농어촌특별세",v:fm>0?fW(fm):"없음 (85㎡ 이하)"},{l:"인지세",v:fW(st)}].concat(firstDed>0?[{l:"생애최초 감면",v:"-"+fW(firstDed),note:populationDecline?"인구감소 300만":"일반 200만"}]:[]).concat([{l:"합계 납부세액",v:fW(total)}])}/>
     <NextStep calcId="acquisition" onNav={onNav} isMo={isMo}/>
     </div>
-    <div style={{gridColumn:"1 / -1"}}>
+    <div>
     <RateTable title="주택 취득세율표" headers={["구분","취득세","교육세","농특세(85㎡↑)","합계"]} rows={[["1주택 6억↓","1%","0.1%","0.2%","1.3%"],["1주택 6~9억","1~3%","취득세의1/10","0.2%","변동"],["1주택 9억↑","3%","0.3%","0.2%","3.5%"],["2주택 조정","8%","0.4%","0.6%","9%"],["2주택 비조정","1~3%","취득세의1/10","0.2%","변동"],["3주택 조정","12%","0.4%","1%","13.4%"],["3주택 비조정","8%","0.4%","0.6%","9%"],["4주택+","12%","0.4%","1%","13.4%"],["법인","12%","0.4%","1%","13.4%"]]}/>
     <RateTable title="주택 외 취득세율표" headers={["구분","취득세","교육세","농특세"]} rows={[["매매(토지·건물)","4%","0.4%","0.2%"],["증여","3.5%","0.3%","0.2%"],["상속","2.8%","0.16%","0.2%"],["원시취득","2.8%","0.16%","0.2%"],["농지 매매","3%","0.2%","0.2%"],["농지 자경","1.5%","0.1%","-"],["농지 상속","2.3%","0.06%","0.2%"]]}/>
     </div>
