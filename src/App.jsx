@@ -1999,6 +1999,8 @@ function EduSidebar({calc:calcId,gTab,setGTab}){
 function EduContent({calc:calcId,gTab}){
   const{calcLabel,relIds,tips,glossary,regs,guideSources,relLabels}=useEduData(calcId);
   const Badge=({item})=>item.fromId!==calcId?<span style={{marginLeft:6,background:"#deebff",color:P.pl,borderRadius:8,padding:"1px 6px",fontSize:10,fontWeight:600}}>{item.from}</span>:null;
+  // 2026.04.14 용어 클릭 팝오버
+  const[openTerm,setOpenTerm]=useState(null);
   return(<div>
     <div style={{fontSize:11,fontWeight:600,letterSpacing:1.5,textTransform:"uppercase",color:P.mt,marginBottom:12}}>EXPERT GUIDE</div>
 
@@ -2042,13 +2044,24 @@ function EduContent({calc:calcId,gTab}){
 
     {gTab==="glossary"&&(glossary.length>0?(<div style={{background:"#fff",borderRadius:12,border:`1px solid ${P.bd}`,overflow:"hidden"}}>
       {glossary.map((g2,i)=>(
-        <div key={i} style={{padding:"10px 14px",borderBottom:i<glossary.length-1?`1px solid ${P.lt}`:"none",display:"flex",gap:12,alignItems:"flex-start"}}>
+        <button key={i} onClick={()=>setOpenTerm(g2)} style={{width:"100%",padding:"10px 14px",borderBottom:i<glossary.length-1?`1px solid ${P.lt}`:"none",display:"flex",gap:12,alignItems:"flex-start",background:"#fff",border:"none",cursor:"pointer",textAlign:"left",fontFamily:"inherit"}} onMouseEnter={e=>e.currentTarget.style.background="#f4f5f7"} onMouseLeave={e=>e.currentTarget.style.background="#fff"}>
           <span style={{fontWeight:700,color:P.pri,fontSize:13,minWidth:80,flexShrink:0}}>{g2.term}</span>
-          <span style={{fontSize:12,color:"#4a5568",lineHeight:1.5}}>{g2.def}<Badge item={g2}/></span>
-        </div>))}
+          <span style={{fontSize:12,color:"#4a5568",lineHeight:1.5,textAlign:"left",flex:"1 1 auto"}}>{g2.def}<Badge item={g2}/></span>
+          <span style={{marginLeft:6,color:P.mt,fontSize:11,flexShrink:0}}>▶</span>
+        </button>))}
     </div>):(<div style={{padding:24,textAlign:"center",color:P.mt,background:"#fff",borderRadius:12,border:`1px solid ${P.bd}`}}>
       <div style={{fontSize:24,marginBottom:6}}>📖</div><div style={{fontSize:12}}>용어를 준비 중입니다.</div>
     </div>))}
+    {/* 2026.04.14 용어 클릭 팝오버 */}
+    {openTerm&&createPortal(<div onClick={()=>setOpenTerm(null)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.5)",zIndex:10003,display:"flex",alignItems:"center",justifyContent:"center",padding:16}}>
+      <div onClick={e=>e.stopPropagation()} style={{background:"#fff",borderRadius:16,padding:24,maxWidth:440,width:"100%",position:"relative"}}>
+        <button onClick={()=>setOpenTerm(null)} aria-label="닫기" style={{position:"absolute",top:12,right:12,background:"none",border:"none",fontSize:20,cursor:"pointer",color:"#6b778c"}}>✕</button>
+        <div style={{fontSize:11,fontWeight:700,letterSpacing:1,color:P.mt,marginBottom:4,textTransform:"uppercase"}}>용어 사전</div>
+        <h3 style={{fontSize:22,fontWeight:800,color:P.pri,margin:"0 0 12px"}}>{openTerm.term}</h3>
+        <p style={{fontSize:14,color:"#172B4D",lineHeight:1.8,margin:0}}>{openTerm.def}</p>
+        {openTerm.from&&openTerm.fromId!==calcId&&<div style={{marginTop:16,padding:"8px 12px",background:P.lt,borderRadius:8,fontSize:11,color:P.mt}}>📍 {openTerm.from} 계산기 관련 용어</div>}
+      </div>
+    </div>,document.body)}
   </div>);
 }
 
@@ -3053,10 +3066,10 @@ button:active{transform:scale(0.98)}
           </div>}
         </div>
 
-        {/* 우측: Expert Guide + 학습센터(아래) */}
+        {/* 2026.04.14 버그 수정: 탭(EduSidebar) 위 · 콘텐츠(EduContent) 아래 순서로 변경. 탭 클릭 시 즉시 아래에 변경 내용 노출 */}
         <div className="sidebar-right">
-          <EduContent calc={calc} gTab={gTab}/>
           <EduSidebar calc={calc} gTab={gTab} setGTab={setGTab}/>
+          <EduContent calc={calc} gTab={gTab}/>
         </div>
       </div>)}
 
