@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.14",
       "category": "전체",
+      "title": "fix: 아코디언 계산기 항목 레이아웃 - 이름 좌측·설명 우측 배치 (모바일 설명 숨김)",
+      "desc": "fix: 아코디언 계산기 항목 레이아웃 - 이름 좌측·설명 우측 배치 (모바일 설명 숨김)"
+    },
+    {
+      "date": "2026.04.14",
+      "category": "전체",
       "title": "feat: 시가표준액 조회 인라인 폼 복구·동번호/호번호 입력 추가",
       "desc": "feat: 시가표준액 조회 인라인 폼 복구·동번호/호번호 입력 추가"
     },
@@ -1463,12 +1469,6 @@
       "category": "대출",
       "title": "feat: 예시계산 배너 2탄 - CalcMort/DSR/Deposit/Yield/Compre 기본값+isDefault+isExample",
       "desc": "feat: 예시계산 배너 2탄 - CalcMort/DSR/Deposit/Yield/Compre 기본값+isDefault+isExample"
-    },
-    {
-      "date": "2026.04.08",
-      "category": "전체",
-      "title": "feat: 예시계산 배너 추가 - RP isExample prop, CalcComm/TotalCost/Joint/HoldTax/Prop 기본값",
-      "desc": "feat: 예시계산 배너 추가 - RP isExample prop, CalcComm/TotalCost/Joint/HoldTax/Prop 기본값"
     }
   ],
   "rates": {
