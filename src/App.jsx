@@ -1642,107 +1642,107 @@ function CalcTrans({isMo=false,onNav=()=>{}}){
       _tips.push("📌 다주택 중과 유예 기간 (2022.5.10~2026.5.9) 내 양도 시 기본세율이 적용됩니다. 유예 종료 전 양도 전략 검토 필요.");
     }
   }
-  return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}><div>{!isMo&&<h3 style={{fontSize:isMo?16:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>양도소득세 계산기</h3>}
-    <div style={{marginBottom:12}}><div style={{fontSize:isMo?14:12,fontWeight:600,color:"#505f79",marginBottom:6}}>양도물건 종류<TipModal title="양도물건 종류별 과세"><ul style={{paddingLeft:20}}><li><b>분양권:</b> 1년 미만 70%, 1년 이상 60%</li><li><b>입주권:</b> 관리처분인가일 기준 분리 계산</li><li><b>비사업용토지:</b> 기본세율 + 10%p 추가과세</li><li><b>주택·일반:</b> 기본 누진세율 적용</li></ul></TipModal></div><div className="radio-grid" style={{display:"grid",gridTemplateColumns:isMo?"repeat(3,1fr)":"repeat(5,1fr)",gap:6}}>
-      {[["house","주택"],["right","분양권"],["union","입주권"],["land","비사업토지"],["other","기타"]].map(([v,l])=>(<button key={v} onClick={()=>{setAssetType(v);if(v==="land"||v==="other"){setOwn("one");setConArea(false)}}} style={{padding:"10px",border:assetType===v?"2px solid #0747A6":"1.5px solid #dfe1e6",borderRadius:8,background:assetType===v?"#deebff":"#fff",color:assetType===v?"#0747A6":"#505f79",fontWeight:assetType===v?700:400,fontSize:isMo?14:13,cursor:"pointer",whiteSpace:"nowrap",wordBreak:"keep-all",fontFamily:"inherit"}}>{l}</button>))}
-    </div></div>
-    <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"16px 0"}}/>
-    {showOwn&&<><div style={{marginBottom:12}}><div style={{fontSize:isMo?14:12,fontWeight:600,color:"#505f79",marginBottom:6}}>보유 주택 수</div><div className="radio-grid" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:6}}>
-      {[["one","1주택자"],["two","2주택자"],["more","3주택 이상"]].map(([v,l])=>(<button key={v} onClick={()=>setOwn(v)} style={{padding:"10px",border:own===v?"2px solid #0747A6":"1.5px solid #dfe1e6",borderRadius:8,background:own===v?"#deebff":"#fff",color:own===v?"#0747A6":"#505f79",fontWeight:own===v?700:400,fontSize:isMo?14:13,cursor:"pointer",whiteSpace:"nowrap",wordBreak:"keep-all",fontFamily:"inherit"}}>{l}</button>))}
-    </div></div><hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"16px 0"}}/></>}
-    <div style={{display:"flex",flexWrap:"wrap",gap:isMo?10:16,marginBottom:12}}>
-      <label style={{display:"flex",alignItems:"center",gap:6,fontSize:isMo?14:13,cursor:"pointer",whiteSpace:"nowrap",wordBreak:"keep-all"}}><input type="checkbox" checked={baseDeduct} onChange={e=>setBaseDeduct(e.target.checked)} style={{width:18,height:18}}/> 기본공제(250만)</label>
-      <label style={{display:"flex",alignItems:"center",gap:6,fontSize:isMo?14:13,cursor:"pointer",whiteSpace:"nowrap",wordBreak:"keep-all"}}><input type="checkbox" checked={jointOwn} onChange={e=>setJointOwn(e.target.checked)} style={{width:18,height:18}}/> 공동명의</label>
-    </div>
-    <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"16px 0"}}/>
-    <div style={{marginBottom:14}}>
-      <div style={{fontSize:11,fontWeight:600,color:"#6b778c",letterSpacing:.5,textTransform:"uppercase",marginBottom:8}}>특수 조건</div>
-      <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
-        {[
-          {show:showConArea,val:conArea,set:setConArea,lbl:"조정대상지역",desc:"양도 시점 조정대상지역은 다주택 중과 대상. 2022.5.10~2026.5.9 양도분은 중과 유예."},
-          {show:showRealLive,val:realLive,set:setRealLive,lbl:"2년 거주",desc:"조정지역 주택은 2년 보유+2년 거주해야 1세대1주택 비과세. 비조정은 2년 보유만."},
-          {show:showRentBiz,val:rentBiz,set:(v)=>{setRentBiz(v);if(!v)setLongRentEx(false)},lbl:"임대사업자",desc:"등록요건·임대기간·임대료 조건 모두 만족한 경우 체크. 소득세법상 혜택 적용."},
-          {show:showLongRent,val:longRentEx,set:setLongRentEx,lbl:"장기임대특례",desc:"장기임대 조세특례 적용 대상."},
-          {show:true,val:unregistered,set:setUnregistered,lbl:"미등기양도",desc:"등기 없이 양도 시 70% 단일세율. 장기보유특별공제 적용 불가."},
-          {show:true,val:inherited,set:setInherited,lbl:"상속자산",desc:"상속 부동산 양도: 세율은 피상속인 취득일부터, 장특공제는 상속개시일부터 기산."},
-          {show:showNonBizLand,val:nonBizLand,set:setNonBizLand,lbl:"비사업용토지",desc:"지목 본래 용도에 사용하지 않은 토지. 기본세율 + 10%p 추가과세."},
-          {show:show1HouseExempt,val:is1HouseExempt,set:setIs1HouseExempt,lbl:"1세대1주택 비과세",desc:"1세대1주택 비과세 요건 충족 주택."},
-          {show:showSangSaeng,val:sangSaeng,set:setSangSaeng,lbl:"상생임대주택",desc:"임대료 5% 이내 인상 계약. 조정지역 거주 2년 요건 면제. 장특 보유공제만 적용."},
-          {show:showMixedHouse,val:mixedHouse,set:setMixedHouse,lbl:"겸용주택",desc:"주택분·상가분 면적 비율 분리 과세. 주택분만 1세대1주택 혜택 적용."},
-          {show:showHeavy2,val:isHeavy2,set:setIsHeavy2,lbl:"조정 중과 2주택",desc:"조정대상 2주택 중과 적용."},
-          {show:showHeavy3,val:isHeavy3,set:setIsHeavy3,lbl:"조정 중과 3주택",desc:"조정대상 3주택 이상 중과 적용."}
-        ].filter(c=>c.show).map(c=>(
-          <button key={c.lbl} onClick={()=>c.set(!c.val)} title={c.desc} style={{padding:"6px 12px",borderRadius:20,fontSize:12,fontWeight:c.val?700:500,cursor:"pointer",fontFamily:"inherit",transition:"all .15s",border:c.val?"none":"1.5px solid #dfe1e6",background:c.val?"#DEEBFF":"#fff",color:c.val?"#0C447C":"#505f79"}}>{c.val&&"✓ "}{c.lbl}</button>
-        ))}
+  const _inlineInputStyle={width:isMo?"100%":200,maxWidth:"100%",textAlign:"right",padding:"8px 12px",border:"1.5px solid #dfe1e6",borderRadius:8,fontSize:15,fontWeight:700,color:P.tx,background:P.lt,outline:"none",fontFamily:"inherit"};
+  const _inlineRow=(label,valueJsx,sufx)=>(<div style={{marginBottom:12}}><div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8,marginBottom:4,flexWrap:"wrap"}}><label style={{fontSize:isMo?13:14,fontWeight:600,color:"#0a1628",lineHeight:1.6,wordBreak:"keep-all"}}>{label}</label><div style={{display:"flex",alignItems:"center",gap:6}}>{valueJsx}{sufx&&<span style={{fontSize:13,color:P.mt,fontWeight:500}}>{sufx}</span>}</div></div></div>);
+  const _moneyInput=(val,set,ph)=>(<input type="text" value={val?Number(String(val).replace(/,/g,"")).toLocaleString("ko-KR"):""} onChange={e=>{const raw=e.target.value.replace(/,/g,"");if(raw===""||/^\d+$/.test(raw))set(raw);}} placeholder={ph||"예: 50000"} style={_inlineInputStyle}/>);
+  const _dateInput=(val,set,ph)=>(<input type="text" value={val} onChange={e=>{const raw=e.target.value.replace(/[^0-9]/g,"");if(raw.length<=8)set(raw);}} placeholder={ph||"20200101"} style={_inlineInputStyle}/>);
+  const _numInput=(val,set,ph)=>(<input type="text" value={val} onChange={e=>set(e.target.value)} placeholder={ph||""} style={_inlineInputStyle}/>);
+  return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}><div>
+      {!isMo&&<div style={{marginBottom:24,display:"flex",alignItems:"center",gap:12,flexWrap:"wrap"}}>
+        <h3 style={{fontSize:28,fontWeight:700,color:"#0a1628",margin:0,letterSpacing:-1}}>양도소득세</h3>
+        <span style={{fontSize:13,color:"#6B7280",flex:"1 1 auto",minWidth:0}}>2026년 최신 세법 기반 정밀 계산</span>
+      </div>}
+      <div style={{marginBottom:16}}>
+        <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>양도물건 종류<TipModal title="양도물건 종류별 과세"><ul style={{paddingLeft:20}}><li><b>분양권:</b> 1년 미만 70%, 1년 이상 60%</li><li><b>입주권:</b> 관리처분인가일 기준 분리 계산</li><li><b>비사업용토지:</b> 기본세율 + 10%p 추가과세</li><li><b>주택·일반:</b> 기본 누진세율 적용</li></ul></TipModal></label>
+        <div style={{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6"}}>
+          {[["house","주택"],["right","분양권"],["union","입주권"],["land","비사업토지"],["other","기타"]].map(([v,l],i,arr)=>(<button key={v} onClick={()=>{setAssetType(v);if(v==="land"||v==="other"){setOwn("one");setConArea(false)}}} style={{flex:1,padding:"10px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:assetType===v?"#0747A6":"#fff",color:assetType===v?"#fff":"#505f79",fontWeight:assetType===v?700:500,fontSize:isMo?12:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s"}}>{l}</button>))}
+        </div>
       </div>
-    </div>
-    <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"16px 0"}}/>
-    <div className="calc-inner" style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:12,marginBottom:12}}>
-      <Inp label="취득가액" value={buyAmt} onChange={setBuyAmt} suffix="만원"/>
-      <Inp label="양도가액" value={sellAmt} onChange={setSellAmt} suffix="만원"/>
-    </div>
-    <div className="calc-inner" style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:12,marginBottom:12}}>
-      <div style={{fontSize:12,color:"#6b778c",marginBottom:-8,marginLeft:2,display:"flex",alignItems:"center",gap:4,flexWrap:"nowrap"}}>필요경비 <TipModal title="필요경비"><p>취득세·등기비·중개수수료·인테리어비(자본적지출) 등이 필요경비로 인정됩니다.</p><p>대출이자·재산세는 필요경비 불인정.</p></TipModal></div>
-      <Inp label="필요경비 합계" value={costTotal} onChange={setCostTotal} suffix="만원" note="취득세+중개수수료+법무사비+인테리어비 등"/>
-      {showJoint&&<Inp label="공동명의 지분" value={jointRate} onChange={setJointRate} suffix="%" placeholder="1~99"/>}
-    </div>
-    {/* 2026.04.14 고도화: 차익조정 수동 입력 */}
-    {/* 2026.04.14 양도차익 직접입력 체크박스 — 미체크 시 자동 계산 */}
-    <div style={{marginBottom:12}}>
-      <label style={{display:"flex",alignItems:"center",gap:6,fontSize:isMo?14:13,cursor:"pointer",whiteSpace:"nowrap",wordBreak:"keep-all"}}>
-        <input type="checkbox" checked={useManualGain} onChange={e=>{setUseManualGain(e.target.checked);if(!e.target.checked)setManualGain("");}} style={{width:18,height:18}}/> 양도차익 직접입력
-      </label>
-      {useManualGain&&<div style={{marginTop:8}}><Inp label="양도차익 (수동)" value={manualGain} onChange={setManualGain} suffix="만원" placeholder="직접 입력한 금액 적용" note="입력 시 양도가액-취득가액-필요경비 대신 이 값이 차익으로 사용됨"/></div>}
-    </div>
-    {mixedHouse&&<div className="calc-inner" style={{display:"grid",gridTemplateColumns:isMo?"1fr 1fr":"1fr 1fr",gap:12,marginBottom:12}}>
-      <Inp label="주택 면적" value={houseArea} onChange={setHouseArea} suffix="㎡"/>
-      <Inp label="상가 면적" value={shopArea} onChange={setShopArea} suffix="㎡"/>
-    </div>}
-    <div className="calc-inner" style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:12,marginBottom:12}}>
-      <Inp label="취득일자" value={buyDate} onChange={setBuyDate} placeholder="20200101 숫자만"/>
-      <Inp label="양도일자" value={sellDate} onChange={setSellDate} placeholder="20260405 숫자만"/>
-    </div>
-    {holdText&&<div style={{marginTop:-6,marginBottom:12,padding:"8px 12px",background:"#eff6ff",border:"1px solid #93c5fd",borderRadius:8,fontSize:12,color:"#1e40af",fontWeight:600}}>{holdText}</div>}
-    <div className="calc-inner" style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:12,marginBottom:12}}>
-      {showLiveYear&&<Inp label="거주기간" value={liveYear} onChange={setLiveYear} suffix="년"/>}
-      {showInheritDate&&<Inp label="피상속인 취득일" value={inheritBuyDate} onChange={setInheritBuyDate} placeholder="20100101"/>}
-      {showUnion&&<Inp label="관리처분인가일" value={approveDate} onChange={setApproveDate} placeholder="20230101"/>}
-      {showUnionPrice&&<Inp label="입주권 가치" value={unionPrice} onChange={setUnionPrice} suffix="만원"/>}
-    </div>
-    {!result&&<StepsGuide steps={[{label:"취득가액 입력",filled:tW(buyAmt)>0},{label:"양도가액 입력",filled:tW(sellAmt)>0},{label:"취득일자 입력",filled:buyDate.length>=8},{label:"양도일자 입력",filled:sellDate.length>=8}]}/>}
-    <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"16px 0"}}/>
-    <RateTable title="양도세율표 (2년 이상 보유)" headers={["과세표준","세율","누진공제"]} rows={[["1,400만 이하","6%","-"],["5,000만 이하","15%","126만"],["8,800만 이하","24%","576만"],["1.5억 이하","35%","1,544만"],["3억 이하","38%","1,994만"],["5억 이하","40%","2,594만"],["10억 이하","42%","3,594만"],["10억 초과","45%","6,594만"]]}/>
-    <RateTable title="단기보유 중과세율" headers={["보유기간","주택","일반"]} rows={[["1년 미만","70%","50%"],["1~2년","60%","40%"],["2년 이상","기본세율","기본세율"]]}/>
+      <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"16px 0"}}/>
+      {showOwn&&<>
+        <div style={{marginBottom:16}}>
+          <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>보유 주택 수</label>
+          <div style={{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6"}}>
+            {[["one","1주택자"],["two","2주택자"],["more","3주택 이상"]].map(([v,l],i,arr)=>(<button key={v} onClick={()=>setOwn(v)} style={{flex:1,padding:"10px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:own===v?"#0747A6":"#fff",color:own===v?"#fff":"#505f79",fontWeight:own===v?700:500,fontSize:isMo?12:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s"}}>{l}</button>))}
+          </div>
+        </div>
+        <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"16px 0"}}/>
+      </>}
+      <div style={{display:"flex",flexWrap:"wrap",gap:isMo?10:16,marginBottom:12}}>
+        <label style={{display:"flex",alignItems:"center",gap:6,fontSize:isMo?14:13,cursor:"pointer",whiteSpace:"nowrap",wordBreak:"keep-all"}}><input type="checkbox" checked={baseDeduct} onChange={e=>setBaseDeduct(e.target.checked)} style={{width:18,height:18}}/> 기본공제(250만)</label>
+        <label style={{display:"flex",alignItems:"center",gap:6,fontSize:isMo?14:13,cursor:"pointer",whiteSpace:"nowrap",wordBreak:"keep-all"}}><input type="checkbox" checked={jointOwn} onChange={e=>setJointOwn(e.target.checked)} style={{width:18,height:18}}/> 공동명의</label>
+      </div>
+      <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"16px 0"}}/>
+      <div style={{marginBottom:14}}>
+        <div style={{fontSize:11,fontWeight:600,color:"#6b778c",letterSpacing:.5,textTransform:"uppercase",marginBottom:8}}>특수 조건 <span style={{fontWeight:400,color:"#aaa",fontSize:10}}>{isMo?"항목을 누르면 적용됩니다":"마우스를 올리면 설명이 나타납니다"}</span></div>
+        <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
+          {[
+            {show:showConArea,val:conArea,set:setConArea,lbl:"조정대상지역",desc:"양도 시점 조정대상지역은 다주택 중과 대상. 2022.5.10~2026.5.9 양도분은 중과 유예."},
+            {show:showRealLive,val:realLive,set:setRealLive,lbl:"2년 거주",desc:"조정지역 주택은 2년 보유+2년 거주해야 1세대1주택 비과세. 비조정은 2년 보유만."},
+            {show:showRentBiz,val:rentBiz,set:(v)=>{setRentBiz(v);if(!v)setLongRentEx(false)},lbl:"임대사업자",desc:"등록요건·임대기간·임대료 조건 모두 만족한 경우 체크. 소득세법상 혜택 적용."},
+            {show:showLongRent,val:longRentEx,set:setLongRentEx,lbl:"장기임대특례",desc:"장기임대 조세특례 적용 대상."},
+            {show:true,val:unregistered,set:setUnregistered,lbl:"미등기양도",desc:"등기 없이 양도 시 70% 단일세율. 장기보유특별공제 적용 불가."},
+            {show:true,val:inherited,set:setInherited,lbl:"상속자산",desc:"상속 부동산 양도: 세율은 피상속인 취득일부터, 장특공제는 상속개시일부터 기산."},
+            {show:showNonBizLand,val:nonBizLand,set:setNonBizLand,lbl:"비사업용토지",desc:"지목 본래 용도에 사용하지 않은 토지. 기본세율 + 10%p 추가과세."},
+            {show:show1HouseExempt,val:is1HouseExempt,set:setIs1HouseExempt,lbl:"1세대1주택 비과세",desc:"1세대1주택 비과세 요건 충족 주택."},
+            {show:showSangSaeng,val:sangSaeng,set:setSangSaeng,lbl:"상생임대주택",desc:"임대료 5% 이내 인상 계약. 조정지역 거주 2년 요건 면제. 장특 보유공제만 적용."},
+            {show:showMixedHouse,val:mixedHouse,set:setMixedHouse,lbl:"겸용주택",desc:"주택분·상가분 면적 비율 분리 과세. 주택분만 1세대1주택 혜택 적용."},
+            {show:showHeavy2,val:isHeavy2,set:setIsHeavy2,lbl:"조정 중과 2주택",desc:"조정대상 2주택 중과 적용."},
+            {show:showHeavy3,val:isHeavy3,set:setIsHeavy3,lbl:"조정 중과 3주택",desc:"조정대상 3주택 이상 중과 적용."}
+          ].filter(c=>c.show).map(c=>(
+            <button key={c.lbl} onClick={()=>c.set(!c.val)} title={c.desc} style={{padding:"6px 12px",borderRadius:20,fontSize:12,fontWeight:c.val?700:500,cursor:"pointer",fontFamily:"inherit",transition:"all .15s",border:c.val?"none":"1.5px solid #dfe1e6",background:c.val?"#DEEBFF":"#fff",color:c.val?"#0C447C":"#505f79"}}>{c.val&&"✓ "}{c.lbl}</button>
+          ))}
+        </div>
+      </div>
+      <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"16px 0"}}/>
+      {_inlineRow("취득가액",_moneyInput(buyAmt,setBuyAmt,"예: 50000"),"만원")}
+      {_inlineRow("양도가액",_moneyInput(sellAmt,setSellAmt,"예: 80000"),"만원")}
+      {_inlineRow(<>필요경비 <TipModal title="필요경비"><p>취득세·등기비·중개수수료·인테리어비(자본적지출) 등이 필요경비로 인정됩니다.</p><p>대출이자·재산세는 필요경비 불인정.</p></TipModal></>,_moneyInput(costTotal,setCostTotal,"취득세+중개수수료+법무사비 등"),"만원")}
+      {showJoint&&_inlineRow("공동명의 지분",_numInput(jointRate,setJointRate,"1~99"),"%")}
+      <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"16px 0"}}/>
+      <div style={{marginBottom:12}}>
+        <label style={{display:"flex",alignItems:"center",gap:6,fontSize:isMo?14:13,cursor:"pointer",whiteSpace:"nowrap",wordBreak:"keep-all"}}>
+          <input type="checkbox" checked={useManualGain} onChange={e=>{setUseManualGain(e.target.checked);if(!e.target.checked)setManualGain("");}} style={{width:18,height:18}}/> 양도차익 직접입력
+        </label>
+        {useManualGain&&<div style={{marginTop:8}}>{_inlineRow("양도차익 (수동)",_moneyInput(manualGain,setManualGain,"직접 입력한 금액 적용"),"만원")}</div>}
+      </div>
+      {mixedHouse&&<>
+        {_inlineRow("주택 면적",_numInput(houseArea,setHouseArea,""),"㎡")}
+        {_inlineRow("상가 면적",_numInput(shopArea,setShopArea,""),"㎡")}
+      </>}
+      <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"16px 0"}}/>
+      {_inlineRow("취득일자",_dateInput(buyDate,setBuyDate,"20200101"),null)}
+      {_inlineRow("양도일자",_dateInput(sellDate,setSellDate,"20260405"),null)}
+      {holdText&&<div style={{marginTop:-2,marginBottom:12,padding:"8px 12px",background:"#eff6ff",border:"1px solid #93c5fd",borderRadius:8,fontSize:12,color:"#1e40af",fontWeight:600}}>{holdText}</div>}
+      {showLiveYear&&_inlineRow("거주기간",_numInput(liveYear,setLiveYear,""),"년")}
+      {showInheritDate&&_inlineRow("피상속인 취득일",_dateInput(inheritBuyDate,setInheritBuyDate,"20100101"),null)}
+      {showUnion&&_inlineRow("관리처분인가일",_dateInput(approveDate,setApproveDate,"20230101"),null)}
+      {showUnionPrice&&_inlineRow("입주권 가치",_moneyInput(unionPrice,setUnionPrice,"예: 30000"),"만원")}
+      {!result&&<StepsGuide steps={[{label:"취득가액 입력",filled:tW(buyAmt)>0},{label:"양도가액 입력",filled:tW(sellAmt)>0},{label:"취득일자 입력",filled:buyDate.length>=8},{label:"양도일자 입력",filled:sellDate.length>=8}]}/>}
+      <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"16px 0"}}/>
+      <RateTable title="양도세율표 (2년 이상 보유)" headers={["과세표준","세율","누진공제"]} rows={[["1,400만 이하","6%","-"],["5,000만 이하","15%","126만"],["8,800만 이하","24%","576만"],["1.5억 이하","35%","1,544만"],["3억 이하","38%","1,994만"],["5억 이하","40%","2,594만"],["10억 이하","42%","3,594만"],["10억 초과","45%","6,594만"]]}/>
+      <RateTable title="단기보유 중과세율" headers={["보유기간","주택","일반"]} rows={[["1년 미만","70%","50%"],["1~2년","60%","40%"],["2년 이상","기본세율","기본세율"]]}/>
     </div>
     <div>
-    {result?<div>
-      <RP
-        title="양도소득세"
-        total={result.totalTax}
-        sub={"양도차익 기준 / "+((result.own==="two"||result.own==="more")?(result.conArea?"조정지역 다주택":"비조정 다주택"):"1주택")}
-        items={result.items.map(it=>({l:it.l,v:it.v,note:it.note}))}
-        alertMsg={inMoratoriumRender&&(result.own==="two"||result.own==="more")&&result.conArea?"다주택 중과 한시배제 (~2026.5.9): 기본세율 적용 중":null}
-        alertType="info"
-      />
-      <SavingsGuide tips={_tips}/>
-      {result.basis&&<div style={{background:"#e3f2fd",borderRadius:10,padding:16,marginTop:16,fontSize:isMo?13:12,lineHeight:1.8,whiteSpace:"pre-line"}}><b>계산결과 해설</b><br/>{result.basis}</div>}
-      <div style={{marginTop:12,padding:"10px 14px",background:"#f8f9fc",border:"1px solid #dfe1e6",borderRadius:8,fontSize:12,color:"#505f79",lineHeight:1.6,display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:8}}><span style={{display:"inline-flex",alignItems:"center",gap:4}}><IconCal/> 신고기한: 양도일이 속한 달 말일로부터 2개월 이내</span><a href="https://hometax.go.kr" target="_blank" rel="noopener noreferrer" style={{color:"#0747A6",fontWeight:700,textDecoration:"none"}}>홈택스 신고 →</a></div>
-      {/* 2026.04.14 양도세 상담 퍼널: 1억↑ 또는 다주택+조정 */}
-      {(result.totalTax>=1e8||((result.own==="two"||result.own==="more")&&result.conArea))&&<button onClick={()=>window.dispatchEvent(new CustomEvent('lc-consult',{detail:{title:"양도소득세",total:result.totalTax}}))} style={{display:"block",width:"100%",marginTop:12,padding:"14px 16px",background:result.totalTax>=1e8?"#0747A6":"#FF8B00",color:"#fff",border:"none",borderRadius:12,fontSize:14,fontWeight:800,cursor:"pointer",fontFamily:"inherit",boxShadow:"0 4px 12px rgba(0,0,0,.15)",textAlign:"left",lineHeight:1.5}}>
-        <div style={{fontSize:15,fontWeight:800,marginBottom:2}}>{result.totalTax>=1e8?<><IconBank c="#fff"/> 세무사 무료 상담 →</>:<><IconChart c="#fff"/> 다주택 절세 전략 보기 →</>}</div>
-        <div style={{fontSize:11,fontWeight:500,opacity:.92}}>{result.totalTax>=1e8?"양도세 1억 이상 — 장특공·중과유예·비과세 전략으로 수백만원 절감 가능":"다주택 조정대상지역 — 중과 유예·비과세·분할양도 전략 상담"}</div>
-      </button>}
-    </div>:<div><RP miss={MI.transfer} title="양도소득세" total={0} isExample={true} items={[]}/></div>}
-    <div style={{marginTop:24,background:"#f8f9fc",borderRadius:10,padding:16}}>
-      <h5 style={{fontWeight:700,marginBottom:12,fontSize:14,color:P.tx}}>2026년 양도소득세 과세 기준표</h5>
-      <table style={{width:"100%",borderCollapse:"collapse",fontSize:isMo?13:12,background:"#fff"}}>
-        <thead><tr style={{background:"#f4f5f7"}}><th style={{padding:8,border:"1px solid #dfe1e6"}}>과세표준</th><th style={{padding:8,border:"1px solid #dfe1e6"}}>세율</th><th style={{padding:8,border:"1px solid #dfe1e6"}}>누진공제</th></tr></thead>
-        <tbody>{[["1,400만원 이하","6%","-"],["5,000만원 이하","15%","126만원"],["8,800만원 이하","24%","576만원"],["1억5천만원 이하","35%","1,544만원"],["3억원 이하","38%","1,994만원"],["5억원 이하","40%","2,594만원"],["10억원 이하","42%","3,594만원"],["10억원 초과","45%","6,594만원"]].map(([a,b,c],i)=>(<tr key={i}><td style={{padding:8,border:"1px solid #dfe1e6"}}>{a}</td><td style={{padding:8,border:"1px solid #dfe1e6",textAlign:"center"}}>{b}</td><td style={{padding:8,border:"1px solid #dfe1e6",textAlign:"center"}}>{c}</td></tr>))}</tbody>
-      </table>
-    </div>
-    <NextStep calcId="transfer" onNav={onNav} isMo={isMo}/>
-    {/* 2026.04.14 실거래가 조회 연동 */}
-    <button onClick={()=>onNav("realestate","realprice")} style={{width:"100%",marginTop:12,padding:"12px 16px",background:"#fff",border:"1.5px solid #0747A6",borderRadius:10,fontSize:14,fontWeight:700,color:"#0747A6",cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",gap:6}}><IconSearch/> 근처 실거래가 조회 →</button>
+      {result?<div>
+        <RP
+          title="양도소득세"
+          total={result.totalTax}
+          sub={"양도차익 기준 / "+((result.own==="two"||result.own==="more")?(result.conArea?"조정지역 다주택":"비조정 다주택"):"1주택")}
+          items={result.items.map(it=>({l:it.l,v:it.v,note:it.note}))}
+          alertMsg={inMoratoriumRender&&(result.own==="two"||result.own==="more")&&result.conArea?"다주택 중과 한시배제 (~2026.5.9): 기본세율 적용 중":null}
+          alertType="info"
+        />
+        <SavingsGuide tips={_tips}/>
+        {result.basis&&<div style={{background:"#e3f2fd",borderRadius:10,padding:16,marginTop:16,fontSize:isMo?13:12,lineHeight:1.8,whiteSpace:"pre-line"}}><b>계산결과 해설</b><br/>{result.basis}</div>}
+        <div style={{marginTop:12,padding:"10px 14px",background:"#f8f9fc",border:"1px solid #dfe1e6",borderRadius:8,fontSize:12,color:"#505f79",lineHeight:1.6,display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:8}}><span style={{display:"inline-flex",alignItems:"center",gap:4}}><IconCal/> 신고기한: 양도일이 속한 달 말일로부터 2개월 이내</span><a href="https://hometax.go.kr" target="_blank" rel="noopener noreferrer" style={{color:"#0747A6",fontWeight:700,textDecoration:"none"}}>홈택스 신고 →</a></div>
+        {(result.totalTax>=1e8||((result.own==="two"||result.own==="more")&&result.conArea))&&<button onClick={()=>window.dispatchEvent(new CustomEvent('lc-consult',{detail:{title:"양도소득세",total:result.totalTax}}))} style={{display:"block",width:"100%",marginTop:12,padding:"14px 16px",background:result.totalTax>=1e8?"#0747A6":"#FF8B00",color:"#fff",border:"none",borderRadius:12,fontSize:14,fontWeight:800,cursor:"pointer",fontFamily:"inherit",boxShadow:"0 4px 12px rgba(0,0,0,.15)",textAlign:"left",lineHeight:1.5}}>
+          <div style={{fontSize:15,fontWeight:800,marginBottom:2}}>{result.totalTax>=1e8?<><IconBank c="#fff"/> 세무사 무료 상담 →</>:<><IconChart c="#fff"/> 다주택 절세 전략 보기 →</>}</div>
+          <div style={{fontSize:11,fontWeight:500,opacity:.92}}>{result.totalTax>=1e8?"양도세 1억 이상 — 장특공·중과유예·비과세 전략으로 수백만원 절감 가능":"다주택 조정대상지역 — 중과 유예·비과세·분할양도 전략 상담"}</div>
+        </button>}
+      </div>:<div><RP miss={MI.transfer} title="양도소득세" total={0} isExample={true} items={[]}/></div>}
+      <div style={{marginTop:32}}><NextStep calcId="transfer" onNav={onNav} isMo={isMo}/></div>
+      <button onClick={()=>onNav("realestate","realprice")} style={{width:"100%",marginTop:12,padding:"12px 16px",background:"#fff",border:"1.5px solid #0747A6",borderRadius:10,fontSize:14,fontWeight:700,color:"#0747A6",cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",gap:6}}><IconSearch/> 근처 실거래가 조회 →</button>
     </div>
   </div>);
 }
