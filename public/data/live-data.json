@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.14",
       "category": "전체",
+      "title": "feat: 모바일 UX 점검 자료 + viewport/아이콘 보강",
+      "desc": "feat: 모바일 UX 점검 자료 + viewport/아이콘 보강"
+    },
+    {
+      "date": "2026.04.14",
+      "category": "전체",
       "title": "feat: 전체 계산기 2열 그리드 레이아웃 적용 (입력 좌·결과 우)",
       "desc": "feat: 전체 계산기 2열 그리드 레이아웃 적용 (입력 좌·결과 우)"
     },
@@ -1463,12 +1469,6 @@
       "category": "전체",
       "title": "fix: OAuth 콜백 처리 순서 수정 - exchangeCodeForSession 완료 후 홈 이동",
       "desc": "fix: OAuth 콜백 처리 순서 수정 - exchangeCodeForSession 완료 후 홈 이동"
-    },
-    {
-      "date": "2026.04.06",
-      "category": "전체",
-      "title": "fix: OAuth PKCE 코드 교환 추가 - 로그인 후 세션 감지 개선",
-      "desc": "fix: OAuth PKCE 코드 교환 추가 - 로그인 후 세션 감지 개선"
     }
   ],
   "rates": {
