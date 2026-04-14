@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.14",
       "category": "전체",
+      "title": "fix: Tog 스크롤·eduTab 단순화·AI OAuth 로그인·CalcShell 2열 그리드·청약가점 부동산",
+      "desc": "fix: Tog 스크롤·eduTab 단순화·AI OAuth 로그인·CalcShell 2열 그리드·청약가점 부동산"
+    },
+    {
+      "date": "2026.04.14",
+      "category": "전체",
       "title": "fix: RP 숨김·Tog 축소·사이드바 순서·탭 스크롤",
       "desc": "fix: RP 숨김·Tog 축소·사이드바 순서·탭 스크롤"
     },
@@ -1463,12 +1469,6 @@
       "category": "전체",
       "title": "feat: Google AdSense 스크립트 추가 (ca-pub-8857637137858335)",
       "desc": "feat: Google AdSense 스크립트 추가 (ca-pub-8857637137858335)"
-    },
-    {
-      "date": "2026.04.06",
-      "category": "전체",
-      "title": "fix: handleLogout 함수 누락 추가",
-      "desc": "fix: handleLogout 함수 누락 추가"
     }
   ],
   "rates": {
