@@ -3087,21 +3087,30 @@ function SidePanelOverlay({sidePanel,setSidePanel,calc,isMo,sideMarketNews,sideM
 }
 
 /* ═══ 좌측 네비게이션 (Resource Hub) ═══ */
-function LeftNav({isMo,navOpen,setNavOpen,sidePanel,setSidePanel,setEduTab}){
-  const[openMenu,setOpenMenu]=useState(null);
+function LeftNav({isMo,navOpen,setNavOpen,sidePanel,setSidePanel,setEduTab,effectiveUser,setAuthMode,setShowAuth,navigateMyPage}){
+  // 2026.04.14 Expert Guide는 기본 펼침, 나머지는 접힘
+  const[openMenu,setOpenMenu]=useState("expert");
   const SV=(stroke,children)=>(<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">{children}</svg>);
-  const buildMenu=(activeId)=>[
-    {id:"expert",l:"Expert Guide",icon:(c)=>SV(c,<><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></>),sub:[
+  const MENU=[
+    {id:"expert",l:"Expert Guide",always:true,icon:(c)=>SV(c,<><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></>),sub:[
       {id:"rates",l:"세율표·가이드"},
       {id:"regs",l:"규정·법령"},
       {id:"tips",l:"절세 팁"},
       {id:"glossary",l:"용어 사전"}
     ]},
-    {id:"learning",l:"Learning Center",icon:(c)=>SV(c,<><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H20v15H5.5A1.5 1.5 0 0 1 4 16.5z"/><path d="M4 16.5A1.5 1.5 0 0 1 5.5 15H20v6H5.5A1.5 1.5 0 0 1 4 19.5z"/></>)},
-    {id:"market",l:"Market Data",icon:(c)=>SV(c,<><path d="M3 20h18"/><path d="M6 16V8"/><path d="M12 16V4"/><path d="M18 16v-6"/></>)},
-    {id:"history",l:"지난 계산 내역",icon:(c)=>SV(c,<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>)}
+    {id:"learning",l:"Learning Center",icon:(c)=>SV(c,<><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H20v15H5.5A1.5 1.5 0 0 1 4 16.5z"/><path d="M4 16.5A1.5 1.5 0 0 1 5.5 15H20v6H5.5A1.5 1.5 0 0 1 4 19.5z"/></>),sub:[
+      {id:"rates",l:"세율표·가이드"},
+      {id:"regs",l:"규정·법령"},
+      {id:"tips",l:"절세 팁"},
+      {id:"glossary",l:"용어 사전"}
+    ]},
+    {id:"market",l:"Market Data",icon:(c)=>SV(c,<><path d="M3 20h18"/><path d="M6 16V8"/><path d="M12 16V4"/><path d="M18 16v-6"/></>),sub:[
+      {id:"market_news",l:"실시간 뉴스"},
+      {id:"market_price",l:"실거래가 조회"},
+      {id:"market_stats",l:"부동산 통계"}
+    ]},
+    {id:"history",l:"지난 계산 내역",special:"history",icon:(c)=>SV(c,<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>)}
   ];
-  const MENU=buildMenu();
   const tx=isMo&&!navOpen?"translateX(-100%)":"none";
   return(<>
     {isMo&&navOpen&&<div onClick={()=>setNavOpen(false)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.5)",zIndex:9998}}/>}
@@ -3110,28 +3119,41 @@ function LeftNav({isMo,navOpen,setNavOpen,sidePanel,setSidePanel,setEduTab}){
       <div style={{padding:"0 22px",marginTop:24,marginBottom:8,fontSize:11,fontWeight:700,letterSpacing:1.5,color:"#6B7280",textTransform:"uppercase"}}>RESOURCE HUB</div>
       <nav style={{flex:"1 1 auto",display:"flex",flexDirection:"column"}}>
         {MENU.map(m=>{
-          const a=sidePanel===m.id;
-          const expanded=openMenu===m.id;
+          const a=sidePanel===m.id||(m.sub&&m.sub.some(s=>sidePanel===s.id));
+          const expanded=m.always||openMenu===m.id;
           const hasSub=Array.isArray(m.sub)&&m.sub.length>0;
+          const isHist=m.special==="history";
           const iconColor=a?"#0747A6":"#0a1628";
           return(<div key={m.id}>
             <button onClick={()=>{
-              if(hasSub){setOpenMenu(expanded?null:m.id);}
+              if(m.always)return;
+              if(hasSub||isHist){setOpenMenu(expanded?null:m.id);}
               else{setSidePanel?.(a?null:m.id);if(isMo)setNavOpen(false);}
-            }} style={{width:"100%",display:"flex",alignItems:"center",gap:10,padding:"12px 18px",background:a?"#EFF6FF":"none",border:"none",borderLeft:a?"3px solid #0747A6":"3px solid transparent",color:a?"#0747A6":"#0a1628",fontSize:13,fontWeight:a?700:500,cursor:"pointer",fontFamily:"inherit",textAlign:"left",position:"relative"}} onMouseEnter={e=>{if(!a)e.currentTarget.style.background="#F9FAFB"}} onMouseLeave={e=>{if(!a)e.currentTarget.style.background="none"}}>
+            }} style={{width:"100%",display:"flex",alignItems:"center",gap:10,padding:"12px 18px",background:a?"#EFF6FF":"none",border:"none",borderLeft:a?"3px solid #0747A6":"3px solid transparent",color:a?"#0747A6":"#0a1628",fontSize:13,fontWeight:a?700:500,cursor:m.always?"default":"pointer",fontFamily:"inherit",textAlign:"left",position:"relative"}} onMouseEnter={e=>{if(!a&&!m.always)e.currentTarget.style.background="#F9FAFB"}} onMouseLeave={e=>{if(!a)e.currentTarget.style.background="none"}}>
               {a&&<span style={{position:"absolute",left:8,top:"50%",transform:"translateY(-50%)",width:6,height:6,borderRadius:"50%",background:"#0747A6"}}/>}
               <span style={{width:22,height:22,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{m.icon(iconColor)}</span>
               <span style={{flex:"1 1 auto"}}>{m.l}</span>
-              {hasSub&&<span style={{fontSize:10,color:a?"#0747A6":"#6B7280",flexShrink:0}}>{expanded?"▼":"▶"}</span>}
+              {!m.always&&(hasSub||isHist)&&<span style={{fontSize:10,color:a?"#0747A6":"#6B7280",flexShrink:0}}>{expanded?"▼":"▶"}</span>}
             </button>
             {hasSub&&expanded&&<div style={{background:"#F9FAFB",borderLeft:"3px solid #EFF6FF"}}>
-              {m.sub.map(s=>(
-                <button key={s.id} onClick={()=>{
-                  setEduTab?.(s.id);
-                  setSidePanel?.(m.id);
+              {m.sub.map(s=>{
+                const active=sidePanel===s.id;
+                return(<button key={s.id} onClick={()=>{
+                  if(m.id==="expert"||m.id==="learning"){setEduTab?.(s.id);setSidePanel?.(m.id);}
+                  else if(m.id==="market"){setSidePanel?.(s.id);}
                   if(isMo)setNavOpen(false);
-                }} style={{width:"100%",display:"flex",alignItems:"center",padding:"10px 18px 10px 44px",background:"none",border:"none",color:"#475569",fontSize:12,fontWeight:500,cursor:"pointer",fontFamily:"inherit",textAlign:"left"}} onMouseEnter={e=>{e.currentTarget.style.background="#EFF6FF";e.currentTarget.style.color="#0747A6"}} onMouseLeave={e=>{e.currentTarget.style.background="none";e.currentTarget.style.color="#475569"}}>{s.l}</button>
-              ))}
+                }} style={{width:"100%",display:"flex",alignItems:"center",padding:"10px 18px 10px 44px",background:active?"#EFF6FF":"none",border:"none",color:active?"#0747A6":"#475569",fontSize:12,fontWeight:active?700:500,cursor:"pointer",fontFamily:"inherit",textAlign:"left"}} onMouseEnter={e=>{if(!active){e.currentTarget.style.background="#EFF6FF";e.currentTarget.style.color="#0747A6"}}} onMouseLeave={e=>{if(!active){e.currentTarget.style.background="none";e.currentTarget.style.color="#475569"}}}>{s.l}</button>);
+              })}
+            </div>}
+            {isHist&&expanded&&<div style={{background:"#F9FAFB",borderLeft:"3px solid #EFF6FF",padding:"12px 18px 12px 44px"}}>
+              {effectiveUser?(
+                <button onClick={()=>{navigateMyPage?.();if(isMo)setNavOpen(false);}} style={{width:"100%",padding:"10px 12px",background:"#0a1628",color:"#fff",border:"none",borderRadius:6,fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>전체 내역 보기 →</button>
+              ):(
+                <div>
+                  <div style={{fontSize:11,color:"#6B7280",marginBottom:8,lineHeight:1.5}}>로그인 후 이용 가능</div>
+                  <button onClick={()=>{setAuthMode?.("login");setShowAuth?.(true);if(isMo)setNavOpen(false);}} style={{width:"100%",padding:"8px 12px",background:"#0747A6",color:"#fff",border:"none",borderRadius:6,fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>로그인</button>
+                </div>
+              )}
             </div>}
           </div>);
         })}
@@ -3383,7 +3405,7 @@ export default function App(){
 
   return(<div style={{minHeight:"100vh",background:"#FFFFFF",fontFamily:"'Pretendard','Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif",width:"100%",maxWidth:"100vw",overflowX:"hidden",paddingLeft:(isMo||page==="home")?0:200,paddingTop:64}}>
     <SidePanel/>
-    {page!=="home"&&<LeftNav isMo={isMo} navOpen={navOpen} setNavOpen={setNavOpen} sidePanel={sidePanel} setSidePanel={setSidePanel} setEduTab={setEduTab}/>}
+    {page!=="home"&&<LeftNav isMo={isMo} navOpen={navOpen} setNavOpen={setNavOpen} sidePanel={sidePanel} setSidePanel={setSidePanel} setEduTab={setEduTab} effectiveUser={effectiveUser} setAuthMode={setAuthMode} setShowAuth={setShowAuth} navigateMyPage={navigateMyPage}/>}
     <SidePanelOverlay sidePanel={sidePanel} setSidePanel={setSidePanel} calc={calc} isMo={isMo} sideMarketNews={sideMarketNews} sideMarketLoading={sideMarketLoading} sideHistory={sideHistory} sideHistoryLoading={sideHistoryLoading} sideHistoryErr={sideHistoryErr} lcToken={lcToken} setAuthMode={setAuthMode} setShowAuth={setShowAuth} eduTab={eduTab} setEduTab={setEduTab}/>
     {isMo&&<button onClick={()=>setNavOpen(true)} aria-label="메뉴 열기" style={{position:"fixed",top:10,left:10,zIndex:9997,width:40,height:40,background:"#0a1628",color:"#fff",border:"none",borderRadius:10,cursor:"pointer",fontSize:20,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 8px rgba(0,0,0,.2)"}}>☰</button>}
     <style>{`
@@ -3462,7 +3484,7 @@ body.lc-embed main{padding-top:0!important}
       </>):(
         <div style={{display:"flex",alignItems:"center",height:64,padding:"0 24px",gap:16}}>
           <div onClick={()=>{navigateHome();setSearch("");}} style={{width:200-24,display:"flex",alignItems:"center",gap:8,cursor:"pointer",flexShrink:0}}>
-            <img src="/logo.png" alt="생활계산기" height={32} style={{marginRight:8,verticalAlign:"middle"}} onError={e=>{e.currentTarget.style.display="none";}}/>
+            <img src="/logo.svg" alt="생활계산기" height={32} style={{marginRight:8,verticalAlign:"middle"}} onError={e=>{e.currentTarget.style.display="none";}}/>
             <span style={{fontSize:20,fontWeight:800,color:"#0a1628",letterSpacing:-.3}}>생활계산기.com</span>
           </div>
           <div style={{flex:"1 1 auto",display:"flex",gap:4,position:"relative",justifyContent:"flex-start"}}>
