@@ -1168,6 +1168,12 @@
   "updateLog": [
     {
       "date": "2026.04.14",
+      "category": "전체",
+      "title": "fix: CalcAcq 레이아웃 - RateTable을 입력 섹션 내부로 이동",
+      "desc": "fix: CalcAcq 레이아웃 - RateTable을 입력 섹션 내부로 이동"
+    },
+    {
+      "date": "2026.04.14",
       "category": "세금",
       "title": "fix: 취득세 취득가액 Slider→Inp 교체 (시가표준액과 동일한 레이블-위 풀폭 레이아웃)",
       "desc": "fix: 취득세 취득가액 Slider→Inp 교체 (시가표준액과 동일한 레이블-위 풀폭 레이아웃)"
@@ -1459,13 +1465,6 @@
       "category": "전체",
       "title": "fix: live-data.json econCalendar 이모지 mojibake 복구",
       "desc": "fix: live-data.json econCalendar 이모지 mojibake 복구"
-    },
-    {
-      "date": "2026.04.13",
-      "category": "세금",
-      "title": "정책 만료 D-26: transferSurchargeEnd",
-      "desc": "2026-05-10 만료 예정. 관련 계산기에 자동 반영됩니다.",
-      "urgent": true
     }
   ],
   "rates": {
