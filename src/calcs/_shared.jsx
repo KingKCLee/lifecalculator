@@ -98,23 +98,30 @@ export const Radio = Tog;
 
 export function RP({title, total, sub, items, alertMsg, alertType="info"}){
   const isMo = useIsMobile();
-  const accent = alertType==="danger"?"#FFEBE6":alertType==="success"?"#E3FCEF":alertType==="warning"?"#FFF8E1":"#DEEBFF";
-  const bc = alertType==="danger"?"#FFBDAD":alertType==="success"?"#57D9A3":alertType==="warning"?"#FFE082":"#93c5fd";
-  const tc = alertType==="danger"?"#BF2600":alertType==="success"?"#006644":alertType==="warning"?"#F57F17":"#0747A6";
-  return(<div style={{background:"#fff",borderRadius:16,border:"1px solid #dfe1e6",padding:isMo?18:24,marginTop:16,boxShadow:"0 1px 3px rgba(0,0,0,.04)",overflowX:"auto"}}>
-    <div style={{fontSize:13,fontWeight:600,color:P.mt,marginBottom:4}}>{title}</div>
-    {sub&&<div style={{fontSize:12,color:P.mt,marginBottom:8,wordBreak:"keep-all",lineHeight:1.5}}>{sub}</div>}
-    <div style={{fontSize:isMo?24:28,fontWeight:800,color:P.pri,marginBottom:16,fontVariantNumeric:"tabular-nums",wordBreak:"break-all",lineHeight:1.2}}>{typeof total==="number"?fW(total):total}</div>
-    {alertMsg&&<div style={{marginBottom:12,padding:"10px 14px",background:accent,border:"1px solid "+bc,borderRadius:8,fontSize:12,color:tc,lineHeight:1.6,wordBreak:"keep-all"}}>{alertMsg}</div>}
-    {items&&items.length>0&&<table style={{width:"100%",borderCollapse:"collapse",fontSize:isMo?12:13,tableLayout:"fixed"}}>
-      <tbody>{items.map((it,i)=>(
-        <tr key={i} style={{borderBottom:i<items.length-1?"1px solid #f1f5f9":"none"}}>
-          <td style={{padding:isMo?"10px 0":"8px 0",color:P.mt,wordBreak:"keep-all",paddingRight:6}}>{it.l}</td>
-          <td style={{padding:isMo?"10px 0":"8px 0",textAlign:"right",fontWeight:600,color:P.tx,fontVariantNumeric:"tabular-nums",wordBreak:"break-all"}}>{it.v}</td>
-          {it.note&&!isMo&&<td style={{padding:"8px 0 8px 8px",fontSize:11,color:"#94a3b8",textAlign:"right"}}>{it.note}</td>}
-        </tr>
-      ))}</tbody>
-    </table>}
+  // 2026.04.14 App.jsx의 메인 RP와 동일한 그라디언트 + 흰색 텍스트 스타일
+  const alertAccent = alertType==="danger"?"#FFC400":alertType==="success"?"#57D9A3":alertType==="warning"?"#FFE380":"#fff";
+  const isTotal = (l) => typeof l==="string" && (l.includes("합계")||l.includes("총")||l.includes("최종")||l.includes("세후")||l.includes("순")||l.includes("최대"));
+  return(<div style={{background:"linear-gradient(135deg, #0747A6 0%, #0052CC 50%, #0065FF 100%)",borderRadius:20,padding:isMo?"22px 20px":"28px 24px",color:"#fff",position:isMo?"relative":"sticky",top:isMo?0:80,alignSelf:"start",boxShadow:"0 8px 28px rgba(7,71,166,.28)",width:"100%",minWidth:isMo?"auto":320,boxSizing:"border-box",marginTop:isMo?16:0}}>
+    {alertMsg&&<div style={{background:"rgba(255,255,255,0.15)",borderRadius:10,padding:"10px 14px",marginBottom:14,fontSize:12,display:"flex",gap:8,alignItems:"flex-start",lineHeight:1.5,color:alertAccent}}>
+      <span style={{flexShrink:0,fontWeight:800}}>{alertType==="danger"?"⚠":alertType==="success"?"✓":alertType==="warning"?"!":"ℹ"}</span><span>{alertMsg}</span>
+    </div>}
+    <div style={{marginBottom:16}}>
+      <div style={{fontSize:11,fontWeight:700,letterSpacing:1.5,textTransform:"uppercase",opacity:.7,marginBottom:6}}>{title}</div>
+      <div style={{fontSize:isMo?32:38,fontWeight:800,lineHeight:1.1,fontVariantNumeric:"tabular-nums",wordBreak:"break-all"}}>{typeof total==="number"?fW(total):total}</div>
+      {sub&&<div style={{fontSize:12,opacity:.72,marginTop:6,wordBreak:"keep-all",lineHeight:1.5}}>{sub}</div>}
+    </div>
+    {items&&items.length>0&&<div style={{borderTop:"1px solid rgba(255,255,255,.22)",paddingTop:4}}>
+      {items.map((it,i)=>{
+        const tr=isTotal(it.l);
+        return(<div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",padding:"10px 0",borderBottom:i<items.length-1?"1px solid rgba(255,255,255,.1)":"none",gap:8}}>
+          <span style={{opacity:tr?1:0.82,fontWeight:tr?800:400,fontSize:tr?16:13,flex:"1 1 auto",minWidth:0,wordBreak:"keep-all"}}>{it.l}</span>
+          <div style={{textAlign:"right",whiteSpace:"nowrap",flexShrink:0}}>
+            <span style={{fontWeight:tr?800:600,fontSize:tr?16:13,color:tr?"#FFC400":"#fff",fontVariantNumeric:"tabular-nums"}}>{it.v}</span>
+            {it.note&&<div style={{fontSize:10,opacity:.58,marginTop:2}}>{it.note}</div>}
+          </div>
+        </div>);
+      })}
+    </div>}
   </div>);
 }
 
