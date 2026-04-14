@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.14",
       "category": "전체",
+      "title": "fix: 취득가액 Slider 복원·시가표준액 인라인 레이아웃·특수조건 } 버그·조회패널 maxWidth",
+      "desc": "fix: 취득가액 Slider 복원·시가표준액 인라인 레이아웃·특수조건 } 버그·조회패널 maxWidth"
+    },
+    {
+      "date": "2026.04.14",
+      "category": "전체",
       "title": "fix: CalcAcq 레이아웃 - RateTable을 입력 섹션 내부로 이동",
       "desc": "fix: CalcAcq 레이아웃 - RateTable을 입력 섹션 내부로 이동"
     },
@@ -1459,12 +1465,6 @@
       "category": "전체",
       "title": "fix: RP 결과 프레임 width 고정 + tabular-nums 적용 (폭 흔들림 방지)",
       "desc": "fix: RP 결과 프레임 width 고정 + tabular-nums 적용 (폭 흔들림 방지)"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "전체",
-      "title": "fix: live-data.json econCalendar 이모지 mojibake 복구",
-      "desc": "fix: live-data.json econCalendar 이모지 mojibake 복구"
     }
   ],
   "rates": {

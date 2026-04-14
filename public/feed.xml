@@ -5,8 +5,15 @@
     <link>https://xn--989a00a691bdfa717h.com/</link>
     <description>취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 등 39가지 무료 계산기. 매일 자동 업데이트.</description>
     <language>ko</language>
-    <lastBuildDate>Tue, 14 Apr 2026 21:05:48 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 14 Apr 2026 21:08:59 +0900</lastBuildDate>
     <atom:link href="https://xn--989a00a691bdfa717h.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+    <title>fix: 취득가액 Slider 복원·시가표준액 인라인 레이아웃·특수조건 } 버그·조회패널 maxWidth</title>
+    <link>https://xn--989a00a691bdfa717h.com/</link>
+    <description>fix: 취득가액 Slider 복원·시가표준액 인라인 레이아웃·특수조건 } 버그·조회패널 maxWidth</description>
+    <pubDate>Tue, 14 Apr 2026 21:08:59 +0900</pubDate>
+    <guid>https://xn--989a00a691bdfa717h.com/#update-202604141208</guid>
+  </item>
     <item>
     <title>fix: CalcAcq 레이아웃 - RateTable을 입력 섹션 내부로 이동</title>
     <link>https://xn--989a00a691bdfa717h.com/</link>
