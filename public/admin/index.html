@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <title>생활계산기 관리자</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <style>
   * { box-sizing: border-box; }
   body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Segoe UI', sans-serif; background: #f4f5f7; color: #172B4D; }
@@ -12,7 +13,7 @@
   header h1 { margin: 0; font-size: 18px; font-weight: 700; }
   header .me { font-size: 13px; opacity: .9; }
   header button { background: #fff; color: #0747A6; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; }
-  .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+  .container { max-width: 1280px; margin: 0 auto; padding: 20px; }
   .tabs { display: flex; gap: 4px; flex-wrap: wrap; border-bottom: 2px solid #dfe1e6; margin-bottom: 20px; }
   .tab { padding: 10px 16px; cursor: pointer; font-weight: 600; color: #505f79; border: none; background: none; font-size: 14px; border-bottom: 3px solid transparent; margin-bottom: -2px; }
   .tab.active { color: #0747A6; border-bottom-color: #0747A6; }
@@ -23,15 +24,22 @@
   .card .label { font-size: 12px; color: #505f79; margin-bottom: 6px; font-weight: 600; }
   .card .value { font-size: 26px; font-weight: 800; color: #0747A6; }
   .card .sub { font-size: 12px; color: #6b778c; margin-top: 4px; }
+  .card .delta-up { color: #006644; font-weight: 700; }
+  .card .delta-dn { color: #de350b; font-weight: 700; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .row2 > .box { background: #fff; border: 1px solid #dfe1e6; border-radius: 10px; padding: 16px; }
+  .row2 > .box h3 { margin: 0 0 10px; font-size: 14px; color: #505f79; }
   .reply-item { background: #fff; border: 1px solid #dfe1e6; border-radius: 10px; padding: 16px; margin-bottom: 12px; }
   .reply-item .post { background: #f4f5f7; padding: 10px; border-radius: 6px; margin-bottom: 10px; font-size: 13px; color: #505f79; }
   .reply-item .post b { color: #172B4D; display: block; margin-bottom: 4px; }
   .reply-item .content { white-space: pre-wrap; font-size: 14px; line-height: 1.6; padding: 10px 0; }
   .reply-item .meta { font-size: 12px; color: #6b778c; margin-bottom: 8px; }
-  .actions { display: flex; gap: 8px; margin-top: 10px; }
+  .actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
   .btn { padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; }
   .btn-ok { background: #0747A6; color: #fff; }
   .btn-no { background: #de350b; color: #fff; }
+  .btn-gray { background: #6b778c; color: #fff; }
+  .btn-out { background: #fff; color: #0747A6; border: 1px solid #0747A6; }
   .btn-sm { padding: 6px 10px; font-size: 12px; }
   .muted { color: #6b778c; font-size: 14px; padding: 40px; text-align: center; }
   .gate { max-width: 420px; margin: 80px auto; background: #fff; padding: 30px; border-radius: 10px; border: 1px solid #dfe1e6; text-align: center; }
@@ -42,7 +50,22 @@
   th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #dfe1e6; font-size: 13px; }
   th { background: #f4f5f7; color: #505f79; font-weight: 700; }
   tr:last-child td { border-bottom: none; }
-  .coming { background: #fff; border: 1px dashed #dfe1e6; border-radius: 10px; padding: 60px 20px; text-align: center; color: #6b778c; }
+  .section { background: #fff; border: 1px solid #dfe1e6; border-radius: 10px; padding: 18px; margin-bottom: 16px; }
+  .section h3 { margin: 0 0 12px; font-size: 15px; color: #172B4D; }
+  .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .form-grid label { font-size: 12px; color: #505f79; font-weight: 600; display: block; margin-bottom: 4px; }
+  .form-grid input, .form-grid select, .form-grid textarea { width: 100%; padding: 8px 10px; border: 1px solid #dfe1e6; border-radius: 6px; font-size: 13px; font-family: inherit; }
+  .form-grid .full { grid-column: 1 / -1; }
+  .pos-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .pos-card { border: 1px dashed #a5b3c9; border-radius: 10px; padding: 18px; text-align: center; background: #fafbfc; }
+  .pos-card.filled { border-style: solid; border-color: #0747A6; background: #fff; }
+  .pos-card h4 { margin: 0 0 6px; font-size: 15px; color: #172B4D; }
+  .pos-card .price { font-size: 13px; color: #0747A6; font-weight: 700; margin-bottom: 10px; }
+  .site-row { display: grid; grid-template-columns: 1.2fr 100px 2fr 140px 100px; gap: 10px; align-items: center; padding: 10px; border-bottom: 1px solid #dfe1e6; }
+  .site-row:last-child { border-bottom: none; }
+  .site-row textarea { width: 100%; padding: 6px 8px; border: 1px solid #dfe1e6; border-radius: 4px; font-size: 12px; font-family: inherit; resize: vertical; min-height: 32px; }
+  .site-row .site-name { font-weight: 600; font-size: 13px; }
+  .site-row .last-check { font-size: 11px; color: #6b778c; }
 </style>
 </head>
 <body>
@@ -64,12 +87,17 @@
       <button class="tab" data-tab="users">회원 관리</button>
       <button class="tab" data-tab="community">커뮤니티 관리</button>
       <button class="tab" data-tab="calcs">계산기 통계</button>
-      <button class="tab" data-tab="ads">광고 관리</button>
-      <button class="tab" data-tab="revenue">수익 관리</button>
+      <button class="tab" data-tab="revenue">수익/광고 관리</button>
+      <button class="tab" data-tab="monitor">경쟁사 모니터링</button>
+      <button class="tab" data-tab="positions">광고 위치 현황</button>
     </div>
 
     <div id="panel-stats" class="panel active">
       <div class="cards" id="statsCards"><div class="muted">불러오는 중...</div></div>
+      <div class="row2">
+        <div class="box"><h3>최근 7일 방문/계산 추이</h3><canvas id="chartDaily" height="140"></canvas></div>
+        <div class="box"><h3>TOP 10 계산기</h3><canvas id="chartTop" height="140"></canvas></div>
+      </div>
     </div>
 
     <div id="panel-replies" class="panel">
@@ -88,12 +116,81 @@
       <div id="calcsList"><div class="muted">탭을 선택하면 불러옵니다.</div></div>
     </div>
 
-    <div id="panel-ads" class="panel">
-      <div class="coming">광고 관리 - 기본 CRUD API는 준비되었습니다. (POST/PUT/DELETE /admin/ads)<br>UI는 다음 업데이트에서 제공됩니다.</div>
+    <div id="panel-revenue" class="panel">
+      <div class="section">
+        <h3>AdSense 수익 수동 입력</h3>
+        <div class="form-grid" style="max-width:640px">
+          <div><label>날짜</label><input type="date" id="advDate"></div>
+          <div><label>금액 (원)</label><input type="number" id="advAmount" placeholder="예: 120000"></div>
+          <div class="full"><label>메모</label><input type="text" id="advNote" placeholder="예: 2026-04 AdSense"></div>
+        </div>
+        <div class="actions"><button class="btn btn-ok" onclick="saveAdsense()">저장</button></div>
+      </div>
+      <div class="section">
+        <h3>RPM 수익 시뮬레이터 (RPM 5,000원 기준)</h3>
+        <div class="form-grid" style="max-width:480px">
+          <div><label>일 방문자</label><input type="number" id="rpmVisitors" value="1000" oninput="calcRPM()"></div>
+          <div><label>예상 일 수익</label><input type="text" id="rpmDaily" readonly></div>
+          <div><label>예상 월 수익</label><input type="text" id="rpmMonthly" readonly></div>
+        </div>
+      </div>
+      <div class="section">
+        <h3>신규 광고 등록</h3>
+        <div class="form-grid" style="max-width:820px">
+          <div><label>광고주명</label><input type="text" id="adPartner"></div>
+          <div><label>제목</label><input type="text" id="adTitle"></div>
+          <div><label>이미지 URL</label><input type="text" id="adImage"></div>
+          <div><label>랜딩 URL</label><input type="text" id="adLink"></div>
+          <div><label>위치</label>
+            <select id="adPosition" onchange="fillDefaultPrice()">
+              <option value="home_top">home_top (홈 상단)</option>
+              <option value="home_bottom">home_bottom (홈 하단)</option>
+              <option value="calc_sidebar">calc_sidebar (계산기 사이드)</option>
+              <option value="calc_bottom">calc_bottom (계산기 하단)</option>
+              <option value="tax_consult">tax_consult (세무사 연결)</option>
+              <option value="loan_consult">loan_consult (대출 연결)</option>
+            </select>
+          </div>
+          <div><label>단가 유형</label>
+            <select id="adPriceType">
+              <option value="fixed">fixed (월 고정)</option>
+              <option value="cpc">cpc (클릭당)</option>
+              <option value="cpm">cpm (1000회 노출당)</option>
+              <option value="cpa">cpa (연결/전환당)</option>
+            </select>
+          </div>
+          <div><label>단가 (원)</label><input type="number" id="adPrice"></div>
+          <div><label>시작일</label><input type="date" id="adStart"></div>
+          <div><label>종료일</label><input type="date" id="adEnd"></div>
+        </div>
+        <div class="actions"><button class="btn btn-ok" onclick="saveAd()">광고 등록</button></div>
+      </div>
+      <div class="section">
+        <h3>월별 수익 요약</h3>
+        <div id="revMonthlyBox"><div class="muted">로딩 중...</div></div>
+      </div>
+      <div class="section">
+        <h3>등록된 광고 목록</h3>
+        <div id="adsList"><div class="muted">로딩 중...</div></div>
+      </div>
     </div>
 
-    <div id="panel-revenue" class="panel">
-      <div id="revenueList"><div class="muted">탭을 선택하면 불러옵니다.</div></div>
+    <div id="panel-monitor" class="panel">
+      <div class="section">
+        <h3>경쟁사 & 기관 사이트 모니터링</h3>
+        <div id="siteList"></div>
+      </div>
+      <div class="section">
+        <h3>미검토 법령/정책 변경 사항</h3>
+        <div id="lawList"><div class="muted">로딩 중...</div></div>
+      </div>
+    </div>
+
+    <div id="panel-positions" class="panel">
+      <div class="section">
+        <h3>광고 위치 4종 현황</h3>
+        <div class="pos-grid" id="posGrid"><div class="muted">로딩 중...</div></div>
+      </div>
     </div>
   </div>
 </div>
@@ -102,8 +199,31 @@
 const API = 'https://lc-auth-worker.noble-kclee.workers.dev';
 const token = localStorage.getItem('lc_token') || localStorage.getItem('lc_auth_token') || '';
 
+const SITES = [
+  { key: 'realestate_calc', name: '부동산계산기.com', url: 'https://xn--989a12eg8ipmqjw8iq2p.com/' },
+  { key: 'realestate_114',  name: '부동산계산기114.com', url: 'https://xn--989a12eg8ipmqjw8iq2p114.com/' },
+  { key: 'hometax',         name: '국세청 홈택스', url: 'https://www.hometax.go.kr/' },
+  { key: 'realtyprice',     name: '부동산공시가격알리미', url: 'https://www.realtyprice.kr/' },
+  { key: 'law',             name: '법제처 국가법령정보센터', url: 'https://www.law.go.kr/' },
+  { key: 'bok',             name: '한국은행', url: 'https://www.bok.or.kr/' },
+  { key: 'molit',           name: '국토교통부', url: 'https://www.molit.go.kr/' },
+];
+
+const POS_LABELS = {
+  home_top: '홈 상단',
+  home_bottom: '홈 하단',
+  calc_sidebar: '계산기 사이드바',
+  calc_bottom: '계산기 하단',
+};
+const POS_LIST = ['home_top', 'home_bottom', 'calc_sidebar', 'calc_bottom'];
+
+let pricingMap = {};
+let chartDaily, chartTop;
+
 function h(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function auth() { return { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' }; }
+function fmt(n) { return Number(n || 0).toLocaleString(); }
+function fmtW(n) { return '₩' + fmt(Math.round(n || 0)); }
 
 async function api(path, opts = {}) {
   const res = await fetch(API + path, { ...opts, headers: { ...auth(), ...(opts.headers || {}) } });
@@ -127,6 +247,12 @@ async function init() {
   document.getElementById('dash').style.display = 'block';
   document.getElementById('meEmail').textContent = me.user.email;
   bindTabs();
+  // preload pricing for ad form
+  try { const pr = await api('/admin/ads/pricing'); if (pr.ok) pricingMap = pr.pricing || {}; } catch {}
+  fillDefaultPrice();
+  // default date for adsense form
+  document.getElementById('advDate').value = new Date().toISOString().slice(0, 10);
+  calcRPM();
   loadStats();
 }
 
@@ -143,23 +269,59 @@ function bindTabs() {
   });
 }
 
+// ---------- Tab 1: Stats + charts + monthly revenue ----------
 async function loadStats() {
   const el = document.getElementById('statsCards');
   el.innerHTML = '<div class="muted">불러오는 중...</div>';
-  const r = await api('/admin/stats');
-  if (!r.ok) { el.innerHTML = '<div class="muted">통계 로드 실패: ' + h(r.error || '') + '</div>'; return; }
-  const s = r.stats;
-  const card = (l, v, sub) => '<div class="card"><div class="label">' + h(l) + '</div><div class="value">' + h(v) + '</div>' + (sub ? '<div class="sub">' + h(sub) + '</div>' : '') + '</div>';
-  const fmt = n => Number(n || 0).toLocaleString();
+  const [statsRes, monRes, dailyRes, topRes] = await Promise.all([
+    api('/admin/stats').catch(() => ({})),
+    api('/admin/revenue/monthly').catch(() => ({})),
+    api('/admin/stats/daily?days=7').catch(() => ({})),
+    api('/admin/top-calculators?limit=10').catch(() => ({})),
+  ]);
+  if (!statsRes.ok) { el.innerHTML = '<div class="muted">통계 로드 실패</div>'; return; }
+  const s = statsRes.stats;
+  const months = (monRes && monRes.ok && monRes.items) ? monRes.items : [];
+  const cur = months[0] || { adsense: 0, partner: 0, subscription: 0, total: 0 };
+  const prev = months[1] || { total: 0 };
+  const deltaPct = prev.total > 0 ? ((cur.total - prev.total) / prev.total) * 100 : 0;
+  const deltaStr = (deltaPct >= 0 ? '▲ +' : '▼ ') + deltaPct.toFixed(1) + '%';
+  const deltaClass = deltaPct >= 0 ? 'delta-up' : 'delta-dn';
+  const card = (l, v, sub, subHtml) => '<div class="card"><div class="label">' + h(l) + '</div><div class="value">' + v + '</div>' + (subHtml ? '<div class="sub">' + subHtml + '</div>' : (sub ? '<div class="sub">' + h(sub) + '</div>' : '')) + '</div>';
   el.innerHTML = [
     card('누적 회원', fmt(s.users_total), '오늘 +' + fmt(s.users_today)),
     card('누적 계산', fmt(s.calcs_total), '오늘 +' + fmt(s.calcs_today)),
     card('답변 대기', fmt(s.pending_replies_count), '승인 필요'),
     card('게시글', fmt(s.posts_total), '전체 커뮤니티'),
-    card('이달 수익', '₩' + fmt(Math.round(s.revenue_this_month)), new Date().toISOString().slice(0,7)),
+    card('이달 총수익', fmtW(cur.total), null, 'AdSense ' + fmtW(cur.adsense) + ' · 제휴 ' + fmtW(cur.partner) + ' · 구독 ' + fmtW(cur.subscription) + ' <span class="' + deltaClass + '">' + deltaStr + '</span>'),
   ].join('');
+
+  // Daily chart
+  const dailyItems = (dailyRes && dailyRes.ok && dailyRes.items) ? dailyRes.items : [];
+  if (chartDaily) chartDaily.destroy();
+  chartDaily = new Chart(document.getElementById('chartDaily'), {
+    type: 'line',
+    data: {
+      labels: dailyItems.map(d => d.date.slice(5)),
+      datasets: [{ label: '계산 실행 수', data: dailyItems.map(d => d.count), borderColor: '#0747A6', backgroundColor: 'rgba(7,71,166,0.12)', tension: 0.3, fill: true }],
+    },
+    options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false } } },
+  });
+
+  // Top calculators chart
+  const topItems = (topRes && topRes.ok && topRes.items) ? topRes.items : [];
+  if (chartTop) chartTop.destroy();
+  chartTop = new Chart(document.getElementById('chartTop'), {
+    type: 'bar',
+    data: {
+      labels: topItems.map(t => t.calc_type),
+      datasets: [{ label: '실행 수', data: topItems.map(t => t.count), backgroundColor: '#0052CC' }],
+    },
+    options: { responsive: true, maintainAspectRatio: true, indexAxis: 'y', plugins: { legend: { display: false } } },
+  });
 }
 
+// ---------- Tab 2: Replies ----------
 async function loadReplies() {
   const el = document.getElementById('repliesList');
   el.innerHTML = '<div class="muted">불러오는 중...</div>';
@@ -178,7 +340,6 @@ async function loadReplies() {
     '</div>'
   )).join('');
 }
-
 async function approveReply(id) {
   const r = await api('/admin/replies/' + id + '/approve', { method: 'PUT' });
   if (r.ok) loadReplies(); else alert('실패: ' + (r.error || ''));
@@ -189,34 +350,56 @@ async function rejectReply(id) {
   if (r.ok) loadReplies(); else alert('실패: ' + (r.error || ''));
 }
 
+// ---------- Tab 3: Users ----------
 async function loadUsers() {
   const el = document.getElementById('usersList');
   el.innerHTML = '<div class="muted">불러오는 중...</div>';
   const r = await api('/admin/users');
   if (!r.ok) { el.innerHTML = '<div class="muted">로드 실패</div>'; return; }
   if (!r.items.length) { el.innerHTML = '<div class="muted">회원이 없습니다.</div>'; return; }
-  el.innerHTML = '<table><thead><tr><th>ID</th><th>이메일</th><th>가입일</th></tr></thead><tbody>' +
-    r.items.map(u => '<tr><td>' + u.id + '</td><td>' + h(u.email) + '</td><td>' + h(u.created_at) + '</td></tr>').join('') +
+  el.innerHTML = '<table><thead><tr><th>ID</th><th>이메일</th><th>가입일</th><th>관리</th></tr></thead><tbody>' +
+    r.items.map(u => '<tr><td>' + u.id + '</td><td>' + h(u.email) + '</td><td>' + h(u.created_at) + '</td><td>' +
+      '<button class="btn btn-out btn-sm" onclick="promoteUser(' + u.id + ')">관리자 승격</button> ' +
+      '<button class="btn btn-no btn-sm" onclick="banUser(' + u.id + ')">정지</button>' +
+    '</td></tr>').join('') +
     '</tbody></table>';
 }
+async function promoteUser(id) {
+  if (!confirm('관리자로 승격? (실제 권한은 ADMIN_EMAILS secret 필요)')) return;
+  const r = await api('/admin/users/' + id + '/admin', { method: 'PUT' });
+  alert(r.ok ? '승격 완료 (' + (r.note || '') + ')' : '실패');
+}
+async function banUser(id) {
+  if (!confirm('회원을 정지하시겠습니까?')) return;
+  const r = await api('/admin/users/' + id + '/ban', { method: 'PUT' });
+  if (r.ok) loadUsers(); else alert('실패');
+}
 
+// ---------- Tab 4: Community ----------
 async function loadCommunity() {
   const el = document.getElementById('communityList');
   el.innerHTML = '<div class="muted">불러오는 중...</div>';
   const r = await api('/admin/community');
   if (!r.ok) { el.innerHTML = '<div class="muted">로드 실패</div>'; return; }
   if (!r.items.length) { el.innerHTML = '<div class="muted">게시글이 없습니다.</div>'; return; }
-  el.innerHTML = '<table><thead><tr><th>ID</th><th>제목</th><th>카테고리</th><th>작성자</th><th>작성일</th><th></th></tr></thead><tbody>' +
-    r.items.map(p => '<tr><td>' + p.id + '</td><td>' + h(p.title) + '</td><td>' + h(p.category || '') + '</td><td>' + h(p.author || '') + '</td><td>' + h(p.created_at) + '</td><td><button class="btn btn-no btn-sm" onclick="delPost(' + p.id + ')">삭제</button></td></tr>').join('') +
+  el.innerHTML = '<table><thead><tr><th>ID</th><th>제목</th><th>카테고리</th><th>작성자</th><th>작성일</th><th>관리</th></tr></thead><tbody>' +
+    r.items.map(p => '<tr><td>' + p.id + '</td><td>' + h(p.title) + '</td><td>' + h(p.category || '') + '</td><td>' + h(p.author || '') + '</td><td>' + h(p.created_at) + '</td><td>' +
+      '<button class="btn btn-out btn-sm" onclick="markNotice(' + p.id + ')">공지</button> ' +
+      '<button class="btn btn-no btn-sm" onclick="delPost(' + p.id + ')">삭제</button>' +
+    '</td></tr>').join('') +
     '</tbody></table>';
 }
-
+async function markNotice(id) {
+  const r = await api('/admin/community/' + id + '/notice', { method: 'PUT' });
+  if (r.ok) alert('공지 지정'); else alert('실패');
+}
 async function delPost(id) {
   if (!confirm('게시글을 삭제하시겠습니까?')) return;
   const r = await api('/admin/community/' + id, { method: 'DELETE' });
   if (r.ok) loadCommunity(); else alert('실패');
 }
 
+// ---------- Tab 5: Calc stats ----------
 async function loadCalcs() {
   const el = document.getElementById('calcsList');
   el.innerHTML = '<div class="muted">불러오는 중...</div>';
@@ -224,17 +407,165 @@ async function loadCalcs() {
   if (!r.ok) { el.innerHTML = '<div class="muted">로드 실패</div>'; return; }
   if (!r.items.length) { el.innerHTML = '<div class="muted">데이터가 없습니다.</div>'; return; }
   el.innerHTML = '<table><thead><tr><th>계산기</th><th>실행 횟수</th></tr></thead><tbody>' +
-    r.items.map(c => '<tr><td>' + h(c.calc_type) + '</td><td>' + Number(c.count).toLocaleString() + '</td></tr>').join('') +
+    r.items.map(c => '<tr><td>' + h(c.calc_type) + '</td><td>' + fmt(c.count) + '</td></tr>').join('') +
     '</tbody></table>';
 }
 
+// ---------- Tab 6: Revenue + Ads ----------
+function calcRPM() {
+  const v = Number(document.getElementById('rpmVisitors').value || 0);
+  const daily = v * 5000 / 1000; // RPM 5,000 = 1,000회당 5,000원
+  document.getElementById('rpmDaily').value = fmtW(daily);
+  document.getElementById('rpmMonthly').value = fmtW(daily * 30);
+}
+
+function fillDefaultPrice() {
+  const pos = document.getElementById('adPosition').value;
+  const def = pricingMap[pos];
+  if (def) {
+    document.getElementById('adPriceType').value = def.type;
+    document.getElementById('adPrice').value = def.amount;
+  }
+}
+
+async function saveAdsense() {
+  const date = document.getElementById('advDate').value;
+  const amount = Number(document.getElementById('advAmount').value || 0);
+  const note = document.getElementById('advNote').value;
+  if (!amount) return alert('금액을 입력하세요');
+  const r = await api('/admin/revenue', { method: 'POST', body: JSON.stringify({ date, amount, type: 'adsense', note }) });
+  if (r.ok) {
+    alert('저장 완료');
+    document.getElementById('advAmount').value = '';
+    document.getElementById('advNote').value = '';
+    loadRevenue();
+  } else alert('실패: ' + (r.error || ''));
+}
+
+async function saveAd() {
+  const body = {
+    partner_name: document.getElementById('adPartner').value,
+    title: document.getElementById('adTitle').value,
+    image_url: document.getElementById('adImage').value,
+    link_url: document.getElementById('adLink').value,
+    position: document.getElementById('adPosition').value,
+    price_type: document.getElementById('adPriceType').value,
+    price_amount: Number(document.getElementById('adPrice').value || 0),
+    start_date: document.getElementById('adStart').value || null,
+    end_date: document.getElementById('adEnd').value || null,
+    type: 'partner',
+  };
+  if (!body.partner_name || !body.position) return alert('광고주/위치를 입력하세요');
+  const r = await api('/admin/ads', { method: 'POST', body: JSON.stringify(body) });
+  if (r.ok) {
+    alert('등록 완료 (id=' + r.id + ')');
+    ['adPartner','adTitle','adImage','adLink'].forEach(id => document.getElementById(id).value = '');
+    loadRevenue();
+  } else alert('실패: ' + (r.error || ''));
+}
+
 async function loadRevenue() {
-  const el = document.getElementById('revenueList');
-  el.innerHTML = '<div class="muted">불러오는 중...</div>';
-  const r = await api('/admin/revenue');
-  if (!r.ok) { el.innerHTML = '<div class="muted">로드 실패</div>'; return; }
-  const monthly = (r.monthly || []).map(m => '<tr><td>' + h(m.month) + '</td><td>₩' + Number(m.total || 0).toLocaleString() + '</td></tr>').join('') || '<tr><td colspan="2" class="muted" style="padding:20px;text-align:center">데이터 없음</td></tr>';
-  el.innerHTML = '<h3 style="margin-top:0">월별 수익</h3><table><thead><tr><th>월</th><th>합계</th></tr></thead><tbody>' + monthly + '</tbody></table>';
+  // Monthly summary
+  const monBox = document.getElementById('revMonthlyBox');
+  const mon = await api('/admin/revenue/monthly');
+  if (mon.ok && mon.items && mon.items.length) {
+    monBox.innerHTML = '<table><thead><tr><th>월</th><th>AdSense</th><th>제휴</th><th>구독</th><th>합계</th></tr></thead><tbody>' +
+      mon.items.map(m => '<tr><td>' + h(m.month) + '</td><td>' + fmtW(m.adsense) + '</td><td>' + fmtW(m.partner) + '</td><td>' + fmtW(m.subscription) + '</td><td><b>' + fmtW(m.total) + '</b></td></tr>').join('') +
+      '</tbody></table>';
+  } else monBox.innerHTML = '<div class="muted">월별 데이터 없음</div>';
+
+  // Ads list
+  const adsBox = document.getElementById('adsList');
+  const a = await api('/admin/ads');
+  if (!a.ok || !a.items.length) { adsBox.innerHTML = '<div class="muted">등록된 광고가 없습니다.</div>'; return; }
+  adsBox.innerHTML = '<table><thead><tr><th>ID</th><th>광고주</th><th>위치</th><th>기간</th><th>단가</th><th>클릭</th><th>노출</th><th>CTR</th><th>수익</th><th>상태</th><th>관리</th></tr></thead><tbody>' +
+    a.items.map(ad => {
+      const ctr = ad.impressions > 0 ? ((ad.clicks / ad.impressions) * 100).toFixed(2) + '%' : '-';
+      const priceStr = (ad.price_type || 'fixed') + ' ' + fmtW(ad.price_amount);
+      return '<tr><td>' + ad.id + '</td><td>' + h(ad.partner_name || '') + '</td><td>' + h(ad.position || '') + '</td><td>' + h((ad.start_date||'')+'~'+(ad.end_date||'')) + '</td><td>' + priceStr + '</td><td>' + fmt(ad.clicks) + '</td><td>' + fmt(ad.impressions) + '</td><td>' + ctr + '</td><td>' + fmtW(ad.revenue) + '</td><td>' + h(ad.status || '') + '</td><td>' +
+        '<button class="btn btn-out btn-sm" onclick="pauseAd(' + ad.id + ')">일시정지</button> ' +
+        '<button class="btn btn-no btn-sm" onclick="delAd(' + ad.id + ')">삭제</button>' +
+      '</td></tr>';
+    }).join('') +
+    '</tbody></table>';
+}
+async function pauseAd(id) { const r = await api('/admin/ads/' + id + '/pause', { method: 'PUT' }); if (r.ok) loadRevenue(); else alert('실패'); }
+async function delAd(id) {
+  if (!confirm('광고를 삭제하시겠습니까?')) return;
+  const r = await api('/admin/ads/' + id, { method: 'DELETE' });
+  if (r.ok) loadRevenue(); else alert('실패');
+}
+
+// ---------- Tab 7: Monitor (competitors + law updates) ----------
+function loadMonitor() {
+  const box = document.getElementById('siteList');
+  box.innerHTML = SITES.map(s => {
+    const memo = localStorage.getItem('mon_memo_' + s.key) || '';
+    const last = localStorage.getItem('mon_last_' + s.key) || '(미확인)';
+    return '<div class="site-row">' +
+      '<div class="site-name">' + h(s.name) + '</div>' +
+      '<div><a class="btn btn-out btn-sm" href="' + h(s.url) + '" target="_blank" rel="noopener" onclick="markChecked(\'' + s.key + '\')">바로가기</a></div>' +
+      '<textarea placeholder="메모" oninput="saveMemo(\'' + s.key + '\', this.value)">' + h(memo) + '</textarea>' +
+      '<div class="last-check" id="last_' + s.key + '">마지막 확인: ' + h(last) + '</div>' +
+      '<div></div>' +
+    '</div>';
+  }).join('');
+
+  loadLawUpdates();
+}
+function saveMemo(key, v) { localStorage.setItem('mon_memo_' + key, v); }
+function markChecked(key) {
+  const now = new Date().toLocaleString('ko-KR');
+  localStorage.setItem('mon_last_' + key, now);
+  const el = document.getElementById('last_' + key);
+  if (el) el.textContent = '마지막 확인: ' + now;
+}
+async function loadLawUpdates() {
+  const el = document.getElementById('lawList');
+  const r = await api('/admin/law-updates?status=new').catch(() => ({}));
+  if (!r.ok) { el.innerHTML = '<div class="muted">로드 실패 (테이블이 비어있을 수 있음)</div>'; return; }
+  if (!r.items || !r.items.length) { el.innerHTML = '<div class="muted">미검토 항목 없음</div>'; return; }
+  el.innerHTML = '<table><thead><tr><th>출처</th><th>제목</th><th>키워드</th><th>날짜</th><th>관리</th></tr></thead><tbody>' +
+    r.items.map(it => '<tr><td>' + h(it.source || '') + '</td><td><a href="' + h(it.link || '#') + '" target="_blank">' + h(it.title || '') + '</a></td><td>' + h(it.keywords || '') + '</td><td>' + h(it.pub_date || it.created_at || '') + '</td><td>' +
+      '<button class="btn btn-out btn-sm" onclick="lawReview(' + it.id + ')">검토완료</button> ' +
+      '<button class="btn btn-ok btn-sm" onclick="lawApply(' + it.id + ')">계산기반영</button>' +
+    '</td></tr>').join('') +
+    '</tbody></table>';
+}
+async function lawReview(id) { const r = await api('/admin/law-updates/' + id + '/review', { method: 'PUT' }); if (r.ok) loadLawUpdates(); else alert('실패'); }
+async function lawApply(id) { const r = await api('/admin/law-updates/' + id + '/apply', { method: 'PUT' }); if (r.ok) loadLawUpdates(); else alert('실패'); }
+
+// ---------- Tab 8: Positions ----------
+async function loadPositions() {
+  const el = document.getElementById('posGrid');
+  el.innerHTML = '<div class="muted">로딩 중...</div>';
+  const r = await api('/admin/ads');
+  const ads = (r.ok && r.items) ? r.items : [];
+  el.innerHTML = POS_LIST.map(pos => {
+    const active = ads.find(a => a.position === pos && a.status === 'active');
+    const def = pricingMap[pos];
+    const priceLabel = def ? '월 ' + Math.round(def.amount / 10000) + '만원' : '-';
+    if (active) {
+      return '<div class="pos-card filled">' +
+        '<h4>' + h(POS_LABELS[pos] || pos) + '</h4>' +
+        '<div class="price">' + h(active.partner_name || '') + ' — ' + fmtW(active.price_amount) + ' (' + h(active.price_type || '') + ')</div>' +
+        '<div style="font-size:12px;color:#505f79">클릭 ' + fmt(active.clicks) + ' · 노출 ' + fmt(active.impressions) + ' · 수익 ' + fmtW(active.revenue) + '</div>' +
+      '</div>';
+    }
+    return '<div class="pos-card">' +
+      '<h4>' + h(POS_LABELS[pos] || pos) + '</h4>' +
+      '<div class="price">광고 없음 — 기본가 ' + priceLabel + '</div>' +
+      '<button class="btn btn-out btn-sm" onclick="gotoAdForm(\'' + pos + '\')">광고 등록</button>' +
+    '</div>';
+  }).join('');
+}
+function gotoAdForm(pos) {
+  document.querySelector('.tab[data-tab="revenue"]').click();
+  setTimeout(() => {
+    document.getElementById('adPosition').value = pos;
+    fillDefaultPrice();
+    document.getElementById('adPartner').focus();
+  }, 100);
 }
 
 const loaders = {
@@ -244,6 +575,8 @@ const loaders = {
   community: loadCommunity,
   calcs: loadCalcs,
   revenue: loadRevenue,
+  monitor: loadMonitor,
+  positions: loadPositions,
 };
 
 init();
