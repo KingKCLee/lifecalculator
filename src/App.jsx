@@ -3211,10 +3211,10 @@ function HomeSections({isMo, effectiveUser, navigateCalc, setAuthMode, setShowAu
   const toggleChip=c=>setChips(p=>p.includes(c)?p.filter(x=>x!==c):[...p,c]);
   const fmtDate=s=>{if(!s)return"";try{const d=new Date(s);if(isNaN(d))return s.slice(0,10);return d.getFullYear()+"."+String(d.getMonth()+1).padStart(2,"0")+"."+String(d.getDate()).padStart(2,"0");}catch{return s.slice(0,10)}};
 
-  const secStyle={background:"#FFFFFF",border:"1px solid #E5E7EB",borderRadius:12,padding:"20px 24px",marginBottom:24};
-  const hdrStyle={fontSize:16,fontWeight:700,color:"#0a1628",display:"flex",alignItems:"center",justifyContent:"space-between",borderBottom:"1px solid #F3F4F6",paddingBottom:12,marginBottom:12,gap:8};
-  const moreLnk={fontSize:12,fontWeight:600,color:"#0747A6",textDecoration:"none",flexShrink:0};
-  const itemStyle={fontSize:13,color:"#374151",padding:"10px 0",borderBottom:"1px solid #F9FAFB",cursor:"pointer",display:"block",textDecoration:"none",transition:"color .15s"};
+  const secStyle={background:"#FFFFFF",border:"1px solid #E5E7EB",borderRadius:12,padding:24,marginBottom:24,boxShadow:"0 1px 3px rgba(0,0,0,0.06)"};
+  const hdrStyle={fontSize:18,fontWeight:700,color:"#0a1628",display:"flex",alignItems:"center",justifyContent:"space-between",borderBottom:"1px solid #F3F4F6",paddingBottom:12,marginBottom:12,gap:8};
+  const moreLnk={fontSize:13,fontWeight:600,color:"#0747A6",textDecoration:"none",flexShrink:0};
+  const itemStyle={fontSize:14,color:"#1F2937",padding:"10px 0",borderBottom:"1px solid #F3F4F6",cursor:"pointer",display:"block",textDecoration:"none",transition:"color .15s,background .15s",lineHeight:1.5};
   const Skel=({lines=5})=>(<div>{Array.from({length:lines}).map((_,i)=>(<div key={i} style={{height:14,background:"linear-gradient(90deg,#F3F4F6,#E5E7EB,#F3F4F6)",backgroundSize:"200% 100%",borderRadius:4,marginBottom:12,animation:"lcpulse 1.4s infinite"}}/>))}</div>);
 
   const NewsList=({state,emptyLabel})=>state.l?<Skel/>:(state.d.length===0?<div style={{fontSize:12,color:"#9CA3AF",padding:"20px 0",textAlign:"center"}}>{emptyLabel||"데이터를 불러오는 중입니다"}</div>:state.d.map((it,i)=>{
@@ -3222,9 +3222,9 @@ function HomeSections({isMo, effectiveUser, navigateCalc, setAuthMode, setShowAu
     const link=it.link||it.url||it.href||"#";
     const src=it.source||it.author||it.publisher||"";
     const dt=fmtDate(it.pubDate||it.date||it.created_at||it.publishedAt);
-    return(<a key={i} href={link} target="_blank" rel="noopener noreferrer" style={{...itemStyle,borderBottom:i===state.d.length-1?"none":itemStyle.borderBottom}} onMouseEnter={e=>e.currentTarget.style.color="#0747A6"} onMouseLeave={e=>e.currentTarget.style.color="#374151"}>
+    return(<a key={i} href={link} target="_blank" rel="noopener noreferrer" style={{...itemStyle,borderBottom:i===state.d.length-1?"none":itemStyle.borderBottom}} onMouseEnter={e=>{e.currentTarget.style.color="#0747A6";e.currentTarget.style.background="#F9FAFB";}} onMouseLeave={e=>{e.currentTarget.style.color="#1F2937";e.currentTarget.style.background="transparent";}}>
       <div style={{fontWeight:600,marginBottom:2,lineHeight:1.4,display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical",overflow:"hidden"}}>{t}</div>
-      <div style={{fontSize:11,color:"#9CA3AF"}}>{[src,dt].filter(Boolean).join(" · ")}</div>
+      <div style={{fontSize:12,color:"#9CA3AF"}}>{[src,dt].filter(Boolean).join(" · ")}</div>
     </a>);
   }));
 
@@ -3232,7 +3232,7 @@ function HomeSections({isMo, effectiveUser, navigateCalc, setAuthMode, setShowAu
     const t=it.title||it.name||"";
     const link=it.link||it.url||"#";
     const src=it.source||it.ministry||it.publisher||"정부";
-    return(<a key={i} href={link} target="_blank" rel="noopener noreferrer" style={{...itemStyle,borderBottom:i===state.d.length-1?"none":itemStyle.borderBottom}} onMouseEnter={e=>e.currentTarget.style.color="#0747A6"} onMouseLeave={e=>e.currentTarget.style.color="#374151"}>
+    return(<a key={i} href={link} target="_blank" rel="noopener noreferrer" style={{...itemStyle,borderBottom:i===state.d.length-1?"none":itemStyle.borderBottom}} onMouseEnter={e=>{e.currentTarget.style.color="#0747A6";e.currentTarget.style.background="#F9FAFB";}} onMouseLeave={e=>{e.currentTarget.style.color="#1F2937";e.currentTarget.style.background="transparent";}}>
       <div style={{lineHeight:1.5,display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical",overflow:"hidden"}}><span style={{color:"#0747A6",fontWeight:700,marginRight:6}}>[{src}]</span>{t}</div>
     </a>);
   }));
@@ -3244,12 +3244,12 @@ function HomeSections({isMo, effectiveUser, navigateCalc, setAuthMode, setShowAu
     const icon=it.icon||"💡";
     const calcId=it.calc||it.calculator||null;
     const onClick=e=>{if(calcId){e.preventDefault();const info=CL.find(c=>c.id===calcId);if(info)navigateCalc(info.c,info.id);}};
-    return(<a key={i} href={calcId?"#":(it.link||"#")} onClick={onClick} style={{...itemStyle,borderBottom:i===taxData.length-1?"none":itemStyle.borderBottom}} onMouseEnter={e=>e.currentTarget.style.color="#0747A6"} onMouseLeave={e=>e.currentTarget.style.color="#374151"}>
+    return(<a key={i} href={calcId?"#":(it.link||"#")} onClick={onClick} style={{...itemStyle,borderBottom:i===taxData.length-1?"none":itemStyle.borderBottom}} onMouseEnter={e=>{e.currentTarget.style.color="#0747A6";e.currentTarget.style.background="#F9FAFB";}} onMouseLeave={e=>{e.currentTarget.style.color="#1F2937";e.currentTarget.style.background="transparent";}}>
       <div style={{display:"flex",alignItems:"flex-start",gap:8}}>
         <span style={{fontSize:16,flexShrink:0,lineHeight:1.2}}>{icon}</span>
         <div style={{flex:"1 1 auto",minWidth:0}}>
           <div style={{fontWeight:600,marginBottom:2,lineHeight:1.4}}>{t}</div>
-          {summary&&<div style={{fontSize:11,color:"#9CA3AF",lineHeight:1.5}}>{summary}</div>}
+          {summary&&<div style={{fontSize:12,color:"#9CA3AF",lineHeight:1.5}}>{summary}</div>}
         </div>
       </div>
     </a>);
@@ -3259,16 +3259,16 @@ function HomeSections({isMo, effectiveUser, navigateCalc, setAuthMode, setShowAu
     const t=it.title||it.subject||"";
     const dt=fmtDate(it.created_at||it.date||it.pubDate);
     const isNotice=it.notice||it.pinned||it.category==="notice";
-    return(<a key={i} href={it.link||("/community/?id="+(it.id||""))} style={{...itemStyle,borderBottom:i===state.d.length-1?"none":itemStyle.borderBottom}} onMouseEnter={e=>e.currentTarget.style.color="#0747A6"} onMouseLeave={e=>e.currentTarget.style.color="#374151"}>
+    return(<a key={i} href={it.link||("/community/?id="+(it.id||""))} style={{...itemStyle,borderBottom:i===state.d.length-1?"none":itemStyle.borderBottom}} onMouseEnter={e=>{e.currentTarget.style.color="#0747A6";e.currentTarget.style.background="#F9FAFB";}} onMouseLeave={e=>{e.currentTarget.style.color="#1F2937";e.currentTarget.style.background="transparent";}}>
       <div style={{display:"flex",alignItems:"center",gap:6,lineHeight:1.5}}>
         {isNotice&&<span style={{fontSize:10,fontWeight:800,color:"#DE350B",background:"#FFEBE6",padding:"2px 6px",borderRadius:4,flexShrink:0}}>공지</span>}
         <span style={{flex:"1 1 auto",minWidth:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{t}</span>
-        <span style={{fontSize:11,color:"#9CA3AF",flexShrink:0}}>{dt}</span>
+        <span style={{fontSize:12,color:"#9CA3AF",flexShrink:0}}>{dt}</span>
       </div>
     </a>);
   }));
 
-  return(<div style={{maxWidth:1200,margin:"0 auto",padding:isMo?"24px 16px 0":"32px 24px 0"}}>
+  return(<div style={{maxWidth:1200,margin:"0 auto",padding:isMo?"24px 16px 0":"32px 24px"}}>
     <style>{`@keyframes lcpulse{0%,100%{background-position:200% 0}50%{background-position:-200% 0}}`}</style>
 
     {/* 섹션 1·2 — 뉴스·정책 (2열) */}
@@ -3314,18 +3314,18 @@ function HomeSections({isMo, effectiveUser, navigateCalc, setAuthMode, setShowAu
     <div style={{...secStyle,position:"relative",overflow:"hidden"}}>
       <div style={{...hdrStyle,filter:effectiveUser?"none":"blur(4px)",pointerEvents:effectiveUser?"auto":"none"}}>
         <span>🎯 나에게 해당되는 정책</span>
-        {effectiveUser&&chips.length>0&&<button onClick={()=>setChips([])} style={{fontSize:11,color:"#9CA3AF",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>초기화</button>}
+        {effectiveUser&&chips.length>0&&<button onClick={()=>setChips([])} style={{fontSize:12,color:"#9CA3AF",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>초기화</button>}
       </div>
       <div style={{filter:effectiveUser?"none":"blur(4px)",pointerEvents:effectiveUser?"auto":"none"}}>
         <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:14}}>
-          {SITUATION_CHIPS.map(c=>(<button key={c} onClick={()=>toggleChip(c)} style={{padding:"7px 14px",borderRadius:20,border:"1.5px solid "+(chips.includes(c)?"#0747A6":"#E5E7EB"),background:chips.includes(c)?"#0747A6":"#fff",color:chips.includes(c)?"#fff":"#6B7280",fontSize:12,fontWeight:chips.includes(c)?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>{c}</button>))}
+          {SITUATION_CHIPS.map(c=>(<button key={c} onClick={()=>toggleChip(c)} style={{padding:"6px 14px",borderRadius:20,border:"none",background:chips.includes(c)?"#0747A6":"#F3F4F6",color:chips.includes(c)?"#fff":"#374151",fontSize:13,fontWeight:chips.includes(c)?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>{c}</button>))}
         </div>
         {chips.length===0?<div style={{fontSize:13,color:"#9CA3AF",padding:"16px 0",textAlign:"center"}}>상황을 선택하면 해당되는 정책·뉴스를 확인할 수 있습니다</div>:(chipNews.l?<Skel lines={3}/>:(chipNews.d.length===0?<div style={{fontSize:12,color:"#9CA3AF",padding:"12px 0",textAlign:"center"}}>선택하신 조건의 정책이 준비 중입니다</div>:chipNews.d.map((it,i)=>{
           const t=it.title||it.name||"";
           const link=it.link||it.url||"#";
-          return(<a key={i} href={link} target="_blank" rel="noopener noreferrer" style={{...itemStyle,borderBottom:i===chipNews.d.length-1?"none":itemStyle.borderBottom}} onMouseEnter={e=>e.currentTarget.style.color="#0747A6"} onMouseLeave={e=>e.currentTarget.style.color="#374151"}>
+          return(<a key={i} href={link} target="_blank" rel="noopener noreferrer" style={{...itemStyle,borderBottom:i===chipNews.d.length-1?"none":itemStyle.borderBottom}} onMouseEnter={e=>{e.currentTarget.style.color="#0747A6";e.currentTarget.style.background="#F9FAFB";}} onMouseLeave={e=>{e.currentTarget.style.color="#1F2937";e.currentTarget.style.background="transparent";}}>
             <div style={{fontWeight:600,lineHeight:1.5}}>{t}</div>
-            {(it.source||it.pubDate)&&<div style={{fontSize:11,color:"#9CA3AF",marginTop:2}}>{[it.source,fmtDate(it.pubDate||it.date)].filter(Boolean).join(" · ")}</div>}
+            {(it.source||it.pubDate)&&<div style={{fontSize:12,color:"#9CA3AF",marginTop:2}}>{[it.source,fmtDate(it.pubDate||it.date)].filter(Boolean).join(" · ")}</div>}
           </a>);
         })))}
       </div>
@@ -3334,7 +3334,7 @@ function HomeSections({isMo, effectiveUser, navigateCalc, setAuthMode, setShowAu
           <div style={{fontSize:15,fontWeight:700,color:"#0a1628",marginBottom:8}}>🔒 맞춤 정책 필터는 회원만 이용할 수 있습니다</div>
           <div style={{fontSize:12,color:"#6B7280",marginBottom:14,lineHeight:1.6}}>상황별로 해당되는 정책·규제·뉴스를 자동 필터링해 드립니다</div>
           <button onClick={()=>{setAuthMode?.("signup");setShowAuth?.(true);}} style={{padding:"10px 22px",background:"#0747A6",color:"#fff",border:"none",borderRadius:8,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",marginBottom:8,width:"100%"}}>무료 회원가입</button>
-          <div style={{fontSize:11,color:"#9CA3AF"}}>이미 회원이신가요? <a onClick={e=>{e.preventDefault();setAuthMode?.("login");setShowAuth?.(true);}} href="#" style={{color:"#0747A6",fontWeight:600}}>로그인</a></div>
+          <div style={{fontSize:12,color:"#9CA3AF"}}>이미 회원이신가요? <a onClick={e=>{e.preventDefault();setAuthMode?.("login");setShowAuth?.(true);}} href="#" style={{color:"#0747A6",fontWeight:600}}>로그인</a></div>
         </div>
       </div>}
     </div>
@@ -3349,7 +3349,7 @@ function HomeSections({isMo, effectiveUser, navigateCalc, setAuthMode, setShowAu
         <input name="q" type="text" placeholder="용어 검색..." style={{width:"100%",padding:"11px 14px",border:"1.5px solid #E5E7EB",borderRadius:10,fontSize:14,fontFamily:"inherit",outline:"none"}} onFocus={e=>e.target.style.borderColor="#0747A6"} onBlur={e=>e.target.style.borderColor="#E5E7EB"}/>
       </form>
       <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
-        {POPULAR_TERMS.map(t=>(<a key={t} href={"/terms/?q="+encodeURIComponent(t)} style={{padding:"6px 12px",borderRadius:16,background:"#F9FAFB",border:"1px solid #E5E7EB",color:"#374151",fontSize:12,fontWeight:500,textDecoration:"none",whiteSpace:"nowrap",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.background="#0747A6";e.currentTarget.style.color="#fff";e.currentTarget.style.borderColor="#0747A6"}} onMouseLeave={e=>{e.currentTarget.style.background="#F9FAFB";e.currentTarget.style.color="#374151";e.currentTarget.style.borderColor="#E5E7EB"}}>{t}</a>))}
+        {POPULAR_TERMS.map(t=>(<a key={t} href={"/terms/?q="+encodeURIComponent(t)} style={{padding:"6px 12px",borderRadius:16,background:"#fff",border:"1px solid #E5E7EB",color:"#374151",fontSize:13,fontWeight:500,textDecoration:"none",whiteSpace:"nowrap",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.background="#0747A6";e.currentTarget.style.color="#fff";e.currentTarget.style.borderColor="#0747A6"}} onMouseLeave={e=>{e.currentTarget.style.background="#fff";e.currentTarget.style.color="#374151";e.currentTarget.style.borderColor="#E5E7EB"}}>{t}</a>))}
       </div>
     </div>
   </div>);
