@@ -2879,6 +2879,73 @@ function CalcGrid({navigateCalc,isMo}){
     realestate: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0747A6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>,
     pro: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0747A6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>
   };
+  // 2026.04.14 계산기별 SVG 아이콘 (16x16, stroke #0747A6)
+  const _ICW={display:"inline-block",verticalAlign:"middle",marginRight:6,flexShrink:0};
+  const _IS={width:"16",height:"16",viewBox:"0 0 24 24",fill:"none",stroke:"#0747A6",strokeWidth:"1.5",strokeLinecap:"round",strokeLinejoin:"round",style:_ICW};
+  const CALC_ICONS={
+    acquisition:<svg {..._IS}><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>,
+    transfer:<svg {..._IS}><path d="M14 3H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="14 3 14 9 20 9"/><path d="M12 12v5"/><polyline points="9 15 12 18 15 15"/></svg>,
+    inctax:<svg {..._IS}><path d="M12 2a10 10 0 1 0 10 10h-10z"/><path d="M12 2v10l7-7A10 10 0 0 0 12 2z"/></svg>,
+    yearend:<svg {..._IS}><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>,
+    compre:<svg {..._IS}><rect x="4" y="2" width="16" height="20" rx="1"/><path d="M8 6h2M14 6h2M8 10h2M14 10h2M8 14h2M14 14h2"/><path d="M10 22v-4h4v4"/></svg>,
+    property:<svg {..._IS}><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><path d="M9 7h6M9 11h6M9 15h4"/></svg>,
+    gift:<svg {..._IS}><rect x="3" y="8" width="18" height="13" rx="1"/><path d="M12 8v13M3 12h18"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.5 4.5 0 0 1 12 8a4.5 4.5 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/></svg>,
+    inherit:<svg {..._IS}><path d="M12 3v18M5 21h14"/><path d="M5 8l-3 6h6z"/><path d="M19 8l-3 6h6z"/><path d="M12 3l-7 5M12 3l7 5"/></svg>,
+    holdtax:<svg {..._IS}><rect x="5" y="2" width="14" height="20" rx="2"/><rect x="8" y="5" width="8" height="4" rx="1"/><circle cx="9" cy="13" r="0.5"/><circle cx="12" cy="13" r="0.5"/><circle cx="15" cy="13" r="0.5"/><circle cx="9" cy="17" r="0.5"/><circle cx="12" cy="17" r="0.5"/><circle cx="15" cy="17" r="0.5"/></svg>,
+    rental:<svg {..._IS}><circle cx="8" cy="15" r="4"/><path d="M11 15h10v4l-3 3M15 19h2"/></svg>,
+    bldvat:<svg {..._IS}><rect x="3" y="4" width="7" height="6"/><rect x="10" y="4" width="11" height="6"/><rect x="3" y="10" width="11" height="6"/><rect x="14" y="10" width="7" height="6"/><rect x="3" y="16" width="7" height="6"/><rect x="10" y="16" width="11" height="6"/></svg>,
+    estincome:<svg {..._IS}><circle cx="12" cy="12" r="10"/><path d="M8 9l4 4 4-4M8 13h8M10 13v5M14 13v5"/></svg>,
+    goodlord:<svg {..._IS}><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>,
+    imputedrent:<svg {..._IS}><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v6c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 11v6c0 1.66 4.03 3 9 3s9-1.34 9-3v-6"/></svg>,
+    legalinherit:<svg {..._IS}><circle cx="9" cy="7" r="3"/><circle cx="17" cy="7" r="3"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M15 21v-2a4 4 0 0 1 4-4h0a4 4 0 0 1 4 4v2"/></svg>,
+    progressive:<svg {..._IS}><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>,
+    mortgage:<svg {..._IS}><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg>,
+    dsr:<svg {..._IS}><path d="M12 14l4-4"/><path d="M3.5 14a9 9 0 1 1 17 0"/><circle cx="12" cy="14" r="1"/></svg>,
+    dti:<svg {..._IS}><path d="M21 15.46A10 10 0 1 1 8.54 3"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>,
+    ltv:<svg {..._IS}><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>,
+    loanmax:<svg {..._IS}><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M16 12h4"/><path d="M3 7v-1a1 1 0 0 1 1-1h14"/></svg>,
+    rti:<svg {..._IS}><rect x="4" y="8" width="16" height="14"/><path d="M4 8l8-6 8 6"/><path d="M10 22v-6h4v6"/><path d="M8 14h1M15 14h1"/></svg>,
+    refinance:<svg {..._IS}><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>,
+    commission:<svg {..._IS}><path d="M11 12l-3 3a2 2 0 1 1-3-3l5-5a3 3 0 0 1 4 0l2 2"/><path d="M13 12l3 3a2 2 0 1 0 3-3l-5-5"/><path d="M3 10l2 2"/><path d="M21 10l-2 2"/></svg>,
+    registration:<svg {..._IS}><path d="M9 2h6v4h-6z"/><path d="M6 6h12l-2 10H8z"/><rect x="4" y="17" width="16" height="4" rx="1"/></svg>,
+    legal:<svg {..._IS}><path d="M12 3v18M5 21h14"/><path d="M5 8l-3 6h6z"/><path d="M19 8l-3 6h6z"/><path d="M12 3l-7 5M12 3l7 5"/></svg>,
+    stamp:<svg {..._IS}><rect x="4" y="4" width="16" height="16" rx="1" strokeDasharray="2 1"/><circle cx="12" cy="12" r="3"/></svg>,
+    bond:<svg {..._IS}><rect x="3" y="5" width="18" height="14" rx="1"/><circle cx="12" cy="12" r="3"/><path d="M6 8v.5M18 8v.5M6 15.5v.5M18 15.5v.5"/></svg>,
+    appraisal:<svg {..._IS}><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/><path d="M8 9h6M8 12h6M10 9v6"/></svg>,
+    bond2:<svg {..._IS}><path d="M3 9l9-7 9 7v6"/><rect x="8" y="12" width="12" height="9" rx="1"/><path d="M14 16h4"/></svg>,
+    jeonseins:<svg {..._IS}><path d="M12 2l8 4v6c0 5-4 9-8 10-4-1-8-5-8-10V6z"/></svg>,
+    stamp2:<svg {..._IS}><path d="M14 3H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="14 3 14 9 20 9"/><polyline points="9 15 11 17 15 13"/></svg>,
+    netsalary:<svg {..._IS}><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M16 12h4"/><path d="M3 7v-1a1 1 0 0 1 1-1h14"/></svg>,
+    insurance4:<svg {..._IS}><path d="M12 2l8 4v6c0 5-4 9-8 10-4-1-8-5-8-10V6z"/><circle cx="12" cy="10" r="2"/><path d="M8 16c0-2 2-3 4-3s4 1 4 3"/></svg>,
+    pension:<svg {..._IS}><circle cx="12" cy="7" r="3"/><path d="M10 10l-2 4v7h8v-7l-2-4"/><path d="M8 14l-2 2M16 14l2 2"/></svg>,
+    cartax:<svg {..._IS}><path d="M3 17V11l2-5h14l2 5v6"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M9 17h6"/></svg>,
+    retire:<svg {..._IS}><rect x="2" y="7" width="20" height="13" rx="1"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/><line x1="2" y1="13" x2="22" y2="13"/></svg>,
+    unemploy:<svg {..._IS}><path d="M12 2v20M2 10a10 10 0 0 1 20 0"/><path d="M12 18a2 2 0 0 0 2-2"/></svg>,
+    minwage:<svg {..._IS}><circle cx="12" cy="7" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>,
+    deposit:<svg {..._IS}><path d="M4 10a8 6 0 0 0 16 0M4 10a8 6 0 0 1 16 0"/><circle cx="17" cy="10" r="0.5"/><path d="M9 4h3v3"/><path d="M5 17v3M19 17v3"/></svg>,
+    convert:<svg {..._IS}><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>,
+    datediff:<svg {..._IS}><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/><path d="M9 14l2 2 4-4"/></svg>,
+    luckyday:<svg {..._IS}><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18"/><polygon points="12 12 13 15 16 15 13.5 17 14.5 20 12 18 9.5 20 10.5 17 8 15 11 15"/></svg>,
+    subscription:<svg {..._IS}><rect x="4" y="3" width="16" height="18" rx="1"/><polyline points="8 9 10 11 14 7"/><line x1="8" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="16" y2="18"/></svg>,
+    auctionloan:<svg {..._IS}><path d="M14 7l6-6 2 2-6 6z"/><path d="M7 14l5-5M3 18l8-8"/><path d="M3 22l4-4"/></svg>,
+    yield:<svg {..._IS}><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>,
+    joint:<svg {..._IS}><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><circle cx="17" cy="9" r="3"/><path d="M17 15h2a3 3 0 0 1 3 3v3"/></svg>,
+    area:<svg {..._IS}><path d="M2 20l18-18"/><path d="M2 14l4 4M6 10l4 4M10 6l4 4M14 2l4 4"/></svg>,
+    far:<svg {..._IS}><rect x="3" y="4" width="18" height="16"/><path d="M3 9h18M3 14h18M9 4v16M15 4v16"/></svg>,
+    auction:<svg {..._IS}><path d="M14 7l6-6 2 2-6 6z"/><path d="M7 14l5-5M3 18l8-8"/><path d="M3 22l4-4"/></svg>,
+    remodel:<svg {..._IS}><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M10 14l4 4M14 14l-4 4"/></svg>,
+    bldvalue:<svg {..._IS}><rect x="4" y="6" width="11" height="15"/><path d="M4 6l5.5-3L15 6"/><circle cx="18" cy="17" r="4"/><path d="M18 14v3l2 1"/></svg>,
+    auction2:<svg {..._IS}><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>,
+    auctiondiv:<svg {..._IS}><path d="M21 15.46A10 10 0 1 1 8.54 3"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>,
+    reconyear:<svg {..._IS}><path d="M4 22h16"/><path d="M10 22V7l10-2v17"/><path d="M10 7H4"/><circle cx="6" cy="20" r="2"/></svg>,
+    remodel2:<svg {..._IS}><path d="M3 3v18h18"/><polyline points="7 14 12 9 16 13 21 8"/></svg>,
+    rentincrease:<svg {..._IS}><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>,
+    realprice:<svg {..._IS}><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>,
+    netsale:<svg {..._IS}><circle cx="12" cy="12" r="9"/><path d="M9 9l3 3 3-3M9 13h6M11 13v5M13 13v5"/></svg>,
+    totalcost:<svg {..._IS}><rect x="3" y="4" width="18" height="16" rx="2"/><polyline points="7 14 10 11 13 14 17 9"/><circle cx="17" cy="9" r="1.5"/></svg>,
+    compare:<svg {..._IS}><line x1="6" y1="20" x2="6" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="18" y1="20" x2="18" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/><line x1="3" y1="4" x2="9" y2="4"/></svg>,
+    invest:<svg {..._IS}><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+  };
   const DATA=[
     {cat:"tax",label:"세금 계산기",color:"#0747A6",items:[{id:"acquisition",name:"취득세",desc:"매매·증여·상속 시 취득세"},{id:"transfer",name:"양도소득세",desc:"부동산 매도 시 양도차익 세금"},{id:"inctax",name:"종합소득세",desc:"근로·사업·프리랜서 소득세"},{id:"yearend",name:"연말정산",desc:"직장인 환급액 계산"},{id:"compre",name:"종부세",desc:"공시가 기준 종합부동산세"},{id:"property",name:"재산세",desc:"매년 부과되는 재산세"},{id:"gift",name:"증여세",desc:"무상 증여 시 증여세"},{id:"inherit",name:"상속세",desc:"상속 재산에 대한 상속세"},{id:"holdtax",name:"보유세 통합",desc:"재산세+종부세 한번에"},{id:"rental",name:"임대소득세",desc:"주택임대소득 과세"}]},
     {cat:"loan",label:"대출 계산기",color:"#00875A",items:[{id:"mortgage",name:"대출이자",desc:"원리금균등·원금균등·만기일시"},{id:"dsr",name:"DSR",desc:"총부채원리금상환비율"},{id:"dti",name:"DTI",desc:"총부채상환비율"},{id:"ltv",name:"LTV·대출한도",desc:"담보인정비율 최대 대출액"},{id:"loanmax",name:"대출가능액",desc:"소득 기준 최대 대출 역산"}]},
@@ -2902,7 +2969,7 @@ function CalcGrid({navigateCalc,isMo}){
           </div>
           {isOpen&&<div style={{padding:isMo?"0 12px 12px":"0 20px 16px"}}><div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:6}}>
             {g.items.map(item=>(<div key={item.id} onClick={()=>navigateCalc(g.cat,item.id)} style={{display:"flex",alignItems:"center",gap:12,padding:isMo?"12px":"14px 16px",borderRadius:10,cursor:"pointer",transition:"all .15s",border:"1px solid transparent"}} onMouseEnter={e=>{e.currentTarget.style.background=g.color+"08";e.currentTarget.style.borderColor=g.color+"30"}} onMouseLeave={e=>{e.currentTarget.style.background="transparent";e.currentTarget.style.borderColor="transparent"}}>
-              <div style={{width:6,height:6,borderRadius:"50%",background:g.color,flexShrink:0}}/>
+              {CALC_ICONS[item.id]||<div style={{width:6,height:6,borderRadius:"50%",background:g.color,flexShrink:0}}/>}
               <div style={{fontSize:isMo?13:14,fontWeight:600,color:"#0a1628",flexShrink:0}}>{item.name}</div>
               <div style={{flex:1}}/>
               {!isMo&&<div style={{fontSize:12,color:"#6B7280",textAlign:"right",flexShrink:1,minWidth:0,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{item.desc}</div>}
