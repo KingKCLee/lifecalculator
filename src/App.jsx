@@ -2839,6 +2839,15 @@ function CalcSearchBar({onSelect,isMo,calcList}){
 function CalcGrid({navigateCalc,isMo}){
   const[openCats,setOpenCats]=useState(["tax"]);
   const toggleCat=(c)=>setOpenCats(p=>p.includes(c)?p.filter(x=>x!==c):[...p,c]);
+  // 2026.04.14 카테고리별 SVG 라인 아이콘 (fill:none, stroke:#0747A6, strokeWidth:1.5, 20x20)
+  const CAT_SVG={
+    tax: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0747A6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>,
+    loan: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0747A6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg>,
+    cost: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0747A6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/><line x1="8" y1="18" x2="12" y2="18"/></svg>,
+    life: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0747A6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
+    realestate: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0747A6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>,
+    pro: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0747A6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>
+  };
   const DATA=[
     {cat:"tax",label:"세금 계산기",color:"#0747A6",items:[{id:"acquisition",name:"취득세",desc:"매매·증여·상속 시 취득세"},{id:"transfer",name:"양도소득세",desc:"부동산 매도 시 양도차익 세금"},{id:"inctax",name:"종합소득세",desc:"근로·사업·프리랜서 소득세"},{id:"yearend",name:"연말정산",desc:"직장인 환급액 계산"},{id:"compre",name:"종부세",desc:"공시가 기준 종합부동산세"},{id:"property",name:"재산세",desc:"매년 부과되는 재산세"},{id:"gift",name:"증여세",desc:"무상 증여 시 증여세"},{id:"inherit",name:"상속세",desc:"상속 재산에 대한 상속세"},{id:"holdtax",name:"보유세 통합",desc:"재산세+종부세 한번에"},{id:"rental",name:"임대소득세",desc:"주택임대소득 과세"}]},
     {cat:"loan",label:"대출 계산기",color:"#00875A",items:[{id:"mortgage",name:"대출이자",desc:"원리금균등·원금균등·만기일시"},{id:"dsr",name:"DSR",desc:"총부채원리금상환비율"},{id:"dti",name:"DTI",desc:"총부채상환비율"},{id:"ltv",name:"LTV·대출한도",desc:"담보인정비율 최대 대출액"},{id:"loanmax",name:"대출가능액",desc:"소득 기준 최대 대출 역산"}]},
@@ -2855,7 +2864,7 @@ function CalcGrid({navigateCalc,isMo}){
         <div key={g.cat} style={{background:"#fff",borderRadius:14,border:"1px solid #dfe1e6",overflow:"hidden",transition:"box-shadow .2s",boxShadow:isOpen?"0 4px 16px rgba(0,0,0,.06)":"none"}}>
           <div onClick={()=>toggleCat(g.cat)} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:isMo?"14px 16px":"16px 24px",cursor:"pointer",background:isOpen?g.color+"08":"#fff"}}>
             <div style={{display:"flex",alignItems:"center",gap:12}}>
-              <div style={{width:36,height:36,borderRadius:10,background:"#EFF6FF",display:"flex",alignItems:"center",justifyContent:"center"}}><div style={{width:14,height:14,borderRadius:3,background:"#0747A6"}}/></div>
+              <div style={{width:36,height:36,borderRadius:10,background:"#EFF6FF",display:"flex",alignItems:"center",justifyContent:"center"}}>{CAT_SVG[g.cat]}</div>
               <div><div style={{fontSize:isMo?15:16,fontWeight:700,color:"#172B4D"}}>{g.label}</div><div style={{fontSize:12,color:"#6b778c"}}>{g.items.length}개</div></div>
             </div>
             <span style={{fontSize:14,color:"#6b778c",transition:"transform .2s",transform:isOpen?"rotate(180deg)":"none",display:"inline-block"}}>▼</span>
