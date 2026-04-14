@@ -3,11 +3,11 @@ import {tW, pN, fW, Inp, Tog, RP, CalcShell} from './_shared';
 
 // 임대료 5% 상한 계산기 (주택임대차보호법 제7조)
 // - 계약갱신청구권 행사 시 기존 임대료 대비 5% 이내 인상만 가능
-// - 전월세전환율(4% 기준금리+2%=6%)로 보증금↔월세 환산
+// - 전월세전환율 = 한국은행 기준금리(3.0%)+2% = 5.0% (주임법 §7의2, 시행령 §9)
 export default function CalcRentIncrease({isMo=false, onNav=()=>{}}){
   const [deposit, setDeposit] = useState("10000");
   const [monthly, setMonthly] = useState("50");
-  const [convRate, setConvRate] = useState("5.5");
+  const [convRate, setConvRate] = useState("5.0");
   const [cap, setCap] = useState("5");
   const dW = tW(deposit);
   const mW = tW(monthly);
@@ -25,7 +25,7 @@ export default function CalcRentIncrease({isMo=false, onNav=()=>{}}){
   return(<CalcShell title="임대료 5% 상한 계산기" isMo={isMo}>
     <Inp label="기존 보증금" value={deposit} onChange={setDeposit} suffix="만원"/>
     <Inp label="기존 월세" value={monthly} onChange={setMonthly} suffix="만원"/>
-    <Inp label="전월세전환율" value={convRate} onChange={setConvRate} suffix="%" note="2026 기준 약 5.5% (기준금리+3.5%)"/>
+    <Inp label="전월세전환율" value={convRate} onChange={setConvRate} suffix="%" note="기준금리(3.0%)+2%=5.0% (주임법 §7의2)"/>
     <Inp label="인상 한도" value={cap} onChange={setCap} suffix="%" note="주임법 5% 기본"/>
     <RP title="최대 인상 가능액" total={increase}
       sub={"환산보증금 기준 "+cap+"% 한도"}
