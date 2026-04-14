@@ -1113,6 +1113,8 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
       {lowVal&&isHouse&&<div style={{padding:"10px 14px",background:"#E3FCEF",border:"1px solid #57D9A3",borderRadius:10,fontSize:12,color:"#006644",marginTop:8,lineHeight:1.6}}>공시가격 1억원 이하 주택은 다주택이어도 중과가 제외됩니다.</div>}
       {populationDecline&&<div style={{padding:"10px 14px",background:"#DEEBFF",border:"1px solid #0747A6",borderRadius:10,fontSize:12,color:"#0747A6",marginTop:8,lineHeight:1.6}}>인구감소지역 생애최초 감면 한도는 300만원입니다.</div>}
       {firstOfLife&&!isFirstHomeBenefit&&<div style={{padding:"12px 16px",background:"#FFEBE6",border:"1px solid #FFBDAD",borderRadius:10,fontSize:13,color:"#DE350B",marginTop:8,lineHeight:1.6,display:"flex",alignItems:"center",gap:6}}><IconWarn c="#DE350B"/> 생애최초 취득세 감면 혜택이 종료되었습니다 (2028.12.31 만료).</div>}
+    <RateTable title="주택 취득세율표" headers={["구분","취득세","교육세","농특세(85㎡↑)","합계"]} rows={[["1주택 6억↓","1%","0.1%","0.2%","1.3%"],["1주택 6~9억","1~3%","취득세의1/10","0.2%","변동"],["1주택 9억↑","3%","0.3%","0.2%","3.5%"],["2주택 조정","8%","0.4%","0.6%","9%"],["2주택 비조정","1~3%","취득세의1/10","0.2%","변동"],["3주택 조정","12%","0.4%","1%","13.4%"],["3주택 비조정","8%","0.4%","0.6%","9%"],["4주택+","12%","0.4%","1%","13.4%"],["법인","12%","0.4%","1%","13.4%"]]}/>
+    <RateTable title="주택 외 취득세율표" headers={["구분","취득세","교육세","농특세"]} rows={[["매매(토지·건물)","4%","0.4%","0.2%"],["증여","3.5%","0.3%","0.2%"],["상속","2.8%","0.16%","0.2%"],["원시취득","2.8%","0.16%","0.2%"],["농지 매매","3%","0.2%","0.2%"],["농지 자경","1.5%","0.1%","-"],["농지 상속","2.3%","0.06%","0.2%"]]}/>
     </div>
     {/* 2026.04.14 고도화: 납부기한 취득유형별 분기 (상속 6개월 / 증여 3개월 / 그 외 60일). 기존: deadline="신고기한: 잔금일 또는 등기일 중 빠른 날부터 60일 이내" */}
     <div><RP title="취득세 계산 결과" total={total} sub={"취득세율 "+fP(r*100)+" 적용"}
@@ -1124,10 +1126,6 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
     <NextStep calcId="acquisition" onNav={onNav} isMo={isMo}/>
     {/* 2026.04.14 실거래가 조회 연동 */}
     <button onClick={()=>onNav("realestate","realprice")} style={{width:"100%",marginTop:12,padding:"12px 16px",background:"#fff",border:"1.5px solid #0747A6",borderRadius:10,fontSize:14,fontWeight:700,color:"#0747A6",cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",gap:6}}><IconSearch/> 근처 실거래가 조회 →</button>
-    </div>
-    <div>
-    <RateTable title="주택 취득세율표" headers={["구분","취득세","교육세","농특세(85㎡↑)","합계"]} rows={[["1주택 6억↓","1%","0.1%","0.2%","1.3%"],["1주택 6~9억","1~3%","취득세의1/10","0.2%","변동"],["1주택 9억↑","3%","0.3%","0.2%","3.5%"],["2주택 조정","8%","0.4%","0.6%","9%"],["2주택 비조정","1~3%","취득세의1/10","0.2%","변동"],["3주택 조정","12%","0.4%","1%","13.4%"],["3주택 비조정","8%","0.4%","0.6%","9%"],["4주택+","12%","0.4%","1%","13.4%"],["법인","12%","0.4%","1%","13.4%"]]}/>
-    <RateTable title="주택 외 취득세율표" headers={["구분","취득세","교육세","농특세"]} rows={[["매매(토지·건물)","4%","0.4%","0.2%"],["증여","3.5%","0.3%","0.2%"],["상속","2.8%","0.16%","0.2%"],["원시취득","2.8%","0.16%","0.2%"],["농지 매매","3%","0.2%","0.2%"],["농지 자경","1.5%","0.1%","-"],["농지 상속","2.3%","0.06%","0.2%"]]}/>
     </div>
   </div>);
 }
