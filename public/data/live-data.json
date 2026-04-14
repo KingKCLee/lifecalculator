@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.14",
       "category": "전체",
+      "title": "feat: 헤더 로고 img 추가·홈 LeftNav 숨김·드롭다운 라운딩/화살표 정리",
+      "desc": "feat: 헤더 로고 img 추가·홈 LeftNav 숨김·드롭다운 라운딩/화살표 정리"
+    },
+    {
+      "date": "2026.04.14",
+      "category": "전체",
       "title": "refactor: Tog 컴포넌트 재작성 (pill 스타일·가로 스크롤)",
       "desc": "refactor: Tog 컴포넌트 재작성 (pill 스타일·가로 스크롤)"
     },
@@ -1463,12 +1469,6 @@
       "category": "전체",
       "title": "feat: 전체 버튼 hover transition 추가 + active scale 효과",
       "desc": "feat: 전체 버튼 hover transition 추가 + active scale 효과"
-    },
-    {
-      "date": "2026.04.07",
-      "category": "전체",
-      "title": "feat: TipModal→SidePanel(PC 마우스오버/모바일 하단시트), H3 설명문 SEO 최적화, 특수조건 안내문구 개선",
-      "desc": "feat: TipModal→SidePanel(PC 마우스오버/모바일 하단시트), H3 설명문 SEO 최적화, 특수조건 안내문구 개선"
     }
   ],
   "rates": {
