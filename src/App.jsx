@@ -968,96 +968,7 @@ function StdPriceLookupModal({onClose,onApply}){
 
 function CalcAcq({isMo=false,onNav=()=>{}}){
   const[acqType,sAT]=useState("sale");const[realType,sRT]=useState("house");const[areaType,sAreaType]=useState("85");const[price,sP]=useState("12500");const[stdPrice,setStdPrice]=useState("");const[own,sO]=useState("1");const[isTempTwo,sTT]=useState("no");const[inheritNone,sIN]=useState("no");const[chipDesc,setChipDesc]=useState(null);
-  // 2026.04.14 시가표준액 조회 인라인 패널 상태 (모달 제거)
-  const[showStdPanel,setShowStdPanel]=useState(false);
-  const[stdType,setStdType]=useState("apt");
-  const[stdSido,setStdSido]=useState("");
-  const[stdSigungu,setStdSigungu]=useState("");
-  const[stdDong,setStdDong]=useState("");
-  const[stdDetail,setStdDetail]=useState("");
-  const[stdDongNo,setStdDongNo]=useState("");
-  const[stdHoNo,setStdHoNo]=useState("");
-  const[stdLoading,setStdLoading]=useState(false);
-  const[stdErr,setStdErr]=useState("");
-  const[stdResult,setStdResult]=useState(null);
-  // 2026.04.14 2단계 조회: (1) worker로 PNU 획득 → (2) 브라우저에서 V-world 직접 호출
-  const lookupStdPrice=async()=>{
-    setStdLoading(true);setStdErr("");setStdResult(null);
-    try{
-      // 1단계: Juso API를 통해 PNU(부동산 고유번호) 획득 (worker 경유)
-      const jusoParams={step:"juso",sido:stdSido,sigungu:stdSigungu,dong:stdDong,name:stdDetail};
-      if(stdDongNo)jusoParams.dong_no=stdDongNo;
-      if(stdHoNo)jusoParams.ho_no=stdHoNo;
-      const jusoQs=new URLSearchParams(jusoParams).toString();
-      const jr=await fetch(LC_REALESTATE_WORKER+"/standard-price?"+jusoQs);
-      const jj=await jr.json().catch(()=>({}));
-      const pnu=jj.pnu||jj.PNU||jj.bdMgtSn;
-      if(!jr.ok||!pnu){
-        setStdErr(jj.error||"주소를 PNU로 변환하지 못했습니다. 단지명/동·호를 확인해주세요.");
-        return;
-      }
-      // 2단계: V-world 공동주택가격 API를 JSONP로 직접 호출 (CORS 우회)
-      const loadVworldJsonp=(pnuArg)=>new Promise((resolve,reject)=>{
-        const cbName="__vw_"+Date.now()+"_"+Math.floor(Math.random()*1e6);
-        let settled=false;
-        const cleanup=()=>{
-          if(settled)return;settled=true;
-          clearTimeout(timer);
-          try{delete window[cbName];}catch{window[cbName]=undefined;}
-          if(script&&script.parentNode)script.parentNode.removeChild(script);
-        };
-        const timer=setTimeout(()=>{cleanup();reject(new Error("JSONP timeout (10s)"));},10000);
-        window[cbName]=(res)=>{cleanup();resolve(res);};
-        const script=document.createElement("script");
-        script.src="http://api.vworld.kr/ned/data/getApartHousingPriceAttr"
-          +"?key=FFEB4285-215F-3D37-B2C9-66EEB153913E"
-          +"&domain=xn--989a00a691bdfa717h.com"
-          +"&pnu="+encodeURIComponent(pnuArg)
-          +"&stdrYear=2025"
-          +"&dongNm="+encodeURIComponent(stdDongNo||"")
-          +"&hoNm="+encodeURIComponent(stdHoNo||"")
-          +"&format=json&numOfRows=100&pageNo=1"
-          +"&callback="+cbName;
-        script.onerror=()=>{cleanup();reject(new Error("JSONP script load failed"));};
-        document.body.appendChild(script);
-      });
-      let vj;
-      try{vj=await loadVworldJsonp(pnu);}
-      catch(e){setStdErr("V-world JSONP 호출 실패: "+(e&&e.message||"unknown"));return;}
-      const wrapper=vj?.apartHousingPrices||vj?.indvdHousingPrices||vj;
-      const rc=wrapper?.resultCode;
-      if(rc&&rc!=="OK"&&rc!=="NORMAL_CODE"&&rc!=="NORMAL_SERVICE"){
-        setStdErr("V-world "+rc+": "+(wrapper?.resultMsg||""));
-        return;
-      }
-      const rows=wrapper?.field||wrapper?.items||[];
-      if(!Array.isArray(rows)||rows.length===0){
-        setStdErr("공시가격 조회 결과가 없습니다. 기준년도 또는 단지명을 확인해주세요.");
-        return;
-      }
-      // 동번호/호번호 매칭
-      const norm=v=>String(v||"").replace(/[^0-9]/g,"");
-      const targetDong=norm(stdDongNo),targetHo=norm(stdHoNo);
-      let match=rows[0];
-      if(targetDong||targetHo){
-        const found=rows.find(row=>{
-          const d=norm(row.dongNm||row.dongNo||"");
-          const h=norm(row.hoNm||row.hoNo||"");
-          return (!targetDong||d===targetDong)&&(!targetHo||h===targetHo);
-        });
-        if(found)match=found;
-      }
-      const priceStr=String(match?.pblntfPc||match?.lastPblntfPc||0).replace(/[^0-9]/g,"");
-      const val=parseInt(priceStr)||0;
-      if(val<=0){
-        setStdErr("해당 동/호의 공시가격을 찾지 못했습니다. 직접 입력을 이용해주세요.");
-        return;
-      }
-      setStdResult({val,label:(stdSido+" "+stdSigungu+" "+stdDong+" "+stdDetail+(stdDongNo?" "+stdDongNo+"동":"")+(stdHoNo?" "+stdHoNo+"호":"")).trim()});
-    }catch(e){setStdErr("네트워크 오류: "+(e&&e.message||"unknown"));}
-    finally{setStdLoading(false);}
-  };
-  const applyStdPrice=()=>{if(stdResult){setStdPrice(String(Math.round((stdResult.val||0)/10000)));setShowStdPanel(false);setStdResult(null);}};
+  // 2026.04.14 시가표준액 조회 — API 연동 제거, 외부 링크 안내로 단순화
   const showChipPanel=(label,desc)=>{if(_popoverTimer){clearTimeout(_popoverTimer);_popoverTimer=null;}setChipDesc({key:label,label,desc,color:"#172B4D",bg:"#f4f5f7",bc:"#dfe1e6"});};
   const hideChipPanel=()=>{_popoverTimer=setTimeout(()=>setChipDesc(null),200);};
   const[corporation,setCorporation]=useState(false);const[firstDistribution,setFirstDistribution]=useState(false);const[conArea,setConArea]=useState(false);const[metro,setMetro]=useState(false);const[populationDecline,setPopulationDecline]=useState(false);const[firstOfLife,setFirstOfLife]=useState(false);const[heavyTaxExclude,setHeavyTaxExclude]=useState(false);const[spouseChildGive,setSpouseChildGive]=useState(false);const[cultivation,setCultivation]=useState(false);const[birthChild,setBirthChild]=useState(false);
@@ -1196,56 +1107,15 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
       </div>}
       {/* 2026.04.14 취득 유형별 입력 레이블 분기 */}
       <Slider label={acqType==="sale"?"취득가액 (실거래가)":acqType==="gift"||acqType==="inherit"?"시가인정액 또는 시가표준액":acqType==="newbuild"?"건축 원가":"취득가액"} value={price} onChange={sP} min={1000} max={500000} step={500}/>
-      {/* 2026.04.14 시가표준액 입력 + 조회 버튼은 모든 취득유형에서 노출. 안내 문구만 유형별 분기 */}
+      {/* 2026.04.14 시가표준액: 직접 입력 + 외부 조회 링크 (API 연동 제거) */}
       <div style={{position:"relative"}}>
-        <div style={{position:"absolute",top:-2,right:72,zIndex:2}}><TipModal title="시가표준액 (공시가격)"><p>미입력 시 취득가액을 시가표준액으로 간주합니다.</p><ul style={{paddingLeft:20}}><li>취득가액보다 시가표준액이 크면 시가표준액이 과세표준</li><li>시가표준액 1억 미만이면 다주택 중과 제외</li><li>조정대상지역 증여 시 시가표준액 3억 초과하면 12% 중과</li></ul><p>부동산 공시가격 알리미(realtyprice.kr)에서 확인 가능합니다.</p></TipModal></div>
-        <button type="button" onClick={()=>setShowStdPanel(v=>!v)} style={{position:"absolute",top:-4,right:0,zIndex:2,padding:"4px 10px",background:showStdPanel?"#6B7280":"#0747A6",color:"#fff",border:"none",borderRadius:6,fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>{showStdPanel?"닫기":"조회"}</button>
+        <div style={{position:"absolute",top:-2,right:0,zIndex:2}}><TipModal title="시가표준액 (공시가격)"><p>미입력 시 취득가액을 시가표준액으로 간주합니다.</p><ul style={{paddingLeft:20}}><li>취득가액보다 시가표준액이 크면 시가표준액이 과세표준</li><li>시가표준액 1억 미만이면 다주택 중과 제외</li><li>조정대상지역 증여 시 시가표준액 3억 초과하면 12% 중과</li></ul></TipModal></div>
         <Inp label="시가표준액 (공시가격)" value={stdPrice} onChange={setStdPrice} suffix="만원" placeholder="미입력 시 취득가 사용" note={acqType==="gift"||acqType==="inherit"?"취득가액이 없으므로 시가표준액 기준으로 계산합니다":acqType==="newbuild"?"시가표준액을 과세표준으로 계산합니다":"취득가액보다 시가표준액이 높으면 시가표준액이 과세표준이 됩니다"}/>
       </div>
-      {showStdPanel&&(()=>{
-        const selSt={width:"100%",padding:"10px 12px",border:"1.5px solid #E5E7EB",borderRadius:8,fontSize:14,fontFamily:"inherit",outline:"none",color:"#0a1628",boxSizing:"border-box",background:"#fff"};
-        const detailLabel=(stdType==="land"||stdType==="house")?"지번":(stdType==="shop"||stdType==="office")?"건물명":"단지명";
-        const isApt=stdType==="apt"||stdType==="officetel";
-        const canLookup=stdSido&&stdSigungu&&stdDong&&stdDetail&&!stdLoading;
-        return(<div style={{marginTop:-8,marginBottom:16,padding:"16px 18px",background:"#F9FAFB",border:"1px solid #E5E7EB",borderRadius:10}}>
-          <div style={{fontSize:13,fontWeight:800,color:"#0a1628",marginBottom:4}}>시가표준액(공시가격) 조회</div>
-          <div style={{fontSize:11,color:"#6B7280",marginBottom:10,lineHeight:1.6}}>V-world API 공시가격 · 유형/지역/단지명 입력 후 조회</div>
-          <Tog label="부동산 유형" value={stdType} onChange={v=>{setStdType(v);setStdResult(null);setStdErr("");}} options={[
-            {value:"apt",label:"공동주택"},
-            {value:"house",label:"단독주택"},
-            {value:"officetel",label:"오피스텔"},
-            {value:"shop",label:"상가"},
-            {value:"office",label:"사무실"},
-            {value:"land",label:"토지"}
-          ]}/>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
-            <select value={stdSido} onChange={e=>{setStdSido(e.target.value);setStdSigungu("");setStdDong("");}} style={selSt}>
-              <option value="">시/도 선택</option>
-              {Object.keys(REGION_DATA).map(s=><option key={s} value={s}>{s}</option>)}
-            </select>
-            <select value={stdSigungu} onChange={e=>{setStdSigungu(e.target.value);setStdDong("");}} disabled={!stdSido} style={selSt}>
-              <option value="">시/군/구</option>
-              {stdSido&&Object.keys(REGION_DATA[stdSido]||{}).map(sg=><option key={sg} value={sg}>{sg}</option>)}
-            </select>
-          </div>
-          <select value={stdDong} onChange={e=>setStdDong(e.target.value)} disabled={!stdSigungu} style={{...selSt,marginBottom:8}}>
-            <option value="">읍/면/동</option>
-            {stdSigungu&&(REGION_DATA[stdSido]?.[stdSigungu]||[]).map(d=><option key={d} value={d}>{d}</option>)}
-          </select>
-          <Inp label={detailLabel} value={stdDetail} onChange={setStdDetail} placeholder={detailLabel+" 입력"}/>
-          {isApt&&<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
-            <Inp label="동번호 (예: 101)" value={stdDongNo} onChange={setStdDongNo} placeholder="101"/>
-            <Inp label="호번호 (예: 105)" value={stdHoNo} onChange={setStdHoNo} placeholder="105"/>
-          </div>}
-          <button onClick={lookupStdPrice} disabled={!canLookup} style={{width:"100%",marginTop:4,padding:"12px 16px",background:canLookup?"#0747A6":"#E5E7EB",color:"#fff",border:"none",borderRadius:10,fontSize:14,fontWeight:700,cursor:canLookup?"pointer":"not-allowed",fontFamily:"inherit"}}>{stdLoading?"조회 중…":"시가표준액 조회"}</button>
-          {stdErr&&<div style={{marginTop:10,padding:"10px 14px",background:"#FFEBE6",border:"1px solid #FFBDAD",borderRadius:8,fontSize:12,color:"#BF2600",lineHeight:1.5}}>{stdErr}</div>}
-          {stdResult&&<div style={{marginTop:12,padding:"14px 16px",background:"#EFF6FF",border:"1px solid #0747A6",borderRadius:10}}>
-            <div style={{fontSize:11,color:"#6B7280",marginBottom:4}}>{stdResult.label}</div>
-            <div style={{fontSize:20,fontWeight:800,color:"#0747A6",marginBottom:10,fontVariantNumeric:"tabular-nums"}}>{"₩"+Number(stdResult.val).toLocaleString("ko-KR")}</div>
-            <button onClick={applyStdPrice} style={{width:"100%",padding:"10px 14px",background:"#0747A6",color:"#fff",border:"none",borderRadius:8,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>이 금액으로 적용</button>
-          </div>}
-        </div>);
-      })()}
+      <div style={{marginTop:-8,marginBottom:16,padding:"12px 14px",background:"#F9FAFB",border:"1px solid #E5E7EB",borderRadius:10}}>
+        <div style={{fontSize:11,color:"#6B7280",lineHeight:1.6,marginBottom:10}}>조회 후 시가표준액을 직접 입력해주세요</div>
+        <a href="https://www.realtyprice.kr:447/notice/main/mainBody.htm" target="_blank" rel="noopener noreferrer" style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,width:"100%",padding:"10px 14px",background:"#0747A6",color:"#fff",borderRadius:8,fontSize:13,fontWeight:700,textDecoration:"none",fontFamily:"inherit"}}>공시가격알리미에서 조회 →</a>
+      </div>
       {isHouse&&acqType==="sale"&&<Radio label="취득 후 주택 수" value={own} onChange={sO} options={[{value:"1",label:"1주택"},{value:"2",label:"2주택"},{value:"3",label:"3주택"},{value:"4",label:"4주택+"}]} cols={4}/>}
       {/* 2026.04.14 사치성재산 칩이 항상 보이도록 무조건 노출 (모든 취득유형에서 선택 가능) */}
       <div style={{marginBottom:14}}>
