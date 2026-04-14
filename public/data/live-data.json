@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.14",
       "category": "전체",
+      "title": "feat: CalcTrans/Compre/Gift/Inherit 2열 레이아웃 + hr 구분선 이식",
+      "desc": "feat: CalcTrans/Compre/Gift/Inherit 2열 레이아웃 + hr 구분선 이식"
+    },
+    {
+      "date": "2026.04.14",
+      "category": "전체",
       "title": "feat: Expert Guide LeftNav 인라인 아코디언·계산기 헤더 한 줄 통합 레이아웃",
       "desc": "feat: Expert Guide LeftNav 인라인 아코디언·계산기 헤더 한 줄 통합 레이아웃"
     },
@@ -1459,12 +1465,6 @@
       "category": "세금",
       "title": "fix: CalcAcq 취득세 계산기 입력부·결과부 2열 그리드 레이아웃 복구",
       "desc": "fix: CalcAcq 취득세 계산기 입력부·결과부 2열 그리드 레이아웃 복구"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "전체",
-      "title": "refactor: 40개 계산기 레이아웃·입력 일관성 통일 (CalcAcq 기준)",
-      "desc": "refactor: 40개 계산기 레이아웃·입력 일관성 통일 (CalcAcq 기준)"
     }
   ],
   "rates": {
