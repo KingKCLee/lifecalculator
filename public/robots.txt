@@ -1,4 +1,25 @@
 User-agent: *
 Allow: /
+Disallow: /payment/
+Disallow: /api/
+Disallow: /admin/
+Disallow: /*?embed=y$
+
+# 크롤러 부하 제한
+Crawl-delay: 1
+
+# 이미지 크롤링 허용
+User-agent: Googlebot-Image
+Allow: /
+
+# AI 크롤러
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: CCBot
+Allow: /
 
 Sitemap: https://xn--989a00a691bdfa717h.com/sitemap.xml
