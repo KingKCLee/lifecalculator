@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.14",
       "category": "전체",
+      "title": "fix: 62개 계산기 전수 법령 검증 — 크리티컬 버그 10건 수정",
+      "desc": "fix: 62개 계산기 전수 법령 검증 — 크리티컬 버그 10건 수정"
+    },
+    {
+      "date": "2026.04.14",
+      "category": "전체",
       "title": "feat: LeftNav 전면 개편 - static scroll·신규 메뉴 구조·푸터 풀폭",
       "desc": "feat: LeftNav 전면 개편 - static scroll·신규 메뉴 구조·푸터 풀폭"
     },
@@ -1459,12 +1465,6 @@
       "category": "전체",
       "title": "fix: Tog 버튼 텍스트 세로겹침 수정 + 18개 신규 계산기 PAGE_META 추가",
       "desc": "fix: Tog 버튼 텍스트 세로겹침 수정 + 18개 신규 계산기 PAGE_META 추가"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "전체",
-      "title": "feat: 신규 계산기 18개 컴포넌트 파일 생성 (src/calcs/)",
-      "desc": "feat: 신규 계산기 18개 컴포넌트 파일 생성 (src/calcs/)"
     }
   ],
   "rates": {
