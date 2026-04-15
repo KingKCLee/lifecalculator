@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.15",
       "category": "전체",
+      "title": "feat(reports): AI PRO 인사이트 보고서 7편 + 목록 페이지 + 라우팅 연결",
+      "desc": "feat(reports): AI PRO 인사이트 보고서 7편 + 목록 페이지 + 라우팅 연결"
+    },
+    {
+      "date": "2026.04.15",
+      "category": "전체",
       "title": "style: 탑메뉴 hover 애니메이션 D(scale) → C(translateY+color) 변경",
       "desc": "style: 탑메뉴 hover 애니메이션 D(scale) → C(translateY+color) 변경"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "fix: CalcAcq 레이아웃 - RateTable을 입력 섹션 내부로 이동",
       "desc": "fix: CalcAcq 레이아웃 - RateTable을 입력 섹션 내부로 이동"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "세금",
-      "title": "fix: 취득세 취득가액 Slider→Inp 교체 (시가표준액과 동일한 레이블-위 풀폭 레이아웃)",
-      "desc": "fix: 취득세 취득가액 Slider→Inp 교체 (시가표준액과 동일한 레이블-위 풀폭 레이아웃)"
     }
   ],
   "rates": {
