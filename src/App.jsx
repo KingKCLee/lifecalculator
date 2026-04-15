@@ -4133,7 +4133,7 @@ function HtmlAdapterPage({url,isMo,navigateHome}){
 
 /* 2026.04.15 Phase 2 — 정적 페이지 React 풀 포팅 (Terms/Learn/Law/About/Pricing/Verification/Guide) */
 const _SW={wrap:{maxWidth:880,margin:"0 auto",padding:"24px 20px 72px"},
-  section:{background:"#fff",border:"1px solid #dfe1e6",borderRadius:14,padding:"28px 32px",marginBottom:18},
+  section:{background:"#FFFFFF",border:"1px solid #E5E7EB",borderRadius:16,padding:"28px 32px",marginBottom:18,boxShadow:"0 2px 12px rgba(0,0,0,0.06)"},
   h2:{fontSize:22,margin:"0 0 16px",color:"#0747A6",display:"flex",alignItems:"center",gap:10,letterSpacing:-0.3,fontWeight:800},
   h2b:{display:"inline-block",width:5,height:20,background:"#0747A6",borderRadius:3,flexShrink:0},
   h3:{fontSize:16,margin:"20px 0 8px",color:"#172B4D",fontWeight:700},
@@ -4148,11 +4148,11 @@ const _SW={wrap:{maxWidth:880,margin:"0 auto",padding:"24px 20px 72px"},
   cl:{background:"#f4f5f7",borderLeft:"4px solid #FFAB00",borderRadius:8,padding:"14px 18px",margin:"14px 0",fontSize:14,lineHeight:1.7,color:"#172B4D"},
   clWarn:{background:"#FFEBE6",borderLeft:"4px solid #DE350B",borderRadius:8,padding:"14px 18px",margin:"14px 0",fontSize:14,lineHeight:1.7,color:"#172B4D"},
   clOk:{background:"#E3FCEF",borderLeft:"4px solid #00875A",borderRadius:8,padding:"14px 18px",margin:"14px 0",fontSize:14,lineHeight:1.7,color:"#172B4D"},
-  btn:{display:"inline-block",background:"#0747A6",color:"#fff",padding:"10px 16px",borderRadius:8,textDecoration:"none",fontWeight:600,fontSize:13,marginRight:8,marginTop:8}};
-function _SH({tag,title,desc,dark}){return(<div style={{background:dark?"linear-gradient(135deg,#172B4D,#0747A6)":"linear-gradient(135deg,#0747A6,#0052CC)",color:"#fff",borderRadius:16,padding:"40px 34px",marginBottom:22}}>
-  {tag&&<span style={{display:"inline-block",background:"rgba(255,255,255,0.2)",padding:"4px 12px",borderRadius:12,fontSize:12,fontWeight:600,marginBottom:12}}>{tag}</span>}
-  <h1 style={{fontSize:30,margin:"0 0 10px",letterSpacing:-0.6,lineHeight:1.25,color:"#fff"}}>{title}</h1>
-  {desc&&<p style={{fontSize:15,margin:0,opacity:.95,color:"#fff",lineHeight:1.65}}>{desc}</p>}
+  btn:{display:"inline-block",background:"#0747A6",color:"#fff",padding:"10px 16px",borderRadius:10,textDecoration:"none",fontWeight:600,fontSize:13,marginRight:8,marginTop:8,transition:"filter .15s"}};
+function _SH({tag,title,desc,dark}){const light=!dark;return(<div style={{background:light?"linear-gradient(135deg, #EEF2FF 0%, #F5F6F8 100%)":"linear-gradient(135deg,#172B4D,#0747A6)",color:light?"#1A1A2E":"#fff",borderRadius:16,padding:"40px 34px",marginBottom:22,border:light?"1px solid #E5E7EB":"none",boxShadow:light?"0 2px 12px rgba(0,0,0,0.06)":"none"}}>
+  {tag&&<span style={{display:"inline-block",background:light?"#0747A6":"rgba(255,255,255,0.2)",color:"#fff",padding:"4px 12px",borderRadius:12,fontSize:12,fontWeight:600,marginBottom:12}}>{tag}</span>}
+  <h1 style={{fontSize:30,margin:"0 0 10px",letterSpacing:-0.6,lineHeight:1.25,color:light?"#1A1A2E":"#fff",fontWeight:800}}>{title}</h1>
+  {desc&&<p style={{fontSize:15,margin:0,opacity:light?.85:.95,color:light?"#6B7280":"#fff",lineHeight:1.65}}>{desc}</p>}
 </div>);}
 function _SS({children}){return(<section style={_SW.section}>{children}</section>);}
 function _SH2({children}){return(<h2 style={_SW.h2}><span style={_SW.h2b}/>{children}</h2>);}
@@ -5525,14 +5525,14 @@ export default function App(){
   const catInfo=CATS.find(c=>c.id===cat);
   const searchResults=search.trim()?CL.filter(c=>(c.l+"|"+(DESC[c.id]||"")).includes(search.trim())):[];
 
-  return(<div style={{minHeight:"100vh",background:"#FFFFFF",fontFamily:"'Pretendard','Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif",width:"100%",maxWidth:"100vw",overflowX:"hidden",paddingTop:64}}>
+  return(<div style={{minHeight:"100vh",background:"#F5F6F8",fontFamily:"'Pretendard','Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif",width:"100%",maxWidth:"100vw",overflowX:"hidden",paddingTop:64,color:"#1A1A2E",fontSize:14,lineHeight:1.7}}>
     <SidePanel/>
     {isMo&&<button onClick={()=>setNavOpen(true)} aria-label="메뉴 열기" style={{position:"fixed",top:10,left:10,zIndex:9997,width:40,height:40,background:"#0a1628",color:"#fff",border:"none",borderRadius:10,cursor:"pointer",fontSize:20,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 8px rgba(0,0,0,.2)"}}>☰</button>}
     {/* 모바일/홈에서는 LeftNav 숨김 — 모바일은 drawer로 별도 렌더 */}
     {page!=="home"&&isMo&&<LeftNav isMo={isMo} navOpen={navOpen} setNavOpen={setNavOpen} navContent={navContent} setNavContent={setNavContent} effectiveUser={effectiveUser} setAuthMode={setAuthMode} setShowAuth={setShowAuth} navigateMyPage={navigateMyPage} calc={calc}/>}
     <style>{`
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;overflow-x:hidden}
-body{-webkit-tap-highlight-color:transparent;font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow-x:hidden;position:relative;width:100%}
+body{-webkit-tap-highlight-color:transparent;font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow-x:hidden;position:relative;width:100%;background:#F5F6F8;color:#1A1A2E;font-size:14px;line-height:1.7}
 img,svg,table,pre{max-width:100%}
 *{box-sizing:border-box}
 input,select,textarea{font-size:16px!important}
@@ -5628,15 +5628,15 @@ body.lc-embed main{padding-top:0!important}
                 </div>}
               </div>
             );})}
-            <div onMouseEnter={()=>setShowInfoMenu(true)} onMouseLeave={()=>setShowInfoMenu(false)} style={{position:"relative"}}>
-              <button onClick={navigateInfo} style={{padding:"0 16px",border:"none",borderRadius:0,background:"transparent",color:page==="info"?"#0747A6":showInfoMenu?"#0a1628":"#6B7280",fontSize:16,fontWeight:page==="info"?700:600,cursor:"pointer",fontFamily:"inherit",borderBottom:page==="info"?"3px solid #0747A6":"3px solid transparent",transition:"all .15s",height:64,display:"flex",alignItems:"center",gap:6}}><span style={{display:"inline-flex"}}>{TAB_ICONS.info}</span>정보센터</button>
+            <div onMouseEnter={megaOpen} onMouseLeave={megaClose} style={{position:"relative"}}>
+              <button onClick={()=>{megaClickClose();navigateInfo();}} style={{padding:"0 16px",border:"none",borderRadius:0,background:"transparent",color:page==="info"?"#0747A6":showInfoMenu?"#0a1628":"#6B7280",fontSize:16,fontWeight:page==="info"?700:600,cursor:"pointer",fontFamily:"inherit",borderBottom:page==="info"?"3px solid #0747A6":"3px solid transparent",transition:"all .15s",height:64,display:"flex",alignItems:"center",gap:6}}><span style={{display:"inline-flex"}}>{TAB_ICONS.info}</span>정보센터</button>
               {showInfoMenu&&<div style={{position:"absolute",top:"100%",right:0,width:720,background:"#fff",borderTop:"2px solid #0747A6",borderRadius:"0 0 12px 12px",boxShadow:"0 8px 24px rgba(0,0,0,0.12)",zIndex:1000,padding:24}}>
                 <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:16}}>
                   {INFO_MENU_COLS.map(col=>(
                     <div key={col.title}>
                       <div style={{fontSize:11,fontWeight:700,color:"#6B7280",marginBottom:8,textTransform:"uppercase",letterSpacing:1}}>{col.title}</div>
                       {col.items.map(item=>(
-                        <a key={item.href} href={item.href} style={{display:"flex",alignItems:"flex-start",gap:10,padding:"8px 12px",borderRadius:8,textDecoration:"none",color:"#374151",background:"#fff"}} onMouseEnter={e=>e.currentTarget.style.background="#F0F4FF"} onMouseLeave={e=>e.currentTarget.style.background="#fff"}>
+                        <a key={item.href} href={item.href} onClick={megaClickClose} style={{display:"flex",alignItems:"flex-start",gap:10,padding:"8px 12px",borderRadius:8,textDecoration:"none",color:"#374151",background:"#fff"}} onMouseEnter={e=>e.currentTarget.style.background="#F0F4FF"} onMouseLeave={e=>e.currentTarget.style.background="#fff"}>
                           <span style={{display:"inline-flex",flexShrink:0,color:"#0747A6",marginTop:2}}>{INFO_ICONS[item.k]}</span>
                           <div style={{minWidth:0}}>
                             <div style={{fontSize:13,fontWeight:700,color:"#0a1628"}}>{item.title}</div>
