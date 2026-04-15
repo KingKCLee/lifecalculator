@@ -9,3 +9,4 @@ dist/
 temp_*.py
 check_syntax.py
 public/fonts/*.woff2
+.claude/
