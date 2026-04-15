@@ -5633,9 +5633,12 @@ button:active{transform:scale(0.98)}
 @media(max-width:768px){.calc-container>div{grid-template-columns:1fr!important;gap:16px!important}.calc-container>div>div[style*="grid-template-columns"]{grid-template-columns:1fr!important;gap:10px!important}.calc-container h3{font-size:16px!important}}
 .req-mark{color:#EF4444;margin-left:2px;font-weight:700}
 .calc-hr{border:none;border-top:1px solid #E5E7EB;margin:16px 0}
-@media(min-width:769px){.calc-container>div>div[style*="grid-template-columns"]>div:nth-child(2){position:sticky;top:80px;align-self:start}}
-/* 2026.04.15 sample-calc 기준 계산기 2컬럼 그리드 60%/40% (PC 전용) — 최상위 Comp grid만 선택, 내부 중첩 grid 미영향 */
-@media(min-width:769px){.calc-container>div>div[style*="grid-template-columns"]{grid-template-columns:60% 40%!important;gap:28px!important;align-items:start!important}}
+/* 2026.04.16 CalcAcq spec: 본문 max-width 1200 + padding 0 24 (PC) */
+@media(min-width:769px){.calc-grid.page-layout{max-width:1200px!important;margin:0 auto!important;padding:0 24px!important;width:100%!important;box-sizing:border-box!important}}
+/* 2026.04.16 CalcAcq spec: 우측 RP sticky top 90 (PC) */
+@media(min-width:769px){.calc-container>div>div[style*="grid-template-columns"]>div:nth-child(2){position:sticky;top:90px;align-self:start}}
+/* 2026.04.16 CalcAcq spec: 2컬럼 1fr 400px gap 28 (PC, 62개 공통 CSS) */
+@media(min-width:769px){.calc-container>div>div[style*="grid-template-columns"]{grid-template-columns:1fr 400px!important;gap:28px!important;align-items:start!important}}
 /* 2026.04.15 sample-calc .form-card 적용 — 좌측 컬럼을 흰 카드로 감싸고, 외부 calc-container 카드 스타일 해제 (PC 전용) */
 @media(min-width:769px){.calc-container{background:transparent!important;border:none!important;padding:0!important;box-shadow:none!important;overflow:visible}}
 @media(min-width:769px){.calc-container>div>div[style*="grid-template-columns"]>div:first-child{background:#fff!important;border:1px solid #dfe1e6!important;border-radius:14px!important;padding:32px!important;min-width:0}}
@@ -5643,8 +5646,6 @@ button:active{transform:scale(0.98)}
 /* 2026.04.15 sample-calc: 입력 폼 끝 구분선 (PC 전용) — RateTable 위에 1개 divider */
 @media(min-width:769px){.calc-container .lc-ratetable{margin-top:28px!important;padding-top:24px;border-top:1px solid #e5e7eb!important;border-radius:12px;border:1px solid #dfe1e6!important}}
 @media(min-width:769px){.calc-container .lc-ratetable+.lc-ratetable{margin-top:20px!important;padding-top:0;border-top:1px solid #dfe1e6!important}}
-/* 2026.04.16 sample-calc 2컬럼 grid 비율 일치: 60%/40% + gap 28 (62개 계산기 공통) */
-@media(min-width:769px){.calc-container>div>div[style*="grid-template-columns"]{grid-template-columns:60% 40%!important;gap:28px!important}}
 /* 2026.04.15 완벽가이드 섹션 번호 원형 배지 (CSS counter 기반) */
 .seo,.seo-guide{counter-reset:lcguide}
 .seo h2 .lc-guide-num::before,.seo-guide h2 .lc-guide-num::before{content:counter(lcguide)}
