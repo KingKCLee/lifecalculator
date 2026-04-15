@@ -1803,7 +1803,7 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
       {lowVal&&isHouse&&<div style={{padding:"10px 14px",background:"#E3FCEF",border:"1px solid #57D9A3",borderRadius:10,fontSize:12,color:"#006644",marginTop:8,marginBottom:16,lineHeight:1.6}}>공시가격 1억원 이하 주택은 다주택이어도 중과가 제외됩니다.</div>}
       {populationDecline&&<div style={{padding:"10px 14px",background:"#DEEBFF",border:"1px solid #0747A6",borderRadius:10,fontSize:12,color:"#0747A6",marginTop:8,lineHeight:1.6}}>인구감소지역 생애최초 감면 한도는 300만원입니다.</div>}
       {firstOfLife&&!isFirstHomeBenefit&&<div style={{padding:"12px 16px",background:"#FFEBE6",border:"1px solid #FFBDAD",borderRadius:10,fontSize:13,color:"#DE350B",marginTop:8,lineHeight:1.6,display:"flex",alignItems:"center",gap:6}}><IconWarn c="#DE350B"/> 생애최초 취득세 감면 혜택이 종료되었습니다 (2028.12.31 만료).</div>}
-    <RateTable title="주택 취득세율표" headers={["구분","취득세","교육세","농특세(85㎡↑)","합계"]} rows={[["1주택 6억↓","1%","0.1%","0.2%","1.3%"],["1주택 6~9억","1~3%","취득세의1/10","0.2%","변동"],["1주택 9억↑","3%","0.3%","0.2%","3.5%"],["2주택 조정","8%","0.4%","0.6%","9%"],["2주택 비조정","1~3%","취득세의1/10","0.2%","변동"],["3주택 조정","12%","0.4%","1%","13.4%"],["3주택 비조정","8%","0.4%","0.6%","9%"],["4주택+","12%","0.4%","1%","13.4%"],["법인","12%","0.4%","1%","13.4%"]]}/>
+    <RateTable title="주택 취득세율표" headers={["구분","취득세","교육세","농특세","합계"]} rows={[["1주택 6억↓","1.0%","0.1%","0.2%","1.3%"],["1주택 6~9억","1~3%","취득×10%","0.2%","변동"],["1주택 9억↑","3.0%","0.3%","0.2%","3.5%"],["조정 2주택","8.0%","0.4%","0.6%","9.0%"],["3주택+","12.0%","0.4%","1.0%","13.4%"],["법인","12.0%","0.4%","1.0%","13.4%"]]}/>
     <div style={{marginTop:isMo?0:24}}><RateTable title="주택 외 취득세율표" headers={["구분","취득세","교육세","농특세","합계"]} rows={[["매매(토지·건물)","4%","0.4%","0.2%","4.6%"],["증여","3.5%","0.3%","0.2%","4.0%"],["상속","2.8%","0.16%","0.2%","3.16%"],["원시취득","2.8%","0.16%","0.2%","3.16%"],["농지 매매","3%","0.2%","0.2%","3.4%"],["농지 자경","1.5%","0.1%","-","1.6%"],["농지 상속","2.3%","0.06%","0.2%","2.56%"]]}/></div>
     </div>
     {/* 2026.04.14 고도화: 납부기한 취득유형별 분기 (상속 6개월 / 증여 3개월 / 그 외 60일). 기존: deadline="신고기한: 잔금일 또는 등기일 중 빠른 날부터 60일 이내" */}
@@ -1812,7 +1812,7 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
       deadlineLink="https://wetax.go.kr" deadlineLinkLabel="위택스 신고 →"
       alertMsg={!stdPrice?"시가표준액 미입력 시 정확도가 낮아질 수 있습니다":firstDed>0?"생애최초 감면 "+fW(firstDed)+" 적용됨":conArea&&n>=2&&!heavyTaxExclude&&!lowVal&&!tempTwo?"조정대상지역 "+n+"주택 중과세율 "+fP(r*100)+" 적용":null}
       alertType={!stdPrice?"warning":firstDed>0?"success":"danger"}
-      items={[{l:"과세표준",v:fW(pW),note:stdW>0&&stdW>tW(price)?"시가표준액 기준":"취득가액 기준"},{l:"취득세율",v:fP(r*100),note:rateLabel},{l:"취득세",v:fW(ac)},{l:"지방교육세",v:fW(ed),note:isHeavy?"중과 0.4%":"취득세×10%"},{l:"농어촌특별세",v:fm>0?fW(fm):"없음 (85㎡ 이하)"},{l:"인지세",v:fW(st)}].concat(firstDed>0?[{l:"생애최초 감면",v:"-"+fW(firstDed),note:populationDecline?"인구감소 300만":"일반 200만"}]:[]).concat([{l:"합계 납부세액",v:fW(total)}])}/>
+      items={[{l:"취득세액 ("+fP(r*100)+")",v:fW(ac)},{l:"지방교육세 ("+fP((isHeavy?0.4:r*100*0.1))+")",v:fW(ed)},{l:"농어촌특별세"+(fm>0?" (0.2%)":""),v:fm>0?fW(fm):"없음"},{l:"합계 납부세액",v:fW(total)}]}/>
     <SavingsGuide tips={_tips}/>
     <div style={{marginTop:32}}><NextStep calcId="acquisition" onNav={onNav} isMo={isMo}/></div>
     {/* 2026.04.16 sample-calc 기준: 근처 실거래가 조회 버튼 제거 */}
@@ -5885,8 +5885,13 @@ button:active{transform:scale(0.98)}
 /* field 간격 sample 기준 20px */
 @media(min-width:769px){.calc-container .lc-input,.calc-container>div>div[style*="grid-template-columns"]>div:first-child>div{margin-bottom:20px}}
 /* 2026.04.15 sample-calc: 입력 폼 끝 구분선 (PC 전용) — RateTable 위에 1개 divider */
-@media(min-width:769px){.calc-container .lc-ratetable{margin-top:28px!important;padding-top:24px;border-top:1px solid #e5e7eb!important;border-radius:12px;border:1px solid #dfe1e6!important}}
-@media(min-width:769px){.calc-container .lc-ratetable+.lc-ratetable{margin-top:20px!important;padding-top:0;border-top:1px solid #dfe1e6!important}}
+@media(min-width:769px){.calc-container .lc-ratetable{margin-top:28px!important;padding:0!important;border-radius:12px;border:1px solid #dfe1e6!important;overflow:hidden!important;background:#fff}}
+@media(min-width:769px){.calc-container .lc-ratetable+.lc-ratetable{margin-top:20px!important}}
+/* 2026.04.16 sample-calc: 페이지 바탕 #f8f9fc (PC 전용, 계산기 페이지) */
+@media(min-width:769px){body:has(.calc-container){background:#f8f9fc}.calc-grid.page-layout{background:#f8f9fc}}
+/* 2026.04.16 sample-calc: 완벽가이드 흰 카드 (PC 전용) */
+@media(min-width:769px){.seo,.seo-guide,.guide-card{background:#fff!important;border:1px solid #dfe1e6!important;border-radius:18px!important;padding:40px 44px!important;box-shadow:0 1px 3px rgba(0,0,0,.04)}}
+@media(min-width:769px){.guide-section{max-width:1200px;margin:0 auto;padding:40px 32px 72px}}
 /* 2026.04.16 sample-calc 완벽가이드 번호 배지 — h2 번호 제거, h3만 .num 배지 */
 .seo h2,.seo-guide h2,.guide-card h2{display:block}
 .seo,.seo-guide,.guide-card{counter-reset:lcguide3}
