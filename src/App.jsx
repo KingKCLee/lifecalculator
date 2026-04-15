@@ -5643,6 +5643,8 @@ button:active{transform:scale(0.98)}
 /* 2026.04.15 sample-calc: 입력 폼 끝 구분선 (PC 전용) — RateTable 위에 1개 divider */
 @media(min-width:769px){.calc-container .lc-ratetable{margin-top:28px!important;padding-top:24px;border-top:1px solid #e5e7eb!important;border-radius:12px;border:1px solid #dfe1e6!important}}
 @media(min-width:769px){.calc-container .lc-ratetable+.lc-ratetable{margin-top:20px!important;padding-top:0;border-top:1px solid #dfe1e6!important}}
+/* 2026.04.16 sample-calc 2컬럼 grid 비율 일치: 60%/40% + gap 28 (62개 계산기 공통) */
+@media(min-width:769px){.calc-container>div>div[style*="grid-template-columns"]{grid-template-columns:60% 40%!important;gap:28px!important}}
 /* 2026.04.15 완벽가이드 섹션 번호 원형 배지 (CSS counter 기반) */
 .seo,.seo-guide{counter-reset:lcguide}
 .seo h2 .lc-guide-num::before,.seo-guide h2 .lc-guide-num::before{content:counter(lcguide)}
