@@ -1168,6 +1168,12 @@
   "updateLog": [
     {
       "date": "2026.04.15",
+      "category": "전체",
+      "title": "fix(calc): 계산기 진입 시 완전 초기화 3종 보강",
+      "desc": "fix(calc): 계산기 진입 시 완전 초기화 3종 보강"
+    },
+    {
+      "date": "2026.04.15",
       "category": "세금",
       "title": "feat(home): 히어로 배지 텍스트 확장 — 부동산·세금·대출·비용·생활",
       "desc": "feat(home): 히어로 배지 텍스트 확장 — 부동산·세금·대출·비용·생활"
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "data: 전국 법정동 코드 데이터셋 (lawd.json) 추가",
       "desc": "data: 전국 법정동 코드 데이터셋 (lawd.json) 추가"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "전체",
-      "title": "fix: RP 그라디언트 전수·CalcTrans RP 교체·Area/FAR 그라디언트·Compare/Invest/Terms 2열·RateTable 풀폭",
-      "desc": "fix: RP 그라디언트 전수·CalcTrans RP 교체·Area/FAR 그라디언트·Compare/Invest/Terms 2열·RateTable 풀폭"
     }
   ],
   "rates": {
