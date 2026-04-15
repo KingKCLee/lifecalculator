@@ -126,9 +126,17 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
         if (rr && rr.ok && Array.isArray(rr.list)) merged.push(...rr.list);
       });
 
-      // 1) 건물명 매칭 (JUSO bdNm과 일치)
-      const bdNm = (picked.bdNm || "").trim();
-      let filtered = bdNm ? merged.filter(it => (it.apt || "").includes(bdNm)) : merged;
+      // 1) 건물명 매칭 (JUSO bdNm과 일치, 공백 제거 후 양방향 includes)
+      const normalize = (s) => (s || "").replace(/\s+/g, "").toLowerCase();
+      const bdNmN = normalize(picked.bdNm);
+      let filtered = merged;
+      if (bdNmN) {
+        const byBdNm = merged.filter(it => {
+          const apt = normalize(it.apt);
+          return apt && (apt.includes(bdNmN) || bdNmN.includes(apt));
+        });
+        if (byBdNm.length > 0) filtered = byBdNm;
+      }
 
       // 2) CalcAcq 면적 버튼 기준 필터 (선택된 면적이 있을 때만)
       const range = bucketToRange(currentArea);
@@ -139,7 +147,6 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
           return a >= lo && a <= hi;
         });
         if (narrowed.length > 0) filtered = narrowed;
-        // 면적 필터 결과가 0건이면 전체 결과를 유지하여 사용자가 판단
       }
 
       filtered.sort((a, b) => {
