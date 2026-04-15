@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.15",
       "category": "전체",
+      "title": "feat: 상단 메인 탭 클릭 시 드롭다운 토글만 (페이지 이동 제거)",
+      "desc": "feat: 상단 메인 탭 클릭 시 드롭다운 토글만 (페이지 이동 제거)"
+    },
+    {
+      "date": "2026.04.15",
+      "category": "전체",
       "title": "feat: 메가메뉴 closeMenu + clickedRecently 500ms 가드로 교체",
       "desc": "feat: 메가메뉴 closeMenu + clickedRecently 500ms 가드로 교체"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "fix: 브레드크럼브·서브메뉴 한 줄 배치 (좌 탭·우 breadcrumb)",
       "desc": "fix: 브레드크럼브·서브메뉴 한 줄 배치 (좌 탭·우 breadcrumb)"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "전체",
-      "title": "feat: 헤더 로고/탑메뉴 타이포·홈 아이콘 SVG·카테고리 색 통일·푸터 카피 업데이트",
-      "desc": "feat: 헤더 로고/탑메뉴 타이포·홈 아이콘 SVG·카테고리 색 통일·푸터 카피 업데이트"
     }
   ],
   "rates": {
