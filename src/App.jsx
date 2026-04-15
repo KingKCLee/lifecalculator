@@ -5634,6 +5634,8 @@ button:active{transform:scale(0.98)}
 .req-mark{color:#EF4444;margin-left:2px;font-weight:700}
 .calc-hr{border:none;border-top:1px solid #E5E7EB;margin:16px 0}
 @media(min-width:769px){.calc-container>div>div[style*="grid-template-columns"]>div:nth-child(2){position:sticky;top:80px;align-self:start}}
+/* 2026.04.15 sample-calc 기준 계산기 2컬럼 그리드 60%/40% (PC 전용) — 최상위 Comp grid만 선택, 내부 중첩 grid 미영향 */
+@media(min-width:769px){.calc-container>div>div[style*="grid-template-columns"]{grid-template-columns:60% 40%!important;gap:28px!important}}
 /* 2026.04.15 sample-calc: 입력 폼 끝 구분선 (PC 전용) — RateTable 위에 1개 divider */
 @media(min-width:769px){.calc-container .lc-ratetable{margin-top:28px!important;padding-top:24px;border-top:1px solid #e5e7eb!important;border-radius:12px;border:1px solid #dfe1e6!important}}
 @media(min-width:769px){.calc-container .lc-ratetable+.lc-ratetable{margin-top:20px!important;padding-top:0;border-top:1px solid #dfe1e6!important}}
