@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "feat(calc): sample-calc 정확 매칭 9항목 (CalcAcq 중심)",
+      "desc": "feat(calc): sample-calc 정확 매칭 9항목 (CalcAcq 중심)"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "style: 로고 그라데이션·버튼 ON 상태 색상 #0141f9 통일",
       "desc": "style: 로고 그라데이션·버튼 ON 상태 색상 #0141f9 통일"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "style: 홈 정보 섹션 가시성 개선 (제목/폰트/hover/칩 스타일)",
       "desc": "style: 홈 정보 섹션 가시성 개선 (제목/폰트/hover/칩 스타일)"
-    },
-    {
-      "date": "2026.04.15",
-      "category": "전체",
-      "title": "feat: SavingsGuide 컴포넌트 + 8개 주요 계산기 절세 가이드 통합",
-      "desc": "feat: SavingsGuide 컴포넌트 + 8개 주요 계산기 절세 가이드 통합"
     }
   ],
   "rates": {
