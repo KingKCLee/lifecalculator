@@ -1167,6 +1167,12 @@
   },
   "updateLog": [
     {
+      "date": "2026.04.16",
+      "category": "전체",
+      "title": "feat(home): sample-home 1:1 매칭 — PC에서 sample 외 3개 섹션 숨김",
+      "desc": "feat(home): sample-home 1:1 매칭 — PC에서 sample 외 3개 섹션 숨김"
+    },
+    {
       "date": "2026.04.15",
       "category": "세금",
       "title": "정책 만료 D-24: transferSurchargeEnd",
@@ -1461,18 +1467,6 @@
       "category": "전체",
       "title": "fix: CalcIncTax 인적공제 모든 소득유형 공통 노출 (소득세법 §50~§52)",
       "desc": "fix: CalcIncTax 인적공제 모든 소득유형 공통 노출 (소득세법 §50~§52)"
-    },
-    {
-      "date": "2026.04.15",
-      "category": "전체",
-      "title": "feat: CalcTrans UI를 CalcAcq 포맷으로 통일 (인라인 입력·hr 구분선·칩)",
-      "desc": "feat: CalcTrans UI를 CalcAcq 포맷으로 통일 (인라인 입력·hr 구분선·칩)"
-    },
-    {
-      "date": "2026.04.15",
-      "category": "전체",
-      "title": "feat: 정보센터 메가메뉴·/info 허브 페이지·홈 정보 섹션 간소화",
-      "desc": "feat: 정보센터 메가메뉴·/info 허브 페이지·홈 정보 섹션 간소화"
     }
   ],
   "rates": {
