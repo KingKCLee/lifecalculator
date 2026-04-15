@@ -1168,6 +1168,12 @@
   "updateLog": [
     {
       "date": "2026.04.15",
+      "category": "세금",
+      "title": "fix: 모바일 인라인 스타일 isMo 조건 직접 수정 (취득세 파일럿 + 공통 Inp/Sel/Tog)",
+      "desc": "fix: 모바일 인라인 스타일 isMo 조건 직접 수정 (취득세 파일럿 + 공통 Inp/Sel/Tog)"
+    },
+    {
+      "date": "2026.04.15",
       "category": "전체",
       "title": "fix: 모바일 UI 종합 개선 (62개 계산기 공통 레이어)",
       "desc": "fix: 모바일 UI 종합 개선 (62개 계산기 공통 레이어)"
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "feat: CalcGrid 62개 계산기 개별 SVG 아이콘 추가",
       "desc": "feat: CalcGrid 62개 계산기 개별 SVG 아이콘 추가"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "대출",
-      "title": "fix: 조건부 UI 개선 (manualGain 체크박스·인적공제 salary 한정·luxury 상시노출·LTV 우대 Radio·LegalInherit parents·Compre 연도 파라미터)",
-      "desc": "fix: 조건부 UI 개선 (manualGain 체크박스·인적공제 salary 한정·luxury 상시노출·LTV 우대 Radio·LegalInherit parents·Compre 연도 파라미터)"
     }
   ],
   "rates": {
