@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.15",
       "category": "전체",
+      "title": "feat: Phase 2 정적 페이지 React 풀 포팅 (Terms/Learn×6/Law×7/About/Pricing/Verification/Guide)",
+      "desc": "feat: Phase 2 정적 페이지 React 풀 포팅 (Terms/Learn×6/Law×7/About/Pricing/Verification/Guide)"
+    },
+    {
+      "date": "2026.04.15",
+      "category": "전체",
       "title": "feat: Phase 1 SPA 라우트 통합 (News/Community/Policy/Market/HTML 어댑터)",
       "desc": "feat: Phase 1 SPA 라우트 통합 (News/Community/Policy/Market/HTML 어댑터)"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "feat: 시가표준액 조회 인라인 패널·좌측 네비 메인 컨텐츠 표시",
       "desc": "feat: 시가표준액 조회 인라인 패널·좌측 네비 메인 컨텐츠 표시"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "전체",
-      "title": "fix: 전체 계산기 RP 우측 컬럼 배치·그라디언트 배경 적용",
-      "desc": "fix: 전체 계산기 RP 우측 컬럼 배치·그라디언트 배경 적용"
     }
   ],
   "rates": {
