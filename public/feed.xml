@@ -5,8 +5,15 @@
     <link>https://xn--989a00a691bdfa717h.com/</link>
     <description>취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 등 39가지 무료 계산기. 매일 자동 업데이트.</description>
     <language>ko</language>
-    <lastBuildDate>Thu, 16 Apr 2026 08:24:32 +0900</lastBuildDate>
+    <lastBuildDate>Thu, 16 Apr 2026 08:29:57 +0900</lastBuildDate>
     <atom:link href="https://xn--989a00a691bdfa717h.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+    <title>feat(acq): add AddressModal with JUSO search → real-price & vworld lookup</title>
+    <link>https://xn--989a00a691bdfa717h.com/</link>
+    <description>feat(acq): add AddressModal with JUSO search → real-price & vworld lookup</description>
+    <pubDate>Thu, 16 Apr 2026 08:29:57 +0900</pubDate>
+    <guid>https://xn--989a00a691bdfa717h.com/#update-202604152329</guid>
+  </item>
     <item>
     <title>style(calc-acq): sample-calc 바탕·카드·세율표·RP 3줄 정렬</title>
     <link>https://xn--989a00a691bdfa717h.com/</link>

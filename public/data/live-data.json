@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "feat(acq): add AddressModal with JUSO search → real-price & vworld lookup",
+      "desc": "feat(acq): add AddressModal with JUSO search → real-price & vworld lookup"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "style(calc-acq): sample-calc 바탕·카드·세율표·RP 3줄 정렬",
       "desc": "style(calc-acq): sample-calc 바탕·카드·세율표·RP 3줄 정렬"
     },
@@ -1460,13 +1466,6 @@
       "category": "전체",
       "title": "feat(nav): 상단 메인/서브 탭 SVG 아이콘 + 정보센터 톤앤매너 통일 + 홈화면 개선",
       "desc": "feat(nav): 상단 메인/서브 탭 SVG 아이콘 + 정보센터 톤앤매너 통일 + 홈화면 개선"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "세금",
-      "title": "정책 만료 D-25: transferSurchargeEnd",
-      "desc": "2026-05-10 만료 예정. 관련 계산기에 자동 반영됩니다.",
-      "urgent": true
     }
   ],
   "rates": {
