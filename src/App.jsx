@@ -4185,8 +4185,8 @@ function HtmlAdapterPage({url,isMo,navigateHome}){
 /* 2026.04.15 Phase 2 — 정적 페이지 React 풀 포팅 (Terms/Learn/Law/About/Pricing/Verification/Guide) */
 const _SW={wrap:{maxWidth:880,margin:"0 auto",padding:"24px 20px 72px"},
   section:{background:"#FFFFFF",border:"1px solid #E5E7EB",borderRadius:16,padding:"28px 32px",marginBottom:18,boxShadow:"0 2px 12px rgba(0,0,0,0.06)"},
-  h2:{fontSize:22,margin:"0 0 16px",color:"#0747A6",display:"flex",alignItems:"center",gap:10,letterSpacing:-0.3,fontWeight:800},
-  h2b:{display:"inline-block",width:5,height:20,background:"#0747A6",borderRadius:3,flexShrink:0},
+  h2:{fontSize:22,margin:"0 0 16px",color:"#0747A6",display:"flex",alignItems:"center",gap:10,letterSpacing:-0.3,fontWeight:800,counterIncrement:"lcguide"},
+  h2b:{display:"inline-flex",alignItems:"center",justifyContent:"center",width:28,height:28,background:"#deebff",color:"#0747A6",borderRadius:"50%",flexShrink:0,fontSize:13,fontWeight:800},
   h3:{fontSize:16,margin:"20px 0 8px",color:"#172B4D",fontWeight:700},
   p:{margin:"0 0 12px",fontSize:15,lineHeight:1.75,color:"#172B4D"},
   ul:{margin:"8px 0 12px",paddingLeft:22},
@@ -4206,7 +4206,8 @@ function _SH({tag,title,desc,dark}){const light=!dark;return(<div style={{backgr
   {desc&&<p style={{fontSize:15,margin:0,opacity:light?.85:.95,color:light?"#6B7280":"#fff",lineHeight:1.65}}>{desc}</p>}
 </div>);}
 function _SS({children}){return(<section style={_SW.section}>{children}</section>);}
-function _SH2({children}){return(<h2 style={_SW.h2}><span style={_SW.h2b}/>{children}</h2>);}
+// 2026.04.15 sample-calc 기준 번호 원형 배지 (섹션별 +1 CSS counter)
+function _SH2({children}){return(<h2 style={_SW.h2}><span style={_SW.h2b} className="lc-guide-num"/>{children}</h2>);}
 function _ST({head,rows}){return(<table style={_SW.tbl}><thead><tr>{head.map((h,i)=>(<th key={i} style={_SW.th}>{h}</th>))}</tr></thead><tbody>{rows.map((r,i)=>(<tr key={i}>{r.map((c,j)=>(<td key={j} style={_SW.td}>{c}</td>))}</tr>))}</tbody></table>);}
 function _SC({items}){return(<div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:10,marginTop:14}}>{items.map((it,i)=>(<a key={i} href={it.href} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"14px 18px",background:"#0747A6",color:"#fff",textDecoration:"none",borderRadius:10,fontWeight:600,fontSize:14}}><span>{it.label}</span><span>→</span></a>))}</div>);}
 function _SCL({type,children}){const st=type==="warn"?_SW.clWarn:type==="ok"?_SW.clOk:_SW.cl;return(<div style={st}>{children}</div>);}
@@ -5632,6 +5633,10 @@ button:active{transform:scale(0.98)}
 /* 2026.04.15 sample-calc: 입력 폼 끝 구분선 (PC 전용) — RateTable 위에 1개 divider */
 @media(min-width:769px){.calc-container .lc-ratetable{margin-top:28px!important;padding-top:24px;border-top:1px solid #e5e7eb!important;border-radius:12px;border:1px solid #dfe1e6!important}}
 @media(min-width:769px){.calc-container .lc-ratetable+.lc-ratetable{margin-top:20px!important;padding-top:0;border-top:1px solid #dfe1e6!important}}
+/* 2026.04.15 완벽가이드 섹션 번호 원형 배지 (CSS counter 기반) */
+.seo,.seo-guide{counter-reset:lcguide}
+.seo h2 .lc-guide-num::before,.seo-guide h2 .lc-guide-num::before{content:counter(lcguide)}
+.seo h2,.seo-guide h2{counter-increment:lcguide}
 @media(max-width:768px){input,select,textarea{font-size:16px!important}.pro-cards{grid-template-columns:1fr!important}.footer-inner{grid-template-columns:1fr!important;text-align:center}.cat-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))!important}}
 @media(max-width:768px){.cat-cards{grid-template-columns:repeat(2,1fr)!important}}
 @media(max-width:480px){.insights-grid{grid-template-columns:1fr!important}.cat-cards{grid-template-columns:1fr!important}}
@@ -5784,8 +5789,12 @@ body.lc-embed main{padding-top:0!important}
           </span>
           <h1 style={{fontSize:52,fontWeight:800,color:"#0a1628",lineHeight:1.18,letterSpacing:-1.5,margin:"0 0 20px"}}>복잡한 세법·대출 규제,<br/><span style={{color:"#3b82f6"}}>10초 만에</span> 완벽 계산</h1>
           <p style={{fontSize:17,color:"#505f79",margin:"0 0 36px",lineHeight:1.7}}>취득세, 양도소득세, 연말정산, 대출이자, 실수령액까지<br/>62가지 전문 계산기를 2026년 최신 세법 기준으로 무료 제공합니다.</p>
-          <div style={{background:"#fff",border:"1.5px solid #dfe1e6",borderRadius:14,padding:8,boxShadow:"0 8px 32px rgba(10,22,40,0.08)",maxWidth:680,margin:"0 auto"}}>
-            <CalcSearchBar onSelect={navigateCalc} isMo={false} calcList={CL.map(c=>({id:c.id,name:c.l,keywords:c.l+" "+(DESC[c.id]||""),cat:c.c}))}/>
+          {/* 2026.04.15 sample-home 검색바 (flex + 네이비 버튼) */}
+          <div style={{display:"flex",alignItems:"center",background:"#fff",border:"1.5px solid #dfe1e6",borderRadius:12,overflow:"hidden",boxShadow:"0 4px 16px rgba(0,0,0,0.08)",maxWidth:580,margin:"0 auto"}}>
+            <div style={{flex:"1 1 auto",minWidth:0}}>
+              <CalcSearchBar onSelect={navigateCalc} isMo={false} calcList={CL.map(c=>({id:c.id,name:c.l,keywords:c.l+" "+(DESC[c.id]||""),cat:c.c}))}/>
+            </div>
+            <button onClick={()=>{const el=document.querySelector('input[placeholder*="계산기"]');const q=el?.value?.trim();if(q){const first=CL.find(c=>c.l.includes(q)||q.includes(c.l));if(first)navigateCalc(first.c,first.id);else navigateCalc("tax","acquisition");}else navigateCalc("tax","acquisition");}} style={{background:"#0f1f3d",color:"#fff",border:"none",padding:"0 28px",height:52,fontSize:14,fontWeight:700,cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontFamily:"inherit"}}>계산기 찾기 →</button>
           </div>
           <div style={{display:"flex",flexWrap:"wrap",gap:8,justifyContent:"center",marginTop:22}}>
             <span style={{fontSize:13,color:"#505f79",alignSelf:"center",marginRight:4}}>인기 검색:</span>
@@ -5830,6 +5839,37 @@ body.lc-embed main{padding-top:0!important}
                 <p style={{fontSize:12,color:"#505f79",margin:0,lineHeight:1.55}}>{p.desc}</p>
               </div>);
             })}
+          </div>
+        </div>
+      </div>}
+
+      {/* 2026.04.15 sample-home AI 인사이트 + 뉴스 2컬럼 (PC) */}
+      {!isMo&&<div style={{background:"#f8f9fc",padding:"72px 32px"}}>
+        <div style={{maxWidth:1200,margin:"0 auto",display:"grid",gridTemplateColumns:"1.3fr 1fr",gap:24}}>
+          <div style={{background:"linear-gradient(135deg,#0a1628 0%,#1e3a5f 100%)",borderRadius:16,padding:"44px 40px",color:"#fff",position:"relative",overflow:"hidden"}}>
+            <div style={{position:"absolute",top:-80,right:-80,width:260,height:260,borderRadius:"50%",background:"radial-gradient(circle,rgba(59,130,246,0.25) 0%,transparent 70%)",pointerEvents:"none"}}/>
+            <span style={{display:"inline-flex",alignItems:"center",gap:6,padding:"6px 14px",background:"rgba(59,130,246,0.2)",border:"1px solid rgba(59,130,246,0.5)",borderRadius:20,fontSize:11,fontWeight:800,color:"#93c5fd",letterSpacing:1,textTransform:"uppercase",marginBottom:20,position:"relative"}}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2M20 14h2M15 13v2M9 13v2"/></svg>
+              AI PRO 인사이트
+            </span>
+            <h3 style={{fontSize:28,fontWeight:800,lineHeight:1.22,margin:"0 0 16px",letterSpacing:-.6,position:"relative"}}>AI 분석: 2026년 취득세<br/>완벽 가이드</h3>
+            <p style={{fontSize:14,color:"#93c5fd",lineHeight:1.75,margin:"0 0 28px",maxWidth:460,position:"relative"}}>Claude AI가 2026년 개정 세법과 실제 거래 시나리오를 분석해 주택 가격·면적·주택수 조합별 최적 절세 전략을 제시합니다.</p>
+            <button onClick={()=>navigateCalc("tax","acquisition")} style={{background:"rgba(255,255,255,0.1)",border:"1px solid rgba(255,255,255,0.2)",color:"#fff",padding:"10px 20px",borderRadius:8,fontSize:14,fontWeight:700,cursor:"pointer",position:"relative",display:"inline-flex",alignItems:"center",gap:8,fontFamily:"inherit"}}>전체 보고서 보기 →</button>
+          </div>
+          <div style={{background:"#fff",border:"1px solid #e8eaf0",borderRadius:16,padding:"28px 24px"}}>
+            <h3 style={{fontSize:17,fontWeight:800,color:"#0a1628",margin:"0 0 18px",display:"flex",alignItems:"center",gap:8}}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/></svg>
+              최신 부동산·세금 뉴스
+            </h3>
+            {[
+              {cat:"HOUSING",title:"수도권 주담대 한도 15억 이하 6억 유지",meta:"국토부 · 4시간 전"},
+              {cat:"POLICY",title:"2026.5.9 양도세 다주택 중과 유예 종료 임박",meta:"국세청 · 1일 전"},
+              {cat:"ECONOMICS",title:"한국은행 기준금리 3.00% 동결, 금통위 만장일치",meta:"한국은행 · 2일 전"},
+            ].map((n,i,arr)=>(<div key={i} style={{padding:"14px 0",borderBottom:i<arr.length-1?"1px solid #dfe1e6":"none"}}>
+              <span style={{display:"inline-block",fontSize:10,fontWeight:800,color:"#3b82f6",background:"#eff6ff",padding:"3px 10px",borderRadius:10,marginBottom:6}}>{n.cat}</span>
+              <div style={{fontSize:14,color:"#172B4D",fontWeight:600,lineHeight:1.55}}>{n.title}</div>
+              <div style={{fontSize:11,color:"#505f79",marginTop:4}}>{n.meta}</div>
+            </div>))}
           </div>
         </div>
       </div>}
@@ -5939,7 +5979,7 @@ body.lc-embed main{padding-top:0!important}
           {!isMo&&<nav aria-label="breadcrumb" style={{fontSize:13,color:"#505f79",marginBottom:12,display:"flex",alignItems:"center",gap:8}}>
             <span onClick={navigateHome} style={{cursor:"pointer",color:"#505f79"}} onMouseEnter={e=>e.currentTarget.style.color="#0747A6"} onMouseLeave={e=>e.currentTarget.style.color="#505f79"}>홈</span>
             <span style={{color:"#d1d5db"}}>›</span>
-            <span style={{cursor:"pointer",color:"#505f79"}} onClick={()=>{const first=CL.find(c=>c.c===cat);if(first)navigateCalc(cat,first.id);}} onMouseEnter={e=>e.currentTarget.style.color="#0747A6"} onMouseLeave={e=>e.currentTarget.style.color="#505f79"}>{catInfo?.l}</span>
+            <span style={{cursor:"pointer",color:"#505f79"}} onClick={()=>{const first=CL.find(c=>c.c===cat);if(first)navigateCalc(cat,first.id);}} onMouseEnter={e=>e.currentTarget.style.color="#0747A6"} onMouseLeave={e=>e.currentTarget.style.color="#505f79"}>{catInfo?.l} 계산기</span>
             <span style={{color:"#d1d5db"}}>›</span>
             <span style={{color:"#0a1628",fontWeight:600}}>{CL.find(c=>c.id===calc)?.l||""}</span>
           </nav>}
