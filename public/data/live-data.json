@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "fix(acq): align 실거래가·시가표준액 inputs in same grid column",
+      "desc": "fix(acq): align 실거래가·시가표준액 inputs in same grid column"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "feat(home): sample-home 1:1 매칭 — PC에서 sample 외 3개 섹션 숨김",
       "desc": "feat(home): sample-home 1:1 매칭 — PC에서 sample 외 3개 섹션 숨김"
     },
@@ -1461,12 +1467,6 @@
       "category": "전체",
       "title": "fix: Tog 버튼 flex:0 0 auto + overflow 제거 — 긴 라벨 wrap 허용",
       "desc": "fix: Tog 버튼 flex:0 0 auto + overflow 제거 — 긴 라벨 wrap 허용"
-    },
-    {
-      "date": "2026.04.15",
-      "category": "전체",
-      "title": "fix: CalcIncTax 인적공제 모든 소득유형 공통 노출 (소득세법 §50~§52)",
-      "desc": "fix: CalcIncTax 인적공제 모든 소득유형 공통 노출 (소득세법 §50~§52)"
     }
   ],
   "rates": {
