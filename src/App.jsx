@@ -2306,23 +2306,29 @@ function TipModal({title,children}){
 }
 function SidePanel(){return null;}
 function MobileCalcWrapper({children}){
-  return(<div style={{padding:"16px 12px",maxWidth:"100vw",overflowX:"hidden"}}>
+  return(<div style={{padding:"12px 12px",maxWidth:"100vw",overflowX:"hidden"}}>
     <style>{`
       .mobile-calc-wrap *{box-sizing:border-box!important}
-      .mobile-calc-wrap>div{display:flex!important;flex-direction:column!important;gap:16px!important;max-width:100%!important}
+      .mobile-calc-wrap>div{display:flex!important;flex-direction:column!important;gap:12px!important;max-width:100%!important}
       .mobile-calc-wrap>div>div{display:contents!important}
+      .mobile-calc-wrap .lc-nextstep{order:3!important;width:100%!important;max-width:100%!important;margin-top:4px!important}
       .mobile-calc-wrap .lc-ratetable{order:4!important;width:100%!important;max-width:100%!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch}
       .mobile-calc-wrap .lc-ratetable td,.mobile-calc-wrap .lc-ratetable th{padding:8px 10px!important;font-size:12px!important}
-      .mobile-calc-wrap input:not([type="range"]),.mobile-calc-wrap select{width:100%!important;max-width:100%!important;font-size:16px!important;padding:14px 12px!important;min-height:48px!important}
+      .mobile-calc-wrap .lc-ratetable table{width:100%!important;min-width:100%!important}
+      .mobile-calc-wrap input:not([type="range"]),.mobile-calc-wrap select{width:100%!important;max-width:100%!important;font-size:16px!important;padding:12px!important;min-height:48px!important}
       .mobile-calc-wrap button{max-width:100%!important;font-size:14px!important;line-height:1.4!important;word-break:keep-all!important;min-height:44px!important}
       .mobile-calc-wrap .radio-grid button{padding:10px 4px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;height:auto!important;min-height:44px!important;display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important}
-      .mobile-calc-wrap .result-actions button{min-height:44px!important;padding:10px 8px!important}
+      .mobile-calc-wrap .result-actions{display:flex!important;flex-wrap:wrap!important;gap:8px!important;width:100%!important}
+      .mobile-calc-wrap .result-actions button,.mobile-calc-wrap .result-actions a{flex:1 1 60px!important;min-width:60px!important;min-height:44px!important;padding:10px 8px!important;white-space:nowrap!important}
       .mobile-calc-wrap h3{font-size:20px!important}
-      .mobile-calc-wrap label{font-size:14px!important}
+      .mobile-calc-wrap label{font-size:14px!important;margin-bottom:4px!important}
       .mobile-calc-wrap p,.mobile-calc-wrap li,.mobile-calc-wrap span{word-break:keep-all}
+      .mobile-calc-wrap small,.mobile-calc-wrap .note,.mobile-calc-wrap [class*="note"]{font-size:13px!important}
       .mobile-calc-wrap input[type="range"]{width:100%!important;min-height:0!important}
       .mobile-calc-wrap table{display:block!important;max-width:100%!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch}
-      .mobile-calc-wrap .result-actions button[title],.mobile-calc-wrap .result-actions a[title]{min-height:44px!important}
+      .mobile-calc-wrap svg[width]{max-width:100%!important}
+      .mobile-calc-wrap .donut-chart,.mobile-calc-wrap .pie-chart,.mobile-calc-wrap [class*="chart"]{max-width:220px!important;max-height:220px!important;margin:0 auto!important}
+      .mobile-calc-wrap .mb16,.mobile-calc-wrap [style*="marginBottom:16"]{margin-bottom:12px!important}
     `}</style>
     <div className="mobile-calc-wrap">{children}</div>
   </div>);
@@ -2947,7 +2953,7 @@ function NextStep({calcId,onNav,isMo=false}){
   const links=(INTERNAL_LINKS[calcId]||[]).map(l=>({id:l.id,label:l.label}));
   if(links.length===0){const rl=(RELATED[calcId]||[]).map(id=>{const it=CL.find(c=>c.id===id);return it?{id,label:it.l+" 계산하기"}:null;}).filter(Boolean);if(rl.length===0)return null;links.push(...rl);}
   return(
-    <div style={{marginTop:12}}>
+    <div className="lc-nextstep" style={{marginTop:12}}>
       <div style={{fontSize:11,fontWeight:700,color:"#6b778c",letterSpacing:.5,textTransform:"uppercase",marginBottom:8}}>함께 계산하면 좋은</div>
       <div style={{display:"flex",flexDirection:"column",gap:6}}>
         {links.map(l=>{const it=CL.find(c=>c.id===l.id);if(!it)return null;return(
