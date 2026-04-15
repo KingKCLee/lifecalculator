@@ -5854,7 +5854,7 @@ body.lc-embed main{padding-top:0!important}
             </span>
             <h3 style={{fontSize:28,fontWeight:800,lineHeight:1.22,margin:"0 0 16px",letterSpacing:-.6,position:"relative"}}>AI 분석: 2026년 취득세<br/>완벽 가이드</h3>
             <p style={{fontSize:14,color:"#93c5fd",lineHeight:1.75,margin:"0 0 28px",maxWidth:460,position:"relative"}}>Claude AI가 2026년 개정 세법과 실제 거래 시나리오를 분석해 주택 가격·면적·주택수 조합별 최적 절세 전략을 제시합니다.</p>
-            <button onClick={()=>navigateCalc("tax","acquisition")} style={{background:"rgba(255,255,255,0.1)",border:"1px solid rgba(255,255,255,0.2)",color:"#fff",padding:"10px 20px",borderRadius:8,fontSize:14,fontWeight:700,cursor:"pointer",position:"relative",display:"inline-flex",alignItems:"center",gap:8,fontFamily:"inherit"}}>전체 보고서 보기 →</button>
+            <button onClick={()=>{setPage("reports:index");history.pushState(null,"","/reports");window.scrollTo(0,0);}} style={{background:"rgba(255,255,255,0.1)",border:"1px solid rgba(255,255,255,0.2)",color:"#fff",padding:"10px 20px",borderRadius:8,fontSize:14,fontWeight:700,cursor:"pointer",position:"relative",display:"inline-flex",alignItems:"center",gap:8,fontFamily:"inherit"}}>전체 보고서 보기 →</button>
           </div>
           <div style={{background:"#fff",border:"1px solid #e8eaf0",borderRadius:16,padding:"28px 24px"}}>
             <h3 style={{fontSize:17,fontWeight:800,color:"#0a1628",margin:"0 0 18px",display:"flex",alignItems:"center",gap:8}}>
