@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.15",
       "category": "전체",
+      "title": "feat(home): sample-home 3개 섹션 추가 — 인기 12카드 + 통계 + 디렉토리 5열",
+      "desc": "feat(home): sample-home 3개 섹션 추가 — 인기 12카드 + 통계 + 디렉토리 5열"
+    },
+    {
+      "date": "2026.04.15",
+      "category": "전체",
       "title": "feat: AI PRO 인사이트 보고서 #08, #09 추가",
       "desc": "feat: AI PRO 인사이트 보고서 #08, #09 추가"
     },
@@ -1460,12 +1466,6 @@
       "category": "대출",
       "title": "fix: Tog 글자겹침 근본 해결 (ellipsis·minWidth:0·DSR 중복 레이블 제거·marginBottom:-8 잔재)",
       "desc": "fix: Tog 글자겹침 근본 해결 (ellipsis·minWidth:0·DSR 중복 레이블 제거·marginBottom:-8 잔재)"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "전체",
-      "title": "fix: 취득가액 Slider 복원·시가표준액 인라인 레이아웃·특수조건 } 버그·조회패널 maxWidth",
-      "desc": "fix: 취득가액 Slider 복원·시가표준액 인라인 레이아웃·특수조건 } 버그·조회패널 maxWidth"
     }
   ],
   "rates": {
