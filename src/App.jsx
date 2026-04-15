@@ -5647,6 +5647,10 @@ button:active{transform:scale(0.98)}
 @media(min-width:769px){.calc-container{background:transparent!important;border:none!important;padding:0!important;box-shadow:none!important;overflow:visible}}
 @media(min-width:769px){.calc-container>div>div[style*="grid-template-columns"]>div:first-child{background:#fff!important;border:1px solid #dfe1e6!important;border-radius:14px!important;padding:32px!important;min-width:0}}
 @media(min-width:769px){.calc-container>div>div[style*="grid-template-columns"]>div:first-child>h3:first-child{display:none!important}}
+/* 2026.04.16 sample-calc .field-label — PC 전용 입력 필드 레이블 uppercase 12px #6b778c */
+@media(min-width:769px){.calc-container label{font-size:12px!important;font-weight:600!important;color:#6b778c!important;text-transform:uppercase!important;letter-spacing:.5px!important;margin-bottom:10px!important}}
+/* field 간격 sample 기준 20px */
+@media(min-width:769px){.calc-container .lc-input,.calc-container>div>div[style*="grid-template-columns"]>div:first-child>div{margin-bottom:20px}}
 /* 2026.04.15 sample-calc: 입력 폼 끝 구분선 (PC 전용) — RateTable 위에 1개 divider */
 @media(min-width:769px){.calc-container .lc-ratetable{margin-top:28px!important;padding-top:24px;border-top:1px solid #e5e7eb!important;border-radius:12px;border:1px solid #dfe1e6!important}}
 @media(min-width:769px){.calc-container .lc-ratetable+.lc-ratetable{margin-top:20px!important;padding-top:0;border-top:1px solid #dfe1e6!important}}
