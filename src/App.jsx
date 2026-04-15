@@ -5811,7 +5811,7 @@ body.lc-embed main{padding-top:0!important}
           </div>
           {tabScroll.right&&<div style={{position:"absolute",right:16,top:0,bottom:8,width:32,background:"linear-gradient(to left, #fff 50%, transparent)",zIndex:2,pointerEvents:"none",display:"flex",alignItems:"center",justifyContent:"flex-end"}}><span style={{fontSize:16,color:"#0747A6",fontWeight:700,lineHeight:1}}>›</span></div>}
         </div>
-        <MobileCalcWrapper><Comp key={calc+"_"+sessionKey} isMo={true}/><NextStep calcId={calc} onNav={navigateCalc} isMo={true}/></MobileCalcWrapper>
+        <MobileCalcWrapper><Comp key={calc+"_"+sessionKey} isMo={true} onNav={navigateCalc}/><NextStep calcId={calc} onNav={navigateCalc} isMo={true}/></MobileCalcWrapper>
         <div style={{padding:"0 12px 24px"}}>
           {SEO_CONTENT[calc]&&<div style={{padding:"20px 16px",background:"#fff",borderRadius:12,border:"1px solid #dfe1e6",marginBottom:12}}><div className="seo" dangerouslySetInnerHTML={{__html:SEO_CONTENT[calc]}} style={{fontSize:14,color:"#172B4D",lineHeight:1.8}}/></div>}
           <EduContent calc={calc} eduTab={eduTab}/>
@@ -5825,13 +5825,6 @@ body.lc-embed main{padding-top:0!important}
             <div className="sub-tabs" style={{flex:"1 1 auto",minWidth:0,display:"flex",gap:6,flexWrap:"nowrap",overflowX:"auto",WebkitOverflowScrolling:"touch",paddingBottom:6,scrollbarWidth:"thin"}}>
               {filtered.map(c=>(<button key={c.id} onClick={()=>navigateCalc(cat,c.id)} style={{padding:"8px 14px",border:calc===c.id?"none":"1px solid #E5E7EB",borderRadius:20,background:calc===c.id?"#0a1628":"#fff",color:calc===c.id?"#fff":"#6B7280",fontSize:13,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0,display:"inline-flex",alignItems:"center",justifyContent:"center",gap:6,height:36,boxSizing:"border-box"}}>{CALC_ICONS[c.id]&&<span style={{display:"inline-flex"}}>{CALC_ICONS[c.id]}</span>}{c.l}</button>))}
             </div>
-            <nav aria-label="breadcrumb" style={{fontSize:12,color:P.mt,display:"flex",alignItems:"center",gap:6,flexShrink:0,whiteSpace:"nowrap"}}>
-              <span onClick={navigateHome} style={{cursor:"pointer",color:P.pri}}>홈</span>
-              <span>›</span>
-              <span style={{cursor:"pointer",color:P.pri}} onClick={()=>{const first=CL.find(c=>c.c===cat);if(first)navigateCalc(cat,first.id);}}>{catInfo?.l}</span>
-              <span>›</span>
-              <span style={{color:P.tx,fontWeight:600}}>{CL.find(c=>c.id===calc)?.l||""}</span>
-            </nav>
           </div>
           <div style={{marginBottom:24,display:"flex",alignItems:"center",gap:12,flexWrap:"wrap"}}>
             <h1 style={{fontSize:28,fontWeight:700,color:"#0a1628",margin:0,letterSpacing:-1}}>{CL.find(c=>c.id===calc)?.l||catInfo?.l+" 계산기"}</h1>
