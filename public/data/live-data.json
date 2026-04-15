@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.15",
       "category": "전체",
+      "title": "fix: 커스텀 레이블 div + Inp label 중복 일괄 제거",
+      "desc": "fix: 커스텀 레이블 div + Inp label 중복 일괄 제거"
+    },
+    {
+      "date": "2026.04.15",
+      "category": "전체",
       "title": "style: 중복 라벨 커스텀 헬퍼 div 강조 스타일 통일",
       "desc": "style: 중복 라벨 커스텀 헬퍼 div 강조 스타일 통일"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "fix: 헤더 브랜드 로고·탑메뉴 중앙정렬·생활경제달력 제거·푸터 중앙정렬 재디자인",
       "desc": "fix: 헤더 브랜드 로고·탑메뉴 중앙정렬·생활경제달력 제거·푸터 중앙정렬 재디자인"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "전체",
-      "title": "feat: LeftNav 드롭다운 확장 (Expert 기본펼침·Learning/Market 서브·History 로그인게이트)·계산기 로고 SVG",
-      "desc": "feat: LeftNav 드롭다운 확장 (Expert 기본펼침·Learning/Market 서브·History 로그인게이트)·계산기 로고 SVG"
     }
   ],
   "rates": {
