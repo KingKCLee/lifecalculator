@@ -224,7 +224,7 @@ terms:{title:"부동산 용어사전 - 100+ 전문 용어 해설 | 생활계산�
 };
 
 const INTERNAL_LINKS={
-acquisition:[{id:"registration",label:"등기비용도 계산해보세요"},{id:"commission",label:"중개수수료는 얼마?"},{id:"totalcost",label:"매수 총비용 시뮬레이션"},{id:"ltv",label:"대출 얼마까지 가능?"}],
+acquisition:[{id:"transfer",label:"양도소득세 계산하기"},{id:"compre",label:"종합부동산세 계산하기"},{id:"totalcost",label:"부동산 총비용 시뮬레이터"},{id:"property",label:"재산세 계산하기"}],
 transfer:[{id:"acquisition",label:"취득세 먼저 계산"},{id:"compare",label:"매매 vs 증여 vs 상속 비교"},{id:"invest",label:"투자수익 종합분석"}],
 inctax:[{id:"yearend",label:"연말정산 환급액 확인"},{id:"netsalary",label:"연봉 실수령액 계산"},{id:"insurance4",label:"4대보험료 확인"}],
 yearend:[{id:"netsalary",label:"실수령액도 확인해보세요"},{id:"inctax",label:"종합소득세 계산"},{id:"pension",label:"국민연금 수령액은?"}],
@@ -967,19 +967,23 @@ function AIGuide({items,title}){
     try{localStorage.setItem(countKey,String(used+1));}catch{}
     try{window.dispatchEvent(new CustomEvent('lc-ai-explain',{detail:{title,items}}));}catch{}
   };
+  // 2026.04.16 sample-calc .rp-ai spec — 초록 반투명 카드 (RP 파란 그라디언트 내부에서 조화)
   return(
-    <div style={{marginTop:12,padding:"16px 18px",background:"#F9FAFB",border:"1px solid #E5E7EB",borderRadius:12}}>
-      <div style={{fontSize:13,fontWeight:700,color:"#0a1628",marginBottom:10,display:"flex",alignItems:"center",gap:6}}><span>🤖</span>AI 절세 가이드</div>
-      <div style={{display:"grid",gridTemplateColumns:"1fr",gap:8}}>
+    <div style={{marginTop:10,padding:"14px 16px",background:"rgba(16,185,129,0.08)",border:"1px solid rgba(16,185,129,0.2)",borderRadius:10}}>
+      <div style={{display:"flex",alignItems:"center",gap:6,fontSize:11,fontWeight:800,color:"#6ee7b7",textTransform:"uppercase",letterSpacing:.8,marginBottom:6}}>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2M20 14h2M15 13v2M9 13v2"/></svg>
+        AI 절세 가이드
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr",gap:6}}>
         {CARDS.map((c,i)=>(
-          <div key={i} style={{padding:"12px 14px",background:"#fff",border:"1px solid #E5E7EB",borderRadius:10}}>
-            <div style={{fontSize:13,fontWeight:700,color:"#0a1628",marginBottom:4}}>{c.icon} {c.title}</div>
-            <div style={{fontSize:12,color:"#6B7280",lineHeight:1.6}}>{c.body}</div>
+          <div key={i} style={{padding:"10px 12px",background:"rgba(255,255,255,0.06)",borderRadius:8}}>
+            <div style={{fontSize:12,fontWeight:700,color:"#fff",marginBottom:3}}>{c.icon} {c.title}</div>
+            <div style={{fontSize:11,color:"rgba(255,255,255,0.82)",lineHeight:1.65}}>{c.body}</div>
           </div>
         ))}
       </div>
-      <button onClick={onMore} style={{marginTop:10,width:"100%",padding:"10px 14px",background:"#0747A6",color:"#fff",border:"none",borderRadius:8,fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>더 자세한 AI 해설 →</button>
-      <div style={{fontSize:10,color:"#9CA3AF",marginTop:8}}>오늘 {used}/3 사용 · 로그인 없이 이용 가능</div>
+      <button onClick={onMore} style={{marginTop:10,width:"100%",padding:"10px 14px",background:"rgba(16,185,129,0.25)",color:"#6ee7b7",border:"1px solid rgba(16,185,129,0.4)",borderRadius:8,fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>더 자세한 AI 해설 →</button>
+      <div style={{fontSize:10,color:"rgba(255,255,255,0.5)",marginTop:8}}>오늘 {used}/3 사용 · 로그인 없이 이용 가능</div>
     </div>
   );
 }
@@ -1169,13 +1173,13 @@ function RP({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlin
       <div style={{fontSize:15,fontWeight:800,marginBottom:2}}>{funnel.label} →</div>
       <div style={{fontSize:11,fontWeight:500,opacity:.92}}>{funnel.subtitle}</div>
     </button>}
-    {/* 2026.04.14 1:1 상담 섹션 (금액 규모별 강조) */}
-    {total>0&&<div style={{marginTop:10,padding:tier==="strong"?"14px 16px":tier==="medium"?"12px 14px":"10px 12px",background:tier==="strong"?"rgba(255,139,0,.22)":tier==="medium"?"rgba(255,255,255,.14)":"rgba(255,255,255,.08)",border:tier==="strong"?"1.5px solid #FFC400":"1px solid rgba(255,255,255,.22)",borderRadius:10,display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,flexWrap:"wrap"}}>
+    {/* 2026.04.16 sample-calc .rp-consult spec — 1:1 세금 상담 카드 */}
+    {total>0&&<div style={{marginTop:10,padding:"12px 14px",background:"rgba(255,255,255,0.14)",border:"1px solid rgba(255,255,255,0.22)",borderRadius:10,display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,flexWrap:"wrap"}}>
       <div style={{flex:"1 1 auto",minWidth:0}}>
-        <div style={{fontSize:tier==="strong"?13:12,fontWeight:tier==="strong"?800:700,color:tier==="strong"?"#FFC400":"#fff",marginBottom:2}}>{tier==="strong"?<><IconWarn c="#FFC400"/> 이 계산 결과가 복잡하신가요?</>:"이 계산 결과가 복잡하신가요?"}</div>
-        <div style={{fontSize:11,opacity:.82,lineHeight:1.5}}>전문가와 1:1 상담으로 정확한 솔루션을 받으세요</div>
+        <div style={{fontSize:12,fontWeight:700,color:"#fff",marginBottom:2}}>1:1 세금 상담</div>
+        <div style={{fontSize:11,opacity:0.82,lineHeight:1.5}}>전문가와 복잡한 절세 전략 논의</div>
       </div>
-      <button onClick={()=>window.dispatchEvent(new CustomEvent('lc-consult',{detail:{title,total}}))} style={{flexShrink:0,padding:"8px 14px",background:"#fff",color:tier==="strong"?"#BF5B00":"#0747A6",border:"none",borderRadius:8,fontSize:12,fontWeight:800,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>1:1 상담 →</button>
+      <button onClick={()=>window.dispatchEvent(new CustomEvent('lc-consult',{detail:{title,total}}))} style={{flexShrink:0,padding:"8px 14px",background:"#fff",color:"#0747A6",border:"none",borderRadius:8,fontSize:12,fontWeight:800,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>상담 →</button>
     </div>}
     {!isExample&&!hasMiss&&total>0&&<AIGuide items={items} title={title}/>}
     <div style={{marginTop:10,fontSize:10,opacity:.5,lineHeight:1.5,textAlign:"center"}}>본 계산은 2026년 세법 기준 참고용이며 법적 효력이 없습니다. (v2026.04.06)</div>
@@ -4186,7 +4190,7 @@ function HtmlAdapterPage({url,isMo,navigateHome}){
 const _SW={wrap:{maxWidth:880,margin:"0 auto",padding:"24px 20px 72px"},
   section:{background:"#FFFFFF",border:"1px solid #E5E7EB",borderRadius:16,padding:"28px 32px",marginBottom:18,boxShadow:"0 2px 12px rgba(0,0,0,0.06)"},
   h2:{fontSize:22,margin:"0 0 16px",color:"#0747A6",display:"flex",alignItems:"center",gap:10,letterSpacing:-0.3,fontWeight:800,counterIncrement:"lcguide"},
-  h2b:{display:"inline-flex",alignItems:"center",justifyContent:"center",width:28,height:28,background:"#deebff",color:"#0747A6",borderRadius:"50%",flexShrink:0,fontSize:13,fontWeight:800},
+  h2b:{display:"inline-flex",alignItems:"center",justifyContent:"center",width:24,height:24,background:"#0747A6",color:"#fff",borderRadius:"50%",flexShrink:0,fontSize:12,fontWeight:800,marginRight:10},
   h3:{fontSize:16,margin:"20px 0 8px",color:"#172B4D",fontWeight:700},
   p:{margin:"0 0 12px",fontSize:15,lineHeight:1.75,color:"#172B4D"},
   ul:{margin:"8px 0 12px",paddingLeft:22},
