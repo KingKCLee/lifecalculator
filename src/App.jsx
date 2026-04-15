@@ -4026,6 +4026,110 @@ function LegalPage({type,onBack}){
     <div style={{marginTop:24,padding:"16px 20px",background:"#f4f5f7",borderRadius:12,fontSize:13,color:"#6b778c"}}>문의사항은 <a href="mailto:noble.kclee@gmail.com" style={{color:"#0747A6"}}>noble.kclee@gmail.com</a> 으로 연락주세요.</div>
   </div>);
 }
+
+/* 2026.04.15 SPA 라우트 통합: News/Community/Policy/Market/HtmlAdapter */
+function SpaBackBtn({navigateHome}){return(<button onClick={navigateHome} style={{display:"flex",alignItems:"center",gap:8,background:"none",border:"none",color:"#0747A6",fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit",marginBottom:16,padding:0}}>← 홈</button>);}
+const _spaExtract=o=>Array.isArray(o)?o:(o?.items||o?.data||o?.news||o?.articles||o?.posts||o?.policies||[]);
+
+function NewsPage({isMo,navigateHome}){
+  const[cat,setCat]=useState("all");const[items,setItems]=useState([]);const[loading,setLoading]=useState(true);const[tick,setTick]=useState(0);
+  useEffect(()=>{let alive=true;setLoading(true);
+    fetch(LC_API+"/news?limit=30"+(cat!=="all"?"&category="+cat:""),{cache:"no-store"})
+      .then(r=>r.ok?r.json():null).then(j=>{if(!alive)return;setItems(_spaExtract(j));setLoading(false);})
+      .catch(()=>{if(alive){setItems([]);setLoading(false);}});
+    return()=>{alive=false};
+  },[cat,tick]);
+  const cats=[{k:"all",l:"전체"},{k:"policy",l:"정책"},{k:"tax",l:"세금"},{k:"loan",l:"대출"},{k:"market",l:"시장"}];
+  return(<div style={{maxWidth:1000,margin:"0 auto",padding:isMo?"24px 16px":"40px 24px",minHeight:"60vh"}}>
+    <SpaBackBtn navigateHome={navigateHome}/>
+    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16,flexWrap:"wrap",gap:8}}>
+      <h1 style={{fontSize:isMo?22:28,fontWeight:800,color:"#172B4D",margin:0}}>실시간 뉴스</h1>
+      <button onClick={()=>setTick(t=>t+1)} style={{background:"#0747A6",color:"#fff",border:"none",borderRadius:8,padding:"8px 16px",fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>새로고침</button>
+    </div>
+    <div style={{display:"flex",gap:8,marginBottom:20,flexWrap:"wrap"}}>{cats.map(c=>(<button key={c.k} onClick={()=>setCat(c.k)} style={{padding:"8px 16px",borderRadius:20,border:"1px solid "+(cat===c.k?"#0747A6":"#dfe1e6"),background:cat===c.k?"#0747A6":"#fff",color:cat===c.k?"#fff":"#505f79",fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>{c.l}</button>))}</div>
+    {loading?<div style={{padding:40,textAlign:"center",color:"#6b778c"}}>불러오는 중...</div>:items.length===0?<div style={{padding:40,textAlign:"center",color:"#6b778c"}}>뉴스가 없습니다.</div>:<div style={{display:"grid",gridTemplateColumns:"1fr",gap:12}}>{items.map((n,i)=>(<a key={i} href={n.link||n.url||"#"} target="_blank" rel="noopener noreferrer" style={{display:"block",background:"#fff",border:"1px solid #dfe1e6",borderRadius:12,padding:"16px 20px",textDecoration:"none",color:"inherit",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.borderColor="#0747A6";e.currentTarget.style.transform="translateY(-2px)";}} onMouseLeave={e=>{e.currentTarget.style.borderColor="#dfe1e6";e.currentTarget.style.transform="none";}}>
+      <div style={{fontSize:15,fontWeight:700,color:"#172B4D",marginBottom:6,lineHeight:1.5}}>{n.title||n.headline||"(제목 없음)"}</div>
+      <div style={{display:"flex",gap:12,fontSize:12,color:"#6b778c",flexWrap:"wrap"}}>{n.source&&<span>{n.source}</span>}{n.date&&<span>{n.date}</span>}{n.category&&<span style={{background:"#deebff",color:"#0747A6",padding:"2px 8px",borderRadius:10,fontWeight:600}}>{n.category}</span>}</div>
+    </a>))}</div>}
+  </div>);
+}
+
+function CommunityPage({isMo,navigateHome,effectiveUser}){
+  const[items,setItems]=useState([]);const[loading,setLoading]=useState(true);
+  useEffect(()=>{let alive=true;
+    fetch(LC_API+"/community?limit=30",{cache:"no-store"})
+      .then(r=>r.ok?r.json():null).then(j=>{if(!alive)return;setItems(_spaExtract(j));setLoading(false);})
+      .catch(()=>{if(alive){setItems([]);setLoading(false);}});
+    return()=>{alive=false};
+  },[]);
+  return(<div style={{maxWidth:1000,margin:"0 auto",padding:isMo?"24px 16px":"40px 24px",minHeight:"60vh"}}>
+    <SpaBackBtn navigateHome={navigateHome}/>
+    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20,flexWrap:"wrap",gap:8}}>
+      <h1 style={{fontSize:isMo?22:28,fontWeight:800,color:"#172B4D",margin:0}}>Q&A 게시판</h1>
+      {effectiveUser&&<a href="/community/write.html" style={{background:"#0747A6",color:"#fff",borderRadius:8,padding:"8px 16px",fontSize:13,fontWeight:700,textDecoration:"none",fontFamily:"inherit"}}>글쓰기</a>}
+    </div>
+    {loading?<div style={{padding:40,textAlign:"center",color:"#6b778c"}}>불러오는 중...</div>:items.length===0?<div style={{padding:40,textAlign:"center",color:"#6b778c"}}>게시글이 없습니다.</div>:<div style={{background:"#fff",border:"1px solid #dfe1e6",borderRadius:12,overflow:"hidden"}}>{items.map((p,i)=>(<a key={i} href={"/community/?id="+(p.id||"")} style={{display:"block",padding:"14px 20px",borderBottom:i<items.length-1?"1px solid #f4f5f7":"none",textDecoration:"none",color:"inherit"}}>
+      <div style={{fontSize:14,fontWeight:600,color:"#172B4D",marginBottom:4}}>{p.title||"(제목 없음)"}</div>
+      <div style={{display:"flex",gap:12,fontSize:11,color:"#6b778c",flexWrap:"wrap"}}>{p.author&&<span>{p.author}</span>}{p.date&&<span>{p.date}</span>}{p.views!==undefined&&<span>조회 {p.views}</span>}</div>
+    </a>))}</div>}
+  </div>);
+}
+
+function PolicyPage({isMo,navigateHome}){
+  const[items,setItems]=useState([]);const[loading,setLoading]=useState(true);
+  useEffect(()=>{let alive=true;
+    fetch(LC_API+"/policy",{cache:"no-store"})
+      .then(r=>r.ok?r.json():null).then(j=>{if(!alive)return;setItems(_spaExtract(j));setLoading(false);})
+      .catch(()=>{if(alive){setItems([]);setLoading(false);}});
+    return()=>{alive=false};
+  },[]);
+  return(<div style={{maxWidth:1000,margin:"0 auto",padding:isMo?"24px 16px":"40px 24px",minHeight:"60vh"}}>
+    <SpaBackBtn navigateHome={navigateHome}/>
+    <h1 style={{fontSize:isMo?22:28,fontWeight:800,color:"#172B4D",marginBottom:20}}>부동산·세금 정책</h1>
+    {loading?<div style={{padding:40,textAlign:"center",color:"#6b778c"}}>불러오는 중...</div>:items.length===0?<div style={{padding:40,textAlign:"center",color:"#6b778c"}}>정책 데이터가 없습니다.</div>:<div style={{display:"grid",gridTemplateColumns:"1fr",gap:12}}>{items.map((p,i)=>(<div key={i} style={{background:"#fff",border:"1px solid #dfe1e6",borderRadius:12,padding:"16px 20px"}}>
+      <div style={{fontSize:15,fontWeight:700,color:"#172B4D",marginBottom:6}}>{p.title||p.name||"(제목 없음)"}</div>
+      <div style={{fontSize:13,color:"#505f79",lineHeight:1.6}}>{p.description||p.summary||p.body||""}</div>
+      {p.date&&<div style={{fontSize:11,color:"#6b778c",marginTop:6}}>{p.date}</div>}
+    </div>))}</div>}
+  </div>);
+}
+
+function MarketPage({isMo,navigateHome}){
+  const[data,setData]=useState(null);const[loading,setLoading]=useState(true);
+  useEffect(()=>{let alive=true;
+    fetch(LC_REALESTATE_WORKER+"/market-data",{cache:"no-store"})
+      .then(r=>r.ok?r.json():null).then(j=>{if(!alive)return;setData(j);setLoading(false);})
+      .catch(()=>{if(alive){setData(null);setLoading(false);}});
+    return()=>{alive=false};
+  },[]);
+  return(<div style={{maxWidth:1000,margin:"0 auto",padding:isMo?"24px 16px":"40px 24px",minHeight:"60vh"}}>
+    <SpaBackBtn navigateHome={navigateHome}/>
+    <h1 style={{fontSize:isMo?22:28,fontWeight:800,color:"#172B4D",marginBottom:20}}>부동산 시장 동향</h1>
+    {loading?<div style={{padding:40,textAlign:"center",color:"#6b778c"}}>불러오는 중...</div>:!data?<div style={{padding:40,textAlign:"center",color:"#6b778c"}}>시장 데이터를 불러오지 못했습니다.</div>:<div style={{background:"#fff",border:"1px solid #dfe1e6",borderRadius:12,padding:"24px",fontSize:14,color:"#172B4D",lineHeight:1.8}}><pre style={{whiteSpace:"pre-wrap",wordBreak:"break-word",margin:0,fontFamily:"inherit",fontSize:12}}>{JSON.stringify(data,null,2)}</pre></div>}
+  </div>);
+}
+
+function HtmlAdapterPage({url,isMo,navigateHome}){
+  const[html,setHtml]=useState(null);const[err,setErr]=useState(false);
+  useEffect(()=>{let alive=true;setHtml(null);setErr(false);
+    fetch(url,{cache:"no-store"}).then(r=>r.ok?r.text():null).then(t=>{
+      if(!alive)return;
+      if(!t){setErr(true);return;}
+      try{
+        const doc=new DOMParser().parseFromString(t,"text/html");
+        const main=doc.querySelector("main")||doc.querySelector("article")||doc.querySelector(".main-content")||doc.querySelector(".content")||doc.body;
+        if(!main){setErr(true);return;}
+        main.querySelectorAll("script,noscript,header,nav,footer").forEach(n=>n.remove());
+        setHtml(main.innerHTML);
+      }catch(e){setErr(true);}
+    }).catch(()=>{if(alive)setErr(true);});
+    return()=>{alive=false};
+  },[url]);
+  return(<div style={{maxWidth:1000,margin:"0 auto",padding:isMo?"24px 16px":"40px 24px",minHeight:"60vh"}}>
+    <SpaBackBtn navigateHome={navigateHome}/>
+    {err?<div style={{padding:40,textAlign:"center",color:"#6b778c"}}>페이지를 불러오지 못했습니다. <a href={url} style={{color:"#0747A6"}}>원본 페이지로 이동 →</a></div>:html===null?<div style={{padding:40,textAlign:"center",color:"#6b778c"}}>불러오는 중...</div>:<div className="lc-html-adapter" style={{background:"#fff",borderRadius:16,border:"1px solid #dfe1e6",padding:isMo?"20px 16px":"32px 28px",fontSize:14,color:"#172B4D",lineHeight:1.8}} dangerouslySetInnerHTML={{__html:html}}/>}
+  </div>);
+}
 function CookieBanner({onPrivacy}){
   const[show,setShow]=useState(typeof window!=="undefined"&&!localStorage.getItem('cookie_consent'));
   if(!show)return null;
@@ -4837,7 +4941,46 @@ export default function App(){
   const hCat=c=>{const f=CL.find(x=>x.c===c);if(f)navigateCalc(c,f.id);};
   const goCalc=(cId)=>{const info=CL.find(c=>c.id===cId);if(info)navigateCalc(info.c,info.id);};
   const hash=usePathRoute();
-  useEffect(()=>{if(hash==="mypage"){setPage("mypage");return;}if(hash==="info"){setPage("info");return;}if(hash==="auth/callback"){return;}if(["privacy","contact","disclaimer","resource"].includes(hash)){setPage("legal_"+hash);}else if(hash&&SLUG_REVERSE[hash]){const cId=SLUG_REVERSE[hash];const it=CL.find(c=>c.id===cId);if(it){setCat(it.c);setCalc(cId);setPage("calc");}}else if(!hash){setPage("home");}},[hash]);
+  useEffect(()=>{
+    if(hash==="mypage"){setPage("mypage");return;}
+    if(hash==="info"){setPage("info");return;}
+    if(hash==="auth/callback"){return;}
+    if(hash==="news"){setPage("news");return;}
+    if(hash==="community"){setPage("community");return;}
+    if(hash==="policy"){setPage("policy");return;}
+    if(hash==="market"){setPage("market");return;}
+    if(hash==="about"){setPage("html:/about/");return;}
+    if(hash==="guide"){setPage("html:/guide/");return;}
+    if(hash==="pricing"){setPage("html:/pricing.html");return;}
+    if(hash==="verification"){setPage("html:/verification/");return;}
+    if(hash==="terms"){setPage("html:/terms/");return;}
+    if(hash.startsWith("terms/")){setPage("html:/"+hash+".html");return;}
+    if(hash.startsWith("learn/")){setPage("html:/"+hash+".html");return;}
+    if(hash.startsWith("law/")){setPage("html:/"+hash+".html");return;}
+    if(["privacy","contact","disclaimer","resource"].includes(hash)){setPage("legal_"+hash);}
+    else if(hash&&SLUG_REVERSE[hash]){const cId=SLUG_REVERSE[hash];const it=CL.find(c=>c.id===cId);if(it){setCat(it.c);setCalc(cId);setPage("calc");}}
+    else if(!hash){setPage("home");}
+  },[hash]);
+  useEffect(()=>{
+    const h=(e)=>{
+      const a=e.target.closest&&e.target.closest("a");
+      if(!a)return;
+      const href=a.getAttribute("href");
+      if(!href||!href.startsWith("/"))return;
+      if(a.target==="_blank")return;
+      const spaPaths=["/news","/community","/policy","/market","/info","/about","/guide","/pricing","/verification","/terms"];
+      const spaPrefixes=["/terms/","/learn/","/law/"];
+      const isSpa=spaPaths.includes(href)||spaPrefixes.some(p=>href.startsWith(p));
+      if(!isSpa)return;
+      if(/\.html?$/i.test(href))return;
+      e.preventDefault();
+      history.pushState(null,"",href);
+      window.dispatchEvent(new PopStateEvent("popstate"));
+      window.scrollTo(0,0);
+    };
+    document.addEventListener("click",h);
+    return()=>document.removeEventListener("click",h);
+  },[]);
   useEffect(()=>{if(page==="calc"&&calc&&PAGE_META[calc]){const m=PAGE_META[calc];document.title=m.title;document.querySelector('meta[name="description"]')?.setAttribute('content',m.desc);document.querySelector('meta[property="og:title"]')?.setAttribute('content',m.title);document.querySelector('meta[property="og:description"]')?.setAttribute('content',m.desc);}else{document.title="생활계산기 - 세금 연말정산 연봉 부동산 종합계산기";document.querySelector('meta[name="description"]')?.setAttribute('content',"취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 4대보험 국민연금 자동차세 등 62가지 무료 계산기. 2026 최신 세법 반영.");}let ld=document.getElementById('dynamic-jsonld');if(!ld){ld=document.createElement('script');ld.id='dynamic-jsonld';ld.type='application/ld+json';document.head.appendChild(ld);}if(page==="calc"&&calc&&PAGE_META[calc]){ld.textContent=JSON.stringify({"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":PAGE_META[calc].title.split(' | ')[0],"description":PAGE_META[calc].desc,"url":"https://xn--989a00a691bdfa717h.com/"+encodeURIComponent(SLUGS[calc]),"applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"홈","item":"https://xn--989a00a691bdfa717h.com/"},{"@type":"ListItem","position":2,"name":CATS.find(c=>c.id===cat)?.l||"","item":"https://xn--989a00a691bdfa717h.com/"},{"@type":"ListItem","position":3,"name":CL.find(c=>c.id===calc)?.l||"","item":"https://xn--989a00a691bdfa717h.com/"+encodeURIComponent(SLUGS[calc])}]}]});}else{ld.textContent='';}},[page,calc]);
   const Comp=CM[calc]||(()=><Placeholder l={CL.find(c=>c.id===calc)?.l||calc}/>);
   const catInfo=CATS.find(c=>c.id===cat);
@@ -4982,7 +5125,7 @@ body.lc-embed main{padding-top:0!important}
     <div style={{display:"flex",alignItems:"flex-start"}}>
     {page!=="home"&&!isMo&&<LeftNav isMo={isMo} navOpen={navOpen} setNavOpen={setNavOpen} navContent={navContent} setNavContent={setNavContent} effectiveUser={effectiveUser} setAuthMode={setAuthMode} setShowAuth={setShowAuth} navigateMyPage={navigateMyPage} calc={calc}/>}
     <main style={{flex:"1 1 auto",minWidth:0}}>
-    {page==="mypage"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><MyPage user={effectiveUser} lcToken={lcToken} lcEmail={lcEmail} onLcLogout={()=>{try{localStorage.removeItem('lc_token');localStorage.removeItem('lc_email');}catch{}setLcToken("");setLcEmail("");}} onBack={navigateHome} onLogout={handleLogout}/></div>):page==="info"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><InfoHub isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("legal_")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LegalPage type={page.replace("legal_","")} onBack={navigateHome}/></div>):page==="home"?(<>
+    {page==="mypage"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><MyPage user={effectiveUser} lcToken={lcToken} lcEmail={lcEmail} onLcLogout={()=>{try{localStorage.removeItem('lc_token');localStorage.removeItem('lc_email');}catch{}setLcToken("");setLcEmail("");}} onBack={navigateHome} onLogout={handleLogout}/></div>):page==="info"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><InfoHub isMo={isMo} navigateHome={navigateHome}/></div>):page==="news"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><NewsPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="community"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><CommunityPage isMo={isMo} navigateHome={navigateHome} effectiveUser={effectiveUser}/></div>):page==="policy"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><PolicyPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="market"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><MarketPage isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("html:")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><HtmlAdapterPage url={page.replace("html:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("legal_")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LegalPage type={page.replace("legal_","")} onBack={navigateHome}/></div>):page==="home"?(<>
       {favorites.length>0&&<div style={{maxWidth:1200,margin:"0 auto",padding:isMo?"16px 16px 0":"32px 24px 0",background:isMo?"#f8f9fc":"transparent"}}>
         <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12}}>
           <span style={{display:"inline-flex",alignItems:"center"}}><Ico.star size={18}/></span>
