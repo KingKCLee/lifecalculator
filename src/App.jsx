@@ -5793,13 +5793,13 @@ body.lc-embed main{padding-top:0!important}
           </span>
           <h1 style={{fontSize:52,fontWeight:800,color:"#0a1628",lineHeight:1.18,letterSpacing:-1.5,margin:"0 0 20px"}}>복잡한 세법·대출 규제,<br/><span style={{color:"#3b82f6"}}>10초 만에</span> 완벽 계산</h1>
           <p style={{fontSize:17,color:"#505f79",margin:"0 0 36px",lineHeight:1.7}}>취득세, 양도소득세, 연말정산, 대출이자, 실수령액까지<br/>62가지 전문 계산기를 2026년 최신 세법 기준으로 무료 제공합니다.</p>
-          {/* 2026.04.15 sample-home 검색바 (flex + 네이비 버튼) */}
-          <div style={{display:"flex",alignItems:"center",background:"#fff",border:"1.5px solid #dfe1e6",borderRadius:12,overflow:"hidden",boxShadow:"0 4px 16px rgba(0,0,0,0.08)",maxWidth:580,margin:"0 auto"}}>
-            <div style={{flex:"1 1 auto",minWidth:0}}>
-              <CalcSearchBar onSelect={navigateCalc} isMo={false} calcList={CL.map(c=>({id:c.id,name:c.l,keywords:c.l+" "+(DESC[c.id]||""),cat:c.c}))}/>
-            </div>
-            <button onClick={()=>{const el=document.querySelector('input[placeholder*="계산기"]');const q=el?.value?.trim();if(q){const first=CL.find(c=>c.l.includes(q)||q.includes(c.l));if(first)navigateCalc(first.c,first.id);else navigateCalc("tax","acquisition");}else navigateCalc("tax","acquisition");}} style={{background:"#0f1f3d",color:"#fff",border:"none",padding:"0 28px",height:52,fontSize:14,fontWeight:700,cursor:"pointer",whiteSpace:"nowrap",flexShrink:0,fontFamily:"inherit"}}>계산기 찾기 →</button>
-          </div>
+          {/* 2026.04.15 sample-home 검색바 (precise spec) */}
+          <style>{`.lc-hero-search input::placeholder{color:#9ca3af}.lc-hero-search-btn:hover{background:#0747A6!important}`}</style>
+          <form className="lc-hero-search" onSubmit={e=>{e.preventDefault();const q=(e.target.q.value||"").trim();if(!q){navigateCalc("tax","acquisition");return;}const hit=CL.find(c=>c.l.includes(q)||q.includes(c.l))||CL.find(c=>(DESC[c.id]||"").includes(q));if(hit)navigateCalc(hit.c,hit.id);else window.location.href="/terms/search.html?q="+encodeURIComponent(q);}} style={{display:"flex",alignItems:"center",background:"#fff",border:"1.5px solid #dfe1e6",borderRadius:14,padding:8,boxShadow:"0 4px 16px rgba(10,22,40,0.06)",maxWidth:680,margin:"0 auto"}}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginLeft:14,marginRight:0,flexShrink:0}}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input name="q" type="text" placeholder="어떤 계산이 필요하세요? (예: 취득세, DSR, 양도세)" style={{flex:1,border:"none",outline:"none",padding:"14px 16px",fontSize:16,background:"transparent",color:"#172B4D",fontFamily:"inherit",minWidth:0}}/>
+            <button type="submit" className="lc-hero-search-btn" style={{background:"#0a1628",color:"#fff",border:"none",borderRadius:10,padding:"14px 24px",fontSize:14,fontWeight:700,whiteSpace:"nowrap",flexShrink:0,cursor:"pointer",fontFamily:"inherit",transition:"background .15s"}}>계산기 찾기 →</button>
+          </form>
           <div style={{display:"flex",flexWrap:"wrap",gap:8,justifyContent:"center",marginTop:22}}>
             <span style={{fontSize:13,color:"#505f79",alignSelf:"center",marginRight:4}}>인기 검색:</span>
             {["취득세","대출이자","연말정산","양도소득세","실수령액","DSR","증여세"].map(tag=>{const info=CL.find(c=>c.l.includes(tag)||tag.includes(c.l));return(<button key={tag} onClick={()=>info&&navigateCalc(info.c,info.id)} style={{padding:"7px 13px",background:"#fff",border:"1px solid #dfe1e6",borderRadius:20,fontSize:13,color:"#374151",cursor:"pointer",fontFamily:"inherit",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.borderColor="#3b82f6";e.currentTarget.style.color="#3b82f6"}} onMouseLeave={e=>{e.currentTarget.style.borderColor="#dfe1e6";e.currentTarget.style.color="#374151"}}>{tag}</button>);})}
