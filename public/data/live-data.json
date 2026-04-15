@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.15",
       "category": "전체",
+      "title": "style: 중복 라벨 커스텀 헬퍼 div 강조 스타일 통일",
+      "desc": "style: 중복 라벨 커스텀 헬퍼 div 강조 스타일 통일"
+    },
+    {
+      "date": "2026.04.15",
+      "category": "전체",
       "title": "fix: TipModal 헬퍼 라벨과 Inp/Sel/Tog label 중복 제거",
       "desc": "fix: TipModal 헬퍼 라벨과 Inp/Sel/Tog label 중복 제거"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "feat: LeftNav 드롭다운 확장 (Expert 기본펼침·Learning/Market 서브·History 로그인게이트)·계산기 로고 SVG",
       "desc": "feat: LeftNav 드롭다운 확장 (Expert 기본펼침·Learning/Market 서브·History 로그인게이트)·계산기 로고 SVG"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "전체",
-      "title": "feat: 헤더 로고 img 추가·홈 LeftNav 숨김·드롭다운 라운딩/화살표 정리",
-      "desc": "feat: 헤더 로고 img 추가·홈 LeftNav 숨김·드롭다운 라운딩/화살표 정리"
     }
   ],
   "rates": {
