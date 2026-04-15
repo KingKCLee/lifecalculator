@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.15",
       "category": "세금",
+      "title": "feat: PC UI 6종 개선 (취득세 파일럿 + 공통 RP/sub-tabs/pro-cards)",
+      "desc": "feat: PC UI 6종 개선 (취득세 파일럿 + 공통 RP/sub-tabs/pro-cards)"
+    },
+    {
+      "date": "2026.04.15",
+      "category": "세금",
       "title": "fix: 모바일 인라인 스타일 isMo 조건 직접 수정 (취득세 파일럿 + 공통 Inp/Sel/Tog)",
       "desc": "fix: 모바일 인라인 스타일 isMo 조건 직접 수정 (취득세 파일럿 + 공통 Inp/Sel/Tog)"
     },
@@ -1460,12 +1466,6 @@
       "category": "세금",
       "title": "fix: 취득세 시가표준액 입력 전 유형 노출·유형별 안내 문구 분기",
       "desc": "fix: 취득세 시가표준액 입력 전 유형 노출·유형별 안내 문구 분기"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "전체",
-      "title": "feat: CalcGrid 62개 계산기 개별 SVG 아이콘 추가",
-      "desc": "feat: CalcGrid 62개 계산기 개별 SVG 아이콘 추가"
     }
   ],
   "rates": {
