@@ -1092,7 +1092,6 @@ function RP({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlin
       })}
     </div>
     {/* 2026.04.15 MiniChart 제거 */}
-    {!isExample&&!hasMiss&&total>0&&<AIGuide items={items} title={title}/>}
     {deadline&&<div style={{background:"rgba(255,255,255,0.10)",borderRadius:10,padding:"10px 14px",marginTop:14,fontSize:11,lineHeight:1.55,display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
       <span><IconCal c="#fff"/></span><span style={{opacity:.88,flex:"1 1 auto",minWidth:0}}>{deadline}</span>
       {deadlineLink&&<a href={deadlineLink} target="_blank" rel="noopener noreferrer" style={{color:"#FFC400",fontWeight:700,textDecoration:"none"}}>{deadlineLinkLabel||"바로가기 →"}</a>}
@@ -1136,6 +1135,7 @@ function RP({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlin
       </div>
       <button onClick={()=>window.dispatchEvent(new CustomEvent('lc-consult',{detail:{title,total}}))} style={{flexShrink:0,padding:"8px 14px",background:"#fff",color:tier==="strong"?"#BF5B00":"#0747A6",border:"none",borderRadius:8,fontSize:12,fontWeight:800,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>1:1 상담 →</button>
     </div>}
+    {!isExample&&!hasMiss&&total>0&&<AIGuide items={items} title={title}/>}
     <div style={{marginTop:10,fontSize:10,opacity:.5,lineHeight:1.5,textAlign:"center"}}>본 계산은 2026년 세법 기준 참고용이며 법적 효력이 없습니다. (v2026.04.06)</div>
   </div>);
 }
@@ -5638,7 +5638,6 @@ body.lc-embed main{padding-top:0!important}
                 {hot&&<div style={{position:"absolute",top:"100%",left:0,paddingTop:0,zIndex:1000,marginTop:-1}}>
                   <div onMouseEnter={()=>setClickedCat(null)} style={{background:"#fff",borderRadius:"0 0 8px 8px",border:"1px solid #E5E7EB",borderTop:"none",boxShadow:"0 8px 24px rgba(0,0,0,0.12)",padding:"8px 0",minWidth:220}}>
                     <div style={{fontSize:12,color:clicked?"#ef4444":"#6B7280",padding:"8px 16px 4px",borderBottom:"1px solid #F3F4F6",animation:"blink 1.5s ease-in-out infinite",fontWeight:clicked?700:400,transition:"color .15s"}}>아래 계산기 종류를 선택하세요</div>
-                    <div style={{padding:"8px 16px 6px",fontSize:11,fontWeight:700,color:"#6B7280",letterSpacing:1}}>{c.l} — {items.length}개</div>
                     {items.map(item=>(<div key={item.id} onClick={()=>{navigateCalc(c.id,item.id);setHoverCat(null);setClickedCat(null);}} style={{padding:"10px 16px",fontSize:14,cursor:"pointer",fontWeight:calc===item.id?700:400,color:"#0a1628",display:"flex",alignItems:"center",gap:8}} onMouseEnter={e=>{e.currentTarget.style.background="#F0F4FF"}} onMouseLeave={e=>{e.currentTarget.style.background="transparent"}}>
                       {CALC_ICONS[item.id]&&<span style={{display:"inline-flex",color:"#0747A6"}}>{CALC_ICONS[item.id]}</span>}
                       <span>{item.l}</span>
