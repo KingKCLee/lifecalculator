@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "style: 빨간 요소 파란 계열로 통일 (필수·힌트)",
+      "desc": "style: 빨간 요소 파란 계열로 통일 (필수·힌트)"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "feat(calc): sample-calc 정확 매칭 9항목 (CalcAcq 중심)",
       "desc": "feat(calc): sample-calc 정확 매칭 9항목 (CalcAcq 중심)"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "feat: AdSlot 동적 광고 컴포넌트 + 홈/계산기 페이지 하단 노출",
       "desc": "feat: AdSlot 동적 광고 컴포넌트 + 홈/계산기 페이지 하단 노출"
-    },
-    {
-      "date": "2026.04.15",
-      "category": "전체",
-      "title": "style: 홈 정보 섹션 가시성 개선 (제목/폰트/hover/칩 스타일)",
-      "desc": "style: 홈 정보 섹션 가시성 개선 (제목/폰트/hover/칩 스타일)"
     }
   ],
   "rates": {
