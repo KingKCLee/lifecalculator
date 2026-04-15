@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.15",
       "category": "전체",
+      "title": "feat: 모바일 Comp onNav 주입 + 브레드크럼 제거",
+      "desc": "feat: 모바일 Comp onNav 주입 + 브레드크럼 제거"
+    },
+    {
+      "date": "2026.04.15",
+      "category": "전체",
       "title": "feat: 메인 탭 onClick 토글로 변경 (페이지 이동 없음)",
       "desc": "feat: 메인 탭 onClick 토글로 변경 (페이지 이동 없음)"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "fix: 시가표준액 조회 → 공식 사이트 안내 패널로 전환 (API 미제공)",
       "desc": "fix: 시가표준액 조회 → 공식 사이트 안내 패널로 전환 (API 미제공)"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "전체",
-      "title": "feat: 전체 계산기 아코디언 카테고리 SVG 라인 아이콘 6종 교체",
-      "desc": "feat: 전체 계산기 아코디언 카테고리 SVG 라인 아이콘 6종 교체"
     }
   ],
   "rates": {
