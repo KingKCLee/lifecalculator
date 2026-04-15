@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.15",
       "category": "세금",
+      "title": "style: 취득세 '공시가격 1억 이하 중과 제외' 안내박스 하단 여백 16px 추가",
+      "desc": "style: 취득세 '공시가격 1억 이하 중과 제외' 안내박스 하단 여백 16px 추가"
+    },
+    {
+      "date": "2026.04.15",
+      "category": "세금",
       "title": "feat: PC UI 6종 개선 (취득세 파일럿 + 공통 RP/sub-tabs/pro-cards)",
       "desc": "feat: PC UI 6종 개선 (취득세 파일럿 + 공통 RP/sub-tabs/pro-cards)"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "feat: 시가표준액 2단계 조회 (worker PNU → 브라우저 V-world 직접 호출)",
       "desc": "feat: 시가표준액 2단계 조회 (worker PNU → 브라우저 V-world 직접 호출)"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "세금",
-      "title": "fix: 취득세 시가표준액 입력 전 유형 노출·유형별 안내 문구 분기",
-      "desc": "fix: 취득세 시가표준액 입력 전 유형 노출·유형별 안내 문구 분기"
     }
   ],
   "rates": {
