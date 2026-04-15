@@ -5791,29 +5791,42 @@ body.lc-embed main{padding-top:0!important}
       </div>
       )}
 
-      {/* 인기 계산기 (PC) */}
-      {!isMo&&<div style={{background:"#fff",padding:"64px 24px",textAlign:"center",maxWidth:"100%",overflow:"hidden"}}>
-        <h2 style={{fontSize:isMo?22:28,fontWeight:800,color:"#172B4D",letterSpacing:-1,margin:"0 0 8px"}}>인기 계산기</h2>
-        <p style={{fontSize:15,color:"#6b778c",margin:"0 0 32px"}}>가장 많이 사용하는 계산기</p>
-        <div style={{display:"grid",gridTemplateColumns:isMo?"repeat(2,1fr)":"repeat(4,1fr)",gap:isMo?10:16,maxWidth:1200,margin:"0 auto"}}>
-          {[{id:"acquisition",bg:"#EFF6FF",svg:<IconHome/>},
-            {id:"transfer",bg:"#EFF6FF",svg:<IconDocArrow/>},
-            {id:"inctax",bg:"#EFF6FF",svg:<IconPieChart/>},
-            {id:"yearend",bg:"#EFF6FF",svg:<IconCal/>},
-            {id:"dsr",bg:"#EFF6FF",svg:<IconGauge/>},
-            {id:"netsalary",bg:"#EFF6FF",svg:<IconWallet/>},
-            {id:"commission",bg:"#EFF6FF",svg:<IconHandshake/>},
-            {id:"pension",bg:"#EFF6FF",svg:<IconUser/>}
-          ].map(p=>{
-            const info=CL.find(c=>c.id===p.id);
-            return(<div key={p.id} onClick={()=>goCalc(p.id)} style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:isMo?"16px 8px":"32px 24px",textAlign:"center",cursor:"pointer",transition:"all .25s",minHeight:"auto"}}
-              onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-6px)";e.currentTarget.style.boxShadow="0 12px 32px rgba(7,71,166,.12)";e.currentTarget.style.borderColor="#0747A6";}}
-              onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";e.currentTarget.style.borderColor=P.bd;}}>
-              <div style={{width:isMo?48:64,height:isMo?48:64,borderRadius:"50%",background:p.bg,margin:"0 auto 12px",display:"flex",alignItems:"center",justifyContent:"center"}}>{p.svg}</div>
-              <div style={{fontSize:isMo?13:17,fontWeight:700,color:"#172B4D",letterSpacing:-.5,marginBottom:6}}>{info?.l}</div>
-              {!isMo&&<div style={{fontSize:13,color:"#6b778c",lineHeight:1.5,fontWeight:400,whiteSpace:"nowrap"}}>{DESC[p.id]}</div>}
-            </div>);
-          })}
+      {/* 2026.04.15 sample-home 기준 인기 12카드 (PC) */}
+      {!isMo&&<div style={{background:"#fff",padding:"72px 32px",maxWidth:"100%",overflow:"hidden"}}>
+        <div style={{maxWidth:1200,margin:"0 auto"}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:32}}>
+            <div>
+              <div style={{fontSize:12,fontWeight:800,color:"#3b82f6",letterSpacing:1.5,textTransform:"uppercase",marginBottom:6}}>Trending Tools</div>
+              <h2 style={{fontSize:32,fontWeight:800,color:"#0a1628",letterSpacing:-.8,margin:0}}>인기 계산기</h2>
+            </div>
+            <a onClick={()=>{document.getElementById("allCalcs")?.scrollIntoView({behavior:"smooth"})}} style={{fontSize:14,fontWeight:700,color:"#0a1628",cursor:"pointer"}}>전체 62개 보기 →</a>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:16}}>
+            {[
+              {id:"acquisition",color:"#eff6ff",fg:"#2563eb",svg:<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>,desc:"매매·증여·상속 취득세 자동 계산"},
+              {id:"transfer",color:"#f0fdf4",fg:"#15803d",svg:<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>,desc:"장기보유특별공제·중과 자동 판정"},
+              {id:"inctax",color:"#fefce8",fg:"#a16207",svg:<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>,desc:"누진세율·인적공제 자동 계산"},
+              {id:"mortgage",color:"#faf5ff",fg:"#7e22ce",svg:<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="10" width="18" height="11" rx="2"/><path d="M3 10l9-7 9 7"/><line x1="12" y1="10" x2="12" y2="21"/><line x1="3" y1="15" x2="21" y2="15"/></svg>,desc:"원리금균등·원금균등 비교"},
+              {id:"gift",color:"#fdf2f8",fg:"#be185d",svg:<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><path d="M12 22V7"/></svg>,desc:"10년 합산·공제한도 자동 적용"},
+              {id:"property",color:"#f0fdfa",fg:"#0f766e",svg:<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01M16 6h.01M8 10h.01M16 10h.01"/></svg>,desc:"주택·토지·건축물 세부담 상한"},
+              {id:"yearend",color:"#f1f5f9",fg:"#0a1628",svg:<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>,desc:"13월의 월급 환급액 미리 확인"},
+              {id:"dsr",color:"#fff7ed",fg:"#c2410c",svg:<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>,desc:"스트레스DSR·연령별 한도 반영"},
+              {id:"netsalary",color:"#eff6ff",fg:"#2563eb",svg:<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4z"/></svg>,desc:"4대보험·소득세 공제 후 월급"},
+              {id:"compre",color:"#f0fdf4",fg:"#15803d",svg:<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>,desc:"1주택 12억 공제·고령자 세액공제"},
+              {id:"convert",color:"#fefce8",fg:"#a16207",svg:<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M7 16V4m0 0L3 8m4-4l4 4"/><path d="M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>,desc:"법정 상한 5% 기준 자동 계산"},
+              {id:"inherit",color:"#faf5ff",fg:"#7e22ce",svg:<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v18"/><path d="M3 9l9-6 9 6"/></svg>,desc:"배우자·일괄공제 최대 활용"},
+            ].map(p=>{
+              const info=CL.find(c=>c.id===p.id);
+              if(!info)return null;
+              return(<div key={p.id} onClick={()=>goCalc(p.id)} style={{background:"#fff",border:"1px solid #dfe1e6",borderRadius:14,padding:"24px 22px",cursor:"pointer",transition:"all .2s"}}
+                onMouseEnter={e=>{e.currentTarget.style.borderColor="#3b82f6";e.currentTarget.style.transform="translateY(-3px)";e.currentTarget.style.boxShadow="0 12px 28px rgba(10,22,40,0.08)";}}
+                onMouseLeave={e=>{e.currentTarget.style.borderColor="#dfe1e6";e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";}}>
+                <div style={{width:44,height:44,borderRadius:11,background:p.color,color:p.fg,display:"flex",alignItems:"center",justifyContent:"center",marginBottom:14}}>{p.svg}</div>
+                <h3 style={{fontSize:15,fontWeight:700,color:"#172B4D",margin:"0 0 4px"}}>{info.l}</h3>
+                <p style={{fontSize:12,color:"#505f79",margin:0,lineHeight:1.55}}>{p.desc}</p>
+              </div>);
+            })}
+          </div>
         </div>
       </div>}
 
@@ -5846,6 +5859,46 @@ body.lc-embed main{padding-top:0!important}
       <CalcGrid navigateCalc={navigateCalc} isMo={isMo}/>
       <AdSlot position="home_bottom"/>
       <HomeSections isMo={isMo} effectiveUser={effectiveUser} navigateCalc={navigateCalc} setAuthMode={setAuthMode} setShowAuth={setShowAuth} navigateInfo={navigateInfo}/>
+      {/* 2026.04.15 sample-home 통계 배너 (PC) */}
+      {!isMo&&<div style={{background:"#0a1628",padding:"56px 32px"}}>
+        <div style={{maxWidth:1200,margin:"0 auto",display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:24,textAlign:"center",color:"#fff"}}>
+          {[{num:"62",lbl:"가지 전문 계산기"},{num:"200만+",lbl:"월간 사용자"},{num:"2026",lbl:"최신 세법 반영"},{num:"98.2%",lbl:"홈택스 대비 정확도"}].map((s,i)=>(<div key={i}>
+            <div style={{fontSize:40,fontWeight:800,color:"#3b82f6",letterSpacing:-1,lineHeight:1}}>{s.num}</div>
+            <div style={{fontSize:13,opacity:0.8,marginTop:8,fontWeight:500}}>{s.lbl}</div>
+          </div>))}
+        </div>
+      </div>}
+      {/* 2026.04.15 sample-home 디렉토리 5열 (PC) */}
+      {!isMo&&<div style={{background:"#fff",padding:"72px 32px"}}>
+        <div style={{maxWidth:1200,margin:"0 auto"}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:32}}>
+            <div>
+              <div style={{fontSize:12,fontWeight:800,color:"#3b82f6",letterSpacing:1.5,textTransform:"uppercase",marginBottom:6}}>Full Directory</div>
+              <h2 style={{fontSize:32,fontWeight:800,color:"#0a1628",letterSpacing:-.8,margin:0}}>전체 계산기</h2>
+            </div>
+            <p style={{margin:0,color:"#505f79",fontSize:14}}>카테고리별로 쉽게 찾는 62가지 계산기</p>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:16}}>
+            {CATS.filter(c=>c.id!=="pro").map(cat=>{
+              const catCalcs=CL.filter(cl=>cl.c===cat.id);
+              const subMap={tax:"취득·양도·종합소득",loan:"DSR·LTV 규제",cost:"중개·등기·법무",life:"월급·보험·일상",realestate:"투자·임대·경매"};
+              return(<div key={cat.id} style={{background:"#fff",border:"1px solid #dfe1e6",borderRadius:14,padding:"20px 18px"}}>
+                <h3 style={{fontSize:13,fontWeight:800,color:"#0a1628",margin:"0 0 4px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                  {cat.l}
+                  <span style={{fontSize:10,fontWeight:700,color:"#3b82f6",background:"#eff6ff",padding:"3px 8px",borderRadius:10}}>{catCalcs.length}</span>
+                </h3>
+                <p style={{fontSize:10,color:"#505f79",margin:"0 0 12px",paddingBottom:10,borderBottom:"1px solid #dfe1e6"}}>{subMap[cat.id]||""}</p>
+                <ul style={{listStyle:"none",padding:0,margin:0}}>
+                  {catCalcs.map(cl=>(<li key={cl.id} onClick={()=>navigateCalc(cat.id,cl.id)} style={{padding:"6px 0",fontSize:12,color:"#374151",display:"flex",justifyContent:"space-between",cursor:"pointer",transition:"color .15s"}} onMouseEnter={e=>e.currentTarget.style.color="#3b82f6"} onMouseLeave={e=>e.currentTarget.style.color="#374151"}>
+                    {cl.l}
+                    <span style={{color:"#cbd5e1",fontSize:10}}>→</span>
+                  </li>))}
+                </ul>
+              </div>);
+            })}
+          </div>
+        </div>
+      </div>}
 
     </>):(
     <>
