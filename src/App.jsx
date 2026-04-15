@@ -3,6 +3,15 @@ import { supabase } from './supabase.js';
 // v2026.04.06
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+// 2026.04.15 AI PRO 인사이트 보고서 7편
+import ReportIndex, {REPORTS_META, REPORTS_BY_CALC} from './pages/reports/ReportIndex';
+import Report01 from './pages/reports/Report01';
+import Report02 from './pages/reports/Report02';
+import Report03 from './pages/reports/Report03';
+import Report04 from './pages/reports/Report04';
+import Report05 from './pages/reports/Report05';
+import Report06 from './pages/reports/Report06';
+import Report07 from './pages/reports/Report07';
 // 2026.04.14 신규 18개 계산기 + 브랜드 PDF 통합
 import CalcAuction2 from './calcs/CalcAuction2';
 import CalcAuctionDiv from './calcs/CalcAuctionDiv';
@@ -636,6 +645,7 @@ const INFO_MENU_COLS=[
     {k:"history",title:"세법 개정 히스토리",desc:"연도별 변경사항",href:"/learn/tax-history"}
   ]},
   {title:"학습·가이드",items:[
+    {k:"reports",title:"AI 분석 보고서",desc:"PRO 인사이트 7편",href:"/reports"},
     {k:"guide",title:"전문가 가이드",desc:"세무사 추천 가이드",href:"/guide"},
     {k:"law",title:"규정·법령",desc:"관련 법령 원문",href:"/law"},
     {k:"saving",title:"절세 전략",desc:"세금 절감 방법",href:"/learn/tax-saving"},
@@ -4389,6 +4399,9 @@ function LearnTaxHistory(){return(<>
     <ul style={_SW.ul}><li style={_SW.li}><b>2026.5.9</b> — 다주택자 양도세 중과 유예 만료</li><li style={_SW.li}><b>2026 하반기</b> — 스트레스 DSR 3단계 시행 검토 (변동 +2.0%p)</li><li style={_SW.li}><b>2027</b> — 공시가격 현실화 로드맵 재검토 예정</li><li style={_SW.li}><b>2028.12.31</b> — 생애최초 취득세 감면 일몰</li><li style={_SW.li}><b>상시 검토</b> — 증여세 세율·공제 구조 개편 논의 중</li></ul></_SS>
 </>);}
 
+/* 2026.04.15 AI PRO 인사이트 보고서 라우팅 */
+const REPORTS_MAP={"index":ReportIndex,"01":Report01,"02":Report02,"03":Report03,"04":Report04,"05":Report05,"06":Report06,"07":Report07};
+function ReportsPage({slug,isMo,navigateHome}){const Comp=REPORTS_MAP[slug||"index"]||ReportIndex;return(<Comp isMo={isMo} navigateHome={navigateHome}/>);}
 const LEARN_MAP={"tax-basics":LearnTaxBasics,"loan-guide":LearnLoanGuide,"tax-saving":LearnTaxSaving,"investment-checklist":LearnInvestChecklist,"calculator-guide":LearnCalculatorGuide,"tax-history":LearnTaxHistory};
 function LearnPage({slug,isMo,navigateHome}){const Comp=LEARN_MAP[slug];return(<div style={{maxWidth:880,margin:"0 auto",padding:isMo?"24px 16px":"40px 24px",minHeight:"60vh"}}>
   <SpaBackBtn navigateHome={navigateHome}/>
@@ -5545,6 +5558,8 @@ export default function App(){
     if(hash==="verification"){setPage("verification");return;}
     if(hash==="terms"){setPage("terms");return;}
     if(hash.startsWith("terms/")){setPage("html:/"+hash+".html");return;}
+    if(hash==="reports"){setPage("reports:index");return;}
+    if(hash.startsWith("reports/")){const slug=hash.replace("reports/","");if(REPORTS_MAP[slug]){setPage("reports:"+slug);return;}setPage("reports:index");return;}
     if(hash.startsWith("learn/")){const slug=hash.replace("learn/","");if(LEARN_MAP[slug]){setPage("learn:"+slug);return;}setPage("html:/"+hash+".html");return;}
     if(hash.startsWith("law/")){const slug=hash.replace("law/","");if(LAW_MAP[slug]){setPage("law:"+slug);return;}setPage("html:/"+hash+".html");return;}
     if(["privacy","contact","disclaimer","resource"].includes(hash)){setPage("legal_"+hash);}
@@ -5558,8 +5573,8 @@ export default function App(){
       const href=a.getAttribute("href");
       if(!href||!href.startsWith("/"))return;
       if(a.target==="_blank")return;
-      const spaPaths=["/news","/community","/policy","/market","/info","/about","/guide","/pricing","/verification","/terms"];
-      const spaPrefixes=["/terms/","/learn/","/law/"];
+      const spaPaths=["/news","/community","/policy","/market","/info","/about","/guide","/pricing","/verification","/terms","/reports"];
+      const spaPrefixes=["/terms/","/learn/","/law/","/reports/"];
       const isSpa=spaPaths.includes(href)||spaPrefixes.some(p=>href.startsWith(p));
       if(!isSpa)return;
       if(/\.html?$/i.test(href))return;
@@ -5717,7 +5732,7 @@ body.lc-embed main{padding-top:0!important}
     <div style={{display:"flex",alignItems:"flex-start"}}>
     {page!=="home"&&!isMo&&<LeftNav isMo={isMo} navOpen={navOpen} setNavOpen={setNavOpen} navContent={navContent} setNavContent={setNavContent} effectiveUser={effectiveUser} setAuthMode={setAuthMode} setShowAuth={setShowAuth} navigateMyPage={navigateMyPage} calc={calc}/>}
     <main style={{flex:"1 1 auto",minWidth:0}}>
-    {page==="mypage"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><MyPage user={effectiveUser} lcToken={lcToken} lcEmail={lcEmail} onLcLogout={()=>{try{localStorage.removeItem('lc_token');localStorage.removeItem('lc_email');}catch{}setLcToken("");setLcEmail("");}} onBack={navigateHome} onLogout={handleLogout}/></div>):page==="info"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><InfoHub isMo={isMo} navigateHome={navigateHome}/></div>):page==="news"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><NewsPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="community"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><CommunityPage isMo={isMo} navigateHome={navigateHome} effectiveUser={effectiveUser}/></div>):page==="policy"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><PolicyPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="market"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><MarketPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="terms"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><TermsHubPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="about"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><AboutPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="guide"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><GuidePage isMo={isMo} navigateHome={navigateHome}/></div>):page==="pricing"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><PricingPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="verification"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><VerificationPage isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("learn:")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LearnPage slug={page.replace("learn:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("law:")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LawPage slug={page.replace("law:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("html:")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><HtmlAdapterPage url={page.replace("html:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("legal_")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LegalPage type={page.replace("legal_","")} onBack={navigateHome}/></div>):page==="home"?(<>
+    {page==="mypage"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><MyPage user={effectiveUser} lcToken={lcToken} lcEmail={lcEmail} onLcLogout={()=>{try{localStorage.removeItem('lc_token');localStorage.removeItem('lc_email');}catch{}setLcToken("");setLcEmail("");}} onBack={navigateHome} onLogout={handleLogout}/></div>):page==="info"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><InfoHub isMo={isMo} navigateHome={navigateHome}/></div>):page==="news"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><NewsPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="community"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><CommunityPage isMo={isMo} navigateHome={navigateHome} effectiveUser={effectiveUser}/></div>):page==="policy"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><PolicyPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="market"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><MarketPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="terms"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><TermsHubPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="about"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><AboutPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="guide"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><GuidePage isMo={isMo} navigateHome={navigateHome}/></div>):page==="pricing"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><PricingPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="verification"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><VerificationPage isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("reports:")?(<div style={{background:"#f8f9fb",minHeight:"100vh"}}><ReportsPage slug={page.replace("reports:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("learn:")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LearnPage slug={page.replace("learn:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("law:")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LawPage slug={page.replace("law:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("html:")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><HtmlAdapterPage url={page.replace("html:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("legal_")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LegalPage type={page.replace("legal_","")} onBack={navigateHome}/></div>):page==="home"?(<>
       {favorites.length>0&&<div style={{maxWidth:1200,margin:"0 auto",padding:isMo?"16px 16px 0":"32px 24px 0",background:isMo?"#f8f9fc":"transparent"}}>
         <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12}}>
           <span style={{display:"inline-flex",alignItems:"center"}}><Ico.star size={18}/></span>
