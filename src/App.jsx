@@ -1592,7 +1592,7 @@ function AcqLookupModal({onClose,onApplyPrice,onApplyStd}){
 /* ═══ 계산기 ═══ */
 
 function CalcAcq({isMo=false,onNav=()=>{}}){
-  const[acqType,sAT]=useState("sale");const[realType,sRT]=useState("house");const[areaType,sAreaType]=useState("85");const[price,sP]=useState("");const[stdPrice,setStdPrice]=useState("");const[own,sO]=useState("1");const[isTempTwo,sTT]=useState("no");const[inheritNone,sIN]=useState("no");const[chipDesc,setChipDesc]=useState(null);const[showStdModal,setShowStdModal]=useState(false);
+  const[acqType,sAT]=useState("sale");const[realType,sRT]=useState("house");const[areaType,sAreaType]=useState("85");const[price,sP]=useState("");const[stdPrice,setStdPrice]=useState("");const[own,sO]=useState("1");const[isTempTwo,sTT]=useState("no");const[inheritNone,sIN]=useState("no");const[chipDesc,setChipDesc]=useState(null);
   const showChipPanel=(label,desc)=>{if(_popoverTimer){clearTimeout(_popoverTimer);_popoverTimer=null;}setChipDesc({key:label,label,desc,color:"#172B4D",bg:"#f4f5f7",bc:"#dfe1e6"});};
   const hideChipPanel=()=>{_popoverTimer=setTimeout(()=>setChipDesc(null),200);};
   const[corporation,setCorporation]=useState(false);const[firstDistribution,setFirstDistribution]=useState(false);const[conArea,setConArea]=useState(false);const[metro,setMetro]=useState(false);const[populationDecline,setPopulationDecline]=useState(false);const[firstOfLife,setFirstOfLife]=useState(false);const[heavyTaxExclude,setHeavyTaxExclude]=useState(false);const[spouseChildGive,setSpouseChildGive]=useState(false);const[cultivation,setCultivation]=useState(false);const[birthChild,setBirthChild]=useState(false);
@@ -1754,9 +1754,9 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
       {showAcqLookup&&<AcqLookupModal onClose={()=>setShowAcqLookup(false)} onApplyPrice={v=>{sP(String(Math.round(v/10000)));setShowAcqLookup(false);}} onApplyStd={v=>{setStdPrice(String(Math.round(v/10000)));setShowAcqLookup(false);}}/>}
       {/* 2026.04.14 취득가액 — 인라인 레이아웃 (PC width:480, 모바일 100%) */}
       <div style={{marginBottom:isMo?8:12}}>
-        <div style={{display:"flex",alignItems:isMo?"stretch":"center",flexDirection:isMo?"column":"row",justifyContent:"space-between",gap:isMo?6:8,marginBottom:4,flexWrap:"wrap"}}>
+        <div style={isMo?{display:"flex",alignItems:"stretch",flexDirection:"column",gap:6,marginBottom:4}:{display:"grid",gridTemplateColumns:"1fr 520px",alignItems:"center",gap:8,marginBottom:4}}>
           <label style={{fontSize:isMo?13:14,fontWeight:600,color:"#0a1628",lineHeight:1.6,wordBreak:"keep-all"}}>{acqType==="sale"?"취득가액 (실거래가)":acqType==="gift"||acqType==="inherit"?"시가인정액 또는 시가표준액":acqType==="newbuild"?"건축 원가":"취득가액"}</label>
-          <div style={{display:"flex",alignItems:"center",gap:6,width:isMo?"100%":"auto"}}>
+          <div style={{display:"flex",alignItems:"center",gap:6,width:isMo?"100%":"auto",justifyContent:"flex-end"}}>
             <input type="text" value={price?Number(String(price).replace(/,/g,"")).toLocaleString("ko-KR"):""} onChange={e=>{const raw=e.target.value.replace(/,/g,"");if(raw===""||/^\d+$/.test(raw))sP(raw);}} placeholder="예: 12500" style={{width:isMo?"100%":480,maxWidth:"100%",textAlign:"right",padding:isMo?"12px 14px":"8px 12px",border:_hasErrors?"1.5px solid #3b82f6":"1.5px solid #dfe1e6",borderRadius:8,fontSize:isMo?16:15,fontWeight:700,color:P.tx,background:P.lt,outline:"none",fontFamily:"inherit",minHeight:isMo?48:undefined,boxShadow:_hasErrors?"0 0 0 3px rgba(59,130,246,0.1)":"none"}}/>
             <span style={{fontSize:13,color:P.mt,fontWeight:500}}>만원</span>
           </div>
@@ -1765,9 +1765,9 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
       {isMo&&<hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"8px 0"}}/>}
       {/* 2026.04.14 시가표준액 인라인 레이아웃 */}
       <div style={{marginBottom:isMo?8:12}}>
-        <div style={{display:"flex",alignItems:isMo?"stretch":"center",flexDirection:isMo?"column":"row",justifyContent:"space-between",gap:isMo?6:8,marginBottom:4,flexWrap:"wrap"}}>
-          <label style={{fontSize:isMo?13:14,fontWeight:600,color:"#0a1628",lineHeight:1.6,wordBreak:"keep-all",display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>시가표준액 (공시가격) {!isMo&&<button type="button" onClick={()=>setShowStdModal(true)} style={{padding:"4px 10px",background:"#eff6ff",border:"1px solid #bfdbfe",borderRadius:6,fontSize:11,fontWeight:700,color:"#0747A6",cursor:"pointer",fontFamily:"inherit"}}>🔍 주소로 조회</button>} <TipModal title="시가표준액 (공시가격)"><p>미입력 시 취득가액을 시가표준액으로 간주합니다.</p><ul style={{paddingLeft:20}}><li>취득가액보다 시가표준액이 크면 시가표준액이 과세표준</li><li>시가표준액 1억 미만이면 다주택 중과 제외</li><li>조정대상지역 증여 시 시가표준액 3억 초과하면 12% 중과</li></ul><p style={{marginTop:10}}>공시가격은 부동산공시가격알리미(realtyprice.kr)에서 조회하실 수 있습니다. <a href="https://www.realtyprice.kr" target="_blank" rel="noopener noreferrer" style={{color:"#0747A6",fontWeight:700,textDecoration:"none"}}>바로가기 →</a></p></TipModal></label>
-          <div style={{display:"flex",alignItems:"center",gap:6,width:isMo?"100%":"auto"}}>
+        <div style={isMo?{display:"flex",alignItems:"stretch",flexDirection:"column",gap:6,marginBottom:4}:{display:"grid",gridTemplateColumns:"1fr 520px",alignItems:"center",gap:8,marginBottom:4}}>
+          <label style={{fontSize:isMo?13:14,fontWeight:600,color:"#0a1628",lineHeight:1.6,wordBreak:"keep-all"}}>시가표준액 (공시가격) <TipModal title="시가표준액 (공시가격)"><p>미입력 시 취득가액을 시가표준액으로 간주합니다.</p><ul style={{paddingLeft:20}}><li>취득가액보다 시가표준액이 크면 시가표준액이 과세표준</li><li>시가표준액 1억 미만이면 다주택 중과 제외</li><li>조정대상지역 증여 시 시가표준액 3억 초과하면 12% 중과</li></ul><p style={{marginTop:10}}>공시가격은 부동산공시가격알리미(realtyprice.kr)에서 조회하실 수 있습니다. <a href="https://www.realtyprice.kr" target="_blank" rel="noopener noreferrer" style={{color:"#0747A6",fontWeight:700,textDecoration:"none"}}>바로가기 →</a></p></TipModal></label>
+          <div style={{display:"flex",alignItems:"center",gap:6,width:isMo?"100%":"auto",justifyContent:"flex-end"}}>
             <input type="text" value={stdPrice?Number(String(stdPrice).replace(/,/g,"")).toLocaleString("ko-KR"):""} onChange={e=>{const raw=e.target.value.replace(/,/g,"");if(raw===""||/^\d+$/.test(raw))setStdPrice(raw);}} placeholder="미입력 시 취득가 사용" style={{width:isMo?"100%":480,maxWidth:"100%",textAlign:"right",padding:isMo?"12px 14px":"8px 12px",border:"1.5px solid #dfe1e6",borderRadius:8,fontSize:isMo?16:15,fontWeight:700,color:P.tx,background:P.lt,outline:"none",fontFamily:"inherit",minHeight:isMo?48:undefined}}/>
             <span style={{fontSize:13,color:P.mt,fontWeight:500}}>만원</span>
           </div>
@@ -1817,7 +1817,6 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
     <div style={{marginTop:32}}><NextStep calcId="acquisition" onNav={onNav} isMo={isMo}/></div>
     {/* 2026.04.16 sample-calc 기준: 근처 실거래가 조회 버튼 제거 */}
     </div>
-    {showStdModal&&<StdPriceLookupModal onClose={()=>setShowStdModal(false)} onApply={(v)=>setStdPrice(String(v))}/>}
   </div>);
 }
 
