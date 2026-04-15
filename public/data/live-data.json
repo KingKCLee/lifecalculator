@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "style: 로고 그라데이션·버튼 ON 상태 색상 #0141f9 통일",
+      "desc": "style: 로고 그라데이션·버튼 ON 상태 색상 #0141f9 통일"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "feat(calc): sample-calc 정확 spec 5항목 추가 반영",
       "desc": "feat(calc): sample-calc 정확 spec 5항목 추가 반영"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "feat: SavingsGuide 컴포넌트 + 8개 주요 계산기 절세 가이드 통합",
       "desc": "feat: SavingsGuide 컴포넌트 + 8개 주요 계산기 절세 가이드 통합"
-    },
-    {
-      "date": "2026.04.15",
-      "category": "전체",
-      "title": "feat(data): 홈화면 정책 태그·최신 정책 JSON 추가",
-      "desc": "feat(data): 홈화면 정책 태그·최신 정책 JSON 추가"
     }
   ],
   "rates": {
