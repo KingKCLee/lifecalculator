@@ -2219,9 +2219,9 @@ function Placeholder({l}){return (<div style={{padding:40,textAlign:"center",col
 function RateTable({title,headers,rows}){
   const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
   return(
-    <div style={{marginTop:0,borderRadius:12,overflow:"hidden",border:"1px solid #dfe1e6"}}>
-      <div style={{padding:"10px 14px",background:"#f4f5f7",fontSize:12,fontWeight:700,color:"#172B4D",display:"flex",alignItems:"center",gap:6}}><Ico.chart size={14}/>{title}</div>
-      <div style={{overflowX:"auto"}}>
+    <div className="lc-ratetable" style={{marginTop:0,borderRadius:12,overflow:"hidden",border:"1px solid #dfe1e6"}}>
+      <div style={{padding:isMo?"10px 12px":"10px 14px",background:"#f4f5f7",fontSize:12,fontWeight:700,color:"#172B4D",display:"flex",alignItems:"center",gap:6}}><Ico.chart size={14}/>{title}</div>
+      <div style={{overflowX:"auto",WebkitOverflowScrolling:"touch"}}>
         <table style={{width:"100%",borderCollapse:"collapse",fontSize:12,background:"#fff"}}>
           <thead><tr>{headers.map((h,i)=><th key={i} style={{padding:"8px 10px",background:"#0747A6",color:"#fff",fontWeight:600,textAlign:i===0?"left":"center",whiteSpace:"nowrap",fontSize:11}}>{h}</th>)}</tr></thead>
           <tbody>{rows.map((r,ri)=><tr key={ri} style={{background:ri%2===0?"#fff":"#f8f9fc"}}>
@@ -2310,7 +2310,9 @@ function MobileCalcWrapper({children}){
     <style>{`
       .mobile-calc-wrap *{box-sizing:border-box!important}
       .mobile-calc-wrap>div{display:flex!important;flex-direction:column!important;gap:16px!important;max-width:100%!important}
-      .mobile-calc-wrap>div>div{max-width:100%!important}
+      .mobile-calc-wrap>div>div{display:contents!important}
+      .mobile-calc-wrap .lc-ratetable{order:4!important;width:100%!important;max-width:100%!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch}
+      .mobile-calc-wrap .lc-ratetable td,.mobile-calc-wrap .lc-ratetable th{padding:8px 10px!important;font-size:12px!important}
       .mobile-calc-wrap input:not([type="range"]),.mobile-calc-wrap select{width:100%!important;max-width:100%!important;font-size:16px!important;padding:14px 12px!important;min-height:48px!important}
       .mobile-calc-wrap button{max-width:100%!important;font-size:14px!important;line-height:1.4!important;word-break:keep-all!important;min-height:44px!important}
       .mobile-calc-wrap .radio-grid button{padding:10px 4px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;height:auto!important;min-height:44px!important;display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important}
