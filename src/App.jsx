@@ -5302,12 +5302,14 @@ export default function App(){
   const megaClickClose=()=>{megaClickRef.current=Date.now();setShowInfoMenu(false);};
   const[sessionKey,setSessionKey]=useState(0);
   useEffect(()=>{
-    const onVis=()=>{if(document.visibilityState==="hidden")setSessionKey(k=>k+1);};
+    const onVis=()=>{if(document.visibilityState==="visible")setSessionKey(k=>k+1);};
     const onPop=()=>setSessionKey(k=>k+1);
     document.addEventListener("visibilitychange",onVis);
     window.addEventListener("popstate",onPop);
     return()=>{document.removeEventListener("visibilitychange",onVis);window.removeEventListener("popstate",onPop);};
   },[]);
+  // 2026.04.15 page 변경 시 항상 sessionKey 증가 → 계산기 완전 초기화
+  useEffect(()=>{setSessionKey(k=>k+1);},[page]);
   const[liveData,setLiveData]=useState(null);
   // 2026-04-14 좌측 네비 패널 (Expert Guide / Learning Center / Market Data / 지난 계산 내역)
   const[sidePanel,setSidePanel]=useState(null);
@@ -5341,7 +5343,7 @@ export default function App(){
   useEffect(()=>{fetch('/data/live-data.json?t='+Date.now()).then(r=>r.json()).then(d=>{setLiveData(d);RATES=d?.rates||{};}).catch(()=>{});},[]);
   
   const filtered=CL.filter(c=>c.c===cat);
-  const navigateCalc=(catId,calcId)=>{setCat(catId);setCalc(calcId);setPage("calc");const slug=SLUGS[calcId]||calcId;history.pushState(null,"","/"+encodeURIComponent(slug));window.scrollTo(0,0);const info=CL.find(c=>c.id===calcId);if(info)saveHistory(calcId,info.l,1);};
+  const navigateCalc=(catId,calcId)=>{setCat(catId);setCalc(calcId);setPage("calc");setSessionKey(k=>k+1);const slug=SLUGS[calcId]||calcId;history.pushState(null,"","/"+encodeURIComponent(slug));window.scrollTo(0,0);const info=CL.find(c=>c.id===calcId);if(info)saveHistory(calcId,info.l,1);};
   const navigateHome=()=>{setPage("home");history.pushState(null,"","/");window.scrollTo(0,0);};
   const navigateInfo=()=>{setPage("info");history.pushState(null,"","/info");window.scrollTo(0,0);setShowInfoMenu(false);};
   const navigateLegal=(type)=>{setPage("legal_"+type);history.pushState(null,"","/"+type);window.scrollTo(0,0);};
