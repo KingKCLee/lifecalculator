@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.15",
       "category": "전체",
+      "title": "fix: 메가메뉴 카테고리 개수 삭제 + RP AIGuide 위치 이동",
+      "desc": "fix: 메가메뉴 카테고리 개수 삭제 + RP AIGuide 위치 이동"
+    },
+    {
+      "date": "2026.04.15",
+      "category": "전체",
       "title": "fix(megamenu): 탑메뉴 hover 배경·scale·클릭 이동 방지 근본 수정",
       "desc": "fix(megamenu): 탑메뉴 hover 배경·scale·클릭 이동 방지 근본 수정"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "refactor: REGION_DATA 인라인 상수 제거·public/data/lawd.json 동적 로드·드릴다운 UI 복원",
       "desc": "refactor: REGION_DATA 인라인 상수 제거·public/data/lawd.json 동적 로드·드릴다운 UI 복원"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "전체",
-      "title": "fix: Tog/Radio flexWrap:wrap 적용·홈화면 62가지 문구 통일",
-      "desc": "fix: Tog/Radio flexWrap:wrap 적용·홈화면 62가지 문구 통일"
     }
   ],
   "rates": {
