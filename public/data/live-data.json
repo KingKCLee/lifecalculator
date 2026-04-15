@@ -1168,6 +1168,12 @@
   "updateLog": [
     {
       "date": "2026.04.15",
+      "category": "전체",
+      "title": "style: 홈 섹션 헤더 이모지 5종 SVG 아이콘 교체",
+      "desc": "style: 홈 섹션 헤더 이모지 5종 SVG 아이콘 교체"
+    },
+    {
+      "date": "2026.04.15",
       "category": "세금",
       "title": "style: 취득세 '공시가격 1억 이하 중과 제외' 안내박스 하단 여백 16px 추가",
       "desc": "style: 취득세 '공시가격 1억 이하 중과 제외' 안내박스 하단 여백 16px 추가"
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "feat: CalcAcq 시가표준액 V-world 호출 JSONP 방식으로 변경 (CORS 우회)",
       "desc": "feat: CalcAcq 시가표준액 V-world 호출 JSONP 방식으로 변경 (CORS 우회)"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "전체",
-      "title": "feat: 시가표준액 2단계 조회 (worker PNU → 브라우저 V-world 직접 호출)",
-      "desc": "feat: 시가표준액 2단계 조회 (worker PNU → 브라우저 V-world 직접 호출)"
     }
   ],
   "rates": {
