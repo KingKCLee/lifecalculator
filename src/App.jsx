@@ -5627,7 +5627,7 @@ body.lc-embed main{padding-top:0!important}
           <div style={{position:"absolute",left:"50%",top:0,bottom:0,transform:"translateX(-50%)",display:"flex",alignItems:"center",gap:4}}>
             {CATS.map(c=>{const items=CL.filter(cl=>cl.c===c.id);const active=cat===c.id&&page!=="home";const hot=hoverCat===c.id;return(
               <div key={c.id} onMouseEnter={()=>setHoverCat(c.id)} onMouseLeave={()=>setHoverCat(null)} style={{position:"relative"}}>
-                <button onClick={()=>{hCat(c.id);setPage("calc");}} style={{padding:"0 16px",border:"none",borderRadius:0,background:"transparent",color:active?"#0747A6":hot?"#0a1628":"#6B7280",fontSize:16,fontWeight:active?700:600,cursor:"pointer",fontFamily:"inherit",borderBottom:active?"3px solid #0747A6":"3px solid transparent",transition:"all .15s",height:64,display:"flex",alignItems:"center",gap:6}}><span style={{display:"inline-flex"}}>{TAB_ICONS[c.id]}</span>{c.l}</button>
+                <button onClick={()=>setHoverCat(hoverCat===c.id?null:c.id)} style={{padding:"0 16px",border:"none",borderRadius:0,background:"transparent",color:active?"#0747A6":hot?"#0a1628":"#6B7280",fontSize:16,fontWeight:active?700:600,cursor:"pointer",fontFamily:"inherit",borderBottom:active?"3px solid #0747A6":"3px solid transparent",transition:"all .15s",height:64,display:"flex",alignItems:"center",gap:6}}><span style={{display:"inline-flex"}}>{TAB_ICONS[c.id]}</span>{c.l}</button>
                 {hot&&<div style={{position:"absolute",top:"100%",left:0,paddingTop:0,zIndex:1000}}>
                   <div style={{background:"#fff",borderRadius:"0 0 8px 8px",border:"1px solid #E5E7EB",borderTop:"none",boxShadow:"0 8px 24px rgba(0,0,0,0.12)",padding:"8px 0",minWidth:220}}>
                     <div style={{padding:"8px 16px 6px",fontSize:11,fontWeight:700,color:"#6B7280",letterSpacing:1}}>{c.l} — {items.length}개</div>
@@ -5640,7 +5640,7 @@ body.lc-embed main{padding-top:0!important}
               </div>
             );})}
             <div onMouseEnter={megaOpen} onMouseLeave={megaClose} style={{position:"relative"}}>
-              <button onClick={()=>{megaClickClose();navigateInfo();}} style={{padding:"0 16px",border:"none",borderRadius:0,background:"transparent",color:page==="info"?"#0747A6":showInfoMenu?"#0a1628":"#6B7280",fontSize:16,fontWeight:page==="info"?700:600,cursor:"pointer",fontFamily:"inherit",borderBottom:page==="info"?"3px solid #0747A6":"3px solid transparent",transition:"all .15s",height:64,display:"flex",alignItems:"center",gap:6}}><span style={{display:"inline-flex"}}>{TAB_ICONS.info}</span>정보센터</button>
+              <button onClick={()=>setShowInfoMenu(v=>!v)} style={{padding:"0 16px",border:"none",borderRadius:0,background:"transparent",color:page==="info"?"#0747A6":showInfoMenu?"#0a1628":"#6B7280",fontSize:16,fontWeight:page==="info"?700:600,cursor:"pointer",fontFamily:"inherit",borderBottom:page==="info"?"3px solid #0747A6":"3px solid transparent",transition:"all .15s",height:64,display:"flex",alignItems:"center",gap:6}}><span style={{display:"inline-flex"}}>{TAB_ICONS.info}</span>정보센터</button>
               {showInfoMenu&&<div style={{position:"absolute",top:"100%",right:0,width:720,background:"#fff",borderTop:"2px solid #0747A6",borderRadius:"0 0 12px 12px",boxShadow:"0 8px 24px rgba(0,0,0,0.12)",zIndex:1000,padding:24}}>
                 <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:16}}>
                   {INFO_MENU_COLS.map(col=>(
