@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.15",
       "category": "전체",
+      "title": "feat(footer): sample-home 픽셀 퍼펙트 PC 푸터 신규 — 다크 네이비 5열",
+      "desc": "feat(footer): sample-home 픽셀 퍼펙트 PC 푸터 신규 — 다크 네이비 5열"
+    },
+    {
+      "date": "2026.04.15",
+      "category": "전체",
       "title": "fix(home): AI 인사이트 카드 \"전체 보고서 보기 →\" 버튼을 /reports 로 연결",
       "desc": "fix(home): AI 인사이트 카드 \"전체 보고서 보기 →\" 버튼을 /reports 로 연결"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "fix: CalcAcq 입력 섹션 사이 hr 구분선 6개 추가",
       "desc": "fix: CalcAcq 입력 섹션 사이 hr 구분선 6개 추가"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "세금",
-      "title": "fix: 취득세 입력란 width 480·드롭다운 제거·특수조건/NextStep marginTop",
-      "desc": "fix: 취득세 입력란 width 480·드롭다운 제거·특수조건/NextStep marginTop"
     }
   ],
   "rates": {
