@@ -5565,6 +5565,7 @@ button:active{transform:scale(0.98)}
 .seo strong{color:#172B4D;font-weight:700}
 .num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
 @media(max-width:1023px){.calc-grid{grid-template-columns:1fr!important}.edu-sidebar{display:none!important}.insights-grid{grid-template-columns:1fr 1fr!important}}
 @media(max-width:768px){.calc-container>div{grid-template-columns:1fr!important;gap:16px!important}.calc-container>div>div[style*="grid-template-columns"]{grid-template-columns:1fr!important;gap:10px!important}.calc-container h3{font-size:16px!important}}
 .req-mark{color:#EF4444;margin-left:2px;font-weight:700}
@@ -5630,7 +5631,7 @@ body.lc-embed main{padding-top:0!important}
                 <button onClick={()=>setHoverCat(hoverCat===c.id?null:c.id)} style={{padding:"0 16px",border:"none",borderRadius:0,background:"transparent",color:active?"#0747A6":hot?"#0a1628":"#6B7280",fontSize:16,fontWeight:active?700:600,cursor:"pointer",fontFamily:"inherit",borderBottom:active?"3px solid #0747A6":"3px solid transparent",transition:"all .15s",height:64,display:"flex",alignItems:"center",gap:6}}><span style={{display:"inline-flex"}}>{TAB_ICONS[c.id]}</span>{c.l}</button>
                 {hot&&<div style={{position:"absolute",top:"100%",left:0,paddingTop:0,zIndex:1000}}>
                   <div style={{background:"#fff",borderRadius:"0 0 8px 8px",border:"1px solid #E5E7EB",borderTop:"none",boxShadow:"0 8px 24px rgba(0,0,0,0.12)",padding:"8px 0",minWidth:220}}>
-                    <div style={{fontSize:12,color:"#6B7280",padding:"8px 16px 4px",borderBottom:"1px solid #F3F4F6"}}>아래 계산기 종류를 선택하세요</div>
+                    <div style={{fontSize:12,color:"#6B7280",padding:"8px 16px 4px",borderBottom:"1px solid #F3F4F6",animation:"blink 1.5s ease-in-out infinite"}}>아래 계산기 종류를 선택하세요</div>
                     <div style={{padding:"8px 16px 6px",fontSize:11,fontWeight:700,color:"#6B7280",letterSpacing:1}}>{c.l} — {items.length}개</div>
                     {items.map(item=>(<div key={item.id} onClick={()=>{navigateCalc(c.id,item.id);setHoverCat(null);}} style={{padding:"10px 16px",fontSize:14,cursor:"pointer",fontWeight:calc===item.id?700:400,color:"#0a1628",display:"flex",alignItems:"center",gap:8}} onMouseEnter={e=>{e.currentTarget.style.background="#F0F4FF"}} onMouseLeave={e=>{e.currentTarget.style.background="transparent"}}>
                       {CALC_ICONS[item.id]&&<span style={{display:"inline-flex",color:"#0747A6"}}>{CALC_ICONS[item.id]}</span>}
@@ -5643,7 +5644,7 @@ body.lc-embed main{padding-top:0!important}
             <div onMouseEnter={megaOpen} onMouseLeave={megaClose} style={{position:"relative"}}>
               <button onClick={()=>setShowInfoMenu(v=>!v)} style={{padding:"0 16px",border:"none",borderRadius:0,background:"transparent",color:page==="info"?"#0747A6":showInfoMenu?"#0a1628":"#6B7280",fontSize:16,fontWeight:page==="info"?700:600,cursor:"pointer",fontFamily:"inherit",borderBottom:page==="info"?"3px solid #0747A6":"3px solid transparent",transition:"all .15s",height:64,display:"flex",alignItems:"center",gap:6}}><span style={{display:"inline-flex"}}>{TAB_ICONS.info}</span>정보센터</button>
               {showInfoMenu&&<div style={{position:"absolute",top:"100%",right:0,width:720,background:"#fff",borderTop:"2px solid #0747A6",borderRadius:"0 0 12px 12px",boxShadow:"0 8px 24px rgba(0,0,0,0.12)",zIndex:1000,padding:24}}>
-                <div style={{fontSize:12,color:"#6B7280",padding:"0 0 8px",marginBottom:12,borderBottom:"1px solid #F3F4F6"}}>아래 계산기 종류를 선택하세요</div>
+                <div style={{fontSize:12,color:"#6B7280",padding:"0 0 8px",marginBottom:12,borderBottom:"1px solid #F3F4F6",animation:"blink 1.5s ease-in-out infinite"}}>아래 계산기 종류를 선택하세요</div>
                 <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:16}}>
                   {INFO_MENU_COLS.map(col=>(
                     <div key={col.title}>
