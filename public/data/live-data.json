@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.15",
       "category": "전체",
+      "title": "feat: 메가메뉴 closeMenu + clickedRecently 500ms 가드로 교체",
+      "desc": "feat: 메가메뉴 closeMenu + clickedRecently 500ms 가드로 교체"
+    },
+    {
+      "date": "2026.04.15",
+      "category": "전체",
       "title": "fix(calc): 계산기 진입 시 완전 초기화 3종 보강",
       "desc": "fix(calc): 계산기 진입 시 완전 초기화 3종 보강"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "feat: 헤더 로고/탑메뉴 타이포·홈 아이콘 SVG·카테고리 색 통일·푸터 카피 업데이트",
       "desc": "feat: 헤더 로고/탑메뉴 타이포·홈 아이콘 SVG·카테고리 색 통일·푸터 카피 업데이트"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "전체",
-      "title": "data: 전국 법정동 코드 데이터셋 (lawd.json) 추가",
-      "desc": "data: 전국 법정동 코드 데이터셋 (lawd.json) 추가"
     }
   ],
   "rates": {
