@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.15",
       "category": "전체",
+      "title": "fix(calc-acq): sample-calc 기준 버튼·레이아웃·섹션 슬림화",
+      "desc": "fix(calc-acq): sample-calc 기준 버튼·레이아웃·섹션 슬림화"
+    },
+    {
+      "date": "2026.04.15",
+      "category": "전체",
       "title": "fix(layout): PC 좌측 Expert Guide 사이드바 실제 렌더 제거",
       "desc": "fix(layout): PC 좌측 Expert Guide 사이드바 실제 렌더 제거"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "feat: LeftNav 전면 개편 - static scroll·신규 메뉴 구조·푸터 풀폭",
       "desc": "feat: LeftNav 전면 개편 - static scroll·신규 메뉴 구조·푸터 풀폭"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "전체",
-      "title": "refactor: LeftNav 하단 실시간 지표 블록 제거 (코스피·기준금리·서울 아파트)",
-      "desc": "refactor: LeftNav 하단 실시간 지표 블록 제거 (코스피·기준금리·서울 아파트)"
     }
   ],
   "rates": {
