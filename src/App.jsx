@@ -5860,7 +5860,8 @@ body.lc-embed main{padding-top:0!important}
     {/* 2026.04.15 PC LeftNav (좌측 Expert Guide 사이드바) 제거 — 모바일 드로어는 L5602에 유지 */}
     <main style={{flex:"1 1 auto",minWidth:0,width:"100%",background:(!isMo&&page!=="home")?"#f8f9fc":undefined}}>
     {page==="mypage"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><MyPage user={effectiveUser} lcToken={lcToken} lcEmail={lcEmail} onLcLogout={()=>{try{localStorage.removeItem('lc_token');localStorage.removeItem('lc_email');}catch{}setLcToken("");setLcEmail("");}} onBack={navigateHome} onLogout={handleLogout}/></div>):page==="info"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><InfoHub isMo={isMo} navigateHome={navigateHome}/></div>):page==="news"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><NewsPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="community"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><CommunityPage isMo={isMo} navigateHome={navigateHome} effectiveUser={effectiveUser}/></div>):page==="policy"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><PolicyPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="market"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><MarketPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="terms"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><TermsHubPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="about"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><AboutPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="guide"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><GuidePage isMo={isMo} navigateHome={navigateHome}/></div>):page==="pricing"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><PricingPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="verification"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><VerificationPage isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("reports:")?(<div style={{background:"#f8f9fb",minHeight:"100vh"}}><ReportsPage slug={page.replace("reports:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("learn:")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LearnPage slug={page.replace("learn:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("law:")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LawPage slug={page.replace("law:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("html:")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><HtmlAdapterPage url={page.replace("html:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("legal_")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LegalPage type={page.replace("legal_","")} onBack={navigateHome}/></div>):page==="home"?(<>
-      {favorites.length>0&&<div style={{maxWidth:1200,margin:"0 auto",padding:isMo?"16px 16px 0":"32px 24px 0",background:isMo?"#f8f9fc":"transparent"}}>
+      {/* 2026.04.16 sample-home 1:1 매칭 — 즐겨찾기 섹션 PC 숨김 (모바일만 유지) */}
+      {isMo&&favorites.length>0&&<div style={{maxWidth:1200,margin:"0 auto",padding:"16px 16px 0",background:"#f8f9fc"}}>
         <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12}}>
           <span style={{display:"inline-flex",alignItems:"center"}}><Ico.star size={18}/></span>
           <span style={{fontSize:isMo?15:18,fontWeight:800,color:"#172B4D"}}>내 즐겨찾기</span>
@@ -5990,8 +5991,8 @@ body.lc-embed main{padding-top:0!important}
         </div>
       </div>}
 
-      {/* 최근 계산 히스토리 */}
-      {isLoggedIn&&calcHistory.length>0&&<div className="recent-calc" style={{maxWidth:1200,margin:"0 auto",padding:isMo?"12px 16px":"16px 24px"}}>
+      {/* 2026.04.16 sample-home 1:1 매칭 — PC에서 최근 히스토리/AdSlot 숨김 */}
+      {isMo&&isLoggedIn&&calcHistory.length>0&&<div className="recent-calc" style={{maxWidth:1200,margin:"0 auto",padding:"12px 16px"}}>
         <div style={{fontSize:13,fontWeight:700,color:"#172B4D",marginBottom:8,display:"flex",alignItems:"center",gap:6}}><Ico.pin size={16}/>최근 계산</div>
         <div style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:8,WebkitOverflowScrolling:"touch"}}>
           {calcHistory.slice(0,5).map((h,i)=>{const item=CL.find(c=>c.id===h.id);return(<button key={i} onClick={()=>{if(item)navigateCalc(item.c,h.id)}} style={{padding:"10px 14px",background:"#fff",border:"1px solid #dfe1e6",borderRadius:10,fontSize:12,cursor:"pointer",flexShrink:0,textAlign:"left",minWidth:120,fontFamily:"inherit"}}>
@@ -6001,8 +6002,8 @@ body.lc-embed main{padding-top:0!important}
         </div>
       </div>}
 
-      {/* 2026.04.15 홈 간소화: 부동산 용어사전 배너·CalcGrid·HomeSections 제거 */}
-      <AdSlot position="home_bottom"/>
+      {/* 2026.04.16 sample-home 1:1 매칭 — AdSlot home_bottom PC 숨김 */}
+      {isMo&&<AdSlot position="home_bottom"/>}
       {/* 2026.04.15 sample-home 통계 배너 (PC) */}
       {!isMo&&<div style={{background:"#0a1628",padding:"56px 32px"}}>
         <div style={{maxWidth:1200,margin:"0 auto",display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:24,textAlign:"center",color:"#fff"}}>
