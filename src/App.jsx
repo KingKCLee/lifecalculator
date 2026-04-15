@@ -1493,27 +1493,27 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
       {!isMo&&<h3 style={{fontSize:isMo?16:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>취득세 계산기</h3>}
       <div style={{marginBottom:isMo?8:16}}>
         <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>취득 유형</label>
-        <div style={{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6"}}>
-          {[["sale","매매"],["gift","증여"],["inherit","상속"],["newbuild","원시"],["corp","법인"]].map(([v,l],i,arr)=>(<button key={v} onClick={()=>sAT(v)} style={{flex:1,padding:isMo?"12px 2px":"10px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:acqType===v?"#0747A6":"#fff",color:acqType===v?"#fff":"#505f79",fontWeight:acqType===v?700:500,fontSize:isMo?13:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s",minHeight:isMo?44:undefined}}>{l}</button>))}
+        <div style={isMo?{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6"}:{display:"flex",flexWrap:"wrap",gap:8}}>
+          {[["sale","매매"],["gift","증여"],["inherit","상속"],["newbuild","원시"],["corp","법인"]].map(([v,l],i,arr)=>(<button key={v} onClick={()=>sAT(v)} style={isMo?{flex:1,padding:"12px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:acqType===v?"#0747A6":"#fff",color:acqType===v?"#fff":"#505f79",fontWeight:acqType===v?700:500,fontSize:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s",minHeight:44}:{flex:"1 1 auto",minWidth:60,padding:"10px 16px",border:acqType===v?"1.5px solid #0747A6":"1.5px solid #dfe1e6",borderRadius:8,background:acqType===v?"#0747A6":"#fff",color:acqType===v?"#fff":"#172B4D",fontWeight:acqType===v?700:500,fontSize:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s,border-color .15s"}}>{l}</button>))}
         </div>
       </div>
-      <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:isMo?"8px 0":"16px 0"}}/>
+      {isMo&&<hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"8px 0"}}/>}
       <div style={{marginBottom:isMo?8:16}}>
         <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>부동산 유형<TipModal title="부동산 유형"><p>주거용 오피스텔인 경우에만 '오피스텔' 선택. 업무용은 '그 외'. 농지는 2년 이상 자경 시 감면 혜택.</p></TipModal></label>
-        <div style={{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6"}}>
-          {[["house","주택"],["officetel","오피스텔"],["farmLand","농지"],["building","그 외"]].map(([v,l],i,arr)=>(<button key={v} onClick={()=>sRT(v)} style={{flex:1,padding:isMo?"12px 2px":"10px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:realType===v?"#0747A6":"#fff",color:realType===v?"#fff":"#505f79",fontWeight:realType===v?700:500,fontSize:isMo?13:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s",minHeight:isMo?44:undefined}}>{l}</button>))}
+        <div style={isMo?{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6"}:{display:"flex",flexWrap:"wrap",gap:8}}>
+          {[["house","주택"],["officetel","오피스텔"],["farmLand","농지"],["building","그 외"]].map(([v,l],i,arr)=>(<button key={v} onClick={()=>sRT(v)} style={isMo?{flex:1,padding:"12px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:realType===v?"#0747A6":"#fff",color:realType===v?"#fff":"#505f79",fontWeight:realType===v?700:500,fontSize:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s",minHeight:44}:{flex:"1 1 auto",minWidth:60,padding:"10px 16px",border:realType===v?"1.5px solid #0747A6":"1.5px solid #dfe1e6",borderRadius:8,background:realType===v?"#0747A6":"#fff",color:realType===v?"#fff":"#172B4D",fontWeight:realType===v?700:500,fontSize:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s,border-color .15s"}}>{l}</button>))}
         </div>
       </div>
-      <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:isMo?"8px 0":"16px 0"}}/>
+      {isMo&&<hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"8px 0"}}/>}
       {(realType==="house"||realType==="officetel")&&<div style={{marginBottom:isMo?8:16}}>
         <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>전용면적</label>
-        <div style={{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6"}}>
+        <div style={isMo?{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6"}:{display:"flex",flexWrap:"wrap",gap:8}}>
           {[["40","40㎡↓"],["60","60㎡↓"],["85","85㎡↓"],["big","85㎡↑"]].map(([v,l],i,arr)=>(
-            <button key={v} onClick={()=>sAreaType(v)} style={{flex:1,padding:isMo?"12px 2px":"10px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:areaType===v?"#0747A6":"#fff",color:areaType===v?"#fff":"#505f79",fontWeight:areaType===v?700:500,fontSize:isMo?13:12,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,minHeight:isMo?44:undefined}}>{l}</button>
+            <button key={v} onClick={()=>sAreaType(v)} style={isMo?{flex:1,padding:"12px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:areaType===v?"#0747A6":"#fff",color:areaType===v?"#fff":"#505f79",fontWeight:areaType===v?700:500,fontSize:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,minHeight:44}:{flex:"1 1 auto",minWidth:60,padding:"10px 16px",border:areaType===v?"1.5px solid #0747A6":"1.5px solid #dfe1e6",borderRadius:8,background:areaType===v?"#0747A6":"#fff",color:areaType===v?"#fff":"#172B4D",fontWeight:areaType===v?700:500,fontSize:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s,border-color .15s"}}>{l}</button>
           ))}
         </div>
       </div>}
-      {(realType==="house"||realType==="officetel")&&<hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:isMo?"8px 0":"16px 0"}}/>}
+      {isMo&&(realType==="house"||realType==="officetel")&&<hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"8px 0"}}/>}
       {/* 2026.04.14 취득가액 — 인라인 레이아웃 (PC width:480, 모바일 100%) */}
       <div style={{marginBottom:isMo?8:12}}>
         <div style={{display:"flex",alignItems:isMo?"stretch":"center",flexDirection:isMo?"column":"row",justifyContent:"space-between",gap:isMo?6:8,marginBottom:4,flexWrap:"wrap"}}>
@@ -1524,7 +1524,7 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
           </div>
         </div>
       </div>
-      <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:isMo?"8px 0":"16px 0"}}/>
+      {isMo&&<hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"8px 0"}}/>}
       {/* 2026.04.14 시가표준액 인라인 레이아웃 */}
       <div style={{marginBottom:isMo?8:12}}>
         <div style={{display:"flex",alignItems:isMo?"stretch":"center",flexDirection:isMo?"column":"row",justifyContent:"space-between",gap:isMo?6:8,marginBottom:4,flexWrap:"wrap"}}>
@@ -1536,8 +1536,8 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
         </div>
         <div style={{fontSize:11,color:P.mt,lineHeight:1.6,wordBreak:"keep-all"}}>{acqType==="gift"||acqType==="inherit"?"취득가액이 없으므로 시가표준액 기준으로 계산합니다":acqType==="newbuild"?"시가표준액을 과세표준으로 계산합니다":"취득가액보다 시가표준액이 높으면 시가표준액이 과세표준이 됩니다"}</div>
       </div>
-      <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:isMo?"8px 0":"16px 0"}}/>
-      {isHouse&&acqType==="sale"&&<><Radio label="취득 후 주택 수" value={own} onChange={sO} options={[{value:"1",label:"1주택"},{value:"2",label:"2주택"},{value:"3",label:"3주택"},{value:"4",label:"4주택+"}]} cols={4}/><hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:isMo?"8px 0":"16px 0"}}/></>}
+      {isMo&&<hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"8px 0"}}/>}
+      {isHouse&&acqType==="sale"&&<><Radio label="취득 후 주택 수" value={own} onChange={sO} options={[{value:"1",label:"1주택"},{value:"2",label:"2주택"},{value:"3",label:"3주택"},{value:"4",label:"4주택+"}]} cols={4}/>{isMo&&<hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"8px 0"}}/>}</>}
       {/* 2026.04.14 사치성재산 칩이 항상 보이도록 무조건 노출 (모든 취득유형에서 선택 가능) */}
       <div style={{marginTop:24,marginBottom:14}}>
         <div style={{fontSize:11,fontWeight:600,color:"#6b778c",letterSpacing:.5,textTransform:"uppercase",marginBottom:8}}>특수 조건 <span style={{fontWeight:400,color:"#aaa",fontSize:10}}>{isMo?"항목을 누르면 설명이 나타납니다":"마우스를 올리면 설명이 나타납니다"}</span></div>
@@ -1557,7 +1557,7 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
         </div>
         {chipDesc&&<div style={{padding:"8px 12px",background:chipDesc.bg||"#f4f5f7",borderRadius:8,border:"0.5px solid "+(chipDesc.bc||"#dfe1e6"),fontSize:12,color:chipDesc.color,lineHeight:1.6,transition:"all .2s"}}><span style={{fontWeight:700}}>{chipDesc.label}</span> — {chipDesc.desc}</div>}
       </div>
-      <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"24px 0"}}/>
+      {isMo&&<hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"24px 0"}}/>}
       {isHouse&&acqType==="sale"&&n===2&&<Tog label="일시적 2주택" value={isTempTwo} onChange={sTT} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (3년 내 처분)"}]}/>}
       {isHouse&&acqType==="inherit"&&<Tog label="무주택가구 상속" value={inheritNone} onChange={sIN} options={[{value:"no",label:"아니오"},{value:"yes",label:"예 (0.8% 특례)"}]}/>}
       {tempTwo&&<div style={{padding:"10px 14px",background:"#FFF8E1",border:"1px solid #FFE082",borderRadius:10,fontSize:12,color:"#F57F17",marginTop:8,lineHeight:1.6}}>종전주택을 신규취득일로부터 3년 이내 처분해야 일반세율이 적용됩니다.</div>}
@@ -5635,7 +5635,11 @@ button:active{transform:scale(0.98)}
 .calc-hr{border:none;border-top:1px solid #E5E7EB;margin:16px 0}
 @media(min-width:769px){.calc-container>div>div[style*="grid-template-columns"]>div:nth-child(2){position:sticky;top:80px;align-self:start}}
 /* 2026.04.15 sample-calc 기준 계산기 2컬럼 그리드 60%/40% (PC 전용) — 최상위 Comp grid만 선택, 내부 중첩 grid 미영향 */
-@media(min-width:769px){.calc-container>div>div[style*="grid-template-columns"]{grid-template-columns:60% 40%!important;gap:28px!important}}
+@media(min-width:769px){.calc-container>div>div[style*="grid-template-columns"]{grid-template-columns:60% 40%!important;gap:28px!important;align-items:start!important}}
+/* 2026.04.15 sample-calc .form-card 적용 — 좌측 컬럼을 흰 카드로 감싸고, 외부 calc-container 카드 스타일 해제 (PC 전용) */
+@media(min-width:769px){.calc-container{background:transparent!important;border:none!important;padding:0!important;box-shadow:none!important;overflow:visible}}
+@media(min-width:769px){.calc-container>div>div[style*="grid-template-columns"]>div:first-child{background:#fff!important;border:1px solid #dfe1e6!important;border-radius:14px!important;padding:32px!important;min-width:0}}
+@media(min-width:769px){.calc-container>div>div[style*="grid-template-columns"]>div:first-child>h3:first-child{display:none!important}}
 /* 2026.04.15 sample-calc: 입력 폼 끝 구분선 (PC 전용) — RateTable 위에 1개 divider */
 @media(min-width:769px){.calc-container .lc-ratetable{margin-top:28px!important;padding-top:24px;border-top:1px solid #e5e7eb!important;border-radius:12px;border:1px solid #dfe1e6!important}}
 @media(min-width:769px){.calc-container .lc-ratetable+.lc-ratetable{margin-top:20px!important;padding-top:0;border-top:1px solid #dfe1e6!important}}
@@ -5989,90 +5993,16 @@ body.lc-embed main{padding-top:0!important}
             {isMo?(<MobileCalcWrapper><Comp key={calc+"_"+sessionKey} isMo={true} onNav={navigateCalc}/></MobileCalcWrapper>):(<div><Comp key={calc+"_"+sessionKey} isMo={false} onNav={navigateCalc}/></div>)}
           </div>
 
-          <MarketIntel isMo={isMo}/>
-          <AdSlot position="calc_bottom"/>
-
-          {FUN_STATS[calc]&&<div style={{marginBottom:16,padding:"20px 24px",background:"linear-gradient(135deg,#deebff,#EAE6FF)",borderRadius:12}}>
-            <div style={{fontSize:14,fontWeight:700,color:"#172B4D",marginBottom:10,display:"flex",alignItems:"center",gap:6}}>{FUN_STATS[calc].icon}{FUN_STATS[calc].title}</div>
-            {FUN_STATS[calc].items.map((it,i)=>(<div key={i} style={{fontSize:13,color:"#344563",padding:"4px 0",display:"flex",alignItems:"flex-start",gap:8}}><span style={{color:"#0747A6"}}>•</span><span>{it}</span></div>))}
-          </div>}
+          {/* 2026.04.15 sample-calc 기준 계산기 페이지 슬림화: MarketIntel·AdSlot·FUN_STATS 제거 */}
           {SEO_CONTENT[calc]&&<div className="guide-card" style={{marginBottom:24,padding:isMo?"28px 20px":"40px 44px",background:"#fff",borderRadius:18,border:`1px solid ${P.bd}`}}>
             <div className="seo" dangerouslySetInnerHTML={{__html:SEO_CONTENT[calc]}} style={{fontSize:14,color:"#374151",lineHeight:1.8}}/>
           </div>}
-          {cat==="tax"&&calc!=="totalcost"&&calc!=="compare"&&calc!=="invest"&&<div className="pro-cards" style={{display:"grid",gridTemplateColumns:isMo?"1fr":"repeat(3,1fr)",gap:isMo?8:12}}>
-            {[{id:"totalcost",t:"총비용 시뮬레이터",d:"취득세~중개보수 합산",icon:<IconBulb c="#0747A6"/>,cl:"#0747A6"},
-              {id:"compare",t:"세금 비교 분석",d:"매매·증여·상속 비교",icon:<IconChart/>,cl:"#00875A"},
-              {id:"invest",t:"투자수익 분석",d:"매수→매도 종합분석",icon:<IconChart c="#FF8B00"/>,cl:"#FF8B00"}
-            ].map(card=>(<div key={card.id} onClick={()=>navigateCalc("pro",card.id)} style={{background:"#fff",borderRadius:12,border:`1px solid ${P.bd}`,padding:20,cursor:"pointer",transition:"transform .2s, box-shadow .2s"}}
-              onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 4px 12px rgba(0,0,0,.08)";}}
-              onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";}}>
-              <div style={{width:40,height:40,borderRadius:10,background:P.lt,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,marginBottom:10}}>{card.icon}</div>
-              <div style={{fontSize:15,fontWeight:700,color:P.tx}}>{card.t}</div>
-              <div style={{fontSize:12,color:P.mt,lineHeight:1.5,marginTop:4}}>{card.d}</div>
-            </div>))}
-          </div>}
+          {/* 2026.04.15 sample-calc 기준 계산기 페이지 슬림화: PRO 분석 카드 3종 제거 */}
         </div>
 
       </div>)}
 
-      {/* 2026.04.14 오늘의 부동산 정보 (최근 세법 변경 3 + 계산 팁 3) */}
-      {!isMo&&<div style={{background:P.bg,padding:"48px 24px"}}>
-        <div style={{maxWidth:1200,margin:"0 auto"}}>
-          <div style={{fontSize:20,fontWeight:700,textAlign:"center",color:P.tx,marginBottom:8,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}><Ico.news size={20}/>오늘의 부동산 정보</div>
-          <div style={{fontSize:12,color:P.mt,textAlign:"center",marginBottom:24}}>최근 세법 변경사항과 유용한 계산 팁</div>
-          {/* 2026.04.14 정책 태그 필터 */}
-          <div style={{marginBottom:16,padding:"14px 16px",background:"#fff",borderRadius:12,border:`1px solid ${P.bd}`}}>
-            <div style={{fontSize:13,fontWeight:700,marginBottom:10,color:P.tx,display:"flex",alignItems:"center",justifyContent:"space-between",gap:8}}>
-              <span>나에게 해당되는 정책</span>
-              {policyTags.length>0&&<button onClick={()=>{setPolicyTags([]);try{localStorage.setItem('lc_policy_tags','[]');}catch{}}} style={{padding:"4px 10px",fontSize:11,fontWeight:700,background:"#fff",color:P.mt,border:`1px solid ${P.bd}`,borderRadius:12,cursor:"pointer",fontFamily:"inherit"}}>초기화</button>}
-            </div>
-            <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
-              {["1주택자","2주택자","3주택이상","생애최초","임대사업자","법인","경매투자자","전세입자","월세입자","분양권보유"].map(tag=>(
-                <button key={tag} onClick={()=>togglePolicyTag(tag)} style={{padding:"6px 12px",borderRadius:20,fontSize:12,fontWeight:600,border:policyTags.includes(tag)?"none":"1.5px solid #E5E7EB",background:policyTags.includes(tag)?"#0747A6":"#fff",color:policyTags.includes(tag)?"#fff":"#6B7280",cursor:"pointer",fontFamily:"inherit"}}>{tag}</button>
-              ))}
-            </div>
-            {policyTags.length>0&&<div style={{marginTop:8,fontSize:11,color:P.mt}}>선택한 태그에 해당하는 뉴스·정책만 표시됩니다.</div>}
-          </div>
-          <div style={{fontSize:13,fontWeight:700,color:P.pri,marginBottom:10,padding:"0 4px",display:"flex",alignItems:"center",gap:6}}><Ico.news size={16}/>실시간 부동산 뉴스</div>
-          <div className="insights-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:16,marginBottom:28}}>
-            <LiveNewsCards filterTags={policyTags}/>
-          </div>
-          <div style={{fontSize:13,fontWeight:700,color:P.pri,marginBottom:10,padding:"0 4px",display:"flex",alignItems:"center",gap:6}}><IconBell/> 최근 세법 변경사항</div>
-          <div className="insights-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:16,marginBottom:28}}>
-            {(()=>{const ALL=[
-              {t:"양도세 다주택 중과 유예",d:"2026.5.9까지 조정대상 2·3주택 중과 유예. 양도 시점 기준 자동 반영.",tag:"세금",date:"2026"},
-              {t:"수도권 주담대 한도 축소",d:"15억↓ 6억, 25억↓ 4억, 25억↑ 2억. LTV/DSR 계산기 반영 완료.",tag:"대출",date:"2026"},
-              {t:"기준금리 3.0% 유지",d:"2026.2.27 금통위 동결. 스트레스 DSR 변동 +1.5%p.",tag:"금리",date:"2026.02"},
-              {t:"생애최초 취득세 감면 연장",d:"12억↓ 최대 200만원 감면이 2028.12.31까지 적용. 신혼부부·첫 주택 구입자 필수 확인.",tag:"세금",date:"2026"},
-              {t:"임대사업자 등록 요건 강화",d:"주택임대사업자 등록 요건 재정비. 기존 등록자 혜택 유지 여부 확인 필요.",tag:"임대",date:"2026"},
-              {t:"분양권·청약 규제 변경",d:"분양권 보유 시 주택수 산정 규정 재정비. 청약 가점 계산 시 유의.",tag:"청약",date:"2026"}
-            ];const filtered=policyTags.length===0?ALL.slice(0,3):ALL.filter(x=>matchPolicyTags(x.t+" "+x.d,policyTags));const show=(filtered.length>0?filtered:ALL).slice(0,3);return show.map((c,i)=>(
-              <div key={i} style={{background:"#fff",borderRadius:16,padding:"24px 28px",border:`1px solid ${P.bd}`}}>
-                <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:8}}>
-                  <span style={{fontSize:10,fontWeight:700,color:"#fff",background:P.pri,padding:"2px 8px",borderRadius:10}}>{c.tag}</span>
-                  <span style={{fontSize:11,color:P.mt}}>{c.date}</span>
-                </div>
-                <div style={{fontSize:15,fontWeight:700,color:P.tx,marginBottom:6,lineHeight:1.4}}>{c.t}</div>
-                <div style={{fontSize:12,color:P.mt,lineHeight:1.6}}>{c.d}</div>
-              </div>
-            ));})()}
-          </div>
-          <div style={{fontSize:13,fontWeight:700,color:P.pri,marginBottom:10,padding:"0 4px",display:"flex",alignItems:"center",gap:6}}><IconBulb/> 유용한 계산 팁</div>
-          <div className="insights-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:16}}>
-            {[
-              {t:"시가표준액 꼭 입력하세요",d:"미입력 시 취득가액을 과세표준으로 간주. 공시가 1억↓ 주택은 중과 제외.",icon:<IconClip/>},
-              {t:"생애최초 감면 12억까지",d:"2028.12.31까지 12억↓ 주택 취득세 최대 200만원 감면. 인구감소지역은 300만원.",icon:<IconHome/>},
-              {t:"스냅샷으로 시나리오 비교",d:"결과 박스 스냅샷 버튼으로 값 변경 전후 차이를 한눈에 비교.",icon:<IconCam/>}
-            ].map((c,i)=>(
-              <div key={i} style={{background:"#fff",borderRadius:16,padding:"24px 28px",border:`1px solid ${P.bd}`}}>
-                <div style={{fontSize:22,marginBottom:8}}>{c.icon}</div>
-                <div style={{fontSize:15,fontWeight:700,color:P.tx,marginBottom:6,lineHeight:1.4}}>{c.t}</div>
-                <div style={{fontSize:12,color:P.mt,lineHeight:1.6}}>{c.d}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>}
+      {/* 2026.04.15 sample-calc 기준 계산기 페이지 슬림화: "오늘의 부동산 정보" 블록 전체 제거 (나에게 해당되는 정책·실시간 부동산 뉴스·최근 세법 변경사항·유용한 계산 팁) */}
     </>)}
 
     {/* 업데이트 내역 (사용자 노출 제외) */}
