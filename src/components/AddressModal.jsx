@@ -35,7 +35,16 @@ const recentMonths = (n = 3) => {
   return arr;
 };
 
-export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onApplyArea }) {
+// 취득세 계산기 면적 버킷 → ㎡ 범위 (필터링용)
+const bucketToRange = (b) => {
+  if (b === "40") return [0, 40];
+  if (b === "60") return [40.0001, 60];
+  if (b === "85") return [60.0001, 85];
+  if (b === "big") return [85.0001, Infinity];
+  return null;
+};
+
+export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onApplyArea, currentArea }) {
   const [stage, setStage] = useState(1); // 1:search, 2:unit, 3:result
   const [keyword, setKeyword] = useState("");
   const [searching, setSearching] = useState(false);
@@ -74,14 +83,17 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
     setStage(2);
   };
 
+  const [stdSkipped, setStdSkipped] = useState(false);
+
   const doLookup = async () => {
     if (!picked) return;
-    setLoading(true); setLookupErr(null); setRealList([]); setStdInfo(null);
+    setLoading(true); setLookupErr(null); setRealList([]); setStdInfo(null); setStdSkipped(false);
     try {
       const lawdCd = (picked.admCd || "").slice(0, 5);
       const pnu = buildPnu(picked.admCd, picked.lnbrMnnm, picked.lnbrSlno, picked.udrtYn);
+      const hasDongHo = !!(dongNm && hoNm);
 
-      // 실거래가: 최근 3개월 병렬 조회, dong 필터 emdNm
+      // 실거래가: 최근 3개월 병렬 조회 (동/호 무관, LAWD_CD + 법정동 필터)
       const months = recentMonths(3);
       const realPromises = months.map((ym) => {
         const qs = new URLSearchParams({
@@ -92,16 +104,18 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
         return fetch(WORKER + "/api/real-price?" + qs).then(r => r.json()).catch(() => ({}));
       });
 
-      // 공시가격
+      // 공시가격: 동/호 둘 다 입력된 경우에만 호출
       let stdPromise = Promise.resolve(null);
-      if (pnu) {
+      if (pnu && hasDongHo) {
         const qs = new URLSearchParams({
           pnu,
           stdrYear: String(new Date().getFullYear()),
-          dongNm: dongNm || "",
-          hoNm: hoNm || ""
+          dongNm,
+          hoNm
         }).toString();
         stdPromise = fetch(WORKER + "/api/vworld-price?" + qs).then(r => r.json()).catch(() => ({}));
+      } else {
+        setStdSkipped(true);
       }
 
       const [realResArr, stdRes] = await Promise.all([Promise.all(realPromises), stdPromise]);
@@ -111,9 +125,23 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
       realResArr.forEach((rr) => {
         if (rr && rr.ok && Array.isArray(rr.list)) merged.push(...rr.list);
       });
-      // 건물명 필터 (JUSO bdNm과 일치하는 아파트만)
+
+      // 1) 건물명 매칭 (JUSO bdNm과 일치)
       const bdNm = (picked.bdNm || "").trim();
-      const filtered = bdNm ? merged.filter(it => (it.apt || "").includes(bdNm)) : merged;
+      let filtered = bdNm ? merged.filter(it => (it.apt || "").includes(bdNm)) : merged;
+
+      // 2) CalcAcq 면적 버튼 기준 필터 (선택된 면적이 있을 때만)
+      const range = bucketToRange(currentArea);
+      if (range) {
+        const [lo, hi] = range;
+        const narrowed = filtered.filter(it => {
+          const a = Number(it.area) || 0;
+          return a >= lo && a <= hi;
+        });
+        if (narrowed.length > 0) filtered = narrowed;
+        // 면적 필터 결과가 0건이면 전체 결과를 유지하여 사용자가 판단
+      }
+
       filtered.sort((a, b) => {
         const ka = (a.year || "") + String(a.month || "").padStart(2, "0") + String(a.day || "").padStart(2, "0");
         const kb = (b.year || "") + String(b.month || "").padStart(2, "0") + String(b.day || "").padStart(2, "0");
@@ -121,15 +149,15 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
       });
       setRealList(filtered.slice(0, 20));
 
-      // 공시가격
+      // 공시가격 결과
       if (stdRes && stdRes.ok && (stdRes.list || []).length > 0) {
         setStdInfo(stdRes.list[0]);
-      } else if (stdRes && stdRes.error) {
-        // 결과 없음은 에러로 안 표시 (실거래가만 있을 수 있음)
+      } else if (hasDongHo && stdRes && (!stdRes.ok || (stdRes.list || []).length === 0)) {
+        setLookupErr("공시가격: 입력한 동/호로 조회된 데이터가 없습니다. 동/호를 다시 확인해 주세요.");
       }
 
       if (filtered.length === 0 && !(stdRes && stdRes.ok && (stdRes.list || []).length > 0)) {
-        setLookupErr("실거래가·공시가격 모두 조회 결과가 없습니다. 동/호를 확인해 주세요.");
+        setLookupErr("실거래가·공시가격 모두 조회 결과가 없습니다.");
       }
       setStage(3);
     } catch (e) {
@@ -155,7 +183,7 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
       <div onClick={e => e.stopPropagation()} style={{ background: "#fff", borderRadius: 16, padding: 24, maxWidth: 640, width: "100%", maxHeight: "90vh", overflowY: "auto", position: "relative", fontFamily: "inherit" }}>
         <button onClick={onClose} aria-label="닫기" style={{ position: "absolute", top: 12, right: 12, background: "none", border: "none", fontSize: 22, cursor: "pointer", color: "#6B7280" }}>✕</button>
         <div style={{ fontSize: 18, fontWeight: 800, color: "#0a1628", marginBottom: 4 }}>주소로 실거래가·공시가격 조회</div>
-        <div style={{ fontSize: 12, color: "#6B7280", marginBottom: 16 }}>JUSO 주소 검색 → 동·호 입력 → 국토부 실거래가 + V-World 공시가격 자동조회</div>
+        <div style={{ fontSize: 12, color: "#6B7280", marginBottom: 16 }}>JUSO 주소 검색 → (동/호는 선택) → 국토부 실거래가 + V-World 공시가격 자동조회</div>
 
         <div style={{ display: "flex", gap: 16, marginBottom: 16, padding: "10px 14px", background: "#f8f9fc", borderRadius: 8 }}>
           {stepDot(1, "주소 검색")}
@@ -195,23 +223,25 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
               <div style={{ fontSize: 12, color: "#374151", marginTop: 2 }}>{picked.roadAddr}</div>
               <div style={{ fontSize: 11, color: "#6b778c", marginTop: 4 }}>법정동 {picked.admCd} · 지번 {picked.lnbrMnnm}-{picked.lnbrSlno}</div>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 14 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "#0a1628", marginBottom: 6 }}>동/호 (선택 입력)</div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 10 }}>
               <div>
-                <label style={labelSt}>동 (아파트)</label>
-                <input type="text" value={dongNm} onChange={e => setDongNm(e.target.value.replace(/\D/g, ""))} placeholder="예: 101" style={inpSt} />
+                <label style={labelSt}>동</label>
+                <input type="text" value={dongNm} onChange={e => setDongNm(e.target.value.replace(/\D/g, ""))} placeholder="예: 101 (선택)" style={inpSt} />
               </div>
               <div>
                 <label style={labelSt}>호</label>
-                <input type="text" value={hoNm} onChange={e => setHoNm(e.target.value.replace(/\D/g, ""))} placeholder="예: 1503" style={inpSt} />
+                <input type="text" value={hoNm} onChange={e => setHoNm(e.target.value.replace(/\D/g, ""))} placeholder="예: 1503 (선택)" style={inpSt} />
               </div>
             </div>
-            <div style={{ fontSize: 11, color: "#6b778c", marginBottom: 12, lineHeight: 1.6 }}>
-              · 동/호는 공시가격 정확 매칭용입니다. 미입력 시 단지 대표값이 반환될 수 있습니다.<br />
-              · 실거래가는 해당 법정동 전체 아파트 내 건물명 매칭으로 필터링됩니다.
+            <div style={{ fontSize: 11, color: "#6b778c", marginBottom: 14, lineHeight: 1.6, padding: "10px 12px", background: "#f8f9fc", borderRadius: 8 }}>
+              · <b>실거래가만 조회</b>: 동/호 없이 조회 — 단지 + 선택한 면적 기준 최근 3개월 거래 내역<br />
+              · <b>공시가격 포함 조회</b>: 동/호 모두 입력 시 V-World 공시가격까지 함께 조회
+              {currentArea && <><br />· 현재 선택 면적 <b>{currentArea === "big" ? "85㎡ 초과" : currentArea + "㎡ 이하"}</b> 로 실거래가 필터링</>}
             </div>
             <div style={{ display: "flex", gap: 8 }}>
               <button onClick={() => setStage(1)} style={{ padding: "12px 18px", background: "#f4f5f7", color: "#505f79", border: "1.5px solid #E5E7EB", borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>이전</button>
-              <button onClick={doLookup} disabled={loading} style={{ ...btnPrimary, flex: 1, background: loading ? "#9CA3AF" : "#0141f9", cursor: loading ? "wait" : "pointer" }}>{loading ? "조회 중…" : "실거래가·공시가격 조회"}</button>
+              <button onClick={doLookup} disabled={loading} style={{ ...btnPrimary, flex: 1, background: loading ? "#9CA3AF" : "#0141f9", cursor: loading ? "wait" : "pointer" }}>{loading ? "조회 중…" : (dongNm && hoNm ? "실거래가 + 공시가격 조회" : "실거래가 바로 조회")}</button>
             </div>
           </div>
         )}
@@ -219,6 +249,11 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
         {stage === 3 && (
           <div>
             {lookupErr && <div style={{ padding: "10px 14px", background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 8, fontSize: 12, color: "#1e40af", lineHeight: 1.5, marginBottom: 12 }}>{lookupErr}</div>}
+            {stdSkipped && !stdInfo && (
+              <div style={{ padding: "10px 14px", background: "#fff8e1", border: "1px solid #ffe082", borderRadius: 8, fontSize: 12, color: "#8a5a00", lineHeight: 1.5, marginBottom: 12 }}>
+                공시가격은 동/호가 모두 입력되어야 조회됩니다. <button onClick={() => setStage(2)} style={{ background: "none", border: "none", color: "#0141f9", fontWeight: 700, textDecoration: "underline", cursor: "pointer", padding: 0, fontFamily: "inherit", fontSize: 12 }}>동/호 입력하기 →</button>
+              </div>
+            )}
 
             {stdInfo && (
               <div style={{ marginBottom: 16, padding: "16px 18px", background: "#eff6ff", border: "1px solid #0141f9", borderRadius: 10 }}>

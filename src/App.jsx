@@ -1753,7 +1753,7 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
       {isMo&&(realType==="house"||realType==="officetel")&&<hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"8px 0"}}/>}
       {/* 2026.04.16 주소→공시가격·실거래가 자동조회 트리거 */}
       {!isMo&&<button type="button" onClick={()=>setShowAcqLookup(true)} style={{width:"100%",marginBottom:10,padding:"12px 16px",background:"linear-gradient(135deg,#eff6ff,#dbeafe)",border:"1.5px solid #bfdbfe",borderRadius:10,fontSize:13,fontWeight:700,color:"#1e40af",cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",gap:8,transition:"background .15s"}}><IconSearch c="#1e40af"/> 주소로 실거래가·공시가격 자동조회</button>}
-      {showAcqLookup&&<AddressModal onClose={()=>setShowAcqLookup(false)} onApplyPrice={v=>{sP(String(Math.round(v/10000)));}} onApplyStd={v=>{setStdPrice(String(Math.round(v/10000)));}} onApplyArea={b=>sAreaType(b)}/>}
+      {showAcqLookup&&<AddressModal onClose={()=>setShowAcqLookup(false)} onApplyPrice={v=>{sP(String(Math.round(v/10000)));}} onApplyStd={v=>{setStdPrice(String(Math.round(v/10000)));}} onApplyArea={b=>sAreaType(b)} currentArea={areaType}/>}
       {/* 2026.04.14 취득가액 — 인라인 레이아웃 (PC width:480, 모바일 100%) */}
       <div style={{marginBottom:isMo?8:12}}>
         <div style={isMo?{display:"flex",alignItems:"stretch",flexDirection:"column",gap:6,marginBottom:4}:{display:"grid",gridTemplateColumns:"1fr 520px",alignItems:"center",gap:8,marginBottom:4}}>
