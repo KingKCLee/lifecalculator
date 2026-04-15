@@ -6119,8 +6119,48 @@ body.lc-embed main{padding-top:0!important}
 
     </main>
     </div>
-    {/* 푸터 */}
-    <footer style={{background:"#F9FAFB",borderTop:"1px solid #E5E7EB",padding:"48px 24px",position:"relative",width:"100vw",marginLeft:"calc(50% - 50vw)",boxSizing:"border-box",textAlign:"center"}}>
+    {/* 2026.04.15 푸터: PC는 sample-home 다크 네이비 5열 / 모바일은 기존 레이아웃 유지 */}
+    {!isMo?(<footer style={{background:"#0a1628",color:"#fff",padding:"64px 32px 32px",position:"relative",width:"100vw",marginLeft:"calc(50% - 50vw)",boxSizing:"border-box"}}>
+      <div style={{maxWidth:1200,margin:"0 auto",display:"grid",gridTemplateColumns:"1.3fr 1fr 1fr 1fr 1.4fr",gap:40}}>
+        <div>
+          <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:14}}>
+            <LogoSVG size={36}/>
+            <span style={{fontSize:24,fontWeight:800,color:"#fff",letterSpacing:-.3}}>생활계산기<span style={{color:"#60a5fa"}}>.com</span></span>
+          </div>
+          <p style={{fontSize:13,opacity:0.7,lineHeight:1.7,margin:"0 0 16px",maxWidth:260}}>대한민국 NO.1 세금·부동산·재테크 계산기 플랫폼. 2026년 최신 세법을 반영한 62가지 전문 계산기를 무료로 제공합니다.</p>
+        </div>
+        <div>
+          <h4 style={{fontSize:13,fontWeight:800,color:"#fff",margin:"0 0 16px"}}>서비스</h4>
+          <ul style={{listStyle:"none",padding:0,margin:0}}>
+            {[{l:"전체 계산기",fn:()=>document.getElementById("allCalcs")?.scrollIntoView({behavior:"smooth"})},{l:"AI 인사이트",fn:()=>{setPage("reports:index");history.pushState(null,"","/reports");window.scrollTo(0,0);}},{l:"PRO 분석",fn:()=>navigateCalc("pro","totalcost")},{l:"API",fn:()=>{}}].map((it,i)=>(<li key={i} onClick={it.fn} style={{fontSize:13,color:"rgba(255,255,255,0.65)",padding:"6px 0",cursor:"pointer",transition:"color .15s"}} onMouseEnter={e=>e.currentTarget.style.color="#3b82f6"} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.65)"}>{it.l}</li>))}
+          </ul>
+        </div>
+        <div>
+          <h4 style={{fontSize:13,fontWeight:800,color:"#fff",margin:"0 0 16px"}}>정보센터</h4>
+          <ul style={{listStyle:"none",padding:0,margin:0}}>
+            {[{l:"실시간 뉴스",href:"/news"},{l:"정책 브리핑",href:"/policy"},{l:"절세 가이드",href:"/learn/tax-saving"},{l:"용어사전",href:"/terms"}].map((it,i)=>(<li key={i} onClick={()=>{window.location.href=it.href}} style={{fontSize:13,color:"rgba(255,255,255,0.65)",padding:"6px 0",cursor:"pointer",transition:"color .15s"}} onMouseEnter={e=>e.currentTarget.style.color="#3b82f6"} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.65)"}>{it.l}</li>))}
+          </ul>
+        </div>
+        <div>
+          <h4 style={{fontSize:13,fontWeight:800,color:"#fff",margin:"0 0 16px"}}>고객지원</h4>
+          <ul style={{listStyle:"none",padding:0,margin:0}}>
+            {[{l:"공지사항",k:"notice"},{l:"자주 묻는 질문",k:"faq"},{l:"문의하기",k:"contact"},{l:"이용약관",k:"terms"}].map((it,i)=>(<li key={i} onClick={()=>navigateLegal(it.k==="contact"?"contact":it.k==="terms"?"privacy":"disclaimer")} style={{fontSize:13,color:"rgba(255,255,255,0.65)",padding:"6px 0",cursor:"pointer",transition:"color .15s"}} onMouseEnter={e=>e.currentTarget.style.color="#3b82f6"} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.65)"}>{it.l}</li>))}
+          </ul>
+        </div>
+        <div>
+          <h4 style={{fontSize:13,fontWeight:800,color:"#fff",margin:"0 0 12px"}}>뉴스레터 구독</h4>
+          <p style={{fontSize:12,color:"rgba(255,255,255,0.65)",margin:"0 0 12px",lineHeight:1.6}}>매주 월요일 세법 변경 브리핑을 이메일로 받아보세요</p>
+          <form onSubmit={e=>{e.preventDefault();showToast("뉴스레터 구독 신청이 접수되었습니다");}} style={{display:"flex",gap:6}}>
+            <input type="email" placeholder="your@email.com" style={{flex:1,padding:"10px 14px",background:"rgba(255,255,255,0.08)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:8,color:"#fff",fontSize:13,outline:"none",fontFamily:"inherit"}}/>
+            <button type="submit" style={{padding:"10px 18px",background:"#3b82f6",color:"#fff",border:"none",borderRadius:8,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>구독</button>
+          </form>
+        </div>
+      </div>
+      <div style={{maxWidth:1200,margin:"48px auto 0",paddingTop:24,borderTop:"1px solid rgba(255,255,255,0.1)",display:"flex",justifyContent:"space-between",gap:20,flexWrap:"wrap",fontSize:12}}>
+        <div style={{color:"rgba(255,255,255,0.3)",maxWidth:720,lineHeight:1.6}}>상호 더블유부동산 · 대표 이광철 · 사업자등록번호 589-24-01721 · 통신판매업신고 제2025-인천부평-0992호 · 주소 인천광역시 부평구 · 이메일 noble.kclee@gmail.com · 개인정보보호책임자 이광철</div>
+        <div style={{color:"rgba(255,255,255,0.65)"}}>© {new Date().getFullYear()} 생활계산기.com · <span onClick={()=>navigateLegal("privacy")} style={{cursor:"pointer"}}>개인정보처리방침</span> · <span onClick={()=>navigateLegal("disclaimer")} style={{cursor:"pointer"}}>이용약관</span></div>
+      </div>
+    </footer>):(<footer style={{background:"#F9FAFB",borderTop:"1px solid #E5E7EB",padding:"48px 24px",position:"relative",width:"100vw",marginLeft:"calc(50% - 50vw)",boxSizing:"border-box",textAlign:"center"}}>
       <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:12}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10}}>
           <LogoSVG size={40}/>
@@ -6129,7 +6169,7 @@ body.lc-embed main{padding-top:0!important}
         <div style={{fontSize:13,color:"#6B7280",lineHeight:1.6,maxWidth:640}}>생활 속 세금·대출·비용·부동산 종합 계산 플랫폼</div>
         <div style={{fontSize:12,color:"#6B7280",lineHeight:1.6,maxWidth:640}}>본 계산기는 참고용이며, 실제 세금·수수료는 세무사 또는 관할 기관에 반드시 확인하시기 바랍니다.</div>
         <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:20,flexWrap:"wrap",marginTop:12}}>
-          {[{l:"면책조항",k:"disclaimer"},{l:"자료실",k:"resource"},{l:"개인정보처리방침",k:"privacy"},{l:"문의",k:"contact"}].map(item=><span key={item.k} onClick={()=>navigateLegal(item.k)} style={{fontSize:13,color:"#6B7280",cursor:"pointer"}} onMouseEnter={e=>e.currentTarget.style.color="#0a1628"} onMouseLeave={e=>e.currentTarget.style.color="#6B7280"}>{item.l}</span>)}
+          {[{l:"면책조항",k:"disclaimer"},{l:"자료실",k:"resource"},{l:"개인정보처리방침",k:"privacy"},{l:"문의",k:"contact"}].map(item=><span key={item.k} onClick={()=>navigateLegal(item.k)} style={{fontSize:13,color:"#6B7280",cursor:"pointer"}}>{item.l}</span>)}
         </div>
         <div style={{fontSize:11,color:"#6B7280",marginTop:20,borderTop:"1px solid #E5E7EB",paddingTop:20,width:"100%",maxWidth:900}}>
           © {new Date().getFullYear()} 생활계산기.com. All rights reserved. | 세법 검증: {UPDATE_LOG[0]?.date}
@@ -6138,7 +6178,7 @@ body.lc-embed main{padding-top:0!important}
           상호: 더블유부동산 | 대표: 이광철 | 사업자등록번호: 589-24-01721 | 통신판매업 신고번호: 제2025-인천부평-0992호 | 이메일: noble.kclee@gmail.com
         </div>
       </div>
-    </footer>
+    </footer>)}
     {modal&&<LegalModal type={modal} onClose={()=>setModal(null)}/>}
     {showAuth&&<AuthModal mode={authMode} setMode={setAuthMode} onClose={()=>setShowAuth(false)} isMo={isMo} onAuthSuccess={(token,email)=>{try{localStorage.setItem('lc_token',token);localStorage.setItem('lc_email',email);}catch{}setLcToken(token);setLcEmail(email);setShowAuth(false);}}/>}
     {toast&&<div style={{position:"fixed",left:"50%",bottom:isMo?80:40,transform:"translateX(-50%)",background:"rgba(23,43,77,.95)",color:"#fff",padding:"12px 20px",borderRadius:10,fontSize:14,fontWeight:600,boxShadow:"0 8px 24px rgba(0,0,0,.25)",zIndex:10001,fontFamily:"inherit",pointerEvents:"none"}}>{toast}</div>}
