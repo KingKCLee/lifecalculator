@@ -700,22 +700,25 @@ function Slider({label,value,onChange,min,max,step}){
 }
 function Radio({label,value,onChange,options,cols}){
   const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
+  // 2026.04.15 PC 전용 sample-calc .opt-btn 스타일 (독립 버튼, gap:8, rounded 8, hover #F0F4FF)
   return(<div style={{marginBottom:20}}>
     <label style={lblSt(isMo)}>{label}</label>
-    <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
-      {options.map((o,i)=>(
-        <button key={o.value} onClick={()=>onChange(o.value)} style={{
-          flex:"1 1 auto",padding:"10px 12px",
-          border:value===o.value?"none":"1.5px solid #dfe1e6",
+    <div style={{display:"flex",flexWrap:"wrap",gap:isMo?6:8}}>
+      {options.map((o,i)=>{
+        const on=value===o.value;
+        return(
+        <button key={o.value} onClick={()=>onChange(o.value)} onMouseEnter={e=>{if(!isMo&&!on){e.currentTarget.style.background="#F0F4FF";e.currentTarget.style.borderColor="#0747A6";e.currentTarget.style.color="#0747A6";}}} onMouseLeave={e=>{if(!isMo&&!on){e.currentTarget.style.background="#fff";e.currentTarget.style.borderColor="#dfe1e6";e.currentTarget.style.color="#505f79";}}} style={{
+          flex:"1 1 auto",minWidth:isMo?"auto":60,padding:isMo?"10px 12px":"10px 12px",
+          border:on?"none":"1.5px solid #dfe1e6",
           borderRadius:8,
-          background:value===o.value?"#0747A6":"#fff",
-          color:value===o.value?"#fff":"#505f79",
-          fontWeight:value===o.value?700:500,
+          background:on?"#0747A6":"#fff",
+          color:on?"#fff":"#505f79",
+          fontWeight:on?700:500,
           fontSize:isMo?12:13,cursor:"pointer",fontFamily:"inherit",
           whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,
-          transition:"background .15s,color .15s"
+          transition:"background .15s,color .15s,border-color .15s"
         }}>{o.label}</button>
-      ))}
+      );})}
     </div>
   </div>);
 }
@@ -772,33 +775,38 @@ const Tog = ({label, options, value, onChange, isMo:isMoProp}) => {
           whiteSpace:"normal"
         }}>{label}</label>
       )}
+      {/* 2026.04.15 PC sample-calc .opt-btn 스타일 (gap:8, rounded 8, 독립 버튼, hover #F0F4FF) */}
       <div style={{
         display:"flex",
         flexWrap:"wrap",
-        gap:6
+        gap:isMo?6:8
       }}>
-        {options.map(opt => (
+        {options.map(opt => {
+          const on=value===opt.value;
+          return(
           <button
             key={opt.value}
             onClick={() => onChange(opt.value)}
+            onMouseEnter={e=>{if(!isMo&&!on){e.currentTarget.style.background="#F0F4FF";e.currentTarget.style.borderColor="#0747A6";e.currentTarget.style.color="#0747A6";}}}
+            onMouseLeave={e=>{if(!isMo&&!on){e.currentTarget.style.background="#fff";e.currentTarget.style.borderColor="#DFE1E6";e.currentTarget.style.color=P.tx;}}}
             style={{
-              flex:"0 0 auto",
-              padding:"6px 12px",
+              flex:isMo?"0 0 auto":"1 1 auto",
+              minWidth:isMo?"auto":60,
+              padding:isMo?"6px 12px":"10px 12px",
               fontSize:13,
-              fontWeight:value===opt.value?700:400,
+              fontWeight:on?700:400,
               whiteSpace:"nowrap",
-              lineHeight:1.3,
-              borderRadius:6,
-              border:"1.5px solid",
-              borderColor:value===opt.value?P.pri:"#DFE1E6",
-              backgroundColor:value===opt.value?P.pri:"#fff",
-              color:value===opt.value?"#fff":P.tx,
+              lineHeight:1.4,
+              borderRadius:8,
+              border:on?"none":"1.5px solid #DFE1E6",
+              backgroundColor:on?P.pri:"#fff",
+              color:on?"#fff":P.tx,
               cursor:"pointer",
               fontFamily:"inherit",
-              transition:"all 0.15s"
+              transition:"background .15s,color .15s,border-color .15s"
             }}
           >{opt.label}</button>
-        ))}
+        );})}
       </div>
     </div>
   );
@@ -1048,7 +1056,29 @@ function AdSlot({position}){
   </div>);
 }
 
-function RP({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlineLinkLabel,alertMsg,alertType="info",consultFunnel,miss}){
+function ExpertGuideCard({items}){
+  // 2026.04.15 sample-calc 기준 Expert Guide 아코디언 카드 (PC/모바일 동일)
+  const [openIdx,setOpenIdx]=useState(0);
+  if(!Array.isArray(items)||items.length===0)return null;
+  return(<div style={{background:"#fff",border:"1px solid #dfe1e6",borderRadius:14,padding:"22px 24px",marginTop:16}}>
+    <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14}}>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0747A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></svg>
+      <h3 style={{fontSize:14,fontWeight:800,color:"#0a1628",margin:0}}>Expert Guide</h3>
+    </div>
+    {items.map((it,i)=>{
+      const open=openIdx===i;
+      return(<div key={i} style={{borderBottom:i<items.length-1?"1px solid #dfe1e6":"none"}}>
+        <button onClick={()=>setOpenIdx(open?-1:i)} style={{width:"100%",padding:"13px 4px",display:"flex",justifyContent:"space-between",alignItems:"center",textAlign:"left",fontSize:13,fontWeight:700,color:"#172B4D",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>
+          <span>{it.q||it.title}</span>
+          <span style={{width:22,height:22,borderRadius:6,background:open?"#0747A6":"#f4f5f7",display:"flex",alignItems:"center",justifyContent:"center",color:open?"#fff":"#0747A6",fontWeight:800,transform:open?"rotate(45deg)":"none",transition:"all .15s",fontSize:14}}>+</span>
+        </button>
+        {open&&<div style={{padding:"0 4px 12px"}}><p style={{fontSize:12,color:"#505f79",margin:0,lineHeight:1.75,whiteSpace:"pre-line"}}>{it.a||it.body}</p></div>}
+      </div>);
+    })}
+  </div>);
+}
+
+function RP({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlineLinkLabel,alertMsg,alertType="info",consultFunnel,miss,expertGuide}){
   // 2026.04.14 입력값 없을 때(isExample) ₩0으로 표시 (항상 노출, 숨기지 않음)
   // 2026.04.15 miss: 필수 입력 미기재 안내 (string[]). 있으면 안내박스 표시
   const hasMiss=Array.isArray(miss)&&miss.length>0;
@@ -1065,7 +1095,7 @@ function RP({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlin
   const isTotal=(l)=>l.includes("합계")||l.includes("납부세액")||l.includes("총 납부")||l.includes("총비용")||l.includes("최종")||l.includes("세후")||l.includes("잔존가치")||l.includes("순수익")||l.includes("환산")||l.includes("실투자")||l.includes("최대 대출");
   const isSub=(l)=>l.startsWith("  ")||l.startsWith("└")||l.startsWith("│");
   const alertAccent=alertType==="danger"?"#FFC400":alertType==="success"?"#57D9A3":alertType==="warning"?"#FFE380":"#fff";
-  return(
+  return(<>
   <div style={{background:"linear-gradient(315deg, #0747A6 0%, #0052CC 50%, #0065FF 100%)",borderRadius:20,padding:"28px 24px",color:"#fff",position:isMo?"relative":"sticky",top:isMo?0:80,alignSelf:"start",boxShadow:"0 8px 28px rgba(7,71,166,.28)",width:"100%",minWidth:isMo?"auto":320,boxSizing:"border-box"}}>
     {isExample&&!hasMiss&&<div style={{background:"rgba(255,255,255,0.18)",borderRadius:6,padding:"4px 10px",marginBottom:12,fontSize:11,display:"inline-flex",alignItems:"center",gap:5}}><IconClip c="#fff"/> 예시값 · 직접 입력하면 즉시 업데이트</div>}
     {hasMiss&&<div style={{background:"rgba(255,255,255,0.95)",border:"1px solid #E5E7EB",borderRadius:10,padding:"14px 16px",marginBottom:16,color:"#374151",fontSize:13,lineHeight:1.6}}>
@@ -1137,7 +1167,10 @@ function RP({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlin
     </div>}
     {!isExample&&!hasMiss&&total>0&&<AIGuide items={items} title={title}/>}
     <div style={{marginTop:10,fontSize:10,opacity:.5,lineHeight:1.5,textAlign:"center"}}>본 계산은 2026년 세법 기준 참고용이며 법적 효력이 없습니다. (v2026.04.06)</div>
-  </div>);
+  </div>
+  {/* 2026.04.15 Expert Guide 카드 — expertGuide prop으로 옵션 렌더 */}
+  {expertGuide&&<ExpertGuideCard items={expertGuide}/>}
+  </>);
 }
 function RequiredGuide({items}){const missing=items.filter(i=>!i.filled);if(missing.length===0)return null;return(<div style={{background:"#F4F5F7",borderRadius:12,padding:"16px 20px",marginTop:8}}><div style={{fontSize:12,fontWeight:700,color:"#505f79",marginBottom:10}}>필수 입력 항목</div>{missing.map((item,i)=>(<div key={i} style={{display:"flex",alignItems:"center",gap:8,marginBottom:6,fontSize:13,color:"#172B4D"}}><span style={{width:6,height:6,borderRadius:"50%",background:"#0747A6",flexShrink:0,display:"inline-block"}}/>{item.label}</div>))}</div>);}
 function StepsGuide({steps}){const filled=steps.filter(s=>s.filled).length;const done=filled>=steps.length;return(<div style={{background:"#f8fafc",border:"1px solid #e2e8f0",borderRadius:12,padding:"16px",marginBottom:12,minHeight:steps.length*30+40,opacity:done?0.4:1,transition:"opacity .25s"}}><div style={{fontSize:12,fontWeight:600,color:"#64748b",marginBottom:8}}><IconDoc/> 입력 단계 ({filled}/{steps.length}){done&&" · 완료"}</div>{steps.map((s,i)=>(<div key={i} style={{display:"flex",alignItems:"center",gap:8,padding:"4px 0",fontSize:13}}><span style={{width:18,height:18,borderRadius:"50%",background:s.filled?"#22c55e":"#e2e8f0",color:s.filled?"#fff":"#94a3b8",display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,flexShrink:0,fontWeight:700}}>{s.filled?"✓":i+1}</span><span style={{color:s.filled?"#94a3b8":"#1e293b",textDecoration:s.filled?"line-through":""}}>{s.label}</span></div>))}</div>);}
@@ -3464,8 +3497,9 @@ function HomeSections({isMo, effectiveUser, navigateCalc, setAuthMode, setShowAu
   const toggleChip=c=>setChips(p=>p.includes(c)?p.filter(x=>x!==c):[...p,c]);
   const fmtDate=s=>{if(!s)return"";try{const d=new Date(s);if(isNaN(d))return s.slice(0,10);return d.getFullYear()+"."+String(d.getMonth()+1).padStart(2,"0")+"."+String(d.getDate()).padStart(2,"0");}catch{return s.slice(0,10)}};
 
-  const secStyle={background:"#FFFFFF",border:"1px solid #E5E7EB",borderRadius:12,padding:24,marginBottom:24,boxShadow:"0 1px 3px rgba(0,0,0,0.06)"};
-  const hdrStyle={fontSize:18,fontWeight:700,color:"#0a1628",display:"flex",alignItems:"center",justifyContent:"space-between",borderBottom:"1px solid #F3F4F6",paddingBottom:12,marginBottom:12,gap:8};
+  // 2026.04.15 sample-home 기반 카드 스타일 업그레이드 (PC 14px radius, 호버 translateY, 더 큰 shadow)
+  const secStyle={background:"#FFFFFF",border:"1px solid #dfe1e6",borderRadius:14,padding:"28px 26px",marginBottom:24,boxShadow:"0 2px 8px rgba(10,22,40,0.04)",transition:"all .2s"};
+  const hdrStyle={fontSize:18,fontWeight:800,color:"#0a1628",display:"flex",alignItems:"center",justifyContent:"space-between",borderBottom:"1px solid #f3f4f6",paddingBottom:14,marginBottom:14,gap:8,letterSpacing:-.3};
   const moreLnk={fontSize:13,fontWeight:600,color:"#0747A6",textDecoration:"none",flexShrink:0};
   const itemStyle={fontSize:14,color:"#1F2937",padding:"10px 0",borderBottom:"1px solid #F3F4F6",cursor:"pointer",display:"block",textDecoration:"none",transition:"color .15s,background .15s",lineHeight:1.6};
   const Skel=({lines=5})=>(<div>{Array.from({length:lines}).map((_,i)=>(<div key={i} style={{height:14,background:"linear-gradient(90deg,#F3F4F6,#E5E7EB,#F3F4F6)",backgroundSize:"200% 100%",borderRadius:4,marginBottom:12,animation:"lcpulse 1.4s infinite"}}/>))}</div>);
@@ -5721,20 +5755,20 @@ body.lc-embed main{padding-top:0!important}
           <button onClick={()=>{document.getElementById("allCalcs")?.scrollIntoView({behavior:"smooth"})}} style={{width:"100%",marginTop:10,padding:"14px",background:"#fff",border:"1px solid #dfe1e6",borderRadius:10,fontSize:14,fontWeight:700,color:"#505f79",cursor:"pointer",fontFamily:"inherit"}}>전체 62가지 계산기 보기</button>
         </div>
       </>):(
-      <div style={{background:"#f8f9fc",maxWidth:"100%",overflow:"hidden"}}>
-        <div style={{maxWidth:1200,margin:"0 auto",padding:"80px 24px"}}>
-          <div className="hero-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:48,alignItems:"center"}}>
-            <div>
-              <div style={{display:"inline-block",background:"#deebff",padding:"6px 16px",borderRadius:20,fontSize:13,color:"#0747A6",marginBottom:20}}><span style={{fontWeight:700}}>대한민국 NO.1 계산기 -</span> <span style={{fontWeight:400,opacity:0.9}}>부동산 · 세금 · 대출 · 비용 · 생활</span></div>
-              <h1 style={{fontSize:44,fontWeight:900,color:"#172B4D",lineHeight:1.15,letterSpacing:-2,margin:"0 0 16px"}}>복잡한 세법·대출 규제,<br/><span style={{color:"#0747A6"}}>10초 만에</span><br/>완벽 계산</h1>
-              <p style={{fontSize:16,color:"#505f79",lineHeight:1.7,margin:0,wordBreak:"keep-all"}}>부동산 세금, 대출, 비용부터 연말정산, 연봉 실수령액, 4대보험까지. 62가지 전문 계산기로 일상의 재정 판단을 도와드립니다. 2026년 최신 세법 반영.</p>
-            </div>
-            <div style={{background:"#fff",borderRadius:20,padding:"40px 32px",border:"1px solid #dfe1e6",boxShadow:"0 4px 20px rgba(0,0,0,0.06)"}}>
-              <div style={{fontSize:18,fontWeight:700,color:"#172B4D",marginBottom:16}}>어떤 계산이 필요하세요?</div>
-              <CalcSearchBar onSelect={navigateCalc} isMo={false} calcList={CL.map(c=>({id:c.id,name:c.l,keywords:c.l+" "+(DESC[c.id]||""),cat:c.c}))}/>
-              <button onClick={()=>navigateCalc("tax","acquisition")} style={{width:"100%",padding:"16px",background:"#0747A6",color:"#fff",border:"none",borderRadius:12,fontSize:16,fontWeight:700,cursor:"pointer",marginTop:12,boxShadow:"0 4px 14px rgba(7,71,166,0.3)",fontFamily:"inherit"}}>지금 계산하기 →</button>
-              <div style={{display:"flex",justifyContent:"center",gap:16,marginTop:16,fontSize:13,color:"#505f79"}}><span style={{display:"inline-flex",alignItems:"center",gap:4}}><Ico.check size={14}/>매일 자동 검증</span><span style={{display:"inline-flex",alignItems:"center",gap:4}}><IconCheck c="#505f79"/> 62가지 무료</span></div>
-            </div>
+      <div style={{background:"linear-gradient(180deg,#eff6ff 0%,#f8f9fc 100%)",borderBottom:"1px solid #dfe1e6",padding:"80px 32px 72px"}}>
+        <div style={{maxWidth:880,margin:"0 auto",textAlign:"center"}}>
+          <span style={{display:"inline-flex",alignItems:"center",gap:8,background:"#fff",padding:"7px 16px",border:"1px solid #dbeafe",borderRadius:20,fontSize:13,fontWeight:700,color:"#3b82f6",marginBottom:24,boxShadow:"0 2px 8px rgba(59,130,246,0.08)"}}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+            대한민국 NO.1 세금·부동산·재테크 계산기
+          </span>
+          <h1 style={{fontSize:52,fontWeight:800,color:"#0a1628",lineHeight:1.18,letterSpacing:-1.5,margin:"0 0 20px"}}>복잡한 세법·대출 규제,<br/><span style={{color:"#3b82f6"}}>10초 만에</span> 완벽 계산</h1>
+          <p style={{fontSize:17,color:"#505f79",margin:"0 0 36px",lineHeight:1.7}}>취득세, 양도소득세, 연말정산, 대출이자, 실수령액까지<br/>62가지 전문 계산기를 2026년 최신 세법 기준으로 무료 제공합니다.</p>
+          <div style={{background:"#fff",border:"1.5px solid #dfe1e6",borderRadius:14,padding:8,boxShadow:"0 8px 32px rgba(10,22,40,0.08)",maxWidth:680,margin:"0 auto"}}>
+            <CalcSearchBar onSelect={navigateCalc} isMo={false} calcList={CL.map(c=>({id:c.id,name:c.l,keywords:c.l+" "+(DESC[c.id]||""),cat:c.c}))}/>
+          </div>
+          <div style={{display:"flex",flexWrap:"wrap",gap:8,justifyContent:"center",marginTop:22}}>
+            <span style={{fontSize:13,color:"#505f79",alignSelf:"center",marginRight:4}}>인기 검색:</span>
+            {["취득세","대출이자","연말정산","양도소득세","실수령액","DSR","증여세"].map(tag=>{const info=CL.find(c=>c.l.includes(tag)||tag.includes(c.l));return(<button key={tag} onClick={()=>info&&navigateCalc(info.c,info.id)} style={{padding:"7px 13px",background:"#fff",border:"1px solid #dfe1e6",borderRadius:20,fontSize:13,color:"#374151",cursor:"pointer",fontFamily:"inherit",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.borderColor="#3b82f6";e.currentTarget.style.color="#3b82f6"}} onMouseLeave={e=>{e.currentTarget.style.borderColor="#dfe1e6";e.currentTarget.style.color="#374151"}}>{tag}</button>);})}
           </div>
         </div>
       </div>
@@ -5827,6 +5861,14 @@ body.lc-embed main{padding-top:0!important}
         {/* 좌측: 헤더 + 서브탭 + 계산기 + PRO */}
         <div>
           {navContent&&<NavContentPanel navContent={navContent} setNavContent={setNavContent} calc={calc} effectiveUser={effectiveUser} lcToken={lcToken} setAuthMode={setAuthMode} setShowAuth={setShowAuth}/>}
+          {/* 2026.04.15 PC 브레드크럼 (홈 > 카테고리 > 계산기) */}
+          {!isMo&&<nav aria-label="breadcrumb" style={{fontSize:13,color:"#505f79",marginBottom:12,display:"flex",alignItems:"center",gap:8}}>
+            <span onClick={navigateHome} style={{cursor:"pointer",color:"#505f79"}} onMouseEnter={e=>e.currentTarget.style.color="#0747A6"} onMouseLeave={e=>e.currentTarget.style.color="#505f79"}>홈</span>
+            <span style={{color:"#d1d5db"}}>›</span>
+            <span style={{cursor:"pointer",color:"#505f79"}} onClick={()=>{const first=CL.find(c=>c.c===cat);if(first)navigateCalc(cat,first.id);}} onMouseEnter={e=>e.currentTarget.style.color="#0747A6"} onMouseLeave={e=>e.currentTarget.style.color="#505f79"}>{catInfo?.l}</span>
+            <span style={{color:"#d1d5db"}}>›</span>
+            <span style={{color:"#0a1628",fontWeight:600}}>{CL.find(c=>c.id===calc)?.l||""}</span>
+          </nav>}
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:16,marginBottom:14}}>
             <div className="sub-tabs" style={{flex:"1 1 auto",minWidth:0,display:"flex",gap:6,flexWrap:"nowrap",overflowX:"auto",WebkitOverflowScrolling:"touch",paddingBottom:6,scrollbarWidth:"none",msOverflowStyle:"none",whiteSpace:"nowrap"}}>
               {filtered.map(c=>(<button key={c.id} onClick={()=>navigateCalc(cat,c.id)} style={{padding:"8px 14px",border:calc===c.id?"none":"1px solid #E5E7EB",borderRadius:20,background:calc===c.id?"#0a1628":"#fff",color:calc===c.id?"#fff":"#6B7280",fontSize:13,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0,display:"inline-flex",alignItems:"center",justifyContent:"center",gap:6,height:36,boxSizing:"border-box"}}>{CALC_ICONS[c.id]&&<span style={{display:"inline-flex"}}>{CALC_ICONS[c.id]}</span>}{c.l}</button>))}
