@@ -5618,10 +5618,14 @@ button:active{transform:scale(0.98)}
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-thumb{background:#c1c7cd;border-radius:3px}
 ::-webkit-scrollbar-track{background:transparent}
-.seo h2{font-size:20px;font-weight:800;color:#172B4D;margin:0 0 16px;letterSpacing:-0.5}
-.seo h3{font-size:16px;font-weight:700;color:#0747A6;margin:20px 0 8px}
-.seo p{margin:0 0 12px}
-.seo strong{color:#172B4D;font-weight:700}
+.seo h2{font-size:28px;font-weight:800;color:#0a1628;margin:0 0 8px;letter-spacing:-0.7px}
+.seo .guide-sub,.guide-card .guide-sub{font-size:13px;color:#505f79;margin:0 0 28px}
+.seo h3{font-size:17px;font-weight:800;color:#0a1628;margin:24px 0 8px;display:flex;align-items:center;gap:8px}
+.seo h3 .num,.seo h3 .lc-guide-num{width:24px;height:24px;border-radius:7px;background:#deebff;color:#0747A6;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0}
+.seo p{font-size:14px;color:#374151;line-height:1.8;margin:0 0 8px}
+.seo strong,.seo b{color:#0a1628;font-weight:700}
+.seo ul,.seo ol{font-size:14px;color:#374151;line-height:1.8;padding-left:22px;margin:8px 0 14px}
+.seo li{margin-bottom:4px}
 .num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
@@ -5973,7 +5977,7 @@ body.lc-embed main{padding-top:0!important}
             </div>
           </div>
           <div style={{marginBottom:24,display:"flex",alignItems:"center",gap:12,flexWrap:"wrap"}}>
-            <h1 style={{fontSize:28,fontWeight:700,color:"#0a1628",margin:0,letterSpacing:-1}}>{CL.find(c=>c.id===calc)?.l||catInfo?.l+" 계산기"}</h1>
+            <h1 style={{fontSize:isMo?22:36,fontWeight:700,color:"#0a1628",margin:0,letterSpacing:"-1px",lineHeight:1.2}}>{CL.find(c=>c.id===calc)?.l||catInfo?.l+" 계산기"}</h1>
             <span style={{fontSize:13,color:"#6B7280",flex:"1 1 auto",minWidth:0}}>{CALC_SUBTITLE[calc]||"2026년 최신 세법 기반 정밀 계산"}</span>
             <button onClick={()=>toggleFavorite(calc)} aria-label={favorites.includes(calc)?"즐겨찾기 해제":"즐겨찾기 추가"} style={{background:favorites.includes(calc)?"#FFFBEA":"#fff",border:"1px solid "+(favorites.includes(calc)?"#F59E0B":"#dfe1e6"),borderRadius:20,padding:"6px 12px",cursor:"pointer",fontSize:13,fontWeight:700,color:favorites.includes(calc)?"#B78100":"#6b778c",display:"inline-flex",alignItems:"center",gap:4,fontFamily:"inherit"}}>{favorites.includes(calc)?<IconStar c="#F59E0B"/>:<IconStar c="#c1c7cd"/>} {favorites.includes(calc)?"즐겨찾기 해제":"즐겨찾기"}</button>
             {/* 2026.04.14 embed 퍼가기 버튼 */}
@@ -5990,8 +5994,8 @@ body.lc-embed main{padding-top:0!important}
             <div style={{fontSize:14,fontWeight:700,color:"#172B4D",marginBottom:10,display:"flex",alignItems:"center",gap:6}}>{FUN_STATS[calc].icon}{FUN_STATS[calc].title}</div>
             {FUN_STATS[calc].items.map((it,i)=>(<div key={i} style={{fontSize:13,color:"#344563",padding:"4px 0",display:"flex",alignItems:"flex-start",gap:8}}><span style={{color:"#0747A6"}}>•</span><span>{it}</span></div>))}
           </div>}
-          {SEO_CONTENT[calc]&&<div style={{marginBottom:24,padding:isMo?"24px 18px":"32px 28px",background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`}}>
-            <div className="seo" dangerouslySetInnerHTML={{__html:SEO_CONTENT[calc]}} style={{fontSize:14,color:"#172B4D",lineHeight:1.8}}/>
+          {SEO_CONTENT[calc]&&<div className="guide-card" style={{marginBottom:24,padding:isMo?"28px 20px":"40px 44px",background:"#fff",borderRadius:18,border:`1px solid ${P.bd}`}}>
+            <div className="seo" dangerouslySetInnerHTML={{__html:SEO_CONTENT[calc]}} style={{fontSize:14,color:"#374151",lineHeight:1.8}}/>
           </div>}
           {cat==="tax"&&calc!=="totalcost"&&calc!=="compare"&&calc!=="invest"&&<div className="pro-cards" style={{display:"grid",gridTemplateColumns:isMo?"1fr":"repeat(3,1fr)",gap:isMo?8:12}}>
             {[{id:"totalcost",t:"총비용 시뮬레이터",d:"취득세~중개보수 합산",icon:<IconBulb c="#0747A6"/>,cl:"#0747A6"},
