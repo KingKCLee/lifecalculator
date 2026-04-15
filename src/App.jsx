@@ -1153,9 +1153,10 @@ function RP({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlin
       if(isExample||hasMiss)return null;
       const chartData=(items||[]).filter(it=>typeof it.v==="string"&&it.v.includes("₩")&&!isTotal(it.l)).map((it,i)=>({label:String(it.l).replace(/^[\s└│]+/,"").slice(0,12),value:parseWonString(it.v),color:CHART_COLORS[i%CHART_COLORS.length]})).filter(d=>d.value>0);
       if(chartData.length<2)return null;
-      return(<div style={{marginTop:14,padding:"12px",background:"rgba(255,255,255,0.96)",borderRadius:10}}>
+      const _isMo=typeof window!=="undefined"&&window.innerWidth<=768;
+      return(<div style={{marginTop:14,padding:"12px",background:"rgba(255,255,255,0.96)",borderRadius:10,maxWidth:_isMo?"100%":200,maxHeight:_isMo?"none":200,margin:_isMo?"14px 0 0":"14px auto 0"}}>
         <div style={{fontSize:11,fontWeight:700,color:"#0747A6",marginBottom:4,letterSpacing:.5}}>구성 비율</div>
-        <MiniChart type="donut" data={chartData} height={180}/>
+        <MiniChart type="donut" data={chartData} height={_isMo?180:160}/>
       </div>);
     })()}
     {!isExample&&!hasMiss&&total>0&&<AIGuide items={items} title={title}/>}
@@ -1163,28 +1164,21 @@ function RP({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlin
       <span><IconCal c="#fff"/></span><span style={{opacity:.88,flex:"1 1 auto",minWidth:0}}>{deadline}</span>
       {deadlineLink&&<a href={deadlineLink} target="_blank" rel="noopener noreferrer" style={{color:"#FFC400",fontWeight:700,textDecoration:"none"}}>{deadlineLinkLabel||"바로가기 →"}</a>}
     </div>}
-    {/* Row 1: PDF / 이미지 / CSV / 링크 */}
-    <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6,marginTop:14}}>
+    {/* Unified action buttons: PDF / 이미지 / CSV / 링크 / AI 해설 / 중개사 PDF / 전문가 상담 */}
+    <div className="result-actions" style={{display:"flex",flexWrap:"wrap",gap:6,marginTop:14}}>
       {[
-        {fn:()=>downloadPDF(title,total,sub,items),icon:<IconDoc c="#0747A6"/>,l:"PDF"},
-        {fn:()=>downloadImage(title,total,sub,items),icon:<IconCam c="#0747A6"/>,l:"이미지"},
-        {fn:()=>downloadCSV(title,total,sub,items),icon:<IconChart c="#0747A6"/>,l:"CSV"},
-        {fn:()=>window.dispatchEvent(new CustomEvent('lc-share-url')),icon:<IconLink c="#0747A6"/>,l:"링크"}
+        {fn:()=>downloadPDF(title,total,sub,items),icon:<IconDoc c="#fff"/>,l:"PDF"},
+        {fn:()=>downloadImage(title,total,sub,items),icon:<IconCam c="#fff"/>,l:"이미지"},
+        {fn:()=>downloadCSV(title,total,sub,items),icon:<IconChart c="#fff"/>,l:"CSV"},
+        {fn:()=>window.dispatchEvent(new CustomEvent('lc-share-url')),icon:<IconLink c="#fff"/>,l:"링크"},
+        {fn:()=>window.dispatchEvent(new CustomEvent('lc-ai-explain',{detail:{title,total,items,sub}})),icon:<IconBot c="#fff"/>,l:"AI 해설"},
+        {fn:()=>window.dispatchEvent(new CustomEvent('lc-brand-pdf',{detail:{title,total,items,sub}})),icon:<IconDoc c="#fff"/>,l:"AI PDF"},
+        {fn:()=>window.dispatchEvent(new CustomEvent('lc-consult',{detail:{title,total}})),icon:<IconUser c="#fff"/>,l:"정보공유"}
       ].map((b,i)=>(
-        <button key={i} onClick={b.fn} style={{padding:"9px 4px",background:"#fff",color:"#0747A6",border:"none",borderRadius:8,fontSize:11,fontWeight:700,cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:2,fontFamily:"inherit",transition:"transform .15s"}}
-          onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-1px)"}} onMouseLeave={e=>{e.currentTarget.style.transform="translateY(0)"}}>
+        <button key={i} onClick={b.fn} style={{flex:"1 1 auto",minWidth:80,padding:"9px 10px",background:"rgba(255,255,255,.12)",color:"#fff",border:"1px solid rgba(255,255,255,.28)",borderRadius:8,fontSize:11,fontWeight:700,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:4,fontFamily:"inherit",transition:"background .15s"}}
+          onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,.22)"}} onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,.12)"}}>
           {b.icon}{b.l}
         </button>))}
-    </div>
-    {/* Row 2: AI 해설 / 중개사 PDF / 전문가 상담 */}
-    <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:6,marginTop:8}}>
-      {[
-        {fn:()=>window.dispatchEvent(new CustomEvent('lc-ai-explain',{detail:{title,total,items,sub}})),icon:<IconBot c="#fff"/>,l:"AI 해설"},
-        {fn:()=>window.dispatchEvent(new CustomEvent('lc-brand-pdf',{detail:{title,total,items,sub}})),icon:<IconDoc c="#fff"/>,l:"중개사 PDF"},
-        {fn:()=>window.dispatchEvent(new CustomEvent('lc-consult',{detail:{title,total}})),icon:<IconUser c="#fff"/>,l:"전문가 상담"}
-      ].map((b,i)=>(
-        <button key={i} onClick={b.fn} style={{padding:"9px 4px",background:"rgba(255,255,255,.12)",color:"#fff",border:"1px solid rgba(255,255,255,.28)",borderRadius:8,fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",gap:4}}>{b.icon}{b.l}</button>
-      ))}
     </div>
     {/* Row 3: -10% / 원래 / +10% */}
     <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:6,marginTop:8}}>
@@ -1594,7 +1588,7 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
       {populationDecline&&<div style={{padding:"10px 14px",background:"#DEEBFF",border:"1px solid #0747A6",borderRadius:10,fontSize:12,color:"#0747A6",marginTop:8,lineHeight:1.6}}>인구감소지역 생애최초 감면 한도는 300만원입니다.</div>}
       {firstOfLife&&!isFirstHomeBenefit&&<div style={{padding:"12px 16px",background:"#FFEBE6",border:"1px solid #FFBDAD",borderRadius:10,fontSize:13,color:"#DE350B",marginTop:8,lineHeight:1.6,display:"flex",alignItems:"center",gap:6}}><IconWarn c="#DE350B"/> 생애최초 취득세 감면 혜택이 종료되었습니다 (2028.12.31 만료).</div>}
     <RateTable title="주택 취득세율표" headers={["구분","취득세","교육세","농특세(85㎡↑)","합계"]} rows={[["1주택 6억↓","1%","0.1%","0.2%","1.3%"],["1주택 6~9억","1~3%","취득세의1/10","0.2%","변동"],["1주택 9억↑","3%","0.3%","0.2%","3.5%"],["2주택 조정","8%","0.4%","0.6%","9%"],["2주택 비조정","1~3%","취득세의1/10","0.2%","변동"],["3주택 조정","12%","0.4%","1%","13.4%"],["3주택 비조정","8%","0.4%","0.6%","9%"],["4주택+","12%","0.4%","1%","13.4%"],["법인","12%","0.4%","1%","13.4%"]]}/>
-    <RateTable title="주택 외 취득세율표" headers={["구분","취득세","교육세","농특세"]} rows={[["매매(토지·건물)","4%","0.4%","0.2%"],["증여","3.5%","0.3%","0.2%"],["상속","2.8%","0.16%","0.2%"],["원시취득","2.8%","0.16%","0.2%"],["농지 매매","3%","0.2%","0.2%"],["농지 자경","1.5%","0.1%","-"],["농지 상속","2.3%","0.06%","0.2%"]]}/>
+    <div style={{marginTop:isMo?0:24}}><RateTable title="주택 외 취득세율표" headers={["구분","취득세","교육세","농특세","합계"]} rows={[["매매(토지·건물)","4%","0.4%","0.2%","4.6%"],["증여","3.5%","0.3%","0.2%","4.0%"],["상속","2.8%","0.16%","0.2%","3.16%"],["원시취득","2.8%","0.16%","0.2%","3.16%"],["농지 매매","3%","0.2%","0.2%","3.4%"],["농지 자경","1.5%","0.1%","-","1.6%"],["농지 상속","2.3%","0.06%","0.2%","2.56%"]]}/></div>
     </div>
     {/* 2026.04.14 고도화: 납부기한 취득유형별 분기 (상속 6개월 / 증여 3개월 / 그 외 60일). 기존: deadline="신고기한: 잔금일 또는 등기일 중 빠른 날부터 60일 이내" */}
     <div>{_hasErrors&&<div style={{padding:"10px 14px",background:"#FEE2E2",border:"1px solid #FECACA",borderRadius:8,fontSize:13,color:"#EF4444",fontWeight:600,marginBottom:12}}>필수 항목을 모두 입력해주세요</div>}<RP miss={tW(price)>0?null:MI.acquisition} title="취득세 계산 결과" total={total} sub={"취득세율 "+fP(r*100)+" 적용"}
@@ -5902,7 +5896,7 @@ body.lc-embed main{padding-top:0!important}
         <div>
           {navContent&&<NavContentPanel navContent={navContent} setNavContent={setNavContent} calc={calc} effectiveUser={effectiveUser} lcToken={lcToken} setAuthMode={setAuthMode} setShowAuth={setShowAuth}/>}
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:16,marginBottom:14}}>
-            <div className="sub-tabs" style={{flex:"1 1 auto",minWidth:0,display:"flex",gap:6,flexWrap:"nowrap",overflowX:"auto",WebkitOverflowScrolling:"touch",paddingBottom:6,scrollbarWidth:"thin"}}>
+            <div className="sub-tabs" style={{flex:"1 1 auto",minWidth:0,display:"flex",gap:6,flexWrap:"nowrap",overflowX:"auto",WebkitOverflowScrolling:"touch",paddingBottom:6,scrollbarWidth:"none",msOverflowStyle:"none",whiteSpace:"nowrap"}}>
               {filtered.map(c=>(<button key={c.id} onClick={()=>navigateCalc(cat,c.id)} style={{padding:"8px 14px",border:calc===c.id?"none":"1px solid #E5E7EB",borderRadius:20,background:calc===c.id?"#0a1628":"#fff",color:calc===c.id?"#fff":"#6B7280",fontSize:13,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0,display:"inline-flex",alignItems:"center",justifyContent:"center",gap:6,height:36,boxSizing:"border-box"}}>{CALC_ICONS[c.id]&&<span style={{display:"inline-flex"}}>{CALC_ICONS[c.id]}</span>}{c.l}</button>))}
             </div>
           </div>
@@ -5927,7 +5921,7 @@ body.lc-embed main{padding-top:0!important}
           {SEO_CONTENT[calc]&&<div style={{marginBottom:24,padding:isMo?"24px 18px":"32px 28px",background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`}}>
             <div className="seo" dangerouslySetInnerHTML={{__html:SEO_CONTENT[calc]}} style={{fontSize:14,color:"#172B4D",lineHeight:1.8}}/>
           </div>}
-          {cat==="tax"&&calc!=="totalcost"&&calc!=="compare"&&calc!=="invest"&&<div className="pro-cards" style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?8:12}}>
+          {cat==="tax"&&calc!=="totalcost"&&calc!=="compare"&&calc!=="invest"&&<div className="pro-cards" style={{display:"grid",gridTemplateColumns:isMo?"1fr":"repeat(3,1fr)",gap:isMo?8:12}}>
             {[{id:"totalcost",t:"총비용 시뮬레이터",d:"취득세~중개보수 합산",icon:<IconBulb c="#0747A6"/>,cl:"#0747A6"},
               {id:"compare",t:"세금 비교 분석",d:"매매·증여·상속 비교",icon:<IconChart/>,cl:"#00875A"},
               {id:"invest",t:"투자수익 분석",d:"매수→매도 종합분석",icon:<IconChart c="#FF8B00"/>,cl:"#FF8B00"}
