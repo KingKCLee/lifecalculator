@@ -82,6 +82,71 @@ function useIsMobile(bp=768){
 const SLUGS={acquisition:"취득세계산기",transfer:"양도소득세계산기",inctax:"종합소득세계산기",yearend:"연말정산계산기",compre:"종부세계산기",property:"재산세계산기",gift:"증여세계산기",inherit:"상속세계산기",holdtax:"보유세계산기",rental:"임대소득세계산기",mortgage:"대출이자계산기",dsr:"DSR계산기",dti:"DTI계산기",ltv:"LTV계산기",loanmax:"대출가능액계산기",rti:"RTI계산기",commission:"중개수수료계산기",registration:"등기비용계산기",legal:"법무사수수료계산기",stamp:"인지세계산기",bond:"채권할인료계산기",appraisal:"감정평가수수료계산기",netsalary:"연봉실수령액",insurance4:"4대보험료계산기",pension:"국민연금수령액",cartax:"자동차세계산기",deposit:"예적금이자계산기",convert:"전월세전환계산기",yield:"임대수익률계산기",joint:"공동명의계산기",area:"평수변환계산기",far:"용적률건폐율계산기",auction:"경매비용계산기",remodel:"리모델링수익계산기",bldvalue:"건물잔존가치계산기",totalcost:"총비용시뮬레이터",compare:"세금비교분석",invest:"투자수익분석",retire:"퇴직금계산기",unemploy:"실업급여계산기",minwage:"최저임금계산기",auction2:"경매적정입찰가",auctiondiv:"경매배당분석",auctionloan:"경락잔금대출",bldvat:"건물부가세계산기",bond2:"국민주택채권매입",datediff:"날짜계산기",estincome:"임대추정소득",goodlord:"착한임대인공제",imputedrent:"간주임대료계산기",jeonseins:"전세보증금보험료",legalinherit:"법정상속분계산기",luckyday:"손없는날달력",progressive:"누진세계산기",reconyear:"재건축연한계산기",refinance:"대환대출비교",remodel2:"리모델링ROI",rentincrease:"임대료인상률",stamp2:"인지세전자계약",realprice:"실거래가조회",subscription:"청약가점계산기",netsale:"매도실수령액계산기",terms:"부동산용어사전"};
 const SLUG_REVERSE=Object.fromEntries(Object.entries(SLUGS).map(([k,v])=>[decodeURIComponent(v),k]));
 
+const CALC_SUBTITLE={
+  acquisition:"2026년 취득세율 자동 적용 · 중과/감면 자동 판정",
+  transfer:"비과세·장특공·중과유예 자동 계산 · 2026년 세법 기준",
+  compre:"공시가격 기반 · 1주택/다주택 자동 구분 계산",
+  property:"재산세 + 도시지역분 자동 계산 · 2026년 기준",
+  gift:"증여재산공제 자동 적용 · 10년 합산 자동 계산",
+  inherit:"상속공제 자동 적용 · 배우자공제 최대 활용",
+  holdtax:"재산세 + 종부세 합산 · 보유세 총액 한눈에",
+  rental:"분리과세 vs 종합과세 자동 비교 · 절세 방법 안내",
+  inctax:"소득유형별 자동 세율 적용 · 인적공제 자동 계산",
+  yearend:"4대보험 + 소득세 자동 계산 · 13월의 월급 시뮬레이션",
+  progressive:"누진세율 자동 적용 · 과세표준별 세액 계산",
+  legalinherit:"법정상속분 자동 계산 · 배우자/자녀 비율 산정",
+  bldvat:"토지·건물 안분 자동 계산 · 부가세 신고 기준",
+  estincome:"간주임대료 자동 계산 · 3주택 이상 과세 기준",
+  goodlord:"임대료 인하액 70% 세액공제 · 소상공인 대상",
+  imputedrent:"보증금 운용이익 자동 계산 · 2026년 이자율 적용",
+  mortgage:"원리금균등/원금균등/만기일시 자동 비교",
+  dsr:"스트레스DSR 자동 가산 · 은행/비은행 기준 판정",
+  dti:"주담대 원리금 + 기타대출 이자 자동 계산",
+  ltv:"지역별/주택수별 LTV 자동 적용 · 생애최초 우대",
+  loanmax:"DSR + LTV 연계 · 실제 최대 대출한도 계산",
+  rti:"임대소득 대비 이자비용 · 임대업 대출 기준 판정",
+  refinance:"중도상환수수료 vs 금리절감 자동 비교",
+  commission:"거래유형/금액별 요율 자동 적용 · 법정 상한 기준",
+  registration:"취득세 + 등기수수료 + 채권 합산 자동 계산",
+  legal:"부동산가액 기준 법무사 보수 자동 계산",
+  stamp:"계약금액별 인지세 자동 계산 · 전자계약 할인 적용",
+  bond:"취득가액 기준 채권 매입액 + 할인료 자동 계산",
+  appraisal:"감정평가액 기준 수수료 체감요율 자동 계산",
+  bond2:"시가표준액 기준 채권 매입비율 자동 계산",
+  stamp2:"전자계약 인지세 50% 감면 자동 적용",
+  jeonseins:"HUG/HF 보증료 자동 계산 · 가입조건 자동 확인",
+  netsalary:"4대보험 + 소득세 공제 후 실수령액 자동 계산",
+  insurance4:"2026년 요율 기준 · 근로자/사업주 부담 자동 구분",
+  pension:"가입기간/소득 기반 예상 수령액 자동 계산",
+  cartax:"배기량별 세율 + 차령 감면 자동 적용",
+  retire:"평균임금 × 근속연수 · 퇴직소득세 자동 계산",
+  unemploy:"피보험기간/연령 기반 지급기간 자동 산정",
+  minwage:"2026년 시급 10,030원 · 월급/연봉 자동 환산",
+  deposit:"단리/복리 이자 + 이자소득세 자동 계산",
+  convert:"전월세전환율 자동 적용 · 법정 상한 기준",
+  datediff:"보유기간/신고기한/계약기간 자동 계산",
+  luckyday:"2026년 손없는날 자동 조회 · 이사 날짜 추천",
+  subscription:"무주택기간/부양가족/청약통장 가점 자동 합산",
+  auctionloan:"낙찰가 기준 대출한도 · LTV/DSR 자동 적용",
+  yield:"총수익률/순수익률 자동 계산 · 공실 리스크 반영",
+  joint:"단독 vs 공동명의 종부세 자동 비교 · 절세효과 산출",
+  area:"㎡ ↔ 평 자동 변환 · 전용/공급면적 구분",
+  far:"용적률/건폐율 자동 계산 · 용도지역별 기준 확인",
+  auction:"입찰부터 소유권 취득까지 전체 비용 자동 계산",
+  remodel:"리모델링 후 예상 수익 · 투자비용 대비 분석",
+  bldvalue:"감가상각 기반 건물 잔존가치 자동 계산",
+  reconyear:"준공연도 기준 재건축 가능 연도 자동 산출",
+  remodel2:"리모델링 투자 대비 수익률(ROI) 자동 계산",
+  rentincrease:"5% 상한 기준 임대료 인상 가능액 자동 계산",
+  realprice:"국토부 실거래가 기반 · 최근 거래 자동 조회",
+  auction2:"시세 대비 적정 입찰가 · 수익 시뮬레이션",
+  auctiondiv:"배당순위별 배분액 자동 계산 · 권리분석 기준",
+  netsale:"양도세/중개보수 공제 후 실수령액 자동 계산",
+  totalcost:"취득~보유~매도 전과정 세금·비용 통합 시뮬레이션",
+  compare:"매매·증여·상속 세금 자동 비교 · 최적 방법 추천",
+  invest:"매수~매도 투자수익률 종합 분석 · 세후 수익 계산"
+};
+
 const PAGE_META={
 acquisition:{title:"취득세 계산기 - 2026년 최신 세율 | 생활계산기",desc:"아파트 취득세 자동 계산. 1주택 1~3%, 2주택 8%, 3주택 12%. 비규제 일반세율, 생애최초 감면, 일시적2주택 특례 반영. 2026년 최신 세법."},
 transfer:{title:"양도소득세 계산기 - 비과세 요건 확인 | 생활계산기",desc:"부동산 양도세 자동 계산. 1주택 비과세, 12억 초과분 과세, 장기보유특별공제 최대 80%. 2026년 최신 세법 반영."},
@@ -5829,7 +5894,7 @@ body.lc-embed main{padding-top:0!important}
           </div>
           <div style={{marginBottom:24,display:"flex",alignItems:"center",gap:12,flexWrap:"wrap"}}>
             <h1 style={{fontSize:28,fontWeight:700,color:"#0a1628",margin:0,letterSpacing:-1}}>{CL.find(c=>c.id===calc)?.l||catInfo?.l+" 계산기"}</h1>
-            <span style={{fontSize:13,color:"#6B7280",flex:"1 1 auto",minWidth:0}}>2026년 최신 세법 기반 정밀 계산</span>
+            <span style={{fontSize:13,color:"#6B7280",flex:"1 1 auto",minWidth:0}}>{CALC_SUBTITLE[calc]||"2026년 최신 세법 기반 정밀 계산"}</span>
             <button onClick={()=>toggleFavorite(calc)} aria-label={favorites.includes(calc)?"즐겨찾기 해제":"즐겨찾기 추가"} style={{background:favorites.includes(calc)?"#FFFBEA":"#fff",border:"1px solid "+(favorites.includes(calc)?"#F59E0B":"#dfe1e6"),borderRadius:20,padding:"6px 12px",cursor:"pointer",fontSize:13,fontWeight:700,color:favorites.includes(calc)?"#B78100":"#6b778c",display:"inline-flex",alignItems:"center",gap:4,fontFamily:"inherit"}}>{favorites.includes(calc)?<IconStar c="#F59E0B"/>:<IconStar c="#c1c7cd"/>} {favorites.includes(calc)?"즐겨찾기 해제":"즐겨찾기"}</button>
             {/* 2026.04.14 embed 퍼가기 버튼 */}
             <button onClick={()=>{const slug=SLUGS[calc]||calc;const url=window.location.origin+"/"+encodeURIComponent(slug)+"?embed=y";const code='<iframe src="'+url+'" style="width:100%;height:700px;border:none" title="생활계산기 '+(CL.find(c=>c.id===calc)?.l||"")+'"></iframe>';if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(code).then(()=>showToast("퍼가기 코드가 복사되었습니다")).catch(()=>showToast("복사 실패"));}else{const ta=document.createElement("textarea");ta.value=code;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);showToast("퍼가기 코드가 복사되었습니다");}}} aria-label="퍼가기 코드 복사" style={{background:"#fff",border:"1px solid #dfe1e6",borderRadius:20,padding:"6px 12px",cursor:"pointer",fontSize:13,fontWeight:700,color:"#6b778c",display:"inline-flex",alignItems:"center",gap:4,fontFamily:"inherit"}}><IconPin/> 퍼가기</button>
