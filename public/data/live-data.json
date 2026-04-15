@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.15",
       "category": "전체",
+      "title": "feat(home): 홈 간소화 — 3개 블록 제거",
+      "desc": "feat(home): 홈 간소화 — 3개 블록 제거"
+    },
+    {
+      "date": "2026.04.15",
+      "category": "전체",
       "title": "feat(footer): sample-home 픽셀 퍼펙트 PC 푸터 신규 — 다크 네이비 5열",
       "desc": "feat(footer): sample-home 픽셀 퍼펙트 PC 푸터 신규 — 다크 네이비 5열"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "feat: Expert Guide LeftNav 인라인 아코디언·계산기 헤더 한 줄 통합 레이아웃",
       "desc": "feat: Expert Guide LeftNav 인라인 아코디언·계산기 헤더 한 줄 통합 레이아웃"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "전체",
-      "title": "fix: CalcAcq 입력 섹션 사이 hr 구분선 6개 추가",
-      "desc": "fix: CalcAcq 입력 섹션 사이 hr 구분선 6개 추가"
     }
   ],
   "rates": {
