@@ -732,12 +732,12 @@ function Inp({label,value,onChange,suffix,placeholder,note,error,inputMode}){
   const numVal=pN(value);
   const bdColor=error?"#EF4444":"#dfe1e6";
   const resolvedInputMode=inputMode||(suffix==="만원"?"numeric":suffix==="%"?"decimal":undefined);
-  return(<div style={{marginBottom:16}}>
+  return(<div style={{marginBottom:isMo?8:16,width:"100%",maxWidth:"100%"}}>
     <label style={lblSt(isMo)}>{label}</label>
-    <div style={{position:"relative"}}>
+    <div style={{position:"relative",width:"100%"}}>
       <input type="text" value={displayVal} onChange={handleChange} placeholder={placeholder}
         inputMode={resolvedInputMode}
-        style={{width:"100%",boxSizing:"border-box",padding:"10px 14px",paddingRight:suffix?44:14,border:error?"2px solid #EF4444":"1.5px solid #dfe1e6",borderRadius:10,fontSize:15,background:"#fff",color:P.tx,outline:"none",fontFamily:"inherit",height:44}}
+        style={{width:"100%",boxSizing:"border-box",padding:isMo?"12px 14px":"10px 14px",paddingRight:suffix?44:14,border:error?"2px solid #EF4444":"1.5px solid #dfe1e6",borderRadius:10,fontSize:isMo?16:15,background:"#fff",color:P.tx,outline:"none",fontFamily:"inherit",height:isMo?48:44}}
         onFocus={e=>{setFocused(true);e.target.style.borderColor=error?"#EF4444":P.pri;}} onBlur={e=>{setFocused(false);e.target.style.borderColor=error?"#EF4444":P.bd;}}/>
       {suffix&&<span style={{position:"absolute",right:14,top:"50%",transform:"translateY(-50%)",fontSize:12,color:P.mt}}>{suffix}</span>}
     </div>
@@ -749,9 +749,9 @@ function Inp({label,value,onChange,suffix,placeholder,note,error,inputMode}){
 }
 function Sel({label,value,onChange,options}){
   const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
-  return(<div style={{marginBottom:16}}>
+  return(<div style={{marginBottom:isMo?8:16,width:"100%",maxWidth:"100%"}}>
     <label style={lblSt(isMo)}>{label}</label>
-    <select value={value} onChange={e=>onChange(e.target.value)} style={{width:"100%",padding:"10px 14px",border:"1.5px solid #dfe1e6",borderRadius:10,fontSize:15,background:"#fff",color:P.tx,outline:"none",fontFamily:"inherit",cursor:"pointer",appearance:"none",height:44,backgroundImage:`url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10'%3E%3Cpath fill='%23718096' d='M5 7L0 2h10z'/%3E%3C/svg%3E")`,backgroundRepeat:"no-repeat",backgroundPosition:"right 14px center"}}>
+    <select value={value} onChange={e=>onChange(e.target.value)} style={{width:"100%",padding:isMo?"12px 14px":"10px 14px",border:"1.5px solid #dfe1e6",borderRadius:10,fontSize:isMo?16:15,background:"#fff",color:P.tx,outline:"none",fontFamily:"inherit",cursor:"pointer",appearance:"none",height:isMo?48:44,backgroundImage:`url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10'%3E%3Cpath fill='%23718096' d='M5 7L0 2h10z'/%3E%3C/svg%3E")`,backgroundRepeat:"no-repeat",backgroundPosition:"right 14px center"}}>
       {options.map(o=><option key={o.value} value={o.value}>{o.label}</option>)}
     </select>
   </div>);
@@ -759,7 +759,7 @@ function Sel({label,value,onChange,options}){
 const Tog = ({label, options, value, onChange, isMo:isMoProp}) => {
   const isMo = isMoProp ?? (typeof window!=="undefined" && window.innerWidth<=768);
   return (
-    <div style={{marginBottom:16, overflow:"visible"}}>
+    <div style={{marginBottom:isMo?8:16, overflow:"visible",width:"100%",maxWidth:"100%"}}>
       {label && (
         <label style={{
           display:"block",
@@ -1517,55 +1517,55 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
       _tips.push("📌 1세대1주택자가 배우자·직계비속에게 증여하는 경우 조정지역+공시3억 초과여도 3.5% 일반세율 적용이 가능합니다.");
     }
   }
-  return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}><div>
+  return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?12:32,alignItems:"start",minWidth:0,width:"100%",maxWidth:"100%"}}><div style={{minWidth:0,width:"100%",maxWidth:"100%"}}>
       {!isMo&&<h3 style={{fontSize:isMo?16:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>취득세 계산기</h3>}
-      <div style={{marginBottom:16}}>
+      <div style={{marginBottom:isMo?8:16}}>
         <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>취득 유형</label>
         <div style={{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6"}}>
-          {[["sale","매매"],["gift","증여"],["inherit","상속"],["newbuild","원시"],["corp","법인"]].map(([v,l],i,arr)=>(<button key={v} onClick={()=>sAT(v)} style={{flex:1,padding:"10px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:acqType===v?"#0747A6":"#fff",color:acqType===v?"#fff":"#505f79",fontWeight:acqType===v?700:500,fontSize:isMo?12:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s"}}>{l}</button>))}
+          {[["sale","매매"],["gift","증여"],["inherit","상속"],["newbuild","원시"],["corp","법인"]].map(([v,l],i,arr)=>(<button key={v} onClick={()=>sAT(v)} style={{flex:1,padding:isMo?"12px 2px":"10px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:acqType===v?"#0747A6":"#fff",color:acqType===v?"#fff":"#505f79",fontWeight:acqType===v?700:500,fontSize:isMo?13:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s",minHeight:isMo?44:undefined}}>{l}</button>))}
         </div>
       </div>
-      <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"16px 0"}}/>
-      <div style={{marginBottom:16}}>
+      <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:isMo?"8px 0":"16px 0"}}/>
+      <div style={{marginBottom:isMo?8:16}}>
         <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>부동산 유형<TipModal title="부동산 유형"><p>주거용 오피스텔인 경우에만 '오피스텔' 선택. 업무용은 '그 외'. 농지는 2년 이상 자경 시 감면 혜택.</p></TipModal></label>
         <div style={{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6"}}>
-          {[["house","주택"],["officetel","오피스텔"],["farmLand","농지"],["building","그 외"]].map(([v,l],i,arr)=>(<button key={v} onClick={()=>sRT(v)} style={{flex:1,padding:"10px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:realType===v?"#0747A6":"#fff",color:realType===v?"#fff":"#505f79",fontWeight:realType===v?700:500,fontSize:isMo?12:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s"}}>{l}</button>))}
+          {[["house","주택"],["officetel","오피스텔"],["farmLand","농지"],["building","그 외"]].map(([v,l],i,arr)=>(<button key={v} onClick={()=>sRT(v)} style={{flex:1,padding:isMo?"12px 2px":"10px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:realType===v?"#0747A6":"#fff",color:realType===v?"#fff":"#505f79",fontWeight:realType===v?700:500,fontSize:isMo?13:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s",minHeight:isMo?44:undefined}}>{l}</button>))}
         </div>
       </div>
-      <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"16px 0"}}/>
-      {(realType==="house"||realType==="officetel")&&<div style={{marginBottom:16}}>
+      <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:isMo?"8px 0":"16px 0"}}/>
+      {(realType==="house"||realType==="officetel")&&<div style={{marginBottom:isMo?8:16}}>
         <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>전용면적</label>
         <div style={{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6"}}>
           {[["40","40㎡↓"],["60","60㎡↓"],["85","85㎡↓"],["big","85㎡↑"]].map(([v,l],i,arr)=>(
-            <button key={v} onClick={()=>sAreaType(v)} style={{flex:1,padding:"10px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:areaType===v?"#0747A6":"#fff",color:areaType===v?"#fff":"#505f79",fontWeight:areaType===v?700:500,fontSize:isMo?12:12,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4}}>{l}</button>
+            <button key={v} onClick={()=>sAreaType(v)} style={{flex:1,padding:isMo?"12px 2px":"10px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:areaType===v?"#0747A6":"#fff",color:areaType===v?"#fff":"#505f79",fontWeight:areaType===v?700:500,fontSize:isMo?13:12,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,minHeight:isMo?44:undefined}}>{l}</button>
           ))}
         </div>
       </div>}
-      {(realType==="house"||realType==="officetel")&&<hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"16px 0"}}/>}
-      {/* 2026.04.14 취득가액 — 인라인 레이아웃 (width:480) */}
-      <div style={{marginBottom:12}}>
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8,marginBottom:4,flexWrap:"wrap"}}>
+      {(realType==="house"||realType==="officetel")&&<hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:isMo?"8px 0":"16px 0"}}/>}
+      {/* 2026.04.14 취득가액 — 인라인 레이아웃 (PC width:480, 모바일 100%) */}
+      <div style={{marginBottom:isMo?8:12}}>
+        <div style={{display:"flex",alignItems:isMo?"stretch":"center",flexDirection:isMo?"column":"row",justifyContent:"space-between",gap:isMo?6:8,marginBottom:4,flexWrap:"wrap"}}>
           <label style={{fontSize:isMo?13:14,fontWeight:600,color:"#0a1628",lineHeight:1.6,wordBreak:"keep-all"}}>{acqType==="sale"?"취득가액 (실거래가)":acqType==="gift"||acqType==="inherit"?"시가인정액 또는 시가표준액":acqType==="newbuild"?"건축 원가":"취득가액"}</label>
-          <div style={{display:"flex",alignItems:"center",gap:6}}>
-            <input type="text" value={price?Number(String(price).replace(/,/g,"")).toLocaleString("ko-KR"):""} onChange={e=>{const raw=e.target.value.replace(/,/g,"");if(raw===""||/^\d+$/.test(raw))sP(raw);}} placeholder="예: 12500" style={{width:480,maxWidth:"100%",textAlign:"right",padding:"8px 12px",border:_hasErrors?"2px solid #EF4444":"1.5px solid #dfe1e6",borderRadius:8,fontSize:15,fontWeight:700,color:P.tx,background:P.lt,outline:"none",fontFamily:"inherit"}}/>
+          <div style={{display:"flex",alignItems:"center",gap:6,width:isMo?"100%":"auto"}}>
+            <input type="text" value={price?Number(String(price).replace(/,/g,"")).toLocaleString("ko-KR"):""} onChange={e=>{const raw=e.target.value.replace(/,/g,"");if(raw===""||/^\d+$/.test(raw))sP(raw);}} placeholder="예: 12500" style={{width:isMo?"100%":480,maxWidth:"100%",textAlign:"right",padding:isMo?"12px 14px":"8px 12px",border:_hasErrors?"2px solid #EF4444":"1.5px solid #dfe1e6",borderRadius:8,fontSize:isMo?16:15,fontWeight:700,color:P.tx,background:P.lt,outline:"none",fontFamily:"inherit",minHeight:isMo?48:undefined}}/>
             <span style={{fontSize:13,color:P.mt,fontWeight:500}}>만원</span>
           </div>
         </div>
       </div>
-      <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"16px 0"}}/>
-      {/* 2026.04.14 시가표준액 인라인 레이아웃 (Slider와 동일: 레이블 좌측 + 입력란 우측 같은 줄) */}
-      <div style={{marginBottom:12}}>
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8,marginBottom:4,flexWrap:"wrap"}}>
+      <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:isMo?"8px 0":"16px 0"}}/>
+      {/* 2026.04.14 시가표준액 인라인 레이아웃 */}
+      <div style={{marginBottom:isMo?8:12}}>
+        <div style={{display:"flex",alignItems:isMo?"stretch":"center",flexDirection:isMo?"column":"row",justifyContent:"space-between",gap:isMo?6:8,marginBottom:4,flexWrap:"wrap"}}>
           <label style={{fontSize:isMo?13:14,fontWeight:600,color:"#0a1628",lineHeight:1.6,wordBreak:"keep-all"}}>시가표준액 (공시가격) <TipModal title="시가표준액 (공시가격)"><p>미입력 시 취득가액을 시가표준액으로 간주합니다.</p><ul style={{paddingLeft:20}}><li>취득가액보다 시가표준액이 크면 시가표준액이 과세표준</li><li>시가표준액 1억 미만이면 다주택 중과 제외</li><li>조정대상지역 증여 시 시가표준액 3억 초과하면 12% 중과</li></ul><p style={{marginTop:10}}>공시가격은 부동산공시가격알리미(realtyprice.kr)에서 조회하실 수 있습니다. <a href="https://www.realtyprice.kr" target="_blank" rel="noopener noreferrer" style={{color:"#0747A6",fontWeight:700,textDecoration:"none"}}>바로가기 →</a></p></TipModal></label>
-          <div style={{display:"flex",alignItems:"center",gap:6}}>
-            <input type="text" value={stdPrice?Number(String(stdPrice).replace(/,/g,"")).toLocaleString("ko-KR"):""} onChange={e=>{const raw=e.target.value.replace(/,/g,"");if(raw===""||/^\d+$/.test(raw))setStdPrice(raw);}} placeholder="미입력 시 취득가 사용" style={{width:480,maxWidth:"100%",textAlign:"right",padding:"8px 12px",border:"1.5px solid #dfe1e6",borderRadius:8,fontSize:15,fontWeight:700,color:P.tx,background:P.lt,outline:"none",fontFamily:"inherit"}}/>
+          <div style={{display:"flex",alignItems:"center",gap:6,width:isMo?"100%":"auto"}}>
+            <input type="text" value={stdPrice?Number(String(stdPrice).replace(/,/g,"")).toLocaleString("ko-KR"):""} onChange={e=>{const raw=e.target.value.replace(/,/g,"");if(raw===""||/^\d+$/.test(raw))setStdPrice(raw);}} placeholder="미입력 시 취득가 사용" style={{width:isMo?"100%":480,maxWidth:"100%",textAlign:"right",padding:isMo?"12px 14px":"8px 12px",border:"1.5px solid #dfe1e6",borderRadius:8,fontSize:isMo?16:15,fontWeight:700,color:P.tx,background:P.lt,outline:"none",fontFamily:"inherit",minHeight:isMo?48:undefined}}/>
             <span style={{fontSize:13,color:P.mt,fontWeight:500}}>만원</span>
           </div>
         </div>
         <div style={{fontSize:11,color:P.mt,lineHeight:1.6,wordBreak:"keep-all"}}>{acqType==="gift"||acqType==="inherit"?"취득가액이 없으므로 시가표준액 기준으로 계산합니다":acqType==="newbuild"?"시가표준액을 과세표준으로 계산합니다":"취득가액보다 시가표준액이 높으면 시가표준액이 과세표준이 됩니다"}</div>
       </div>
-      <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"16px 0"}}/>
-      {isHouse&&acqType==="sale"&&<><Radio label="취득 후 주택 수" value={own} onChange={sO} options={[{value:"1",label:"1주택"},{value:"2",label:"2주택"},{value:"3",label:"3주택"},{value:"4",label:"4주택+"}]} cols={4}/><hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"16px 0"}}/></>}
+      <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:isMo?"8px 0":"16px 0"}}/>
+      {isHouse&&acqType==="sale"&&<><Radio label="취득 후 주택 수" value={own} onChange={sO} options={[{value:"1",label:"1주택"},{value:"2",label:"2주택"},{value:"3",label:"3주택"},{value:"4",label:"4주택+"}]} cols={4}/><hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:isMo?"8px 0":"16px 0"}}/></>}
       {/* 2026.04.14 사치성재산 칩이 항상 보이도록 무조건 노출 (모든 취득유형에서 선택 가능) */}
       <div style={{marginTop:24,marginBottom:14}}>
         <div style={{fontSize:11,fontWeight:600,color:"#6b778c",letterSpacing:.5,textTransform:"uppercase",marginBottom:8}}>특수 조건 <span style={{fontWeight:400,color:"#aaa",fontSize:10}}>{isMo?"항목을 누르면 설명이 나타납니다":"마우스를 올리면 설명이 나타납니다"}</span></div>
