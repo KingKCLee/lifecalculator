@@ -719,11 +719,11 @@ function Radio({label,value,onChange,options,cols}){
       {options.map((o,i)=>{
         const on=value===o.value;
         return(
-        <button key={o.value} onClick={()=>onChange(o.value)} onMouseEnter={e=>{if(!isMo&&!on){e.currentTarget.style.background="#F0F4FF";e.currentTarget.style.borderColor="#0747A6";e.currentTarget.style.color="#0747A6";}}} onMouseLeave={e=>{if(!isMo&&!on){e.currentTarget.style.background="#fff";e.currentTarget.style.borderColor="#dfe1e6";e.currentTarget.style.color="#505f79";}}} style={{
+        <button key={o.value} onClick={()=>onChange(o.value)} onMouseEnter={e=>{if(!isMo&&!on){e.currentTarget.style.background="#F0F4FF";e.currentTarget.style.borderColor="#0141f9";e.currentTarget.style.color="#0141f9";}}} onMouseLeave={e=>{if(!isMo&&!on){e.currentTarget.style.background="#fff";e.currentTarget.style.borderColor="#dfe1e6";e.currentTarget.style.color="#505f79";}}} style={{
           flex:"1 1 auto",minWidth:isMo?"auto":60,padding:isMo?"10px 12px":"10px 12px",
           border:on?"none":"1.5px solid #dfe1e6",
           borderRadius:8,
-          background:on?"#0747A6":"#fff",
+          background:on?"#0141f9":"#fff",
           color:on?"#fff":"#505f79",
           fontWeight:on?700:500,
           fontSize:isMo?12:13,cursor:"pointer",fontFamily:"inherit",
@@ -799,7 +799,7 @@ const Tog = ({label, options, value, onChange, isMo:isMoProp}) => {
           <button
             key={opt.value}
             onClick={() => onChange(opt.value)}
-            onMouseEnter={e=>{if(!isMo&&!on){e.currentTarget.style.background="#F0F4FF";e.currentTarget.style.borderColor="#0747A6";e.currentTarget.style.color="#0747A6";}}}
+            onMouseEnter={e=>{if(!isMo&&!on){e.currentTarget.style.background="#F0F4FF";e.currentTarget.style.borderColor="#0141f9";e.currentTarget.style.color="#0141f9";}}}
             onMouseLeave={e=>{if(!isMo&&!on){e.currentTarget.style.background="#fff";e.currentTarget.style.borderColor="#DFE1E6";e.currentTarget.style.color=P.tx;}}}
             style={{
               flex:isMo?"0 0 auto":"1 1 auto",
@@ -811,7 +811,7 @@ const Tog = ({label, options, value, onChange, isMo:isMoProp}) => {
               lineHeight:1.4,
               borderRadius:8,
               border:on?"none":"1.5px solid #DFE1E6",
-              backgroundColor:on?P.pri:"#fff",
+              backgroundColor:on?"#0141f9":"#fff",
               color:on?"#fff":P.tx,
               cursor:"pointer",
               fontFamily:"inherit",
@@ -1580,14 +1580,14 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
       <div style={{marginBottom:isMo?8:16}}>
         <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>취득 유형</label>
         <div style={isMo?{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6"}:{display:"flex",flexWrap:"wrap",gap:8}}>
-          {[["sale","매매"],["gift","증여"],["inherit","상속"],["newbuild","원시"],["corp","법인"]].map(([v,l],i,arr)=>(<button key={v} onClick={()=>sAT(v)} style={isMo?{flex:1,padding:"12px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:acqType===v?"#0747A6":"#fff",color:acqType===v?"#fff":"#505f79",fontWeight:acqType===v?700:500,fontSize:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s",minHeight:44}:{flex:"1 1 auto",minWidth:60,padding:"10px 16px",border:acqType===v?"1.5px solid #0747A6":"1.5px solid #dfe1e6",borderRadius:8,background:acqType===v?"#0747A6":"#fff",color:acqType===v?"#fff":"#172B4D",fontWeight:acqType===v?700:500,fontSize:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s,border-color .15s"}}>{l}</button>))}
+          {[["sale","매매"],["gift","증여"],["inherit","상속"],["newbuild","원시"],["corp","법인"]].map(([v,l],i,arr)=>(<button key={v} onClick={()=>sAT(v)} style={isMo?{flex:1,padding:"12px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:acqType===v?"#0141f9":"#fff",color:acqType===v?"#fff":"#505f79",fontWeight:acqType===v?700:500,fontSize:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s",minHeight:44}:{flex:"1 1 auto",minWidth:60,padding:"10px 16px",border:acqType===v?"1.5px solid #0141f9":"1.5px solid #dfe1e6",borderRadius:8,background:acqType===v?"#0141f9":"#fff",color:acqType===v?"#fff":"#172B4D",fontWeight:acqType===v?700:500,fontSize:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s,border-color .15s"}}>{l}</button>))}
         </div>
       </div>
       {isMo&&<hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"8px 0"}}/>}
       <div style={{marginBottom:isMo?8:16}}>
         <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>부동산 유형<TipModal title="부동산 유형"><p>주거용 오피스텔인 경우에만 '오피스텔' 선택. 업무용은 '그 외'. 농지는 2년 이상 자경 시 감면 혜택.</p></TipModal></label>
         <div style={isMo?{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6"}:{display:"flex",flexWrap:"wrap",gap:8}}>
-          {[["house","주택"],["officetel","오피스텔"],["farmLand","농지"],["building","그 외"]].map(([v,l],i,arr)=>(<button key={v} onClick={()=>sRT(v)} style={isMo?{flex:1,padding:"12px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:realType===v?"#0747A6":"#fff",color:realType===v?"#fff":"#505f79",fontWeight:realType===v?700:500,fontSize:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s",minHeight:44}:{flex:"1 1 auto",minWidth:60,padding:"10px 16px",border:realType===v?"1.5px solid #0747A6":"1.5px solid #dfe1e6",borderRadius:8,background:realType===v?"#0747A6":"#fff",color:realType===v?"#fff":"#172B4D",fontWeight:realType===v?700:500,fontSize:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s,border-color .15s"}}>{l}</button>))}
+          {[["house","주택"],["officetel","오피스텔"],["farmLand","농지"],["building","그 외"]].map(([v,l],i,arr)=>(<button key={v} onClick={()=>sRT(v)} style={isMo?{flex:1,padding:"12px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:realType===v?"#0141f9":"#fff",color:realType===v?"#fff":"#505f79",fontWeight:realType===v?700:500,fontSize:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s",minHeight:44}:{flex:"1 1 auto",minWidth:60,padding:"10px 16px",border:realType===v?"1.5px solid #0141f9":"1.5px solid #dfe1e6",borderRadius:8,background:realType===v?"#0141f9":"#fff",color:realType===v?"#fff":"#172B4D",fontWeight:realType===v?700:500,fontSize:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s,border-color .15s"}}>{l}</button>))}
         </div>
       </div>
       {isMo&&<hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"8px 0"}}/>}
@@ -1595,7 +1595,7 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
         <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>전용면적</label>
         <div style={isMo?{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6"}:{display:"flex",flexWrap:"wrap",gap:8}}>
           {[["40","40㎡↓"],["60","60㎡↓"],["85","85㎡↓"],["big","85㎡↑"]].map(([v,l],i,arr)=>(
-            <button key={v} onClick={()=>sAreaType(v)} style={isMo?{flex:1,padding:"12px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:areaType===v?"#0747A6":"#fff",color:areaType===v?"#fff":"#505f79",fontWeight:areaType===v?700:500,fontSize:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,minHeight:44}:{flex:"1 1 auto",minWidth:60,padding:"10px 16px",border:areaType===v?"1.5px solid #0747A6":"1.5px solid #dfe1e6",borderRadius:8,background:areaType===v?"#0747A6":"#fff",color:areaType===v?"#fff":"#172B4D",fontWeight:areaType===v?700:500,fontSize:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s,border-color .15s"}}>{l}</button>
+            <button key={v} onClick={()=>sAreaType(v)} style={isMo?{flex:1,padding:"12px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:areaType===v?"#0141f9":"#fff",color:areaType===v?"#fff":"#505f79",fontWeight:areaType===v?700:500,fontSize:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,minHeight:44}:{flex:"1 1 auto",minWidth:60,padding:"10px 16px",border:areaType===v?"1.5px solid #0141f9":"1.5px solid #dfe1e6",borderRadius:8,background:areaType===v?"#0141f9":"#fff",color:areaType===v?"#fff":"#172B4D",fontWeight:areaType===v?700:500,fontSize:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s,border-color .15s"}}>{l}</button>
           ))}
         </div>
       </div>}
@@ -5004,7 +5004,7 @@ const CAT_ICON={"tax":<IconMoney/>,"loan":<IconBank/>,"cost":<IconClip/>,"life":
 
 const LogoSVG=({size=36,invert=false})=>(
   <svg viewBox="0 0 512 512" width={size} height={size}>
-    {!invert&&<><defs><linearGradient id="lbg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style={{stopColor:"#1e40a0"}}/><stop offset="100%" style={{stopColor:"#0f2b80"}}/></linearGradient></defs>
+    {!invert&&<><defs><linearGradient id="lbg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style={{stopColor:"#0141f9"}}/><stop offset="100%" style={{stopColor:"#0141f9"}}/></linearGradient></defs>
     <rect width="512" height="512" rx="102" fill="url(#lbg)"/></>}
     <rect x="90" y="145" width="140" height="28" rx="14" fill="white"/>
     <g transform="translate(370,160)"><rect x="-70" y="-14" width="140" height="28" rx="14" fill="white" transform="rotate(45)"/><rect x="-70" y="-14" width="140" height="28" rx="14" fill="white" transform="rotate(-45)"/></g>
