@@ -4268,7 +4268,7 @@ function HtmlAdapterPage({url,isMo,navigateHome}){
 const _SW={wrap:{maxWidth:880,margin:"0 auto",padding:"24px 20px 72px"},
   section:{background:"#FFFFFF",border:"1px solid #E5E7EB",borderRadius:16,padding:"28px 32px",marginBottom:18,boxShadow:"0 2px 12px rgba(0,0,0,0.06)"},
   h2:{fontSize:22,margin:"0 0 16px",color:"#0747A6",display:"flex",alignItems:"center",gap:10,letterSpacing:-0.3,fontWeight:800,counterIncrement:"lcguide"},
-  h2b:{display:"inline-flex",alignItems:"center",justifyContent:"center",width:24,height:24,background:"#0747A6",color:"#fff",borderRadius:"50%",flexShrink:0,fontSize:12,fontWeight:800,marginRight:10},
+  h2b:{display:"inline-flex",alignItems:"center",justifyContent:"center",width:24,height:24,background:"#deebff",color:"#0747A6",borderRadius:7,flexShrink:0,fontSize:12,fontWeight:800},
   h3:{fontSize:16,margin:"20px 0 8px",color:"#172B4D",fontWeight:700},
   p:{margin:"0 0 12px",fontSize:15,lineHeight:1.75,color:"#172B4D"},
   ul:{margin:"8px 0 12px",paddingLeft:22},
@@ -5719,11 +5719,11 @@ button:active{transform:scale(0.98)}
 @media(min-width:769px){.calc-grid.page-layout{max-width:1200px!important;margin:0 auto!important;padding:0 24px!important;width:100%!important;box-sizing:border-box!important}}
 /* 2026.04.16 CalcAcq spec: 우측 RP sticky top 90 (PC) */
 @media(min-width:769px){.calc-container>div>div[style*="grid-template-columns"]>div:nth-child(2){position:sticky;top:90px;align-self:start}}
-/* 2026.04.16 CalcAcq spec: 2컬럼 1fr 400px gap 28 (PC, 62개 공통 CSS) */
-@media(min-width:769px){.calc-container>div>div[style*="grid-template-columns"]{grid-template-columns:1fr 400px!important;gap:28px!important;align-items:start!important}}
+/* 2026.04.16 sample-calc spec 정확 매칭: 2컬럼 60% 40% gap 28 (PC, 62개 공통 CSS) */
+@media(min-width:769px){.calc-container>div>div[style*="grid-template-columns"]{grid-template-columns:60% 40%!important;gap:28px!important;align-items:start!important}}
 /* 2026.04.15 sample-calc .form-card 적용 — 좌측 컬럼을 흰 카드로 감싸고, 외부 calc-container 카드 스타일 해제 (PC 전용) */
 @media(min-width:769px){.calc-container{background:transparent!important;border:none!important;padding:0!important;box-shadow:none!important;overflow:visible}}
-@media(min-width:769px){.calc-container>div>div[style*="grid-template-columns"]>div:first-child{background:#fff!important;border:1px solid #dfe1e6!important;border-radius:14px!important;padding:32px!important;min-width:0}}
+@media(min-width:769px){.calc-container>div>div[style*="grid-template-columns"]>div:first-child{background:#fff!important;border:1px solid #dfe1e6!important;border-radius:16px!important;padding:32px!important;min-width:0;box-shadow:0 1px 3px rgba(0,0,0,.04)}}
 @media(min-width:769px){.calc-container>div>div[style*="grid-template-columns"]>div:first-child>h3:first-child{display:none!important}}
 /* 2026.04.16 sample-calc .field-label — PC 전용 입력 필드 레이블 uppercase 12px #6b778c */
 @media(min-width:769px){.calc-container label{font-size:12px!important;font-weight:600!important;color:#6b778c!important;text-transform:uppercase!important;letter-spacing:.5px!important;margin-bottom:10px!important}}
@@ -6072,7 +6072,7 @@ body.lc-embed main{padding-top:0!important}
             </div>
           </div>
           <div style={{marginBottom:24,display:"flex",alignItems:"center",gap:12,flexWrap:"wrap"}}>
-            <h1 style={{fontSize:isMo?22:36,fontWeight:700,color:"#0a1628",margin:0,letterSpacing:"-1px",lineHeight:1.2}}>{CL.find(c=>c.id===calc)?.l||catInfo?.l+" 계산기"}</h1>
+            <h1 style={{fontSize:isMo?22:44,fontWeight:700,color:"#0a1628",margin:"0 0 8px",letterSpacing:isMo?"-1px":"-1.2px",lineHeight:1.15}}>{CL.find(c=>c.id===calc)?.l||catInfo?.l+" 계산기"}</h1>
             <span style={{fontSize:13,color:"#6B7280",flex:"1 1 auto",minWidth:0}}>{CALC_SUBTITLE[calc]||"2026년 최신 세법 기반 정밀 계산"}</span>
             <button onClick={()=>toggleFavorite(calc)} aria-label={favorites.includes(calc)?"즐겨찾기 해제":"즐겨찾기 추가"} style={{background:favorites.includes(calc)?"#FFFBEA":"#fff",border:"1px solid "+(favorites.includes(calc)?"#F59E0B":"#dfe1e6"),borderRadius:20,padding:"6px 12px",cursor:"pointer",fontSize:13,fontWeight:700,color:favorites.includes(calc)?"#B78100":"#6b778c",display:"inline-flex",alignItems:"center",gap:4,fontFamily:"inherit"}}>{favorites.includes(calc)?<IconStar c="#F59E0B"/>:<IconStar c="#c1c7cd"/>} {favorites.includes(calc)?"즐겨찾기 해제":"즐겨찾기"}</button>
             {/* 2026.04.14 embed 퍼가기 버튼 */}
