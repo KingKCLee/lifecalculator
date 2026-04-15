@@ -1189,9 +1189,13 @@ function RP({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlin
   </>);
 }
 // 2026.04.16 RPFull — CalcAcq 전용 sample-calc 정확 매칭 버전 (funnel/snapshot 제거, 버튼 라벨/순서 sample 고정)
-function RPFull({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlineLinkLabel,alertMsg,alertType="info",miss,expertGuide}){
+function RPFull({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlineLinkLabel,alertMsg,alertType="info",miss,expertGuide,itemFilter}){
   const hasMiss=Array.isArray(miss)&&miss.length>0;
   if(isExample||hasMiss){total=total||0;if(hasMiss){items=[];sub="필수 항목을 입력해주세요";}else{items=[];sub="입력값을 입력하면 결과가 표시됩니다";}}
+  // 2026.04.16 sample-calc 기준: itemFilter 라벨 배열이 있으면 해당 라벨만 표시 (합계는 제외)
+  if(Array.isArray(itemFilter)&&itemFilter.length>0&&items&&items.length>0){
+    items=items.filter(it=>itemFilter.some(f=>String(it.l||"").includes(f)));
+  }
   const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
   const isTotal=(l)=>l.includes("합계")||l.includes("납부세액")||l.includes("총 납부")||l.includes("총비용")||l.includes("최종")||l.includes("세후")||l.includes("잔존가치")||l.includes("순수익")||l.includes("환산")||l.includes("실투자")||l.includes("최대 대출");
   const isSub=(l)=>l.startsWith("  ")||l.startsWith("└")||l.startsWith("│");
@@ -1651,7 +1655,7 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
     <div style={{marginTop:isMo?0:24}}><RateTable title="주택 외 취득세율표" headers={["구분","취득세","교육세","농특세","합계"]} rows={[["매매(토지·건물)","4%","0.4%","0.2%","4.6%"],["증여","3.5%","0.3%","0.2%","4.0%"],["상속","2.8%","0.16%","0.2%","3.16%"],["원시취득","2.8%","0.16%","0.2%","3.16%"],["농지 매매","3%","0.2%","0.2%","3.4%"],["농지 자경","1.5%","0.1%","-","1.6%"],["농지 상속","2.3%","0.06%","0.2%","2.56%"]]}/></div>
     </div>
     {/* 2026.04.14 고도화: 납부기한 취득유형별 분기 (상속 6개월 / 증여 3개월 / 그 외 60일). 기존: deadline="신고기한: 잔금일 또는 등기일 중 빠른 날부터 60일 이내" */}
-    <div>{_hasErrors&&<div style={{padding:"10px 14px",background:"#FEE2E2",border:"1px solid #FECACA",borderRadius:8,fontSize:13,color:"#EF4444",fontWeight:600,marginBottom:12}}>필수 항목을 모두 입력해주세요</div>}<RPFull miss={tW(price)>0?null:MI.acquisition} expertGuide={CALC_NAV_CONTENT.acquisition?.items} title="취득세 계산 결과" total={total} sub={"취득세율 "+fP(r*100)+" 적용"}
+    <div>{_hasErrors&&<div style={{padding:"10px 14px",background:"#FEE2E2",border:"1px solid #FECACA",borderRadius:8,fontSize:13,color:"#EF4444",fontWeight:600,marginBottom:12}}>필수 항목을 모두 입력해주세요</div>}<RPFull miss={tW(price)>0?null:MI.acquisition} expertGuide={CALC_NAV_CONTENT.acquisition?.items} itemFilter={["취득세","지방교육세","농어촌특별세","합계"]} title="취득세 계산기" total={total} sub={"취득세율 "+fP(r*100)+" 적용"}
       deadline={acqType==="inherit"?"신고기한: 상속개시일이 속하는 달의 말일부터 6개월 이내 (지방세법 §20)":acqType==="gift"?"신고기한: 취득일이 속하는 달의 말일부터 3개월 이내 (지방세법 §20)":"신고기한: 잔금일 또는 등기일 중 빠른 날부터 60일 이내 (지방세법 §20)"}
       deadlineLink="https://wetax.go.kr" deadlineLinkLabel="위택스 신고 →"
       alertMsg={!stdPrice?"시가표준액 미입력 시 정확도가 낮아질 수 있습니다":firstDed>0?"생애최초 감면 "+fW(firstDed)+" 적용됨":conArea&&n>=2&&!heavyTaxExclude&&!lowVal&&!tempTwo?"조정대상지역 "+n+"주택 중과세율 "+fP(r*100)+" 적용":null}
@@ -5732,10 +5736,40 @@ button:active{transform:scale(0.98)}
 /* 2026.04.15 sample-calc: 입력 폼 끝 구분선 (PC 전용) — RateTable 위에 1개 divider */
 @media(min-width:769px){.calc-container .lc-ratetable{margin-top:28px!important;padding-top:24px;border-top:1px solid #e5e7eb!important;border-radius:12px;border:1px solid #dfe1e6!important}}
 @media(min-width:769px){.calc-container .lc-ratetable+.lc-ratetable{margin-top:20px!important;padding-top:0;border-top:1px solid #dfe1e6!important}}
-/* 2026.04.15 완벽가이드 섹션 번호 원형 배지 (CSS counter 기반) */
-.seo,.seo-guide{counter-reset:lcguide}
-.seo h2 .lc-guide-num::before,.seo-guide h2 .lc-guide-num::before{content:counter(lcguide)}
-.seo h2,.seo-guide h2{counter-increment:lcguide}
+/* 2026.04.16 완벽가이드 번호 배지 (sample-calc .guide-card h3 .num 정확 spec) */
+.seo,.seo-guide,.guide-card{counter-reset:lcguide}
+.seo h2,.seo-guide h2,.guide-card h2{counter-increment:lcguide;display:flex;align-items:center;gap:8px}
+.seo h2::before,.seo-guide h2::before,.guide-card h2::before{
+  content:counter(lcguide);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:24px;
+  height:24px;
+  border-radius:7px;
+  background:#deebff;
+  color:#0747A6;
+  font-size:12px;
+  font-weight:800;
+  flex-shrink:0;
+}
+/* h3 번호 배지도 동일 스타일 (sample-calc spec: .guide-card h3 .num) */
+.guide-card{counter-reset:lcguide2}
+.guide-card h3{counter-increment:lcguide2;display:flex;align-items:center;gap:8px}
+.guide-card h3::before{
+  content:counter(lcguide2);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:24px;
+  height:24px;
+  border-radius:7px;
+  background:#deebff;
+  color:#0747A6;
+  font-size:12px;
+  font-weight:800;
+  flex-shrink:0;
+}
 @media(max-width:768px){input,select,textarea{font-size:16px!important}.pro-cards{grid-template-columns:1fr!important}.footer-inner{grid-template-columns:1fr!important;text-align:center}.cat-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))!important}}
 @media(max-width:768px){.cat-cards{grid-template-columns:repeat(2,1fr)!important}}
 @media(max-width:480px){.insights-grid{grid-template-columns:1fr!important}.cat-cards{grid-template-columns:1fr!important}}
@@ -6066,13 +6100,14 @@ body.lc-embed main{padding-top:0!important}
             <span style={{color:"#d1d5db"}}>›</span>
             <span style={{color:"#0a1628",fontWeight:600}}>{CL.find(c=>c.id===calc)?.l||""}</span>
           </nav>}
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:16,marginBottom:14}}>
+          {/* 2026.04.16 sample-calc 기준: 서브탭 바 제거 (PC) — 모바일은 유지 */}
+          {isMo&&<div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:16,marginBottom:14}}>
             <div className="sub-tabs" style={{flex:"1 1 auto",minWidth:0,display:"flex",gap:6,flexWrap:"nowrap",overflowX:"auto",WebkitOverflowScrolling:"touch",paddingBottom:6,scrollbarWidth:"none",msOverflowStyle:"none",whiteSpace:"nowrap"}}>
               {filtered.map(c=>(<button key={c.id} onClick={()=>navigateCalc(cat,c.id)} style={{padding:"8px 14px",border:calc===c.id?"none":"1px solid #E5E7EB",borderRadius:20,background:calc===c.id?"#0a1628":"#fff",color:calc===c.id?"#fff":"#6B7280",fontSize:13,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0,display:"inline-flex",alignItems:"center",justifyContent:"center",gap:6,height:36,boxSizing:"border-box"}}>{CALC_ICONS[c.id]&&<span style={{display:"inline-flex"}}>{CALC_ICONS[c.id]}</span>}{c.l}</button>))}
             </div>
-          </div>
+          </div>}
           <div style={{marginBottom:24,display:"flex",alignItems:"center",gap:12,flexWrap:"wrap"}}>
-            <h1 style={{fontSize:isMo?22:44,fontWeight:700,color:"#0a1628",margin:"0 0 8px",letterSpacing:isMo?"-1px":"-1.2px",lineHeight:1.15}}>{CL.find(c=>c.id===calc)?.l||catInfo?.l+" 계산기"}</h1>
+            <h1 style={{fontSize:isMo?22:44,fontWeight:700,color:"#0a1628",margin:"0 0 8px",letterSpacing:isMo?"-1px":"-1.2px",lineHeight:1.15}}>{(CL.find(c=>c.id===calc)?.l||catInfo?.l)+" 계산기"}</h1>
             <span style={{fontSize:13,color:"#6B7280",flex:"1 1 auto",minWidth:0}}>{CALC_SUBTITLE[calc]||"2026년 최신 세법 기반 정밀 계산"}</span>
             <button onClick={()=>toggleFavorite(calc)} aria-label={favorites.includes(calc)?"즐겨찾기 해제":"즐겨찾기 추가"} style={{background:favorites.includes(calc)?"#FFFBEA":"#fff",border:"1px solid "+(favorites.includes(calc)?"#F59E0B":"#dfe1e6"),borderRadius:20,padding:"6px 12px",cursor:"pointer",fontSize:13,fontWeight:700,color:favorites.includes(calc)?"#B78100":"#6b778c",display:"inline-flex",alignItems:"center",gap:4,fontFamily:"inherit"}}>{favorites.includes(calc)?<IconStar c="#F59E0B"/>:<IconStar c="#c1c7cd"/>} {favorites.includes(calc)?"즐겨찾기 해제":"즐겨찾기"}</button>
             {/* 2026.04.14 embed 퍼가기 버튼 */}
@@ -6083,8 +6118,11 @@ body.lc-embed main{padding-top:0!important}
           </div>
 
           {/* 2026.04.15 sample-calc 기준 계산기 페이지 슬림화: MarketIntel·AdSlot·FUN_STATS 제거 */}
-          {SEO_CONTENT[calc]&&<div className="guide-card" style={{marginBottom:24,padding:isMo?"28px 20px":"40px 44px",background:"#fff",borderRadius:18,border:`1px solid ${P.bd}`}}>
-            <div className="seo" dangerouslySetInnerHTML={{__html:SEO_CONTENT[calc]}} style={{fontSize:14,color:"#374151",lineHeight:1.8}}/>
+          {/* 2026.04.16 sample-calc .guide-section > .guide-card 구조 */}
+          {SEO_CONTENT[calc]&&<div className="guide-section" style={{padding:isMo?"24px 0":"40px 0 72px",marginBottom:0}}>
+            <div className="guide-card" style={{background:"#fff",border:"1px solid #dfe1e6",borderRadius:18,padding:isMo?"28px 20px":"40px 44px",boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
+              <div className="seo" dangerouslySetInnerHTML={{__html:SEO_CONTENT[calc]}} style={{fontSize:14,color:"#374151",lineHeight:1.8}}/>
+            </div>
           </div>}
           {/* 2026.04.15 sample-calc 기준 계산기 페이지 슬림화: PRO 분석 카드 3종 제거 */}
         </div>
