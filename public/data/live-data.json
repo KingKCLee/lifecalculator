@@ -1167,6 +1167,12 @@
   },
   "updateLog": [
     {
+      "date": "2026.04.16",
+      "category": "전체",
+      "title": "feat(calc): CalcAcq 본문 레이아웃 spec 5종 업데이트 (CSS only)",
+      "desc": "feat(calc): CalcAcq 본문 레이아웃 spec 5종 업데이트 (CSS only)"
+    },
+    {
       "date": "2026.04.15",
       "category": "전체",
       "title": "fix(calc-acq): sample-calc 기준 버튼·레이아웃·섹션 슬림화",
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "fix: 62개 계산기 전수 법령 검증 — 크리티컬 버그 10건 수정",
       "desc": "fix: 62개 계산기 전수 법령 검증 — 크리티컬 버그 10건 수정"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "전체",
-      "title": "feat: LeftNav 전면 개편 - static scroll·신규 메뉴 구조·푸터 풀폭",
-      "desc": "feat: LeftNav 전면 개편 - static scroll·신규 메뉴 구조·푸터 풀폭"
     }
   ],
   "rates": {
