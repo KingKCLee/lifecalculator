@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "feat(calc): sample-calc 정확 spec 5항목 추가 반영",
+      "desc": "feat(calc): sample-calc 정확 spec 5항목 추가 반영"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "feat(calc): sample-calc 정확 수치 재매칭 4항목 (PC)",
       "desc": "feat(calc): sample-calc 정확 수치 재매칭 4항목 (PC)"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "feat(data): 홈화면 정책 태그·최신 정책 JSON 추가",
       "desc": "feat(data): 홈화면 정책 태그·최신 정책 JSON 추가"
-    },
-    {
-      "date": "2026.04.15",
-      "category": "전체",
-      "title": "feat: 62개 계산기 초기값 전체 0 통일 (100% 커버리지)",
-      "desc": "feat: 62개 계산기 초기값 전체 0 통일 (100% 커버리지)"
     }
   ],
   "rates": {
