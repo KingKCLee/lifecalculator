@@ -720,7 +720,7 @@ function Radio({label,value,onChange,options,cols}){
   </div>);
 }
 
-function Inp({label,value,onChange,suffix,placeholder,note,error}){
+function Inp({label,value,onChange,suffix,placeholder,note,error,inputMode}){
   const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
   const[focused,setFocused]=useState(false);
   const displayVal=(!focused&&suffix==="만원"&&value)?addComma(value):value;
@@ -731,10 +731,12 @@ function Inp({label,value,onChange,suffix,placeholder,note,error}){
   };
   const numVal=pN(value);
   const bdColor=error?"#EF4444":"#dfe1e6";
+  const resolvedInputMode=inputMode||(suffix==="만원"?"numeric":suffix==="%"?"decimal":undefined);
   return(<div style={{marginBottom:16}}>
     <label style={lblSt(isMo)}>{label}</label>
     <div style={{position:"relative"}}>
       <input type="text" value={displayVal} onChange={handleChange} placeholder={placeholder}
+        inputMode={resolvedInputMode}
         style={{width:"100%",boxSizing:"border-box",padding:"10px 14px",paddingRight:suffix?44:14,border:error?"2px solid #EF4444":"1.5px solid #dfe1e6",borderRadius:10,fontSize:15,background:"#fff",color:P.tx,outline:"none",fontFamily:"inherit",height:44}}
         onFocus={e=>{setFocused(true);e.target.style.borderColor=error?"#EF4444":P.pri;}} onBlur={e=>{setFocused(false);e.target.style.borderColor=error?"#EF4444":P.bd;}}/>
       {suffix&&<span style={{position:"absolute",right:14,top:"50%",transform:"translateY(-50%)",fontSize:12,color:P.mt}}>{suffix}</span>}
@@ -2308,14 +2310,17 @@ function MobileCalcWrapper({children}){
     <style>{`
       .mobile-calc-wrap *{box-sizing:border-box!important}
       .mobile-calc-wrap>div{display:flex!important;flex-direction:column!important;gap:16px!important;max-width:100%!important}
-      .mobile-calc-wrap>div>div{max-width:100%!important;overflow:hidden!important}
-      .mobile-calc-wrap input:not([type="range"]),.mobile-calc-wrap select{width:100%!important;max-width:100%!important;font-size:16px!important;padding:14px 12px!important}
-      .mobile-calc-wrap button{max-width:100%!important;font-size:14px!important;line-height:1.4!important;word-break:keep-all!important}
-      .mobile-calc-wrap .radio-grid button{padding:10px 4px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;height:auto!important;min-height:40px!important;display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important}
+      .mobile-calc-wrap>div>div{max-width:100%!important}
+      .mobile-calc-wrap input:not([type="range"]),.mobile-calc-wrap select{width:100%!important;max-width:100%!important;font-size:16px!important;padding:14px 12px!important;min-height:48px!important}
+      .mobile-calc-wrap button{max-width:100%!important;font-size:14px!important;line-height:1.4!important;word-break:keep-all!important;min-height:44px!important}
+      .mobile-calc-wrap .radio-grid button{padding:10px 4px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;height:auto!important;min-height:44px!important;display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important}
       .mobile-calc-wrap .result-actions button{min-height:44px!important;padding:10px 8px!important}
       .mobile-calc-wrap h3{font-size:20px!important}
       .mobile-calc-wrap label{font-size:14px!important}
-      .mobile-calc-wrap input[type="range"]{width:100%!important}
+      .mobile-calc-wrap p,.mobile-calc-wrap li,.mobile-calc-wrap span{word-break:keep-all}
+      .mobile-calc-wrap input[type="range"]{width:100%!important;min-height:0!important}
+      .mobile-calc-wrap table{display:block!important;max-width:100%!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch}
+      .mobile-calc-wrap .result-actions button[title],.mobile-calc-wrap .result-actions a[title]{min-height:44px!important}
     `}</style>
     <div className="mobile-calc-wrap">{children}</div>
   </div>);
