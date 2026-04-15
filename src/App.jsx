@@ -1188,6 +1188,84 @@ function RP({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlin
   {expertGuide&&<ExpertGuideCard items={expertGuide}/>}
   </>);
 }
+// 2026.04.16 RPFull — CalcAcq 전용 sample-calc 정확 매칭 버전 (funnel/snapshot 제거, 버튼 라벨/순서 sample 고정)
+function RPFull({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlineLinkLabel,alertMsg,alertType="info",miss,expertGuide}){
+  const hasMiss=Array.isArray(miss)&&miss.length>0;
+  if(isExample||hasMiss){total=total||0;if(hasMiss){items=[];sub="필수 항목을 입력해주세요";}else{items=[];sub="입력값을 입력하면 결과가 표시됩니다";}}
+  const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
+  const isTotal=(l)=>l.includes("합계")||l.includes("납부세액")||l.includes("총 납부")||l.includes("총비용")||l.includes("최종")||l.includes("세후")||l.includes("잔존가치")||l.includes("순수익")||l.includes("환산")||l.includes("실투자")||l.includes("최대 대출");
+  const isSub=(l)=>l.startsWith("  ")||l.startsWith("└")||l.startsWith("│");
+  const alertAccent=alertType==="danger"?"#FFC400":alertType==="success"?"#57D9A3":alertType==="warning"?"#FFE380":"#fff";
+  return(<>
+  <div style={{background:"linear-gradient(315deg, #0747A6 0%, #0052CC 50%, #0065FF 100%)",borderRadius:20,padding:"28px 24px",color:"#fff",position:isMo?"relative":"sticky",top:isMo?0:90,alignSelf:"start",boxShadow:"0 8px 28px rgba(7,71,166,.28)",width:"100%",minWidth:isMo?"auto":320,boxSizing:"border-box"}}>
+    {hasMiss&&<div style={{background:"rgba(255,255,255,0.95)",border:"1px solid #E5E7EB",borderRadius:10,padding:"14px 16px",marginBottom:16,color:"#374151",fontSize:13,lineHeight:1.6}}>
+      <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:6}}><span style={{fontSize:16}}>📝</span><strong style={{color:"#0747A6",fontSize:13}}>필수 항목을 입력하면 자동으로 계산됩니다</strong></div>
+      <ul style={{margin:"6px 0 0 20px",padding:0,color:"#6B7280",fontSize:12}}>{miss.map((m,i)=>(<li key={i} style={{marginTop:2}}>{m}</li>))}</ul>
+    </div>}
+    {alertMsg&&<div style={{background:"rgba(255,255,255,0.15)",borderRadius:10,padding:"10px 14px",marginBottom:14,fontSize:12,display:"flex",gap:8,alignItems:"flex-start",lineHeight:1.5,color:alertAccent}}><span style={{flexShrink:0,fontWeight:800}}>{alertType==="danger"?"⚠":alertType==="success"?"✓":alertType==="warning"?"!":"ℹ"}</span><span>{alertMsg}</span></div>}
+    {/* [2] 타이틀 + 대형 금액 + 부제 */}
+    <div style={{marginBottom:16}}>
+      <div style={{fontSize:11,fontWeight:700,letterSpacing:1.5,textTransform:"uppercase",opacity:.7,marginBottom:6}}>{title}</div>
+      <div style={{fontSize:isMo?32:38,fontWeight:800,lineHeight:1.1,fontVariantNumeric:"tabular-nums"}}>{fW(total)}</div>
+      {sub&&<div style={{fontSize:12,opacity:.72,marginTop:6}}>{sub}</div>}
+    </div>
+    {/* [3] 상세 내역 */}
+    <div style={{borderTop:"1px solid rgba(255,255,255,.22)",paddingTop:4}}>
+      {items.map((it,i)=>{
+        const tr=isTotal(it.l);const sr=isSub(it.l);
+        return(<div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",padding:"10px 0",borderBottom:i<items.length-1?"1px solid rgba(255,255,255,.1)":"none",gap:8}}>
+          <span style={{opacity:sr?0.65:tr?1:0.82,fontWeight:tr?800:400,paddingLeft:sr?12:0,fontSize:tr?16:13,flex:"1 1 auto",minWidth:0}}>{it.l}</span>
+          <div style={{textAlign:"right",whiteSpace:"nowrap",flexShrink:0}}>
+            <span style={{fontWeight:tr?800:600,fontSize:tr?16:13,color:tr?"#FFC400":"#fff",fontVariantNumeric:"tabular-nums"}}>{it.v}</span>
+            {it.note&&<div style={{fontSize:10,opacity:.58,marginTop:2}}>{it.note}</div>}
+          </div>
+        </div>);
+      })}
+    </div>
+    {/* [4] 납부기한 (deadline) */}
+    {deadline&&<div style={{background:"rgba(255,255,255,0.10)",borderRadius:10,padding:"10px 14px",marginTop:14,fontSize:11,lineHeight:1.55,display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
+      <span><IconCal c="#fff"/></span><span style={{opacity:.88,flex:"1 1 auto",minWidth:0}}>{deadline}</span>
+      {deadlineLink&&<a href={deadlineLink} target="_blank" rel="noopener noreferrer" style={{color:"#FFC400",fontWeight:700,textDecoration:"none"}}>{deadlineLinkLabel||"바로가기 →"}</a>}
+    </div>}
+    {/* [5] 버튼: PDF / 이미지 / CSV / 링크 / AI해설 / AI PDF / 공유 — sample-calc .rp-actions */}
+    <div className="result-actions" style={{display:"flex",flexWrap:"wrap",gap:6,marginTop:14}}>
+      {[
+        {fn:()=>downloadPDF(title,total,sub,items),icon:<IconDoc c="#fff"/>,l:"PDF"},
+        {fn:()=>downloadImage(title,total,sub,items),icon:<IconCam c="#fff"/>,l:"이미지"},
+        {fn:()=>downloadCSV(title,total,sub,items),icon:<IconChart c="#fff"/>,l:"CSV"},
+        {fn:()=>window.dispatchEvent(new CustomEvent('lc-share-url')),icon:<IconLink c="#fff"/>,l:"링크"},
+        {fn:()=>window.dispatchEvent(new CustomEvent('lc-ai-explain',{detail:{title,total,items,sub}})),icon:<IconBot c="#fff"/>,l:"AI 해설"},
+        {fn:()=>window.dispatchEvent(new CustomEvent('lc-brand-pdf',{detail:{title,total,items,sub}})),icon:<IconDoc c="#fff"/>,l:"AI PDF"},
+        {fn:()=>window.dispatchEvent(new CustomEvent('lc-consult',{detail:{title,total}})),icon:<IconLink c="#fff"/>,l:"공유"}
+      ].map((b,i)=>(
+        <button key={i} onClick={b.fn} style={{flex:"1 1 auto",minWidth:80,padding:"9px 10px",background:"rgba(255,255,255,.12)",color:"#fff",border:"1px solid rgba(255,255,255,.28)",borderRadius:8,fontSize:11,fontWeight:700,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:4,fontFamily:"inherit",transition:"background .15s"}}
+          onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,.22)"}} onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,.12)"}}>
+          {b.icon}{b.l}
+        </button>))}
+    </div>
+    {/* [6] -10% / 절세 팁 / +10% — sample-calc .rp-scenario */}
+    <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:6,marginTop:8}}>
+      {[{m:0.9,l:"−10%"},{m:1,l:"절세 팁"},{m:1.1,l:"+10%"}].map(s=>(
+        <button key={s.l} onClick={()=>window.dispatchEvent(new CustomEvent(s.l==="절세 팁"?'lc-ai-explain':'lc-scenario',{detail:s.l==="절세 팁"?{title,total,items,sub}:{mult:s.m}}))} style={{padding:"8px 4px",background:"rgba(255,255,255,.12)",color:"#fff",border:"1px solid rgba(255,255,255,.28)",borderRadius:8,fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>{s.l}</button>
+      ))}
+    </div>
+    {/* [7] 1:1 세금 상담 카드 */}
+    {total>0&&<div style={{marginTop:10,padding:"12px 14px",background:"rgba(255,255,255,0.14)",border:"1px solid rgba(255,255,255,0.22)",borderRadius:10,display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,flexWrap:"wrap"}}>
+      <div style={{flex:"1 1 auto",minWidth:0}}>
+        <div style={{fontSize:12,fontWeight:700,color:"#fff",marginBottom:2}}>1:1 세금 상담</div>
+        <div style={{fontSize:11,opacity:0.82,lineHeight:1.5}}>전문가와 복잡한 절세 전략 논의</div>
+      </div>
+      <button onClick={()=>window.dispatchEvent(new CustomEvent('lc-consult',{detail:{title,total}}))} style={{flexShrink:0,padding:"8px 14px",background:"#fff",color:"#0747A6",border:"none",borderRadius:8,fontSize:12,fontWeight:800,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>상담 →</button>
+    </div>}
+    {/* [8] AI 절세 가이드 (초록) */}
+    {!isExample&&!hasMiss&&total>0&&<AIGuide items={items} title={title}/>}
+    <div style={{marginTop:10,fontSize:10,opacity:.5,lineHeight:1.5,textAlign:"center"}}>본 계산은 2026년 세법 기준 참고용이며 법적 효력이 없습니다. (v2026.04.06)</div>
+  </div>
+  {/* [9] Expert Guide 아코디언 (RP gradient 밖) */}
+  {expertGuide&&<ExpertGuideCard items={expertGuide}/>}
+  </>);
+}
+
 function RequiredGuide({items}){const missing=items.filter(i=>!i.filled);if(missing.length===0)return null;return(<div style={{background:"#F4F5F7",borderRadius:12,padding:"16px 20px",marginTop:8}}><div style={{fontSize:12,fontWeight:700,color:"#505f79",marginBottom:10}}>필수 입력 항목</div>{missing.map((item,i)=>(<div key={i} style={{display:"flex",alignItems:"center",gap:8,marginBottom:6,fontSize:13,color:"#172B4D"}}><span style={{width:6,height:6,borderRadius:"50%",background:"#0747A6",flexShrink:0,display:"inline-block"}}/>{item.label}</div>))}</div>);}
 function StepsGuide({steps}){const filled=steps.filter(s=>s.filled).length;const done=filled>=steps.length;return(<div style={{background:"#f8fafc",border:"1px solid #e2e8f0",borderRadius:12,padding:"16px",marginBottom:12,minHeight:steps.length*30+40,opacity:done?0.4:1,transition:"opacity .25s"}}><div style={{fontSize:12,fontWeight:600,color:"#64748b",marginBottom:8}}><IconDoc/> 입력 단계 ({filled}/{steps.length}){done&&" · 완료"}</div>{steps.map((s,i)=>(<div key={i} style={{display:"flex",alignItems:"center",gap:8,padding:"4px 0",fontSize:13}}><span style={{width:18,height:18,borderRadius:"50%",background:s.filled?"#22c55e":"#e2e8f0",color:s.filled?"#fff":"#94a3b8",display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,flexShrink:0,fontWeight:700}}>{s.filled?"✓":i+1}</span><span style={{color:s.filled?"#94a3b8":"#1e293b",textDecoration:s.filled?"line-through":""}}>{s.label}</span></div>))}</div>);}
 
@@ -1573,7 +1651,7 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
     <div style={{marginTop:isMo?0:24}}><RateTable title="주택 외 취득세율표" headers={["구분","취득세","교육세","농특세","합계"]} rows={[["매매(토지·건물)","4%","0.4%","0.2%","4.6%"],["증여","3.5%","0.3%","0.2%","4.0%"],["상속","2.8%","0.16%","0.2%","3.16%"],["원시취득","2.8%","0.16%","0.2%","3.16%"],["농지 매매","3%","0.2%","0.2%","3.4%"],["농지 자경","1.5%","0.1%","-","1.6%"],["농지 상속","2.3%","0.06%","0.2%","2.56%"]]}/></div>
     </div>
     {/* 2026.04.14 고도화: 납부기한 취득유형별 분기 (상속 6개월 / 증여 3개월 / 그 외 60일). 기존: deadline="신고기한: 잔금일 또는 등기일 중 빠른 날부터 60일 이내" */}
-    <div>{_hasErrors&&<div style={{padding:"10px 14px",background:"#FEE2E2",border:"1px solid #FECACA",borderRadius:8,fontSize:13,color:"#EF4444",fontWeight:600,marginBottom:12}}>필수 항목을 모두 입력해주세요</div>}<RP miss={tW(price)>0?null:MI.acquisition} expertGuide={CALC_NAV_CONTENT.acquisition?.items} expertGuide={CALC_NAV_CONTENT.acquisition?.items} title="취득세 계산 결과" total={total} sub={"취득세율 "+fP(r*100)+" 적용"}
+    <div>{_hasErrors&&<div style={{padding:"10px 14px",background:"#FEE2E2",border:"1px solid #FECACA",borderRadius:8,fontSize:13,color:"#EF4444",fontWeight:600,marginBottom:12}}>필수 항목을 모두 입력해주세요</div>}<RPFull miss={tW(price)>0?null:MI.acquisition} expertGuide={CALC_NAV_CONTENT.acquisition?.items} title="취득세 계산 결과" total={total} sub={"취득세율 "+fP(r*100)+" 적용"}
       deadline={acqType==="inherit"?"신고기한: 상속개시일이 속하는 달의 말일부터 6개월 이내 (지방세법 §20)":acqType==="gift"?"신고기한: 취득일이 속하는 달의 말일부터 3개월 이내 (지방세법 §20)":"신고기한: 잔금일 또는 등기일 중 빠른 날부터 60일 이내 (지방세법 §20)"}
       deadlineLink="https://wetax.go.kr" deadlineLinkLabel="위택스 신고 →"
       alertMsg={!stdPrice?"시가표준액 미입력 시 정확도가 낮아질 수 있습니다":firstDed>0?"생애최초 감면 "+fW(firstDed)+" 적용됨":conArea&&n>=2&&!heavyTaxExclude&&!lowVal&&!tempTwo?"조정대상지역 "+n+"주택 중과세율 "+fP(r*100)+" 적용":null}
