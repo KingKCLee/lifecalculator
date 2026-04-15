@@ -4130,6 +4130,541 @@ function HtmlAdapterPage({url,isMo,navigateHome}){
     {err?<div style={{padding:40,textAlign:"center",color:"#6b778c"}}>페이지를 불러오지 못했습니다. <a href={url} style={{color:"#0747A6"}}>원본 페이지로 이동 →</a></div>:html===null?<div style={{padding:40,textAlign:"center",color:"#6b778c"}}>불러오는 중...</div>:<div className="lc-html-adapter" style={{background:"#fff",borderRadius:16,border:"1px solid #dfe1e6",padding:isMo?"20px 16px":"32px 28px",fontSize:14,color:"#172B4D",lineHeight:1.8}} dangerouslySetInnerHTML={{__html:html}}/>}
   </div>);
 }
+
+/* 2026.04.15 Phase 2 — 정적 페이지 React 풀 포팅 (Terms/Learn/Law/About/Pricing/Verification/Guide) */
+const _SW={wrap:{maxWidth:880,margin:"0 auto",padding:"24px 20px 72px"},
+  section:{background:"#fff",border:"1px solid #dfe1e6",borderRadius:14,padding:"28px 32px",marginBottom:18},
+  h2:{fontSize:22,margin:"0 0 16px",color:"#0747A6",display:"flex",alignItems:"center",gap:10,letterSpacing:-0.3,fontWeight:800},
+  h2b:{display:"inline-block",width:5,height:20,background:"#0747A6",borderRadius:3,flexShrink:0},
+  h3:{fontSize:16,margin:"20px 0 8px",color:"#172B4D",fontWeight:700},
+  p:{margin:"0 0 12px",fontSize:15,lineHeight:1.75,color:"#172B4D"},
+  ul:{margin:"8px 0 12px",paddingLeft:22},
+  li:{fontSize:15,marginBottom:6,lineHeight:1.75,color:"#172B4D"},
+  tbl:{width:"100%",borderCollapse:"collapse",margin:"12px 0",fontSize:14},
+  th:{padding:"10px 12px",textAlign:"left",borderBottom:"1px solid #dfe1e6",background:"#f4f5f7",fontWeight:700,fontSize:13,color:"#172B4D"},
+  td:{padding:"10px 12px",textAlign:"left",borderBottom:"1px solid #dfe1e6",verticalAlign:"top",fontSize:14,color:"#172B4D"},
+  article:{background:"#f4f5f7",borderLeft:"4px solid #0747A6",borderRadius:8,padding:"14px 18px",margin:"14px 0",fontSize:14,lineHeight:1.8,color:"#172B4D"},
+  articleLabel:{display:"block",color:"#0747A6",marginBottom:6,fontWeight:700},
+  cl:{background:"#f4f5f7",borderLeft:"4px solid #FFAB00",borderRadius:8,padding:"14px 18px",margin:"14px 0",fontSize:14,lineHeight:1.7,color:"#172B4D"},
+  clWarn:{background:"#FFEBE6",borderLeft:"4px solid #DE350B",borderRadius:8,padding:"14px 18px",margin:"14px 0",fontSize:14,lineHeight:1.7,color:"#172B4D"},
+  clOk:{background:"#E3FCEF",borderLeft:"4px solid #00875A",borderRadius:8,padding:"14px 18px",margin:"14px 0",fontSize:14,lineHeight:1.7,color:"#172B4D"},
+  btn:{display:"inline-block",background:"#0747A6",color:"#fff",padding:"10px 16px",borderRadius:8,textDecoration:"none",fontWeight:600,fontSize:13,marginRight:8,marginTop:8}};
+function _SH({tag,title,desc,dark}){return(<div style={{background:dark?"linear-gradient(135deg,#172B4D,#0747A6)":"linear-gradient(135deg,#0747A6,#0052CC)",color:"#fff",borderRadius:16,padding:"40px 34px",marginBottom:22}}>
+  {tag&&<span style={{display:"inline-block",background:"rgba(255,255,255,0.2)",padding:"4px 12px",borderRadius:12,fontSize:12,fontWeight:600,marginBottom:12}}>{tag}</span>}
+  <h1 style={{fontSize:30,margin:"0 0 10px",letterSpacing:-0.6,lineHeight:1.25,color:"#fff"}}>{title}</h1>
+  {desc&&<p style={{fontSize:15,margin:0,opacity:.95,color:"#fff",lineHeight:1.65}}>{desc}</p>}
+</div>);}
+function _SS({children}){return(<section style={_SW.section}>{children}</section>);}
+function _SH2({children}){return(<h2 style={_SW.h2}><span style={_SW.h2b}/>{children}</h2>);}
+function _ST({head,rows}){return(<table style={_SW.tbl}><thead><tr>{head.map((h,i)=>(<th key={i} style={_SW.th}>{h}</th>))}</tr></thead><tbody>{rows.map((r,i)=>(<tr key={i}>{r.map((c,j)=>(<td key={j} style={_SW.td}>{c}</td>))}</tr>))}</tbody></table>);}
+function _SC({items}){return(<div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:10,marginTop:14}}>{items.map((it,i)=>(<a key={i} href={it.href} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"14px 18px",background:"#0747A6",color:"#fff",textDecoration:"none",borderRadius:10,fontWeight:600,fontSize:14}}><span>{it.label}</span><span>→</span></a>))}</div>);}
+function _SCL({type,children}){const st=type==="warn"?_SW.clWarn:type==="ok"?_SW.clOk:_SW.cl;return(<div style={st}>{children}</div>);}
+function _SBtn({href,children}){return(<a href={href} style={_SW.btn}>{children} →</a>);}
+
+function TermsHubPage({isMo,navigateHome}){
+  const[terms,setTerms]=useState([]);const[loading,setLoading]=useState(true);const[q,setQ]=useState("");
+  useEffect(()=>{let alive=true;
+    fetch("/terms/terms.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).then(j=>{
+      if(!alive)return;
+      setTerms(j?.terms||[]);setLoading(false);
+    }).catch(()=>{if(alive){setTerms([]);setLoading(false);}});
+    return()=>{alive=false};
+  },[]);
+  const getCho=s=>{if(!s)return "#";const c=s.charCodeAt(0)-0xAC00;if(c<0||c>11171)return "#";const CHO=['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];const ch=CHO[Math.floor(c/588)];return({'ㄲ':'ㄱ','ㄸ':'ㄷ','ㅃ':'ㅂ','ㅆ':'ㅅ','ㅉ':'ㅈ'})[ch]||ch;};
+  const filtered=q.trim()?terms.filter(t=>(t.term+" "+(t.definition||"")).toLowerCase().includes(q.trim().toLowerCase())):terms;
+  const byCat={};for(const t of filtered){if(!byCat[t.category])byCat[t.category]=[];byCat[t.category].push(t);}
+  Object.values(byCat).forEach(arr=>arr.sort((a,b)=>a.term.localeCompare(b.term,'ko')));
+  const cats=Object.keys(byCat).sort();
+  return(<div style={{maxWidth:900,margin:"0 auto",padding:isMo?"24px 16px":"40px 24px",minHeight:"60vh"}}>
+    <SpaBackBtn navigateHome={navigateHome}/>
+    <h1 style={{fontSize:isMo?24:28,fontWeight:800,color:"#0747A6",margin:"0 0 8px"}}>부동산 용어집</h1>
+    <p style={{fontSize:14,color:"#505f79",margin:"0 0 8px"}}>취득세·양도세·대출·임대차·중개수수료 등 부동산 거래 필수 용어 정리</p>
+    <p style={{fontSize:13,color:"#505f79",marginBottom:20}}>총 <b style={{color:"#0747A6"}}>{terms.length}</b>개 용어</p>
+    <div style={{display:"flex",gap:8,marginBottom:20}}>
+      <input type="text" value={q} onChange={e=>setQ(e.target.value)} placeholder="용어 검색 (예: 취득세, DSR)" style={{flex:1,padding:"12px 16px",border:"2px solid #dfe1e6",borderRadius:10,fontSize:15,background:"#fff",color:"#172B4D",outline:"none",fontFamily:"inherit"}}/>
+    </div>
+    {loading?<div style={{padding:40,textAlign:"center",color:"#6b778c"}}>불러오는 중...</div>:cats.length===0?<div style={{padding:40,textAlign:"center",color:"#6b778c"}}>용어가 없습니다.</div>:cats.map(cat=>(<details key={cat} open style={{background:"#fff",border:"1px solid #dfe1e6",borderRadius:10,marginBottom:12,overflow:"hidden"}}>
+      <summary style={{padding:"16px 18px",cursor:"pointer",fontWeight:700,color:"#172B4D",listStyle:"none",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+        <span>{cat}</span>
+        <span style={{fontSize:12,color:"#505f79",fontWeight:500,background:"#f4f5f7",padding:"2px 10px",borderRadius:10}}>{byCat[cat].length}개</span>
+      </summary>
+      <div style={{padding:"0 18px 18px"}}>{byCat[cat].map((t,i)=>(<div key={i} style={{padding:"12px 0",borderTop:i===0?"none":"1px solid #dfe1e6"}}>
+        <div style={{fontSize:15,fontWeight:700,color:"#172B4D",marginBottom:4,display:"flex",alignItems:"center",gap:8}}>
+          {t.term}
+          <span style={{fontSize:11,color:"#0747A6",background:"#e6efff",padding:"1px 6px",borderRadius:8,fontWeight:600}}>{getCho(t.term)}</span>
+        </div>
+        <div style={{fontSize:13,color:"#505f79",lineHeight:1.6}}>{(t.definition||"").length>120?(t.definition||"").slice(0,120)+"…":(t.definition||"")}</div>
+      </div>))}</div>
+    </details>))}
+  </div>);
+}
+
+/* Learn pages */
+function LearnTaxBasics(){return(<>
+  <_SH tag="LEARN 01" title="부동산 세금 기초" desc="집을 사고, 보유하고, 팔 때 만나는 6대 세금을 2026년 기준으로 정리했습니다."/>
+  <_SS><_SH2>들어가며</_SH2><p style={_SW.p}>부동산 세금은 <b>취득 → 보유 → 처분 → 무상이전</b>의 단계별로 6가지가 부과됩니다. 각 세금의 과세표준·세율·공제제도를 이해하면 합법적인 절세가 가능합니다.</p><ul style={_SW.ul}><li style={_SW.li}><b>취득 단계</b> — 취득세, 인지세, 국민주택채권</li><li style={_SW.li}><b>보유 단계</b> — 재산세, 종합부동산세</li><li style={_SW.li}><b>처분 단계</b> — 양도소득세, 지방소득세</li><li style={_SW.li}><b>무상이전</b> — 증여세, 상속세</li></ul></_SS>
+  <_SS><_SH2>1. 취득세</_SH2><p style={_SW.p}>부동산을 살 때 취득가액 기준으로 부과되는 지방세입니다. 주택 수와 조정대상지역 여부에 따라 세율이 크게 달라지며, 취득일로부터 60일 이내 신고·납부해야 합니다.</p><h3 style={_SW.h3}>2026년 취득세율표 (주택)</h3>
+    <_ST head={["구분","6억 이하","6~9억","9억 초과"]} rows={[["1주택","1.0%","1~3% (누진)","3.0%"],["조정 2주택","8.0% (일시적 2주택 예외)","",""],["3주택 이상","12.0%","",""],["법인","12.0%","",""]]}/>
+    <_SCL><b>생애최초 감면</b> 2028.12.31까지 12억 이하 주택 최대 200만원 감면</_SCL>
+    <_SBtn href="/취득세계산기">취득세 계산기</_SBtn><_SBtn href="/등기비용계산기">등기비용 계산기</_SBtn></_SS>
+  <_SS><_SH2>2. 양도소득세</_SH2><p style={_SW.p}>부동산을 팔아 양도차익이 발생할 때 부과되는 국세입니다. 보유기간·주택수·조정지역 여부에 따라 세율과 중과 여부가 결정되며, 양도일이 속하는 달의 말일부터 2개월 이내 예정신고합니다.</p><h3 style={_SW.h3}>2026년 양도세율표 (기본세율)</h3>
+    <_ST head={["과세표준","세율","누진공제"]} rows={[["1,400만원 이하","6%","-"],["5,000만원 이하","15%","126만원"],["8,800만원 이하","24%","576만원"],["1.5억 이하","35%","1,544만원"],["3억 이하","38%","1,994만원"],["5억 이하","40%","2,594만원"],["10억 이하","42%","3,594만원"],["10억 초과","45%","6,594만원"]]}/>
+    <_SCL><b>다주택 중과 유예</b> 2026.5.9까지 한시적 유예. 이후 2주택 +20%p, 3주택 +30%p 중과 복원 예정</_SCL>
+    <_SBtn href="/양도소득세계산기">양도소득세 계산기</_SBtn></_SS>
+  <_SS><_SH2>3. 종합부동산세</_SH2><p style={_SW.p}>인별 전국 합산 공시가격이 기준금액을 초과할 때 부과되는 국세입니다. 1주택자는 12억, 다주택자는 9억까지 기본공제됩니다. 매년 12월 1~15일 납부합니다.</p>
+    <_ST head={["과세표준","일반","법인"]} rows={[["3억 이하","0.5%","2.7%"],["6억 이하","0.7%","2.7%"],["12억 이하","1.0%","2.7%"],["25억 이하","1.3%","5.0%"],["50억 이하","1.5%","5.0%"],["94억 이하","2.0%","5.0%"],["94억 초과","2.7%","5.0%"]]}/>
+    <_SCL><b>기본공제</b> 1주택 12억 / 다주택 9억 / 법인 0원</_SCL>
+    <_SBtn href="/종합부동산세계산기">종부세 계산기</_SBtn></_SS>
+  <_SS><_SH2>4. 재산세</_SH2><p style={_SW.p}>매년 6월 1일 기준 부동산 소유자에게 부과되는 지방세입니다. 주택은 7월·9월 두 번 분납, 토지는 9월, 건축물은 7월에 납부합니다.</p>
+    <_ST head={["과세표준","세율","누진공제"]} rows={[["6천만원 이하","0.1%","-"],["1.5억 이하","0.15%","3만원"],["3억 이하","0.25%","18만원"],["3억 초과","0.4%","63만원"]]}/>
+    <_SBtn href="/재산세계산기">재산세 계산기</_SBtn><_SBtn href="/보유세통합계산기">보유세 통합</_SBtn></_SS>
+  <_SS><_SH2>5. 증여세</_SH2><p style={_SW.p}>타인(배우자·자녀 등)에게 대가 없이 재산을 이전받을 때 수증자가 납부하는 국세입니다. 10년 단위 누적 합산 과세됩니다.</p>
+    <_ST head={["과세표준","세율","누진공제"]} rows={[["1억 이하","10%","-"],["5억 이하","20%","1천만원"],["10억 이하","30%","6천만원"],["30억 이하","40%","1.6억원"],["30억 초과","50%","4.6억원"]]}/>
+    <_SCL><b>증여재산공제 (10년)</b> 배우자 6억 / 성년 자녀 5천만 / 미성년 자녀 2천만 / 기타 친족 1천만</_SCL>
+    <_SBtn href="/증여세계산기">증여세 계산기</_SBtn></_SS>
+  <_SS><_SH2>6. 상속세</_SH2><p style={_SW.p}>피상속인 사망으로 재산이 이전될 때 부과되는 국세입니다. 세율은 증여세와 동일하지만 각종 공제가 훨씬 크며, 상속개시일로부터 6개월 이내 신고합니다.</p>
+    <h3 style={_SW.h3}>주요 상속공제</h3>
+    <_ST head={["공제 항목","금액"]} rows={[["기초공제","2억원"],["배우자공제","최소 5억 ~ 최대 30억"],["일괄공제","5억원"],["금융재산공제","최대 2억원"],["동거주택 상속공제","최대 6억원"]]}/>
+    <_SBtn href="/상속세계산기">상속세 계산기</_SBtn></_SS>
+</>);}
+
+function LearnLoanGuide(){return(<>
+  <_SH tag="LEARN 02" title="대출 규제 완전 가이드" desc="LTV·DTI·DSR·스트레스DSR 2026년 최신 규제 비율과 실수요자 우대 조건을 정리했습니다."/>
+  <_SS><_SH2>대출 규제 3대 축</_SH2><p style={_SW.p}>주택담보대출 규제는 <b>담보·소득·부채</b> 세 가지 관점에서 작동합니다.</p><ul style={_SW.ul}><li style={_SW.li}><b>LTV (Loan To Value)</b> — 담보가치 대비 대출비율. 집값 기준</li><li style={_SW.li}><b>DTI (Debt To Income)</b> — 연소득 대비 원리금 상환부담. 주담대+기타대출 이자만</li><li style={_SW.li}><b>DSR (Debt Service Ratio)</b> — 모든 대출 원리금 / 연소득</li></ul><_SCL><b>2026년 기준금리</b> 3.0% (2026.2.27 금통위 결정)</_SCL></_SS>
+  <_SS><_SH2>LTV (담보인정비율)</_SH2><p style={_SW.p}>주택 감정가(또는 KB시세) 대비 대출 가능 비율입니다. 주택수·지역·실수요자 여부에 따라 달라집니다.</p>
+    <h3 style={_SW.h3}>2026년 LTV 규제표</h3>
+    <_ST head={["구분","비규제지역","규제지역"]} rows={[["무주택","70%","50%"],["생애최초","80%","80%"],["1주택 (처분조건)","70%","50%"],["2주택 이상","60%","0%"]]}/>
+    <h3 style={_SW.h3}>수도권 주담대 한도 (2026)</h3>
+    <_ST head={["주택가격","최대 대출한도"]} rows={[["15억 이하","6억원"],["25억 이하","4억원"],["25억 초과","2억원"]]}/>
+    <_SBtn href="/LTV계산기">LTV 계산기</_SBtn><_SBtn href="/대출가능액계산기">대출가능액 계산기</_SBtn></_SS>
+  <_SS><_SH2>DTI (총부채상환비율)</_SH2><p style={_SW.p}>연소득 대비 '주담대 원리금 + 기타대출 이자'의 비율입니다. 현재는 DSR 중심으로 전환되어 보조지표로 사용됩니다.</p>
+    <_ST head={["구분","비율"]} rows={[["일반","60%"],["규제지역","50%"]]}/>
+    <_SBtn href="/DTI계산기">DTI 계산기</_SBtn></_SS>
+  <_SS><_SH2>DSR (총부채원리금상환비율)</_SH2><p style={_SW.p}>연소득 대비 <b>모든 대출의 원리금</b> 합계 비율입니다. 주담대·신용대출·카드론·학자금·할부까지 모두 포함됩니다.</p>
+    <_ST head={["구분","한도"]} rows={[["은행권","40%"],["비은행권 (저축은행·보험·카드)","50%"]]}/>
+    <_SCL type="warn"><b>주의</b> 대출이 1억원을 초과하면 차주별 DSR이 적용됩니다.</_SCL>
+    <_SBtn href="/DSR계산기">DSR 계산기</_SBtn></_SS>
+  <_SS><_SH2>스트레스 DSR</_SH2><p style={_SW.p}>향후 금리 인상 가능성을 반영해, 실제 금리에 <b>가산금리(스트레스 금리)</b>를 더해 DSR을 계산하는 제도입니다.</p>
+    <_ST head={["대출 유형","2단계 (현행)","3단계 (예정)"]} rows={[["변동금리","+1.5%p","+2.0%p"],["혼합형 (5년 고정)","+0.75%p","+1.0%p"],["주기형 (5년 주기)","+0.375%p","+0.5%p"],["순수 고정금리","0%p","0%p"]]}/>
+    <_SCL><b>적용 범위</b> 수도권 주담대는 2단계부터 전면 적용, 비수도권은 단계적 확대</_SCL></_SS>
+  <_SS><_SH2>실수요자 우대 조건</_SH2><p style={_SW.p}>다음 조건을 모두 충족하는 실수요자는 LTV·DSR 완화 혜택을 받을 수 있습니다.</p>
+    <ul style={_SW.ul}><li style={_SW.li}><b>생애최초 주택구입</b> — LTV 80% 적용 (6억원 한도)</li><li style={_SW.li}><b>무주택 세대주</b> — 세대원 전원 무주택</li><li style={_SW.li}><b>부부합산 소득</b> — 9천만원 이하 (생애최초는 1.3억원)</li><li style={_SW.li}><b>주택가격</b> — 수도권 9억 이하, 비수도권 6억 이하</li><li style={_SW.li}><b>실거주 의무</b> — 6개월 이내 전입 및 2년 이상 거주</li></ul>
+    <_SCL type="ok"><b>보금자리론</b> 디딤돌대출(무주택 서민) · 특례보금자리 등 정책자금은 DSR 산정에서 제외되며 금리도 유리합니다.</_SCL></_SS>
+  <_SS><_SH2>관련 계산기</_SH2>
+    <_SBtn href="/DSR계산기">DSR 계산기</_SBtn><_SBtn href="/LTV계산기">LTV 계산기</_SBtn><_SBtn href="/대출이자계산기">대출이자 계산기</_SBtn><_SBtn href="/대출가능액계산기">대출가능액 계산기</_SBtn></_SS>
+</>);}
+
+function LearnTaxSaving(){return(<>
+  <_SH tag="LEARN 03" title="절세 전략 가이드" desc="2026년 세제 기준으로 합법적인 절세 전략 4가지와 20개 체크리스트를 정리했습니다."/>
+  <_SS><_SH2>1. 취득세 절세</_SH2><p style={_SW.p}>취득 단계에서 가장 큰 절세 포인트는 <b>주택수 산정</b>과 <b>일시적 2주택</b> 예외입니다.</p>
+    <ul style={_SW.ul}><li style={_SW.li}><b>일시적 2주택</b> — 기존 주택을 3년 이내 처분 시 1주택 세율 적용</li><li style={_SW.li}><b>생애최초 감면</b> — 12억 이하 최대 200만원 감면 (2028.12.31까지)</li><li style={_SW.li}><b>공시가 1억 이하</b> — 주택수 산정 제외 (투기과열지역 제외)</li><li style={_SW.li}><b>분양권·입주권</b> — 취득시점 판단 기준 확인</li><li style={_SW.li}><b>상속주택 5년 특례</b> — 상속 후 5년간 주택수 미산정</li></ul>
+    <_SBtn href="/취득세계산기">취득세 계산기</_SBtn></_SS>
+  <_SS><_SH2>2. 양도세 절세</_SH2><p style={_SW.p}>양도세는 비과세 요건과 장기보유특별공제 활용이 핵심입니다.</p>
+    <ul style={_SW.ul}><li style={_SW.li}><b>1세대 1주택 비과세</b> — 12억 이하 양도가액 + 2년 이상 보유 (조정지역은 2년 거주)</li><li style={_SW.li}><b>장기보유특별공제</b> — 3년부터 매년 2%p, 1세대 1주택은 최대 80%</li><li style={_SW.li}><b>일시적 2주택</b> — 3년 이내 종전 주택 양도 시 비과세</li><li style={_SW.li}><b>명의 분산</b> — 공동명의로 기본공제 250만원 × 2회</li><li style={_SW.li}><b>양도 시점 조정</b> — 연도 분산으로 누진세율 회피</li><li style={_SW.li}><b>필요경비 인정</b> — 중개수수료·법무비·인테리어 자본적 지출 포함</li></ul>
+    <_SCL type="warn"><b>주의</b> 2026.5.9 이후 다주택 중과가 복원될 예정입니다.</_SCL>
+    <_SBtn href="/양도소득세계산기">양도소득세 계산기</_SBtn></_SS>
+  <_SS><_SH2>3. 종부세 절세</_SH2><p style={_SW.p}>종부세는 인별 합산 과세이므로 <b>명의 분산</b>이 가장 효과적입니다.</p>
+    <ul style={_SW.ul}><li style={_SW.li}><b>부부 공동명의</b> — 각자 공제 적용으로 과표 감소</li><li style={_SW.li}><b>1주택 12억 공제</b> 활용 — 고가 1주택이 저가 2주택보다 유리한 경우 多</li><li style={_SW.li}><b>고령자·장기보유 세액공제</b> — 최대 80% 공제 (합산 상한)</li><li style={_SW.li}><b>임대주택 등록</b> — 합산배제 신청 (단, 요건 확인 필수)</li></ul>
+    <_SBtn href="/종합부동산세계산기">종부세 계산기</_SBtn></_SS>
+  <_SS><_SH2>4. 증여세 절세</_SH2><p style={_SW.p}>증여는 <b>시기 분산</b>과 <b>공제 한도 활용</b>이 핵심입니다.</p>
+    <ul style={_SW.ul}><li style={_SW.li}><b>10년 단위 분할 증여</b> — 공제 한도를 10년마다 재사용</li><li style={_SW.li}><b>부담부증여</b> — 대출·전세보증금 인수분만큼 증여가액 감소 (양도세는 발생)</li><li style={_SW.li}><b>조부모 → 손자녀 증여</b> — 세대생략 할증 30%지만 상속세 절감 효과</li><li style={_SW.li}><b>혼인·출산 증여재산공제</b> — 1억원 추가 공제 (2024 신설)</li><li style={_SW.li}><b>저가 매수</b> — 시가의 70% 이하는 부당행위계산 부인 대상</li></ul>
+    <_SBtn href="/증여세계산기">증여세 계산기</_SBtn></_SS>
+  <_SS><_SH2>합법 절세 20 체크리스트</_SH2>
+    <ol style={_SW.ul}>{["취득 전 주택수를 정확히 산정했는가","일시적 2주택 3년 기한을 확인했는가","생애최초 감면 대상인지 확인했는가","공동명의로 등기할 수 있는가","1세대 1주택 비과세 2년 요건을 충족했는가","조정지역이면 2년 거주 요건도 충족했는가","장기보유특별공제 구간을 계산했는가","양도 시기를 연도 단위로 분산했는가","필요경비 영수증을 모두 보관했는가","인테리어 자본적 지출과 수익적 지출을 구분했는가","종부세 공정시장가액비율을 확인했는가","고령자·장기보유 세액공제를 받을 수 있는가","증여는 10년 단위로 분할했는가","부담부증여로 증여가액을 낮췄는가","부부간 증여공제 6억원을 활용했는가","상속공제 일괄공제 5억원을 확인했는가","배우자 상속공제 최대 30억을 검토했는가","세액공제 신고기한을 놓치지 않았는가","지방소득세(양도세의 10%)도 계산했는가","세무사 상담 후 최종 확정했는가"].map((t,i)=>(<li key={i} style={_SW.li}>{t}</li>))}</ol>
+    <_SBtn href="/세금비교분석">세금비교 분석</_SBtn><_SBtn href="/총비용시뮬레이터">총비용 시뮬레이터</_SBtn></_SS>
+</>);}
+
+function LearnInvestChecklist(){const _chk=(items)=>(<ul style={{listStyle:"none",padding:0,margin:"8px 0"}}>{items.map((t,i)=>(<li key={i} style={{padding:"10px 0 10px 32px",borderBottom:i<items.length-1?"1px solid #dfe1e6":"none",position:"relative",fontSize:14,color:"#172B4D"}}><span style={{position:"absolute",left:6,top:8,fontSize:18,color:"#505f79"}}>☐</span>{t}</li>))}</ul>);return(<>
+  <_SH tag="LEARN 04" title="투자 체크리스트" desc="매수전·취득시·보유중·매도시 4단계와 경매투자 체크리스트를 정리했습니다."/>
+  <_SS><_SH2>1단계 · 매수 전</_SH2><p style={_SW.p}>계약서 작성 전에 반드시 확인해야 할 항목입니다.</p>
+    {_chk(["등기부등본 갑구·을구 확인 (근저당·가압류)","건축물대장과 실제 현황 일치 여부","시세 대비 매매가 적정성 (KB시세·실거래가 비교)","주택수 산정으로 예상 취득세 계산","LTV·DSR 한도 내 대출 가능액 확인","관리비·수선충당금 연체 여부","세입자 승계 시 전세보증금 확인","학군·교통·개발호재·재건축 가능성","총 매수비용(취득세+등기비+중개수수료) 산출"])}
+    <_SBtn href="/취득세계산기">취득세 계산기</_SBtn><_SBtn href="/총비용시뮬레이터">총비용 시뮬레이터</_SBtn><_SBtn href="/대출가능액계산기">대출가능액 계산기</_SBtn></_SS>
+  <_SS><_SH2>2단계 · 취득 시</_SH2><p style={_SW.p}>계약부터 잔금·등기까지 단계별 확인사항입니다.</p>
+    {_chk(["계약금 10% 지급 후 계약서 공증","중도금 시점에 권리변동 재확인","잔금일 당일 등기부 최종 열람","법무사 수수료·등기비용 견적 비교","국민주택채권 할인율 확인 (즉시 매도)","인지세 납부 (부동산은 15만원)","취득세 신고·납부 (취득일로부터 60일 이내)","전입신고·확정일자 당일 처리"])}
+    <_SBtn href="/등기비용계산기">등기비용 계산기</_SBtn><_SBtn href="/법무사수수료계산기">법무사수수료 계산기</_SBtn><_SBtn href="/채권할인료계산기">채권할인료 계산기</_SBtn></_SS>
+  <_SS><_SH2>3단계 · 보유 중</_SH2><p style={_SW.p}>보유 기간 동안 연간 점검이 필요한 항목입니다.</p>
+    {_chk(["매년 6/1 기준 재산세 과세 대상 확인","공시가격 이의신청 기간(4월) 확인","종부세 합산배제 신청(9/16~9/30)","임대료 시세 대비 현실화율 검토","전월세전환율 5.0% (기준금리+2%) 준수","임대사업자 등록 여부 검토","부동산 임대소득 신고(5월)","수선·리모델링 영수증 보관 (필요경비 인정)"])}
+    <_SBtn href="/재산세계산기">재산세 계산기</_SBtn><_SBtn href="/보유세통합계산기">보유세 통합</_SBtn><_SBtn href="/임대소득세계산기">임대소득세 계산기</_SBtn></_SS>
+  <_SS><_SH2>4단계 · 매도 시</_SH2><p style={_SW.p}>양도 의사결정부터 신고·납부까지 확인사항입니다.</p>
+    {_chk(["1세대 1주택 비과세 요건(2년 보유·거주) 확인","장기보유특별공제 구간 계산","일시적 2주택이면 3년 내 종전 주택 양도","필요경비 영수증 전부 수집","양도 시점 분산 검토 (연도별 누진 회피)","양도세 예정신고 (양도월 말일+2개월)","지방소득세(양도세의 10%) 자동 부과","확정신고(이듬해 5월) 필요 여부"])}
+    <_SBtn href="/양도소득세계산기">양도소득세 계산기</_SBtn><_SBtn href="/중개보수계산기">중개보수 계산기</_SBtn></_SS>
+  <_SS><_SH2>경매 투자 체크리스트</_SH2><p style={_SW.p}>일반 매매와 다른 경매 고유의 확인사항입니다.</p>
+    {_chk(["감정가 대비 최저가 낙찰률 추이 확인","말소기준권리 확인 (저당·압류·가압류·담보가등기)","대항력 있는 임차인 여부 확인","배당요구 종기 내 배당신청 확인","유치권·법정지상권·분묘기지권 신고 여부","현장 임장 (공실·점유자 확인)","명도 예상비용 및 난이도","낙찰가 + 경매비용 + 명도비용 총액 계산","취득세는 낙찰가 기준으로 산정"])}
+    <_SBtn href="/경매비용계산기">경매비용 계산기</_SBtn><_SBtn href="/투자수익분석">투자수익 분석</_SBtn></_SS>
+</>);}
+
+function LearnCalculatorGuide(){const _grid=(arr)=>(<div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:8,margin:"12px 0"}}>{arr.map((it,i)=>(<a key={i} href={it[1]} style={{display:"block",padding:"10px 14px",background:"#f4f5f7",border:"1px solid #dfe1e6",borderRadius:8,color:"#172B4D",textDecoration:"none",fontSize:13,fontWeight:600}}>{it[0]}</a>))}</div>);return(<>
+  <_SH tag="LEARN 05" title="계산기 사용 가이드" desc="생활계산기 62개 전체 목록과 상황별 추천, 사용 시 주의사항을 정리했습니다."/>
+  <_SS><_SH2>세금 계산기</_SH2>
+    {_grid([["취득세","/취득세계산기"],["양도소득세","/양도소득세계산기"],["종합소득세","/종합소득세계산기"],["연말정산","/연말정산계산기"],["종합부동산세","/종합부동산세계산기"],["재산세","/재산세계산기"],["증여세","/증여세계산기"],["상속세","/상속세계산기"],["보유세 통합","/보유세통합계산기"],["임대소득세","/임대소득세계산기"]])}
+    <_SCL type="warn"><b>주의</b> 세율과 공제는 매년 개정되므로 세법 히스토리에서 최신 반영일을 확인하세요.</_SCL></_SS>
+  <_SS><_SH2>대출 계산기</_SH2>
+    {_grid([["대출이자","/대출이자계산기"],["DSR","/DSR계산기"],["DTI","/DTI계산기"],["LTV","/LTV계산기"],["대출가능액","/대출가능액계산기"]])}</_SS>
+  <_SS><_SH2>비용 계산기</_SH2>
+    {_grid([["중개보수","/중개보수계산기"],["등기비용","/등기비용계산기"],["법무사수수료","/법무사수수료계산기"],["인지세","/인지세계산기"],["채권할인료","/채권할인료계산기"],["감정평가수수료","/감정평가수수료계산기"]])}</_SS>
+  <_SS><_SH2>생활 계산기</_SH2>
+    {_grid([["연봉 실수령액","/연봉실수령액계산기"],["4대보험","/4대보험계산기"],["국민연금","/국민연금계산기"],["자동차세","/자동차세계산기"],["퇴직금","/퇴직금계산기"],["실업급여","/실업급여계산기"],["최저임금","/최저임금계산기"],["예적금이자","/예적금이자계산기"],["전월세전환","/전월세전환계산기"]])}
+    <_SCL><b>2026년 주요 지표</b> 최저임금 10,030원 · 전월세전환율 5.0% · 기준금리 3.0%</_SCL></_SS>
+  <_SS><_SH2>부동산 계산기</_SH2>
+    {_grid([["임대수익률","/임대수익률계산기"],["공동명의","/공동명의계산기"],["평수변환","/평수변환계산기"],["용적률·건폐율","/용적률계산기"],["경매비용","/경매비용계산기"],["리모델링 수익","/리모델링수익계산기"],["건물 잔존가치","/건물잔존가치계산기"]])}</_SS>
+  <_SS><_SH2>PRO 분석</_SH2>
+    {_grid([["총비용 시뮬레이터","/총비용시뮬레이터"],["세금비교 분석","/세금비교분석"],["투자수익 분석","/투자수익분석"]])}</_SS>
+  <_SS><_SH2>상황별 추천</_SH2>
+    <h3 style={_SW.h3}>집 살 때</h3><p style={_SW.p}>취득세 → 등기비용 → 대출가능액 → 총비용 시뮬레이터 순서로 확인하세요.</p>
+    <_SBtn href="/취득세계산기">취득세</_SBtn><_SBtn href="/등기비용계산기">등기비용</_SBtn><_SBtn href="/대출가능액계산기">대출가능액</_SBtn>
+    <h3 style={_SW.h3}>집 팔 때</h3><p style={_SW.p}>양도소득세 + 중개보수로 예상 실수익을 계산하세요.</p>
+    <_SBtn href="/양도소득세계산기">양도소득세</_SBtn><_SBtn href="/중개보수계산기">중개보수</_SBtn>
+    <h3 style={_SW.h3}>대출 받을 때</h3><p style={_SW.p}>DSR → LTV → 대출이자 순서로 한도와 월 상환액을 확인하세요.</p>
+    <_SBtn href="/DSR계산기">DSR</_SBtn><_SBtn href="/LTV계산기">LTV</_SBtn><_SBtn href="/대출이자계산기">대출이자</_SBtn>
+    <h3 style={_SW.h3}>임대할 때</h3><p style={_SW.p}>임대수익률 → 임대소득세 → 전월세전환 순서로 수익을 검증하세요.</p>
+    <_SBtn href="/임대수익률계산기">임대수익률</_SBtn><_SBtn href="/임대소득세계산기">임대소득세</_SBtn><_SBtn href="/전월세전환계산기">전월세전환</_SBtn>
+    <h3 style={_SW.h3}>경매할 때</h3><p style={_SW.p}>경매비용 → 취득세 → 투자수익분석 순서로 낙찰가 상한을 산출하세요.</p>
+    <_SBtn href="/경매비용계산기">경매비용</_SBtn><_SBtn href="/투자수익분석">투자수익 분석</_SBtn></_SS>
+  <_SS><_SH2>계산기 사용 시 주의사항</_SH2>
+    <ul style={_SW.ul}><li style={_SW.li}><b>공시가격 vs 시가</b> — 재산세·종부세는 공시가, 양도세는 실거래가 기준</li><li style={_SW.li}><b>주택수 산정</b> — 분양권·입주권 포함 여부를 계산기 옵션에서 확인</li><li style={_SW.li}><b>지방소득세</b> — 양도세·종합소득세의 10% 자동 가산</li><li style={_SW.li}><b>DSR 대출 포함</b> — 신용대출·카드론·할부까지 전부 입력</li><li style={_SW.li}><b>최종 확정 전</b> — 세무사·법무사 상담으로 엣지케이스 확인</li></ul></_SS>
+</>);}
+
+function LearnTaxHistory(){return(<>
+  <_SH tag="LEARN 06" title="세법 개정 히스토리" desc="2020~2026년 부동산 세법 주요 개정과 2026년 이후 예정 개정사항을 정리했습니다."/>
+  <_SS><_SH2>2020 — 다주택 전방위 중과 도입</_SH2><p style={_SW.p}>문재인 정부 7·10 대책으로 다주택자에 대한 취득세·종부세·양도세 3종 중과가 동시 도입된 해입니다.</p>
+    <ul style={_SW.ul}><li style={_SW.li}>취득세 — 2주택 8%, 3주택 이상 12% (조정지역)</li><li style={_SW.li}>종부세율 — 최고 6.0%까지 인상 (2주택 이상)</li><li style={_SW.li}>양도세 중과 — 2주택 +20%p, 3주택 +30%p</li><li style={_SW.li}>임대사업자 등록말소 (단기·아파트)</li></ul>
+    <_SBtn href="/취득세계산기">취득세</_SBtn><_SBtn href="/종합부동산세계산기">종부세</_SBtn></_SS>
+  <_SS><_SH2>2021 — 공시가격 급등</_SH2><p style={_SW.p}>공시가격 현실화율 목표 90%를 설정하여 보유세 부담이 크게 증가한 시기입니다.</p>
+    <ul style={_SW.ul}><li style={_SW.li}>아파트 공시가격 평균 +19.1%</li><li style={_SW.li}>종부세 납부인원 약 94만명(역대 최대)</li><li style={_SW.li}>재산세 특례세율 0.05%p 인하 (6억 이하)</li></ul>
+    <_SBtn href="/재산세계산기">재산세</_SBtn></_SS>
+  <_SS><_SH2>2022 — 양도세 중과 한시 유예</_SH2><p style={_SW.p}>2022년 5월 10일부터 다주택자 양도세 중과가 1년 한시 유예되었고, 이후 매년 연장되었습니다.</p>
+    <ul style={_SW.ul}><li style={_SW.li}>양도세 다주택 중과 1년 유예 (5.10~)</li><li style={_SW.li}>일시적 2주택 기한 2→3년 완화</li><li style={_SW.li}>1세대 1주택 비과세 기준 9억→12억 상향</li><li style={_SW.li}>생애최초 LTV 80% 도입</li></ul>
+    <_SBtn href="/양도소득세계산기">양도소득세</_SBtn></_SS>
+  <_SS><_SH2>2023 — 종부세 개편</_SH2><p style={_SW.p}>다주택자 중과세율 폐지와 기본공제 상향으로 종부세 부담이 크게 줄어든 해입니다.</p>
+    <ul style={_SW.ul}><li style={_SW.li}>종부세 다주택 중과 폐지 (2주택 포함)</li><li style={_SW.li}>기본공제 1주택 11억→12억, 다주택 6억→9억</li><li style={_SW.li}>종부세 최고세율 6.0%→2.7%</li><li style={_SW.li}>공시가격 현실화율 동결</li></ul>
+    <_SBtn href="/종합부동산세계산기">종부세</_SBtn></_SS>
+  <_SS><_SH2>2024 — 스트레스 DSR 도입</_SH2><p style={_SW.p}>가계부채 관리를 위해 실제 금리에 가산금리를 더해 DSR을 산정하는 스트레스 DSR이 단계적으로 도입됐습니다.</p>
+    <ul style={_SW.ul}><li style={_SW.li}>스트레스 DSR 1단계 (2월, 변동 +0.38%p)</li><li style={_SW.li}>2단계 (9월, 변동 +0.75%p, 수도권 +1.2%p)</li><li style={_SW.li}>혼인·출산 증여재산공제 1억원 신설</li><li style={_SW.li}>기준금리 3.25%로 인하</li></ul>
+    <_SBtn href="/DSR계산기">DSR</_SBtn></_SS>
+  <_SS><_SH2>2025 — 수도권 주담대 한도 도입</_SH2><p style={_SW.p}>수도권 집값 안정화를 위해 주택가격 구간별 대출한도가 신설됐습니다.</p>
+    <ul style={_SW.ul}><li style={_SW.li}>수도권 주담대 한도 신설 (15억↓ 6억, 25억↓ 4억, 25억↑ 2억)</li><li style={_SW.li}>스트레스 DSR 2단계 전면 확대 (변동 +1.5%p)</li><li style={_SW.li}>생애최초 취득세 감면 연장 (2028.12.31까지)</li><li style={_SW.li}>기준금리 3.0%로 인하</li></ul>
+    <_SBtn href="/LTV계산기">LTV</_SBtn><_SBtn href="/대출가능액계산기">대출가능액</_SBtn></_SS>
+  <_SS><_SH2>2026 — 양도세 중과 복원 임박</_SH2><p style={_SW.p}>2026년은 한시 유예되었던 양도세 다주택 중과가 복원을 앞둔 해입니다.</p>
+    <ul style={_SW.ul}><li style={_SW.li}>기준금리 3.0% 유지 (2026.2.27 금통위)</li><li style={_SW.li}>최저임금 10,030원 (+1.7%)</li><li style={_SW.li}>전월세전환율 5.0% (기준금리+2%p)</li><li style={_SW.li}>DSR 은행 40%·비은행 50% 유지</li></ul>
+    <_SCL type="warn"><b>2026.5.9 만료 예정</b> 다주택자 양도세 중과 한시 유예 종료. 이후 2주택 +20%p, 3주택 +30%p 중과 복원</_SCL></_SS>
+  <_SS><_SH2>향후 예정 개정사항</_SH2>
+    <ul style={_SW.ul}><li style={_SW.li}><b>2026.5.9</b> — 다주택자 양도세 중과 유예 만료</li><li style={_SW.li}><b>2026 하반기</b> — 스트레스 DSR 3단계 시행 검토 (변동 +2.0%p)</li><li style={_SW.li}><b>2027</b> — 공시가격 현실화 로드맵 재검토 예정</li><li style={_SW.li}><b>2028.12.31</b> — 생애최초 취득세 감면 일몰</li><li style={_SW.li}><b>상시 검토</b> — 증여세 세율·공제 구조 개편 논의 중</li></ul></_SS>
+</>);}
+
+const LEARN_MAP={"tax-basics":LearnTaxBasics,"loan-guide":LearnLoanGuide,"tax-saving":LearnTaxSaving,"investment-checklist":LearnInvestChecklist,"calculator-guide":LearnCalculatorGuide,"tax-history":LearnTaxHistory};
+function LearnPage({slug,isMo,navigateHome}){const Comp=LEARN_MAP[slug];return(<div style={{maxWidth:880,margin:"0 auto",padding:isMo?"24px 16px":"40px 24px",minHeight:"60vh"}}>
+  <SpaBackBtn navigateHome={navigateHome}/>
+  {Comp?<Comp/>:<div style={{padding:40,textAlign:"center",color:"#6b778c"}}>페이지를 찾을 수 없습니다.</div>}
+</div>);}
+
+/* Law pages */
+function _LawMeta({rows}){return(<dl style={{background:"#fff",border:"1px solid #dfe1e6",borderRadius:12,padding:"18px 22px",marginBottom:22,display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:14}}>{rows.map(([k,v],i)=>(<div key={i}><dt style={{fontSize:11,color:"#505f79",fontWeight:700,textTransform:"uppercase",letterSpacing:0.5,marginBottom:3}}>{k}</dt><dd style={{margin:0,fontSize:14,color:"#172B4D",fontWeight:500}}>{v}</dd></div>))}</dl>);}
+function _LawArticle({label,children}){return(<div style={_SW.article}><span style={_SW.articleLabel}>{label}</span>{children}</div>);}
+
+function LawAcquisitionTax(){return(<>
+  <_SH dark tag="지방세법" title="취득세 법령 (지방세법 제10조~제16조)" desc="부동산 취득세의 과세대상·과세표준·세율·중과·감면·신고납부 관련 핵심 조문을 정리했습니다."/>
+  <_LawMeta rows={[["법령명","지방세법"],["관할 조문","제10조~제16조"],["시행일","1995.01.01 (최초)"],["주무부처","행정안전부"],["집행기관","각 지자체 (시·군·구)"]]}/>
+  <_SS><_SH2>제10조 — 과세대상</_SH2>
+    <_LawArticle label="지방세법 제10조 (과세대상)">취득세는 부동산, 차량, 기계장비, 항공기, 선박, 입목, 광업권, 어업권, 양식업권, 골프회원권, 승마회원권, 콘도미니엄 회원권, 종합체육시설 이용회원권, 요트회원권의 취득에 대하여 부과한다.</_LawArticle>
+    <p style={_SW.p}>부동산에는 토지·건물·주택·상가·오피스텔이 모두 포함됩니다.</p></_SS>
+  <_SS><_SH2>제10조의2 — 과세표준</_SH2>
+    <_LawArticle label="지방세법 제10조의2 (과세표준)">취득세의 과세표준은 취득 당시의 가액으로 하되, 다음 각 호의 구분에 따른다.<br/>1. 유상승계취득: 사실상의 취득가격 (실거래가)<br/>2. 무상취득 (상속·증여): 시가표준액 또는 시가인정액<br/>3. 원시취득 (신축 등): 사실상의 취득가격 또는 시가표준액</_LawArticle>
+    <h3 style={_SW.h3}>실무 적용</h3>
+    <ul style={_SW.ul}><li style={_SW.li}>매매: 실거래가 (2023년부터 의무화)</li><li style={_SW.li}>증여: 시가인정액 (감정평가 또는 유사 매매사례)</li><li style={_SW.li}>상속: 시가표준액 (일반적으로 공시가격)</li><li style={_SW.li}>신축: 건축비 + 토지가액</li></ul></_SS>
+  <_SS><_SH2>제11조 — 세율 (표준세율)</_SH2>
+    <_LawArticle label="지방세법 제11조 (부동산 취득의 세율)">부동산 취득의 표준세율: 상속 2.8%(농지 2.3%), 증여 3.5%, 원시취득(신축) 2.8%, 매매 주택은 구간별, 매매 주택 외 4%.</_LawArticle>
+    <h3 style={_SW.h3}>주택 유상거래 세율 상세</h3>
+    <_ST head={["매매가","세율"]} rows={[["6억원 이하","1%"],["6억 ~ 9억","1~3% (차등 적용)"],["9억 초과","3%"]]}/></_SS>
+  <_SS><_SH2>제13조 — 중과세율 (다주택자·법인)</_SH2>
+    <_LawArticle label="지방세법 제13조의2 (주택 유상거래 중과세율)">조정대상지역 내 주택을 취득하는 경우: 2주택자 8%, 3주택자 이상 12%, 법인 12% (지역 무관).</_LawArticle>
+    <h3 style={_SW.h3}>중과 제외 사유</h3>
+    <ul style={_SW.ul}><li style={_SW.li}>일시적 2주택 (3년 내 종전 처분 조건)</li><li style={_SW.li}>상속 주택 (상속개시일로부터 5년)</li><li style={_SW.li}>이사·학업·요양 등 불가피한 사유</li></ul>
+    <_SBtn href="/취득세계산기">취득세 계산기</_SBtn><_SBtn href="/등기비용계산기">등기비용 계산기</_SBtn></_SS>
+  <_SS><_SH2>감면 규정</_SH2>
+    <h3 style={_SW.h3}>생애최초 주택구입 감면 (지방세특례제한법 제36조의3)</h3>
+    <ul style={_SW.ul}><li style={_SW.li}>취득가 12억 이하 주택</li><li style={_SW.li}>세대원 전원 주택 소유 이력 없음</li><li style={_SW.li}>실거주 3년 이상</li><li style={_SW.li}><b>최대 200만원 감면</b></li><li style={_SW.li}>시행 기간: 2028.12.31까지 한시</li></ul>
+    <h3 style={_SW.h3}>서민·실수요자 주택 감면</h3>
+    <p style={_SW.p}>수도권 6억 이하·지방 3억 이하 주택에 대한 감면 규정. 소득 요건 충족 시.</p></_SS>
+  <_SS><_SH2>신고·납부 기한</_SH2>
+    <_LawArticle label="지방세법 제20조 (신고 및 납부)">취득세 납세의무자는 취득일부터 60일(상속은 6개월) 이내에 관할 지자체에 신고·납부해야 한다.</_LawArticle>
+    <ul style={_SW.ul}><li style={_SW.li}><b>매매·증여·원시취득</b>: 60일 이내</li><li style={_SW.li}><b>상속</b>: 상속개시일이 속한 달 말일부터 6개월 이내</li><li style={_SW.li}>미신고·과소신고: 무신고가산세 20% + 납부지연가산세 일 0.022%</li></ul>
+    <_SBtn href="/취득세계산기">취득세 계산기</_SBtn><_SBtn href="/등기비용계산기">등기비용 계산기</_SBtn><_SBtn href="/법무사수수료계산기">법무사수수료</_SBtn></_SS>
+</>);}
+
+function LawTransferTax(){return(<>
+  <_SH dark tag="소득세법" title="양도소득세 법령 (소득세법 제89조~제104조)" desc="부동산 양도소득세의 비과세·과세표준·공제·세율·중과·신고납부 관련 핵심 조문입니다."/>
+  <_LawMeta rows={[["법령명","소득세법"],["관할 조문","제89조~제104조"],["시행일","1975.01.01 (최초)"],["주무부처","기획재정부"],["집행기관","국세청"]]}/>
+  <_SS><_SH2>제89조 — 비과세 양도소득</_SH2>
+    <_LawArticle label="소득세법 제89조 (비과세 양도소득)">1세대가 양도일 현재 국내에 1주택을 보유하고 있는 경우로서 2년 이상 보유한 주택의 양도로 인하여 발생하는 소득(고가주택 제외)은 비과세한다.</_LawArticle>
+    <h3 style={_SW.h3}>1세대1주택 비과세 요건</h3>
+    <ul style={_SW.ul}><li style={_SW.li}><b>1세대</b>: 거주자 본인 + 배우자 + 동일 주소 직계존비속</li><li style={_SW.li}><b>1주택</b>: 양도일 기준 국내 1주택</li><li style={_SW.li}><b>보유 2년 이상</b>: 취득일부터 양도일까지</li><li style={_SW.li}><b>거주 2년 이상</b>: 조정대상지역에서 취득한 경우 (2017.8.3 이후)</li><li style={_SW.li}><b>양도가 12억 이하</b>: 12억 초과분은 과세 (고가주택)</li></ul>
+    <_SBtn href="/양도소득세계산기">양도소득세 계산기</_SBtn></_SS>
+  <_SS><_SH2>제95조 — 장기보유특별공제</_SH2>
+    <_LawArticle label="소득세법 제95조 (장기보유특별공제)">일반 부동산: 보유기간 3년 이상, 연 2% (최대 30%). 1세대1주택: 보유 연 4% + 거주 연 4% (최대 80%).</_LawArticle>
+    <h3 style={_SW.h3}>1세대1주택 공제율 표</h3>
+    <_ST head={["기간","보유","거주","합계"]} rows={[["3년","12%","12%","24%"],["5년","20%","20%","40%"],["7년","28%","28%","56%"],["10년↑","40%","40%","80%"]]}/></_SS>
+  <_SS><_SH2>제104조 — 세율</_SH2>
+    <_LawArticle label="소득세법 제104조 (양도소득세의 세율)">양도소득세는 해당 과세기간의 양도소득 과세표준에 다음 세율을 적용하여 계산한 금액을 그 세액으로 한다.</_LawArticle>
+    <h3 style={_SW.h3}>기본세율 (보유 2년 이상)</h3>
+    <_ST head={["과세표준","세율"]} rows={[["1,400만 이하","6%"],["5,000만 이하","15%"],["8,800만 이하","24%"],["1.5억 이하","35%"],["3억 이하","38%"],["5억 이하","40%"],["10억 이하","42%"],["10억 초과","45%"]]}/>
+    <h3 style={_SW.h3}>단기양도 중과세율</h3>
+    <ul style={_SW.ul}><li style={_SW.li}>보유 1년 미만: 70%</li><li style={_SW.li}>보유 1~2년: 60%</li><li style={_SW.li}>분양권 1년 미만: 70% / 1년 이상: 60%</li></ul></_SS>
+  <_SS><_SH2>제104조의3 — 다주택 중과</_SH2>
+    <_LawArticle label="소득세법 제104조의3">조정대상지역 내 주택을 양도하는 경우: 2주택자 기본세율 +20%p, 3주택자 이상 기본세율 +30%p. 또한 장기보유특별공제를 적용하지 아니한다.</_LawArticle>
+    <_SCL type="warn"><b>⚠ 한시 유예 (2026.5.9까지)</b> 현재 다주택 중과는 2026년 5월 9일까지 한시 유예 중입니다. 유예 기간 내 양도 시 기본세율만 적용되며 장특공도 적용됩니다.</_SCL></_SS>
+  <_SS><_SH2>신고·납부 기한</_SH2>
+    <_LawArticle label="소득세법 제105조 (양도소득과세표준 예정신고)">양도일이 속하는 달의 말일부터 2개월 이내에 예정신고·납부해야 한다.</_LawArticle>
+    <ul style={_SW.ul}><li style={_SW.li}><b>예정신고</b>: 양도일 속한 달 말일부터 2개월</li><li style={_SW.li}><b>확정신고</b>: 다음해 5월 1~31일</li><li style={_SW.li}>무신고가산세 20% + 납부지연가산세</li></ul>
+    <_SBtn href="/양도소득세계산기">양도소득세 계산기</_SBtn></_SS>
+</>);}
+
+function LawComprehensiveTax(){return(<>
+  <_SH dark tag="종부세" title="종합부동산세법" desc="부동산 보유에 부과되는 국세인 종합부동산세의 법적 근거와 핵심 내용입니다."/>
+  <_LawMeta rows={[["법령명","종합부동산세법"],["시행일","2005.01.01"],["주무부처","기획재정부"],["집행기관","국세청"],["기준일","매년 6월 1일"]]}/>
+  <_SS><_SH2>과세대상</_SH2>
+    <_LawArticle label="종합부동산세법 제7조">과세기준일(매년 6월 1일) 현재 국내에 소재하는 주택의 공시가격 합계액이 일정 금액을 초과하는 자에게 부과한다.</_LawArticle>
+    <ul style={_SW.ul}><li style={_SW.li}><b>1세대1주택자</b>: 공시가격 12억 초과분</li><li style={_SW.li}><b>다주택자</b>: 공시가격 합계 9억 초과분</li><li style={_SW.li}><b>법인</b>: 공제 없음 (0원부터 과세)</li></ul>
+    <_SBtn href="/종합부동산세계산기">종합부동산세</_SBtn><_SBtn href="/보유세통합계산기">보유세 통합</_SBtn><_SBtn href="/재산세계산기">재산세 계산기</_SBtn></_SS>
+  <_SS><_SH2>공제액</_SH2>
+    <_ST head={["구분","기본공제"]} rows={[["1세대1주택 (단독명의)","12억"],["다주택자 (개인)","9억"],["법인","0원"],["부부 공동명의 1주택 특례","18억 (각 9억 합산)"]]}/>
+    <p style={_SW.p}>부부 공동명의 1주택자는 단독명의 12억 특례와 공동명의 18억 특례 중 <b>유리한 쪽 선택</b> 가능 (매년 9월 홈택스 신청).</p></_SS>
+  <_SS><_SH2>세율 (2026년 현행)</_SH2>
+    <h3 style={_SW.h3}>개인 (1주택 및 다주택)</h3>
+    <_ST head={["과세표준","세율"]} rows={[["3억 이하","0.5%"],["6억 이하","0.7%"],["12억 이하","1.0%"],["25억 이하","1.3%"],["50억 이하","1.5%"],["94억 이하","2.0%"],["94억 초과","2.7%"]]}/>
+    <h3 style={_SW.h3}>법인</h3>
+    <p style={_SW.p}>2.7% ~ 5.0% 누진 (다주택 법인). 공제 없음.</p></_SS>
+  <_SS><_SH2>1주택 세액공제 (고령자·장기보유)</_SH2>
+    <_LawArticle label="종합부동산세법 제9조">1세대1주택자에 한해 연령별·보유기간별 세액공제를 적용한다.</_LawArticle>
+    <_ST head={["연령 공제","공제율"]} rows={[["60세 이상","20%"],["65세 이상","30%"],["70세 이상","40%"]]}/>
+    <_ST head={["보유 공제","공제율"]} rows={[["5년 이상","20%"],["10년 이상","40%"],["15년 이상","50%"]]}/>
+    <p style={_SW.p}>두 공제는 합산 <b>최대 80%</b>까지 적용됩니다.</p></_SS>
+  <_SS><_SH2>납부기한</_SH2>
+    <ul style={_SW.ul}><li style={_SW.li}>매년 <b>12월 1일 ~ 12월 15일</b></li><li style={_SW.li}>납부 세액 250만원 초과: 6개월 분납 가능</li><li style={_SW.li}>납부 세액 500만원 초과: 신청 시 납부유예</li></ul></_SS>
+</>);}
+
+function LawBrokerage(){return(<>
+  <_SH dark tag="중개보수" title="중개보수 규정 (공인중개사법)" desc="부동산 거래 시 공인중개사에게 지급하는 중개보수(수수료)의 법적 상한 요율을 정리했습니다."/>
+  <_LawMeta rows={[["법령명","공인중개사법"],["시행일","2006.01.01"],["주무부처","국토교통부"],["하위 고시","각 시·도 조례"]]}/>
+  <_SS><_SH2>법적 근거</_SH2>
+    <_LawArticle label="공인중개사법 제32조 (중개보수 등)">개업공인중개사는 중개업무에 관하여 중개의뢰인으로부터 소정의 보수를 받는다. 주택의 중개에 대한 보수는 중개의뢰인 쌍방으로부터 각각 받되, 그 일방으로부터 받을 수 있는 한도는 국토교통부령이 정하는 기준에 따라 조례로 정한다.</_LawArticle></_SS>
+  <_SS><_SH2>주택 매매 중개보수 요율 (상한)</_SH2>
+    <_ST head={["거래금액","상한요율","한도액"]} rows={[["5천만 미만","0.6%","25만원"],["5천만 ~ 2억","0.5%","80만원"],["2억 ~ 6억","0.4%","없음"],["6억 ~ 9억","0.5%","없음"],["9억 ~ 12억","0.5%","없음"],["12억 ~ 15억","0.6%","없음"],["15억 이상","0.7%","없음"]]}/>
+    <p style={_SW.p}>※ 상한요율 이내에서 의뢰인과 공인중개사가 협의하여 결정</p>
+    <_SBtn href="/중개보수계산기">중개수수료 계산기</_SBtn><_SBtn href="/등기비용계산기">등기비용 계산기</_SBtn></_SS>
+  <_SS><_SH2>주택 임대차 중개보수 요율</_SH2>
+    <_ST head={["거래금액","상한요율","한도액"]} rows={[["5천만 미만","0.5%","20만원"],["5천만 ~ 1억","0.4%","30만원"],["1억 ~ 3억","0.3%","없음"],["3억 ~ 6억","0.4%","없음"],["6억 ~ 9억","0.4%","없음"],["9억 ~ 12억","0.5%","없음"],["12억 이상","0.6%","없음"]]}/></_SS>
+  <_SS><_SH2>상가·토지·오피스텔(업무용)</_SH2>
+    <p style={_SW.p}><b>0.9% 이내에서 의뢰인과 개업공인중개사가 협의</b>하여 결정합니다. 한도액 없음. 부가세 별도.</p>
+    <h3 style={_SW.h3}>오피스텔 특례</h3>
+    <ul style={_SW.ul}><li style={_SW.li}>주거용 오피스텔 (전용 85㎡ 이하 + 전용 입식부엌·화장실): 주택요율 적용</li><li style={_SW.li}>업무용: 0.5% 이내</li></ul></_SS>
+  <_SS><_SH2>월세 거래금액 산정</_SH2>
+    <_LawArticle label="거래금액 산정식">거래금액 = 보증금 + (월세 × 100). 다만 거래금액이 5천만원 미만이면 보증금 + (월세 × 70)으로 재계산.</_LawArticle>
+    <p style={_SW.p}>예시: 보증금 3천만 + 월세 50만 → 3천만 + 5천만 = 8천만 (월세×100) → 5천만 이상이므로 그대로 적용.</p>
+    <p style={_SW.p}>예시: 보증금 1천만 + 월세 30만 → 1천만 + 3천만 = 4천만 → 5천만 미만이므로 재계산 → 1천만 + (30만×70) = 3,100만.</p>
+    <_SBtn href="/중개보수계산기">중개수수료 계산기</_SBtn><_SBtn href="/전월세전환계산기">전월세 전환 계산기</_SBtn></_SS>
+</>);}
+
+function LawLoanRegulation(){return(<>
+  <_SH dark tag="금융 규제" title="대출 규제 (금융위 고시·은행업감독규정)" desc="주택담보대출에 적용되는 LTV·DTI·DSR·스트레스DSR 의 법적 근거와 현행 기준입니다."/>
+  <_LawMeta rows={[["근거 법령","은행법·은행업감독규정"],["주무부처","금융위원회"],["집행기관","금융감독원·각 금융기관"]]}/>
+  <_SS><_SH2>LTV 규제 (담보인정비율)</_SH2>
+    <_LawArticle label="은행업감독규정 제29조의2">은행은 주택담보대출을 취급할 때 담보인정비율(LTV)을 초과할 수 없다.</_LawArticle>
+    <h3 style={_SW.h3}>지역·주택수별 LTV (2026 현행)</h3>
+    <_ST head={["구분","무주택","1주택","2주택+"]} rows={[["비규제지역","70%","70%","60%"],["조정대상지역","50%","50%","0%"],["투기과열지구","40%","40%","0%"]]}/>
+    <_SBtn href="/LTV계산기">LTV 대출한도</_SBtn><_SBtn href="/대출이자계산기">대출이자</_SBtn><_SBtn href="/대출가능액계산기">대출가능액</_SBtn></_SS>
+  <_SS><_SH2>DTI 규제 (총부채상환비율)</_SH2>
+    <ul style={_SW.ul}><li style={_SW.li}>투기과열지구: 40%</li><li style={_SW.li}>조정대상지역: 50%</li><li style={_SW.li}>비규제지역: 60%</li></ul>
+    <_SBtn href="/DTI계산기">DTI 계산기</_SBtn><_SBtn href="/DSR계산기">DSR 계산기</_SBtn></_SS>
+  <_SS><_SH2>DSR 규제 (총부채원리금상환비율)</_SH2>
+    <_LawArticle label="은행업감독규정 제29조의3">차주별 DSR은 은행 40%, 제2금융권 50% 이내로 관리해야 한다.</_LawArticle>
+    <h3 style={_SW.h3}>분자 구성</h3>
+    <ul style={_SW.ul}><li style={_SW.li}>주택담보대출: 월 상환액 × 12</li><li style={_SW.li}>신용대출·마이너스통장: 잔액 ÷ 7년 만기 가정</li><li style={_SW.li}>전세자금대출: 이자만 반영</li><li style={_SW.li}>기타 대출: 월 상환액 × 12</li></ul>
+    <_SBtn href="/DSR계산기">DSR 계산기</_SBtn><_SBtn href="/대출가능액계산기">대출가능액 계산기</_SBtn></_SS>
+  <_SS><_SH2>스트레스 DSR</_SH2>
+    <_LawArticle label="금융위 가계부채 관리방안 (2024~)">향후 금리 상승을 선반영하기 위해 DSR 산정 시 실제 금리에 가산금리를 더해 원리금을 계산한다.</_LawArticle>
+    <_ST head={["단계","시행일","변동","혼합(5년)"]} rows={[["1단계","2024.02","+0.38%p","+0.19%p"],["2단계","2024.09","+0.75%p","+0.375%p"],["3단계 (현행)","2025.07","+1.50%p","+0.75%p"]]}/></_SS>
+  <_SS><_SH2>수도권 주담대 한도 캡</_SH2>
+    <p style={_SW.p}>LTV·DSR 과 별개로 <b>절대 한도</b>가 적용됩니다.</p>
+    <ul style={_SW.ul}><li style={_SW.li}>15억 이하: 최대 6억</li><li style={_SW.li}>25억 이하: 최대 4억</li><li style={_SW.li}>25억 초과: 최대 2억</li></ul>
+    <_SBtn href="/LTV계산기">LTV 대출한도</_SBtn><_SBtn href="/대출가능액계산기">대출가능액 계산기</_SBtn></_SS>
+</>);}
+
+function LawRentalProtection(){return(<>
+  <_SH dark tag="임대차" title="주택임대차보호법 (임대차3법)" desc="주택 임차인 보호를 위한 주택임대차보호법의 핵심 조문입니다."/>
+  <_LawMeta rows={[["법령명","주택임대차보호법"],["제정","1981.03.05"],["임대차3법 개정","2020.07.31"],["주무부처","법무부·국토교통부"]]}/>
+  <_SS><_SH2>제3조 — 대항력</_SH2>
+    <_LawArticle label="주택임대차보호법 제3조 (대항력 등)">임대차는 그 등기가 없는 경우에도 임차인이 주택의 인도와 주민등록을 마친 때에는 그 다음 날부터 제3자에 대하여 효력이 생긴다.</_LawArticle>
+    <h3 style={_SW.h3}>대항력 요건</h3>
+    <ol style={_SW.ul}><li style={_SW.li}>주택 인도 (점유 개시)</li><li style={_SW.li}>전입신고 (주민등록 이전)</li><li style={_SW.li}>다음 날 0시부터 효력 발생</li></ol>
+    <_SBtn href="/전월세전환계산기">전월세 전환 계산기</_SBtn><_SBtn href="/임대수익률계산기">임대수익률</_SBtn></_SS>
+  <_SS><_SH2>제3조의2 — 우선변제권</_SH2>
+    <_LawArticle label="주택임대차보호법 제3조의2">대항요건과 임대차계약증서상의 확정일자를 갖춘 임차인은 경매 또는 공매 시 후순위권리자 기타 채권자보다 우선하여 보증금을 변제받을 수 있다.</_LawArticle>
+    <ul style={_SW.ul}><li style={_SW.li}>대항력 + 확정일자 = 우선변제권</li><li style={_SW.li}>확정일자: 동사무소·온라인 신고 시 자동 부여</li><li style={_SW.li}><b>전월세신고제 신고 = 확정일자 자동 부여</b></li></ul></_SS>
+  <_SS><_SH2>제6조의3 — 계약갱신청구권</_SH2>
+    <_LawArticle label="주택임대차보호법 제6조의3">임차인은 임대차 기간 만료 6개월 전부터 2개월 전까지 임대인에게 갱신을 요구할 수 있다. 임대인은 정당한 사유 없이 이를 거절할 수 없다. 갱신은 1회에 한해 2년이 보장된다.</_LawArticle>
+    <h3 style={_SW.h3}>임대인의 거절 사유 (법정 9가지)</h3>
+    <ol style={_SW.ul}><li style={_SW.li}>2기의 차임 연체</li><li style={_SW.li}>거짓 기타 부정한 방법</li><li style={_SW.li}>합의 및 상당한 보상 제공</li><li style={_SW.li}>무단 전대</li><li style={_SW.li}>고의·중과실 파손</li><li style={_SW.li}>주택 멸실</li><li style={_SW.li}>철거·재건축</li><li style={_SW.li}><b>임대인 본인 또는 직계존비속의 실거주</b></li><li style={_SW.li}>기타 임차인의 의무 현저 위반</li></ol></_SS>
+  <_SS><_SH2>제7조 — 전월세상한제</_SH2>
+    <_LawArticle label="주택임대차보호법 제7조 (차임 등의 증감청구권)">차임 또는 보증금의 증액 청구는 약정한 차임 또는 보증금의 20분의 1 (5%)을 초과하지 못한다.</_LawArticle>
+    <h3 style={_SW.h3}>적용 범위</h3>
+    <ul style={_SW.ul}><li style={_SW.li}><b>갱신 시에만</b> 적용 (신규 계약 제외)</li><li style={_SW.li}>계약갱신청구권 사용 여부와 무관</li><li style={_SW.li}>묵시적 갱신에도 5% 상한 적용</li></ul>
+    <_SBtn href="/전월세전환계산기">전월세 전환 계산기</_SBtn></_SS>
+  <_SS><_SH2>제7조의2 — 전월세전환율</_SH2>
+    <_LawArticle label="주택임대차보호법 제7조의2">보증금을 월세로 전환하는 경우 다음 중 낮은 비율: (1) 대통령령으로 정하는 비율 10%, (2) 한국은행 기준금리 + 연 2%p.</_LawArticle>
+    <_ST head={["항목","2026년 현행"]} rows={[["법정 전환율 상한","연 5.0% (기준금리 3.0% + 2.0%p)"],["계산 공식","월세 = (보증금 차액 × 5.0%) ÷ 12"],["적용 범위","전세 → 월세 전환 시"]]}/>
+    <_SBtn href="/전월세전환계산기">전월세 전환 계산기</_SBtn></_SS>
+  <_SS><_SH2>제6조의2 — 전월세신고제</_SH2>
+    <_LawArticle label="부동산 거래신고 등에 관한 법률 제6조의2">임대차 계약 체결 시 30일 이내에 계약 당사자는 관할 지자체에 신고해야 한다.</_LawArticle>
+    <ul style={_SW.ul}><li style={_SW.li}>보증금 6천만 초과 또는 월세 30만 초과 대상</li><li style={_SW.li}><b>확정일자 자동 부여</b></li><li style={_SW.li}>미신고 시 최대 100만원 과태료</li></ul></_SS>
+</>);}
+
+function LawReconstruction(){return(<>
+  <_SH dark tag="재건축" title="재건축 관련법 (도시 및 주거환경정비법)" desc="재건축·재개발 사업에 적용되는 도시 및 주거환경정비법의 핵심 조문입니다."/>
+  <_LawMeta rows={[["법령명","도시 및 주거환경정비법"],["약칭","도시정비법·도정법"],["제정","2003.07.01"],["주무부처","국토교통부"]]}/>
+  <_SS><_SH2>정비구역 지정</_SH2>
+    <_LawArticle label="도정법 제8조 (정비구역 지정)">특별시장·광역시장·특별자치도지사·시장은 정비사업의 시행이 필요하다고 인정되는 지역을 정비구역으로 지정할 수 있다.</_LawArticle>
+    <p style={_SW.p}>정비구역 지정 → 추진위원회 구성 → 조합 설립 → 사업시행인가 → 관리처분인가 → 철거·착공 → 입주 순서로 진행됩니다.</p></_SS>
+  <_SS><_SH2>재건축 가능연한</_SH2>
+    <_LawArticle label="도정법 시행령 별표1 (노후·불량건축물의 범위)">공동주택의 경우 준공 후 30년이 경과하면 노후·불량건축물로 보아 재건축 추진이 가능하다. (시·도 조례로 20년까지 단축 가능)</_LawArticle>
+    <_ST head={["구분","연한 (2026년 현행)"]} rows={[["공동주택 (원칙)","30년"],["서울특별시","30년 (2014년 40년→30년 단축)"],["광역시·경기","27~30년 (조례)"],["지방","20~30년 (조례)"],["안전진단 D·E등급","연한 무관 즉시 가능"]]}/>
+    <_SBtn href="/재건축연한계산기">재건축 연한</_SBtn><_SBtn href="/리모델링수익계산기">리모델링 수익</_SBtn></_SS>
+  <_SS><_SH2>안전진단</_SH2>
+    <p style={_SW.p}>재건축 추진 전 건축물의 구조안전성 평가를 거쳐 D·E등급을 받아야 합니다.</p>
+    <h3 style={_SW.h3}>평가 항목 (가중치)</h3>
+    <ul style={_SW.ul}><li style={_SW.li}>구조안전성 30~50%</li><li style={_SW.li}>주거환경 15~30%</li><li style={_SW.li}>건축마감·설비노후도 25~30%</li><li style={_SW.li}>비용분석 10%</li></ul></_SS>
+  <_SS><_SH2>초과이익환수</_SH2>
+    <_LawArticle label="재건축초과이익 환수에 관한 법률">재건축 사업으로 발생한 이익 중 일정 기준을 초과하는 부분을 국가가 환수한다.</_LawArticle>
+    <ul style={_SW.ul}><li style={_SW.li}>조합원 1인당 초과이익 3천만 초과 시 과세</li><li style={_SW.li}>10~50% 누진 부담금</li><li style={_SW.li}>현재 한시 유예·조정 논의 진행</li></ul></_SS>
+  <_SS><_SH2>분양가상한제</_SH2>
+    <p style={_SW.p}>공공택지 전체 + 민간택지 중 투기과열지구에서 지정된 지역에 적용. 실거주 2~5년 의무가 부과될 수 있습니다.</p>
+    <_SBtn href="/재건축연한계산기">재건축 연한</_SBtn></_SS>
+</>);}
+
+const LAW_MAP={"acquisition-tax":LawAcquisitionTax,"transfer-tax":LawTransferTax,"comprehensive-tax":LawComprehensiveTax,"brokerage":LawBrokerage,"loan-regulation":LawLoanRegulation,"rental-protection":LawRentalProtection,"reconstruction":LawReconstruction};
+function LawPage({slug,isMo,navigateHome}){const Comp=LAW_MAP[slug];return(<div style={{maxWidth:880,margin:"0 auto",padding:isMo?"24px 16px":"40px 24px",minHeight:"60vh"}}>
+  <SpaBackBtn navigateHome={navigateHome}/>
+  {Comp?<Comp/>:<div style={{padding:40,textAlign:"center",color:"#6b778c"}}>법령 페이지를 찾을 수 없습니다.</div>}
+</div>);}
+
+function AboutPage({isMo,navigateHome}){return(<div style={{maxWidth:820,margin:"0 auto",padding:isMo?"24px 16px":"40px 24px",minHeight:"60vh"}}>
+  <SpaBackBtn navigateHome={navigateHome}/>
+  <_SH title="생활계산기 소개" desc="2026년 최신 세법·금융 규제를 반영한 60여 개 계산기를 실수요자와 투자자·직장인에게 무료 제공합니다. 검수 기준·세법 반영 기준일·면책조항을 투명하게 공개합니다."/>
+  <_SS><_SH2>운영 원칙</_SH2><p style={_SW.p}>생활계산기는 부동산 실수요자·투자자·직장인이 법정 세금과 금융 비용을 사전에 확인할 수 있도록 만든 <b>광고·구독 없는 무료 서비스</b>입니다.</p>
+    <ul style={_SW.ul}><li style={_SW.li}><b>정확성</b> — 모든 세율·공제·한도는 국세청·행정안전부·한국주택금융공사 등 1차 공식 출처에서 직접 확인합니다.</li><li style={_SW.li}><b>투명성</b> — 결과 산출식·세율표·가정·제한 사항을 페이지 하단에 모두 공개합니다.</li><li style={_SW.li}><b>최신성</b> — 세법 개정·기준금리 변동을 상시 모니터링하여 24시간 내 반영을 목표로 합니다.</li><li style={_SW.li}><b>독립성</b> — 특정 업체·기관의 후원 없이 운영됩니다.</li></ul>
+    <_SCL type="ok"><b>✓ 무료·광고 최소화 정책</b> 모든 계산 기능은 회원가입 없이 무료로 이용 가능합니다.</_SCL></_SS>
+  <_SS><_SH2>서비스 현황</_SH2>
+    <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(140px,1fr))",gap:10,margin:"14px 0"}}>{[["63","계산기"],["300","용어사전"],["12","공식 출처"],["2026","세법 기준"],["5","정책 해설"],["4","실전 가이드"]].map(([n,l],i)=>(<div key={i} style={{background:"#f4f5f7",border:"1px solid #dfe1e6",borderRadius:10,padding:"14px 12px",textAlign:"center"}}><b style={{display:"block",fontSize:22,color:"#0747A6",fontWeight:800,marginBottom:2}}>{n}</b><small style={{fontSize:11,color:"#505f79"}}>{l}</small></div>))}</div>
+    <h3 style={_SW.h3}>제공 카테고리</h3>
+    <ul style={_SW.ul}><li style={_SW.li}><b>세금 (17종)</b> — 취득세·양도세·종합소득세·연말정산·종부세·재산세·증여세·상속세 등</li><li style={_SW.li}><b>대출 (8종)</b> — 대출이자·DSR·DTI·LTV·대출가능액·RTI·경락잔금대출·대환대출</li><li style={_SW.li}><b>비용 (9종)</b> — 중개수수료·등기비용·법무사·인지세·채권할인료 등</li><li style={_SW.li}><b>생활 (11종)</b> — 연봉 실수령액·4대보험·국민연금·퇴직금·실업급여 등</li><li style={_SW.li}><b>부동산 (16종)</b> — 임대수익률·공동명의·평수·용적률·경매·재건축·청약가점 등</li><li style={_SW.li}><b>PRO 분석 (3종)</b> — 총비용 시뮬레이터·세금비교·투자수익 분석</li></ul></_SS>
+  <_SS><_SH2>계산기 검수 기준</_SH2>
+    <h3 style={_SW.h3}>1차 데이터 출처 (12개 기관)</h3>
+    <p style={_SW.p}>계산 로직과 세율 데이터는 공식 1차 출처에서만 수집합니다. 언론 기사·세무블로그·타 계산기 사이트는 인용하지 않습니다.</p>
+    <ul style={_SW.ul}><li style={_SW.li}><b>국세청 홈택스</b> — 취득세·양도세·종합소득세·연말정산</li><li style={_SW.li}><b>행정안전부 위택스</b> — 재산세·자동차세</li><li style={_SW.li}><b>한국주택금융공사 HF</b> — 보금자리론·디딤돌·DSR 규정</li><li style={_SW.li}><b>금융위원회·금융감독원</b> — LTV·DTI·DSR·가계부채관리방안</li><li style={_SW.li}><b>한국은행</b> — 기준금리·전월세 전환율</li><li style={_SW.li}><b>국토교통부</b> — 부동산 실거래가·공시가격</li><li style={_SW.li}><b>국민연금·건강보험·근로복지공단</b> — 4대보험 요율</li><li style={_SW.li}><b>고용노동부</b> — 최저임금·퇴직금·실업급여</li><li style={_SW.li}><b>법무부·대법원</b> — 민법·인지세·등기 법령</li><li style={_SW.li}><b>국가법령정보센터</b> — 세법·시행령 원문 대조</li></ul>
+    <h3 style={_SW.h3}>검증 프로세스 (5단계)</h3>
+    <ol style={_SW.ul}><li style={_SW.li}><b>자동 모니터링 (매일 01:00 KST)</b> — Cloudflare Worker로 12개 기관 크롤링</li><li style={_SW.li}><b>AI 1차 분석</b> — Claude 모델이 변경사항 영향도 평가</li><li style={_SW.li}><b>운영자 수동 검수</b> — 원문 법령·공식 사례 대조</li><li style={_SW.li}><b>계산 로직 업데이트</b> — staging 환경 회귀 테스트</li><li style={_SW.li}><b>배포 및 이력 공개</b> — Cloudflare Pages 자동 배포 + RSS 피드</li></ol></_SS>
+  <_SS><_SH2>세법 반영 기준일</_SH2>
+    <_SCL type="ok"><b>현재 반영 기준: 2026년 4월 14일</b><br/>취득세·양도세·종부세·DSR 스트레스 3단계·2026년 최저임금 10,030원 등 최신 개정 사항이 모두 반영된 상태입니다.</_SCL>
+    <p style={_SW.p}>주요 반영 내용:</p>
+    <ul style={_SW.ul}><li style={_SW.li}>양도세 다주택 중과 유예 (2026.5.9까지)</li><li style={_SW.li}>생애최초 취득세 감면 최대 200만원 (2028.12.31까지)</li><li style={_SW.li}>수도권 주담대 한도 규제 (15억↓ 6억 / 25억↓ 4억 / 25억↑ 2억)</li><li style={_SW.li}>스트레스 DSR (변동 +1.5%p, 혼합 +0.75%p)</li><li style={_SW.li}>한국은행 기준금리 3.0% (2026.2.27 결정)</li></ul></_SS>
+  <_SS><_SH2>면책조항</_SH2>
+    <_SCL type="warn"><b>중요 — 이 사이트의 계산 결과는 법적 효력이 없으며 참고용입니다.</b></_SCL>
+    <ul style={_SW.ul}><li style={_SW.li}>본 사이트가 제공하는 모든 계산 결과는 <b>일반적인 사례를 전제한 추정치</b>이며, 실제 납부액과 다를 수 있습니다.</li><li style={_SW.li}>특수한 요건(감면·중과·비과세·공동명의 등)은 개인별 상황에 따라 결과가 달라지므로 세무사·공인중개사와 상담하십시오.</li><li style={_SW.li}>법령 개정 시차로 최신 규정이 반영되지 않았을 가능성이 있습니다.</li><li style={_SW.li}>계산 결과에 따른 손실에 대해 운영자는 책임을 지지 않습니다.</li><li style={_SW.li}>실제 세금 신고는 <b>국세청 홈택스 모의계산기</b>, 실제 대출 한도는 <b>금융기관 공식 상담</b>을 권장합니다.</li></ul>
+    <p style={{marginTop:12}}><a href="/verification" style={{color:"#0747A6",fontWeight:600,textDecoration:"none"}}>→ 계산 검증 가이드 보기</a></p></_SS>
+  <_SS><_SH2>운영자 정보 및 문의</_SH2>
+    <p style={_SW.p}>계산 오류 제보·세법 반영 요청·제휴·취재 문의는 아래 이메일로 연락 주시기 바랍니다. <b>영업일 기준 2일 이내</b> 회신드립니다.</p>
+    <a href="mailto:noble.kclee@gmail.com" style={{display:"inline-block",background:"#0747A6",color:"#fff",padding:"10px 18px",borderRadius:8,textDecoration:"none",fontWeight:600,marginTop:8}}>📧 noble.kclee@gmail.com</a>
+    <h3 style={_SW.h3}>사업자 정보</h3>
+    <_ST head={["항목","내용"]} rows={[["상호","더블유부동산"],["대표자","이광철"],["사업자등록번호","589-24-01721"],["통신판매업 신고번호","제2025-인천부평-0992호"],["업종","정보통신업 · 부동산 정보 제공 서비스"],["이메일","noble.kclee@gmail.com"],["개인정보 보호책임자","이광철"]]}/></_SS>
+</div>);}
+
+function PricingPage({isMo,navigateHome}){
+  const[mode,setMode]=useState("monthly");
+  const plans=[
+    {name:"무료",tag:"누구나 회원가입 없이",price:{monthly:"0",yearly:"0"},note:"영구 무료 · 광고 최소화",cta:"지금 시작하기",ctaHref:"/",ctaStyle:{background:"#f4f5f7",color:"#172B4D",border:"1px solid #dfe1e6"},features:[[true,"60+ 기본 계산기 전체 사용"],[true,"2026년 최신 세법 반영"],[true,"부동산 용어사전 300개"],[true,"정책 해설 5종·가이드 4종"],[false,"PRO 분석 (세금비교·투자수익)"],[false,"계산 히스토리·즐겨찾기 동기화"],[false,"공인중개사 고객 관리"]]},
+    {name:"베이직",tag:"개인 실수요자",price:{monthly:"4,900",yearly:"3,920"},note:mode==="yearly"?"연간 47,040원 (월 3,920원)":"월간 결제",cta:"베이직 시작",ctaHref:"/payment/?plan=basic",ctaStyle:{background:"#0747A6",color:"#fff"},features:[[true,"무료 플랜 모든 기능 포함"],[true,"광고 완전 제거"],[true,"계산 히스토리 무제한 저장"],[true,"즐겨찾기 기기간 동기화"],[true,"PDF 결과 리포트 저장"],[false,"PRO 분석 풀 접근"],[false,"전문가 상담 크레딧"]]},
+    {name:"PRO",tag:"투자자·다주택자",popular:true,price:{monthly:"9,900",yearly:"7,920"},note:mode==="yearly"?"연간 95,040원 (월 7,920원)":"월간 결제",cta:"PRO 시작",ctaHref:"/payment/?plan=pro",ctaStyle:{background:"linear-gradient(135deg,#172B4D,#0747A6)",color:"#fff"},features:[[true,"베이직 모든 기능 포함"],[true,"PRO 분석 3종 풀 접근"],[true,"시나리오 비교 (단독 vs 공동명의)"],[true,"IRR 투자수익률 분석"],[true,"다주택자 보유세 시뮬레이션"],[true,"전문가 상담 월 2회 크레딧"],[false,"공인중개사 고객 CRM"]]},
+    {name:"공인중개사",tag:"사업자 전용",price:{monthly:"29,900",yearly:"23,920"},note:mode==="yearly"?"연간 287,040원 (월 23,920원)":"월간 결제",cta:"공인중개사 시작",ctaHref:"/payment/?plan=agent",ctaStyle:{background:"#0747A6",color:"#fff"},features:[[true,"PRO 모든 기능 포함"],[true,"고객 관리(CRM) 무제한"],[true,"브랜드 PDF 리포트 (로고 삽입)"],[true,"중개보수 자동 산출 툴"],[true,"거래 시나리오 공유 링크"],[true,"세금계산서 발행"],[true,"전문가 상담 월 10회 크레딧"]]}
+  ];
+  return(<div style={{maxWidth:1080,margin:"0 auto",padding:isMo?"24px 16px":"40px 24px",minHeight:"60vh"}}>
+    <SpaBackBtn navigateHome={navigateHome}/>
+    <div style={{textAlign:"center",margin:"20px 0 36px"}}>
+      <h1 style={{fontSize:isMo?26:34,margin:"0 0 10px",color:"#172B4D",letterSpacing:-0.8,lineHeight:1.25}}>당신에게 맞는 요금제를 선택하세요</h1>
+      <p style={{fontSize:16,color:"#505f79",margin:0}}>60+ 계산기 영구 무료. 고급 분석과 전문가 툴킷은 유료 플랜에서.</p>
+      <div style={{display:"inline-flex",background:"#fff",border:"1px solid #dfe1e6",borderRadius:30,padding:4,marginTop:22}}>
+        <button onClick={()=>setMode("monthly")} style={{padding:"10px 22px",border:"none",background:mode==="monthly"?"#0747A6":"transparent",color:mode==="monthly"?"#fff":"#505f79",fontSize:14,fontWeight:700,borderRadius:26,cursor:"pointer",fontFamily:"inherit"}}>월간 결제</button>
+        <button onClick={()=>setMode("yearly")} style={{padding:"10px 22px",border:"none",background:mode==="yearly"?"#0747A6":"transparent",color:mode==="yearly"?"#fff":"#505f79",fontSize:14,fontWeight:700,borderRadius:26,cursor:"pointer",fontFamily:"inherit"}}>연간 결제 <span style={{background:"#FFAB00",color:"#172B4D",fontSize:10,padding:"2px 7px",borderRadius:8,fontWeight:800,marginLeft:4}}>−20%</span></button>
+      </div>
+    </div>
+    <div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"repeat(4,1fr)",gap:16,margin:"0 0 48px"}}>
+      {plans.map((p,i)=>(<div key={i} style={{background:"#fff",border:p.popular?"2px solid #0747A6":"1px solid #dfe1e6",borderRadius:16,padding:"28px 24px",position:"relative",display:"flex",flexDirection:"column",boxShadow:p.popular?"0 8px 24px rgba(7,71,166,0.12)":"none",transform:p.popular?"translateY(-4px)":"none"}}>
+        {p.popular&&<div style={{position:"absolute",top:-12,left:"50%",transform:"translateX(-50%)",background:"#0747A6",color:"#fff",fontSize:11,fontWeight:800,padding:"5px 14px",borderRadius:10,letterSpacing:0.5,whiteSpace:"nowrap"}}>가장 인기</div>}
+        <div style={{fontSize:14,fontWeight:700,color:"#0747A6",marginBottom:6,textTransform:"uppercase",letterSpacing:0.5}}>{p.name}</div>
+        <div style={{fontSize:12,color:"#505f79",marginBottom:14,minHeight:18}}>{p.tag}</div>
+        <div style={{display:"flex",alignItems:"baseline",gap:4,marginBottom:4}}>
+          <span style={{fontSize:32,fontWeight:800,color:"#172B4D",letterSpacing:-0.5}}>{p.price.monthly==="0"?"0":"₩"+p.price[mode]}</span>
+          <span style={{fontSize:13,color:"#505f79"}}>{p.price.monthly==="0"?"원":"/ 월"}</span>
+        </div>
+        <div style={{fontSize:11,color:"#505f79",marginBottom:18,minHeight:14}}>{p.note}</div>
+        <ul style={{listStyle:"none",padding:0,margin:"0 0 22px",borderTop:"1px solid #dfe1e6",paddingTop:18,flex:1}}>
+          {p.features.map(([on,txt],j)=>(<li key={j} style={{fontSize:13,color:on?"#172B4D":"#505f79",padding:"7px 0",paddingLeft:22,position:"relative",lineHeight:1.5}}><span style={{position:"absolute",left:0,top:7,color:on?"#00875A":"#c1c7d0",fontWeight:800,fontSize:14}}>{on?"✓":"−"}</span>{txt}</li>))}
+        </ul>
+        <a href={p.ctaHref} style={{display:"block",padding:"13px 20px",textAlign:"center",borderRadius:10,fontWeight:700,fontSize:14,textDecoration:"none",...p.ctaStyle}}>{p.cta}</a>
+      </div>))}
+    </div>
+    <div style={{textAlign:"center",fontSize:12,color:"#505f79",margin:"18px 0 0",lineHeight:1.7}}>모든 유료 플랜은 <b>7일 무료 체험</b> 후 자동 결제됩니다. 언제든지 해지 가능하며 잔여일 환불이 적용됩니다.</div>
+    <_SS><_SH2>플랜 비교표</_SH2>
+      <_ST head={["기능","무료","베이직","PRO","공인중개사"]} rows={[["60+ 기본 계산기","✓","✓","✓","✓"],["부동산 용어사전·정책 해설","✓","✓","✓","✓"],["광고 제거","−","✓","✓","✓"],["계산 히스토리·동기화","−","✓","✓","✓"],["PDF 결과 리포트","−","✓","✓","✓"],["PRO 분석 (시뮬레이터·비교·IRR)","−","−","✓","✓"],["전문가 상담 크레딧","−","−","월 2회","월 10회"],["브랜드 PDF (로고)","−","−","−","✓"],["고객 관리(CRM)","−","−","−","✓"],["세금계산서 발행","−","✓","✓","✓"]]}/></_SS>
+    <_SS><_SH2>자주 묻는 질문</_SH2>
+      {[["무료 플랜만 써도 충분한가요?","네. 취득세·양도세·종부세·DSR·LTV 등 60+ 기본 계산기는 회원가입 없이 영구 무료로 사용 가능합니다. 개인 실수요자는 대부분 무료 플랜으로 충분합니다."],["PRO 분석은 무엇이 다른가요?","PRO 분석은 단일 계산기가 아닌 복합 시나리오 시뮬레이션 도구입니다. (1) 총비용 시뮬레이터 (2) 세금비교 분석 (3) 투자수익 분석. 다주택자·투자자에게 필수적인 분석 기능입니다."],["연간 결제 20% 할인은 어떻게 적용되나요?","연간 결제 시 월간 대비 20% 할인된 가격이 적용됩니다. 예를 들어 PRO 월 9,900원 → 연간 결제 시 95,040원 (월 7,920원)."],["결제 후 환불이 가능한가요?","모든 유료 플랜은 7일 무료 체험을 제공합니다. 체험 기간 내 해지 시 결제가 발생하지 않습니다. 연간 결제는 잔여일 일할 환불이 적용됩니다."],["공인중개사 플랜은 누구를 위한 것인가요?","공인중개사·부동산 중개법인·세무사 등 사업자 전용 플랜입니다. 일반 PRO 기능에 더해 고객 관리(CRM), 브랜드 로고 PDF, 중개보수 자동 산출 등 실무 기능이 포함됩니다."]].map(([q,a],i)=>(<details key={i} style={{borderBottom:"1px solid #dfe1e6",padding:"16px 0"}}><summary style={{fontWeight:700,fontSize:15,cursor:"pointer",color:"#172B4D",listStyle:"none"}}>{q}</summary><div style={{marginTop:12,fontSize:14,color:"#505f79",lineHeight:1.75}}>{a}</div></details>))}
+    </_SS>
+  </div>);
+}
+
+function VerificationPage({isMo,navigateHome}){return(<div style={{maxWidth:820,margin:"0 auto",padding:isMo?"24px 16px":"40px 24px",minHeight:"60vh"}}>
+  <SpaBackBtn navigateHome={navigateHome}/>
+  <h1 style={{fontSize:isMo?24:28,margin:"0 0 16px",color:"#0747A6",letterSpacing:-0.5,fontWeight:800}}>계산 검증 가이드</h1>
+  <p style={{fontSize:15,color:"#505f79",margin:"0 0 22px",lineHeight:1.75}}>생활계산기 결과를 공식 모의계산기와 대조하는 방법, 실제 세금 신고와 차이가 발생하는 대표 케이스, 세무사 상담이 필요한 상황을 안내합니다.</p>
+  <div style={{background:"#FFEBE6",border:"2px solid #DE350B",borderRadius:12,padding:"18px 22px",marginBottom:22,display:"flex",gap:14,alignItems:"flex-start"}}>
+    <div style={{flex:"0 0 auto",width:40,height:40,background:"#DE350B",color:"#fff",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,fontWeight:700}}>!</div>
+    <div><b style={{display:"block",fontSize:15,color:"#DE350B",marginBottom:4}}>이 계산기는 세무사 상담을 대체하지 않습니다.</b><p style={{margin:0,fontSize:14,color:"#172B4D",lineHeight:1.7}}>생활계산기의 결과는 일반적인 케이스의 <b>추정치</b>이며, 법적 효력이 없습니다. 실제 세금 신고·대출 실행 전에는 반드시 세무사·공인중개사·금융기관의 상담을 받으시기 바랍니다.</p></div>
+  </div>
+  <_SS><_SH2>왜 검증이 필요한가</_SH2><p style={_SW.p}>모든 자동 계산기는 <b>표준 가정</b> 위에서 동작합니다. 현실의 세금 신고에는 개인별 특수 사정(감면·중과·비과세·상속 분할·공동명의 지분 등)이 적용되어 결과가 달라질 수 있습니다. 생활계산기는 일반 케이스의 90% 이상을 커버하도록 설계되었지만, <b>최종 확정 세액</b>은 관할 세무서 또는 세무 대리인의 판단을 따라야 합니다.</p></_SS>
+  <_SS><_SH2>공식 모의계산기와 대조하는 법</_SH2>
+    <ol style={{listStyle:"none",padding:0,counterReset:"s"}}>{["생활계산기에서 1차 계산 — 빠른 결과로 대략적인 세액 감을 잡습니다.","국세청 홈택스 접속 — hometax.go.kr → 모의계산 메뉴에서 동일 항목 선택.","동일 조건으로 재입력 — 공시가격·취득일·보유기간·지역 등을 똑같이 입력합니다.","결과 비교 — 10만원 이상 차이가 나면 차이 원인을 파악합니다(감면 요건, 누진 구간 경계, 공제 차이 등).","세무사 상담 — 차이가 크거나 거래가 임박했다면 세무사 유료 상담을 권장합니다."].map((t,i)=>(<li key={i} style={{counterIncrement:"s",padding:"12px 14px 12px 48px",background:"#f4f5f7",borderRadius:8,marginBottom:8,position:"relative",fontSize:14,color:"#172B4D"}}><span style={{position:"absolute",left:12,top:12,width:26,height:26,background:"#0747A6",color:"#fff",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,fontWeight:700}}>{i+1}</span>{t}</li>))}</ol></_SS>
+  <_SS><_SH2>계산기별 검증 방법</_SH2>
+    <div style={{display:"grid",gridTemplateColumns:"1fr",gap:12}}>{[["취득세","위택스 또는 지자체 홈페이지의 취득세 모의계산기와 대조. 조정대상지역·중과·감면 적용 여부를 확인.","https://www.wetax.go.kr","위택스 모의계산"],["양도소득세","홈택스 → 세금모의계산 → 양도소득세 자동계산. 장기보유특별공제·1세대1주택 비과세 요건을 꼼꼼히 기입.","https://www.hometax.go.kr","홈택스 양도세 모의계산"],["종합부동산세 / 재산세","홈택스·위택스의 종부세·재산세 모의계산. 공시가격·세부담 상한·1세대1주택 특례를 확인.","https://www.hometax.go.kr","홈택스 종부세 모의계산"],["증여세 / 상속세","공제 한도를 10년 합산으로 재확인. 분할 시나리오는 세무사 권장.","https://www.hometax.go.kr","홈택스 증여세 모의계산"],["종합소득세 / 연말정산","홈택스 → 종합소득세/연말정산 미리보기. 홈택스 간소화 서비스와 일치해야 함.","https://www.hometax.go.kr","홈택스 연말정산 미리보기"],["DSR / LTV / 대출한도","실제 대출 한도는 은행별 내부기준·개인 신용등급에 따라 달라집니다. 금융기관 공식 상담 필수.","https://www.hf.go.kr","주택금융공사 한도 조회"],["4대보험 / 연봉 실수령액","국민연금·건강보험·고용보험 공단의 공식 계산기와 대조.","https://www.nps.or.kr","국민연금공단 모의계산"],["퇴직금 / 실업급여","고용노동부 퇴직금 계산기·실업급여 계산기와 대조.","https://www.moel.go.kr","고용노동부 퇴직금 계산"]].map(([t,d,u,l],i)=>(<div key={i} style={{border:"1px solid #dfe1e6",borderRadius:10,padding:"16px 18px"}}><h3 style={{margin:"0 0 6px",color:"#0747A6",fontSize:15}}>{t}</h3><p style={{fontSize:13,margin:"4px 0",color:"#505f79"}}>{d}</p><a href={u} target="_blank" rel="noopener" style={{display:"inline-block",marginTop:6,fontSize:13,color:"#0747A6",textDecoration:"none",fontWeight:600}}>→ {l}</a></div>))}</div></_SS>
+  <_SS><_SH2>생활계산기와 실제 신고가 차이날 수 있는 대표 케이스</_SH2>
+    {[["취득세 계산기",["⚠ 생애최초 감면 — 연소득·자산 요건 미충족 시 감면 불인정","⚠ 일시적2주택 특례 — 종전주택 처분 기한 초과 시 중과","⚠ 오피스텔 주거용 — 건축물대장상 업무용이면 주택수 불산입"]],["양도소득세 계산기",["⚠ 거주기간 요건 — 조정대상지역 주택은 2년 거주 미충족 시 비과세 불인정","⚠ 장기보유특별공제 — 고가주택은 과세분에만 적용","⚠ 필요경비 — 증빙자료 미보유 시 차감 불가","⚠ 분양권 / 입주권 — 주택수 산정·보유기간 기산점이 달라 실제 세액 차이 큼"]],["종부세 / 재산세 계산기",["⚠ 세부담 상한 — 전년 대비 상한이 적용되면 이론 세액보다 낮을 수 있음","⚠ 고령자·장기보유 공제 — 연령·보유기간 조합에 따라 최대 80% 감면"]],["증여세 / 상속세 계산기",["⚠ 10년 합산과세 — 사전 증여 이력이 있으면 합산되어 세율이 달라짐","⚠ 추정상속재산·사전증여 — 상속 개시 10년 이내 증여분 합산 여부로 큰 차이"]],["DSR / 대출 계산기",["⚠ 기존 대출 미입력 — 신용대출·마이너스통장 미반영 시 한도 과대 산출","⚠ 스트레스 DSR 단계 — 금융기관별 적용 단계가 다를 수 있음","⚠ 수도권 한도 캡 — 15억/25억 구간별 한도가 우선 적용"]],["4대보험 / 연봉 계산기",["⚠ 비과세 항목 — 식대·자가운전보조금 등 비과세 한도 변경 시 실수령액 차이","⚠ 지역가입자·직장가입자 전환 — 소득종류 혼합 시 건강보험료 산정 복잡"]]].map(([t,items],i)=>(<div key={i}><h3 style={_SW.h3}>{t}</h3>{items.map((m,j)=>(<div key={j} style={{background:"#FFFAE6",borderLeft:"4px solid #FFAB00",borderRadius:6,padding:"12px 16px",margin:"10px 0",fontSize:14,color:"#172B4D"}}><b style={{color:"#B76E00"}}>{m}</b></div>))}</div>))}</_SS>
+  <_SS><_SH2>반드시 세무사 상담이 필요한 경우</_SH2>
+    <ul style={_SW.ul}><li style={_SW.li}>다주택자·법인·공동명의로 취득·양도 예정인 경우</li><li style={_SW.li}>상속 재산 분할·유류분 분쟁 가능성이 있는 경우</li><li style={_SW.li}>10년 내 사전 증여 이력이 있는 경우</li><li style={_SW.li}>조정대상지역·투기과열지구 내 고가주택(12억 초과) 양도</li><li style={_SW.li}>임대주택 등록·직권 말소·과태료 관련 사안</li><li style={_SW.li}>상가·토지 양도 및 비사업용토지 중과 여부</li><li style={_SW.li}>외국인·재외동포·비거주자 납세 의무</li><li style={_SW.li}>재건축·재개발 조합원 입주권·분양권 전환</li></ul>
+    <p style={{marginTop:12,...(_SW.p)}}>위 사례는 개인별 상황에 따라 수백만~수억 단위 세액 차이가 발생할 수 있습니다. 반드시 <b>국세청 세무도움센터</b> 또는 <b>세무사회 등록 세무사</b>와 상담하시기 바랍니다.</p></_SS>
+  <_SS><_SH2>오류 발견 시 제보</_SH2>
+    <p style={_SW.p}>계산 결과가 홈택스·위택스 공식 결과와 다르거나, 최신 세법이 반영되지 않은 것으로 보이는 경우 아래로 연락 주시면 48시간 내 검토 후 회신드립니다.</p>
+    <p style={_SW.p}><a href="mailto:noble.kclee@gmail.com" style={{color:"#0747A6",fontWeight:600}}>noble.kclee@gmail.com</a></p>
+    <p style={{marginTop:12,...(_SW.p)}}><a href="/about" style={{color:"#0747A6",fontWeight:600}}>→ 생활계산기 소개 / 검수 기준 보기</a></p></_SS>
+</div>);}
+
+function GuidePage({isMo,navigateHome}){return(<div style={{maxWidth:860,margin:"0 auto",padding:isMo?"24px 16px":"40px 24px",minHeight:"60vh"}}>
+  <SpaBackBtn navigateHome={navigateHome}/>
+  <_SH tag="2026 최신" title="부동산 세금·대출 완벽 가이드" desc="취득·보유·양도 전 단계 — 실수요자와 투자자가 알아야 할 핵심 지식을 주제별로 정리했습니다."/>
+  <_SS><_SH2>주제별 가이드</_SH2>
+    <div style={{display:"grid",gap:14}}>
+      {[{tag:"💰 절세 전략",title:"2026 부동산 절세 전략 완벽 가이드",desc:"취득세·양도세·보유세 단계별 절세 방법. 공동명의·일시적2주택·장기보유특별공제 활용.",preview:"📌 1세대1주택 비과세 12억 + 장특공 80%(보유 40+거주 40) 조합으로 양도차익 5억까지 합법적 전액 비과세 가능. 일시적 2주택은 종전주택 3년 내 처분 시 신규주택도 비과세 적용.",calcs:[["취득세","/취득세계산기"],["양도세","/양도소득세계산기"],["세금 비교","/세금비교분석"]],more:"/learn/tax-saving"},{tag:"🏘️ 다주택자",title:"다주택자 세금 완벽 가이드 2026",desc:"종부세·재산세 부담 계산, 양도세 중과유예, 매도·증여·임대 전략 비교.",preview:"📌 양도세 다주택 중과 2026.5.9까지 유예. 조정지역 2주택 +20%p, 3주택 +30%p 가산세율은 유예 종료 후 부활. 유예 기간 내 정리 vs 임대등록 vs 증여 시나리오를 세후 수익으로 비교 필수.",calcs:[["종부세","/종합부동산세계산기"],["양도세","/양도소득세계산기"],["증여세","/증여세계산기"],["세금 비교","/세금비교분석"]],more:"/learn/tax-saving"},{tag:"🏠 첫 집 구매",title:"생애최초 주택구입 완벽 가이드",desc:"취득세 감면 200만원, LTV 80% 완화, 디딤돌·보금자리 대출, 총비용 체크리스트.",preview:"📌 12억 이하 주택 생애최초 구입 시 취득세 최대 200만원 감면 (2028.12.31까지 연장). LTV 80% 우대 + 디딤돌(2.5~3.5%)·보금자리(4%)·청년전용 대출 활용 시 자기자본 부담 최소화.",calcs:[["취득세","/취득세계산기"],["LTV·한도","/LTV계산기"],["총비용","/총비용시뮬레이터"],["등기비용","/등기비용계산기"]],more:"/learn/loan-guide"}].map((g,i)=>(<div key={i} style={{background:"#fff",border:"1.5px solid #dfe1e6",borderRadius:14,padding:"24px 28px"}}>
+        <span style={{display:"inline-block",background:"#e6f0ff",color:"#0747A6",fontSize:11,fontWeight:700,padding:"4px 12px",borderRadius:12,marginBottom:10}}>{g.tag}</span>
+        <h3 style={{fontSize:19,margin:"4px 0 10px",color:"#172B4D",fontWeight:800,letterSpacing:-0.3}}>{g.title}</h3>
+        <p style={{color:"#505f79",fontSize:14,margin:"0 0 8px",lineHeight:1.7}}>{g.desc}</p>
+        <div style={{background:"#f4f5f7",borderLeft:"3px solid #0747A6",padding:"10px 14px",margin:"12px 0",borderRadius:"0 6px 6px 0",fontSize:13,color:"#172B4D",lineHeight:1.6}}>{g.preview}</div>
+        <a href={g.more} style={{display:"inline-block",marginTop:6,color:"#0747A6",fontWeight:700,fontSize:13,textDecoration:"none"}}>가이드 보기 →</a>
+        <div style={{display:"flex",flexWrap:"wrap",gap:8,marginTop:14,paddingTop:14,borderTop:"1px dashed #dfe1e6",alignItems:"center"}}>
+          <span style={{fontSize:11,color:"#505f79",fontWeight:700,marginRight:4,textTransform:"uppercase",letterSpacing:0.5}}>관련 계산기</span>
+          {g.calcs.map(([l,h],j)=>(<a key={j} href={h} style={{padding:"7px 13px",background:"#e6f0ff",color:"#0747A6",borderRadius:18,fontSize:12,fontWeight:600,textDecoration:"none"}}>{l} →</a>))}
+        </div>
+      </div>))}
+    </div></_SS>
+  <_SS><_SH2>가이드 활용법</_SH2>
+    <ol style={_SW.ul}><li style={_SW.li}><b>본문 읽기</b> — 각 가이드는 2026년 최신 세법과 금융 규제를 반영해 작성되었습니다.</li><li style={_SW.li}><b>계산기로 시뮬레이션</b> — 가이드 하단의 <a href="/" style={{color:"#0747A6"}}>60개+ 계산기</a>로 본인 상황에 맞는 수치를 확인하세요.</li><li style={_SW.li}><b>상담 신청</b> — 복잡한 사안은 전문가와 논의할 수 있습니다.</li><li style={_SW.li}><b>검증 가이드 참고</b> — 실제 세금 신고 전에는 <a href="/verification" style={{color:"#0747A6"}}>검증 가이드</a>로 홈택스·위택스 공식 자료와 대조하세요.</li></ol>
+    <_SCL><b>💡 가이드 신뢰 기준</b> 모든 내용은 <a href="/about" style={{color:"#0747A6"}}>생활계산기 검수 기준</a>을 따라 국세청·행안부·금융위 등 1차 출처에서 수집됩니다.</_SCL></_SS>
+</div>);}
 function CookieBanner({onPrivacy}){
   const[show,setShow]=useState(typeof window!=="undefined"&&!localStorage.getItem('cookie_consent'));
   if(!show)return null;
@@ -4949,14 +5484,14 @@ export default function App(){
     if(hash==="community"){setPage("community");return;}
     if(hash==="policy"){setPage("policy");return;}
     if(hash==="market"){setPage("market");return;}
-    if(hash==="about"){setPage("html:/about/");return;}
-    if(hash==="guide"){setPage("html:/guide/");return;}
-    if(hash==="pricing"){setPage("html:/pricing.html");return;}
-    if(hash==="verification"){setPage("html:/verification/");return;}
-    if(hash==="terms"){setPage("html:/terms/");return;}
+    if(hash==="about"){setPage("about");return;}
+    if(hash==="guide"){setPage("guide");return;}
+    if(hash==="pricing"){setPage("pricing");return;}
+    if(hash==="verification"){setPage("verification");return;}
+    if(hash==="terms"){setPage("terms");return;}
     if(hash.startsWith("terms/")){setPage("html:/"+hash+".html");return;}
-    if(hash.startsWith("learn/")){setPage("html:/"+hash+".html");return;}
-    if(hash.startsWith("law/")){setPage("html:/"+hash+".html");return;}
+    if(hash.startsWith("learn/")){const slug=hash.replace("learn/","");if(LEARN_MAP[slug]){setPage("learn:"+slug);return;}setPage("html:/"+hash+".html");return;}
+    if(hash.startsWith("law/")){const slug=hash.replace("law/","");if(LAW_MAP[slug]){setPage("law:"+slug);return;}setPage("html:/"+hash+".html");return;}
     if(["privacy","contact","disclaimer","resource"].includes(hash)){setPage("legal_"+hash);}
     else if(hash&&SLUG_REVERSE[hash]){const cId=SLUG_REVERSE[hash];const it=CL.find(c=>c.id===cId);if(it){setCat(it.c);setCalc(cId);setPage("calc");}}
     else if(!hash){setPage("home");}
@@ -5125,7 +5660,7 @@ body.lc-embed main{padding-top:0!important}
     <div style={{display:"flex",alignItems:"flex-start"}}>
     {page!=="home"&&!isMo&&<LeftNav isMo={isMo} navOpen={navOpen} setNavOpen={setNavOpen} navContent={navContent} setNavContent={setNavContent} effectiveUser={effectiveUser} setAuthMode={setAuthMode} setShowAuth={setShowAuth} navigateMyPage={navigateMyPage} calc={calc}/>}
     <main style={{flex:"1 1 auto",minWidth:0}}>
-    {page==="mypage"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><MyPage user={effectiveUser} lcToken={lcToken} lcEmail={lcEmail} onLcLogout={()=>{try{localStorage.removeItem('lc_token');localStorage.removeItem('lc_email');}catch{}setLcToken("");setLcEmail("");}} onBack={navigateHome} onLogout={handleLogout}/></div>):page==="info"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><InfoHub isMo={isMo} navigateHome={navigateHome}/></div>):page==="news"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><NewsPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="community"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><CommunityPage isMo={isMo} navigateHome={navigateHome} effectiveUser={effectiveUser}/></div>):page==="policy"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><PolicyPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="market"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><MarketPage isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("html:")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><HtmlAdapterPage url={page.replace("html:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("legal_")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LegalPage type={page.replace("legal_","")} onBack={navigateHome}/></div>):page==="home"?(<>
+    {page==="mypage"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><MyPage user={effectiveUser} lcToken={lcToken} lcEmail={lcEmail} onLcLogout={()=>{try{localStorage.removeItem('lc_token');localStorage.removeItem('lc_email');}catch{}setLcToken("");setLcEmail("");}} onBack={navigateHome} onLogout={handleLogout}/></div>):page==="info"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><InfoHub isMo={isMo} navigateHome={navigateHome}/></div>):page==="news"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><NewsPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="community"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><CommunityPage isMo={isMo} navigateHome={navigateHome} effectiveUser={effectiveUser}/></div>):page==="policy"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><PolicyPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="market"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><MarketPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="terms"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><TermsHubPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="about"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><AboutPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="guide"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><GuidePage isMo={isMo} navigateHome={navigateHome}/></div>):page==="pricing"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><PricingPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="verification"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><VerificationPage isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("learn:")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LearnPage slug={page.replace("learn:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("law:")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LawPage slug={page.replace("law:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("html:")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><HtmlAdapterPage url={page.replace("html:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("legal_")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LegalPage type={page.replace("legal_","")} onBack={navigateHome}/></div>):page==="home"?(<>
       {favorites.length>0&&<div style={{maxWidth:1200,margin:"0 auto",padding:isMo?"16px 16px 0":"32px 24px 0",background:isMo?"#f8f9fc":"transparent"}}>
         <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12}}>
           <span style={{display:"inline-flex",alignItems:"center"}}><Ico.star size={18}/></span>
