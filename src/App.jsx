@@ -80,7 +80,7 @@ function useIsMobile(bp=768){
 }
 
 const SLUGS={acquisition:"취득세계산기",transfer:"양도소득세계산기",inctax:"종합소득세계산기",yearend:"연말정산계산기",compre:"종부세계산기",property:"재산세계산기",gift:"증여세계산기",inherit:"상속세계산기",holdtax:"보유세계산기",rental:"임대소득세계산기",mortgage:"대출이자계산기",dsr:"DSR계산기",dti:"DTI계산기",ltv:"LTV계산기",loanmax:"대출가능액계산기",rti:"RTI계산기",commission:"중개수수료계산기",registration:"등기비용계산기",legal:"법무사수수료계산기",stamp:"인지세계산기",bond:"채권할인료계산기",appraisal:"감정평가수수료계산기",netsalary:"연봉실수령액",insurance4:"4대보험료계산기",pension:"국민연금수령액",cartax:"자동차세계산기",deposit:"예적금이자계산기",convert:"전월세전환계산기",yield:"임대수익률계산기",joint:"공동명의계산기",area:"평수변환계산기",far:"용적률건폐율계산기",auction:"경매비용계산기",remodel:"리모델링수익계산기",bldvalue:"건물잔존가치계산기",totalcost:"총비용시뮬레이터",compare:"세금비교분석",invest:"투자수익분석",retire:"퇴직금계산기",unemploy:"실업급여계산기",minwage:"최저임금계산기",auction2:"경매적정입찰가",auctiondiv:"경매배당분석",auctionloan:"경락잔금대출",bldvat:"건물부가세계산기",bond2:"국민주택채권매입",datediff:"날짜계산기",estincome:"임대추정소득",goodlord:"착한임대인공제",imputedrent:"간주임대료계산기",jeonseins:"전세보증금보험료",legalinherit:"법정상속분계산기",luckyday:"손없는날달력",progressive:"누진세계산기",reconyear:"재건축연한계산기",refinance:"대환대출비교",remodel2:"리모델링ROI",rentincrease:"임대료인상률",stamp2:"인지세전자계약",realprice:"실거래가조회",subscription:"청약가점계산기",netsale:"매도실수령액계산기",terms:"부동산용어사전"};
-const SLUG_REVERSE=Object.fromEntries(Object.entries(SLUGS).map(([k,v])=>[decodeURIComponent(v),k]));
+const SLUG_REVERSE=Object.fromEntries(Object.entries(SLUGS).map(([k,v])=>[decodeURIComponent(v),k]));SLUG_REVERSE["중개보수계산기"]="commission";SLUG_REVERSE["연봉실수령액계산기"]="netsalary";SLUG_REVERSE["종합부동산세계산기"]="compre";
 
 const CALC_SUBTITLE={
   acquisition:"2026년 취득세율 자동 적용 · 중과/감면 자동 판정",
@@ -1671,9 +1671,8 @@ function CalcTrans({isMo=false,onNav=()=>{}}){
     const holdY=(sd-bd)/(365.25*86400000);
     const liveY=parseInt(liveYear)||0;
     if(holdY<2){setIs1HouseExempt(false);setAutoExempt(false);setExemptHint("📌 보유기간 2년을 채우면 기본세율이 적용됩니다");return;}
-    if(sellW>12e8){setIs1HouseExempt(false);setAutoExempt(false);setExemptHint("📌 양도가액이 12억 이하이면 전액 비과세입니다 (현재 "+fW(sellW)+")");return;}
-    if(conArea&&liveY<2){setIs1HouseExempt(false);setAutoExempt(false);setExemptHint("📌 조정지역 거주기간 2년을 채우면 양도세가 0원이 됩니다");return;}
-    setIs1HouseExempt(true);setAutoExempt(true);setExemptHint("✅ 1세대1주택 비과세 요건 충족 — 자동 적용됨");
+    if(conArea&&liveY<2){setIs1HouseExempt(false);setAutoExempt(false);setExemptHint("📌 조정지역 거주기간 2년을 채우면 1세대1주택 비과세가 적용됩니다");return;}
+    setIs1HouseExempt(true);setAutoExempt(true);setExemptHint(sellW>12e8?"✅ 1세대1주택 12억 초과 — 12억 초과분만 과세 (자동 적용)":"✅ 1세대1주택 12억 이하 — 전액 비과세 (자동 적용)");
   },[assetType,own,buyDate,sellDate,sellAmt,conArea,liveYear]);
   useEffect(()=>{if(tW(buyAmt)&&tW(sellAmt)&&buyDate.length>=8&&sellDate.length>=8)calculate();else setResult(null);},[assetType,own,baseDeduct,jointOwn,jointRate,conArea,realLive,liveYear,rentBiz,longRentEx,unregistered,inherited,nonBizLand,is1HouseExempt,isHeavy2,isHeavy3,buyAmt,sellAmt,costTotal,buyDate,sellDate,inheritBuyDate,sangSaeng,mixedHouse,houseArea,shopArea,useManualGain,manualGain]);
   function calculate(){
@@ -2578,7 +2577,7 @@ if(ppW>0&&rnW>0){
   if(aI>=aR*0.5){_tips.push("📌 대출이자가 연간 임대수입의 50% 이상을 차지합니다. 대출 원금 상환·금리 낮은 상품으로 대환 검토 권장.");}
   if(nt>=10){_tips.push("📌 순수익률 10% 이상으로 우수합니다. 임대사업자 등록 시 종부세 합산배제·양도세 중과배제 등 혜택 적용 가능.");}
 }
-return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}><div>{!isMo&&<h3 style={{fontSize:isMo?16:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>임대수익률 계산기</h3>}<div style={{fontSize:12,color:"#6b778c",marginBottom:-8,marginLeft:2,display:"flex",alignItems:"center",gap:4,flexWrap:"nowrap"}}>수익률 <TipModal title="임대수익률 계산법"><p><b>Gross:</b> 연임대료÷매입가 / <b>Net:</b> 순수익÷자기자본</p></TipModal></div><Inp label="매입가" value={pp} onChange={sPP} suffix="만원" placeholder="예: 50000" error={!pp||pp==="0"}/><Inp label="보증금 (전세금)" value={dp} onChange={sDp} suffix="만원" placeholder="예: 10000"/><Inp label="월세" value={rn} onChange={sRn} suffix="만원" placeholder="예: 100"/><Inp label="월 관리비·경비" value={ex} onChange={sEx} suffix="만원" placeholder="예: 20"/><Inp label="대출금액" value={ln} onChange={sLn} suffix="만원" placeholder="예: 20000"/><Inp label="대출 금리" value={lr} onChange={sLr} suffix="%" placeholder="예: 4.0"/></div><RP miss={isDefault?MI.yield:null} isExample={isDefault} title="임대수익률"
+return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}><div>{!isMo&&<h3 style={{fontSize:isMo?16:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>임대수익률 계산기</h3>}<div style={{fontSize:12,color:"#6b778c",marginBottom:-8,marginLeft:2,display:"flex",alignItems:"center",gap:4,flexWrap:"nowrap"}}>수익률 <TipModal title="임대수익률 계산법"><p><b>Gross:</b> 연임대료÷매입가 / <b>Net:</b> 순수익÷자기자본</p></TipModal></div><Inp label="매입가" value={pp} onChange={sPP} suffix="만원" placeholder="예: 50000" error={!pp||pp==="0"}/>{!pp&&<div style={{padding:"12px 14px",background:"#FFF4E6",border:"2px solid #FF8B00",borderRadius:10,fontSize:13,color:"#B8550A",marginTop:-4,marginBottom:12,fontWeight:700,boxShadow:"0 2px 8px rgba(255,139,0,0.15)",display:"flex",alignItems:"center",gap:8}}>💡 매매가격 입력 시 수익률이 계산됩니다</div>}<Inp label="보증금 (전세금)" value={dp} onChange={sDp} suffix="만원" placeholder="예: 10000"/><Inp label="월세" value={rn} onChange={sRn} suffix="만원" placeholder="예: 100"/><Inp label="월 관리비·경비" value={ex} onChange={sEx} suffix="만원" placeholder="예: 20"/><Inp label="대출금액" value={ln} onChange={sLn} suffix="만원" placeholder="예: 20000"/><Inp label="대출 금리" value={lr} onChange={sLr} suffix="%" placeholder="예: 4.0"/></div><RP miss={(!pp&&!dp&&!rn&&!ex&&!ln&&!lr)?MI.yield:null} isExample={(!pp&&!dp&&!rn&&!ex&&!ln&&!lr)} title="임대수익률"
       deadline="※ 세전 수익률 기준 / 양도세·종합소득세 등 별도 고려 필요"
       alertMsg={ni<=0?"순수익 마이너스: 대출이자+경비 초과":inv<=0?"자기자본 없음: 레버리지 투자":nt>=10?"우수한 순수익률":nt<3?"기대 수익률 낮음":null}
       alertType={ni<=0?"danger":nt>=10?"success":"warning"}
