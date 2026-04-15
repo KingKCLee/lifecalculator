@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.15",
       "category": "전체",
+      "title": "fix(home): AI 인사이트 카드 \"전체 보고서 보기 →\" 버튼을 /reports 로 연결",
+      "desc": "fix(home): AI 인사이트 카드 \"전체 보고서 보기 →\" 버튼을 /reports 로 연결"
+    },
+    {
+      "date": "2026.04.15",
+      "category": "전체",
       "title": "feat(home): sample-home 3개 섹션 추가 — 인기 12카드 + 통계 + 디렉토리 5열",
       "desc": "feat(home): sample-home 3개 섹션 추가 — 인기 12카드 + 통계 + 디렉토리 5열"
     },
@@ -1460,12 +1466,6 @@
       "category": "세금",
       "title": "fix: 취득세 입력란 width 480·드롭다운 제거·특수조건/NextStep marginTop",
       "desc": "fix: 취득세 입력란 width 480·드롭다운 제거·특수조건/NextStep marginTop"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "대출",
-      "title": "fix: Tog 글자겹침 근본 해결 (ellipsis·minWidth:0·DSR 중복 레이블 제거·marginBottom:-8 잔재)",
-      "desc": "fix: Tog 글자겹침 근본 해결 (ellipsis·minWidth:0·DSR 중복 레이블 제거·marginBottom:-8 잔재)"
     }
   ],
   "rates": {
