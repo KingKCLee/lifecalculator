@@ -10,6 +10,7 @@
  * 필요 환경변수 (wrangler secret put 또는 대시보드 Variables):
  *   VWORLD_KEY = FFEB4285-215F-3D37-B2C9-66EEB153913E
  *   MOLIT_KEY  = (data.go.kr에서 발급받은 인증키, URL-decoded 상태)
+ *   JUSO_KEY   = (juso.go.kr 도로명주소 API 승인키)
  * ════════════════════════════════════════════════════════════ */
 
 const CORS_HEADERS = {
@@ -130,6 +131,52 @@ async function handleRealPrice(url, env) {
   }
 }
 
+// ── /api/juso-search ──────────────────────────────────────
+// 도로명주소 검색 (juso.go.kr) 프록시
+// 쿼리: keyword (검색어), currentPage(기본 1), countPerPage(기본 10)
+async function handleJusoSearch(url, env) {
+  const keyword = (url.searchParams.get("keyword") || "").trim();
+  const currentPage = url.searchParams.get("currentPage") || "1";
+  const countPerPage = url.searchParams.get("countPerPage") || "10";
+  if (!keyword) return jsonRes({ error: "keyword 필요" }, 400);
+
+  const key = env.JUSO_KEY;
+  if (!key) return jsonRes({ error: "JUSO_KEY 미설정" }, 500);
+
+  const api = new URL("https://business.juso.go.kr/addrlink/addrLinkApi.do");
+  api.searchParams.set("confmKey", key);
+  api.searchParams.set("currentPage", currentPage);
+  api.searchParams.set("countPerPage", countPerPage);
+  api.searchParams.set("keyword", keyword);
+  api.searchParams.set("resultType", "json");
+
+  try {
+    const r = await fetch(api.toString(), { cf: { cacheTtl: 600 } });
+    const txt = await r.text();
+    // JUSO returns text/html Content-Type with JSON body — parse manually
+    let j = {};
+    try { j = JSON.parse(txt); } catch (e) { return jsonRes({ error: "JUSO 응답 파싱 실패", raw: txt.slice(0,300) }, 502); }
+    const results = j?.results?.juso || [];
+    const list = results.map(r => ({
+      roadAddr: r.roadAddr,
+      jibunAddr: r.jibunAddr,
+      bdNm: r.bdNm || "",
+      admCd: r.admCd || "",          // 법정동코드 10자리
+      rnMgtSn: r.rnMgtSn || "",
+      lnbrMnnm: r.lnbrMnnm || "0",   // 지번 본번
+      lnbrSlno: r.lnbrSlno || "0",   // 지번 부번
+      siNm: r.siNm || "",
+      sggNm: r.sggNm || "",
+      emdNm: r.emdNm || "",
+      udrtYn: r.udrtYn || "0"         // 산 여부(0:대지,1:산)
+    }));
+    const common = j?.results?.common || {};
+    return jsonRes({ ok: true, count: Number(common.totalCount || list.length), list });
+  } catch (e) {
+    return jsonRes({ error: "JUSO 호출 실패: " + e.message }, 502);
+  }
+}
+
 /* 기존 Worker의 fetch 핸들러에 아래와 같이 추가:
 
 export default {
@@ -140,9 +187,10 @@ export default {
     }
     if (url.pathname === "/api/vworld-price") return handleVworldPrice(url, env);
     if (url.pathname === "/api/real-price")   return handleRealPrice(url, env);
+    if (url.pathname === "/api/juso-search")  return handleJusoSearch(url, env);
     // ... 기존 라우트(/price, /standard-price 등) ...
   }
 };
 */
 
-export { handleVworldPrice, handleRealPrice, CORS_HEADERS };
+export { handleVworldPrice, handleRealPrice, handleJusoSearch, CORS_HEADERS };
