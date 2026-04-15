@@ -9,12 +9,20 @@ export const REPORTS_META = [
   {id:"04", title:"DSR·LTV 규제 하 최적 대출 설계", tag:"대출·금융", desc:"스트레스 DSR 3단계, 생애최초·서민실수요 우대, 정책대출(디딤돌·보금자리) 비교", calcId:"dsr", color:"#8b5cf6"},
   {id:"05", title:"증여 vs 상속 세금 비교 분석", tag:"세금·이전", desc:"공제한도 비교, 시나리오별 세액 차이, 10년 주기 분할증여, 가업승계 특례", calcId:"gift", color:"#ec4899"},
   {id:"06", title:"다주택자 종합부동산세 절세 로드맵", tag:"세금·보유", desc:"2026년 세율, 계산 구조, 공동명의·임대사업자 등록, 매도 타이밍 전략", calcId:"compre", color:"#ef4444"},
-  {id:"07", title:"임대사업자 수익률 최적화 전략", tag:"투자·임대", desc:"과세 체계, 필요경비율 60%, 주택수별 과세, 등록 유불리 시뮬레이션", calcId:"rental", color:"#0891b2"}
+  {id:"07", title:"임대사업자 수익률 최적화 전략", tag:"투자·임대", desc:"과세 체계, 필요경비율 60%, 주택수별 과세, 등록 유불리 시뮬레이션", calcId:"rental", color:"#0891b2"},
+  {id:"08", title:"스트레스DSR이 대출가능금액에 미치는 영향", tag:"대출·규제", desc:"단계별 한도 변화, 유형별 스트레스금리 비교, 신용대출 경계, 한도 극대화 5전략", calcId:"dsr", color:"#7c3aed"},
+  {id:"09", title:"2026년 5월 9일 이후 부동산 시장 전망", tag:"시장·전망", desc:"양도세 중과 유예 종료일 시나리오 분석, 지역별 전망, 실수요자·다주택자 실전 전략", calcId:"transfer", color:"#059669"}
 ];
 
 export const REPORTS_BY_CALC = {
   acquisition:"01", transfer:"02", yearend:"03", dsr:"04", mortgage:"04", ltv:"04", dti:"04",
   gift:"05", inherit:"05", legalinherit:"05", compre:"06", holdtax:"06", property:"06", rental:"07", yield:"07"
+};
+
+// 계산기별 추가 Report 링크 (기본 REPORTS_BY_CALC 외에 함께 노출할 연관 보고서)
+export const REPORTS_EXTRA_BY_CALC = {
+  dsr:["08"], mortgage:["08"], ltv:["08"], loanmax:["08"], refinance:["08"],
+  transfer:["09"], acquisition:["09"], compre:["09"], totalcost:["09"],
 };
 
 const PALETTE = {
@@ -172,9 +180,9 @@ export default function ReportIndex({navigateHome, isMo}){
         <div style={{background:"linear-gradient(135deg,#0f1f3d 0%,#1e3a8a 50%,#3b82f6 100%)",borderRadius:16,padding:isMo?"36px 24px":"52px 44px",color:"#fff",marginBottom:28}}>
           <div style={{display:"inline-block",padding:"6px 14px",background:"rgba(255,255,255,.18)",borderRadius:20,fontSize:11,fontWeight:700,letterSpacing:".5px",marginBottom:14}}>✨ AI PRO INSIGHTS</div>
           <h1 style={{fontSize:isMo?26:36,fontWeight:800,margin:"0 0 14px",letterSpacing:"-0.8px",lineHeight:1.25}}>2026년 세법·금융 심층 분석 보고서</h1>
-          <p style={{fontSize:isMo?14:16,margin:0,opacity:.92,lineHeight:1.65,maxWidth:720}}>AI 가 2026년 최신 세법·금융 규제를 분석하여 작성한 7편의 심층 보고서. 절세 시나리오, 대출 설계, 상속·증여 비교까지 실무자가 바로 활용할 수 있는 내용으로 구성했습니다.</p>
+          <p style={{fontSize:isMo?14:16,margin:0,opacity:.92,lineHeight:1.65,maxWidth:720}}>AI 가 2026년 최신 세법·금융 규제를 분석하여 작성한 9편의 심층 보고서. 절세 시나리오, 대출 설계, 상속·증여 비교, 시장 전망까지 실무자가 바로 활용할 수 있는 내용으로 구성했습니다.</p>
           <div style={{marginTop:20,display:"flex",gap:10,flexWrap:"wrap",fontSize:12,opacity:.88}}>
-            <span>📊 총 7편</span>
+            <span>📊 총 9편</span>
             <span>🔍 2026 세법 기준</span>
             <span>💡 실전 시나리오 중심</span>
           </div>

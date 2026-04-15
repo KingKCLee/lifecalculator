@@ -3,7 +3,7 @@ import { supabase } from './supabase.js';
 // v2026.04.06
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-// 2026.04.15 AI PRO 인사이트 보고서 7편
+// 2026.04.15 AI PRO 인사이트 보고서 9편
 import ReportIndex, {REPORTS_META, REPORTS_BY_CALC} from './pages/reports/ReportIndex';
 import Report01 from './pages/reports/Report01';
 import Report02 from './pages/reports/Report02';
@@ -12,6 +12,8 @@ import Report04 from './pages/reports/Report04';
 import Report05 from './pages/reports/Report05';
 import Report06 from './pages/reports/Report06';
 import Report07 from './pages/reports/Report07';
+import Report08 from './pages/reports/Report08';
+import Report09 from './pages/reports/Report09';
 // 2026.04.14 신규 18개 계산기 + 브랜드 PDF 통합
 import CalcAuction2 from './calcs/CalcAuction2';
 import CalcAuctionDiv from './calcs/CalcAuctionDiv';
@@ -645,7 +647,7 @@ const INFO_MENU_COLS=[
     {k:"history",title:"세법 개정 히스토리",desc:"연도별 변경사항",href:"/learn/tax-history"}
   ]},
   {title:"학습·가이드",items:[
-    {k:"reports",title:"AI 분석 보고서",desc:"PRO 인사이트 7편",href:"/reports"},
+    {k:"reports",title:"AI 분석 보고서",desc:"PRO 인사이트 9편",href:"/reports"},
     {k:"guide",title:"전문가 가이드",desc:"세무사 추천 가이드",href:"/guide"},
     {k:"law",title:"규정·법령",desc:"관련 법령 원문",href:"/law"},
     {k:"saving",title:"절세 전략",desc:"세금 절감 방법",href:"/learn/tax-saving"},
@@ -4400,7 +4402,7 @@ function LearnTaxHistory(){return(<>
 </>);}
 
 /* 2026.04.15 AI PRO 인사이트 보고서 라우팅 */
-const REPORTS_MAP={"index":ReportIndex,"01":Report01,"02":Report02,"03":Report03,"04":Report04,"05":Report05,"06":Report06,"07":Report07};
+const REPORTS_MAP={"index":ReportIndex,"01":Report01,"02":Report02,"03":Report03,"04":Report04,"05":Report05,"06":Report06,"07":Report07,"08":Report08,"09":Report09};
 function ReportsPage({slug,isMo,navigateHome}){const Comp=REPORTS_MAP[slug||"index"]||ReportIndex;return(<Comp isMo={isMo} navigateHome={navigateHome}/>);}
 const LEARN_MAP={"tax-basics":LearnTaxBasics,"loan-guide":LearnLoanGuide,"tax-saving":LearnTaxSaving,"investment-checklist":LearnInvestChecklist,"calculator-guide":LearnCalculatorGuide,"tax-history":LearnTaxHistory};
 function LearnPage({slug,isMo,navigateHome}){const Comp=LEARN_MAP[slug];return(<div style={{maxWidth:880,margin:"0 auto",padding:isMo?"24px 16px":"40px 24px",minHeight:"60vh"}}>
