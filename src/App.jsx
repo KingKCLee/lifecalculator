@@ -964,64 +964,7 @@ function AIGuide({items,title}){
   );
 }
 
-/* 2026.04.14 MiniChart — 경량 인라인 SVG 차트 (pie / donut / bar) */
-const CHART_COLORS=["#0747A6","#0052CC","#0065FF","#4C9AFF","#B3D4FF","#FFC400","#FF8B00","#36B37E","#6554C0","#FF5630"];
-function MiniChart({type="pie",data,width="100%",height=200}){
-  if(!Array.isArray(data)||data.length===0)return null;
-  const rows=data.map((d,i)=>({...d,color:d.color||CHART_COLORS[i%CHART_COLORS.length],value:Math.abs(Number(d.value)||0)}));
-  const total=rows.reduce((s,r)=>s+r.value,0);
-  if(total<=0)return null;
-  if(type==="bar"){
-    const max=Math.max(...rows.map(r=>r.value));
-    const barH=22,gap=8,padL=110,padR=70,top=8;
-    const vbH=top+rows.length*(barH+gap)+4;
-    return(
-      <svg viewBox={`0 0 400 ${vbH}`} width={width} height={height} preserveAspectRatio="xMidYMid meet" style={{display:"block"}}>
-        {rows.map((r,i)=>{
-          const y=top+i*(barH+gap);
-          const w=max>0?(400-padL-padR)*(r.value/max):0;
-          return(<g key={i}>
-            <text x={padL-6} y={y+barH*0.7} textAnchor="end" fontSize="11" fill="#505f79" fontFamily="inherit">{String(r.label).slice(0,10)}</text>
-            <rect x={padL} y={y} width={w} height={barH} rx="3" fill={r.color}/>
-            <text x={padL+w+6} y={y+barH*0.7} fontSize="11" fill="#172B4D" fontFamily="inherit" fontWeight="700">{r.value.toLocaleString()}</text>
-          </g>);
-        })}
-      </svg>
-    );
-  }
-  // pie / donut
-  const cx=200,cy=110,r=90,ir=type==="donut"?55:0;
-  let acc=0;
-  const arcs=rows.map((row,i)=>{
-    const frac=row.value/total;
-    const a0=acc*2*Math.PI-Math.PI/2;
-    acc+=frac;
-    const a1=acc*2*Math.PI-Math.PI/2;
-    const large=frac>0.5?1:0;
-    const x0=cx+r*Math.cos(a0),y0=cy+r*Math.sin(a0);
-    const x1=cx+r*Math.cos(a1),y1=cy+r*Math.sin(a1);
-    let d;
-    if(ir>0){
-      const xi0=cx+ir*Math.cos(a0),yi0=cy+ir*Math.sin(a0);
-      const xi1=cx+ir*Math.cos(a1),yi1=cy+ir*Math.sin(a1);
-      d=`M ${x0} ${y0} A ${r} ${r} 0 ${large} 1 ${x1} ${y1} L ${xi1} ${yi1} A ${ir} ${ir} 0 ${large} 0 ${xi0} ${yi0} Z`;
-    }else{
-      d=`M ${cx} ${cy} L ${x0} ${y0} A ${r} ${r} 0 ${large} 1 ${x1} ${y1} Z`;
-    }
-    return<path key={i} d={d} fill={row.color}/>;
-  });
-  return(
-    <svg viewBox="0 0 400 220" width={width} height={height} preserveAspectRatio="xMidYMid meet" style={{display:"block"}}>
-      {arcs}
-      {rows.map((r,i)=>(
-        <g key={"l"+i} transform={`translate(300, ${20+i*18})`}>
-          <rect width="12" height="12" rx="2" fill={r.color}/>
-          <text x="18" y="10" fontSize="11" fill="#172B4D" fontFamily="inherit">{String(r.label).slice(0,8)} {(r.value/total*100).toFixed(0)}%</text>
-        </g>
-      ))}
-    </svg>
-  );
-}
+/* 2026.04.15 MiniChart 제거됨 — 차트 전체 삭제 */
 
 function parseWonString(v){
   if(typeof v!=="string")return 0;
@@ -1148,17 +1091,7 @@ function RP({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlin
         </div>);
       })}
     </div>
-    {/* 2026.04.14 auto MiniChart: items 중 ₩ 금액 항목 ≥2개면 파이차트 자동 렌더 */}
-    {(()=>{
-      if(isExample||hasMiss)return null;
-      const chartData=(items||[]).filter(it=>typeof it.v==="string"&&it.v.includes("₩")&&!isTotal(it.l)).map((it,i)=>({label:String(it.l).replace(/^[\s└│]+/,"").slice(0,12),value:parseWonString(it.v),color:CHART_COLORS[i%CHART_COLORS.length]})).filter(d=>d.value>0);
-      if(chartData.length<2)return null;
-      const _isMo=typeof window!=="undefined"&&window.innerWidth<=768;
-      return(<div style={{marginTop:14,padding:"12px",background:"rgba(255,255,255,0.96)",borderRadius:10,maxWidth:_isMo?"100%":200,maxHeight:_isMo?"none":200,margin:_isMo?"14px 0 0":"14px auto 0"}}>
-        <div style={{fontSize:11,fontWeight:700,color:"#0747A6",marginBottom:4,letterSpacing:.5}}>구성 비율</div>
-        <MiniChart type="donut" data={chartData} height={_isMo?180:160}/>
-      </div>);
-    })()}
+    {/* 2026.04.15 MiniChart 제거 */}
     {!isExample&&!hasMiss&&total>0&&<AIGuide items={items} title={title}/>}
     {deadline&&<div style={{background:"rgba(255,255,255,0.10)",borderRadius:10,padding:"10px 14px",marginTop:14,fontSize:11,lineHeight:1.55,display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
       <span><IconCal c="#fff"/></span><span style={{opacity:.88,flex:"1 1 auto",minWidth:0}}>{deadline}</span>
@@ -5701,9 +5634,9 @@ body.lc-embed main{padding-top:0!important}
           <div style={{position:"absolute",left:"50%",top:0,bottom:0,transform:"translateX(-50%)",display:"flex",alignItems:"center",gap:4}}>
             {CATS.map(c=>{const items=CL.filter(cl=>cl.c===c.id);const active=cat===c.id&&page!=="home";const hot=hoverCat===c.id;const clicked=clickedCat===c.id;return(
               <div key={c.id} onMouseEnter={()=>setHoverCat(c.id)} onMouseLeave={()=>{setHoverCat(null);setClickedCat(prev=>prev===c.id?null:prev);}} style={{position:"relative"}}>
-                <button onClick={()=>{const next=hoverCat===c.id?null:c.id;setHoverCat(next);setClickedCat(next);}} style={{padding:"0 16px",border:"none",borderRadius:0,background:hot?"#fff":"transparent",color:active?"#0747A6":"#6B7280",fontSize:16,fontWeight:active?700:600,cursor:"pointer",fontFamily:"inherit",borderBottom:active?"3px solid #0747A6":"3px solid transparent",transition:"all .15s",height:64,display:"flex",alignItems:"center",gap:6}}><span style={{display:"inline-flex"}}>{TAB_ICONS[c.id]}</span>{c.l}</button>
+                <button onMouseEnter={()=>setClickedCat(c.id)} onClick={()=>{const next=hoverCat===c.id?null:c.id;setHoverCat(next);setClickedCat(next);}} style={{padding:"0 16px",border:"none",borderRadius:0,background:hot?"#fff":"transparent",color:active?"#0747A6":"#6B7280",fontSize:16,fontWeight:hot?500:(active?700:600),cursor:"pointer",fontFamily:"inherit",borderBottom:active?"3px solid #0747A6":"3px solid transparent",transition:"transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background .15s, color .15s",height:64,display:"flex",alignItems:"center",gap:6,transform:hot?"scale(1.1)":"scale(1)",transformOrigin:"center"}}><span style={{display:"inline-flex"}}>{TAB_ICONS[c.id]}</span>{c.l}</button>
                 {hot&&<div style={{position:"absolute",top:"100%",left:0,paddingTop:0,zIndex:1000}}>
-                  <div style={{background:"#fff",borderRadius:"0 0 8px 8px",border:"1px solid #E5E7EB",borderTop:"none",boxShadow:"0 8px 24px rgba(0,0,0,0.12)",padding:"8px 0",minWidth:220}}>
+                  <div onMouseEnter={()=>setClickedCat(null)} style={{background:"#fff",borderRadius:"0 0 8px 8px",border:"1px solid #E5E7EB",borderTop:"none",boxShadow:"0 8px 24px rgba(0,0,0,0.12)",padding:"8px 0",minWidth:220}}>
                     <div style={{fontSize:12,color:clicked?"#ef4444":"#6B7280",padding:"8px 16px 4px",borderBottom:"1px solid #F3F4F6",animation:"blink 1.5s ease-in-out infinite",fontWeight:clicked?700:400,transition:"color .15s"}}>아래 계산기 종류를 선택하세요</div>
                     <div style={{padding:"8px 16px 6px",fontSize:11,fontWeight:700,color:"#6B7280",letterSpacing:1}}>{c.l} — {items.length}개</div>
                     {items.map(item=>(<div key={item.id} onClick={()=>{navigateCalc(c.id,item.id);setHoverCat(null);setClickedCat(null);}} style={{padding:"10px 16px",fontSize:14,cursor:"pointer",fontWeight:calc===item.id?700:400,color:"#0a1628",display:"flex",alignItems:"center",gap:8}} onMouseEnter={e=>{e.currentTarget.style.background="#F0F4FF"}} onMouseLeave={e=>{e.currentTarget.style.background="transparent"}}>
@@ -5715,8 +5648,8 @@ body.lc-embed main{padding-top:0!important}
               </div>
             );})}
             <div onMouseEnter={megaOpen} onMouseLeave={megaClose} style={{position:"relative"}}>
-              <button onClick={()=>{const next=!showInfoMenu;setShowInfoMenu(next);setClickedCat(next?"info":null);}} style={{padding:"0 16px",border:"none",borderRadius:0,background:showInfoMenu?"#fff":"transparent",color:page==="info"?"#0747A6":"#6B7280",fontSize:16,fontWeight:page==="info"?700:600,cursor:"pointer",fontFamily:"inherit",borderBottom:page==="info"?"3px solid #0747A6":"3px solid transparent",transition:"all .15s",height:64,display:"flex",alignItems:"center",gap:6}}><span style={{display:"inline-flex"}}>{TAB_ICONS.info}</span>정보센터</button>
-              {showInfoMenu&&<div style={{position:"absolute",top:"100%",right:0,width:720,background:"#fff",borderTop:"2px solid #0747A6",borderRadius:"0 0 12px 12px",boxShadow:"0 8px 24px rgba(0,0,0,0.12)",zIndex:1000,padding:24}}>
+              <button onMouseEnter={()=>setClickedCat("info")} onClick={()=>{const next=!showInfoMenu;setShowInfoMenu(next);setClickedCat(next?"info":null);}} style={{padding:"0 16px",border:"none",borderRadius:0,background:showInfoMenu?"#fff":"transparent",color:page==="info"?"#0747A6":"#6B7280",fontSize:16,fontWeight:showInfoMenu?500:(page==="info"?700:600),cursor:"pointer",fontFamily:"inherit",borderBottom:page==="info"?"3px solid #0747A6":"3px solid transparent",transition:"transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background .15s, color .15s",height:64,display:"flex",alignItems:"center",gap:6,transform:showInfoMenu?"scale(1.1)":"scale(1)",transformOrigin:"center"}}><span style={{display:"inline-flex"}}>{TAB_ICONS.info}</span>정보센터</button>
+              {showInfoMenu&&<div onMouseEnter={()=>{if(clickedCat==="info")setClickedCat(null);}} style={{position:"absolute",top:"100%",right:0,width:720,background:"#fff",borderTop:"2px solid #0747A6",borderRadius:"0 0 12px 12px",boxShadow:"0 8px 24px rgba(0,0,0,0.12)",zIndex:1000,padding:24}}>
                 <div style={{fontSize:12,color:clickedCat==="info"?"#ef4444":"#6B7280",padding:"0 0 8px",marginBottom:12,borderBottom:"1px solid #F3F4F6",animation:"blink 1.5s ease-in-out infinite",fontWeight:clickedCat==="info"?700:400,transition:"color .15s"}}>아래 계산기 종류를 선택하세요</div>
                 <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:16}}>
                   {INFO_MENU_COLS.map(col=>(
