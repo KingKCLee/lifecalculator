@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.15",
       "category": "전체",
+      "title": "fix: 메가메뉴 hover/click 동작 강화 (type/preventDefault/borderBottom none)",
+      "desc": "fix: 메가메뉴 hover/click 동작 강화 (type/preventDefault/borderBottom none)"
+    },
+    {
+      "date": "2026.04.15",
+      "category": "전체",
       "title": "style: 홈 섹션 헤더 이모지 5종 SVG 아이콘 교체",
       "desc": "style: 홈 섹션 헤더 이모지 5종 SVG 아이콘 교체"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "refactor: 시가표준액 조회 API 제거·realtyprice.kr 외부 링크로 전환",
       "desc": "refactor: 시가표준액 조회 API 제거·realtyprice.kr 외부 링크로 전환"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "전체",
-      "title": "feat: CalcAcq 시가표준액 V-world 호출 JSONP 방식으로 변경 (CORS 우회)",
-      "desc": "feat: CalcAcq 시가표준액 V-world 호출 JSONP 방식으로 변경 (CORS 우회)"
     }
   ],
   "rates": {
