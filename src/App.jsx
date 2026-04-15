@@ -1580,21 +1580,21 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
       <div style={{marginBottom:isMo?8:16}}>
         <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>취득 유형</label>
         <div style={isMo?{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6"}:{display:"flex",flexWrap:"wrap",gap:8}}>
-          {[["sale","매매"],["gift","증여"],["inherit","상속"],["newbuild","원시"],["corp","법인"]].map(([v,l],i,arr)=>(<button key={v} onClick={()=>sAT(v)} style={isMo?{flex:1,padding:"12px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:acqType===v?"#0141f9":"#fff",color:acqType===v?"#fff":"#505f79",fontWeight:acqType===v?700:500,fontSize:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s",minHeight:44}:{flex:"1 1 auto",minWidth:60,padding:"10px 16px",border:acqType===v?"1.5px solid #0141f9":"1.5px solid #dfe1e6",borderRadius:8,background:acqType===v?"#0141f9":"#fff",color:acqType===v?"#fff":"#172B4D",fontWeight:acqType===v?700:500,fontSize:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s,border-color .15s"}}>{l}</button>))}
+          {[["sale","구매"],["gift","증여"],["inherit","상속"],["newbuild","분양"],["corp","법인"]].map(([v,l],i,arr)=>(<button key={v} onClick={()=>sAT(v)} style={isMo?{flex:1,padding:"12px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:acqType===v?"#0141f9":"#fff",color:acqType===v?"#fff":"#505f79",fontWeight:acqType===v?700:500,fontSize:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s",minHeight:44}:{flex:"1 1 auto",minWidth:60,padding:"10px 16px",border:acqType===v?"1.5px solid #0141f9":"1.5px solid #dfe1e6",borderRadius:8,background:acqType===v?"#0141f9":"#fff",color:acqType===v?"#fff":"#172B4D",fontWeight:acqType===v?700:500,fontSize:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s,border-color .15s"}}>{l}</button>))}
         </div>
       </div>
       {isMo&&<hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"8px 0"}}/>}
       <div style={{marginBottom:isMo?8:16}}>
-        <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>부동산 유형<TipModal title="부동산 유형"><p>주거용 오피스텔인 경우에만 '오피스텔' 선택. 업무용은 '그 외'. 농지는 2년 이상 자경 시 감면 혜택.</p></TipModal></label>
+        <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>부동산 종류<TipModal title="부동산 종류"><p>주거용 오피스텔인 경우에만 '오피스텔' 선택. 업무용은 '그 외'. 토지(농지)는 2년 이상 자경 시 감면 혜택.</p></TipModal></label>
         <div style={isMo?{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6"}:{display:"flex",flexWrap:"wrap",gap:8}}>
-          {[["house","주택"],["officetel","오피스텔"],["farmLand","농지"],["building","그 외"]].map(([v,l],i,arr)=>(<button key={v} onClick={()=>sRT(v)} style={isMo?{flex:1,padding:"12px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:realType===v?"#0141f9":"#fff",color:realType===v?"#fff":"#505f79",fontWeight:realType===v?700:500,fontSize:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s",minHeight:44}:{flex:"1 1 auto",minWidth:60,padding:"10px 16px",border:realType===v?"1.5px solid #0141f9":"1.5px solid #dfe1e6",borderRadius:8,background:realType===v?"#0141f9":"#fff",color:realType===v?"#fff":"#172B4D",fontWeight:realType===v?700:500,fontSize:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s,border-color .15s"}}>{l}</button>))}
+          {[["house","아파트"],["officetel","오피스텔"],["farmLand","토지"],["building","그 외"]].map(([v,l],i,arr)=>(<button key={v} onClick={()=>sRT(v)} style={isMo?{flex:1,padding:"12px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:realType===v?"#0141f9":"#fff",color:realType===v?"#fff":"#505f79",fontWeight:realType===v?700:500,fontSize:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s",minHeight:44}:{flex:"1 1 auto",minWidth:60,padding:"10px 16px",border:realType===v?"1.5px solid #0141f9":"1.5px solid #dfe1e6",borderRadius:8,background:realType===v?"#0141f9":"#fff",color:realType===v?"#fff":"#172B4D",fontWeight:realType===v?700:500,fontSize:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s,border-color .15s"}}>{l}</button>))}
         </div>
       </div>
       {isMo&&<hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"8px 0"}}/>}
       {(realType==="house"||realType==="officetel")&&<div style={{marginBottom:isMo?8:16}}>
         <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>전용면적</label>
         <div style={isMo?{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6"}:{display:"flex",flexWrap:"wrap",gap:8}}>
-          {[["40","40㎡↓"],["60","60㎡↓"],["85","85㎡↓"],["big","85㎡↑"]].map(([v,l],i,arr)=>(
+          {[["40","40㎡ 이하"],["60","60㎡ 이하"],["85","85㎡ 이하"],["big","85㎡ 초과"]].map(([v,l],i,arr)=>(
             <button key={v} onClick={()=>sAreaType(v)} style={isMo?{flex:1,padding:"12px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:areaType===v?"#0141f9":"#fff",color:areaType===v?"#fff":"#505f79",fontWeight:areaType===v?700:500,fontSize:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,minHeight:44}:{flex:"1 1 auto",minWidth:60,padding:"10px 16px",border:areaType===v?"1.5px solid #0141f9":"1.5px solid #dfe1e6",borderRadius:8,background:areaType===v?"#0141f9":"#fff",color:areaType===v?"#fff":"#172B4D",fontWeight:areaType===v?700:500,fontSize:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s,border-color .15s"}}>{l}</button>
           ))}
         </div>
@@ -3011,8 +3011,8 @@ function NextStep({calcId,onNav,isMo=false}){
   const links=(INTERNAL_LINKS[calcId]||[]).map(l=>({id:l.id,label:l.label}));
   if(links.length===0){const rl=(RELATED[calcId]||[]).map(id=>{const it=CL.find(c=>c.id===id);return it?{id,label:it.l+" 계산하기"}:null;}).filter(Boolean);if(rl.length===0)return null;links.push(...rl);}
   return(
-    <div className="lc-nextstep" style={{marginTop:12}}>
-      <div style={{fontSize:11,fontWeight:700,color:"#6b778c",letterSpacing:.5,textTransform:"uppercase",marginBottom:8}}>함께 계산하면 좋은</div>
+    <div className="lc-nextstep" style={{marginTop:16,background:"#fff",border:"1px solid #dfe1e6",borderRadius:14,padding:"20px 22px"}}>
+      <h3 style={{fontSize:11,fontWeight:700,color:"#6b778c",letterSpacing:.5,textTransform:"uppercase",margin:"0 0 12px"}}>함께 계산하면 좋은</h3>
       <div style={{display:"flex",flexDirection:"column",gap:6}}>
         {links.map(l=>{const it=CL.find(c=>c.id===l.id);if(!it)return null;return(
           <button key={l.id} onClick={()=>onNav(it.c,l.id)} style={{padding:"10px 14px",background:"#fff",border:"1px solid #dfe1e6",borderRadius:10,fontSize:13,color:"#172B4D",cursor:"pointer",fontWeight:500,fontFamily:"inherit",textAlign:"left",display:"flex",justifyContent:"space-between",alignItems:"center",transition:"all .15s"}}
@@ -5735,28 +5735,12 @@ button:active{transform:scale(0.98)}
 /* 2026.04.15 sample-calc: 입력 폼 끝 구분선 (PC 전용) — RateTable 위에 1개 divider */
 @media(min-width:769px){.calc-container .lc-ratetable{margin-top:28px!important;padding-top:24px;border-top:1px solid #e5e7eb!important;border-radius:12px;border:1px solid #dfe1e6!important}}
 @media(min-width:769px){.calc-container .lc-ratetable+.lc-ratetable{margin-top:20px!important;padding-top:0;border-top:1px solid #dfe1e6!important}}
-/* 2026.04.16 완벽가이드 번호 배지 (sample-calc .guide-card h3 .num 정확 spec) */
-.seo,.seo-guide,.guide-card{counter-reset:lcguide}
-.seo h2,.seo-guide h2,.guide-card h2{counter-increment:lcguide;display:flex;align-items:center;gap:8px}
-.seo h2::before,.seo-guide h2::before,.guide-card h2::before{
-  content:counter(lcguide);
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  width:24px;
-  height:24px;
-  border-radius:7px;
-  background:#deebff;
-  color:#0747A6;
-  font-size:12px;
-  font-weight:800;
-  flex-shrink:0;
-}
-/* h3 번호 배지도 동일 스타일 (sample-calc spec: .guide-card h3 .num) */
-.guide-card{counter-reset:lcguide2}
-.guide-card h3{counter-increment:lcguide2;display:flex;align-items:center;gap:8px}
-.guide-card h3::before{
-  content:counter(lcguide2);
+/* 2026.04.16 sample-calc 완벽가이드 번호 배지 — h2 번호 제거, h3만 .num 배지 */
+.seo h2,.seo-guide h2,.guide-card h2{display:block}
+.seo,.seo-guide,.guide-card{counter-reset:lcguide3}
+.seo h3,.seo-guide h3,.guide-card h3{counter-increment:lcguide3;display:flex;align-items:center;gap:8px}
+.seo h3::before,.seo-guide h3::before,.guide-card h3::before{
+  content:counter(lcguide3);
   display:inline-flex;
   align-items:center;
   justify-content:center;
@@ -6105,12 +6089,16 @@ body.lc-embed main{padding-top:0!important}
               {filtered.map(c=>(<button key={c.id} onClick={()=>navigateCalc(cat,c.id)} style={{padding:"8px 14px",border:calc===c.id?"none":"1px solid #E5E7EB",borderRadius:20,background:calc===c.id?"#0a1628":"#fff",color:calc===c.id?"#fff":"#6B7280",fontSize:13,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0,display:"inline-flex",alignItems:"center",justifyContent:"center",gap:6,height:36,boxSizing:"border-box"}}>{CALC_ICONS[c.id]&&<span style={{display:"inline-flex"}}>{CALC_ICONS[c.id]}</span>}{c.l}</button>))}
             </div>
           </div>}
-          <div style={{marginBottom:24,display:"flex",alignItems:"center",gap:12,flexWrap:"wrap"}}>
-            <h1 style={{fontSize:isMo?22:44,fontWeight:700,color:"#0a1628",margin:"0 0 8px",letterSpacing:isMo?"-1px":"-1.2px",lineHeight:1.15}}>{(CL.find(c=>c.id===calc)?.l||catInfo?.l)+" 계산기"}</h1>
-            <span style={{fontSize:13,color:"#6B7280",flex:"1 1 auto",minWidth:0}}>{CALC_SUBTITLE[calc]||"2026년 최신 세법 기반 정밀 계산"}</span>
-            <button onClick={()=>toggleFavorite(calc)} aria-label={favorites.includes(calc)?"즐겨찾기 해제":"즐겨찾기 추가"} style={{background:favorites.includes(calc)?"#FFFBEA":"#fff",border:"1px solid "+(favorites.includes(calc)?"#F59E0B":"#dfe1e6"),borderRadius:20,padding:"6px 12px",cursor:"pointer",fontSize:13,fontWeight:700,color:favorites.includes(calc)?"#B78100":"#6b778c",display:"inline-flex",alignItems:"center",gap:4,fontFamily:"inherit"}}>{favorites.includes(calc)?<IconStar c="#F59E0B"/>:<IconStar c="#c1c7cd"/>} {favorites.includes(calc)?"즐겨찾기 해제":"즐겨찾기"}</button>
-            {/* 2026.04.14 embed 퍼가기 버튼 */}
-            <button onClick={()=>{const url=window.location.href;if(navigator.share){navigator.share({title:(CL.find(c=>c.id===calc)?.l||"")+" 계산기",url}).catch(()=>{});}else if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(url).then(()=>showToast("링크가 복사되었습니다")).catch(()=>showToast("복사 실패"));}else{const ta=document.createElement("textarea");ta.value=url;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);showToast("링크가 복사되었습니다");}}} aria-label="공유" style={{background:"#fff",border:"1px solid #E5E7EB",borderRadius:8,padding:"8px 14px",cursor:"pointer",fontSize:13,fontWeight:500,color:"#6B7280",display:"inline-flex",alignItems:"center",gap:6,fontFamily:"inherit"}}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>공유</button>
+          {/* 2026.04.16 sample-calc .page-head .head-row — h1 + 부제 2행 + 우측 액션 */}
+          <div style={{marginBottom:24,display:"flex",justifyContent:"space-between",alignItems:"flex-end",gap:20,flexWrap:"wrap"}}>
+            <div style={{flex:"1 1 auto",minWidth:0}}>
+              <h1 style={{fontSize:isMo?22:44,fontWeight:700,color:"#0a1628",margin:"0 0 8px",letterSpacing:isMo?"-1px":"-1.2px",lineHeight:1.15}}>{(CL.find(c=>c.id===calc)?.l||catInfo?.l)+" 계산기"}</h1>
+              <div style={{fontSize:15,color:"#505f79",margin:0}}>{CALC_SUBTITLE[calc]||"2026년 최신 세법 기반 정밀 계산"}</div>
+            </div>
+            <div style={{display:"flex",gap:10,flexShrink:0}}>
+              <button onClick={()=>toggleFavorite(calc)} aria-label={favorites.includes(calc)?"즐겨찾기 해제":"즐겨찾기 추가"} style={{background:favorites.includes(calc)?"#FFFBEA":"#fff",border:"1px solid "+(favorites.includes(calc)?"#F59E0B":"#E5E7EB"),borderRadius:8,padding:"8px 14px",cursor:"pointer",fontSize:13,fontWeight:500,color:favorites.includes(calc)?"#B78100":"#6B7280",display:"inline-flex",alignItems:"center",gap:6,fontFamily:"inherit"}}>{favorites.includes(calc)?<IconStar c="#F59E0B"/>:<IconStar c="#c1c7cd"/>}{favorites.includes(calc)?"즐겨찾기 해제":"즐겨찾기"}</button>
+              <button onClick={()=>{const url=window.location.href;if(navigator.share){navigator.share({title:(CL.find(c=>c.id===calc)?.l||"")+" 계산기",url}).catch(()=>{});}else if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(url).then(()=>showToast("링크가 복사되었습니다")).catch(()=>showToast("복사 실패"));}else{const ta=document.createElement("textarea");ta.value=url;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);showToast("링크가 복사되었습니다");}}} aria-label="공유" style={{background:"#fff",border:"1px solid #E5E7EB",borderRadius:8,padding:"8px 14px",cursor:"pointer",fontSize:13,fontWeight:500,color:"#6B7280",display:"inline-flex",alignItems:"center",gap:6,fontFamily:"inherit"}}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>공유</button>
+            </div>
           </div>
           <div className="calc-container" style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:isMo?16:32,marginBottom:24,boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
             {isMo?(<MobileCalcWrapper><Comp key={calc+"_"+sessionKey} isMo={true} onNav={navigateCalc}/></MobileCalcWrapper>):(<div><Comp key={calc+"_"+sessionKey} isMo={false} onNav={navigateCalc}/></div>)}
