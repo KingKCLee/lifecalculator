@@ -3528,7 +3528,7 @@ function HomeSections({isMo, effectiveUser, navigateCalc, setAuthMode, setShowAu
     <div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?0:20}}>
       <div style={secStyle}>
         <div style={hdrStyle}>
-          <span>📰 세금·부동산 뉴스</span>
+          <span style={{display:"inline-flex",alignItems:"center",gap:6,verticalAlign:"middle"}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{display:"inline-block",verticalAlign:"middle"}}><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8V6Z"/></svg>세금·부동산 뉴스</span>
           <a href="/news/" style={moreLnk}>더보기 →</a>
         </div>
         <NewsList state={news}/>
@@ -3536,7 +3536,7 @@ function HomeSections({isMo, effectiveUser, navigateCalc, setAuthMode, setShowAu
       </div>
       <div style={secStyle}>
         <div style={hdrStyle}>
-          <span>🏛 최신 규제·정책 브리핑</span>
+          <span style={{display:"inline-flex",alignItems:"center",gap:6,verticalAlign:"middle"}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{display:"inline-block",verticalAlign:"middle"}}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>최신 규제·정책 브리핑</span>
           <a href="/policy/" style={moreLnk}>전체 정책 →</a>
         </div>
         <PolicyList state={policy}/>
@@ -3548,7 +3548,7 @@ function HomeSections({isMo, effectiveUser, navigateCalc, setAuthMode, setShowAu
     <div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?0:20}}>
       <div style={secStyle}>
         <div style={hdrStyle}>
-          <span>🤖 AI 절세 가이드</span>
+          <span style={{display:"inline-flex",alignItems:"center",gap:6,verticalAlign:"middle"}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{display:"inline-block",verticalAlign:"middle"}}><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2M20 14h2M15 13v2M9 13v2"/></svg>AI 절세 가이드</span>
           <a href="/guide/" style={moreLnk}>가이드 전체 →</a>
         </div>
         <TaxTipList/>
@@ -3556,7 +3556,7 @@ function HomeSections({isMo, effectiveUser, navigateCalc, setAuthMode, setShowAu
       </div>
       <div style={secStyle}>
         <div style={hdrStyle}>
-          <span>💬 사용자 Q&A 게시판</span>
+          <span style={{display:"inline-flex",alignItems:"center",gap:6,verticalAlign:"middle"}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{display:"inline-block",verticalAlign:"middle"}}><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>사용자 Q&A 게시판</span>
           <div style={{display:"flex",gap:8,alignItems:"center"}}>
             {effectiveUser&&<a href="/community/write.html" style={{...moreLnk,background:"#0747A6",color:"#fff",padding:"4px 10px",borderRadius:6}}>글쓰기</a>}
             <a href="/community/" style={moreLnk}>게시판 →</a>
@@ -3599,7 +3599,7 @@ function HomeSections({isMo, effectiveUser, navigateCalc, setAuthMode, setShowAu
     {/* 섹션 6 — 용어 빠른 검색 (전체 너비) */}
     <div style={secStyle}>
       <div style={hdrStyle}>
-        <span>📖 세금·부동산 용어 빠른검색</span>
+        <span style={{display:"inline-flex",alignItems:"center",gap:6,verticalAlign:"middle"}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{display:"inline-block",verticalAlign:"middle"}}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>세금·부동산 용어 빠른검색</span>
         <a href="/terms/" style={moreLnk}>용어사전 →</a>
       </div>
       <form onSubmit={e=>{e.preventDefault();const q=e.target.q.value.trim();if(q)window.location.href="/terms/?q="+encodeURIComponent(q);}} style={{marginBottom:14}}>
