@@ -5296,10 +5296,11 @@ export default function App(){
   const[calcHistory,setCalcHistory]=useState(()=>{try{return JSON.parse(localStorage.getItem('calc_history')||'[]')}catch{return[]}});
   const saveHistory=(cId,name,total)=>{if(!total||total<=0)return;const item={id:cId,name,total,time:Date.now()};setCalcHistory(prev=>{const updated=[item,...prev.filter(h=>h.id!==cId)].slice(0,10);try{localStorage.setItem('calc_history',JSON.stringify(updated))}catch{}return updated;});};
   const[showAllLog,setShowAllLog]=useState(false);const[hoverCat,setHoverCat]=useState(null);const[showInfoMenu,setShowInfoMenu]=useState(false);
-  const megaClickRef=useRef(0);
-  const megaOpen=()=>{if(Date.now()-megaClickRef.current>300)setShowInfoMenu(true);};
+  const clickedRecently=useRef(false);
+  const closeMenu=()=>{setShowInfoMenu(false);clickedRecently.current=true;setTimeout(()=>{clickedRecently.current=false;},500);};
+  const megaOpen=()=>{if(clickedRecently.current)return;setShowInfoMenu(true);};
   const megaClose=()=>setShowInfoMenu(false);
-  const megaClickClose=()=>{megaClickRef.current=Date.now();setShowInfoMenu(false);};
+  const megaClickClose=closeMenu;
   const[sessionKey,setSessionKey]=useState(0);
   useEffect(()=>{
     const onVis=()=>{if(document.visibilityState==="visible")setSessionKey(k=>k+1);};
