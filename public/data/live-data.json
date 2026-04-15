@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "fix(AddressModal): optional 동/호, area-bucket filter, separated real/std flow",
+      "desc": "fix(AddressModal): optional 동/호, area-bucket filter, separated real/std flow"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "feat(acq): add AddressModal with JUSO search → real-price & vworld lookup",
       "desc": "feat(acq): add AddressModal with JUSO search → real-price & vworld lookup"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "fix: TipModal 데스크톱 팝오버 title 헤더 제거 — 레이블과 중복 해소",
       "desc": "fix: TipModal 데스크톱 팝오버 title 헤더 제거 — 레이블과 중복 해소"
-    },
-    {
-      "date": "2026.04.15",
-      "category": "전체",
-      "title": "feat(nav): 상단 메인/서브 탭 SVG 아이콘 + 정보센터 톤앤매너 통일 + 홈화면 개선",
-      "desc": "feat(nav): 상단 메인/서브 탭 SVG 아이콘 + 정보센터 톤앤매너 통일 + 홈화면 개선"
     }
   ],
   "rates": {
