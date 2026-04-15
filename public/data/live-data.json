@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.15",
       "category": "전체",
+      "title": "fix(layout): PC 좌측 Expert Guide 사이드바 실제 렌더 제거",
+      "desc": "fix(layout): PC 좌측 Expert Guide 사이드바 실제 렌더 제거"
+    },
+    {
+      "date": "2026.04.15",
+      "category": "전체",
       "title": "feat(hero): 홈 검색바 spec 정확 일치 — CalcSearchBar 우회 + inline form",
       "desc": "feat(hero): 홈 검색바 spec 정확 일치 — CalcSearchBar 우회 + inline form"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "refactor: LeftNav 하단 실시간 지표 블록 제거 (코스피·기준금리·서울 아파트)",
       "desc": "refactor: LeftNav 하단 실시간 지표 블록 제거 (코스피·기준금리·서울 아파트)"
-    },
-    {
-      "date": "2026.04.14",
-      "category": "전체",
-      "title": "feat: CalcTrans/Compre/Gift/Inherit 2열 레이아웃 + hr 구분선 이식",
-      "desc": "feat: CalcTrans/Compre/Gift/Inherit 2열 레이아웃 + hr 구분선 이식"
     }
   ],
   "rates": {
