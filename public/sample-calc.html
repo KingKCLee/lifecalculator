@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>취득세 계산기 — 생활계산기.com</title>
+<style>
+  :root{
+    /* App.jsx palette P */
+    --navy:#0a1628;
+    --pri:#0747A6;
+    --pl:#0052CC;
+    --tx:#172B4D;
+    --mt:#505f79;
+    --bd:#dfe1e6;
+    --lt:#f4f5f7;
+    --bg:#f8f9fc;
+    --card:#ffffff;
+    --blue:#3b82f6;
+    --grey-500:#6B7280;
+    --grey-700:#374151;
+    --red:#ef4444;
+    --gold:#FFC400;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif;color:var(--tx);background:#FFFFFF;line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer;border:none;background:none}
+  input,select{font-family:inherit}
+  svg{display:inline-block;vertical-align:middle}
+
+  /* ────── REAL HEADER ────── */
+  header.top{background:#FFFFFF;border-bottom:1px solid #E5E7EB;position:sticky;top:0;left:0;right:0;z-index:1000}
+  .top-inner{display:flex;align-items:center;height:64px;padding:0 24px;gap:16px;position:relative;max-width:1400px;margin:0 auto}
+  .logo-link{display:flex;align-items:center;gap:10px;cursor:pointer;flex-shrink:0}
+  .logo-link .brand{font-size:24px;font-weight:800;color:var(--navy);letter-spacing:-.3px;margin-left:4px}
+  .logo-link .brand .dot{color:var(--blue)}
+  .tabs-wrap{position:absolute;left:50%;top:0;bottom:0;transform:translateX(-50%);display:flex;align-items:center;gap:4px}
+  .tab-wrap{position:relative}
+  .tab-btn{padding:0 16px;border:none;border-radius:0;background:transparent;color:var(--grey-500);font-size:16px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;height:64px;display:inline-flex;align-items:center;gap:6px;transition:transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.15s, background .15s;transform:translateY(0)}
+  .tab-btn.active{color:var(--pri);font-weight:700;border-bottom-color:var(--pri)}
+  .tab-wrap:hover .tab-btn{background:#fff;color:var(--blue);transform:translateY(-4px);border-bottom:none}
+  .tab-wrap:hover .drop{display:block}
+  .drop{display:none;position:absolute;top:100%;left:0;background:#fff;border:1px solid #E5E7EB;border-top:none;border-radius:0 0 8px 8px;box-shadow:0 8px 24px rgba(0,0,0,0.12);padding:8px 0;min-width:240px;z-index:1001}
+  .tab-wrap:nth-last-child(-n+2) .drop{left:auto;right:0}
+  .drop-hint{font-size:12px;color:var(--grey-500);padding:8px 16px 4px;border-bottom:1px solid #F3F4F6;animation:blink 1.5s ease-in-out infinite;transition:color .15s}
+  .tab-wrap:hover .drop-hint{color:var(--red);font-weight:700}
+  .drop:hover .drop-hint{color:var(--grey-500);font-weight:400}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.5}}
+  .drop a{display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:14px;color:var(--navy)}
+  .drop a:hover{background:#F0F4FF}
+  .mega-info-outer{display:none;position:absolute;top:100%;right:0;background:#fff;border:2px solid var(--pri);border-top:none;border-radius:0 0 12px 12px;box-shadow:0 8px 24px rgba(0,0,0,0.12);width:640px;z-index:1001;padding:24px}
+  .tab-wrap:hover .mega-info-outer{display:block}
+  .mega-info-outer .hint{font-size:12px;color:var(--grey-500);padding-bottom:8px;margin-bottom:12px;border-bottom:1px solid #F3F4F6;animation:blink 1.5s ease-in-out infinite}
+  .tab-wrap:hover .mega-info-outer .hint{color:var(--red);font-weight:700}
+  .mega-info-outer:hover .hint{color:var(--grey-500);font-weight:400}
+  .mega-info-cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+  .mega-info-cols h4{font-size:11px;font-weight:800;color:var(--grey-500);letter-spacing:1px;text-transform:uppercase;margin:0 0 8px}
+  .mega-info-cols a{display:flex;align-items:flex-start;gap:10px;padding:8px 12px;border-radius:8px;color:var(--grey-700)}
+  .mega-info-cols a:hover{background:#F0F4FF}
+  .mega-info-cols a svg{flex-shrink:0;color:var(--pri);margin-top:2px}
+  .mega-info-cols a .ti{font-size:13px;font-weight:700;color:var(--navy)}
+  .mega-info-cols a .de{font-size:11px;color:var(--grey-500);margin-top:2px}
+
+  .top-right{display:flex;align-items:center;gap:10px;margin-left:auto;flex-shrink:0}
+  .search-mini{position:relative;width:200px;height:36px}
+  .search-mini input{width:100%;height:36px;padding:0 12px 0 34px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;color:var(--navy);font-family:inherit;outline:none}
+  .search-mini svg.ic{position:absolute;left:10px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--grey-500)}
+  .btn{display:inline-flex;align-items:center;justify-content:center;padding:8px 20px;border-radius:8px;font-weight:700;font-size:14px;white-space:nowrap;border:none;font-family:inherit;cursor:pointer;transition:background .15s}
+  .btn.primary{background:var(--navy);color:#fff}
+  .btn.primary:hover{background:var(--pri)}
+  .btn.ghost{background:#fff;color:var(--grey-500);border:1px solid #E5E7EB;font-weight:500;font-size:13px;padding:8px 14px}
+
+  /* ────── BREADCRUMB ────── */
+  .crumb{max-width:1200px;margin:0 auto;padding:24px 32px 0;font-size:13px;color:var(--mt)}
+  .crumb a{color:var(--mt)}
+  .crumb .sep{margin:0 8px;color:#d1d5db}
+  .crumb .here{color:var(--navy);font-weight:600}
+
+  /* ────── PAGE HEAD ────── */
+  .page-head{max-width:1200px;margin:0 auto;padding:16px 32px 24px}
+  .page-head h1{font-size:44px;font-weight:700;color:var(--navy);letter-spacing:-1.2px;margin:0 0 8px;line-height:1.15}
+  .page-head .sub{font-size:15px;color:var(--mt);margin:0}
+  .page-head .head-row{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
+  .head-actions{display:flex;gap:10px}
+
+  /* ────── MAIN 2-col ────── */
+  main.calc-wrap{max-width:1200px;margin:0 auto;padding:16px 32px 48px;display:grid;grid-template-columns:60% 40%;gap:28px;align-items:start}
+
+  /* ────── LEFT: form (real App.jsx look) ────── */
+  .form-card{background:#fff;border:1px solid var(--bd);border-radius:16px;padding:32px 32px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  .field{margin-bottom:20px}
+  .field-label{display:block;font-size:12px;font-weight:600;color:#6b778c;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px}
+
+  /* 독립 버튼 (real Radio component style) */
+  .btn-group{display:flex;flex-wrap:wrap;gap:6px}
+  .opt-btn{
+    flex:1 1 auto;min-width:60px;padding:10px 12px;
+    border:1.5px solid var(--bd);
+    border-radius:8px;
+    background:#fff;
+    color:#505f79;
+    font-weight:500;
+    font-size:13px;
+    cursor:pointer;font-family:inherit;
+    white-space:nowrap;text-align:center;line-height:1.4;
+    transition:background .15s, color .15s, border-color .15s;
+  }
+  .opt-btn:hover{background:#F0F4FF;border-color:var(--pri);color:var(--pri)}
+  .opt-btn.on{
+    background:#0747A6;
+    color:#fff;
+    border:none;
+    font-weight:700;
+  }
+  .opt-btn.on:hover{background:#0052CC;color:#fff}
+
+  /* chip (real style from L1573) */
+  .chip{
+    padding:6px 12px;border-radius:20px;font-size:12px;font-weight:500;
+    cursor:pointer;font-family:inherit;transition:all .15s;
+    border:1.5px solid var(--bd);background:#fff;color:#505f79
+  }
+  .chip.on{border:none;background:#E6F1FB;color:#0C447C;font-weight:700}
+  .chip:hover:not(.on){border-color:var(--pri);color:var(--pri)}
+
+  /* inputs */
+  .input-row{display:flex;align-items:center;gap:10px}
+  input.money-input{
+    flex:1;padding:10px 14px;
+    border:1.5px solid var(--bd);border-radius:10px;
+    font-size:15px;font-weight:500;color:var(--tx);
+    outline:none;text-align:right;font-variant-numeric:tabular-nums;
+    background:#fff;
+  }
+  input.money-input:focus{border-color:var(--pri)}
+  .unit{font-size:13px;color:var(--mt);font-weight:500;min-width:36px}
+  .hint{font-size:11px;color:var(--mt);margin-top:6px;line-height:1.6}
+  .check{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:12px;color:var(--grey-700);cursor:pointer}
+  .check input{width:14px;height:14px;accent-color:var(--pri)}
+
+  /* 입력폼 내부 구분선 제거 — 필드는 margin만 */
+  /* notice */
+  .notice-ok{background:#E3FCEF;border:1px solid #57D9A3;border-radius:10px;padding:10px 14px;font-size:12px;color:#006644;line-height:1.6;margin-top:12px}
+
+  /* 입력폼 끝과 세율표 사이 단 1개 구분선 */
+  .form-divider{border:none;border-top:1px solid #e5e7eb;margin:28px 0 24px}
+
+  /* rate tables (real App.jsx L2149 style) */
+  .rate-wrap{margin-top:0;border-radius:12px;overflow:hidden;border:1px solid var(--bd)}
+  .rate-head{padding:10px 14px;background:#f4f5f7;font-size:12px;font-weight:700;color:#172B4D;display:flex;align-items:center;gap:6px}
+  .rate-head svg{color:#0747A6}
+  .rate-table{width:100%;border-collapse:collapse;font-size:12px;background:#fff}
+  .rate-table th{padding:8px 10px;background:#0747A6;color:#fff;font-weight:600;text-align:center;white-space:nowrap;font-size:11px}
+  .rate-table th:first-child{text-align:left}
+  .rate-table td{padding:7px 10px;border-bottom:1px solid #f0f0f0;text-align:center;font-size:11px;color:#505f79;white-space:nowrap}
+  .rate-table td:first-child{text-align:left;color:#172B4D}
+  .rate-table tr:nth-child(even) td{background:#f8f9fc}
+  .rate-table tr:last-child td{border-bottom:none}
+  .rate-table td.total{font-weight:800;color:#172B4D}
+  .rate-section-gap{height:20px}
+
+  /* ────── RIGHT column (result + nextstep + expert) ────── */
+  .rp-wrap{display:flex;flex-direction:column;gap:16px;position:sticky;top:90px;align-self:start}
+  .result-panel{background:linear-gradient(315deg, #0747A6 0%, #0052CC 50%, #0065FF 100%);color:#fff;border-radius:20px;padding:28px 24px;position:relative;overflow:hidden;box-shadow:0 8px 28px rgba(7,71,166,.28)}
+  .rp-warn{background:rgba(255,255,255,0.15);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:12px;display:flex;gap:8px;align-items:flex-start;line-height:1.55;color:#FFE380;position:relative}
+  .rp-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;opacity:.7;margin-bottom:6px;position:relative}
+  .rp-total{font-size:38px;font-weight:800;line-height:1.1;font-variant-numeric:tabular-nums;position:relative}
+  .rp-sub{font-size:12px;opacity:.72;margin-top:6px;margin-bottom:16px;line-height:1.5;position:relative}
+  .rp-break{border-top:1px solid rgba(255,255,255,.22);padding-top:4px;position:relative}
+  .rp-line{display:flex;justify-content:space-between;align-items:baseline;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:13px;gap:8px}
+  .rp-line:last-child{border-bottom:none}
+  .rp-line .l{opacity:.82;flex:1 1 auto}
+  .rp-line .v{font-weight:600;font-variant-numeric:tabular-nums;color:#fff}
+  .rp-line.total{padding-top:14px;border-top:1px solid rgba(255,255,255,.25);margin-top:6px}
+  .rp-line.total .l{opacity:1;font-weight:800;font-size:16px}
+  .rp-line.total .v{color:var(--gold);font-weight:800;font-size:16px}
+
+  .rp-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;position:relative}
+  .rp-actions button{flex:1 1 auto;min-width:80px;padding:9px 10px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.28);border-radius:8px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;font-family:inherit}
+  .rp-actions button:hover{background:rgba(255,255,255,.22)}
+  .rp-scenario{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px;position:relative}
+  .rp-scenario button{padding:8px 4px;background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.28);border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit}
+  .rp-consult{margin-top:10px;padding:12px 14px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:10px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;position:relative}
+  .rp-consult .l .t{font-size:12px;font-weight:700;margin-bottom:2px}
+  .rp-consult .l .d{font-size:11px;opacity:.82}
+  .rp-consult button{flex-shrink:0;padding:8px 14px;background:#fff;color:var(--pri);border:none;border-radius:8px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit}
+  .rp-ai{background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.35);border-radius:10px;padding:14px 16px;margin-top:10px;position:relative}
+  .rp-ai .h{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:800;color:#6ee7b7;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
+  .rp-ai p{font-size:12px;margin:0;line-height:1.65;color:rgba(255,255,255,.9)}
+
+  /* NextStep */
+  .nextstep{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:20px 22px}
+  .nextstep h3{font-size:11px;font-weight:700;color:#6b778c;margin:0 0 12px;text-transform:uppercase;letter-spacing:.5px}
+  .ns-list{display:flex;flex-direction:column;gap:6px}
+  .ns-btn{padding:10px 14px;background:#fff;border:1px solid var(--bd);border-radius:10px;font-size:13px;color:var(--tx);font-weight:500;display:flex;justify-content:space-between;align-items:center;transition:all .15s;width:100%;font-family:inherit;cursor:pointer}
+  .ns-btn:hover{background:#deebff;border-color:var(--pri);color:var(--pri)}
+  .ns-btn .arr{color:var(--pri);font-weight:700}
+
+  /* Expert Guide */
+  .expert-card{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:22px 24px}
+  .expert-head{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+  .expert-head svg{color:var(--pri)}
+  .expert-head h3{font-size:14px;font-weight:800;color:var(--navy);margin:0}
+  .acc-item{border-bottom:1px solid var(--bd)}
+  .acc-item:last-child{border-bottom:none}
+  .acc-q{width:100%;padding:13px 4px;display:flex;justify-content:space-between;align-items:center;text-align:left;font-size:13px;font-weight:700;color:var(--tx);background:none;border:none;cursor:pointer;font-family:inherit}
+  .acc-q .ico{width:22px;height:22px;border-radius:6px;background:#f4f5f7;display:flex;align-items:center;justify-content:center;color:var(--pri);font-weight:800;transition:all .15s;font-size:14px}
+  .acc-item.open .acc-q .ico{background:var(--pri);color:#fff;transform:rotate(45deg)}
+  .acc-a{max-height:0;overflow:hidden;transition:max-height .25s ease;padding:0 4px}
+  .acc-item.open .acc-a{max-height:220px;padding:0 4px 12px}
+  .acc-a p{font-size:12px;color:var(--mt);margin:0;line-height:1.75}
+  .expert-links{margin-top:12px;padding-top:12px;border-top:1px solid var(--bd);display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .expert-link{padding:9px 12px;background:#f8f9fc;border:1px solid var(--bd);border-radius:8px;font-size:12px;color:var(--grey-700);font-weight:600;display:flex;align-items:center;gap:8px;cursor:pointer;font-family:inherit}
+  .expert-link:hover{background:#eff6ff;border-color:var(--pri);color:var(--pri)}
+  .expert-link svg{color:var(--pri);flex-shrink:0}
+
+  /* Complete Guide */
+  .guide-section{max-width:1200px;margin:0 auto;padding:40px 32px 72px}
+  .guide-card{background:#fff;border:1px solid var(--bd);border-radius:18px;padding:40px 44px}
+  .guide-card h2{font-size:28px;font-weight:800;color:var(--navy);margin:0 0 8px;letter-spacing:-0.7px}
+  .guide-sub{font-size:13px;color:var(--mt);margin:0 0 28px}
+  .guide-card h3{font-size:17px;font-weight:800;color:var(--navy);margin:24px 0 8px;display:flex;align-items:center;gap:8px}
+  .guide-card h3 .num{width:24px;height:24px;border-radius:7px;background:#deebff;color:var(--pri);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:800}
+  .guide-card p{font-size:14px;color:var(--grey-700);line-height:1.8;margin:0 0 8px}
+
+  /* Footer */
+  footer{background:var(--navy);color:#fff;padding:64px 32px 32px}
+  .ft-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr 1.4fr;gap:40px}
+  .ft-brand .logo-link{margin-bottom:14px}
+  .ft-brand .logo-link .brand{color:#ffffff}
+  .ft-brand .logo-link .brand .dot{color:#60a5fa}
+  .ft-brand p{font-size:13px;opacity:0.7;line-height:1.7;margin:0 0 16px;max-width:260px}
+  .ft-col h4{font-size:13px;font-weight:800;color:#fff;margin:0 0 16px}
+  .ft-col ul{list-style:none;padding:0;margin:0}
+  .ft-col li{font-size:13px;color:rgba(255,255,255,0.65);padding:6px 0;cursor:pointer}
+  .ft-col li:hover{color:var(--blue)}
+  .ft-news h4{font-size:13px;font-weight:800;color:#fff;margin:0 0 12px}
+  .ft-news p{font-size:12px;color:rgba(255,255,255,0.65);margin:0 0 12px;line-height:1.6}
+  .ft-news form{display:flex;gap:6px}
+  .ft-news input{flex:1;padding:10px 14px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:#fff;font-size:13px;outline:none;font-family:inherit}
+  .ft-news button{padding:10px 18px;background:var(--blue);color:#fff;border-radius:8px;font-size:13px;font-weight:700}
+  .ft-bottom{max-width:1200px;margin:48px auto 0;padding-top:24px;border-top:1px solid rgba(255,255,255,0.1);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:12px}
+  .ft-bottom .biz{color:rgba(255,255,255,0.3);max-width:720px;line-height:1.6}
+  .ft-bottom .rights{color:rgba(255,255,255,0.65)}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ REAL HEADER ═══════════ -->
+<header class="top">
+  <div class="top-inner">
+    <a class="logo-link" href="sample-home.html">
+      <svg viewBox="0 0 512 512" width="40" height="40">
+        <defs><linearGradient id="lbg2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1e40a0"/><stop offset="100%" stop-color="#0f2b80"/></linearGradient></defs>
+        <rect width="512" height="512" rx="102" fill="url(#lbg2)"/>
+        <rect x="90" y="145" width="140" height="28" rx="14" fill="white"/>
+        <g transform="translate(370,160)"><rect x="-70" y="-14" width="140" height="28" rx="14" fill="white" transform="rotate(45)"/><rect x="-70" y="-14" width="140" height="28" rx="14" fill="white" transform="rotate(-45)"/></g>
+        <rect x="90" y="340" width="140" height="28" rx="14" fill="white"/>
+        <rect x="146" y="284" width="28" height="140" rx="14" fill="white"/>
+        <rect x="282" y="320" width="140" height="28" rx="14" fill="white"/>
+        <rect x="282" y="370" width="140" height="28" rx="14" fill="white"/>
+      </svg>
+      <span class="brand">생활계산기<span class="dot">.com</span></span>
+    </a>
+
+    <div class="tabs-wrap">
+      <div class="tab-wrap">
+        <button class="tab-btn active">세금</button>
+        <div class="drop">
+          <div class="drop-hint">아래 계산기 종류를 선택하세요</div>
+          <a href="#">취득세</a><a href="#">양도소득세</a><a href="#">종합소득세</a><a href="#">연말정산</a><a href="#">종부세</a><a href="#">재산세</a><a href="#">증여세</a><a href="#">상속세</a><a href="#">보유세 통합</a><a href="#">임대소득세</a><a href="#">건물 부가세</a><a href="#">임대 추정소득</a><a href="#">착한임대인 공제</a><a href="#">간주임대료</a><a href="#">법정상속분</a><a href="#">누진세 범용</a>
+        </div>
+      </div>
+      <div class="tab-wrap"><button class="tab-btn">대출</button><div class="drop"><div class="drop-hint">아래 계산기 종류를 선택하세요</div><a href="#">대출이자</a><a href="#">DSR</a><a href="#">DTI</a><a href="#">LTV·대출한도</a><a href="#">대출가능액</a><a href="#">RTI</a><a href="#">대환대출 비교</a></div></div>
+      <div class="tab-wrap"><button class="tab-btn">비용</button><div class="drop"><div class="drop-hint">아래 계산기 종류를 선택하세요</div><a href="#">중개보수</a><a href="#">등기비용</a><a href="#">법무사수수료</a><a href="#">인지세</a><a href="#">채권할인료</a><a href="#">감정평가수수료</a><a href="#">국민주택채권 매입</a><a href="#">전세보증금보험료</a><a href="#">인지세(전자계약)</a></div></div>
+      <div class="tab-wrap"><button class="tab-btn">생활</button><div class="drop"><div class="drop-hint">아래 계산기 종류를 선택하세요</div><a href="#">연봉 실수령액</a><a href="#">4대보험료</a><a href="#">국민연금 수령액</a><a href="#">자동차세</a><a href="#">퇴직금</a><a href="#">실업급여</a><a href="#">최저임금</a><a href="#">예적금이자</a><a href="#">전월세전환</a><a href="#">날짜 계산기</a><a href="#">손없는날 달력</a></div></div>
+      <div class="tab-wrap"><button class="tab-btn">부동산</button><div class="drop"><div class="drop-hint">아래 계산기 종류를 선택하세요</div><a href="#">임대수익률</a><a href="#">공동명의</a><a href="#">평수변환</a><a href="#">용적률·건폐율</a><a href="#">경매비용</a><a href="#">리모델링수익</a><a href="#">청약가점</a><a href="#">재건축 연한</a><a href="#">실거래가 조회</a><a href="#">매도 실수령액</a></div></div>
+      <div class="tab-wrap"><button class="tab-btn">PRO 분석</button><div class="drop"><div class="drop-hint">아래 계산기 종류를 선택하세요</div><a href="#">총비용 시뮬레이터</a><a href="#">세금비교 분석</a><a href="#">투자수익 분석</a></div></div>
+      <div class="tab-wrap">
+        <button class="tab-btn">정보센터</button>
+        <div class="mega-info-outer">
+          <div class="hint">아래 계산기 종류를 선택하세요</div>
+          <div class="mega-info-cols">
+            <div class="col"><h4>최신 정보</h4>
+              <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/></svg><div><div class="ti">실시간 뉴스</div><div class="de">부동산·세금 뉴스</div></div></a>
+              <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg><div><div class="ti">부동산 정책</div><div class="de">정부 발표 정책</div></div></a>
+              <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="1"/></svg><div><div class="ti">세법 개정 히스토리</div><div class="de">연도별 변경사항</div></div></a>
+            </div>
+            <div class="col"><h4>학습·가이드</h4>
+              <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><div><div class="ti">전문가 가이드</div><div class="de">세무사 추천</div></div></a>
+              <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/></svg><div><div class="ti">규정·법령</div><div class="de">법령 원문</div></div></a>
+              <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/></svg><div><div class="ti">절세 전략</div><div class="de">절감 방법</div></div></a>
+              <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/></svg><div><div class="ti">계산기 사용법</div><div class="de">튜토리얼</div></div></a>
+            </div>
+            <div class="col"><h4>커뮤니티</h4>
+              <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><div><div class="ti">Q&A 게시판</div><div class="de">질문 답변</div></div></a>
+              <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/></svg><div><div class="ti">부동산 용어사전</div><div class="de">용어 검색</div></div></a>
+              <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 20h18"/><path d="M6 16V8"/><path d="M12 16V4"/><path d="M18 16v-6"/></svg><div><div class="ti">시장 데이터</div><div class="de">실거래가·시세</div></div></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="top-right">
+      <div class="search-mini">
+        <svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" placeholder="계산기 검색…">
+      </div>
+      <button class="btn ghost">로그인</button>
+      <button class="btn primary">무료 가입</button>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════ BREADCRUMB ═══════════ -->
+<nav class="crumb">
+  <a href="sample-home.html">홈</a>
+  <span class="sep">›</span>
+  <a href="#">세금 계산기</a>
+  <span class="sep">›</span>
+  <span class="here">취득세</span>
+</nav>
+
+<!-- ═══════════ PAGE HEAD ═══════════ -->
+<div class="page-head">
+  <div class="head-row">
+    <div>
+      <h1>취득세 계산기</h1>
+      <p class="sub">2026년 취득세율 자동 적용 · 중과/감면 자동 판정</p>
+    </div>
+    <div class="head-actions">
+      <button class="btn ghost">☆ 즐겨찾기</button>
+      <button class="btn ghost">↗ 공유</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ MAIN 2-COL ═══════════ -->
+<main class="calc-wrap">
+
+  <!-- ─── LEFT: form ─── -->
+  <div class="form-card">
+
+    <!-- 취득 유형 (독립 버튼) -->
+    <div class="field">
+      <label class="field-label">취득 유형</label>
+      <div class="btn-group" data-group="acq">
+        <button class="opt-btn on">구매</button>
+        <button class="opt-btn">증여</button>
+        <button class="opt-btn">상속</button>
+        <button class="opt-btn">분양</button>
+        <button class="opt-btn">법인</button>
+      </div>
+    </div>
+
+    <!-- 부동산 선택 -->
+    <div class="field">
+      <label class="field-label">부동산 종류</label>
+      <div class="btn-group" data-group="type">
+        <button class="opt-btn on">아파트</button>
+        <button class="opt-btn">오피스텔</button>
+        <button class="opt-btn">토지</button>
+        <button class="opt-btn">그 외</button>
+      </div>
+    </div>
+
+    <!-- 면적 -->
+    <div class="field">
+      <label class="field-label">전용면적</label>
+      <div class="btn-group" data-group="area">
+        <button class="opt-btn">40㎡ 이하</button>
+        <button class="opt-btn">60㎡ 이하</button>
+        <button class="opt-btn on">85㎡ 이하</button>
+        <button class="opt-btn">85㎡ 초과</button>
+      </div>
+    </div>
+
+    <!-- 취득가액 -->
+    <div class="field">
+      <label class="field-label">취득가액 (실거래가)</label>
+      <div class="input-row">
+        <input class="money-input" type="text" value="65,000" placeholder="예: 65,000">
+        <span class="unit">만원</span>
+      </div>
+      <div class="hint">= ₩650,000,000 (6억 5천만원)</div>
+    </div>
+
+    <!-- 시가표준액 -->
+    <div class="field">
+      <label class="field-label">시가표준액 (공시가격)</label>
+      <div class="input-row">
+        <input class="money-input" type="text" placeholder="미입력 시 취득가 사용">
+        <span class="unit">만원</span>
+      </div>
+      <label class="check"><input type="checkbox" checked> 직접 입력하지 않음 (취득가액을 시가표준액으로 간주)</label>
+    </div>
+
+    <!-- 주택 수 -->
+    <div class="field">
+      <label class="field-label">취득 후 주택 수</label>
+      <div class="btn-group" data-group="house">
+        <button class="opt-btn on">1주택</button>
+        <button class="opt-btn">2주택</button>
+        <button class="opt-btn">3주택</button>
+        <button class="opt-btn">4주택+</button>
+      </div>
+    </div>
+
+    <!-- 특수 조건 -->
+    <div class="field">
+      <label class="field-label">특수 조건 (선택)</label>
+      <div class="btn-group">
+        <button class="chip">법인</button>
+        <button class="chip">일시적 2주택</button>
+        <button class="chip on">수도권</button>
+        <button class="chip">인구감소지역</button>
+        <button class="chip on">생애최초</button>
+        <button class="chip">사회임대</button>
+      </div>
+    </div>
+
+    <div class="notice-ok">
+      <b>✓ 중과 제외 안내</b> — 공시가격 1억원 이하 주택은 다주택이어도 중과가 제외됩니다.
+    </div>
+
+    <!-- 입력폼 끝 → 세율표 시작: 단 하나의 구분선 -->
+    <hr class="form-divider">
+
+    <!-- 주택 취득세율 -->
+    <div class="rate-wrap">
+      <div class="rate-head">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18"/><path d="M6 16V8"/><path d="M12 16V4"/><path d="M18 16v-6"/></svg>
+        주택 취득세율표
+      </div>
+      <table class="rate-table">
+        <thead><tr><th>구분</th><th>취득세</th><th>교육세</th><th>농특세</th><th>합계</th></tr></thead>
+        <tbody>
+          <tr><td>1주택 6억↓</td><td>1.0%</td><td>0.1%</td><td>0.2%</td><td class="total">1.3%</td></tr>
+          <tr><td>1주택 6~9억</td><td>1~3%</td><td>취득×10%</td><td>0.2%</td><td class="total">변동</td></tr>
+          <tr><td>1주택 9억↑</td><td>3.0%</td><td>0.3%</td><td>0.2%</td><td class="total">3.5%</td></tr>
+          <tr><td>조정 2주택</td><td>8.0%</td><td>0.4%</td><td>0.6%</td><td class="total">9.0%</td></tr>
+          <tr><td>3주택+</td><td>12.0%</td><td>0.4%</td><td>1.0%</td><td class="total">13.4%</td></tr>
+          <tr><td>법인</td><td>12.0%</td><td>0.4%</td><td>1.0%</td><td class="total">13.4%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="rate-section-gap"></div>
+
+    <!-- 주택외 취득세율 -->
+    <div class="rate-wrap">
+      <div class="rate-head">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18"/><path d="M6 16V8"/><path d="M12 16V4"/><path d="M18 16v-6"/></svg>
+        주택 외 취득세율표
+      </div>
+      <table class="rate-table">
+        <thead><tr><th>구분</th><th>취득세</th><th>교육세</th><th>농특세</th><th>합계</th></tr></thead>
+        <tbody>
+          <tr><td>매매 (토지·건물)</td><td>4.0%</td><td>0.4%</td><td>0.2%</td><td class="total">4.6%</td></tr>
+          <tr><td>증여</td><td>3.5%</td><td>0.3%</td><td>0.2%</td><td class="total">4.0%</td></tr>
+          <tr><td>상속</td><td>2.8%</td><td>0.16%</td><td>0.2%</td><td class="total">3.16%</td></tr>
+          <tr><td>원시취득</td><td>2.8%</td><td>0.16%</td><td>0.2%</td><td class="total">3.16%</td></tr>
+          <tr><td>농지 매매</td><td>3.0%</td><td>0.2%</td><td>0.2%</td><td class="total">3.4%</td></tr>
+          <tr><td>농지 상속</td><td>2.3%</td><td>0.06%</td><td>0.2%</td><td class="total">2.56%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ─── RIGHT: result + nextstep + expert ─── -->
+  <div class="rp-wrap">
+
+    <aside class="result-panel">
+      <div class="rp-warn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+        <span>시가표준액 미입력 시 정확도가 낮아질 수 있습니다.</span>
+      </div>
+      <div class="rp-label">취득세 계산 결과</div>
+      <div class="rp-total">₩9,683,334</div>
+      <div class="rp-sub">취득가 1.13% 적용 · 생애최초 감면 반영</div>
+      <div class="rp-break">
+        <div class="rp-line"><span class="l">취득세액 (1.0%)</span><span class="v">₩8,666,667</span></div>
+        <div class="rp-line"><span class="l">지방교육세 (0.13%)</span><span class="v">₩866,667</span></div>
+        <div class="rp-line"><span class="l">농어촌특별세 (0.2%)</span><span class="v">₩150,000</span></div>
+        <div class="rp-line total"><span class="l">합계 납부세액</span><span class="v">₩9,683,334</span></div>
+      </div>
+
+      <div class="rp-actions">
+        <button><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>PDF</button>
+        <button><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg>이미지</button>
+        <button><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18"/><path d="M6 16V8"/><path d="M12 16V4"/><path d="M18 16v-6"/></svg>CSV</button>
+        <button><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>링크</button>
+        <button><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="12" rx="2"/><path d="M12 3v4M8 13v2M16 13v2"/></svg>AI 해설</button>
+        <button><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>AI PDF</button>
+        <button><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6"/></svg>공유</button>
+      </div>
+      <div class="rp-scenario">
+        <button>−10%</button><button>절세 팁</button><button>+10%</button>
+      </div>
+      <div class="rp-consult">
+        <div class="l">
+          <div class="t">1:1 세금 상담</div>
+          <div class="d">전문가와 복잡한 절세 전략 논의</div>
+        </div>
+        <button>상담 →</button>
+      </div>
+      <div class="rp-ai">
+        <div class="h">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/></svg>
+          AI 절세 가이드
+        </div>
+        <p>생애최초 구입 감면 최대 200만원 적용 중. 85㎡ 이하 + 수도권 + 1주택 조합으로 최저 1.3% 적용.</p>
+      </div>
+    </aside>
+
+    <div class="nextstep">
+      <h3>함께 계산하면 좋은</h3>
+      <div class="ns-list">
+        <button class="ns-btn"><span>양도소득세 계산하기</span><span class="arr">→</span></button>
+        <button class="ns-btn"><span>종합부동산세 계산하기</span><span class="arr">→</span></button>
+        <button class="ns-btn"><span>부동산 총비용 시뮬레이터</span><span class="arr">→</span></button>
+        <button class="ns-btn"><span>재산세 계산하기</span><span class="arr">→</span></button>
+      </div>
+    </div>
+
+    <div class="expert-card">
+      <div class="expert-head">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M8 2v20"/></svg>
+        <h3>Expert Guide</h3>
+      </div>
+      <div class="acc-item open">
+        <button class="acc-q">취득세란? <span class="ico">+</span></button>
+        <div class="acc-a"><p>부동산을 매매·증여·상속 등으로 취득할 때 납부하는 지방세. 주택은 1~12% 차등 적용.</p></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-q">절세 팁 <span class="ico">+</span></button>
+        <div class="acc-a"><p>생애최초 200만원 감면, 일시적2주택 1주택세율, 시가표준액 1억 이하 중과 제외.</p></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-q">신고 기한 <span class="ico">+</span></button>
+        <div class="acc-a"><p>취득일로부터 60일 이내 신고·납부. 상속은 6개월, 증여는 3개월.</p></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-q">신고 방법 <span class="ico">+</span></button>
+        <div class="acc-a"><p>위택스(wetax.go.kr) 온라인 신고 또는 관할 시·군·구청 방문.</p></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-q">주의사항 <span class="ico">+</span></button>
+        <div class="acc-a"><p>과세표준은 실거래가. 시가표준액이 높으면 시가표준액 적용. 법인은 무조건 12%.</p></div>
+      </div>
+      <div class="expert-links">
+        <button class="expert-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+          Learning Center
+        </button>
+        <button class="expert-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18"/><path d="M6 16V8"/><path d="M12 16V4"/><path d="M18 16v-6"/></svg>
+          Market Data
+        </button>
+        <button class="expert-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="1"/></svg>
+          지난 계산 내역
+        </button>
+        <button class="expert-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          용어 검색
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<!-- ═══════════ GUIDE ═══════════ -->
+<section class="guide-section">
+  <div class="guide-card">
+    <h2>2026년 취득세 완벽 가이드</h2>
+    <p class="guide-sub">국세청·행정안전부 공식 자료 기반 · 2026년 4월 최신 반영</p>
+    <h3><span class="num">1</span> 취득세란?</h3>
+    <p>취득세는 부동산·차량·선박 등 재산을 취득할 때 부과되는 지방세입니다. 부동산은 소유권 이전 등기일 또는 잔금 지급일 중 빠른 날부터 <b>60일 이내</b>(상속은 6개월 이내)에 관할 지자체에 신고·납부해야 합니다.</p>
+    <h3><span class="num">2</span> 2026년 주택 취득세율</h3>
+    <p>기본 세율은 주택 가격대별 1~3% 누진. 1주택 6억 이하 1%, 6~9억 1~3% 선형, 9억 초과 3%. 조정대상지역 2주택 8%, 3주택 이상 12% 중과. 법인은 지역과 무관하게 일괄 12%.</p>
+    <h3><span class="num">3</span> 생애최초 주택구입 감면</h3>
+    <p>세대원 전원 주택 소유 이력이 없는 경우 12억 이하 주택에 대해 <b>최대 200만원</b> 감면 (인구감소지역 300만원). 2028.12.31까지 한시 적용.</p>
+    <h3><span class="num">4</span> 일시적 2주택 특례</h3>
+    <p>기존 주택을 보유한 상태에서 신규 주택을 취득한 경우, 종전 주택을 <b>3년 이내</b> 처분하면 2주택 중과세율(8%)이 아닌 1주택 기본세율(1~3%)이 적용됩니다.</p>
+    <h3><span class="num">5</span> 납부기한 및 가산세</h3>
+    <p>취득일로부터 60일 이내(상속 6개월). 미신고 시 무신고가산세 20%(부정신고 40%), 납부지연가산세 일 0.022%. 위택스(wetax.go.kr)에서 전자신고·납부 가능.</p>
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <div class="ft-inner">
+    <div class="ft-brand">
+      <a class="logo-link" href="sample-home.html">
+        <svg viewBox="0 0 512 512" width="36" height="36">
+          <rect width="512" height="512" rx="102" fill="#ffffff" opacity="0.1"/>
+          <rect x="90" y="145" width="140" height="28" rx="14" fill="#ffffff"/>
+          <g transform="translate(370,160)"><rect x="-70" y="-14" width="140" height="28" rx="14" fill="#ffffff" transform="rotate(45)"/><rect x="-70" y="-14" width="140" height="28" rx="14" fill="#ffffff" transform="rotate(-45)"/></g>
+          <rect x="90" y="340" width="140" height="28" rx="14" fill="#ffffff"/>
+          <rect x="146" y="284" width="28" height="140" rx="14" fill="#ffffff"/>
+          <rect x="282" y="320" width="140" height="28" rx="14" fill="#ffffff"/>
+          <rect x="282" y="370" width="140" height="28" rx="14" fill="#ffffff"/>
+        </svg>
+        <span class="brand">생활계산기<span class="dot">.com</span></span>
+      </a>
+      <p>대한민국 NO.1 세금·부동산·재테크 계산기 플랫폼. 2026년 최신 세법을 반영한 62가지 전문 계산기를 무료로 제공합니다.</p>
+    </div>
+    <div class="ft-col"><h4>서비스</h4><ul><li>전체 계산기</li><li>AI 인사이트</li><li>PRO 분석</li><li>API</li></ul></div>
+    <div class="ft-col"><h4>정보센터</h4><ul><li>실시간 뉴스</li><li>정책 브리핑</li><li>절세 가이드</li><li>용어사전</li></ul></div>
+    <div class="ft-col"><h4>고객지원</h4><ul><li>공지사항</li><li>자주 묻는 질문</li><li>문의하기</li><li>이용약관</li></ul></div>
+    <div class="ft-news">
+      <h4>뉴스레터 구독</h4>
+      <p>매주 월요일 세법 변경 브리핑을 이메일로 받아보세요</p>
+      <form onsubmit="return false">
+        <input type="email" placeholder="your@email.com">
+        <button type="submit">구독</button>
+      </form>
+    </div>
+  </div>
+  <div class="ft-bottom">
+    <div class="biz">상호 더블유부동산 · 대표 이광철 · 사업자등록번호 589-24-01721 · 통신판매업신고 제2025-인천부평-0992호 · 주소 인천광역시 부평구 · 이메일 noble.kclee@gmail.com · 개인정보보호책임자 이광철</div>
+    <div class="rights">© 2026 생활계산기.com · 개인정보처리방침 · 이용약관</div>
+  </div>
+</footer>
+
+<script>
+  // 독립 버튼 세그먼트 (한 그룹 내 하나만 on)
+  document.querySelectorAll('.btn-group[data-group]').forEach(group => {
+    group.addEventListener('click', e => {
+      const btn = e.target.closest('.opt-btn');
+      if(!btn) return;
+      group.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('on'));
+      btn.classList.add('on');
+    });
+  });
+  // 칩 다중 토글
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => chip.classList.toggle('on'));
+  });
+  // Expert Guide 아코디언
+  document.querySelectorAll('.acc-q').forEach(q => {
+    q.addEventListener('click', () => q.closest('.acc-item').classList.toggle('open'));
+  });
+</script>
+
+</body>
+</html>

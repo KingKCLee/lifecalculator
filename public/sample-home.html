@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>생활계산기.com — 세금·부동산·재테크 62가지 계산기</title>
+<style>
+  :root{
+    --navy:#0a1628;
+    --pri:#0747A6;
+    --pl:#0052CC;
+    --blue:#3b82f6;
+    --blue-lt:#deebff;
+    --tx:#172B4D;
+    --mt:#505f79;
+    --bd:#dfe1e6;
+    --lt:#f4f5f7;
+    --bg:#f8f9fc;
+    --card:#ffffff;
+    --red:#ef4444;
+    --grey-500:#6B7280;
+    --grey-700:#374151;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif;color:var(--tx);background:#FFFFFF;line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer;border:none;background:none}
+  svg{display:inline-block;vertical-align:middle}
+
+  /* ────── REAL HEADER ────── */
+  header.top{background:#FFFFFF;border-bottom:1px solid #E5E7EB;position:sticky;top:0;left:0;right:0;z-index:1000}
+  .top-inner{display:flex;align-items:center;height:64px;padding:0 24px;gap:16px;position:relative;max-width:1400px;margin:0 auto}
+  .logo-link{display:flex;align-items:center;gap:10px;cursor:pointer;flex-shrink:0}
+  .logo-link .brand{font-size:24px;font-weight:800;color:var(--navy);letter-spacing:-.3px;margin-left:4px}
+  .logo-link .brand .dot{color:var(--blue)}
+
+  .tabs-wrap{position:absolute;left:50%;top:0;bottom:0;transform:translateX(-50%);display:flex;align-items:center;gap:4px}
+  .tab-wrap{position:relative}
+  .tab-btn{padding:0 16px;border:none;border-radius:0;background:transparent;color:var(--grey-500);font-size:16px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;height:64px;display:inline-flex;align-items:center;gap:6px;transition:transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.15s, background .15s;transform:translateY(0)}
+  .tab-wrap:hover .tab-btn{background:#FFFFFF;color:var(--blue);transform:translateY(-4px);border-bottom:none}
+  .tab-wrap:hover .drop{display:block}
+
+  /* dropdown */
+  .drop{display:none;position:absolute;top:100%;left:0;background:#fff;border:1px solid #E5E7EB;border-top:none;border-radius:0 0 8px 8px;box-shadow:0 8px 24px rgba(0,0,0,0.12);padding:8px 0;min-width:240px;z-index:1001}
+  .tab-wrap:nth-last-child(-n+2) .drop{left:auto;right:0}
+  .drop-hint{font-size:12px;color:var(--grey-500);padding:8px 16px 4px;border-bottom:1px solid #F3F4F6;animation:blink 1.5s ease-in-out infinite;transition:color .15s}
+  .tab-wrap:hover .drop-hint{color:var(--red);font-weight:700}
+  .drop:hover .drop-hint{color:var(--grey-500);font-weight:400}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.5}}
+  .drop a{display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:14px;color:var(--navy)}
+  .drop a:hover{background:#F0F4FF}
+  .drop.mega-info{min-width:640px;padding:20px;display:none;grid-template-columns:1fr 1fr 1fr;gap:16px}
+  .tab-wrap:hover .drop.mega-info{display:grid}
+  .drop.mega-info .col h4{font-size:11px;font-weight:800;color:var(--grey-500);letter-spacing:1px;text-transform:uppercase;margin:0 0 10px;padding-bottom:6px;border-bottom:1px solid #F3F4F6}
+  .drop.mega-info .col a{padding:8px 10px;border-radius:8px;display:block}
+  .drop.mega-info .col .ti{font-size:13px;font-weight:700;color:var(--navy)}
+  .drop.mega-info .col .de{font-size:11px;color:var(--grey-500);margin-top:2px}
+  .drop.mega-info-wrap{position:static;padding:0;border:none;box-shadow:none;min-width:0;display:none}
+  /* info mega menu full width-ish */
+  .mega-info-outer{display:none;position:absolute;top:100%;right:0;background:#fff;border:2px solid var(--pri);border-top:none;border-radius:0 0 12px 12px;box-shadow:0 8px 24px rgba(0,0,0,0.12);width:640px;z-index:1001;padding:24px}
+  .tab-wrap:hover .mega-info-outer{display:block}
+  .mega-info-outer .hint{font-size:12px;color:var(--grey-500);padding-bottom:8px;margin-bottom:12px;border-bottom:1px solid #F3F4F6;animation:blink 1.5s ease-in-out infinite}
+  .tab-wrap:hover .mega-info-outer .hint{color:var(--red);font-weight:700}
+  .mega-info-outer:hover .hint{color:var(--grey-500);font-weight:400}
+  .mega-info-cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+  .mega-info-cols h4{font-size:11px;font-weight:800;color:var(--grey-500);letter-spacing:1px;text-transform:uppercase;margin:0 0 8px}
+  .mega-info-cols a{display:flex;align-items:flex-start;gap:10px;padding:8px 12px;border-radius:8px;color:var(--grey-700)}
+  .mega-info-cols a:hover{background:#F0F4FF}
+  .mega-info-cols a svg{flex-shrink:0;color:var(--pri);margin-top:2px}
+  .mega-info-cols a .ti{font-size:13px;font-weight:700;color:var(--navy)}
+  .mega-info-cols a .de{font-size:11px;color:var(--grey-500);margin-top:2px}
+
+  .top-right{display:flex;align-items:center;gap:10px;margin-left:auto;flex-shrink:0}
+  .search-mini{position:relative;width:200px;height:36px}
+  .search-mini input{width:100%;height:36px;padding:0 12px 0 34px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;color:var(--navy);font-family:inherit;outline:none}
+  .search-mini svg.ic{position:absolute;left:10px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--grey-500)}
+  .btn{display:inline-flex;align-items:center;justify-content:center;padding:8px 20px;border-radius:8px;font-weight:700;font-size:14px;white-space:nowrap;border:none;font-family:inherit;cursor:pointer;transition:background .15s}
+  .btn.primary{background:var(--navy);color:#fff}
+  .btn.primary:hover{background:var(--pri)}
+  .btn.ghost{background:#fff;color:var(--grey-500);border:1px solid #E5E7EB;font-weight:500;font-size:14px;padding:8px 14px}
+
+  /* ────── HERO ────── */
+  .hero{background:linear-gradient(180deg,#eff6ff 0%,#f8f9fc 100%);padding:80px 32px 72px;border-bottom:1px solid var(--bd)}
+  .hero-inner{max-width:880px;margin:0 auto;text-align:center}
+  .badge{display:inline-flex;align-items:center;gap:8px;background:#fff;padding:7px 16px;border:1px solid #dbeafe;border-radius:20px;font-size:13px;font-weight:700;color:var(--blue);margin-bottom:24px;box-shadow:0 2px 8px rgba(59,130,246,0.08)}
+  .hero h1{font-size:52px;font-weight:800;color:var(--navy);line-height:1.18;letter-spacing:-1.5px;margin:0 0 20px}
+  .hero h1 .accent{color:var(--blue)}
+  .hero p.lead{font-size:17px;color:var(--mt);margin:0 0 36px;line-height:1.7}
+  .search-big{background:#fff;border:1.5px solid var(--bd);border-radius:14px;padding:8px;display:flex;align-items:center;box-shadow:0 8px 32px rgba(10,22,40,0.08);max-width:680px;margin:0 auto}
+  .search-big svg{margin-left:14px;color:#9ca3af}
+  .search-big input{flex:1;border:none;outline:none;padding:14px 16px;font-size:16px;background:transparent;font-family:inherit}
+  .search-big button{background:var(--navy);color:#fff;padding:14px 24px;border-radius:10px;font-weight:700;font-size:14px}
+  .hot-tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:22px}
+  .hot-tags .lbl{font-size:13px;color:var(--mt);align-self:center;margin-right:4px}
+  .hot-tag{padding:7px 13px;background:#fff;border:1px solid var(--bd);border-radius:20px;font-size:13px;color:var(--grey-700)}
+  .hot-tag:hover{border-color:var(--blue);color:var(--blue)}
+
+  /* ────── SECTION ────── */
+  section{padding:72px 32px;background:#f8f9fc}
+  section.white{background:#fff}
+  .sec-inner{max-width:1200px;margin:0 auto}
+  .sec-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:32px}
+  .sec-kicker{font-size:12px;font-weight:800;color:var(--blue);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
+  .sec-head h2{font-size:32px;font-weight:800;color:var(--navy);letter-spacing:-0.8px;margin:0}
+  .sec-more{font-size:14px;font-weight:700;color:var(--navy)}
+
+  /* ────── POPULAR ────── */
+  .pop-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .pop-card{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:24px 22px;cursor:pointer;transition:all .2s}
+  .pop-card:hover{border-color:var(--blue);transform:translateY(-3px);box-shadow:0 12px 28px rgba(10,22,40,0.08)}
+  .pop-ico{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+  .i-blue{background:#eff6ff;color:#2563eb}
+  .i-green{background:#f0fdf4;color:#15803d}
+  .i-yellow{background:#fefce8;color:#a16207}
+  .i-purple{background:#faf5ff;color:#7e22ce}
+  .i-pink{background:#fdf2f8;color:#be185d}
+  .i-teal{background:#f0fdfa;color:#0f766e}
+  .i-navy{background:#f1f5f9;color:var(--navy)}
+  .i-orange{background:#fff7ed;color:#c2410c}
+  .pop-card h3{font-size:15px;font-weight:700;color:var(--tx);margin:0 0 4px}
+  .pop-card p{font-size:12px;color:var(--mt);margin:0;line-height:1.55}
+
+  /* ────── AI + NEWS ────── */
+  .ai-row{display:grid;grid-template-columns:1.3fr 1fr;gap:24px}
+  .ai-card{background:linear-gradient(135deg,var(--navy) 0%,#26304f 100%);color:#fff;border-radius:18px;padding:44px 40px;position:relative;overflow:hidden}
+  .ai-card::before{content:"";position:absolute;top:-80px;right:-80px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,0.25) 0%,transparent 70%)}
+  .ai-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(59,130,246,0.2);border:1px solid rgba(59,130,246,0.5);border-radius:20px;font-size:11px;font-weight:800;color:#93c5fd;letter-spacing:1px;text-transform:uppercase;margin-bottom:20px;position:relative}
+  .ai-card h3{font-size:30px;font-weight:800;line-height:1.22;margin:0 0 16px;letter-spacing:-0.6px;position:relative}
+  .ai-card p{font-size:14px;opacity:0.75;line-height:1.75;margin:0 0 28px;max-width:460px;position:relative}
+  .btn-ai{background:var(--blue);color:#fff;padding:13px 26px;border-radius:10px;font-weight:700;font-size:14px;position:relative;display:inline-flex;align-items:center;gap:8px;border:none;cursor:pointer;font-family:inherit}
+
+  .news-card{background:#fff;border:1px solid var(--bd);border-radius:18px;padding:32px 28px}
+  .news-card h3{font-size:17px;font-weight:800;color:var(--navy);margin:0 0 18px;display:flex;align-items:center;gap:8px}
+  .news-card h3 svg{color:var(--blue)}
+  .news-item{padding:14px 0;border-bottom:1px solid var(--bd)}
+  .news-item:last-of-type{border-bottom:none}
+  .news-cat{display:inline-block;font-size:10px;font-weight:800;color:var(--blue);background:#eff6ff;padding:3px 10px;border-radius:10px;margin-bottom:6px}
+  .news-title{font-size:14px;color:var(--tx);font-weight:600;line-height:1.55}
+  .news-meta{font-size:11px;color:var(--mt);margin-top:4px}
+
+  /* ────── STATS ────── */
+  .stats{background:var(--navy);padding:56px 32px}
+  .stats-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center;color:#fff}
+  .stats-item .num{font-size:40px;font-weight:800;color:var(--blue);letter-spacing:-1px;line-height:1}
+  .stats-item .lbl{font-size:13px;opacity:0.8;margin-top:8px;font-weight:500}
+
+  /* ────── DIRECTORY 5 COLS ────── */
+  .dir-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+  .dir-col{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:20px 18px}
+  .dir-col h3{font-size:13px;font-weight:800;color:var(--navy);margin:0 0 4px;display:flex;align-items:center;justify-content:space-between}
+  .dir-col h3 .count{font-size:10px;font-weight:700;color:var(--blue);background:#eff6ff;padding:3px 8px;border-radius:10px}
+  .dir-col .sub{font-size:10px;color:var(--mt);margin:0 0 12px;padding-bottom:10px;border-bottom:1px solid var(--bd)}
+  .dir-col ul{list-style:none;padding:0;margin:0}
+  .dir-col li{padding:6px 0;font-size:12px;color:var(--grey-700);display:flex;justify-content:space-between;cursor:pointer}
+  .dir-col li:hover{color:var(--blue)}
+  .dir-col li .arr{color:#cbd5e1;font-size:10px}
+
+  /* ────── FOOTER ────── */
+  footer{background:var(--navy);color:#fff;padding:64px 32px 32px}
+  .ft-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr 1.4fr;gap:40px}
+  .ft-brand .logo-link{margin-bottom:14px}
+  .ft-brand .logo-link .brand{color:#ffffff}
+  .ft-brand .logo-link .brand .dot{color:#60a5fa}
+  .ft-brand p{font-size:13px;opacity:0.7;line-height:1.7;margin:0 0 16px;max-width:260px}
+  .ft-col h4{font-size:13px;font-weight:800;color:#fff;margin:0 0 16px}
+  .ft-col ul{list-style:none;padding:0;margin:0}
+  .ft-col li{font-size:13px;color:rgba(255,255,255,0.65);padding:6px 0;cursor:pointer}
+  .ft-col li:hover{color:var(--blue)}
+  .ft-news h4{font-size:13px;font-weight:800;color:#fff;margin:0 0 12px}
+  .ft-news p{font-size:12px;color:rgba(255,255,255,0.65);margin:0 0 12px;line-height:1.6}
+  .ft-news form{display:flex;gap:6px}
+  .ft-news input{flex:1;padding:10px 14px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:#fff;font-size:13px;outline:none;font-family:inherit}
+  .ft-news input::placeholder{color:rgba(255,255,255,0.4)}
+  .ft-news button{padding:10px 18px;background:var(--blue);color:#fff;border-radius:8px;font-size:13px;font-weight:700}
+  .ft-bottom{max-width:1200px;margin:48px auto 0;padding-top:24px;border-top:1px solid rgba(255,255,255,0.1);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:12px}
+  .ft-bottom .biz{color:rgba(255,255,255,0.3);max-width:720px;line-height:1.6}
+  .ft-bottom .rights{color:rgba(255,255,255,0.65)}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ REAL HEADER ═══════════ -->
+<header class="top">
+  <div class="top-inner">
+    <a class="logo-link" href="#">
+      <svg viewBox="0 0 512 512" width="40" height="40">
+        <defs><linearGradient id="lbg1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1e40a0"/><stop offset="100%" stop-color="#0f2b80"/></linearGradient></defs>
+        <rect width="512" height="512" rx="102" fill="url(#lbg1)"/>
+        <rect x="90" y="145" width="140" height="28" rx="14" fill="white"/>
+        <g transform="translate(370,160)"><rect x="-70" y="-14" width="140" height="28" rx="14" fill="white" transform="rotate(45)"/><rect x="-70" y="-14" width="140" height="28" rx="14" fill="white" transform="rotate(-45)"/></g>
+        <rect x="90" y="340" width="140" height="28" rx="14" fill="white"/>
+        <rect x="146" y="284" width="28" height="140" rx="14" fill="white"/>
+        <rect x="282" y="320" width="140" height="28" rx="14" fill="white"/>
+        <rect x="282" y="370" width="140" height="28" rx="14" fill="white"/>
+      </svg>
+      <span class="brand">생활계산기<span class="dot">.com</span></span>
+    </a>
+
+    <div class="tabs-wrap">
+      <!-- 세금 (16개) -->
+      <div class="tab-wrap">
+        <button class="tab-btn">세금</button>
+        <div class="drop">
+          <div class="drop-hint">아래 계산기 종류를 선택하세요</div>
+          <a href="#">취득세</a><a href="#">양도소득세</a><a href="#">종합소득세</a><a href="#">연말정산</a><a href="#">종부세</a><a href="#">재산세</a><a href="#">증여세</a><a href="#">상속세</a><a href="#">보유세 통합</a><a href="#">임대소득세</a><a href="#">건물 부가세</a><a href="#">임대 추정소득</a><a href="#">착한임대인 공제</a><a href="#">간주임대료</a><a href="#">법정상속분</a><a href="#">누진세 범용</a>
+        </div>
+      </div>
+      <!-- 대출 (7개) -->
+      <div class="tab-wrap">
+        <button class="tab-btn">대출</button>
+        <div class="drop">
+          <div class="drop-hint">아래 계산기 종류를 선택하세요</div>
+          <a href="#">대출이자</a><a href="#">DSR</a><a href="#">DTI</a><a href="#">LTV·대출한도</a><a href="#">대출가능액</a><a href="#">RTI</a><a href="#">대환대출 비교</a>
+        </div>
+      </div>
+      <!-- 비용 (9개 실제) -->
+      <div class="tab-wrap">
+        <button class="tab-btn">비용</button>
+        <div class="drop">
+          <div class="drop-hint">아래 계산기 종류를 선택하세요</div>
+          <a href="#">중개보수</a><a href="#">등기비용</a><a href="#">법무사수수료</a><a href="#">인지세</a><a href="#">채권할인료</a><a href="#">감정평가수수료</a><a href="#">국민주택채권 매입</a><a href="#">전세보증금보험료</a><a href="#">인지세(전자계약)</a>
+        </div>
+      </div>
+      <!-- 생활 (11개 실제) -->
+      <div class="tab-wrap">
+        <button class="tab-btn">생활</button>
+        <div class="drop">
+          <div class="drop-hint">아래 계산기 종류를 선택하세요</div>
+          <a href="#">연봉 실수령액</a><a href="#">4대보험료</a><a href="#">국민연금 수령액</a><a href="#">자동차세</a><a href="#">퇴직금</a><a href="#">실업급여</a><a href="#">최저임금</a><a href="#">예적금이자</a><a href="#">전월세전환</a><a href="#">날짜 계산기</a><a href="#">손없는날 달력</a>
+        </div>
+      </div>
+      <!-- 부동산 (16개 실제) -->
+      <div class="tab-wrap">
+        <button class="tab-btn">부동산</button>
+        <div class="drop">
+          <div class="drop-hint">아래 계산기 종류를 선택하세요</div>
+          <a href="#">임대수익률</a><a href="#">공동명의</a><a href="#">평수변환</a><a href="#">용적률·건폐율</a><a href="#">경매비용</a><a href="#">리모델링수익</a><a href="#">건물잔존가치</a><a href="#">청약가점</a><a href="#">경매 적정입찰가</a><a href="#">경매 배당 분석</a><a href="#">재건축 연한</a><a href="#">리모델링 ROI</a><a href="#">임대료 5% 상한</a><a href="#">실거래가 조회</a><a href="#">매도 실수령액</a><a href="#">경락잔금대출</a>
+        </div>
+      </div>
+      <!-- PRO 분석 (3개) -->
+      <div class="tab-wrap">
+        <button class="tab-btn">PRO 분석</button>
+        <div class="drop">
+          <div class="drop-hint">아래 계산기 종류를 선택하세요</div>
+          <a href="#">총비용 시뮬레이터</a><a href="#">세금비교 분석</a><a href="#">투자수익 분석</a>
+        </div>
+      </div>
+      <!-- 정보센터 (mega) -->
+      <div class="tab-wrap">
+        <button class="tab-btn">정보센터</button>
+        <div class="mega-info-outer">
+          <div class="hint">아래 계산기 종류를 선택하세요</div>
+          <div class="mega-info-cols">
+            <div class="col">
+              <h4>최신 정보</h4>
+              <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8V6Z"/></svg><div><div class="ti">실시간 뉴스</div><div class="de">부동산·세금 뉴스</div></div></a>
+              <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><div><div class="ti">부동산 정책</div><div class="de">정부 발표 정책</div></div></a>
+              <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="1"/><path d="M3 9h18M8 3v4M16 3v4"/></svg><div><div class="ti">세법 개정 히스토리</div><div class="de">연도별 변경사항</div></div></a>
+            </div>
+            <div class="col">
+              <h4>학습·가이드</h4>
+              <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><div><div class="ti">전문가 가이드</div><div class="de">세무사 추천 가이드</div></div></a>
+              <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M8 2v20"/></svg><div><div class="ti">규정·법령</div><div class="de">관련 법령 원문</div></div></a>
+              <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10"/><path d="M9 10h4.5a1.5 1.5 0 0 1 0 3H10.5a1.5 1.5 0 0 0 0 3H15"/></svg><div><div class="ti">절세 전략</div><div class="de">세금 절감 방법</div></div></a>
+              <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.8.4-1 1-1 1.7V14"/><path d="M12 17.2v.1"/></svg><div><div class="ti">계산기 사용법</div><div class="de">초보자 튜토리얼</div></div></a>
+            </div>
+            <div class="col">
+              <h4>커뮤니티</h4>
+              <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><div><div class="ti">Q&A 게시판</div><div class="de">궁금한 점 질문</div></div></a>
+              <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><div><div class="ti">부동산 용어사전</div><div class="de">전문 용어 검색</div></div></a>
+              <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18"/><path d="M6 16V8"/><path d="M12 16V4"/><path d="M18 16v-6"/></svg><div><div class="ti">시장 데이터</div><div class="de">실거래가·시세</div></div></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="top-right">
+      <div class="search-mini">
+        <svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" placeholder="계산기 검색…">
+      </div>
+      <button class="btn ghost">로그인</button>
+      <button class="btn primary">무료 가입</button>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="hero">
+  <div class="hero-inner">
+    <span class="badge">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+      대한민국 NO.1 세금·부동산·재테크 계산기
+    </span>
+    <h1>복잡한 세법·대출 규제,<br><span class="accent">10초 만에</span> 완벽 계산</h1>
+    <p class="lead">취득세, 양도소득세, 연말정산, 대출이자, 실수령액까지<br>62가지 전문 계산기를 2026년 최신 세법 기준으로 무료 제공합니다.</p>
+    <div class="search-big">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" placeholder="어떤 계산이 필요하세요? (예: 취득세, DSR, 양도세)">
+      <button>계산기 찾기 →</button>
+    </div>
+    <div class="hot-tags">
+      <span class="lbl">인기 검색:</span>
+      <a class="hot-tag" href="#">취득세</a>
+      <a class="hot-tag" href="#">대출이자</a>
+      <a class="hot-tag" href="#">연말정산</a>
+      <a class="hot-tag" href="#">양도소득세</a>
+      <a class="hot-tag" href="#">실수령액</a>
+      <a class="hot-tag" href="#">DSR</a>
+      <a class="hot-tag" href="#">증여세</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ POPULAR ═══════════ -->
+<section class="white">
+  <div class="sec-inner">
+    <div class="sec-head">
+      <div>
+        <div class="sec-kicker">Trending Tools</div>
+        <h2>인기 계산기</h2>
+      </div>
+      <a class="sec-more" href="#">전체 62개 보기 →</a>
+    </div>
+    <div class="pop-grid">
+      <div class="pop-card"><div class="pop-ico i-blue"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><h3>취득세</h3><p>매매·증여·상속 취득세 자동 계산</p></div>
+      <div class="pop-card"><div class="pop-ico i-green"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div><h3>양도소득세</h3><p>장기보유특별공제·중과 자동 판정</p></div>
+      <div class="pop-card"><div class="pop-ico i-yellow"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div><h3>종합소득세</h3><p>누진세율·인적공제 자동 계산</p></div>
+      <div class="pop-card"><div class="pop-ico i-purple"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="10" width="18" height="11" rx="2"/><path d="M3 10l9-7 9 7"/><line x1="12" y1="10" x2="12" y2="21"/><line x1="3" y1="15" x2="21" y2="15"/></svg></div><h3>대출이자</h3><p>원리금균등·원금균등 비교</p></div>
+      <div class="pop-card"><div class="pop-ico i-pink"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><path d="M12 22V7"/></svg></div><h3>증여세</h3><p>10년 합산·공제한도 자동 적용</p></div>
+      <div class="pop-card"><div class="pop-ico i-teal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01M16 6h.01M8 10h.01M16 10h.01"/></svg></div><h3>재산세</h3><p>주택·토지·건축물 세부담 상한 반영</p></div>
+      <div class="pop-card"><div class="pop-ico i-navy"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><h3>연말정산</h3><p>13월의 월급 환급액 미리 확인</p></div>
+      <div class="pop-card"><div class="pop-ico i-orange"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg></div><h3>DSR</h3><p>스트레스DSR·연령별 한도 반영</p></div>
+      <div class="pop-card"><div class="pop-ico i-blue"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4z"/></svg></div><h3>실수령액</h3><p>4대보험·소득세 공제 후 월급</p></div>
+      <div class="pop-card"><div class="pop-ico i-green"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg></div><h3>종합부동산세</h3><p>1주택 12억 공제·고령자 세액공제</p></div>
+      <div class="pop-card"><div class="pop-ico i-yellow"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16V4m0 0L3 8m4-4l4 4"/><path d="M17 8v12m0 0l4-4m-4 4l-4-4"/></svg></div><h3>전월세전환</h3><p>법정 상한 5% 기준 자동 계산</p></div>
+      <div class="pop-card"><div class="pop-ico i-purple"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M3 9l9-6 9 6"/><path d="M3 9c0 3.3 2.7 6 6 6s6-2.7 6-6"/><path d="M9 15c0 3.3 2.7 6 6 6s6-2.7 6-6"/></svg></div><h3>상속세</h3><p>배우자·일괄공제 최대 활용</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ AI + NEWS ═══════════ -->
+<section>
+  <div class="sec-inner">
+    <div class="ai-row">
+      <div class="ai-card">
+        <span class="ai-badge">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2M20 14h2M15 13v2M9 13v2"/></svg>
+          AI PRO 인사이트
+        </span>
+        <h3>AI 분석: 2026년 취득세<br>완벽 가이드</h3>
+        <p>Claude Opus 4.6이 2026년 개정 세법과 2,847건의 실제 거래 시나리오를 분석해 주택 가격·면적·주택수 조합별 최적 절세 전략을 제시합니다.</p>
+        <button class="btn-ai">전체 보고서 보기 →</button>
+      </div>
+      <div class="news-card">
+        <h3>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/></svg>
+          최신 부동산·세금 뉴스
+        </h3>
+        <div class="news-item"><span class="news-cat">HOUSING</span><div class="news-title">수도권 주담대 한도 15억 이하 6억 유지</div><div class="news-meta">국토부 · 4시간 전</div></div>
+        <div class="news-item"><span class="news-cat">POLICY</span><div class="news-title">2026.5.9 양도세 다주택 중과 유예 종료 임박</div><div class="news-meta">국세청 · 1일 전</div></div>
+        <div class="news-item"><span class="news-cat">ECONOMICS</span><div class="news-title">한국은행 기준금리 3.00% 동결, 금통위 만장일치</div><div class="news-meta">한국은행 · 2일 전</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ STATS ═══════════ -->
+<div class="stats">
+  <div class="stats-inner">
+    <div class="stats-item"><div class="num">62</div><div class="lbl">가지 전문 계산기</div></div>
+    <div class="stats-item"><div class="num">200만+</div><div class="lbl">월간 사용자</div></div>
+    <div class="stats-item"><div class="num">2026</div><div class="lbl">최신 세법 반영</div></div>
+    <div class="stats-item"><div class="num">98.2%</div><div class="lbl">홈택스 대비 정확도</div></div>
+  </div>
+</div>
+
+<!-- ═══════════ DIRECTORY 5 cols ═══════════ -->
+<section class="white">
+  <div class="sec-inner">
+    <div class="sec-head">
+      <div>
+        <div class="sec-kicker">Full Directory</div>
+        <h2>전체 계산기</h2>
+      </div>
+      <p style="margin:0;color:var(--mt);font-size:14px">카테고리별로 쉽게 찾는 62가지 계산기</p>
+    </div>
+
+    <div class="dir-grid">
+      <div class="dir-col">
+        <h3>세금 <span class="count">16</span></h3>
+        <p class="sub">취득·양도·종합소득</p>
+        <ul>
+          <li>취득세 <span class="arr">→</span></li><li>양도소득세 <span class="arr">→</span></li><li>종합소득세 <span class="arr">→</span></li><li>연말정산 <span class="arr">→</span></li><li>증여세 <span class="arr">→</span></li><li>상속세 <span class="arr">→</span></li><li>재산세 <span class="arr">→</span></li><li>종합부동산세 <span class="arr">→</span></li><li>보유세 통합 <span class="arr">→</span></li><li>건물 부가세 <span class="arr">→</span></li><li>임대소득세 <span class="arr">→</span></li><li>임대 추정소득 <span class="arr">→</span></li><li>간주임대료 <span class="arr">→</span></li><li>착한임대인 공제 <span class="arr">→</span></li><li>법정상속분 <span class="arr">→</span></li><li>누진세 범용 <span class="arr">→</span></li>
+        </ul>
+      </div>
+
+      <div class="dir-col">
+        <h3>대출 <span class="count">7</span></h3>
+        <p class="sub">DSR·LTV 규제</p>
+        <ul>
+          <li>대출이자 <span class="arr">→</span></li><li>DSR <span class="arr">→</span></li><li>DTI <span class="arr">→</span></li><li>LTV·대출한도 <span class="arr">→</span></li><li>대출가능액 <span class="arr">→</span></li><li>RTI <span class="arr">→</span></li><li>대환대출 비교 <span class="arr">→</span></li>
+        </ul>
+      </div>
+
+      <div class="dir-col">
+        <h3>비용 <span class="count">4</span></h3>
+        <p class="sub">총비용·PRO 분석</p>
+        <ul>
+          <li>총비용 시뮬레이터 <span class="arr">→</span></li><li>세금비교 분석 <span class="arr">→</span></li><li>투자수익 분석 <span class="arr">→</span></li><li>취득·등록세 <span class="arr">→</span></li>
+        </ul>
+      </div>
+
+      <div class="dir-col">
+        <h3>생활 <span class="count">12</span></h3>
+        <p class="sub">월급·보험·일상</p>
+        <ul>
+          <li>실수령액 <span class="arr">→</span></li><li>최저임금 <span class="arr">→</span></li><li>4대보험료 <span class="arr">→</span></li><li>퇴직금 <span class="arr">→</span></li><li>실업급여 <span class="arr">→</span></li><li>전월세전환 <span class="arr">→</span></li><li>예적금이자 <span class="arr">→</span></li><li>날짜 계산 <span class="arr">→</span></li><li>손없는날 달력 <span class="arr">→</span></li><li>환율 계산 <span class="arr">→</span></li><li>연봉 실수령액 <span class="arr">→</span></li><li>최저임금 계산 <span class="arr">→</span></li>
+        </ul>
+      </div>
+
+      <div class="dir-col">
+        <h3>부동산 <span class="count">12</span></h3>
+        <p class="sub">실거래·청약·자동차</p>
+        <ul>
+          <li>아파트 실거래가 <span class="arr">→</span></li><li>청약가점 <span class="arr">→</span></li><li>부동산 중개보수 <span class="arr">→</span></li><li>재건축 분담금 <span class="arr">→</span></li><li>공시가격 조회 <span class="arr">→</span></li><li>중도금 대출 <span class="arr">→</span></li><li>자동차세 <span class="arr">→</span></li><li>자동차 취득세 <span class="arr">→</span></li><li>국민연금 <span class="arr">→</span></li><li>건강보험료 <span class="arr">→</span></li><li>단위 변환 <span class="arr">→</span></li><li>부동산 수익률 <span class="arr">→</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <div class="ft-inner">
+    <div class="ft-brand">
+      <a class="logo-link" href="#">
+        <svg viewBox="0 0 512 512" width="36" height="36">
+          <rect width="512" height="512" rx="102" fill="#ffffff" opacity="0.1"/>
+          <rect x="90" y="145" width="140" height="28" rx="14" fill="#ffffff"/>
+          <g transform="translate(370,160)"><rect x="-70" y="-14" width="140" height="28" rx="14" fill="#ffffff" transform="rotate(45)"/><rect x="-70" y="-14" width="140" height="28" rx="14" fill="#ffffff" transform="rotate(-45)"/></g>
+          <rect x="90" y="340" width="140" height="28" rx="14" fill="#ffffff"/>
+          <rect x="146" y="284" width="28" height="140" rx="14" fill="#ffffff"/>
+          <rect x="282" y="320" width="140" height="28" rx="14" fill="#ffffff"/>
+          <rect x="282" y="370" width="140" height="28" rx="14" fill="#ffffff"/>
+        </svg>
+        <span class="brand">생활계산기<span class="dot">.com</span></span>
+      </a>
+      <p>대한민국 NO.1 세금·부동산·재테크 계산기 플랫폼. 2026년 최신 세법을 반영한 62가지 전문 계산기를 무료로 제공합니다.</p>
+    </div>
+    <div class="ft-col"><h4>서비스</h4><ul><li>전체 계산기</li><li>AI 인사이트</li><li>PRO 분석</li><li>API</li></ul></div>
+    <div class="ft-col"><h4>정보센터</h4><ul><li>실시간 뉴스</li><li>정책 브리핑</li><li>절세 가이드</li><li>용어사전</li></ul></div>
+    <div class="ft-col"><h4>고객지원</h4><ul><li>공지사항</li><li>자주 묻는 질문</li><li>문의하기</li><li>이용약관</li></ul></div>
+    <div class="ft-news">
+      <h4>뉴스레터 구독</h4>
+      <p>매주 월요일 세법 변경 브리핑을 이메일로 받아보세요</p>
+      <form onsubmit="return false">
+        <input type="email" placeholder="your@email.com">
+        <button type="submit">구독</button>
+      </form>
+    </div>
+  </div>
+  <div class="ft-bottom">
+    <div class="biz">상호 더블유부동산 · 대표 이광철 · 사업자등록번호 589-24-01721 · 통신판매업신고 제2025-인천부평-0992호 · 주소 인천광역시 부평구 · 이메일 noble.kclee@gmail.com · 개인정보보호책임자 이광철</div>
+    <div class="rights">© 2026 생활계산기.com · 개인정보처리방침 · 이용약관</div>
+  </div>
+</footer>
+
+</body>
+</html>
