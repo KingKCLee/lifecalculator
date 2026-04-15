@@ -5885,24 +5885,8 @@ body.lc-embed main{padding-top:0!important}
         </div>
       </div>}
 
-      {/* 2026.04.14 부동산 용어사전 섹션 */}
-      <div style={{maxWidth:1200,margin:"0 auto",padding:isMo?"24px 16px 0":"48px 24px 0"}}>
-        <a href="/terms/index.html" style={{display:"block",textDecoration:"none",background:"linear-gradient(135deg,#0747A6 0%,#6554C0 100%)",borderRadius:16,padding:isMo?"24px 20px":"32px 36px",color:"#fff",transition:"transform .2s,box-shadow .2s"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 12px 32px rgba(7,71,166,.25)"}} onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none"}}>
-          <div style={{display:"flex",alignItems:"center",gap:isMo?12:20,flexWrap:"wrap"}}>
-            <div style={{fontSize:isMo?40:56,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center"}}><IconBook/></div>
-            <div style={{flex:"1 1 auto",minWidth:0}}>
-              <div style={{fontSize:11,fontWeight:700,letterSpacing:1.5,opacity:.8,textTransform:"uppercase",marginBottom:4}}>GLOSSARY</div>
-              <div style={{fontSize:isMo?20:26,fontWeight:800,marginBottom:4,letterSpacing:-.5}}>부동산 용어사전</div>
-              <div style={{fontSize:isMo?13:14,opacity:.9,lineHeight:1.6}}>취득세·양도세·DSR·전세 등 100+개 부동산·세금·대출 전문 용어 해설. 한 곳에서 모두 확인하세요.</div>
-            </div>
-            <div style={{flexShrink:0,padding:"10px 18px",background:"rgba(255,255,255,.18)",borderRadius:10,fontSize:13,fontWeight:700,whiteSpace:"nowrap"}}>전체 보기 →</div>
-          </div>
-        </a>
-      </div>
-      {/* 전체 계산기 격자 그리드 */}
-      <CalcGrid navigateCalc={navigateCalc} isMo={isMo}/>
+      {/* 2026.04.15 홈 간소화: 부동산 용어사전 배너·CalcGrid·HomeSections 제거 */}
       <AdSlot position="home_bottom"/>
-      <HomeSections isMo={isMo} effectiveUser={effectiveUser} navigateCalc={navigateCalc} setAuthMode={setAuthMode} setShowAuth={setShowAuth} navigateInfo={navigateInfo}/>
       {/* 2026.04.15 sample-home 통계 배너 (PC) */}
       {!isMo&&<div style={{background:"#0a1628",padding:"56px 32px"}}>
         <div style={{maxWidth:1200,margin:"0 auto",display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:24,textAlign:"center",color:"#fff"}}>
