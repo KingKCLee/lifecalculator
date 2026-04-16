@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "fix: 소셜 로그인 이름 표시 수정 (Google given_name fallback + lc_name 저장 누락)",
+      "desc": "fix: 소셜 로그인 이름 표시 수정 (Google given_name fallback + lc_name 저장 누락)"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "fix: 소셜 로그인 이름 표시 + 속도 개선",
       "desc": "fix: 소셜 로그인 이름 표시 + 속도 개선"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "style: 탑메뉴 hover 애니메이션 D(scale) → C(translateY+color) 변경",
       "desc": "style: 탑메뉴 hover 애니메이션 D(scale) → C(translateY+color) 변경"
-    },
-    {
-      "date": "2026.04.15",
-      "category": "전체",
-      "title": "fix: 메가메뉴 카테고리 개수 삭제 + RP AIGuide 위치 이동",
-      "desc": "fix: 메가메뉴 카테고리 개수 삭제 + RP AIGuide 위치 이동"
     }
   ],
   "rates": {
