@@ -41,7 +41,7 @@ export default function AdminPage({ subPage }) {
             localStorage.setItem("lc_admin_token", j.token);
             setSession({ email: j.email, name: j.name, picture: j.picture });
           } else {
-            setError("token_exchange");
+            setError(j.error || "token_exchange");
           }
         })
         .catch(() => setError("network"))

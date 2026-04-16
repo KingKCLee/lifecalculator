@@ -9,10 +9,12 @@ export default function AdminLogin({ error }) {
 
         {error && (
           <div style={{ padding: "10px 14px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10, color: "#dc2626", fontSize: 13, marginBottom: 20, fontWeight: 600 }}>
-            {error === "unauthorized" ? "허가되지 않은 계정입니다" :
+            {error === "unauthorized" ? "허가되지 않은 계정입니다 (관리자 이메일만 접근 가능)" :
              error === "cancelled" ? "로그인이 취소되었습니다" :
-             error === "invalid_state" ? "인증 상태 오류 - 다시 시도해주세요" :
-             error === "token_exchange" ? "인증 토큰 교환 실패" :
+             error.startsWith("invalid_state:expired") ? "인증 시간 초과 - 다시 시도해주세요" :
+             error.startsWith("invalid_state") ? "인증 상태 오류 - 다시 시도해주세요 (" + error + ")" :
+             error.startsWith("token_exchange") ? "Google 인증 토큰 교환 실패 (" + error + ")" :
+             error === "network" ? "네트워크 오류 - 인터넷 연결을 확인하세요" :
              "로그인 오류: " + error}
           </div>
         )}
