@@ -272,7 +272,8 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
               tradePrice: mode !== "holding" ? rAmt : 0, tradeDate: mode !== "holding" ? tradeDate : "",
               publicPrice: mode !== "transfer" ? sAmt : 0, priceYear: stdInfo ? String(stdInfo.year) : "",
               landRatio: stdLandRatio ? stdLandRatio.landRatio : null,
-              landPricePerSqm: stdLandRatio ? stdLandRatio.landPricePerSqm : null
+              landPricePerSqm: stdLandRatio ? stdLandRatio.landPricePerSqm : null,
+              unitArea: stdLandRatio ? stdLandRatio.unitArea : null
             });
             onClose();
           };
