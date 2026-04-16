@@ -37,6 +37,7 @@ import AdminPage from './pages/admin/AdminPage';
 import CalcRealPrice from './calcs/CalcRealPrice';
 // 2026.04.16 주소→실거래가·공시가격 자동조회 모달
 import AddressModal from './components/AddressModal';
+import Breadcrumb from './components/Breadcrumb';
 // 2026.04.16 계산기 트래킹 훅
 import { useTrack } from './hooks/useTrack';
 
@@ -1071,60 +1072,39 @@ const MI={
   remodel2:["매입가격을 입력해주세요"],
 };
 
-/* 2026.04.14 AIGuide — 결과 기반 정적 휴리스틱 가이드 카드 (1일 3회 제한) */
+/* 2026.04.16 AIGuide — Worker KV 기반 횟수 제한 (비회원 1일1회 / 회원 1일3회) */
 function AIGuide({items,title}){
-  const today=new Date().toISOString().slice(0,10).replace(/-/g,"");
-  const countKey="lc_ai_guide_count_"+today;
-  const used=(()=>{try{return parseInt(localStorage.getItem(countKey)||"0")||0;}catch{return 0;}})();
+  const[gs,setGs]=useState({remaining:null,isLoggedIn:false,maxCount:1,blocked:false,checked:false});
+  const lcToken=useMemo(()=>{try{return localStorage.getItem('lc_token')||"";}catch{return "";}},[]);
+  useEffect(()=>{
+    fetch(LC_REALESTATE_WORKER+"/api/ai-guide",{method:"POST",headers:{"Content-Type":"application/json",...(lcToken?{Authorization:"Bearer "+lcToken}:{})}})
+      .then(r=>r.json()).then(j=>{
+        if(j.error==="LIMIT_EXCEEDED")setGs({remaining:0,isLoggedIn:!!j.isLoggedIn,maxCount:j.maxCount||1,blocked:true,checked:true});
+        else setGs({remaining:j.remaining??0,isLoggedIn:!!j.isLoggedIn,maxCount:j.maxCount||1,blocked:false,checked:true});
+      }).catch(()=>setGs(s=>({...s,checked:true})));
+  },[]);
   const itemText=(items||[]).map(it=>String(it.l||"")+" "+String(it.v||"")).join(" ");
-  const has=(kw)=>itemText.includes(kw);
-  const titleStr=String(title||"");
-  // 휴리스틱 기반 3장 카드
-  const tipSave=has("감면")||has("공제")
-    ? "결과에 감면/공제 항목이 포함되어 있습니다. 생애최초·장기보유·1세대1주택 등 추가 감면 요건을 확인하면 세액을 더 낮출 수 있습니다."
-    : titleStr.includes("양도")?"1세대1주택 비과세(2년 거주), 장기보유특별공제(최대 80%), 필요경비 영수증 정리로 양도차익을 낮추세요."
-    : titleStr.includes("취득")?"생애최초 감면(12억↓ 최대 200만원, 2028.12.31까지), 신혼부부 감면, 출산·양육 가구 특례를 확인하세요."
-    : titleStr.includes("대출")||titleStr.includes("DSR")||titleStr.includes("LTV")?"스트레스 DSR은 고정금리 선택 시 +0.75%p, 혼합형은 +1.5%p로 적용됩니다. 고정금리로 한도를 더 받을 수 있는지 비교해보세요."
-    : "동일 조건을 다른 계산기로도 돌려보면 숨어있는 절세 포인트가 보입니다.";
-  const tipWarn=has("중과")||has("다주택")
-    ? "다주택 중과 구간에 해당합니다. 2026.5.9까지 유예이므로 양도 시점에 따라 세액이 크게 달라집니다."
-    : titleStr.includes("종부세")||titleStr.includes("재산세")?"6월 1일 기준 보유자가 과세 대상입니다. 잔금일·등기일을 6월 1일 전후로 조정하면 그 해 세금이 달라질 수 있습니다."
-    : titleStr.includes("상속")||titleStr.includes("증여")?"10년 합산과세(배우자 6억·성년 5천만원 등) 공제 한도를 반드시 확인하고, 가족 간 거래는 시가 산정 근거를 남겨두세요."
-    : "계산 결과는 2026년 현행 기준 참고용이며, 실제 신고 전 관할 지자체·세무사 확인을 권장합니다.";
-  const tipNext=titleStr.includes("취득")?"등기비용·중개보수 계산기로 총 구입 비용을 확인하세요."
-    : titleStr.includes("양도")?"보유세 통합 계산기로 매년 부담을 함께 검토하세요."
-    : titleStr.includes("대출")||titleStr.includes("DSR")||titleStr.includes("LTV")?"총비용 시뮬레이터로 원리금+세금+관리비 전체를 시뮬레이션해보세요."
-    : titleStr.includes("연봉")||titleStr.includes("실수령")?"4대보험료·퇴직금 계산기로 근로소득 전반을 확인하세요."
-    : "관련 계산기로 같은 시나리오를 다각도로 점검해보세요.";
-  const CARDS=[
-    {icon:"💡",title:"지금 당장 할 수 있는 절세 방법",body:tipSave},
-    {icon:"⚠",title:"주의해야 할 사항",body:tipWarn},
-    {icon:"📊",title:"다음에 확인해볼 계산기",body:tipNext}
-  ];
-  const onMore=()=>{
-    if(used>=3){try{window.dispatchEvent(new CustomEvent('lc-toast',{detail:{msg:"오늘 AI 해설 이용 한도(3회)에 도달했습니다."}}));}catch{}return;}
-    try{localStorage.setItem(countKey,String(used+1));}catch{}
-    try{window.dispatchEvent(new CustomEvent('lc-ai-explain',{detail:{title,items}}));}catch{}
-  };
-  // 2026.04.16 sample-calc .rp-ai spec — 초록 반투명 카드 (RP 파란 그라디언트 내부에서 조화)
+  const has=(kw)=>itemText.includes(kw);const titleStr=String(title||"");
+  const tipSave=has("감면")||has("공제")?"결과에 감면/공제 항목이 포함되어 있습니다. 생애최초·장기보유·1세대1주택 등 추가 감면 요건을 확인하면 세액을 더 낮출 수 있습니다.":titleStr.includes("양도")?"1세대1주택 비과세(2년 거주), 장기보유특별공제(최대 80%), 필요경비 영수증 정리로 양도차익을 낮추세요.":titleStr.includes("취득")?"생애최초 감면(12억↓ 최대 200만원, 2028.12.31까지), 신혼부부 감면, 출산·양육 가구 특례를 확인하세요.":titleStr.includes("대출")||titleStr.includes("DSR")||titleStr.includes("LTV")?"스트레스 DSR은 고정금리 선택 시 +0.75%p, 혼합형은 +1.5%p로 적용됩니다. 고정금리로 한도를 더 받을 수 있는지 비교해보세요.":"동일 조건을 다른 계산기로도 돌려보면 숨어있는 절세 포인트가 보입니다.";
+  const tipWarn=has("중과")||has("다주택")?"다주택 중과 구간에 해당합니다. 2026.5.9까지 유예이므로 양도 시점에 따라 세액이 크게 달라집니다.":titleStr.includes("종부세")||titleStr.includes("재산세")?"6월 1일 기준 보유자가 과세 대상입니다. 잔금일·등기일을 6월 1일 전후로 조정하면 그 해 세금이 달라질 수 있습니다.":titleStr.includes("상속")||titleStr.includes("증여")?"10년 합산과세(배우자 6억·성년 5천만원 등) 공제 한도를 반드시 확인하고, 가족 간 거래는 시가 산정 근거를 남겨두세요.":"계산 결과는 2026년 현행 기준 참고용이며, 실제 신고 전 관할 지자체·세무사 확인을 권장합니다.";
+  const tipNext=titleStr.includes("취득")?"등기비용·중개보수 계산기로 총 구입 비용을 확인하세요.":titleStr.includes("양도")?"보유세 통합 계산기로 매년 부담을 함께 검토하세요.":titleStr.includes("대출")||titleStr.includes("DSR")||titleStr.includes("LTV")?"총비용 시뮬레이터로 원리금+세금+관리비 전체를 시뮬레이션해보세요.":titleStr.includes("연봉")||titleStr.includes("실수령")?"4대보험료·퇴직금 계산기로 근로소득 전반을 확인하세요.":"관련 계산기로 같은 시나리오를 다각도로 점검해보세요.";
+  const CARDS=[{icon:"💡",title:"지금 당장 할 수 있는 절세 방법",body:tipSave},{icon:"⚠",title:"주의해야 할 사항",body:tipWarn},{icon:"📊",title:"다음에 확인해볼 계산기",body:tipNext}];
+  if(gs.blocked){return(
+    <div style={{marginTop:10,padding:"14px 16px",background:"rgba(255,255,255,0.08)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:10}}>
+      <div style={{display:"flex",alignItems:"center",gap:6,fontSize:11,fontWeight:800,color:"#6ee7b7",textTransform:"uppercase",letterSpacing:.8,marginBottom:8}}>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2M20 14h2M15 13v2M9 13v2"/></svg>AI 절세 가이드</div>
+      {!gs.isLoggedIn?(<div style={{textAlign:"center",padding:"10px 0"}}><div style={{fontSize:13,color:"#fff",fontWeight:600,marginBottom:6}}>오늘 무료 횟수를 다 사용했어요</div><div style={{fontSize:12,color:"rgba(255,255,255,0.7)",marginBottom:12}}>로그인하면 1일 3회 이용 가능해요</div><button onClick={()=>{try{window.dispatchEvent(new CustomEvent('lc-open-auth'));}catch{}}} style={{padding:"10px 24px",background:"#fff",color:"#0747A6",border:"none",borderRadius:8,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>로그인하기</button></div>
+      ):(<div style={{textAlign:"center",padding:"10px 0"}}><div style={{fontSize:13,color:"#fff",fontWeight:600,marginBottom:4}}>오늘 3회를 모두 사용했어요</div><div style={{fontSize:12,color:"rgba(255,255,255,0.7)"}}>내일 다시 이용 가능합니다</div></div>)}
+    </div>);}
   return(
     <div style={{marginTop:10,padding:"14px 16px",background:"rgba(16,185,129,0.08)",border:"1px solid rgba(16,185,129,0.2)",borderRadius:10}}>
-      <div style={{display:"flex",alignItems:"center",gap:6,fontSize:11,fontWeight:800,color:"#6ee7b7",textTransform:"uppercase",letterSpacing:.8,marginBottom:6}}>
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2M20 14h2M15 13v2M9 13v2"/></svg>
-        AI 절세 가이드
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:6}}>
+        <div style={{display:"flex",alignItems:"center",gap:6,fontSize:11,fontWeight:800,color:"#6ee7b7",textTransform:"uppercase",letterSpacing:.8}}>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2M20 14h2M15 13v2M9 13v2"/></svg>AI 절세 가이드</div>
+        {gs.checked&&<div style={{fontSize:10,color:"rgba(255,255,255,0.5)"}}>오늘 {gs.remaining!=null?gs.remaining+"회 남음":"확인중"}{!gs.isLoggedIn?" · 로그인 시 3회":""}</div>}
       </div>
-      <div style={{display:"grid",gridTemplateColumns:"1fr",gap:6}}>
-        {CARDS.map((c,i)=>(
-          <div key={i} style={{padding:"10px 12px",background:"rgba(255,255,255,0.06)",borderRadius:8}}>
-            <div style={{fontSize:12,fontWeight:700,color:"#fff",marginBottom:3}}>{c.icon} {c.title}</div>
-            <div style={{fontSize:11,color:"rgba(255,255,255,0.82)",lineHeight:1.65}}>{c.body}</div>
-          </div>
-        ))}
-      </div>
-      <button onClick={onMore} style={{marginTop:10,width:"100%",padding:"10px 14px",background:"rgba(16,185,129,0.25)",color:"#6ee7b7",border:"1px solid rgba(16,185,129,0.4)",borderRadius:8,fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>더 자세한 AI 해설 →</button>
-      <div style={{fontSize:10,color:"rgba(255,255,255,0.5)",marginTop:8}}>오늘 {used}/3 사용 · 로그인 없이 이용 가능</div>
-    </div>
-  );
+      <div style={{display:"grid",gridTemplateColumns:"1fr",gap:6}}>{CARDS.map((c,i)=>(<div key={i} style={{padding:"10px 12px",background:"rgba(255,255,255,0.06)",borderRadius:8}}><div style={{fontSize:12,fontWeight:700,color:"#fff",marginBottom:3}}>{c.icon} {c.title}</div><div style={{fontSize:11,color:"rgba(255,255,255,0.82)",lineHeight:1.65}}>{c.body}</div></div>))}</div>
+    </div>);
 }
 
 /* 2026.04.15 MiniChart 제거됨 — 차트 전체 삭제 */
@@ -1411,6 +1391,11 @@ function RPFull({title,total,sub,items,isExample=false,deadline,deadlineLink,dea
     </div>}
     {/* [8] AI 절세 가이드 (초록) */}
     {!isExample&&!hasMiss&&total>0&&<AIGuide items={items} title={title}/>}
+    {/* [8.5] 비회원 계산 완료 후 로그인 유도 CTA */}
+    {!isExample&&!hasMiss&&total>0&&(()=>{try{return !localStorage.getItem('lc_token');}catch{return true;}})()&&<div style={{marginTop:10,padding:"12px 14px",background:"rgba(255,255,255,0.1)",border:"1px solid rgba(255,255,255,0.2)",borderRadius:10,display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,flexWrap:"wrap"}}>
+      <div style={{flex:"1 1 auto",minWidth:0}}><div style={{fontSize:12,fontWeight:600,color:"#fff"}}>계산 결과를 저장하려면 로그인하세요</div><div style={{fontSize:11,opacity:.7,marginTop:2}}>히스토리 보관 · AI 가이드 3회 · 맞춤 알림</div></div>
+      <button onClick={()=>{try{window.dispatchEvent(new CustomEvent('lc-open-auth'));}catch{}}} style={{flexShrink:0,padding:"8px 16px",background:"#fff",color:"#0747A6",border:"none",borderRadius:8,fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>로그인</button>
+    </div>}
     <div style={{marginTop:10,fontSize:10,opacity:.5,lineHeight:1.5,textAlign:"center"}}>본 계산은 2026년 세법 기준 참고용이며 법적 효력이 없습니다. (v2026.04.06)</div>
   </div>
   {/* [9] Expert Guide 아코디언 (RP gradient 밖) */}
@@ -4016,6 +4001,27 @@ function HomeSections({isMo, effectiveUser, navigateCalc, setAuthMode, setShowAu
       </div>
     </div>
 
+    {/* 섹션 4.5 — 회원 혜택 배너 (비회원 전용) */}
+    {!effectiveUser&&<div style={{background:"linear-gradient(135deg,#0747A6 0%,#0052CC 50%,#0065FF 100%)",borderRadius:16,padding:isMo?"28px 20px":"36px 40px",marginBottom:isMo?16:20,color:"#fff",position:"relative",overflow:"hidden"}}>
+      <div style={{position:"absolute",top:-40,right:-40,width:200,height:200,borderRadius:"50%",background:"rgba(255,255,255,0.06)"}}/>
+      <div style={{position:"relative"}}>
+        <div style={{fontSize:isMo?18:22,fontWeight:800,marginBottom:6,letterSpacing:"-0.5px"}}>무료 회원가입으로 더 많은 혜택을</div>
+        <div style={{fontSize:isMo?13:14,opacity:.85,marginBottom:isMo?20:24,lineHeight:1.6}}>로그인 한 번으로 계산기 전체 기능을 이용하세요</div>
+        <div style={{display:"grid",gridTemplateColumns:isMo?"1fr 1fr":"repeat(4,1fr)",gap:isMo?10:14,marginBottom:isMo?20:24}}>
+          {[{icon:"📋",t:"계산 내역 저장",d:"히스토리 자동 보관"},{icon:"🤖",t:"AI 절세 가이드",d:"비회원 1회 → 회원 3회"},{icon:"🔔",t:"금리·공시가 알림",d:"변동 시 즉시 알림"},{icon:"📊",t:"맞춤 보고서",d:"PDF 다운로드"}].map((b,i)=>(
+            <div key={i} style={{background:"rgba(255,255,255,0.1)",borderRadius:12,padding:isMo?"14px 12px":"16px",border:"1px solid rgba(255,255,255,0.15)"}}>
+              <div style={{fontSize:20,marginBottom:6}}>{b.icon}</div>
+              <div style={{fontSize:13,fontWeight:700,marginBottom:2}}>{b.t}</div>
+              <div style={{fontSize:11,opacity:.75}}>{b.d}</div>
+            </div>))}
+        </div>
+        <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
+          <button onClick={()=>{setAuthMode?.("signup");setShowAuth?.(true);}} style={{padding:"12px 28px",background:"#fff",color:"#0747A6",border:"none",borderRadius:10,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>무료 회원가입</button>
+          <button onClick={()=>{setAuthMode?.("login");setShowAuth?.(true);}} style={{padding:"12px 28px",background:"rgba(255,255,255,0.15)",color:"#fff",border:"1px solid rgba(255,255,255,0.3)",borderRadius:10,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>로그인</button>
+        </div>
+      </div>
+    </div>}
+
     {/* 섹션 5 — 맞춤 정책 (전체 너비, 로그인 필요) */}
     <div style={{...secStyle,position:"relative",overflow:"hidden"}}>
       <div style={{...hdrStyle,filter:effectiveUser?"none":"blur(4px)",pointerEvents:effectiveUser?"auto":"none"}}>
@@ -5933,6 +5939,12 @@ export default function App(){
     window.addEventListener('lc-consult',h);
     return()=>window.removeEventListener('lc-consult',h);
   },[]);
+  // lc-open-auth 이벤트: RP/AIGuide에서 로그인 유도 시 사용
+  useEffect(()=>{
+    const h=()=>{setAuthMode("login");setShowAuth(true);};
+    window.addEventListener('lc-open-auth',h);
+    return()=>window.removeEventListener('lc-open-auth',h);
+  },[]);
   const submitConsult=async()=>{
     if(!consultForm.name||!consultForm.phone){showToast("이름과 연락처를 입력하세요");return;}
     setConsultBusy(true);
@@ -6443,14 +6455,7 @@ body.lc-embed main{padding-top:0!important}
         {/* 좌측: 헤더 + 서브탭 + 계산기 + PRO */}
         <div>
           {navContent&&<NavContentPanel navContent={navContent} setNavContent={setNavContent} calc={calc} effectiveUser={effectiveUser} lcToken={lcToken} setAuthMode={setAuthMode} setShowAuth={setShowAuth}/>}
-          {/* 2026.04.15 PC 브레드크럼 (홈 > 카테고리 > 계산기) */}
-          {!isMo&&<nav aria-label="breadcrumb" style={{fontSize:13,color:"#505f79",paddingTop:24,marginBottom:12,display:"flex",alignItems:"center",gap:8}}>
-            <span onClick={navigateHome} style={{cursor:"pointer",color:"#505f79"}} onMouseEnter={e=>e.currentTarget.style.color="#0747A6"} onMouseLeave={e=>e.currentTarget.style.color="#505f79"}>홈</span>
-            <span style={{color:"#d1d5db"}}>›</span>
-            <span style={{cursor:"pointer",color:"#505f79"}} onClick={()=>{const first=CL.find(c=>c.c===cat);if(first)navigateCalc(cat,first.id);}} onMouseEnter={e=>e.currentTarget.style.color="#0747A6"} onMouseLeave={e=>e.currentTarget.style.color="#505f79"}>{catInfo?.l} 계산기</span>
-            <span style={{color:"#d1d5db"}}>›</span>
-            <span style={{color:"#0a1628",fontWeight:600}}>{CL.find(c=>c.id===calc)?.l||""}</span>
-          </nav>}
+          <Breadcrumb pageName={(CL.find(c=>c.id===calc)?.l||"")+" 계산기"} category={catInfo?.l+" 계산기"} navigateHome={navigateHome} isMo={isMo}/>
           {/* 2026.04.16 sample-calc 기준: 서브탭 바 제거 (PC) — 모바일은 유지 */}
           {isMo&&<div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:16,marginBottom:14}}>
             <div className="sub-tabs" style={{flex:"1 1 auto",minWidth:0,display:"flex",gap:6,flexWrap:"nowrap",overflowX:"auto",WebkitOverflowScrolling:"touch",paddingBottom:6,scrollbarWidth:"none",msOverflowStyle:"none",whiteSpace:"nowrap"}}>
