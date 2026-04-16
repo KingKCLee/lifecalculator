@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "fix: 완벽가이드 글자크기 대폭 키우기",
+      "desc": "fix: 완벽가이드 글자크기 대폭 키우기"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "fix: 완벽가이드 외부박스 1개/글자크기 가시성 개선",
       "desc": "fix: 완벽가이드 외부박스 1개/글자크기 가시성 개선"
     },
@@ -1459,12 +1465,6 @@
       "category": "전체",
       "title": "fix(AddressModal): replace all unicode escapes with UTF-8 chars, remove JUSO subtitle",
       "desc": "fix(AddressModal): replace all unicode escapes with UTF-8 chars, remove JUSO subtitle"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "feat(AddressModal): full UX overhaul — 9 modifications (button, procedure, search, results, apt info card, errors, source)",
-      "desc": "feat(AddressModal): full UX overhaul — 9 modifications (button, procedure, search, results, apt info card, errors, source)"
     }
   ],
   "rates": {
