@@ -1168,6 +1168,12 @@
   "updateLog": [
     {
       "date": "2026.04.16",
+      "category": "전체",
+      "title": "feat: 전체 62개 완벽가이드 5단계 구조 전면 개편 (seoContent.js 분리)",
+      "desc": "feat: 전체 62개 완벽가이드 5단계 구조 전면 개편 (seoContent.js 분리)"
+    },
+    {
+      "date": "2026.04.16",
       "category": "부동산",
       "title": "feat: RateTable 19개 + 구조별 내용연수/리모델링 참고표 추가",
       "desc": "feat: RateTable 19개 + 구조별 내용연수/리모델링 참고표 추가"
@@ -1459,12 +1465,6 @@
       "category": "전체",
       "title": "style(calc-acq): sample-calc 바탕·카드·세율표·RP 3줄 정렬",
       "desc": "style(calc-acq): sample-calc 바탕·카드·세율표·RP 3줄 정렬"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "fix(acq): align 실거래가·시가표준액 inputs in same grid column",
-      "desc": "fix(acq): align 실거래가·시가표준액 inputs in same grid column"
     }
   ],
   "rates": {
