@@ -39,6 +39,8 @@ import CalcRealPrice from './calcs/CalcRealPrice';
 import AddressModal from './components/AddressModal';
 // 2026.04.17 완벽가이드 콘텐츠 외부 파일 분리
 import SEO_CONTENT from './data/seoContent';
+import GuideCard from './components/GuideCard';
+import { GUIDE_DATA } from './data/guideData';
 import Breadcrumb from './components/Breadcrumb';
 // 2026.04.16 계산기 트래킹 훅
 import { useTrack, usePageTrack, trackSignup } from './hooks/useTrack';
@@ -6642,8 +6644,8 @@ body.lc-embed main{padding-top:0!important}
           {adSlots?.rp_bottom?.enabled&&!isMo&&<div style={{marginBottom:16}} dangerouslySetInnerHTML={{__html:adSlots.rp_bottom.code||""}}/>}
 
           {/* 2026.04.15 sample-calc 기준 계산기 페이지 슬림화: MarketIntel·AdSlot·FUN_STATS 제거 */}
-          {/* 완벽가이드: 취득세는 JSX 카드, 나머지는 기존 SEO_CONTENT */}
-          {calc==="acquisition"?(<AcqGuide isMo={isMo}/>):(SEO_CONTENT[calc]&&<div className="guide-section" style={{padding:isMo?"24px 0":"40px 0 72px",marginBottom:0}}>
+          {/* 완벽가이드: GUIDE_DATA가 있으면 GuideCard, 없으면 SEO_CONTENT fallback */}
+          {GUIDE_DATA[calc]?(<GuideCard {...GUIDE_DATA[calc]} isMo={isMo}/>):(SEO_CONTENT[calc]&&<div className="guide-section" style={{padding:isMo?"24px 0":"40px 0 72px",marginBottom:0}}>
             <div className="guide-card" style={{background:"#fff",border:"1px solid #dfe1e6",borderRadius:18,padding:isMo?"28px 20px":"40px 44px",boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
               <div className="seo" dangerouslySetInnerHTML={{__html:SEO_CONTENT[calc]}} style={{fontSize:15,color:"#374151",lineHeight:1.8}}/>
             </div>
