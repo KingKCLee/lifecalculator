@@ -6129,7 +6129,19 @@ export default function App(){
     };
     window.addEventListener('lc-share-url',h);
     return()=>window.removeEventListener('lc-share-url',h);
-  },[]);
+  },[])
+  // 2026.04.17 외부 calcs RP에서 dispatch하는 다운로드/공유 이벤트 처리
+  useEffect(()=>{
+    const hPdf=(e)=>{const d=e.detail;if(d)downloadPDF(d.title,d.total,d.sub,d.items);};
+    const hImg=(e)=>{const d=e.detail;if(d)downloadImage(d.title,d.total,d.sub,d.items);};
+    const hCsv=(e)=>{const d=e.detail;if(d)downloadCSV(d.title,d.total,d.sub,d.items);};
+    const hKakao=(e)=>{const d=e.detail;if(d)shareKakao(d.title,d.total,d.sub,d.items);};
+    window.addEventListener('lc-download-pdf',hPdf);
+    window.addEventListener('lc-download-image',hImg);
+    window.addEventListener('lc-download-csv',hCsv);
+    window.addEventListener('lc-share-kakao',hKakao);
+    return()=>{window.removeEventListener('lc-download-pdf',hPdf);window.removeEventListener('lc-download-image',hImg);window.removeEventListener('lc-download-csv',hCsv);window.removeEventListener('lc-share-kakao',hKakao);};
+  },[]);;
   // Phase B: 시나리오 ±10% (주 입력값 배율 조정)
   const scenarioOrigRef=useRef(null);
   useEffect(()=>{scenarioOrigRef.current=null;},[calc]);

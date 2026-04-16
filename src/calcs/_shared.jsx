@@ -146,15 +146,26 @@ export const MI = {
   luckyday:["이사 예정 월을 입력해주세요"],
 };
 
-export function RP({title, total, sub, items, alertMsg, alertType="info", miss}){
+export function RP({title, total, sub, items, alertMsg, alertType="info", miss, isExample=false}){
   const isMo = useIsMobile();
-  // 2026.04.14 App.jsx의 메인 RP와 동일한 그라디언트 + 흰색 텍스트 스타일
-  // 2026.04.15 miss: 필수 입력 미기재 시 회색 안내박스 표시 (string[])
   const hasMiss = Array.isArray(miss) && miss.length>0;
-  if(hasMiss){ total = 0; items = []; sub = "필수 항목을 입력해주세요"; }
+  if(isExample||hasMiss){total=total||0;if(hasMiss){items=[];sub="필수 항목을 입력해주세요";}else if(!items||items.length===0){sub=sub||"입력값을 입력하면 결과가 표시됩니다";}}
   const alertAccent = alertType==="danger"?"#FFC400":alertType==="success"?"#57D9A3":alertType==="warning"?"#FFE380":"#fff";
   const isTotal = (l) => typeof l==="string" && (l.includes("합계")||l.includes("총")||l.includes("최종")||l.includes("세후")||l.includes("순")||l.includes("최대"));
-  return(<div style={{background:"linear-gradient(135deg, #0747A6 0%, #0052CC 50%, #0065FF 100%)",borderRadius:20,padding:isMo?"22px 20px":"28px 24px",color:"#fff",position:isMo?"relative":"sticky",top:isMo?0:80,alignSelf:"start",boxShadow:"0 8px 28px rgba(7,71,166,.28)",width:"100%",minWidth:isMo?"auto":320,boxSizing:"border-box",marginTop:isMo?16:0}}>
+  const isSub = (l) => typeof l==="string" && (l.startsWith("  ")||l.startsWith("└")||l.startsWith("│"));
+  const _s=(d)=>({width:18,height:18,viewBox:"0 0 24 24",fill:"none",stroke:"#fff",strokeWidth:1.5,strokeLinecap:"round",strokeLinejoin:"round",...d});
+  const Ic={
+    doc:<svg {..._s({})}><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="14 3 14 9 20 9"/><path d="M8 13h8M8 17h5"/></svg>,
+    cam:<svg {..._s({})}><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="4"/></svg>,
+    chart:<svg {..._s({})}><path d="M3 20h18"/><path d="M6 16V8"/><path d="M12 16V4"/><path d="M18 16v-6"/></svg>,
+    link:<svg {..._s({})}><path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 1 0-5.66-5.66l-1.5 1.5"/><path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 1 0 5.66 5.66l1.5-1.5"/></svg>,
+    bot:<svg {..._s({})}><rect x="4" y="7" width="16" height="12" rx="2"/><path d="M12 3v4M8 13v2M16 13v2"/></svg>
+  };
+  const _ev=(n,d)=>{try{window.dispatchEvent(new CustomEvent(n,{detail:d}));}catch{}};
+  const btnSt={padding:"9px 10px",background:"rgba(255,255,255,.12)",color:"#fff",border:"1px solid rgba(255,255,255,.28)",borderRadius:8,fontSize:11,fontWeight:700,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:4,fontFamily:"inherit",transition:"background .15s"};
+  const bHov=e=>{e.currentTarget.style.background="rgba(255,255,255,.22)"};
+  const bOut=e=>{e.currentTarget.style.background="rgba(255,255,255,.12)"};
+  return(<div style={{background:"linear-gradient(315deg, #0747A6 0%, #0052CC 50%, #0065FF 100%)",borderRadius:20,padding:isMo?"22px 20px":"28px 24px",color:"#fff",position:isMo?"relative":"sticky",top:isMo?0:80,alignSelf:"start",boxShadow:"0 8px 28px rgba(7,71,166,.28)",width:"100%",minWidth:isMo?"auto":320,boxSizing:"border-box",marginTop:isMo?16:0}}>
     {hasMiss&&<div style={{background:"rgba(255,255,255,0.95)",border:"1px solid #E5E7EB",borderRadius:10,padding:"14px 16px",marginBottom:16,color:"#374151",fontSize:13,lineHeight:1.6}}>
       <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:6}}><span style={{fontSize:16}}>📝</span><strong style={{color:"#0747A6",fontSize:13}}>필수 항목을 입력하면 자동으로 계산됩니다</strong></div>
       <ul style={{margin:"6px 0 0 20px",padding:0,color:"#6B7280",fontSize:12}}>{miss.map((m,i)=>(<li key={i} style={{marginTop:2}}>{m}</li>))}</ul>
@@ -169,9 +180,9 @@ export function RP({title, total, sub, items, alertMsg, alertType="info", miss})
     </div>
     {items&&items.length>0&&<div style={{borderTop:"1px solid rgba(255,255,255,.22)",paddingTop:4}}>
       {items.map((it,i)=>{
-        const tr=isTotal(it.l);
+        const tr=isTotal(it.l);const sr=isSub(it.l);
         return(<div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",padding:"10px 0",borderBottom:i<items.length-1?"1px solid rgba(255,255,255,.1)":"none",gap:8}}>
-          <span style={{opacity:tr?1:0.82,fontWeight:tr?800:400,fontSize:tr?16:13,flex:"1 1 auto",minWidth:0,wordBreak:"keep-all"}}>{it.l}</span>
+          <span style={{opacity:sr?0.65:tr?1:0.82,fontWeight:tr?800:400,paddingLeft:sr?12:0,fontSize:tr?16:13,flex:"1 1 auto",minWidth:0,wordBreak:"keep-all"}}>{it.l}</span>
           <div style={{textAlign:"right",whiteSpace:"nowrap",flexShrink:0}}>
             <span style={{fontWeight:tr?800:600,fontSize:tr?16:13,color:tr?"#FFC400":"#fff",fontVariantNumeric:"tabular-nums"}}>{it.v}</span>
             {it.note&&<div style={{fontSize:10,opacity:.58,marginTop:2}}>{it.note}</div>}
@@ -179,6 +190,43 @@ export function RP({title, total, sub, items, alertMsg, alertType="info", miss})
         </div>);
       })}
     </div>}
+    {!hasMiss&&total>0&&(()=>{
+      const d={title,total,items,sub};
+      const row1=[
+        {fn:()=>_ev('lc-download-pdf',d),icon:Ic.doc,l:"PDF"},
+        {fn:()=>_ev('lc-download-image',d),icon:Ic.cam,l:"이미지"},
+        {fn:()=>_ev('lc-download-csv',d),icon:Ic.chart,l:"CSV"},
+        {fn:()=>_ev('lc-share-url'),icon:Ic.link,l:"링크"}
+      ];
+      const row2=[
+        {fn:()=>_ev('lc-ai-explain',d),icon:Ic.bot,l:"AI 해설"},
+        {fn:()=>_ev('lc-brand-pdf',d),icon:Ic.doc,l:"AI PDF"},
+        {fn:()=>_ev('lc-share-kakao',d),icon:Ic.link,l:"공유"}
+      ];
+      const renderBtn=(b,i)=>(<button key={i} onClick={b.fn} style={btnSt} onMouseEnter={bHov} onMouseLeave={bOut}>{b.icon}{b.l}</button>);
+      if(isMo) return(<div style={{display:"flex",flexWrap:"wrap",gap:6,marginTop:14}}>{[...row1,...row2].map(renderBtn)}</div>);
+      return(<div style={{marginTop:14,display:"flex",flexDirection:"column",gap:6}}>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6}}>{row1.map(renderBtn)}</div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:6}}>{row2.map(renderBtn)}</div>
+      </div>);
+    })()}
+    {!hasMiss&&total>0&&<div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:6,marginTop:8}}>
+      {[{l:"−10%"},{l:"절세 팁"},{l:"+10%"}].map(s=>(
+        <button key={s.l} onClick={()=>_ev(s.l==="절세 팁"?'lc-ai-explain':'lc-scenario',s.l==="절세 팁"?{title,total,items,sub}:{mult:s.l==="−10%"?0.9:1.1})} style={{padding:"8px 4px",background:"rgba(255,255,255,.12)",color:"#fff",border:"1px solid rgba(255,255,255,.28)",borderRadius:8,fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>{s.l}</button>
+      ))}
+    </div>}
+    {!hasMiss&&total>0&&<div style={{marginTop:10,padding:"12px 14px",background:"rgba(255,255,255,0.14)",border:"1px solid rgba(255,255,255,0.22)",borderRadius:10,display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,flexWrap:"wrap"}}>
+      <div style={{flex:"1 1 auto",minWidth:0}}>
+        <div style={{fontSize:12,fontWeight:700,color:"#fff",marginBottom:2}}>1:1 세금 상담</div>
+        <div style={{fontSize:11,opacity:0.82,lineHeight:1.5}}>전문가와 복잡한 절세 전략 논의</div>
+      </div>
+      <button onClick={()=>_ev('lc-consult',{title,total})} style={{flexShrink:0,padding:"8px 14px",background:"#fff",color:"#0747A6",border:"none",borderRadius:8,fontSize:12,fontWeight:800,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>상담 →</button>
+    </div>}
+    {!isExample&&!hasMiss&&total>0&&(()=>{try{return !localStorage.getItem('lc_token');}catch{return true;}})()&&<div style={{marginTop:10,padding:"12px 14px",background:"rgba(255,255,255,0.1)",border:"1px solid rgba(255,255,255,0.2)",borderRadius:10,display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,flexWrap:"wrap"}}>
+      <div style={{flex:"1 1 auto",minWidth:0}}><div style={{fontSize:12,fontWeight:600,color:"#fff"}}>계산 결과를 저장하려면 로그인하세요</div><div style={{fontSize:11,opacity:.7,marginTop:2}}>히스토리 보관 · AI 가이드 3회 · 맞춤 알림</div></div>
+      <button onClick={()=>_ev('lc-open-auth')} style={{flexShrink:0,padding:"8px 16px",background:"#fff",color:"#0747A6",border:"none",borderRadius:8,fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>로그인</button>
+    </div>}
+    <div style={{marginTop:10,fontSize:10,opacity:.5,lineHeight:1.5,textAlign:"center"}}>본 계산은 2026년 세법 기준 참고용이며 법적 효력이 없습니다.</div>
   </div>);
 }
 
