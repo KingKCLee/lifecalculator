@@ -6623,10 +6623,8 @@ body.lc-embed main{padding-top:0!important}
 
           {/* 2026.04.15 sample-calc 기준 계산기 페이지 슬림화: MarketIntel·AdSlot·FUN_STATS 제거 */}
           {/* 2026.04.16 sample-calc .guide-section > .guide-card 구조 */}
-          {SEO_CONTENT[calc]&&<div className="guide-section" style={{padding:isMo?"24px 0":"40px 0 72px",marginBottom:0}}>
-            <div className="guide-card" style={{background:"#fff",border:"1px solid #dfe1e6",borderRadius:18,padding:isMo?"28px 20px":"40px 44px",boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
-              <div className="seo" dangerouslySetInnerHTML={{__html:SEO_CONTENT[calc]}} style={{fontSize:14,color:"#374151",lineHeight:1.8}}/>
-            </div>
+          {SEO_CONTENT[calc]&&<div className="guide-section" style={{maxWidth:1200,margin:"0 auto",padding:isMo?"24px 16px":"40px 32px 72px"}}>
+            <div className="seo" dangerouslySetInnerHTML={{__html:SEO_CONTENT[calc]}} style={{fontSize:15,color:"#374151",lineHeight:1.8}}/>
           </div>}
           {adSlots?.guide_bottom?.enabled&&!isMo&&<div style={{marginBottom:16}} dangerouslySetInnerHTML={{__html:adSlots.guide_bottom.code||""}}/>}
           {/* 2026.04.15 sample-calc 기준 계산기 페이지 슬림화: PRO 분석 카드 3종 제거 */}
