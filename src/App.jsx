@@ -5955,7 +5955,7 @@ export default function App(){
       if(err||!code){window.history.replaceState(null,"","/");setPage("home");return;}
       fetch(LC_REALESTATE_WORKER+"/auth/callback?code="+encodeURIComponent(code)+"&state="+encodeURIComponent(state||""))
         .then(r=>r.json()).then(j=>{
-          if(j.ok&&j.token){try{localStorage.setItem("lc_token",j.token);localStorage.setItem("lc_email",j.email||"");}catch{}setLcToken(j.token);setLcEmail(j.email||"");}
+          if(j.ok&&j.token){try{localStorage.setItem("lc_token",j.token);localStorage.setItem("lc_email",j.email||"");if(j.name)localStorage.setItem("lc_name",j.name);}catch{}setLcToken(j.token);setLcEmail(j.email||"");if(j.name)setLcName(j.name);}
         }).catch(()=>{}).finally(()=>{window.history.replaceState(null,"","/");setPage("home");});
       return;
     }
