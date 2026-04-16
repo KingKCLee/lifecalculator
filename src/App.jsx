@@ -1146,6 +1146,24 @@ function parseWonString(v){
   return parseFloat(m)||0;
 }
 
+/* ═══ 취득세 완벽가이드 5단계 카드 ═══ */
+function AcqGuide({isMo}){
+  const hd=(num,title,bg,tx)=>(<div style={{display:"flex",alignItems:"center",gap:12,padding:isMo?"14px 18px":"18px 24px",background:"#f9fafb",borderBottom:"1px solid #e5e7eb"}}><div style={{width:32,height:32,borderRadius:"50%",background:bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:15,fontWeight:600,color:tx,flexShrink:0}}>{num}</div><span style={{fontSize:isMo?16:18,fontWeight:600,color:"#0a1628"}}>{title}</span></div>);
+  const dot=(text)=>(<div style={{display:"flex",alignItems:"flex-start",gap:12}}><div style={{width:8,height:8,borderRadius:"50%",background:"#378ADD",marginTop:8,flexShrink:0}}/><span style={{fontSize:isMo?14:16,color:"#374151",lineHeight:1.8}}>{text}</span></div>);
+  const tag=(label,text,bg,tx)=>(<div style={{display:"flex",gap:12,alignItems:"flex-start"}}><span style={{fontSize:isMo?12:14,fontWeight:600,color:tx,background:bg,padding:"4px 12px",borderRadius:4,flexShrink:0,marginTop:2,whiteSpace:"nowrap"}}>{label}</span><span style={{fontSize:isMo?14:16,color:"#374151",lineHeight:1.8}}>{text}</span></div>);
+  const warn=(title,text,color)=>(<div style={{padding:"14px 18px",background:"#f9fafb",borderRadius:8,borderLeft:"3px solid "+color}}><div style={{fontSize:isMo?14:15,fontWeight:600,color:color==="#E24B4A"?"#A32D2D":"#185FA5",marginBottom:6}}>{title}</div><div style={{fontSize:isMo?14:16,color:"#374151",lineHeight:1.8}}>{text}</div></div>);
+  const cd={background:"#fff",border:"1px solid #e5e7eb",borderRadius:12,overflow:"hidden"};
+  return(
+    <div style={{width:"100%",marginTop:32,display:"flex",flexDirection:"column",gap:16}}>
+      <div style={cd}>{hd(1,"이런 분들께 필요해요","#E6F1FB","#0C447C")}<div style={{padding:isMo?"16px 18px":"20px 24px",display:"flex",flexDirection:"column",gap:12}}>{dot("아파트·주택 매수 계약을 앞두고 총 자금이 얼마나 드는지 정확히 파악하고 싶은 분")}{dot("다주택자로서 중과세율(8~12%)이 적용되는지 미리 확인하고 싶은 분")}{dot("생애최초 주택 구입 감면, 일시적 2주택 특례 등 감면 혜택을 놓치고 싶지 않은 분")}{dot("증여·상속으로 부동산을 받는데 취득세가 얼마인지 몰라 불안한 분")}</div></div>
+      <div style={cd}>{hd(2,"이 계산기로 해결되는 것","#E1F5EE","#085041")}<div style={{padding:isMo?"16px 18px":"20px 24px"}}><p style={{fontSize:isMo?14:16,color:"#374151",lineHeight:1.8,margin:0}}>취득가액, 부동산 유형, 보유 주택 수, 면적, 특수조건(법인·조정지역·생애최초 등)을 입력하면 <b>취득세·지방교육세·농어촌특별세가 자동으로 계산</b>됩니다. 주소 검색으로 실거래가와 공시가격을 자동 조회하여 과세표준을 정확히 산출합니다. 1주택 6억 이하 1.3%부터 법인 13.4%까지, 본인 상황에 맞는 세율이 자동 적용됩니다.</p></div></div>
+      <div style={cd}>{hd(3,"2026년 핵심 세율과 계산법","#FAEEDA","#633806")}<div style={{padding:isMo?"16px 18px":"20px 24px",display:"flex",flexDirection:"column",gap:12}}>{tag("1주택","6억 이하 1%, 6~9억 1~3%(비례), 9억 초과 3%","#E6F1FB","#185FA5")}{tag("다주택","조정 2주택 8%, 3주택 이상 12%, 법인 12%","#FCEBEB","#A32D2D")}{tag("감면","생애최초 12억 이하 최대 200만원 (2028년 말까지)","#EAF3DE","#3B6D11")}{tag("부가세","지방교육세(취득세×10%) + 농어촌특별세(85㎡ 초과 0.2%) 추가","#FAEEDA","#633806")}</div></div>
+      <div style={cd}>{hd(4,"계산기 200% 활용법","#EEEDFE","#3C3489")}<div style={{padding:isMo?"16px 18px":"20px 24px",display:"flex",flexDirection:"column",gap:14}}>{tag("1단계","취득 유형(구매/증여/상속/분양)과 부동산 종류를 선택합니다.","#EEEDFE","#534AB7")}{tag("2단계","'주소로 자동입력' 버튼으로 실거래가와 공시가격을 한 번에 조회하세요.","#EEEDFE","#534AB7")}{tag("3단계","특수조건 칩(조정대상·생애최초·법인 등)을 눌러 본인 상황을 반영합니다. 조건 하나로 세액이 수백만원 달라지므로 반드시 체크하세요.","#EEEDFE","#534AB7")}{tag("4단계","결과의 -10%/+10% 시뮬레이션으로 매수가 변동 시 세금 변화도 확인할 수 있습니다.","#EEEDFE","#534AB7")}</div></div>
+      <div style={cd}>{hd(5,"놓치면 손해보는 것들","#FCEBEB","#791F1F")}<div style={{padding:isMo?"16px 18px":"20px 24px",display:"flex",flexDirection:"column",gap:12}}>{warn("신고기한","잔금일(또는 등기일) 중 빠른 날부터 60일 이내. 상속은 6개월, 증여는 3개월","#E24B4A")}{warn("미신고 가산세","무신고 20% + 납부지연 일 0.022%. 1억 세금이면 가산세만 2천만원","#E24B4A")}{warn("생애최초 감면","자동 적용이 아님. 위택스(wetax.go.kr)에서 감면 신청 별도 필요","#378ADD")}{warn("공시가격 1억 이하","다주택이어도 중과 제외 — 이 계산기에서 자동 판정됩니다","#378ADD")}</div></div>
+    </div>
+  );
+}
+
 function SavingsGuide({tips}){
   if(!tips || tips.length === 0) return null;
   return (
@@ -6623,12 +6641,12 @@ body.lc-embed main{padding-top:0!important}
           {adSlots?.rp_bottom?.enabled&&!isMo&&<div style={{marginBottom:16}} dangerouslySetInnerHTML={{__html:adSlots.rp_bottom.code||""}}/>}
 
           {/* 2026.04.15 sample-calc 기준 계산기 페이지 슬림화: MarketIntel·AdSlot·FUN_STATS 제거 */}
-          {/* 2026.04.16 sample-calc .guide-section > .guide-card 구조 */}
-          {SEO_CONTENT[calc]&&<div className="guide-section" style={{padding:isMo?"24px 0":"40px 0 72px",marginBottom:0}}>
+          {/* 완벽가이드: 취득세는 JSX 카드, 나머지는 기존 SEO_CONTENT */}
+          {calc==="acquisition"?(<AcqGuide isMo={isMo}/>):(SEO_CONTENT[calc]&&<div className="guide-section" style={{padding:isMo?"24px 0":"40px 0 72px",marginBottom:0}}>
             <div className="guide-card" style={{background:"#fff",border:"1px solid #dfe1e6",borderRadius:18,padding:isMo?"28px 20px":"40px 44px",boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
               <div className="seo" dangerouslySetInnerHTML={{__html:SEO_CONTENT[calc]}} style={{fontSize:15,color:"#374151",lineHeight:1.8}}/>
             </div>
-          </div>}
+          </div>)}
           {adSlots?.guide_bottom?.enabled&&!isMo&&<div style={{marginBottom:16}} dangerouslySetInnerHTML={{__html:adSlots.guide_bottom.code||""}}/>}
           {/* 2026.04.15 sample-calc 기준 계산기 페이지 슬림화: PRO 분석 카드 3종 제거 */}
         </div>
