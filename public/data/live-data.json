@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "fix: 완벽가이드 좌우 정렬 2열그리드와 일치",
+      "desc": "fix: 완벽가이드 좌우 정렬 2열그리드와 일치"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "fix: 완벽가이드 글자크기 대폭 키우기",
       "desc": "fix: 완벽가이드 글자크기 대폭 키우기"
     },
@@ -1459,12 +1465,6 @@
       "category": "전체",
       "title": "feat(admin): dashboard with D1 tracking, KV auth, /admin route, calc event logging",
       "desc": "feat(admin): dashboard with D1 tracking, KV auth, /admin route, calc event logging"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "fix(AddressModal): replace all unicode escapes with UTF-8 chars, remove JUSO subtitle",
-      "desc": "fix(AddressModal): replace all unicode escapes with UTF-8 chars, remove JUSO subtitle"
     }
   ],
   "rates": {
