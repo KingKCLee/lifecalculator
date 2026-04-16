@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "feat: 전체 계산기 NextStep/RateTable/RP패널 100% 완성",
+      "desc": "feat: 전체 계산기 NextStep/RateTable/RP패널 100% 완성"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "feat: 전체 계산기 필수요소 일괄 추가 - Expert Guide 30개 신규",
       "desc": "feat: 전체 계산기 필수요소 일괄 추가 - Expert Guide 30개 신규"
     },
@@ -1459,13 +1465,6 @@
       "category": "전체",
       "title": "feat(home): sample-home 1:1 매칭 — PC에서 sample 외 3개 섹션 숨김",
       "desc": "feat(home): sample-home 1:1 매칭 — PC에서 sample 외 3개 섹션 숨김"
-    },
-    {
-      "date": "2026.04.15",
-      "category": "세금",
-      "title": "정책 만료 D-24: transferSurchargeEnd",
-      "desc": "2026-05-10 만료 예정. 관련 계산기에 자동 반영됩니다.",
-      "urgent": true
     }
   ],
   "rates": {
