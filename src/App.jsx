@@ -2326,7 +2326,7 @@ function CalcCompre({isMo=false,onNav=()=>{}}){
     }
   }
   return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}><div>
-    {showCompreLookup!==null&&<AddressModal calcType="holding" onClose={()=>setShowCompreLookup(null)} onApplyStd={v=>{const tid=showCompreLookup;setItems(items.map(i=>i.id===tid?{...i,price:String(Math.round(v/10000))}:i));markModified();setShowCompreLookup(null);}} onApplyInfo={info=>{const tid=showCompreLookup;setItems(items.map(i=>i.id===tid?{...i,aptInfo:info}:i));}}/>}<Tog label="납세자 유형" value={taxpayer} onChange={sTP} options={[{value:"indi",label:"개인"},{value:"corp",label:"법인"}]}/>
+    {showCompreLookup!==null&&<AddressModal calcType="holding" onClose={()=>setShowCompreLookup(null)} onApplyStd={v=>{const tid=showCompreLookup;setItems(prev=>prev.map(i=>i.id===tid?{...i,price:String(Math.round(v/10000))}:i));markModified();setShowCompreLookup(null);}} onApplyInfo={info=>{const tid=showCompreLookup;setItems(prev=>prev.map(i=>i.id===tid?{...i,aptInfo:info}:i));}}/>}<Tog label="납세자 유형" value={taxpayer} onChange={sTP} options={[{value:"indi",label:"개인"},{value:"corp",label:"법인"}]}/>
     <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"16px 0"}}/>
     <div style={{marginBottom:12}}>
       <div style={{fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:8,display:"flex",alignItems:"center",gap:4}}>보유 물건 <TipModal title="보유 물건"><p>보유 중인 주택을 각각 추가하세요. 공동명의는 지분 비율만큼만 합산됩니다. 임대사업자 합산배제 등록 물건은 제외 체크.</p></TipModal><span style={{marginLeft:"auto",fontSize:11,fontWeight:400,color:"#94a3b8"}}>합산 {nRaw}건</span></div>
@@ -2334,7 +2334,7 @@ function CalcCompre({isMo=false,onNav=()=>{}}){
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:8}}>
           <span style={{fontSize:12,fontWeight:700,color:"#0747A6"}}>물건 {idx+1}</span>
           <div style={{display:"flex",gap:6,alignItems:"center"}}>
-            {!isMo&&<button onClick={()=>setShowCompreLookup(it.id)} style={{padding:"4px 10px",fontSize:11,background:"#eff6ff",color:"#1e40af",border:"1px solid #bfdbfe",borderRadius:6,cursor:"pointer",fontFamily:"inherit",fontWeight:600}}>📍 주소조회</button>}
+            {!isMo&&<button onClick={()=>setShowCompreLookup(it.id)} style={{padding:"4px 10px",fontSize:11,background:"linear-gradient(135deg,#eff6ff,#dbeafe)",color:"#1e40af",border:"1.5px solid #bfdbfe",borderRadius:6,cursor:"pointer",fontFamily:"inherit",fontWeight:700,display:"inline-flex",alignItems:"center",gap:4}}>📍 주소·단지명으로 조회</button>}
             {items.length>1&&<button onClick={()=>removeItem(it.id)} style={{padding:"4px 10px",fontSize:11,background:"#FFEBE6",color:"#BF2600",border:"1px solid #FFBDAD",borderRadius:6,cursor:"pointer",fontFamily:"inherit",fontWeight:600}}>삭제</button>}
           </div>
         </div>
