@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "feat(AddressModal): compare real vs std, 과세표준 badge on higher, collapsible extra trades",
+      "desc": "feat(AddressModal): compare real vs std, 과세표준 badge on higher, collapsible extra trades"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "feat(AddressModal): add tax guidance banner, dual-apply flow (std stays open, real closes)",
       "desc": "feat(AddressModal): add tax guidance banner, dual-apply flow (std stays open, real closes)"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "style: 중복 라벨 커스텀 헬퍼 div 강조 스타일 통일",
       "desc": "style: 중복 라벨 커스텀 헬퍼 div 강조 스타일 통일"
-    },
-    {
-      "date": "2026.04.15",
-      "category": "전체",
-      "title": "fix: TipModal 헬퍼 라벨과 Inp/Sel/Tog label 중복 제거",
-      "desc": "fix: TipModal 헬퍼 라벨과 Inp/Sel/Tog label 중복 제거"
     }
   ],
   "rates": {
