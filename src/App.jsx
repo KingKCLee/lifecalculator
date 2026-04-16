@@ -1148,6 +1148,7 @@ function parseWonString(v){
 
 /* ═══ 취득세 완벽가이드 5단계 카드 ═══ */
 function AcqGuide({isMo}){
+  if(typeof console!=="undefined")console.log("[AcqGuide] rendered, isMo=",isMo);
   const hd=(num,title,bg,tx)=>(<div style={{display:"flex",alignItems:"center",gap:12,padding:isMo?"14px 18px":"18px 24px",background:"#f9fafb",borderBottom:"1px solid #e5e7eb"}}><div style={{width:32,height:32,borderRadius:"50%",background:bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:15,fontWeight:600,color:tx,flexShrink:0}}>{num}</div><span style={{fontSize:isMo?16:18,fontWeight:600,color:"#0a1628"}}>{title}</span></div>);
   const dot=(text)=>(<div style={{display:"flex",alignItems:"flex-start",gap:12}}><div style={{width:8,height:8,borderRadius:"50%",background:"#378ADD",marginTop:8,flexShrink:0}}/><span style={{fontSize:isMo?14:16,color:"#374151",lineHeight:1.8}}>{text}</span></div>);
   const tag=(label,text,bg,tx)=>(<div style={{display:"flex",gap:12,alignItems:"flex-start"}}><span style={{fontSize:isMo?12:14,fontWeight:600,color:tx,background:bg,padding:"4px 12px",borderRadius:4,flexShrink:0,marginTop:2,whiteSpace:"nowrap"}}>{label}</span><span style={{fontSize:isMo?14:16,color:"#374151",lineHeight:1.8}}>{text}</span></div>);
