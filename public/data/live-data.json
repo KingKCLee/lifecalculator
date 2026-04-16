@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "fix: Google 로그인 전체 수정 (admin + 일반 사용자)",
+      "desc": "fix: Google 로그인 전체 수정 (admin + 일반 사용자)"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "fix: 어드민 API fetch에 credentials: include 추가",
       "desc": "fix: 어드민 API fetch에 credentials: include 추가"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "fix: 모바일 UI 종합 개선 (62개 계산기 공통 레이어)",
       "desc": "fix: 모바일 UI 종합 개선 (62개 계산기 공통 레이어)"
-    },
-    {
-      "date": "2026.04.15",
-      "category": "전체",
-      "title": "feat: 계산기별 부제목 CALC_SUBTITLE 매핑",
-      "desc": "feat: 계산기별 부제목 CALC_SUBTITLE 매핑"
     }
   ],
   "rates": {
