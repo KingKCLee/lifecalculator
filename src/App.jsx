@@ -6728,9 +6728,9 @@ body.lc-embed main{padding-top:0!important}
           </div>
           {adSlots?.header?.enabled&&!isMo&&!noAds&&<div style={{marginBottom:16}} dangerouslySetInnerHTML={{__html:adSlots.header.code||""}}/>}
           <div className="calc-container" style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:isMo?16:32,marginBottom:24,boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
-            {isMo?(<MobileCalcWrapper><Comp key={calc+"_"+sessionKey} isMo={true} onNav={navigateCalc}/></MobileCalcWrapper>):(<div><Comp key={calc+"_"+sessionKey} isMo={false} onNav={navigateCalc}/></div>)}
+            {isMo?(<MobileCalcWrapper><Comp key={calc+"_"+sessionKey} isMo={true} onNav={navigateCalc}/></MobileCalcWrapper>):(<div style={{display:"grid",gridTemplateColumns:"3fr 2fr",gap:28,alignItems:"start"}}><div style={{gridColumn:"1 / -1",display:"contents"}}><Comp key={calc+"_"+sessionKey} isMo={false} onNav={navigateCalc}/></div><div style={{gridColumn:2,gridRow:2}}><NextStep calcId={calc} onNav={navigateCalc} isMo={false}/></div></div>)}
           
-            {!isMo&&<NextStep calcId={calc} onNav={navigateCalc} isMo={false}/>}</div>
+            </div>
           
           {adSlots?.rp_bottom?.enabled&&!isMo&&!noAds&&<div style={{marginBottom:16}} dangerouslySetInnerHTML={{__html:adSlots.rp_bottom.code||""}}/>}
 
