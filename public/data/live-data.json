@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "feat: 부동산 카테고리 21개 계산기 포맷 전파 — 60/40 그리드 + h3 제거 + AddressModal 연동 6종",
+      "desc": "feat: 부동산 카테고리 21개 계산기 포맷 전파 — 60/40 그리드 + h3 제거 + AddressModal 연동 6종"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "fix: 트래킹 한글 깨짐 수정 (Content-Type charset=utf-8)",
       "desc": "fix: 트래킹 한글 깨짐 수정 (Content-Type charset=utf-8)"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "style: 홈 섹션 헤더 이모지 5종 SVG 아이콘 교체",
       "desc": "style: 홈 섹션 헤더 이모지 5종 SVG 아이콘 교체"
-    },
-    {
-      "date": "2026.04.15",
-      "category": "세금",
-      "title": "style: 취득세 '공시가격 1억 이하 중과 제외' 안내박스 하단 여백 16px 추가",
-      "desc": "style: 취득세 '공시가격 1억 이하 중과 제외' 안내박스 하단 여백 16px 추가"
     }
   ],
   "rates": {
