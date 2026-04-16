@@ -1168,6 +1168,12 @@
   "updateLog": [
     {
       "date": "2026.04.16",
+      "category": "전체",
+      "title": "feat: 어드민 대시보드 고도화 — 사이드바 + 5탭 + 도넛차트 + 시간대바",
+      "desc": "feat: 어드민 대시보드 고도화 — 사이드바 + 5탭 + 도넛차트 + 시간대바"
+    },
+    {
+      "date": "2026.04.16",
       "category": "세금",
       "title": "fix: 취득세 계산기 재방문 시 이전 입력값 잔존 문제 수정 — localStorage autosave/복원 제거",
       "desc": "fix: 취득세 계산기 재방문 시 이전 입력값 잔존 문제 수정 — localStorage autosave/복원 제거"
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "feat: 메인 탭 onClick 토글로 변경 (페이지 이동 없음)",
       "desc": "feat: 메인 탭 onClick 토글로 변경 (페이지 이동 없음)"
-    },
-    {
-      "date": "2026.04.15",
-      "category": "전체",
-      "title": "feat: 메인 탭 클릭 시 드롭다운 열고 유지 + 안내문 추가",
-      "desc": "feat: 메인 탭 클릭 시 드롭다운 열고 유지 + 안내문 추가"
     }
   ],
   "rates": {
