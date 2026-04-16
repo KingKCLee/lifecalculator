@@ -1981,7 +1981,7 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
       alertType={!stdPrice?"warning":firstDed>0?"success":"danger"}
       items={[{l:"취득세액 ("+fP(r*100)+")",v:fW(ac)},{l:"지방교육세 ("+fP((isHeavy?0.4:r*100*0.1))+")",v:fW(ed)},{l:"농어촌특별세"+(fm>0?" (0.2%)":""),v:fm>0?fW(fm):"없음"},{l:"합계 납부세액",v:fW(total)}]}/>
     
-    </div>
+    <NextStep calcId="acquisition" onNav={onNav} isMo={isMo}/></div>
   </div>);
 }
 
@@ -6728,9 +6728,9 @@ body.lc-embed main{padding-top:0!important}
           </div>
           {adSlots?.header?.enabled&&!isMo&&!noAds&&<div style={{marginBottom:16}} dangerouslySetInnerHTML={{__html:adSlots.header.code||""}}/>}
           <div className="calc-container" style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:isMo?16:32,marginBottom:24,boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
-            {isMo?(<MobileCalcWrapper><Comp key={calc+"_"+sessionKey} isMo={true} onNav={navigateCalc}/></MobileCalcWrapper>):(<div style={{display:"grid",gridTemplateColumns:"3fr 2fr",gap:28,alignItems:"start"}}><div style={{gridColumn:"1 / -1",display:"contents"}}><Comp key={calc+"_"+sessionKey} isMo={false} onNav={navigateCalc}/></div><div style={{gridColumn:2,gridRow:2}}><NextStep calcId={calc} onNav={navigateCalc} isMo={false}/></div></div>)}
-          
-            </div>
+            {isMo?(<MobileCalcWrapper><Comp key={calc+"_"+sessionKey} isMo={true} onNav={navigateCalc}/></MobileCalcWrapper>):(<div><Comp key={calc+"_"+sessionKey} isMo={false} onNav={navigateCalc}/></div>)}
+          </div>
+          {!isMo&&calc!=="acquisition"&&<NextStep calcId={calc} onNav={navigateCalc} isMo={false}/>}
           
           {adSlots?.rp_bottom?.enabled&&!isMo&&!noAds&&<div style={{marginBottom:16}} dangerouslySetInnerHTML={{__html:adSlots.rp_bottom.code||""}}/>}
 
