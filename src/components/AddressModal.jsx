@@ -223,11 +223,11 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 10 }}>
               <div>
                 <label style={labelSt}>동</label>
-                <input type="text" value={dongNm} onChange={e => setDongNm(e.target.value.replace(/\D/g, ""))} placeholder="예: 101" style={inpSt} />
+                <input type="text" value={dongNm} onChange={e => setDongNm(e.target.value)} placeholder="예: 101" style={inpSt} />
               </div>
               <div>
                 <label style={labelSt}>호</label>
-                <input type="text" value={hoNm} onChange={e => setHoNm(e.target.value.replace(/\D/g, ""))} placeholder="예: 1205" style={inpSt} />
+                <input type="text" value={hoNm} onChange={e => setHoNm(e.target.value)} placeholder="예: 1205" style={inpSt} />
               </div>
             </div>
             {mode === "transfer" && (
