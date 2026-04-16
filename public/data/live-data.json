@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "세금",
+      "title": "feat: 양도세 취득연도 입력으로 과거 실거래가 조회 (12개월 병렬, Worker 50건)",
+      "desc": "feat: 양도세 취득연도 입력으로 과거 실거래가 조회 (12개월 병렬, Worker 50건)"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "세금",
       "title": "fix: 전체 계산기 UI 취득세 기준으로 통일 (버튼/모달/레이아웃)",
       "desc": "fix: 전체 계산기 UI 취득세 기준으로 통일 (버튼/모달/레이아웃)"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "feat(calc): 옵션 A - RPFull 전용 컴포넌트 신설, CalcAcq만 사용",
       "desc": "feat(calc): 옵션 A - RPFull 전용 컴포넌트 신설, CalcAcq만 사용"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "feat(calc): sample-calc .field-label 스타일 전역 CSS 적용 (PC)",
-      "desc": "feat(calc): sample-calc .field-label 스타일 전역 CSS 적용 (PC)"
     }
   ],
   "rates": {
