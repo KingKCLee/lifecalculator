@@ -5819,7 +5819,7 @@ export default function App(){
       if(!t||!t.matches||!t.matches('input[type="text"],input[type="number"]'))return;
       if(!t.closest('.calc-container,.mobile-calc-wrap'))return;
       const cid=calcSaveRef.current;if(!cid)return;
-      try{localStorage.setItem('lc_input_'+cid,JSON.stringify(lcGetCalcInputs().map(el=>el.value)));}catch{}
+      try{localStorage.removeItem('lc_input_'+cid);}catch{}/* autosave 제거 — 재방문 시 항상 초기 상태 */
     };
     document.addEventListener('input',h,true);
     return()=>document.removeEventListener('input',h,true);
@@ -5831,7 +5831,7 @@ export default function App(){
     const urlIn=urlParams.get('in');
     let values=null;
     if(urlIn){values=lcDecodeInputs(urlIn);}
-    else{try{const s=localStorage.getItem('lc_input_'+calc);if(s)values=JSON.parse(s);}catch{}}
+    else{return;/* localStorage 자동복원 제거 — 재방문 시 항상 초기 상태로 시작 */}
     if(!values||!Array.isArray(values))return;
     const apply=()=>{
       const inputs=lcGetCalcInputs();
