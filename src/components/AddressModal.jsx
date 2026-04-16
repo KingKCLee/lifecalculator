@@ -347,9 +347,19 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
                 </div>
               )}
 
+              {/* 2026.04.16 자동입력 안내 (수정 가이드) */}
+              <div style={{ fontSize: 12, color: "#505f79", lineHeight: 1.55, padding: "10px 12px", background: "#f8f9fc", border: "1px solid #E5E7EB", borderRadius: 8, marginTop: 12 }}>
+                입력된 값이 실제와 다를 경우<br/>취득가액·시가표준액 입력란에서 직접 수정하세요.
+              </div>
+
               <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
                 <button onClick={() => setStage(2)} style={{ padding: "12px 18px", background: "#f4f5f7", color: "#505f79", border: "1.5px solid #E5E7EB", borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>이전</button>
                 <button onClick={() => { setStage(1); setPicked(null); setResults(null); setKeyword(""); setRealList([]); setStdInfo(null); setStdApplied(false); setShowMoreReal(false); setSelectedRealIdx(0); }} style={{ padding: "12px 18px", background: "#f4f5f7", color: "#505f79", border: "1.5px solid #E5E7EB", borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", flex: 1 }}>다른 주소 검색</button>
+              </div>
+
+              {/* 2026.04.16 모달 하단 공통 안내 */}
+              <div style={{ fontSize: 12, color: "#6b778c", lineHeight: 1.55, textAlign: "center", marginTop: 14, paddingTop: 12, borderTop: "1px solid #F3F4F6" }}>
+                ✏️ 자동입력된 값은 직접 수정 가능합니다.
               </div>
             </div>
           );
