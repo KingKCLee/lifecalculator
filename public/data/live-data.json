@@ -1168,6 +1168,12 @@
   "updateLog": [
     {
       "date": "2026.04.16",
+      "category": "전체",
+      "title": "fix: 어드민 lc_token으로 verify 통합",
+      "desc": "fix: 어드민 lc_token으로 verify 통합"
+    },
+    {
+      "date": "2026.04.16",
       "category": "세금",
       "title": "fix: 취득세 함께계산하면좋은 2열 Expert Guide 아래로 추가",
       "desc": "fix: 취득세 함께계산하면좋은 2열 Expert Guide 아래로 추가"
@@ -1459,12 +1465,6 @@
       "category": "전체",
       "title": "feat(report): pro tax invoice design for PDF/Image export (navy header, main card, styled table)",
       "desc": "feat(report): pro tax invoice design for PDF/Image export (navy header, main card, styled table)"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "feat(AddressModal): compare real vs std, 과세표준 badge on higher, collapsible extra trades",
-      "desc": "feat(AddressModal): compare real vs std, 과세표준 badge on higher, collapsible extra trades"
     }
   ],
   "rates": {
