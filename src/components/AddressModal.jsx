@@ -69,7 +69,7 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
       const j = await r.json().catch(() => ({}));
       if (r.ok && j.ok) {
         setResults(j.list || []);
-        if ((j.list || []).length === 0) setSearchErr("검색 결과가 없습니다.\n아파트·오피스텔만 조회 가능합니다.\n단독주택·빌라는 직접 입력해주세요.");
+        if ((j.list || []).length === 0) { const bt = buildingType || "apt"; setSearchErr(bt === "house" ? "검색 결과가 없습니다.\n주소를 다시 확인해주세요. (동/호 불필요)" : bt === "villa" ? "검색 결과가 없습니다.\n주소·동·호를 확인해주세요." : "검색 결과가 없습니다.\n주소 또는 건물명을 다시 확인해주세요."); }
       } else {
         setSearchErr("일시적인 오류가 발생했습니다.\n잠시 후 다시 시도하거나 직접 입력해주세요.");
       }
@@ -199,11 +199,11 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
             <label style={labelSt}>주소 또는 단지명</label>
             <div style={{ display: "flex", gap: 8, marginBottom: 6 }}>
               <input type="text" value={keyword} onChange={e => setKeyword(e.target.value)} onKeyDown={e => { if (e.key === "Enter") doSearch(); }}
-                placeholder="아파트·오피스텔명 또는 주소 입력 (예: 호반써밋송도, 대치 은마아파트, 송도 1로)"
+                placeholder="건물명 또는 주소 입력 (예: 은마아파트, 서울 강남구 역삼동)"
                 style={{ ...inpSt, flex: 1 }} />
               <button onClick={doSearch} disabled={searching} style={{ padding: "10px 20px", background: searching ? "#9CA3AF" : "#0141f9", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: searching ? "wait" : "pointer", fontFamily: "inherit", whiteSpace: "nowrap" }}>{searching ? "검색 중..." : "검색"}</button>
             </div>
-            <div style={{ fontSize: 11, color: "#9CA3AF", marginBottom: 10, lineHeight: 1.6 }}>아파트·오피스텔만 조회 가능합니다. 단독주택·빌라는 직접 입력해주세요.</div>
+            <div style={{ fontSize: 11, color: "#9CA3AF", marginBottom: 10, lineHeight: 1.6 }}>{(()=>{const bt=buildingType||"apt";if(bt==="house")return "주소 입력으로 개별주택가격 자동조회 (동/호 불필요)";if(bt==="villa")return "주소·동·호 입력으로 실거래가 조회 (공시가격 제한적)";if(bt==="commercial"||bt==="land")return "주소 입력으로 실거래가·토지공시지가 자동조회";return "주소 입력으로 실거래가·공시가격 자동조회";})()}</div>
             {searchErr && <div style={{ padding: "10px 14px", background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 8, fontSize: 12, color: "#1e40af", lineHeight: 1.6, marginBottom: 10, whiteSpace: "pre-line" }}>{searchErr}</div>}
             {results && results.length > 0 && (
               <div style={{ maxHeight: 380, overflowY: "auto", border: "1px solid #E5E7EB", borderRadius: 8 }}>
