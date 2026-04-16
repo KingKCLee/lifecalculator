@@ -739,6 +739,19 @@ function Radio({label,value,onChange,options,cols}){
   </div>);
 }
 
+/* 기준금리 표시 힌트 (대출 계산기 금리 입력란 옆) */
+function BaseRateHint(){
+  const[rate,setRate]=useState(null);
+  useEffect(()=>{
+    fetch(LC_REALESTATE_WORKER+"/api/base-rate").then(r=>r.json()).then(j=>{if(j.ok)setRate(j);}).catch(()=>{});
+  },[]);
+  if(!rate)return null;
+  return(<div style={{fontSize:11,color:"#0141f9",fontWeight:600,marginTop:4,display:"flex",alignItems:"center",gap:4}}>
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+    현재 기준금리: {rate.rate}% ({rate.date})
+  </div>);
+}
+
 function Inp({label,value,onChange,suffix,placeholder,note,error,inputMode}){
   const isMo=typeof window!=="undefined"&&window.innerWidth<=768;
   const[focused,setFocused]=useState(false);
@@ -3027,7 +3040,7 @@ function CalcBond({isMo=false,onNav=()=>{}}){
       total={discountCost} sub={"매입률 "+fP(bondRate*100)+" · 할인율 "+fP(discountRate*100)} items={[{l:"매매가격",v:fW(pW)},{l:"적용 지역·용도",v:(area==="seoul"?"서울":area==="metro"?"광역시":"기타")+" / "+(use==="house"?"주택":"상가")},{l:"채권매입률",v:fP(bondRate*100)},{l:"채권매입액",v:fW(bondAmt),note:"매매가×매입률"},{l:"할인율 (시세)",v:fP(discountRate*100)},{l:"실제 부담 할인비용",v:fW(discountCost),note:"매입액×할인율"}]}/><NextStep calcId="bond" onNav={onNav} isMo={isMo}/></div>);}
 
 /* 예적금이자 */
-function CalcDeposit({isMo=false,onNav=()=>{}}){const[amt,sAmt]=useState("");const[rt,sRt]=useState("");const[isDefault,setIsDefault]=useState(true);const markModified=()=>setIsDefault(false);const[mon,sMon]=useState("12");const[ty,sTy]=useState("saving");const[tax,sTax]=useState("normal");const amtW=tW(amt),r=pN(rt)/100,m=parseInt(mon);const taxRate=tax==="normal"?0.154:tax==="preferential"?0.095:0;let interest=0;if(ty==="saving"){interest=amtW*r*m/12;}else{interest=amtW*r*m*(m+1)/24;}const taxAmt=Math.round(interest*taxRate);const afterTax=interest-taxAmt;const total=(ty==="saving"?amtW:amtW*m)+afterTax;return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}><div>{!isMo&&<h3 style={{fontSize:isMo?16:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>예적금 이자 계산</h3>}<Inp label={ty==="saving"?"예금 원금":"월 납입액"} value={amt} onChange={sAmt} suffix="만원" placeholder="예: 1000" error={!amt||amt==="0"}/><Inp label="연이율" value={rt} onChange={sRt} suffix="%" placeholder="예: 3.5" error={!rt||rt==="0"}/><Sel label="기간" value={mon} onChange={sMon} options={[3,6,12,18,24,36].map(m=>({value:String(m),label:m+"개월"}))}/><Tog label="상품 유형" value={ty} onChange={sTy} options={[{value:"saving",label:"예금 (거치식)"},{value:"installment",label:"적금 (적립식)"}]}/><div style={{fontSize:13,color:"#374151",fontWeight:600,marginBottom:4,display:"flex",alignItems:"center",gap:6}}>세금 유형 <TipModal title=""><p>일반 15.4% / 세금우대 9.5% / 비과세(ISA 등). 금융소득 2천만↑ 종합과세.</p></TipModal></div><Tog label="" value={tax} onChange={sTax} options={[{value:"normal",label:"일반 (15.4%)"},{value:"preferential",label:"세금우대 (9.5%)"},{value:"exempt",label:"비과세"}]}/></div><RP miss={isDefault?MI.deposit:null} expertGuide={CALC_NAV_CONTENT.deposit?.items} expertGuide={CALC_NAV_CONTENT.deposit?.items} isExample={isDefault} title="세후 수령액"
+function CalcDeposit({isMo=false,onNav=()=>{}}){const[amt,sAmt]=useState("");const[rt,sRt]=useState("");const[isDefault,setIsDefault]=useState(true);const markModified=()=>setIsDefault(false);const[mon,sMon]=useState("12");const[ty,sTy]=useState("saving");const[tax,sTax]=useState("normal");const amtW=tW(amt),r=pN(rt)/100,m=parseInt(mon);const taxRate=tax==="normal"?0.154:tax==="preferential"?0.095:0;let interest=0;if(ty==="saving"){interest=amtW*r*m/12;}else{interest=amtW*r*m*(m+1)/24;}const taxAmt=Math.round(interest*taxRate);const afterTax=interest-taxAmt;const total=(ty==="saving"?amtW:amtW*m)+afterTax;return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}><div>{!isMo&&<h3 style={{fontSize:isMo?16:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>예적금 이자 계산</h3>}<Inp label={ty==="saving"?"예금 원금":"월 납입액"} value={amt} onChange={sAmt} suffix="만원" placeholder="예: 1000" error={!amt||amt==="0"}/><Inp label="연이율" value={rt} onChange={sRt} suffix="%" placeholder="예: 3.5" error={!rt||rt==="0"} note="한국은행 기준금리: 3.00% (2026.02.27 동결)"/><Sel label="기간" value={mon} onChange={sMon} options={[3,6,12,18,24,36].map(m=>({value:String(m),label:m+"개월"}))}/><Tog label="상품 유형" value={ty} onChange={sTy} options={[{value:"saving",label:"예금 (거치식)"},{value:"installment",label:"적금 (적립식)"}]}/><div style={{fontSize:13,color:"#374151",fontWeight:600,marginBottom:4,display:"flex",alignItems:"center",gap:6}}>세금 유형 <TipModal title=""><p>일반 15.4% / 세금우대 9.5% / 비과세(ISA 등). 금융소득 2천만↑ 종합과세.</p></TipModal></div><Tog label="" value={tax} onChange={sTax} options={[{value:"normal",label:"일반 (15.4%)"},{value:"preferential",label:"세금우대 (9.5%)"},{value:"exempt",label:"비과세"}]}/></div><RP miss={isDefault?MI.deposit:null} expertGuide={CALC_NAV_CONTENT.deposit?.items} expertGuide={CALC_NAV_CONTENT.deposit?.items} isExample={isDefault} title="세후 수령액"
       deadline="※ 금융소득 연 2,000만원 초과 시 종합과세 대상"
       alertMsg={pN(rt)>5?"고금리 상품: 만기 전 해지 조건 확인":pN(rt)<2?"저금리: 인플레이션 고려 필요":null}
       alertType="info"
@@ -3337,7 +3350,7 @@ function CalcMinWage({isMo=false,onNav=()=>{}}){
   return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}>
     <div>
       {!isMo&&<h3 style={{fontSize:isMo?16:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>최저임금 계산기</h3>}
-      <div style={{padding:"12px 16px",background:"#E6F1FB",borderRadius:10,marginBottom:16,fontSize:13,color:"#0747A6",fontWeight:600}}>2026년 최저임금: <strong>시급 {MIN_HOURLY.toLocaleString()}원</strong></div>
+      <div style={{padding:"12px 16px",background:"#E6F1FB",borderRadius:10,marginBottom:16,fontSize:13,color:"#0747A6",fontWeight:600}}>2026년 최저임금: <strong>시급 {MIN_HOURLY.toLocaleString()}원</strong> <span style={{fontWeight:400,fontSize:11,color:"#6b778c"}}>(+1.7% / 매년 1월 자동 업데이트)</span></div>
       <Inp label="하루 근무시간" value={hours} onChange={setH} suffix="시간" placeholder="예: 8"/>
       <Inp label="주 근무일수" value={days} onChange={setD} suffix="일" placeholder="예: 5"/>
       <Inp label="직접 입력 시급 (선택)" value={customH} onChange={setCH} suffix="원" placeholder={"미입력 시 최저임금 "+MIN_HOURLY.toLocaleString()+"원 적용"}/>
@@ -4419,7 +4432,13 @@ function AuthModal({mode,setMode,onClose,isMo,onAuthSuccess}){
 function MyPage({user,lcToken,lcEmail,onBack,onLogout,onLcLogout}){
   const[tab,setTab]=useState("profile");const[delConfirm,setDelConfirm]=useState(false);
   const[lcHistory,setLcHistory]=useState(null);const[lcHistErr,setLcHistErr]=useState("");
+  const[isAdmin,setIsAdmin]=useState(false);
   const deleteAccount=async()=>{onLogout();onBack();};
+  useEffect(()=>{
+    if(!lcToken)return;
+    fetch(LC_REALESTATE_WORKER+"/auth/verify",{headers:{"Authorization":"Bearer "+lcToken}})
+      .then(r=>r.json()).then(j=>{if(j.valid&&j.isAdmin)setIsAdmin(true);}).catch(()=>{});
+  },[lcToken]);
   useEffect(()=>{
     if(tab!=="history"||!lcToken)return;
     setLcHistory(null);setLcHistErr("");
@@ -4444,6 +4463,7 @@ function MyPage({user,lcToken,lcEmail,onBack,onLogout,onLcLogout}){
         <div style={{fontSize:13,fontWeight:600,color:"#6b778c",marginBottom:16}}>계정 정보</div>
         {[["이름",user.user_metadata?.full_name||"-"],["이메일",user.email||"-"],["가입일",new Date(user.created_at).toLocaleDateString("ko-KR")],["로그인 방법","Google"]].map(([k,v])=>(<div key={k} style={{display:"flex",justifyContent:"space-between",padding:"10px 0",borderBottom:"1px solid #f4f5f7",fontSize:14}}><span style={{color:"#6b778c"}}>{k}</span><span style={{color:"#172B4D",fontWeight:500}}>{v}</span></div>))}
       </div>
+      {isAdmin&&<button onClick={()=>{history.pushState(null,"","/admin");window.dispatchEvent(new PopStateEvent("popstate"));}} style={{width:"100%",padding:"14px 18px",background:"#0a1628",color:"#fff",border:"none",borderRadius:10,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit",marginBottom:8,display:"flex",alignItems:"center",gap:10,justifyContent:"flex-start"}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg><div style={{textAlign:"left"}}><div>어드민 대시보드</div><div style={{fontSize:11,fontWeight:400,opacity:.7,marginTop:2}}>사이트 관리 및 통계 확인</div></div></button>}
       <button onClick={onLogout} style={{width:"100%",padding:14,background:"#f4f5f7",color:"#505f79",border:"none",borderRadius:10,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit",marginBottom:8}}>로그아웃</button>
       {!delConfirm?(<button onClick={()=>setDelConfirm(true)} style={{width:"100%",padding:14,background:"none",color:"#DE350B",border:"1px solid #FFBDAD",borderRadius:10,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>회원 탈퇴</button>):(<div style={{padding:16,background:"#FFEBE6",borderRadius:10,border:"1px solid #FFBDAD"}}><p style={{fontSize:13,color:"#DE350B",marginBottom:12}}>탈퇴 시 모든 데이터가 삭제됩니다.</p><div style={{display:"flex",gap:8}}><button onClick={()=>setDelConfirm(false)} style={{flex:1,padding:10,background:"#fff",border:"1px solid #dfe1e6",borderRadius:8,fontSize:13,cursor:"pointer",fontFamily:"inherit"}}>취소</button><button onClick={deleteAccount} style={{flex:1,padding:10,background:"#DE350B",color:"#fff",border:"none",borderRadius:8,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>탈퇴 확인</button></div></div>)}
     </div>)}
