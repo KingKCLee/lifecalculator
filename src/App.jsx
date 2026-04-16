@@ -1355,22 +1355,31 @@ function RPFull({title,total,sub,items,isExample=false,deadline,deadlineLink,dea
       <span><IconCal c="#fff"/></span><span style={{opacity:.88,flex:"1 1 auto",minWidth:0}}>{deadline}</span>
       {deadlineLink&&<a href={deadlineLink} target="_blank" rel="noopener noreferrer" style={{color:"#FFC400",fontWeight:700,textDecoration:"none"}}>{deadlineLinkLabel||"바로가기 →"}</a>}
     </div>}
-    {/* [5] 버튼: PDF / 이미지 / CSV / 링크 / AI해설 / AI PDF / 공유 — sample-calc .rp-actions */}
-    <div className="result-actions" style={{display:"flex",flexWrap:"wrap",gap:6,marginTop:14}}>
-      {[
+    {/* [5] 버튼: sample-calc 권장 구조 — PC 2행 그리드 (출력 4개 / AI·공유 3개), 모바일은 flex-wrap */}
+    {(() => {
+      const row1=[
         {fn:()=>downloadPDF(title,total,sub,items),icon:<IconDoc c="#fff"/>,l:"PDF"},
         {fn:()=>downloadImage(title,total,sub,items),icon:<IconCam c="#fff"/>,l:"이미지"},
         {fn:()=>downloadCSV(title,total,sub,items),icon:<IconChart c="#fff"/>,l:"CSV"},
-        {fn:()=>window.dispatchEvent(new CustomEvent('lc-share-url')),icon:<IconLink c="#fff"/>,l:"링크"},
+        {fn:()=>window.dispatchEvent(new CustomEvent('lc-share-url')),icon:<IconLink c="#fff"/>,l:"링크"}
+      ];
+      const row2=[
         {fn:()=>window.dispatchEvent(new CustomEvent('lc-ai-explain',{detail:{title,total,items,sub}})),icon:<IconBot c="#fff"/>,l:"AI 해설"},
         {fn:()=>window.dispatchEvent(new CustomEvent('lc-brand-pdf',{detail:{title,total,items,sub}})),icon:<IconDoc c="#fff"/>,l:"AI PDF"},
-        {fn:()=>window.dispatchEvent(new CustomEvent('lc-consult',{detail:{title,total}})),icon:<IconLink c="#fff"/>,l:"공유"}
-      ].map((b,i)=>(
-        <button key={i} onClick={b.fn} style={{flex:"1 1 auto",minWidth:80,padding:"9px 10px",background:"rgba(255,255,255,.12)",color:"#fff",border:"1px solid rgba(255,255,255,.28)",borderRadius:8,fontSize:11,fontWeight:700,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:4,fontFamily:"inherit",transition:"background .15s"}}
-          onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,.22)"}} onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,.12)"}}>
-          {b.icon}{b.l}
-        </button>))}
-    </div>
+        {fn:()=>shareKakao(title,total,sub,items),icon:<IconLink c="#fff"/>,l:"공유"}
+      ];
+      const btnSt={padding:"9px 10px",background:"rgba(255,255,255,.12)",color:"#fff",border:"1px solid rgba(255,255,255,.28)",borderRadius:8,fontSize:11,fontWeight:700,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:4,fontFamily:"inherit",transition:"background .15s"};
+      const renderBtn=(b,i)=>(<button key={i} onClick={b.fn} style={btnSt} onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,.22)"}} onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,.12)"}}>{b.icon}{b.l}</button>);
+      if(isMo){
+        return (<div className="result-actions" style={{display:"flex",flexWrap:"wrap",gap:6,marginTop:14}}>
+          {[...row1,...row2].map((b,i)=>renderBtn({...b,fn:b.fn},i))}
+        </div>);
+      }
+      return (<div className="result-actions" style={{marginTop:14,display:"flex",flexDirection:"column",gap:6}}>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6}}>{row1.map(renderBtn)}</div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:6}}>{row2.map(renderBtn)}</div>
+      </div>);
+    })()}
     {/* [6] -10% / 절세 팁 / +10% — sample-calc .rp-scenario */}
     <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:6,marginTop:8}}>
       {[{m:0.9,l:"−10%"},{m:1,l:"절세 팁"},{m:1.1,l:"+10%"}].map(s=>(
