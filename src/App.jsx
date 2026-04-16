@@ -826,11 +826,133 @@ const Tog = ({label, options, value, onChange, isMo:isMoProp}) => {
   );
 }
 function generateReportHTML(title,total,sub,items){
-  const now=new Date();const ds=now.getFullYear()+'.'+(now.getMonth()+1).toString().padStart(2,'0')+'.'+now.getDate().toString().padStart(2,'0');const ts=now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
-  return`<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><title>${title} - 생활계산기.com</title><style>@page{size:A4;margin:20mm}*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Pretendard',-apple-system,sans-serif;color:#172B4D;font-size:14px;line-height:1.7;background:#fff}.r{max-width:700px;margin:0 auto;padding:40px}.hd{display:flex;justify-content:space-between;border-bottom:3px solid #0747A6;padding-bottom:20px;margin-bottom:32px}.lg{font-size:20px;font-weight:800;color:#0747A6}.ls{font-size:11px;color:#6b778c;margin-top:2px}.dt{text-align:right;font-size:12px;color:#6b778c}.ts{background:linear-gradient(135deg,#0747A6,#0065FF);color:#fff;border-radius:12px;padding:28px 24px;margin-bottom:24px}.ts h1{font-size:22px;font-weight:800}.ts .sb{font-size:13px;opacity:.7;margin-top:4px}.ts .tl{font-size:36px;font-weight:900;margin-top:16px}table{width:100%;border-collapse:collapse;margin-bottom:24px}th{text-align:left;padding:12px 16px;background:#f4f5f7;font-size:13px;font-weight:600;color:#6b778c;border-bottom:2px solid #dfe1e6}td{padding:12px 16px;border-bottom:1px solid #f4f5f7;font-size:14px}td:last-child{text-align:right;font-weight:700;color:#0747A6}tr:last-child td{border-bottom:2px solid #0747A6;font-weight:800}.ns{background:#f8f9fc;border-radius:10px;padding:20px;margin-bottom:24px}.ns h3{font-size:14px;font-weight:700;color:#0747A6;margin-bottom:8px}.ns p{font-size:12px;color:#6b778c}.dc{border-top:1px solid #dfe1e6;padding-top:20px;margin-top:32px}.dc p{font-size:11px;color:#6b778c}.ft{margin-top:40px;text-align:center;font-size:11px;color:#6b778c;border-top:1px solid #f4f5f7;padding-top:16px}.st{display:inline-block;border:2px solid #0747A6;border-radius:8px;padding:8px 20px;color:#0747A6;font-size:12px;font-weight:700;margin-top:16px;opacity:.6}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}.np{display:none}}</style></head><body><div class="r"><div class="hd"><div><div class="lg">생활계산기.com</div><div class="ls">대한민국 NO.1 생활 계산기</div></div><div class="dt"><div>작성일: ${ds}</div><div>작성시간: ${ts}</div><div>문서번호: LC-${now.getTime().toString(36).toUpperCase()}</div></div></div><div class="ts"><h1>${title}</h1><div class="sb">${sub||''}</div><div class="tl">₩${Math.round(total).toLocaleString('ko-KR')}</div></div><table><thead><tr><th>항목</th><th style="text-align:right">금액</th></tr></thead><tbody>${items.map(it=>'<tr><td>'+it.l+'</td><td>'+it.v+'</td></tr>').join('')}<tr><td><strong>합계</strong></td><td><strong>₩${Math.round(total).toLocaleString('ko-KR')}</strong></td></tr></tbody></table><div class="ns"><h3>📋 산출 기준</h3><p>• 적용 기준일: ${ds}<br>• 적용 세법: 2025년 현행 세법 기준<br>• 산출 방식: ${sub||'표준 계산 로직 적용'}</p></div><div class="ns"><h3>💡 참고 안내</h3><p>• 본 리포트의 금액은 대략적인 추정치이며, 실제 금액과 차이가 있을 수 있습니다.<br>• 정확한 세금·수수료 확인은 세무사, 법무사, 공인중개사 등 전문가에게 의뢰하시기 바랍니다.</p></div><div class="dc"><p>본 문서는 생활계산기.com에서 자동 생성된 참고용 리포트입니다. 법적 효력이 없습니다.</p></div><div class="ft"><div>생활계산기.com | https://생활계산기.com</div><div class="st">참고용 계산서</div></div><div class="np"></div></div></body></html>`;}
+  const now=new Date();
+  const pad=n=>String(n).padStart(2,'0');
+  const ds=now.getFullYear()+'.'+pad(now.getMonth()+1)+'.'+pad(now.getDate());
+  const ts=pad(now.getHours())+':'+pad(now.getMinutes());
+  const docId='LC-'+now.getTime().toString(36).toUpperCase().slice(-8);
+  const totalFmt=Math.round(total||0).toLocaleString('ko-KR');
+  // 합계/요약 항목을 테이블 본문에서 제외
+  const excludeRe=/(합계|총\s*납부|과세표준|취득세율|세율)/;
+  const taxItems=(items||[]).filter(it=>!excludeRe.test(String(it.l||'')));
+  // 세율·과세표준 배지용 추출 (sub 또는 items에서 찾기)
+  const rateItem=(items||[]).find(it=>String(it.l||'').includes('세율'));
+  const baseItem=(items||[]).find(it=>String(it.l||'').includes('과세표준'));
+  const badges=[];
+  if(rateItem)badges.push('세율 '+rateItem.v);
+  if(baseItem)badges.push('과세표준 '+baseItem.v);
+  const badgeHtml=badges.map(b=>'<span class="bdg">'+b+'</span>').join('');
+  const rowsHtml=taxItems.map((it,i)=>{
+    const note=it.note?'<span class="nt">'+it.note+'</span>':'';
+    return '<tr class="'+(i%2?'alt':'')+'"><td>'+it.l+note+'</td><td class="c">'+(it.note&&/^\d/.test(String(it.v))===false&&/%/.test(String(it.v))?it.v:'-')+'</td><td class="r">'+it.v+'</td></tr>';
+  }).join('');
+  return `<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><title>${title} - 생활계산기.com</title><style>
+@page{size:A4;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Pretendard','Malgun Gothic',-apple-system,sans-serif;color:#0a1628;font-size:13px;line-height:1.6;background:#fff;-webkit-font-smoothing:antialiased}
+.r{width:720px;margin:0 auto;padding:0;background:#fff}
+.hd{background:#0a1628;color:#fff;padding:28px 36px;display:flex;justify-content:space-between;align-items:flex-start}
+.hd .lg{font-size:13px;font-weight:700;color:#93c5fd;letter-spacing:.5px;margin-bottom:6px}
+.hd .tt{font-size:22px;font-weight:800;color:#fff;line-height:1.3}
+.hd .tt .em{color:#60a5fa}
+.hd .meta{text-align:right;font-size:11px;color:#cbd5e1;line-height:1.9}
+.hd .meta b{color:#fff;font-weight:600}
+.bd{padding:28px 36px}
+.main{background:#f8f9fc;border-left:4px solid #0141f9;border-radius:8px;padding:24px 26px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+.main-l .lbl{font-size:12px;color:#64748b;font-weight:600;letter-spacing:.3px;margin-bottom:8px}
+.main-l .amt{font-size:32px;font-weight:900;color:#0a1628;line-height:1.1;font-variant-numeric:tabular-nums}
+.main-l .sb{font-size:12px;color:#475569;margin-top:8px;font-weight:500}
+.main-r{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;max-width:220px}
+.bdg{display:inline-block;padding:5px 11px;background:#0141f9;color:#fff;font-size:11px;font-weight:700;border-radius:999px;white-space:nowrap}
+.sec{margin-bottom:22px}
+.sec-t{font-size:13px;font-weight:800;color:#0a1628;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid #0141f9;display:inline-block}
+table{width:100%;border-collapse:collapse;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden}
+thead th{background:#0141f9;color:#fff;font-size:12px;font-weight:700;padding:11px 14px;text-align:left;letter-spacing:.3px}
+thead th.r{text-align:right}
+thead th.c{text-align:center}
+tbody td{padding:11px 14px;font-size:13px;color:#0a1628;border-bottom:1px solid #e2e8f0}
+tbody td.r{text-align:right;font-weight:700;color:#0141f9;font-variant-numeric:tabular-nums}
+tbody td.c{text-align:center;color:#64748b;font-size:12px}
+tbody tr.alt td{background:#f8f9fc}
+tbody tr:last-child td{border-bottom:none}
+tbody .nt{display:block;font-size:10px;color:#94a3b8;font-weight:400;margin-top:2px}
+.tot{background:#0a1628!important}
+.tot td{background:#0a1628!important;color:#fff!important;font-weight:800;font-size:14px;padding:13px 14px}
+.tot td.r{color:#60a5fa!important;font-size:16px}
+.basis{background:#f1f5f9;border-radius:8px;padding:16px 20px;margin-bottom:18px;border:1px solid #e2e8f0}
+.basis-t{font-size:12px;font-weight:800;color:#0a1628;margin-bottom:8px}
+.basis-p{font-size:11px;color:#475569;line-height:1.8}
+.basis-p b{color:#0a1628}
+.disc{background:#fff7ed;border-left:3px solid #f97316;border-radius:4px;padding:12px 16px;margin-bottom:20px;font-size:11px;color:#9a3412;line-height:1.65}
+.disc b{color:#7c2d12}
+.ft{border-top:1px solid #e2e8f0;padding:16px 0 4px;display:flex;justify-content:space-between;align-items:center;font-size:10px;color:#94a3b8}
+.ft .ft-l{font-weight:600;color:#475569}
+.ft .ft-c{text-align:center;flex:1;padding:0 16px;font-style:italic}
+.ft .ft-r{text-align:right}
+@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}.np{display:none}}
+</style></head><body><div class="r">
+<div class="hd">
+  <div>
+    <div class="lg">생활계산기.com</div>
+    <div class="tt">${title} <span class="em">결과서</span></div>
+  </div>
+  <div class="meta">
+    <div>문서번호: <b>${docId}</b></div>
+    <div>작성일: <b>${ds}</b></div>
+    <div>작성시간: <b>${ts}</b></div>
+  </div>
+</div>
+<div class="bd">
+  <div class="main">
+    <div class="main-l">
+      <div class="lbl">합계 납부세액</div>
+      <div class="amt">₩${totalFmt}</div>
+      ${sub?'<div class="sb">'+sub+'</div>':''}
+    </div>
+    ${badges.length?'<div class="main-r">'+badgeHtml+'</div>':''}
+  </div>
+  <div class="sec">
+    <div class="sec-t">상세 내역</div>
+    <table>
+      <thead><tr><th>항목</th><th class="c">세율/비고</th><th class="r">금액</th></tr></thead>
+      <tbody>
+        ${rowsHtml}
+        <tr class="tot"><td>합계 납부세액</td><td class="c">-</td><td class="r">₩${totalFmt}</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="basis">
+    <div class="basis-t">📋 산출 기준</div>
+    <div class="basis-p">
+      • 적용 기준일: <b>${ds}</b><br>
+      • 적용 세법: <b>2026년 현행 세법 기준</b><br>
+      • 산출 방식: <b>${sub||'표준 계산 로직 적용'}</b>
+    </div>
+  </div>
+  <div class="disc">
+    <b>⚠ 주의:</b> 본 문서는 참고용 계산서이며 법적 효력이 없습니다. 정확한 세금 확인은 세무사·법무사·공인중개사 등 전문가에게 의뢰하시기 바랍니다.
+  </div>
+  <div class="ft">
+    <div class="ft-l">생활계산기.com<br/>https://생활계산기.com</div>
+    <div class="ft-c">본 문서는 참고용이며 법적 효력이 없습니다</div>
+    <div class="ft-r">© ${now.getFullYear()}<br/>생활계산기.com</div>
+  </div>
+</div>
+<div class="np"></div>
+</div></body></html>`;}
 function generateReport(t,v,s,it){const h=generateReportHTML(t,v,s,it),b=new Blob([h],{type:'text/html'}),u=URL.createObjectURL(b);window.open(u,'_blank');setTimeout(()=>URL.revokeObjectURL(u),60000);}
-async function downloadPDF(title,total,sub,items){try{const html2canvas=(await import('html2canvas')).default;const jsPDF=(await import('jspdf')).default;const container=document.createElement('div');container.style.cssText='position:fixed;left:-9999px;top:0;width:700px;background:#fff';container.innerHTML='<div style="padding:40px;font-family:Pretendard,sans-serif;color:#172B4D">'+generateReportHTML(title,total,sub,items).match(/<div class="r">([\s\S]*?)<div class="np"/)[1]+'</div>';document.body.appendChild(container);const canvas=await html2canvas(container,{scale:2,useCORS:true,backgroundColor:"#ffffff"});document.body.removeChild(container);const pdf=new jsPDF('p','mm','a4');const w=pdf.internal.pageSize.getWidth()-20;const h=(canvas.height*w)/canvas.width;const maxH=pdf.internal.pageSize.getHeight()-25;let y=10;if(h<=maxH){pdf.addImage(canvas.toDataURL('image/png'),'PNG',10,y,w,h);}else{let remaining=canvas.height;let srcY=0;const pageHeightPx=maxH*canvas.width/w;while(remaining>0){const sliceH=Math.min(pageHeightPx,remaining);const tmp=document.createElement('canvas');tmp.width=canvas.width;tmp.height=sliceH;tmp.getContext('2d').drawImage(canvas,0,srcY,canvas.width,sliceH,0,0,canvas.width,sliceH);pdf.addImage(tmp.toDataURL('image/png'),'PNG',10,10,w,sliceH*w/canvas.width);srcY+=sliceH;remaining-=sliceH;if(remaining>0)pdf.addPage();}}pdf.setFontSize(8);pdf.setTextColor(150);pdf.text("생활계산기.com | 참고용 계산이며 법적 효력 없음",10,pdf.internal.pageSize.getHeight()-5);pdf.save(title+"_"+new Date().toISOString().slice(0,10)+".pdf");}catch(e){alert("PDF 저장 실패: "+e.message);}}
-async function downloadImage(title,total,sub,items){try{const html2canvas=(await import('html2canvas')).default;const container=document.createElement('div');container.style.cssText='position:fixed;left:-9999px;top:0;width:600px;padding:32px;background:#fff;font-family:Pretendard,sans-serif';container.innerHTML=generateReportHTML(title,total,sub,items).match(/<body>([\s\S]*)<\/body>/)[1].replace(/<div class="np"[\s\S]*?<\/div>/,'');document.body.appendChild(container);const canvas=await html2canvas(container,{scale:2,useCORS:true,backgroundColor:"#ffffff"});document.body.removeChild(container);const link=document.createElement('a');link.download=title+"_"+new Date().toISOString().slice(0,10)+".png";link.href=canvas.toDataURL('image/png');link.click();}catch(e){alert("사진 저장 실패: "+e.message);}}
+function _buildReportContainer(title,total,sub,items){
+  const fullHtml=generateReportHTML(title,total,sub,items);
+  const styleM=fullHtml.match(/<style>([\s\S]*?)<\/style>/);
+  const bodyM=fullHtml.match(/<body>([\s\S]*?)<\/body>/);
+  const container=document.createElement('div');
+  container.style.cssText='position:fixed;left:-9999px;top:0;width:720px;background:#fff';
+  container.innerHTML='<style>'+(styleM?styleM[1]:'')+'</style>'+(bodyM?bodyM[1]:'').replace(/<div class="np"[\s\S]*?<\/div>/,'');
+  document.body.appendChild(container);
+  return container;
+}
+async function downloadPDF(title,total,sub,items){try{const html2canvas=(await import('html2canvas')).default;const jsPDF=(await import('jspdf')).default;const container=_buildReportContainer(title,total,sub,items);const canvas=await html2canvas(container,{scale:2,useCORS:true,backgroundColor:"#ffffff"});document.body.removeChild(container);const pdf=new jsPDF('p','mm','a4');const w=pdf.internal.pageSize.getWidth()-20;const h=(canvas.height*w)/canvas.width;const maxH=pdf.internal.pageSize.getHeight()-25;if(h<=maxH){pdf.addImage(canvas.toDataURL('image/png'),'PNG',10,10,w,h);}else{let remaining=canvas.height;let srcY=0;const pageHeightPx=maxH*canvas.width/w;while(remaining>0){const sliceH=Math.min(pageHeightPx,remaining);const tmp=document.createElement('canvas');tmp.width=canvas.width;tmp.height=sliceH;tmp.getContext('2d').drawImage(canvas,0,srcY,canvas.width,sliceH,0,0,canvas.width,sliceH);pdf.addImage(tmp.toDataURL('image/png'),'PNG',10,10,w,sliceH*w/canvas.width);srcY+=sliceH;remaining-=sliceH;if(remaining>0)pdf.addPage();}}pdf.setFontSize(8);pdf.setTextColor(150);pdf.text("생활계산기.com | 참고용 계산이며 법적 효력 없음",10,pdf.internal.pageSize.getHeight()-5);pdf.save(title+"_"+new Date().toISOString().slice(0,10)+".pdf");}catch(e){alert("PDF 저장 실패: "+e.message);}}
+async function downloadImage(title,total,sub,items){try{const html2canvas=(await import('html2canvas')).default;const container=_buildReportContainer(title,total,sub,items);const canvas=await html2canvas(container,{scale:2,useCORS:true,backgroundColor:"#ffffff"});document.body.removeChild(container);const link=document.createElement('a');link.download=title+"_"+new Date().toISOString().slice(0,10)+".png";link.href=canvas.toDataURL('image/png');link.click();}catch(e){alert("사진 저장 실패: "+e.message);}}
 function copyLink(){const url=window.location.href;if(navigator.clipboard){navigator.clipboard.writeText(url).then(()=>alert("링크가 복사되었습니다!\n"+url)).catch(()=>{const ta=document.createElement("textarea");ta.value=url;ta.style.position="fixed";ta.style.left="-9999px";document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);alert("링크가 복사되었습니다!");});}else{const ta=document.createElement("textarea");ta.value=url;ta.style.position="fixed";ta.style.left="-9999px";document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);alert("링크가 복사되었습니다!");}}
 // 2026.04.14 CSV 다운로드: 계산기명/입력값/결과항목/금액
 function downloadCSV(title,total,sub,items){
