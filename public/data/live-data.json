@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "feat(admin): dashboard with D1 tracking, KV auth, /admin route, calc event logging",
+      "desc": "feat(admin): dashboard with D1 tracking, KV auth, /admin route, calc event logging"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "fix(AddressModal): replace all unicode escapes with UTF-8 chars, remove JUSO subtitle",
       "desc": "fix(AddressModal): replace all unicode escapes with UTF-8 chars, remove JUSO subtitle"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "feat: 메가메뉴 closeMenu + clickedRecently 500ms 가드로 교체",
       "desc": "feat: 메가메뉴 closeMenu + clickedRecently 500ms 가드로 교체"
-    },
-    {
-      "date": "2026.04.15",
-      "category": "전체",
-      "title": "fix(calc): 계산기 진입 시 완전 초기화 3종 보강",
-      "desc": "fix(calc): 계산기 진입 시 완전 초기화 3종 보강"
     }
   ],
   "rates": {
