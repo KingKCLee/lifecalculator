@@ -1730,9 +1730,10 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
   const hideChipPanel=()=>{_popoverTimer=setTimeout(()=>setChipDesc(null),200);};
   const[corporation,setCorporation]=useState(false);const[firstDistribution,setFirstDistribution]=useState(false);const[conArea,setConArea]=useState(false);const[metro,setMetro]=useState(false);const[populationDecline,setPopulationDecline]=useState(false);const[firstOfLife,setFirstOfLife]=useState(false);const[heavyTaxExclude,setHeavyTaxExclude]=useState(false);const[spouseChildGive,setSpouseChildGive]=useState(false);const[cultivation,setCultivation]=useState(false);const[birthChild,setBirthChild]=useState(false);
   const[luxury,setLuxury]=useState(false); // 2026.04.14 사치성재산 중과 (지방세법 §13②) 별장·골프장·고급주택·고급오락장 → 표준세율 + 중과기준세율(2%)×4 = +8%p
-  const[showAcqLookup,setShowAcqLookup]=useState(false); // 2026.04.16 주소→공시가격·실거래가 자동조회 모달
-  const[autoPriceFlag,setAutoPriceFlag]=useState(false); // 2026.04.16 취득가액 자동입력 여부
-  const[autoStdFlag,setAutoStdFlag]=useState(false); // 2026.04.16 시가표준액 자동입력 여부
+  const[showAcqLookup,setShowAcqLookup]=useState(false);
+  const[autoPriceFlag,setAutoPriceFlag]=useState(false);
+  const[autoStdFlag,setAutoStdFlag]=useState(false);
+  const[selectedAptInfo,setSelectedAptInfo]=useState(null);
   const today=new Date();const firstHomeBenefitEnd=new Date('2028-12-31');const isFirstHomeBenefit=today<firstHomeBenefitEnd;
   const stdW=tW(stdPrice)||0;
   const _hasErrors=!price||price===""||price==="0";
@@ -1885,9 +1886,20 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
       </div>}
       {isMo&&(realType==="house"||realType==="officetel")&&<hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"8px 0"}}/>}
       {/* 2026.04.16 주소→공시가격·실거래가 자동조회 트리거 */}
-      {!isMo&&<button type="button" onClick={()=>setShowAcqLookup(true)} style={{width:"100%",marginBottom:10,padding:"12px 16px",background:"linear-gradient(135deg,#eff6ff,#dbeafe)",border:"1.5px solid #bfdbfe",borderRadius:10,fontSize:13,fontWeight:700,color:"#1e40af",cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",gap:8,transition:"background .15s"}}><IconSearch c="#1e40af"/> 주소로 실거래가·공시가격 자동조회</button>}
-      {showAcqLookup&&<AddressModal onClose={()=>setShowAcqLookup(false)} onApplyPrice={v=>{sP(String(Math.round(v/10000)));setAutoPriceFlag(true);}} onApplyStd={v=>{setStdPrice(String(Math.round(v/10000)));setAutoStdFlag(true);}} onApplyArea={b=>sAreaType(b)} currentArea={areaType}/>}
-      {/* 2026.04.14 취득가액 — 인라인 레이아웃 (PC width:480, 모바일 100%) */}
+      {!isMo&&<div style={{marginBottom:10}}>
+        <button type="button" onClick={()=>setShowAcqLookup(true)} style={{width:"100%",padding:"12px 16px",background:"linear-gradient(135deg,#eff6ff,#dbeafe)",border:"1.5px solid #bfdbfe",borderRadius:10,fontSize:13,fontWeight:700,color:"#1e40af",cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",gap:8,transition:"background .15s"}}>📍 주소·단지명으로 자동입력</button>
+        <div style={{fontSize:11,color:"#9ca3af",textAlign:"center",marginTop:4}}>실거래가·공시가격 자동조회 후 취득가액·시가표준액 자동입력</div>
+      </div>}
+      {showAcqLookup&&<AddressModal onClose={()=>setShowAcqLookup(false)} onApplyPrice={v=>{sP(String(Math.round(v/10000)));setAutoPriceFlag(true);}} onApplyStd={v=>{setStdPrice(String(Math.round(v/10000)));setAutoStdFlag(true);}} onApplyArea={b=>sAreaType(b)} onApplyInfo={info=>setSelectedAptInfo(info)} currentArea={areaType}/>}
+      {/* 수정 6: 선택 완료 후 단지 정보 카드 (PC only) */}
+      {!isMo&&selectedAptInfo&&<div style={{background:"#eff6ff",border:"1px solid #bfdbfe",borderRadius:10,padding:"12px 16px",marginBottom:12,display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,flexWrap:"wrap"}}>
+        <div style={{flex:"1 1 auto",minWidth:0}}>
+          <div style={{fontSize:13,fontWeight:700,color:"#1e40af"}}>📍 {selectedAptInfo.aptName}{selectedAptInfo.dongNm?" "+selectedAptInfo.dongNm+"동":""}{selectedAptInfo.hoNm?" "+selectedAptInfo.hoNm+"호":""}</div>
+          <div style={{fontSize:11,color:"#3b82f6",marginTop:3,lineHeight:1.5}}>{selectedAptInfo.tradeDate?"실거래가 "+selectedAptInfo.tradeDate:""}{selectedAptInfo.tradeDate&&selectedAptInfo.priceYear?" · ":"" }{selectedAptInfo.priceYear?"공시가격 "+selectedAptInfo.priceYear+"년":""}{(selectedAptInfo.tradeDate||selectedAptInfo.priceYear)?" 기준으로 자동입력됨":""}</div>
+        </div>
+        <button onClick={()=>{setSelectedAptInfo(null);setAutoPriceFlag(false);setAutoStdFlag(false);setShowAcqLookup(true);}} style={{flexShrink:0,fontSize:12,color:"#0141f9",background:"none",border:"none",cursor:"pointer",fontWeight:700,fontFamily:"inherit",whiteSpace:"nowrap"}}>다시검색</button>
+      </div>}
+      {/* 취득가액 — 인라인 레이아웃 (PC width:480, 모바일 100%) */}
       <div style={{marginBottom:isMo?8:12}}>
         <div style={isMo?{display:"flex",alignItems:"stretch",flexDirection:"column",gap:6,marginBottom:4}:{display:"grid",gridTemplateColumns:"1fr 520px",alignItems:"center",gap:8,marginBottom:4}}>
           <label style={{fontSize:isMo?13:14,fontWeight:600,color:"#0a1628",lineHeight:1.6,wordBreak:"keep-all"}}>{acqType==="sale"?"취득가액 (실거래가)":acqType==="gift"||acqType==="inherit"?"시가인정액 또는 시가표준액":acqType==="newbuild"?"건축 원가":"취득가액"}</label>
