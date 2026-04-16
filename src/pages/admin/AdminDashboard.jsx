@@ -24,6 +24,7 @@ const MENU = [
   { id: "newsletter", label: "뉴스레터", icon: "E" },
   { id: "members", label: "회원 관리", icon: "U" },
   { id: "keywords", label: "검색 키워드", icon: "K" },
+  { id: "logs", label: "실행 로그", icon: "G" },
 ];
 
 export default function AdminDashboard({ token, session, onLogout }) {
@@ -70,6 +71,7 @@ export default function AdminDashboard({ token, session, onLogout }) {
       {tab === "newsletter" && <NewsletterTab authFetch={authFetch} />}
         {tab === "members" && <MembersTab authFetch={authFetch} />}
         {tab === "keywords" && <KeywordsTab authFetch={authFetch} stats={stats} />}
+        {tab === "logs" && <LogsTab authFetch={authFetch} />}
     </main>
   </div>);
 }
@@ -498,5 +500,78 @@ function KeywordsTab({ authFetch, stats }) {
         {gscData?.period && <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 12 }}>기간: {gscData.period.start} ~ {gscData.period.end}</div>}
       </div>
     )}
+  </div>);
+}
+
+/* --- 실행 로그 탭 --- */
+function LogsTab({ authFetch }) {
+  const [logs, setLogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState("all");
+
+  const load = async (f) => {
+    setLoading(true);
+    try {
+      const qs = f && f !== "all" ? "?action=" + encodeURIComponent(f) : "";
+      const r = await authFetch("/api/admin/logs" + qs);
+      const j = await r.json().catch(() => ({}));
+      if (j.ok) setLogs(j.logs || []);
+    } catch {}
+    finally { setLoading(false); }
+  };
+
+  useEffect(() => { load(filter); }, [filter]);
+
+  // 30초 자동 새로고침
+  useEffect(() => {
+    const t = setInterval(() => load(filter), 30000);
+    return () => clearInterval(t);
+  }, [filter]);
+
+  const ACTION_LABEL = { login: "\uB85C\uADF8\uC778", law_approve: "\uBC95\uB839 \uC2B9\uC778", law_test: "\uBC95\uB839 \uD14C\uC2A4\uD2B8", adsense_update: "\uAD11\uACE0 \uC124\uC815", notice_update: "\uACF5\uC9C0 \uC124\uC815", members_view: "\uD68C\uC6D0 \uC870\uD68C", member_update: "\uD68C\uC6D0 \uC218\uC815" };
+  const RESULT_STYLE = { success: { bg: "#10b981", label: "\uC131\uACF5" }, fail: { bg: "#ef4444", label: "\uC2E4\uD328" }, error: { bg: "#ef4444", label: "\uC624\uB958" }, approved: { bg: "#10b981", label: "\uC2B9\uC778" }, dismissed: { bg: "#6b778c", label: "\uBB34\uC2DC" }, warning: { bg: "#f59e0b", label: "\uACBD\uACE0" } };
+  const FILTERS = [{ id: "all", label: "\uC804\uCCB4" }, { id: "login", label: "\uB85C\uADF8\uC778" }, { id: "law_approve", label: "\uBC95\uB839" }, { id: "law_test", label: "\uBAA8\uB2C8\uD130\uB9C1" }, { id: "adsense_update", label: "\uAD11\uACE0" }, { id: "notice_update", label: "\uACF5\uC9C0" }, { id: "members_view", label: "\uD68C\uC6D0" }];
+
+  const fmtTime = (ts) => {
+    if (!ts) return "-";
+    const d = new Date(ts);
+    return d.getFullYear() + "." + String(d.getMonth() + 1).padStart(2, "0") + "." + String(d.getDate()).padStart(2, "0") + " " + String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
+  };
+
+  return (<div>
+    <div style={{ display: "flex", gap: 6, marginBottom: 16, flexWrap: "wrap" }}>
+      {FILTERS.map(f => (
+        <button key={f.id} onClick={() => setFilter(f.id)} style={{ padding: "7px 14px", borderRadius: 8, border: filter === f.id ? "2px solid #0141f9" : "1px solid #E5E7EB", background: filter === f.id ? "#eff6ff" : "#fff", fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "inherit", color: filter === f.id ? "#0141f9" : "#6b778c" }}>{f.label}</button>
+      ))}
+      <div style={{ flex: 1 }} />
+      <div style={{ fontSize: 11, color: "#94a3b8", alignSelf: "center" }}>30{"\uCD08 \uC790\uB3D9 \uC0C8\uB85C\uACE0\uCE68"}</div>
+    </div>
+    <div style={{ background: "#fff", borderRadius: 14, padding: "20px 24px", border: "1px solid #E5E7EB" }}>
+      {loading ? <div style={{ color: "#6b778c", padding: 20 }}>{"\uB85C\uB4DC \uC911..."}</div> :
+        logs.length === 0 ? <div style={{ padding: 40, textAlign: "center", color: "#9ca3af", fontSize: 13 }}>{"\uB85C\uADF8\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4"}</div> :
+        (<div style={{ overflowX: "auto" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+            <thead><tr style={{ borderBottom: "2px solid #E5E7EB" }}>
+              <th style={{ padding: "8px 8px", textAlign: "left", color: "#6b778c", fontWeight: 600, whiteSpace: "nowrap" }}>{"\uC2DC\uAC04"}</th>
+              <th style={{ padding: "8px 8px", textAlign: "left", color: "#6b778c", fontWeight: 600 }}>{"\uC561\uC158"}</th>
+              <th style={{ padding: "8px 8px", textAlign: "left", color: "#6b778c", fontWeight: 600 }}>{"\uB300\uC0C1"}</th>
+              <th style={{ padding: "8px 8px", textAlign: "center", color: "#6b778c", fontWeight: 600 }}>{"\uACB0\uACFC"}</th>
+              <th style={{ padding: "8px 8px", textAlign: "left", color: "#6b778c", fontWeight: 600 }}>{"\uC0C1\uC138"}</th>
+              <th style={{ padding: "8px 8px", textAlign: "left", color: "#6b778c", fontWeight: 600 }}>IP</th>
+            </tr></thead>
+            <tbody>{logs.map((log, i) => {
+              const rs = RESULT_STYLE[log.result] || { bg: "#6b778c", label: log.result || "-" };
+              return (<tr key={log.id || i} style={{ borderBottom: "1px solid #f4f5f7" }}>
+                <td style={{ padding: "8px 8px", color: "#6b778c", whiteSpace: "nowrap" }}>{fmtTime(log.ts)}</td>
+                <td style={{ padding: "8px 8px", fontWeight: 600, color: "#0a1628" }}>{ACTION_LABEL[log.action] || log.action}</td>
+                <td style={{ padding: "8px 8px", color: "#505f79", maxWidth: 120, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{log.target || "-"}</td>
+                <td style={{ padding: "8px 8px", textAlign: "center" }}><span style={{ padding: "2px 8px", borderRadius: 5, fontSize: 11, fontWeight: 700, color: "#fff", background: rs.bg }}>{rs.label}</span></td>
+                <td style={{ padding: "8px 8px", color: "#6b778c", maxWidth: 200, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{log.detail || "-"}</td>
+                <td style={{ padding: "8px 8px", color: "#94a3b8", fontSize: 11 }}>{log.ip || "-"}</td>
+              </tr>);
+            })}</tbody>
+          </table>
+        </div>)}
+    </div>
   </div>);
 }
