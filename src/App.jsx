@@ -4373,7 +4373,9 @@ function AuthModal({mode,setMode,onClose,isMo,onAuthSuccess}){
       if(provider==="구글"){
         window.location.href=LC_REALESTATE_WORKER+"/auth/google";
       } else if(provider==="네이버"){
-        alert("네이버 로그인은 심사 진행 중입니다. 구글 로그인을 이용해주세요.");
+        window.location.href=LC_REALESTATE_WORKER+"/auth/naver";
+      } else if(provider==="카카오"){
+        window.location.href=LC_REALESTATE_WORKER+"/auth/kakao";
       }
     }catch(e){alert("로그인 오류: "+e.message);}
   };
@@ -4417,6 +4419,7 @@ function AuthModal({mode,setMode,onClose,isMo,onAuthSuccess}){
       <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:20}}>
         <button onClick={()=>handleSocialLogin("구글")} style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,padding:14,background:"#fff",color:"#172B4D",border:"1.5px solid #dfe1e6",borderRadius:10,fontSize:15,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}><span style={{fontSize:18}}>G</span>Google로 {mode==="login"?"로그인":"시작하기"}</button>
         <button onClick={()=>handleSocialLogin("네이버")} style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,padding:14,background:"#03C75A",color:"#fff",border:"none",borderRadius:10,fontSize:15,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}><span style={{fontSize:18,fontWeight:900}}>N</span>네이버로 {mode==="login"?"로그인":"시작하기"}</button>
+        <button onClick={()=>handleSocialLogin("카카오")} style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,padding:14,background:"#FEE500",color:"#000000",border:"none",borderRadius:10,fontSize:15,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}><svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 3C6.5 3 2 6.58 2 11c0 2.84 1.87 5.33 4.68 6.73l-1.2 4.46c-.08.3.26.54.52.36L10.67 19c.43.05.88.07 1.33.07 5.5 0 10-3.58 10-8s-4.5-8-10-8z" fill="#000000"/></svg>카카오로 {mode==="login"?"로그인":"시작하기"}</button>
       </div>
       <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:20}}><div style={{flex:1,height:1,background:"#dfe1e6"}}/><span style={{fontSize:12,color:"#6b778c"}}>또는</span><div style={{flex:1,height:1,background:"#dfe1e6"}}/></div>
       <div style={{display:"flex",flexDirection:"column",gap:10}}>
@@ -5952,6 +5955,13 @@ export default function App(){
         .then(r=>r.json()).then(j=>{
           if(j.ok&&j.token){try{localStorage.setItem("lc_token",j.token);localStorage.setItem("lc_email",j.email||"");}catch{}setLcToken(j.token);setLcEmail(j.email||"");}
         }).catch(()=>{}).finally(()=>{window.history.replaceState(null,"","/");setPage("home");});
+      return;
+    }
+    if(hash==="auth/naver/callback"||hash==="auth/naver/result"||hash==="auth/kakao/callback"||hash==="auth/kakao/result"){
+      const params=new URLSearchParams(window.location.search);
+      const token=params.get("token"),email=params.get("email"),err=params.get("error");
+      if(token&&email){try{localStorage.setItem("lc_token",token);localStorage.setItem("lc_email",email);}catch{}setLcToken(token);setLcEmail(email);}
+      window.history.replaceState(null,"","/");setPage("home");
       return;
     }
     if(hash==="news"){setPage("news");return;}
