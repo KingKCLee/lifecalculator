@@ -5,8 +5,15 @@
     <link>https://xn--989a00a691bdfa717h.com/</link>
     <description>취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 등 39가지 무료 계산기. 매일 자동 업데이트.</description>
     <language>ko</language>
-    <lastBuildDate>Thu, 16 Apr 2026 21:29:27 +0900</lastBuildDate>
+    <lastBuildDate>Thu, 16 Apr 2026 21:36:37 +0900</lastBuildDate>
     <atom:link href="https://xn--989a00a691bdfa717h.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+    <title>fix: 완벽가이드 좌우폭 2열그리드와 정확히 일치 (guide-card 래퍼 복원)</title>
+    <link>https://xn--989a00a691bdfa717h.com/</link>
+    <description>fix: 완벽가이드 좌우폭 2열그리드와 정확히 일치 (guide-card 래퍼 복원)</description>
+    <pubDate>Thu, 16 Apr 2026 21:36:37 +0900</pubDate>
+    <guid>https://xn--989a00a691bdfa717h.com/#update-202604161236</guid>
+  </item>
     <item>
     <title>feat: 어드민 대시보드 트래킹/통계/키워드 시스템</title>
     <link>https://xn--989a00a691bdfa717h.com/</link>

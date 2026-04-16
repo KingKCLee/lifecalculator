@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "fix: 완벽가이드 좌우폭 2열그리드와 정확히 일치 (guide-card 래퍼 복원)",
+      "desc": "fix: 완벽가이드 좌우폭 2열그리드와 정확히 일치 (guide-card 래퍼 복원)"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "feat: 어드민 대시보드 트래킹/통계/키워드 시스템",
       "desc": "feat: 어드민 대시보드 트래킹/통계/키워드 시스템"
     },
@@ -1459,12 +1465,6 @@
       "category": "세금",
       "title": "fix: 취득세 계산기 재방문 시 이전 입력값 잔존 문제 수정 — localStorage autosave/복원 제거",
       "desc": "fix: 취득세 계산기 재방문 시 이전 입력값 잔존 문제 수정 — localStorage autosave/복원 제거"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "feat(admin): Google OAuth login, session via KV+Bearer token, callback SPA handler",
-      "desc": "feat(admin): Google OAuth login, session via KV+Bearer token, callback SPA handler"
     }
   ],
   "rates": {
