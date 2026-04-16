@@ -5,8 +5,15 @@
     <link>https://xn--989a00a691bdfa717h.com/</link>
     <description>취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 등 39가지 무료 계산기. 매일 자동 업데이트.</description>
     <language>ko</language>
-    <lastBuildDate>Thu, 16 Apr 2026 17:35:33 +0900</lastBuildDate>
+    <lastBuildDate>Thu, 16 Apr 2026 17:41:26 +0900</lastBuildDate>
     <atom:link href="https://xn--989a00a691bdfa717h.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+    <title>fix: 건물부가세 공시가격 안분 근거 표시 + 매매가 직접입력</title>
+    <link>https://xn--989a00a691bdfa717h.com/</link>
+    <description>fix: 건물부가세 공시가격 안분 근거 표시 + 매매가 직접입력</description>
+    <pubDate>Thu, 16 Apr 2026 17:41:26 +0900</pubDate>
+    <guid>https://xn--989a00a691bdfa717h.com/#update-202604160841</guid>
+  </item>
     <item>
     <title>feat: 개별공시지가 API 토지비율 정확 계산 (Worker landPrice + CalcBldVat onApplyInfo)</title>
     <link>https://xn--989a00a691bdfa717h.com/</link>
