@@ -5,8 +5,15 @@
     <link>https://xn--989a00a691bdfa717h.com/</link>
     <description>취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 등 39가지 무료 계산기. 매일 자동 업데이트.</description>
     <language>ko</language>
-    <lastBuildDate>Thu, 16 Apr 2026 18:47:15 +0900</lastBuildDate>
+    <lastBuildDate>Thu, 16 Apr 2026 19:53:19 +0900</lastBuildDate>
     <atom:link href="https://xn--989a00a691bdfa717h.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+    <title>fix: 전체 계산기 nextstep Expert Guide 아래/세율표 1열 위치 통일</title>
+    <link>https://xn--989a00a691bdfa717h.com/</link>
+    <description>fix: 전체 계산기 nextstep Expert Guide 아래/세율표 1열 위치 통일</description>
+    <pubDate>Thu, 16 Apr 2026 19:53:19 +0900</pubDate>
+    <guid>https://xn--989a00a691bdfa717h.com/#update-202604161053</guid>
+  </item>
     <item>
     <title>fix: 어드민 로그인 수정 (state TTL 600초, 디버그 에러 상세화, 프론트 에러 표시 개선)</title>
     <link>https://xn--989a00a691bdfa717h.com/</link>

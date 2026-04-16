@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "fix: 전체 계산기 nextstep Expert Guide 아래/세율표 1열 위치 통일",
+      "desc": "fix: 전체 계산기 nextstep Expert Guide 아래/세율표 1열 위치 통일"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "fix: 어드민 로그인 수정 (state TTL 600초, 디버그 에러 상세화, 프론트 에러 표시 개선)",
       "desc": "fix: 어드민 로그인 수정 (state TTL 600초, 디버그 에러 상세화, 프론트 에러 표시 개선)"
     },
@@ -1459,12 +1465,6 @@
       "category": "전체",
       "title": "fix(AddressModal): optional 동/호, area-bucket filter, separated real/std flow",
       "desc": "fix(AddressModal): optional 동/호, area-bucket filter, separated real/std flow"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "feat(acq): add AddressModal with JUSO search → real-price & vworld lookup",
-      "desc": "feat(acq): add AddressModal with JUSO search → real-price & vworld lookup"
     }
   ],
   "rates": {
