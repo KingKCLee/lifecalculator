@@ -5957,7 +5957,13 @@ export default function App(){
         }).catch(()=>{}).finally(()=>{window.history.replaceState(null,"","/");setPage("home");});
       return;
     }
-    if(hash==="auth/naver/callback"||hash==="auth/naver/result"||hash==="auth/kakao/callback"||hash==="auth/kakao/result"){
+    if(hash==="auth/naver/callback"||hash==="auth/kakao/callback"){
+      // OAuth provider가 code/state를 SPA로 보냄 → Worker 콜백으로 전달 (302 리디렉션 방식)
+      const search=window.location.search;
+      window.location.href=LC_REALESTATE_WORKER+"/"+hash+search;
+      return;
+    }
+    if(hash==="auth/naver/result"||hash==="auth/kakao/result"){
       const params=new URLSearchParams(window.location.search);
       const token=params.get("token"),email=params.get("email"),err=params.get("error");
       if(token&&email){try{localStorage.setItem("lc_token",token);localStorage.setItem("lc_email",email);}catch{}setLcToken(token);setLcEmail(email);}
