@@ -39,7 +39,7 @@ const bucketToRange = (b) => {
 const fKRW = (n) => "₩" + Number(n || 0).toLocaleString("ko-KR");
 
 // calcType: "acquisition"(기본, 실거래가+공시가격), "holding"(공시가격만), "transfer"(실거래가만)
-export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onApplyArea, onApplyInfo, onApplyDate, currentArea, calcType }) {
+export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onApplyArea, onApplyInfo, onApplyDate, currentArea, calcType, buildingType }) {
   const mode = calcType || (onApplyPrice && onApplyStd ? "acquisition" : onApplyStd ? "holding" : onApplyPrice ? "transfer" : "acquisition");
   const [stage, setStage] = useState(1);
   const [keyword, setKeyword] = useState("");
@@ -90,17 +90,22 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
       const months = (yr >= 2006 && yr <= new Date().getFullYear())
         ? Array.from({ length: 12 }, (_, i) => yr + String(i + 1).padStart(2, "0"))
         : recentMonths(3);
+      const bt = buildingType || "apt";
       const realPromises = months.map((ym) => {
         const qs = new URLSearchParams({
-          LAWD_CD: lawdCd, DEAL_YMD: ym,
+          LAWD_CD: lawdCd, DEAL_YMD: ym, type: bt,
           ...(picked.emdNm ? { dongFilter: picked.emdNm } : {})
         }).toString();
         return fetch(WORKER + "/api/real-price?" + qs).then(r => r.json()).catch(() => ({}));
       });
 
+      const needDongHo = bt === "apt" || bt === "officetel" || bt === "villa";
       let stdPromise = Promise.resolve(null);
-      if (pnu && hasDongHo) {
-        const qs = new URLSearchParams({ pnu, stdrYear: String(new Date().getFullYear()), dongNm, hoNm }).toString();
+      if (pnu && (hasDongHo || !needDongHo)) {
+        const qs = new URLSearchParams({
+          pnu, stdrYear: String(new Date().getFullYear()), buildingType: bt,
+          ...(dongNm ? { dongNm } : {}), ...(hoNm ? { hoNm } : {})
+        }).toString();
         stdPromise = fetch(WORKER + "/api/vworld-price?" + qs).then(r => r.json()).catch(() => ({}));
       } else {
         setStdSkipped(true);
@@ -220,7 +225,7 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
               <div style={{ fontSize: 13, fontWeight: 700, color: "#0a1628" }}>{picked.bdNm || "(건물명 없음)"}</div>
               <div style={{ fontSize: 12, color: "#374151", marginTop: 2 }}>{picked.roadAddr}</div>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 10 }}>
+            {(buildingType||"apt")!=="house"&&(buildingType||"apt")!=="land"&&<div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 10 }}>
               <div>
                 <label style={labelSt}>동</label>
                 <input type="text" value={dongNm} onChange={e => setDongNm(e.target.value)} placeholder="예: 101" style={inpSt} />
@@ -229,7 +234,8 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
                 <label style={labelSt}>호</label>
                 <input type="text" value={hoNm} onChange={e => setHoNm(e.target.value)} placeholder="예: 1205" style={inpSt} />
               </div>
-            </div>
+            </div>}
+            {((buildingType||"apt")==="house"||(buildingType||"apt")==="land")&&<div style={{fontSize:12,color:"#6b778c",marginBottom:10,padding:"10px 12px",background:"#f8f9fc",borderRadius:8}}>단독주택/토지는 동·호 입력 없이 바로 조회합니다.</div>}
             {mode === "transfer" && (
               <div style={{ marginBottom: 10 }}>
                 <label style={labelSt}>취득연도 (과거 거래 조회 시 입력)</label>

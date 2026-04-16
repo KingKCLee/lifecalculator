@@ -1908,7 +1908,7 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
         <button type="button" onClick={()=>setShowAcqLookup(true)} style={{width:"100%",padding:"12px 16px",background:"linear-gradient(135deg,#eff6ff,#dbeafe)",border:"1.5px solid #bfdbfe",borderRadius:10,fontSize:13,fontWeight:700,color:"#1e40af",cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",gap:8,transition:"background .15s"}}>📍 주소·단지명으로 자동입력</button>
         <div style={{fontSize:11,color:"#9ca3af",textAlign:"center",marginTop:4}}>실거래가·공시가격 자동조회 후 취득가액·시가표준액 자동입력</div>
       </div>}
-      {showAcqLookup&&<AddressModal onClose={()=>setShowAcqLookup(false)} onApplyPrice={v=>{sP(String(Math.round(v/10000)));setAutoPriceFlag(true);}} onApplyStd={v=>{setStdPrice(String(Math.round(v/10000)));setAutoStdFlag(true);}} onApplyArea={b=>sAreaType(b)} onApplyInfo={info=>setSelectedAptInfo(info)} currentArea={areaType}/>}
+      {showAcqLookup&&<AddressModal onClose={()=>setShowAcqLookup(false)} onApplyPrice={v=>{sP(String(Math.round(v/10000)));setAutoPriceFlag(true);}} onApplyStd={v=>{setStdPrice(String(Math.round(v/10000)));setAutoStdFlag(true);}} onApplyArea={b=>sAreaType(b)} onApplyInfo={info=>setSelectedAptInfo(info)} currentArea={areaType} buildingType={{house:"apt",officetel:"officetel",farmLand:"land",building:"commercial"}[realType]||"apt"}/>}
       {/* 수정 6: 선택 완료 후 단지 정보 카드 (PC only) */}
       {!isMo&&selectedAptInfo&&<div style={{background:"#eff6ff",border:"1px solid #bfdbfe",borderRadius:10,padding:"12px 16px",marginBottom:12,display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,flexWrap:"wrap"}}>
         <div style={{flex:"1 1 auto",minWidth:0}}>
