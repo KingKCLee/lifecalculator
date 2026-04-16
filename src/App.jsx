@@ -6363,22 +6363,24 @@ body.lc-embed main{padding-top:0!important}
       {/* 회원 혜택 배너 (비회원 전용, PC) */}
       {!isMo&&!effectiveUser&&<div style={{padding:"0 32px 0"}}><div style={{maxWidth:1200,margin:"0 auto",background:"linear-gradient(135deg,#0747A6 0%,#0052CC 50%,#0065FF 100%)",borderRadius:16,padding:"36px 40px",color:"#fff",position:"relative",overflow:"hidden"}}>
         <div style={{position:"absolute",top:-40,right:-40,width:200,height:200,borderRadius:"50%",background:"rgba(255,255,255,0.06)"}}/>
-        <div style={{position:"relative",display:"flex",gap:32,alignItems:"center"}}>
-          <div style={{flex:"1 1 auto",minWidth:0}}><div style={{fontSize:22,fontWeight:800,marginBottom:6,letterSpacing:"-0.5px"}}>무료 회원가입으로 더 많은 혜택을</div>
-          <div style={{fontSize:14,opacity:.85,marginBottom:24,lineHeight:1.6}}>로그인 한 번으로 계산기 전체 기능을 이용하세요</div>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:14}}>
-            {[{svg:<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>,t:"계산 내역 저장",d:"히스토리 자동 보관"},{svg:<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>,t:"AI 절세 가이드",d:"비회원 1회 → 회원 3회"},{svg:<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>,t:"금리·공시가 알림",d:"변동 시 즉시 알림"},{svg:<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>,t:"맞춤 보고서",d:"PDF 다운로드"}].map((b,i)=>(
-              <div key={i} style={{background:"rgba(255,255,255,0.1)",borderRadius:12,padding:"16px",border:"1px solid rgba(255,255,255,0.15)",transition:"transform .2s,background .2s",cursor:"default"}} onMouseEnter={e=>{e.currentTarget.style.transform="scale(1.05)";e.currentTarget.style.background="rgba(255,255,255,0.18)";}} onMouseLeave={e=>{e.currentTarget.style.transform="scale(1)";e.currentTarget.style.background="rgba(255,255,255,0.1)";}}>
-                <div style={{width:48,height:48,borderRadius:"50%",background:"rgba(255,255,255,0.12)",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:10,color:"#fff"}}>{b.svg}</div>
-                <div style={{fontSize:13,fontWeight:700,marginBottom:2}}>{b.t}</div>
-                <div style={{fontSize:11,opacity:.75}}>{b.d}</div>
-              </div>))}
-            </div>
+        {/* 상단 행: 제목 + 버튼 */}
+        <div style={{position:"relative",display:"flex",alignItems:"center",gap:16,marginBottom:20}}>
+          <div style={{flex:"1 1 auto",minWidth:0}}>
+            <div style={{fontSize:22,fontWeight:800,letterSpacing:"-0.5px"}}>무료 회원가입으로 더 많은 혜택을</div>
           </div>
-          <div style={{width:170,flexShrink:0,display:"flex",flexDirection:"column",gap:8,alignSelf:"center"}}>
-            <button onClick={()=>{setAuthMode("signup");setShowAuth(true);}} style={{width:"100%",padding:"14px 0",background:"#fff",color:"#0747A6",border:"none",borderRadius:10,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit",textAlign:"center"}}>무료 회원가입</button>
-            <button onClick={()=>{setAuthMode("login");setShowAuth(true);}} style={{width:"100%",padding:"14px 0",background:"rgba(255,255,255,0.15)",color:"#fff",border:"1px solid rgba(255,255,255,0.3)",borderRadius:10,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit",textAlign:"center"}}>로그인</button>
+          <div style={{flexShrink:0,display:"flex",gap:8,marginLeft:"auto"}}>
+            <button onClick={()=>{setAuthMode("signup");setShowAuth(true);}} style={{padding:"12px 28px",background:"#fff",color:"#0747A6",border:"none",borderRadius:10,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>무료 회원가입</button>
+            <button onClick={()=>{setAuthMode("login");setShowAuth(true);}} style={{padding:"12px 28px",background:"rgba(255,255,255,0.15)",color:"#fff",border:"1px solid rgba(255,255,255,0.3)",borderRadius:10,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>로그인</button>
           </div>
+        </div>
+        {/* 하단 행: 카드 4개 */}
+        <div style={{position:"relative",display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:16}}>
+          {[{svg:<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>,t:"계산 내역 저장",d:"히스토리 자동 보관"},{svg:<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>,t:"AI 절세 가이드",d:"비회원 1회 → 회원 3회"},{svg:<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>,t:"금리·공시가 알림",d:"변동 시 즉시 알림"},{svg:<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>,t:"맞춤 보고서",d:"PDF 다운로드"}].map((b,i)=>(
+            <div key={i} style={{background:"rgba(255,255,255,0.1)",borderRadius:12,padding:"16px",border:"1px solid rgba(255,255,255,0.15)",transition:"transform .2s,background .2s",cursor:"default"}} onMouseEnter={e=>{e.currentTarget.style.transform="scale(1.05)";e.currentTarget.style.background="rgba(255,255,255,0.18)";}} onMouseLeave={e=>{e.currentTarget.style.transform="scale(1)";e.currentTarget.style.background="rgba(255,255,255,0.1)";}}>
+              <div style={{width:48,height:48,borderRadius:"50%",background:"rgba(255,255,255,0.12)",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:10,color:"#fff"}}>{b.svg}</div>
+              <div style={{fontSize:13,fontWeight:700,marginBottom:2}}>{b.t}</div>
+              <div style={{fontSize:11,opacity:.75}}>{b.d}</div>
+            </div>))}
         </div>
       </div></div>}
 
