@@ -108,8 +108,55 @@ function DashContent({ stats, cardSt, secSt }) {
             <div style={{ width: "70%", height: Math.max(hPx, 2), background: d.hour >= 9 && d.hour <= 22 ? "#0141f9" : "#cbd5e1", borderRadius: "2px 2px 0 0" }} />
             <div style={{ fontSize: 8, color: "#94a3b8", marginTop: 3 }}>{d.hour}</div></div>); })}</div>
     </div>
+    {/* 페이지뷰 통계 (신규) */}
+    {stats.pageViews && <>
+      <div style={{ fontSize: 16, fontWeight: 800, color: "#0a1628", marginTop: 32, marginBottom: 16, paddingTop: 20, borderTop: "2px solid #E5E7EB" }}>페이지뷰 트래킹</div>
+      <div style={{ display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 24 }}>
+        {[{ l: "오늘 PV", v: fNum(stats.pageViews.today), sub: stats.pageViews.yesterday > 0 ? ("어제 " + fNum(stats.pageViews.yesterday)) : "" },
+          { l: "이번주 PV", v: fNum(stats.pageViews.week) },
+          { l: "모바일", v: (stats.pageViews.deviceRatio?.mobile || 0) + "%", color: "#0141f9" },
+          { l: "데스크톱", v: (stats.pageViews.deviceRatio?.desktop || 0) + "%" }
+        ].map((c, i) => (
+          <div key={i} style={cardSt}><div style={{ fontSize: 12, color: "#6b778c", fontWeight: 600, marginBottom: 6 }}>{c.l}</div><div style={{ fontSize: 24, fontWeight: 800, color: c.color || "#0a1628" }}>{c.v}</div>{c.sub && <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 2 }}>{c.sub}</div>}</div>))}
+      </div>
+      {(stats.pageViews.sources || []).length > 0 && <div style={secSt}>
+        <div style={{ fontSize: 14, fontWeight: 800, color: "#0a1628", marginBottom: 12 }}>유입 경로 (7일)</div>
+        <DonutChart data={(stats.pageViews.sources || []).slice(0, 6).map((s, i) => ({ label: s.source || "unknown", value: s.cnt, color: ["#00c73c", "#4285f4", "#6b778c", "#f59e0b", "#ef4444", "#8b5cf6"][i] || "#d1d5db" }))} />
+      </div>}
+      {(stats.pageViews.topPages || []).length > 0 && <div style={secSt}>
+        <div style={{ fontSize: 14, fontWeight: 800, color: "#0a1628", marginBottom: 12 }}>인기 페이지 TOP 10 (7일)</div>
+        {stats.pageViews.topPages.map((p, i) => (
+          <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: "1px solid #f4f5f7", fontSize: 13 }}>
+            <span style={{ color: "#0a1628" }}>{i + 1}. {p.page || "/"}</span>
+            <span style={{ fontWeight: 700, color: "#0141f9" }}>{fNum(p.cnt)}</span>
+          </div>))}
+      </div>}
+      {(stats.pageViews.hourly || []).length > 0 && <div style={secSt}>
+        <div style={{ fontSize: 14, fontWeight: 800, color: "#0a1628", marginBottom: 12 }}>오늘 시간대별 PV</div>
+        <div style={{ display: "flex", alignItems: "flex-end", gap: 3, height: 80 }}>
+          {Array.from({ length: 24 }, (_, h) => {
+            const d = (stats.pageViews.hourly || []).find(x => x.hour === h);
+            const cnt = d ? d.cnt : 0;
+            const maxH = Math.max(...(stats.pageViews.hourly || [{ cnt: 1 }]).map(x => x.cnt), 1);
+            return (<div key={h} style={{ flex: "1 0 0", display: "flex", flexDirection: "column", alignItems: "center" }} title={h + "시: " + cnt}>
+              <div style={{ width: "70%", height: Math.max((cnt / maxH) * 60, 1), background: "#0141f9", borderRadius: "2px 2px 0 0" }} />
+              <div style={{ fontSize: 7, color: "#94a3b8", marginTop: 2 }}>{h}</div>
+            </div>);
+          })}
+        </div>
+      </div>}
+    </>}
+    {/* 신규 가입 내역 */}
+    {(stats.recentSignups || []).length > 0 && <div style={secSt}>
+      <div style={{ fontSize: 14, fontWeight: 800, color: "#0a1628", marginBottom: 12 }}>최근 가입 (7일)</div>
+      {stats.recentSignups.map((s, i) => (
+        <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: "1px solid #f4f5f7", fontSize: 12 }}>
+          <span>{s.name || s.email}</span>
+          <span style={{ color: "#6b778c" }}>{s.provider} · {new Date(s.ts * 1000).toLocaleDateString("ko-KR")}</span>
+        </div>))}
+    </div>}
     <div style={secSt}>
-      <div style={{ fontSize: 14, fontWeight: 800, color: "#0a1628", marginBottom: 12 }}>{"\uAD00\uB9AC \uB9C1\uD06C"}</div>
+      <div style={{ fontSize: 14, fontWeight: 800, color: "#0a1628", marginBottom: 12 }}>관리 링크</div>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
         {[{ l: "Cloudflare", u: "https://dash.cloudflare.com/" }, { l: "GitHub", u: "https://github.com/KingKCLee/lifecalculator" }, { l: "Search Console", u: "https://search.google.com/search-console" }, { l: "GA4", u: "https://analytics.google.com/" }, { l: "AdSense", u: "https://www.google.com/adsense/" }].map((lk, i) => (
           <a key={i} href={lk.u} target="_blank" rel="noopener noreferrer" style={{ padding: "10px 16px", background: "#f1f5f9", borderRadius: 8, fontSize: 12, fontWeight: 600, color: "#0a1628", textDecoration: "none", border: "1px solid #E5E7EB" }}>{lk.l}</a>))}
