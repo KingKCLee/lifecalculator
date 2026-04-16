@@ -1168,6 +1168,12 @@
   "updateLog": [
     {
       "date": "2026.04.16",
+      "category": "세금",
+      "title": "fix: 취득세 nextstep 2열 JSX 구조 직접 이동",
+      "desc": "fix: 취득세 nextstep 2열 JSX 구조 직접 이동"
+    },
+    {
+      "date": "2026.04.16",
       "category": "전체",
       "title": "fix: 중복된 함께계산하면좋은 박스 제거",
       "desc": "fix: 중복된 함께계산하면좋은 박스 제거"
@@ -1459,12 +1465,6 @@
       "category": "전체",
       "title": "feat(address-modal): 절차 설명·인라인 힌트·에러 메시지·출처 표기 개선",
       "desc": "feat(address-modal): 절차 설명·인라인 힌트·에러 메시지·출처 표기 개선"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "fix(RPFull): sample-calc 4+3 PC grid, fix '공유' to actually share (shareKakao)",
-      "desc": "fix(RPFull): sample-calc 4+3 PC grid, fix '공유' to actually share (shareKakao)"
     }
   ],
   "rates": {
