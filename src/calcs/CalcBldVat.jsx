@@ -69,10 +69,10 @@ export default function CalcBldVat({isMo=false, onNav=()=>{}}){
       onClose={()=>setShowLookup(false)}
       onApplyPrice={v=>{setPrice(String(Math.round(v/10000)));setAutoInfo(prev=>({...prev,tradeApplied:true}));}}
       onApplyStd={v=>{
-        if(v&&pW>0){
+        if(v){
           const stdW=Math.round(v/10000);
-          const ratio=Math.round((stdW/pW)*100);
-          if(ratio>0&&ratio<100){setLandRatio(String(ratio));setAutoLandHint("공시가격 기준 토지비율이 자동입력되었습니다. 수정 가능합니다.");}
+          setAutoInfo(prev=>({...prev,publicPrice:stdW}));
+          setAutoLandHint("물건 유형 기준 토지비율 " + landRatio + "% 적용 중. 공시가격 " + stdW.toLocaleString("ko-KR") + "만원 확인됨. 계약서상 안분비율이 다르면 직접 수정하세요.");
         }
       }}
     />}
