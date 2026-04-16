@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "fix: canonical 태그 동적 추가",
+      "desc": "fix: canonical 태그 동적 추가"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "fix: 동호 입력 영문 허용",
       "desc": "fix: 동호 입력 영문 허용"
     },
@@ -1459,12 +1465,6 @@
       "category": "전체",
       "title": "feat: 부동산 카테고리 21개 계산기 포맷 전파 — 60/40 그리드 + h3 제거 + AddressModal 연동 6종",
       "desc": "feat: 부동산 카테고리 21개 계산기 포맷 전파 — 60/40 그리드 + h3 제거 + AddressModal 연동 6종"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "fix: 트래킹 한글 깨짐 수정 (Content-Type charset=utf-8)",
-      "desc": "fix: 트래킹 한글 깨짐 수정 (Content-Type charset=utf-8)"
     }
   ],
   "rates": {
