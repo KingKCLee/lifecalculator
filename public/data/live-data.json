@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "feat: 어드민 대시보드 트래킹/통계/키워드 시스템",
+      "desc": "feat: 어드민 대시보드 트래킹/통계/키워드 시스템"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "fix: 완벽가이드 좌우 정렬 2열그리드와 일치",
       "desc": "fix: 완벽가이드 좌우 정렬 2열그리드와 일치"
     },
@@ -1459,12 +1465,6 @@
       "category": "전체",
       "title": "feat(admin): Google OAuth login, session via KV+Bearer token, callback SPA handler",
       "desc": "feat(admin): Google OAuth login, session via KV+Bearer token, callback SPA handler"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "feat(admin): dashboard with D1 tracking, KV auth, /admin route, calc event logging",
-      "desc": "feat(admin): dashboard with D1 tracking, KV auth, /admin route, calc event logging"
     }
   ],
   "rates": {
