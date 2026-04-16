@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "fix(AddressModal): close modal on apply (real-price + std-price)",
+      "desc": "fix(AddressModal): close modal on apply (real-price + std-price)"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "fix(AddressModal): normalize whitespace in building name filter",
       "desc": "fix(AddressModal): normalize whitespace in building name filter"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "refactor: TipModal 재구현 — 다크 툴팁·200ms hover delay·경계 보정",
       "desc": "refactor: TipModal 재구현 — 다크 툴팁·200ms hover delay·경계 보정"
-    },
-    {
-      "date": "2026.04.15",
-      "category": "전체",
-      "title": "fix: TipModal 모바일 bottom sheet title 헤더 제거",
-      "desc": "fix: TipModal 모바일 bottom sheet title 헤더 제거"
     }
   ],
   "rates": {
