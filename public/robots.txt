@@ -11,6 +11,7 @@ Allow: /consult/
 Disallow: /payment/
 Disallow: /api/
 Disallow: /admin/
+Disallow: /auth/
 Disallow: /*?embed=y$
 
 # 크롤러 부하 제한
