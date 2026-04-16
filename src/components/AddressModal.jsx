@@ -69,12 +69,12 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
       const j = await r.json().catch(() => ({}));
       if (r.ok && j.ok) {
         setResults(j.list || []);
-        if ((j.list || []).length === 0) setSearchErr("검색 결과가 없습니다");
+        if ((j.list || []).length === 0) setSearchErr("검색 결과가 없습니다.\n아파트·오피스텔만 조회 가능합니다.\n단독주택·빌라는 직접 입력해주세요.");
       } else {
-        setSearchErr(j.error || "주소 검색 실패 (Worker /api/juso-search 배포 · JUSO_KEY 설정 확인)");
+        setSearchErr("일시적인 오류가 발생했습니다.\n잠시 후 다시 시도하거나 직접 입력해주세요.");
       }
     } catch (e) {
-      setSearchErr("네트워크 오류: " + e.message);
+      setSearchErr("일시적인 오류가 발생했습니다.\n잠시 후 다시 시도하거나 직접 입력해주세요.");
     } finally { setSearching(false); }
   };
 
@@ -163,15 +163,17 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
       if (stdRes && stdRes.ok && (stdRes.list || []).length > 0) {
         setStdInfo(stdRes.list[0]);
       } else if (hasDongHo && stdRes && (!stdRes.ok || (stdRes.list || []).length === 0)) {
-        setLookupErr("공시가격: 입력한 동/호로 조회된 데이터가 없습니다. 동/호를 다시 확인해 주세요.");
+        setLookupErr("해당 동/호의 공시가격을 찾지 못했습니다.\n동/호 번호를 확인하거나 시가표준액을 직접 입력해주세요.");
       }
 
       if (filtered.length === 0 && !(stdRes && stdRes.ok && (stdRes.list || []).length > 0)) {
-        setLookupErr("실거래가·공시가격 모두 조회 결과가 없습니다.");
+        setLookupErr("최근 3개월 실거래가 없습니다.\n취득가액을 직접 입력해주세요.");
+      } else if (filtered.length === 0 && stdRes && stdRes.ok && (stdRes.list || []).length > 0) {
+        setLookupErr("최근 3개월 실거래가 없습니다.\n취득가액을 직접 입력해주세요.");
       }
       setStage(3);
     } catch (e) {
-      setLookupErr("조회 실패: " + e.message);
+      setLookupErr("일시적인 오류가 발생했습니다.\n잠시 후 다시 시도하거나 직접 입력해주세요.");
     } finally { setLoading(false); }
   };
 
@@ -192,8 +194,23 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
     <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(10,22,40,.55)", zIndex: 10004, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
       <div onClick={e => e.stopPropagation()} style={{ background: "#fff", borderRadius: 16, padding: 24, maxWidth: 640, width: "100%", maxHeight: "90vh", overflowY: "auto", position: "relative", fontFamily: "inherit" }}>
         <button onClick={onClose} aria-label="닫기" style={{ position: "absolute", top: 12, right: 12, background: "none", border: "none", fontSize: 22, cursor: "pointer", color: "#6B7280" }}>✕</button>
-        <div style={{ fontSize: 18, fontWeight: 800, color: "#0a1628", marginBottom: 4 }}>주소로 실거래가·공시가격 조회</div>
-        <div style={{ fontSize: 12, color: "#6B7280", marginBottom: 16 }}>JUSO 주소 검색 → (동/호는 선택) → 국토부 실거래가 + V-World 공시가격 자동조회</div>
+        <div style={{ fontSize: 18, fontWeight: 800, color: "#0a1628", marginBottom: 12 }}>🔍 주소로 실거래가·공시가격 자동조회</div>
+
+        {/* 2026.04.16 절차 설명 블록 */}
+        <div style={{ background: "#f8f9fc", borderRadius: 10, padding: 16, marginBottom: 16, fontSize: 13, color: "#505f79", lineHeight: 1.7 }}>
+          <div style={{ marginBottom: 10 }}>
+            <span style={{ color: "#0141f9", fontWeight: 700 }}>[1단계] 주소 검색</span><br />
+            아파트·오피스텔 주소를 입력하세요. 도로명 또는 지번 모두 검색 가능합니다.
+          </div>
+          <div style={{ marginBottom: 10 }}>
+            <span style={{ color: "#0141f9", fontWeight: 700 }}>[2단계] 동/호 입력 (선택사항)</span><br />
+            동/호를 입력하면 해당 호수의 공시가격을 정확히 조회할 수 있습니다. 입력하지 않으면 실거래가만 조회됩니다.
+          </div>
+          <div>
+            <span style={{ color: "#0141f9", fontWeight: 700 }}>[3단계] 결과 확인 및 입력</span><br />
+            실거래가와 공시가격을 비교하여 높은 금액이 취득세 과세표준이 됩니다. 두 값을 모두 입력하면 정확도가 높아집니다.
+          </div>
+        </div>
 
         <div style={{ display: "flex", gap: 16, marginBottom: 16, padding: "10px 14px", background: "#f8f9fc", borderRadius: 8 }}>
           {stepDot(1, "주소 검색")}
@@ -205,12 +222,13 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
 
         {stage === 1 && (
           <div>
-            <label style={labelSt}>도로명/지번 주소</label>
-            <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
-              <input type="text" value={keyword} onChange={e => setKeyword(e.target.value)} onKeyDown={e => { if (e.key === "Enter") doSearch(); }} placeholder="예: 역삼동 736 또는 테헤란로 152" style={{ ...inpSt, flex: 1 }} />
+            <label style={labelSt}>도로명/지번/아파트명</label>
+            <div style={{ display: "flex", gap: 8, marginBottom: 6 }}>
+              <input type="text" value={keyword} onChange={e => setKeyword(e.target.value)} onKeyDown={e => { if (e.key === "Enter") doSearch(); }} placeholder="예: 인천 송도동 호반써밋, 서울 강남구 대치동" style={{ ...inpSt, flex: 1 }} />
               <button onClick={doSearch} disabled={searching} style={{ padding: "10px 20px", background: searching ? "#9CA3AF" : "#0141f9", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: searching ? "wait" : "pointer", fontFamily: "inherit", whiteSpace: "nowrap" }}>{searching ? "검색 중…" : "검색"}</button>
             </div>
-            {searchErr && <div style={{ padding: "10px 14px", background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 8, fontSize: 12, color: "#1e40af", lineHeight: 1.5, marginBottom: 10 }}>{searchErr}</div>}
+            <div style={{ fontSize: 11, color: "#9CA3AF", marginBottom: 10 }}>도로명주소·지번·아파트명 모두 검색 가능</div>
+            {searchErr && <div style={{ padding: "10px 14px", background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 8, fontSize: 12, color: "#1e40af", lineHeight: 1.6, marginBottom: 10, whiteSpace: "pre-line" }}>{searchErr}</div>}
             {results && results.length > 0 && (
               <div style={{ maxHeight: 380, overflowY: "auto", border: "1px solid #E5E7EB", borderRadius: 8 }}>
                 {results.map((it, i) => (
@@ -233,21 +251,21 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
               <div style={{ fontSize: 12, color: "#374151", marginTop: 2 }}>{picked.roadAddr}</div>
               <div style={{ fontSize: 11, color: "#6b778c", marginTop: 4 }}>법정동 {picked.admCd} · 지번 {picked.lnbrMnnm}-{picked.lnbrSlno}</div>
             </div>
-            <div style={{ fontSize: 11, fontWeight: 700, color: "#0a1628", marginBottom: 6 }}>동/호 (선택 입력)</div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 10 }}>
+            <div style={{ fontSize: 12, color: "#1e40af", marginBottom: 12, lineHeight: 1.7, padding: "12px 14px", background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 10 }}>
+              <b>동/호 입력은 선택사항입니다.</b><br />
+              입력 시 → 실거래가 + 공시가격 모두 조회<br />
+              미입력 시 → 실거래가만 조회
+              {currentArea && <><br />· 현재 선택 면적 <b>{currentArea === "big" ? "85㎡ 초과" : currentArea + "㎡ 이하"}</b> 로 실거래가 필터링</>}
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 14 }}>
               <div>
                 <label style={labelSt}>동</label>
-                <input type="text" value={dongNm} onChange={e => setDongNm(e.target.value.replace(/\D/g, ""))} placeholder="예: 101 (선택)" style={inpSt} />
+                <input type="text" value={dongNm} onChange={e => setDongNm(e.target.value.replace(/\D/g, ""))} placeholder="예: 101 (동 번호만)" style={inpSt} />
               </div>
               <div>
                 <label style={labelSt}>호</label>
-                <input type="text" value={hoNm} onChange={e => setHoNm(e.target.value.replace(/\D/g, ""))} placeholder="예: 1503 (선택)" style={inpSt} />
+                <input type="text" value={hoNm} onChange={e => setHoNm(e.target.value.replace(/\D/g, ""))} placeholder="예: 1205 (호수만)" style={inpSt} />
               </div>
-            </div>
-            <div style={{ fontSize: 11, color: "#6b778c", marginBottom: 14, lineHeight: 1.6, padding: "10px 12px", background: "#f8f9fc", borderRadius: 8 }}>
-              · <b>실거래가만 조회</b>: 동/호 없이 조회 — 단지 + 선택한 면적 기준 최근 3개월 거래 내역<br />
-              · <b>공시가격 포함 조회</b>: 동/호 모두 입력 시 V-World 공시가격까지 함께 조회
-              {currentArea && <><br />· 현재 선택 면적 <b>{currentArea === "big" ? "85㎡ 초과" : currentArea + "㎡ 이하"}</b> 로 실거래가 필터링</>}
             </div>
             <div style={{ display: "flex", gap: 8 }}>
               <button onClick={() => setStage(1)} style={{ padding: "12px 18px", background: "#f4f5f7", color: "#505f79", border: "1.5px solid #E5E7EB", borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>이전</button>
@@ -303,11 +321,11 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
               <div style={{ padding: "12px 14px", background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 10, marginBottom: 14 }}>
                 <div style={{ fontSize: 12, fontWeight: 800, color: "#1e40af", marginBottom: 4 }}>📌 취득세 과세표준 안내</div>
                 <div style={{ fontSize: 11.5, color: "#1e3a8a", lineHeight: 1.65 }}>
-                  취득세는 <b>두 금액 중 높은 금액</b>이 과세표준입니다. 아래 버튼을 누르면 두 값이 <b>모두 자동입력</b>됩니다.
+                  취득세 과세표준 = <b>실거래가 vs 공시가격 중 높은 금액</b><br />아래에서 두 값을 확인하고 입력하세요.
                 </div>
               </div>
 
-              {lookupErr && <div style={{ padding: "10px 14px", background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 8, fontSize: 12, color: "#1e40af", lineHeight: 1.5, marginBottom: 12 }}>{lookupErr}</div>}
+              {lookupErr && <div style={{ padding: "10px 14px", background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 8, fontSize: 12, color: "#1e40af", lineHeight: 1.6, marginBottom: 12, whiteSpace: "pre-line" }}>{lookupErr}</div>}
               {stdSkipped && !stdInfo && (
                 <div style={{ padding: "10px 14px", background: "#fff8e1", border: "1px solid #ffe082", borderRadius: 8, fontSize: 12, color: "#8a5a00", lineHeight: 1.5, marginBottom: 12 }}>
                   공시가격은 동/호가 모두 입력되어야 조회됩니다. <button onClick={() => setStage(2)} style={{ background: "none", border: "none", color: "#0141f9", fontWeight: 700, textDecoration: "underline", cursor: "pointer", padding: 0, fontFamily: "inherit", fontSize: 12 }}>동/호 입력하기 →</button>
@@ -364,6 +382,13 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
             </div>
           );
         })()}
+
+        {/* 2026.04.16 데이터 출처 표기 (모든 단계 공통) */}
+        <div style={{ fontSize: 11, color: "#9ca3af", textAlign: "center", marginTop: 20, paddingTop: 14, borderTop: "1px solid #F3F4F6", lineHeight: 1.7 }}>
+          데이터 출처: 행정안전부 도로명주소 ·<br />
+          국토교통부 실거래가 공개시스템 ·<br />
+          국토교통부 공간정보 오픈플랫폼(V-World)
+        </div>
       </div>
     </div>
   );
