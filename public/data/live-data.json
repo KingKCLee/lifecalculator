@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "feat(AddressModal): add tax guidance banner, dual-apply flow (std stays open, real closes)",
+      "desc": "feat(AddressModal): add tax guidance banner, dual-apply flow (std stays open, real closes)"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "fix(AddressModal): close modal on apply (real-price + std-price)",
       "desc": "fix(AddressModal): close modal on apply (real-price + std-price)"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "fix: TipModal 헬퍼 라벨과 Inp/Sel/Tog label 중복 제거",
       "desc": "fix: TipModal 헬퍼 라벨과 Inp/Sel/Tog label 중복 제거"
-    },
-    {
-      "date": "2026.04.15",
-      "category": "전체",
-      "title": "refactor: TipModal 재구현 — 다크 툴팁·200ms hover delay·경계 보정",
-      "desc": "refactor: TipModal 재구현 — 다크 툴팁·200ms hover delay·경계 보정"
     }
   ],
   "rates": {
