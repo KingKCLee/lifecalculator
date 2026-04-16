@@ -4717,17 +4717,49 @@ function PolicyPage({isMo,navigateHome}){
 }
 
 function MarketPage({isMo,navigateHome}){
-  const[data,setData]=useState(null);const[loading,setLoading]=useState(true);
+  const[md,setMd]=useState(null);const[ld,setLd]=useState(null);const[loading,setLoading]=useState(true);
   useEffect(()=>{let alive=true;
-    fetch(LC_REALESTATE_WORKER+"/market-data",{cache:"no-store"})
-      .then(r=>r.ok?r.json():null).then(j=>{if(!alive)return;setData(j);setLoading(false);})
-      .catch(()=>{if(alive){setData(null);setLoading(false);}});
+    Promise.allSettled([
+      fetch(LC_REALESTATE_WORKER+"/market-data",{cache:"no-store"}).then(r=>r.json()),
+      fetch(LC_REALESTATE_WORKER+"/api/market/dashboard",{cache:"no-store"}).then(r=>r.json())
+    ]).then(([r1,r2])=>{if(!alive)return;if(r1.status==="fulfilled")setLd(r1.value);if(r2.status==="fulfilled"&&r2.value.ok)setMd(r2.value);setLoading(false);}).catch(()=>{if(alive)setLoading(false);});
     return()=>{alive=false};
   },[]);
-  return(<div style={{maxWidth:1000,margin:"0 auto",padding:isMo?"24px 16px":"40px 24px",minHeight:"60vh"}}>
+  const fV=v=>typeof v==="number"?v.toLocaleString():v||"—";
+  return(<div style={{maxWidth:1200,margin:"0 auto",padding:isMo?"24px 16px":"40px 24px",minHeight:"60vh"}}>
     <SpaBackBtn navigateHome={navigateHome}/>
-    <h1 style={{fontSize:isMo?22:28,fontWeight:800,color:"#172B4D",marginBottom:20}}>부동산 시장 동향</h1>
-    {loading?<div style={{padding:40,textAlign:"center",color:"#6b778c"}}>불러오는 중...</div>:!data?<div style={{padding:40,textAlign:"center",color:"#6b778c"}}>시장 데이터를 불러오지 못했습니다.</div>:<div style={{background:"#fff",border:"1px solid #dfe1e6",borderRadius:12,padding:"24px",fontSize:14,color:"#172B4D",lineHeight:1.8}}><pre style={{whiteSpace:"pre-wrap",wordBreak:"break-word",margin:0,fontFamily:"inherit",fontSize:12}}>{JSON.stringify(data,null,2)}</pre></div>}
+    <h1 style={{fontSize:isMo?24:32,fontWeight:800,color:"#0a1628",margin:"0 0 8px"}}>부동산 시장 동향</h1>
+    <p style={{fontSize:14,color:"#6B7280",margin:"0 0 32px"}}>한국부동산원·등기정보광장·한국은행 데이터 기반 시장 현황</p>
+    {loading?<div style={{padding:60,textAlign:"center",color:"#9CA3AF"}}>시장 데이터 로딩 중...</div>:<>
+    {ld&&<div style={{display:"grid",gridTemplateColumns:isMo?"repeat(2,1fr)":"repeat(4,1fr)",gap:12,marginBottom:24}}>
+      {[{l:"기준금리",v:ld.base_rate?ld.base_rate.value+"%":"—",s:ld.base_rate?.note||""},{l:"코스피",v:ld.stock_index?.kospi?fV(ld.stock_index.kospi.value):"—",s:ld.stock_index?.kospi?.change||""},{l:"DSR 규제",v:ld.dsr_regulation?"은행 "+ld.dsr_regulation.bank+"%":"—",s:"비은행 "+(ld.dsr_regulation?.non_bank||50)+"%"},{l:"2026 최저임금",v:ld.min_wage_2026?fV(ld.min_wage_2026.hourly)+"원":"—",s:ld.min_wage_2026?.change||""}].map((cd,i)=>(<div key={i} style={{background:"#fff",border:"1px solid #e5e7eb",borderRadius:12,padding:"16px 18px"}}>
+        <div style={{fontSize:12,color:"#6b7280",marginBottom:4}}>{cd.l}</div>
+        <div style={{fontSize:isMo?20:26,fontWeight:800,color:"#0a1628"}}>{cd.v}</div>
+        <div style={{fontSize:12,color:"#6b7280",marginTop:4}}>{cd.s}</div>
+      </div>))}
+    </div>}
+    {md&&<MarketDashboard isMo={isMo}/>}
+    {ld&&<div style={{marginTop:24}}>
+      <h2 style={{fontSize:18,fontWeight:700,color:"#0a1628",margin:"0 0 16px"}}>주요 규제 현황</h2>
+      <div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr 1fr",gap:12}}>
+        <div style={{background:"#fff",border:"1px solid #e5e7eb",borderRadius:12,padding:"18px 20px"}}>
+          <div style={{fontSize:13,fontWeight:700,color:"#0747A6",marginBottom:10}}>LTV 한도</div>
+          {[["무주택",(ld.ltv?.no_house||70)+"%"],["생애최초(비규제)",(ld.ltv?.first_buyer_non_regulated||80)+"%"]].map(([k,v],i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",padding:"6px 0",fontSize:13,borderBottom:i<1?"1px solid #f3f4f6":"none"}}><span style={{color:"#374151"}}>{k}</span><span style={{fontWeight:700}}>{v}</span></div>))}
+        </div>
+        <div style={{background:"#fff",border:"1px solid #e5e7eb",borderRadius:12,padding:"18px 20px"}}>
+          <div style={{fontSize:13,fontWeight:700,color:"#0747A6",marginBottom:10}}>수도권 주담대 한도</div>
+          {ld.mortgage_limit_metro?[["15억 이하",ld.mortgage_limit_metro.under_15],["25억 이하",ld.mortgage_limit_metro.under_25],["25억 초과",ld.mortgage_limit_metro.over_25]].map(([k,v],i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",padding:"6px 0",fontSize:13,borderBottom:i<2?"1px solid #f3f4f6":"none"}}><span style={{color:"#374151"}}>{k}</span><span style={{fontWeight:700}}>{v}</span></div>)):<div style={{fontSize:13,color:"#9CA3AF"}}>—</div>}
+        </div>
+        <div style={{background:"#fff",border:"1px solid #e5e7eb",borderRadius:12,padding:"18px 20px"}}>
+          <div style={{fontSize:13,fontWeight:700,color:"#0747A6",marginBottom:10}}>조정대상지역</div>
+          {ld.adjusted_target_area?.districts?.map((d,i)=>(<div key={i} style={{fontSize:13,color:"#374151",padding:"4px 0"}}>{d}</div>))||<div style={{fontSize:13,color:"#9CA3AF"}}>없음</div>}
+        </div>
+      </div>
+    </div>}
+    <div style={{marginTop:32,padding:"16px 20px",background:"#f8f9fc",borderRadius:10,fontSize:12,color:"#9CA3AF",lineHeight:1.6,textAlign:"center"}}>
+      출처: 한국부동산원, 법원 등기정보광장, 한국은행, 금융위원회 | 매월 자동 갱신
+    </div>
+    </>}
   </div>);
 }
 
