@@ -72,7 +72,15 @@ export default function CalcBldVat({isMo=false, onNav=()=>{}}){
         if(v){
           const stdW=Math.round(v/10000);
           setAutoInfo(prev=>({...prev,publicPrice:stdW}));
-          setAutoLandHint("물건 유형 기준 토지비율 " + landRatio + "% 적용 중. 공시가격 " + stdW.toLocaleString("ko-KR") + "만원 확인됨. 계약서상 안분비율이 다르면 직접 수정하세요.");
+        }
+      }}
+      onApplyInfo={info=>{
+        if(info && info.landRatio && info.landRatio > 0 && info.landRatio < 100){
+          setLandRatio(String(info.landRatio));
+          const lps = info.landPricePerSqm ? Math.round(info.landPricePerSqm/10000).toLocaleString("ko-KR") : "";
+          setAutoLandHint("개별공시지가 기준 토지비율 " + info.landRatio + "% 자동계산" + (lps ? " (공시지가 " + lps + "만원/㎡)" : "") + ". 계약서상 안분비율이 다르면 직접 수정하세요.");
+        } else {
+          setAutoLandHint("물건 유형 기준 평균값 " + landRatio + "% 적용 중. 계약서상 안분비율로 수정하세요.");
         }
       }}
     />}

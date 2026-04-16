@@ -53,6 +53,7 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
   const [lookupErr, setLookupErr] = useState(null);
   const [realList, setRealList] = useState([]);
   const [stdInfo, setStdInfo] = useState(null);
+  const [stdLandRatio, setStdLandRatio] = useState(null);
   const [stdSkipped, setStdSkipped] = useState(false);
   const [showMoreReal, setShowMoreReal] = useState(false);
   const [selectedRealIdx, setSelectedRealIdx] = useState(0);
@@ -131,6 +132,7 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
 
       if (stdRes && stdRes.ok && (stdRes.list || []).length > 0) {
         setStdInfo(stdRes.list[0]);
+        if (stdRes.landPrice && stdRes.landPrice.landRatio > 0) setStdLandRatio(stdRes.landPrice);
       } else if (hasDongHo) {
         setLookupErr("해당 동/호의 공시가격을 찾지 못했습니다.\n동/호 번호를 확인하거나\n시가표준액을 직접 입력해주세요.");
       }
@@ -268,7 +270,9 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
               dongNm: dongNm || (stdInfo ? stdInfo.dong : ""),
               hoNm: hoNm || (stdInfo ? stdInfo.ho : ""),
               tradePrice: mode !== "holding" ? rAmt : 0, tradeDate: mode !== "holding" ? tradeDate : "",
-              publicPrice: mode !== "transfer" ? sAmt : 0, priceYear: stdInfo ? String(stdInfo.year) : ""
+              publicPrice: mode !== "transfer" ? sAmt : 0, priceYear: stdInfo ? String(stdInfo.year) : "",
+              landRatio: stdLandRatio ? stdLandRatio.landRatio : null,
+              landPricePerSqm: stdLandRatio ? stdLandRatio.landPricePerSqm : null
             });
             onClose();
           };
