@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "세금",
+      "title": "feat: 연말정산 근로소득세율표 + 대출이자 기준금리 참고표 추가",
+      "desc": "feat: 연말정산 근로소득세율표 + 대출이자 기준금리 참고표 추가"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "세금",
       "title": "fix: 증여세 취득세 안내 및 이동 링크 추가",
       "desc": "fix: 증여세 취득세 안내 및 이동 링크 추가"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "fix(calc-acq): sample-calc 기준 버튼·레이아웃·섹션 슬림화",
       "desc": "fix(calc-acq): sample-calc 기준 버튼·레이아웃·섹션 슬림화"
-    },
-    {
-      "date": "2026.04.15",
-      "category": "전체",
-      "title": "fix(layout): PC 좌측 Expert Guide 사이드바 실제 렌더 제거",
-      "desc": "fix(layout): PC 좌측 Expert Guide 사이드바 실제 렌더 제거"
     }
   ],
   "rates": {
