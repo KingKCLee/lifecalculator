@@ -85,10 +85,11 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
 
   const [stdSkipped, setStdSkipped] = useState(false);
   const [stdApplied, setStdApplied] = useState(false);
+  const [showMoreReal, setShowMoreReal] = useState(false);
 
   const doLookup = async () => {
     if (!picked) return;
-    setLoading(true); setLookupErr(null); setRealList([]); setStdInfo(null); setStdSkipped(false); setStdApplied(false);
+    setLoading(true); setLookupErr(null); setRealList([]); setStdInfo(null); setStdSkipped(false); setStdApplied(false); setShowMoreReal(false);
     try {
       const lawdCd = (picked.admCd || "").slice(0, 5);
       const pnu = buildPnu(picked.admCd, picked.lnbrMnnm, picked.lnbrSlno, picked.udrtYn);
@@ -254,62 +255,98 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
           </div>
         )}
 
-        {stage === 3 && (
-          <div>
-            {/* 세법 안내 배너 */}
-            <div style={{ padding: "12px 14px", background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 10, marginBottom: 14 }}>
-              <div style={{ fontSize: 12, fontWeight: 800, color: "#1e40af", marginBottom: 4 }}>📌 취득세 과세표준 선택 안내</div>
-              <div style={{ fontSize: 11.5, color: "#1e3a8a", lineHeight: 1.65 }}>
-                취득세는 <b>실거래가와 공시가격 중 높은 금액</b>이 과세표준이 됩니다. 일반적으로 실거래가를 <b>취득가액</b>으로 입력하시고, 공시가격은 <b>시가표준액</b>으로 자동 입력됩니다.
-              </div>
+        {stage === 3 && (() => {
+          const primaryReal = realList.length > 0 ? realList[0] : null;
+          const realAmount = primaryReal ? Number(primaryReal.amount) || 0 : 0;
+          const stdAmount = stdInfo ? Number(stdInfo.price) || 0 : 0;
+          const hasBoth = realAmount > 0 && stdAmount > 0;
+          const realIsHigher = hasBoth ? realAmount >= stdAmount : null;
+          const formatKRW = (n) => "₩" + Number(n || 0).toLocaleString("ko-KR");
+
+          const applyReal = (it) => {
+            onApplyPrice(it.amount);
+            if (onApplyArea && it.area) onApplyArea(areaToBucket(it.area));
+            onClose();
+          };
+          const applyStd = () => {
+            onApplyStd(stdInfo.price);
+            setStdApplied(true);
+          };
+
+          const realCard = (isPrimary) => primaryReal && (
+            <div style={{ padding: "16px 18px", background: isPrimary ? "#eff6ff" : "#f8f9fc", border: isPrimary ? "2px solid #0141f9" : "1px solid #E5E7EB", borderRadius: 12, marginBottom: 12 }}>
+              {isPrimary && <div style={{ display: "inline-block", padding: "3px 10px", background: "#0141f9", color: "#fff", fontSize: 10, fontWeight: 800, borderRadius: 999, marginBottom: 8 }}>✅ 과세표준 (높은 금액)</div>}
+              <div style={{ fontSize: 12, fontWeight: 800, color: "#0a1628", marginBottom: 2 }}>{isPrimary ? "실거래가" : "실거래가 (낮음)"}</div>
+              <div style={{ fontSize: 11, color: "#6b778c", marginBottom: 6 }}>{primaryReal.apt} · {primaryReal.floor}층 · {primaryReal.area}㎡ · {primaryReal.year}.{String(primaryReal.month).padStart(2, "0")}.{String(primaryReal.day).padStart(2, "0")}</div>
+              <div style={{ fontSize: 24, fontWeight: 800, color: isPrimary ? "#0141f9" : "#6b778c", marginBottom: 10, fontVariantNumeric: "tabular-nums" }}>{formatKRW(primaryReal.amount)}</div>
+              <button onClick={() => applyReal(primaryReal)} style={{ width: "100%", padding: "11px 14px", background: isPrimary ? "#0141f9" : "#fff", color: isPrimary ? "#fff" : "#0141f9", border: isPrimary ? "none" : "1.5px solid #0141f9", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>취득가액으로 입력</button>
             </div>
+          );
 
-            {lookupErr && <div style={{ padding: "10px 14px", background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 8, fontSize: 12, color: "#1e40af", lineHeight: 1.5, marginBottom: 12 }}>{lookupErr}</div>}
-            {stdSkipped && !stdInfo && (
-              <div style={{ padding: "10px 14px", background: "#fff8e1", border: "1px solid #ffe082", borderRadius: 8, fontSize: 12, color: "#8a5a00", lineHeight: 1.5, marginBottom: 12 }}>
-                공시가격은 동/호가 모두 입력되어야 조회됩니다. <button onClick={() => setStage(2)} style={{ background: "none", border: "none", color: "#0141f9", fontWeight: 700, textDecoration: "underline", cursor: "pointer", padding: 0, fontFamily: "inherit", fontSize: 12 }}>동/호 입력하기 →</button>
-              </div>
-            )}
+          const stdCard = (isPrimary) => stdInfo && (
+            <div style={{ padding: "16px 18px", background: isPrimary ? "#eff6ff" : "#f8f9fc", border: isPrimary ? "2px solid #0141f9" : "1px solid #E5E7EB", borderRadius: 12, marginBottom: 12 }}>
+              {isPrimary && <div style={{ display: "inline-block", padding: "3px 10px", background: "#0141f9", color: "#fff", fontSize: 10, fontWeight: 800, borderRadius: 999, marginBottom: 8 }}>✅ 과세표준 (높은 금액)</div>}
+              <div style={{ fontSize: 12, fontWeight: 800, color: "#0a1628", marginBottom: 2 }}>{isPrimary ? "공시가격" : "공시가격 (낮음 · 시가표준액용)"}</div>
+              <div style={{ fontSize: 11, color: "#6b778c", marginBottom: 6 }}>{stdInfo.year}년 · {stdInfo.dong || dongNm}동 {stdInfo.ho || hoNm}호</div>
+              <div style={{ fontSize: 24, fontWeight: 800, color: isPrimary ? "#0141f9" : "#6b778c", marginBottom: 10, fontVariantNumeric: "tabular-nums" }}>{formatKRW(stdInfo.price)}</div>
+              <button onClick={applyStd} disabled={stdApplied} style={{ width: "100%", padding: "11px 14px", background: stdApplied ? "#10b981" : (isPrimary ? "#0141f9" : "#fff"), color: stdApplied ? "#fff" : (isPrimary ? "#fff" : "#0141f9"), border: isPrimary || stdApplied ? "none" : "1.5px solid #0141f9", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: stdApplied ? "default" : "pointer", fontFamily: "inherit" }}>{stdApplied ? "✓ 시가표준액 입력 완료" : "시가표준액으로 입력"}</button>
+            </div>
+          );
 
-            {stdInfo && (
-              <div style={{ marginBottom: 16, padding: "16px 18px", background: "#eff6ff", border: "1px solid #0141f9", borderRadius: 10 }}>
-                <div style={{ fontSize: 12, fontWeight: 800, color: "#0a1628", marginBottom: 2 }}>시가표준액 (공시가격) — 자동 입력됩니다</div>
-                <div style={{ fontSize: 11, color: "#6b778c", marginBottom: 8, lineHeight: 1.6 }}>취득가액보다 낮으면 실거래가가 과세표준이 됩니다</div>
-                <div style={{ fontSize: 11, color: "#6B7280", marginBottom: 4 }}>{stdInfo.year}년 공시가격 · {stdInfo.dong || dongNm}동 {stdInfo.ho || hoNm}호</div>
-                <div style={{ fontSize: 24, fontWeight: 800, color: "#0141f9", marginBottom: 10, fontVariantNumeric: "tabular-nums" }}>₩{Number(stdInfo.price).toLocaleString("ko-KR")}</div>
-                <button onClick={() => { onApplyStd(stdInfo.price); setStdApplied(true); }} disabled={stdApplied} style={{ width: "100%", padding: "10px 14px", background: stdApplied ? "#10b981" : "#0141f9", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: stdApplied ? "default" : "pointer", fontFamily: "inherit" }}>{stdApplied ? "✓ 시가표준액 입력 완료" : "공시가격으로 시가표준액 입력"}</button>
-              </div>
-            )}
-
-            {realList.length > 0 && (
-              <div style={{ marginBottom: 12 }}>
-                <div style={{ fontSize: 12, fontWeight: 800, color: "#0a1628", marginBottom: 2 }}>실거래가 — 취득가액으로 입력하세요</div>
-                <div style={{ fontSize: 11, color: "#6b778c", marginBottom: 8, lineHeight: 1.6 }}>실제 매매가격을 선택하시면 취득가액에 자동 입력됩니다 · 최근 3개월 {realList.length}건</div>
-                <div style={{ maxHeight: 340, overflowY: "auto", border: "1px solid #E5E7EB", borderRadius: 8 }}>
-                  {realList.map((it, i) => (
-                    <button key={i} onClick={() => { onApplyPrice(it.amount); if (onApplyArea && it.area) onApplyArea(areaToBucket(it.area)); onClose(); }} style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 8, alignItems: "center", width: "100%", padding: "10px 14px", border: "none", borderBottom: i < realList.length - 1 ? "1px solid #F3F4F6" : "none", background: "#fff", cursor: "pointer", fontFamily: "inherit", textAlign: "left" }} onMouseEnter={e => e.currentTarget.style.background = "#eff6ff"} onMouseLeave={e => e.currentTarget.style.background = "#fff"}>
-                      <div>
-                        <div style={{ fontSize: 13, fontWeight: 700, color: "#0a1628" }}>{it.apt} <span style={{ fontWeight: 400, color: "#6b778c", fontSize: 11 }}>{it.dong} {it.jibun}</span></div>
-                        <div style={{ fontSize: 11, color: "#6b778c", marginTop: 2 }}>{it.floor}층 · {it.area}㎡ · {it.year}.{String(it.month).padStart(2, "0")}.{String(it.day).padStart(2, "0")}</div>
-                      </div>
-                      <div style={{ fontSize: 14, fontWeight: 800, color: "#0141f9", fontVariantNumeric: "tabular-nums" }}>₩{Number(it.amount).toLocaleString("ko-KR")}</div>
-                    </button>
-                  ))}
+          return (
+            <div>
+              {/* 세법 안내 문구 */}
+              <div style={{ padding: "12px 14px", background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 10, marginBottom: 14 }}>
+                <div style={{ fontSize: 12, fontWeight: 800, color: "#1e40af", marginBottom: 4 }}>📌 취득세 과세표준 선택 안내</div>
+                <div style={{ fontSize: 11.5, color: "#1e3a8a", lineHeight: 1.65 }}>
+                  취득세는 <b>실거래가와 공시가격 중 높은 금액</b>이 과세표준입니다. 아래에서 확인 후 입력하세요.
                 </div>
               </div>
-            )}
 
-            {/* 권장 플로우 안내 */}
-            <div style={{ padding: "10px 12px", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 8, fontSize: 11.5, color: "#166534", lineHeight: 1.65, marginTop: 12 }}>
-              💡 <b>권장 순서</b>: 공시가격 먼저 <b>시가표준액 입력</b> → 실거래가 클릭으로 <b>취득가액 입력</b> → 두 값 모두 입력 시 과세표준 계산 정확도가 높아집니다.
-            </div>
+              {lookupErr && <div style={{ padding: "10px 14px", background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 8, fontSize: 12, color: "#1e40af", lineHeight: 1.5, marginBottom: 12 }}>{lookupErr}</div>}
+              {stdSkipped && !stdInfo && (
+                <div style={{ padding: "10px 14px", background: "#fff8e1", border: "1px solid #ffe082", borderRadius: 8, fontSize: 12, color: "#8a5a00", lineHeight: 1.5, marginBottom: 12 }}>
+                  공시가격은 동/호가 모두 입력되어야 조회됩니다. <button onClick={() => setStage(2)} style={{ background: "none", border: "none", color: "#0141f9", fontWeight: 700, textDecoration: "underline", cursor: "pointer", padding: 0, fontFamily: "inherit", fontSize: 12 }}>동/호 입력하기 →</button>
+                </div>
+              )}
 
-            <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
-              <button onClick={() => setStage(2)} style={{ padding: "12px 18px", background: "#f4f5f7", color: "#505f79", border: "1.5px solid #E5E7EB", borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>이전</button>
-              <button onClick={() => { setStage(1); setPicked(null); setResults(null); setKeyword(""); setRealList([]); setStdInfo(null); setStdApplied(false); }} style={{ padding: "12px 18px", background: "#f4f5f7", color: "#505f79", border: "1.5px solid #E5E7EB", borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", flex: 1 }}>다른 주소 검색</button>
+              {/* 비교 결과 (둘 다 있을 때) */}
+              {hasBoth && realIsHigher && (<>{realCard(true)}{stdCard(false)}</>)}
+              {hasBoth && !realIsHigher && (<>{stdCard(true)}{realCard(false)}</>)}
+
+              {/* 한쪽만 있을 때 */}
+              {!hasBoth && primaryReal && realCard(true)}
+              {!hasBoth && stdInfo && stdCard(true)}
+
+              {/* 실거래가 추가 (최근 1건 외 나머지) */}
+              {realList.length > 1 && (
+                <div style={{ marginBottom: 12 }}>
+                  <button onClick={() => setShowMoreReal(v => !v)} style={{ width: "100%", padding: "10px 14px", background: "#f4f5f7", color: "#505f79", border: "1px solid #E5E7EB", borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", textAlign: "left" }}>
+                    {showMoreReal ? "▾ 다른 실거래가 숨기기" : "▸ 다른 실거래가 " + (realList.length - 1) + "건 보기"}
+                  </button>
+                  {showMoreReal && (
+                    <div style={{ marginTop: 8, maxHeight: 260, overflowY: "auto", border: "1px solid #E5E7EB", borderRadius: 8 }}>
+                      {realList.slice(1).map((it, i, arr) => (
+                        <button key={i} onClick={() => applyReal(it)} style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 8, alignItems: "center", width: "100%", padding: "10px 14px", border: "none", borderBottom: i < arr.length - 1 ? "1px solid #F3F4F6" : "none", background: "#fff", cursor: "pointer", fontFamily: "inherit", textAlign: "left" }} onMouseEnter={e => e.currentTarget.style.background = "#eff6ff"} onMouseLeave={e => e.currentTarget.style.background = "#fff"}>
+                          <div>
+                            <div style={{ fontSize: 13, fontWeight: 700, color: "#0a1628" }}>{it.apt} <span style={{ fontWeight: 400, color: "#6b778c", fontSize: 11 }}>{it.dong} {it.jibun}</span></div>
+                            <div style={{ fontSize: 11, color: "#6b778c", marginTop: 2 }}>{it.floor}층 · {it.area}㎡ · {it.year}.{String(it.month).padStart(2, "0")}.{String(it.day).padStart(2, "0")}</div>
+                          </div>
+                          <div style={{ fontSize: 14, fontWeight: 800, color: "#0141f9", fontVariantNumeric: "tabular-nums" }}>{formatKRW(it.amount)}</div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
+                <button onClick={() => setStage(2)} style={{ padding: "12px 18px", background: "#f4f5f7", color: "#505f79", border: "1.5px solid #E5E7EB", borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>이전</button>
+                <button onClick={() => { setStage(1); setPicked(null); setResults(null); setKeyword(""); setRealList([]); setStdInfo(null); setStdApplied(false); setShowMoreReal(false); }} style={{ padding: "12px 18px", background: "#f4f5f7", color: "#505f79", border: "1.5px solid #E5E7EB", borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", flex: 1 }}>다른 주소 검색</button>
+              </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
       </div>
     </div>
   );
