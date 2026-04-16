@@ -28,7 +28,7 @@ export default function AdminDashboard({ token, session, onLogout }) {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState(null);
-  const authFetch = (path, opts = {}) => fetch(API + path, { ...opts, headers: { "Content-Type": "application/json", Authorization: "Bearer " + token, ...(opts.headers || {}) } });
+  const authFetch = (path, opts = {}) => fetch(API + path, { ...opts, credentials: "include", headers: { "Content-Type": "application/json", Authorization: "Bearer " + token, ...(opts.headers || {}) } });
   const loadStats = async () => { setLoading(true); setErr(null); try { const r = await authFetch("/api/admin/stats"); const j = await r.json().catch(() => ({})); if (r.ok && j.ok) setStats(j); else if (r.status === 401) { onLogout(); return; } else setErr(j.error || "Load failed"); } catch { setErr("Network error"); } finally { setLoading(false); } };
   useEffect(() => { loadStats(); }, []);
   const doLogout = async () => { try { await authFetch("/api/admin/logout", { method: "POST" }); } catch {} localStorage.removeItem("lc_admin_token"); onLogout(); };
