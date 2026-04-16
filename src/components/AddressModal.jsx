@@ -58,6 +58,7 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
   const [showMoreReal, setShowMoreReal] = useState(false);
   const [selectedRealIdx, setSelectedRealIdx] = useState(0);
   const [buyYear, setBuyYear] = useState("");
+  const [hasHoNum, setHasHoNum] = useState(false);
 
   const doSearch = async () => {
     if (!keyword.trim()) { setSearchErr("주소를 입력하세요"); return; }
@@ -225,17 +226,30 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
               <div style={{ fontSize: 13, fontWeight: 700, color: "#0a1628" }}>{picked.bdNm || "(건물명 없음)"}</div>
               <div style={{ fontSize: 12, color: "#374151", marginTop: 2 }}>{picked.roadAddr}</div>
             </div>
-            {(buildingType||"apt")!=="house"&&(buildingType||"apt")!=="land"&&<div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 10 }}>
-              <div>
-                <label style={labelSt}>동</label>
-                <input type="text" value={dongNm} onChange={e => setDongNm(e.target.value)} placeholder="예: 101" style={inpSt} />
-              </div>
-              <div>
-                <label style={labelSt}>호</label>
-                <input type="text" value={hoNm} onChange={e => setHoNm(e.target.value)} placeholder="예: 1205" style={inpSt} />
-              </div>
-            </div>}
-            {((buildingType||"apt")==="house"||(buildingType||"apt")==="land")&&<div style={{fontSize:12,color:"#6b778c",marginBottom:10,padding:"10px 12px",background:"#f8f9fc",borderRadius:8}}>단독주택/토지는 동·호 입력 없이 바로 조회합니다.</div>}
+            {(() => {
+              const bt = buildingType || "apt";
+              const showDongHo = bt === "apt" || bt === "officetel" || bt === "villa" || (bt === "commercial" && hasHoNum);
+              return (<>
+                {bt === "commercial" && (
+                  <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "#374151", marginBottom: 10, cursor: "pointer" }}>
+                    <input type="checkbox" checked={hasHoNum} onChange={e => setHasHoNum(e.target.checked)} style={{ width: 18, height: 18 }} />
+                    호실 번호가 있는 집합건물입니다 (상가, 오피스 등)
+                  </label>
+                )}
+                {showDongHo && <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 10 }}>
+                  <div>
+                    <label style={labelSt}>동</label>
+                    <input type="text" value={dongNm} onChange={e => setDongNm(e.target.value)} placeholder="예: 101" style={inpSt} />
+                  </div>
+                  <div>
+                    <label style={labelSt}>호</label>
+                    <input type="text" value={hoNm} onChange={e => setHoNm(e.target.value)} placeholder="예: 1205" style={inpSt} />
+                  </div>
+                </div>}
+                {(bt === "house" || bt === "land") && <div style={{ fontSize: 12, color: "#6b778c", marginBottom: 10, padding: "10px 12px", background: "#f8f9fc", borderRadius: 8 }}>단독주택/토지는 동·호 입력 없이 바로 조회합니다.</div>}
+                {bt === "commercial" && !hasHoNum && <div style={{ fontSize: 12, color: "#6b778c", marginBottom: 10, padding: "10px 12px", background: "#f8f9fc", borderRadius: 8 }}>토지 공시지가 기준으로 조회합니다.</div>}
+              </>);
+            })()}
             {mode === "transfer" && (
               <div style={{ marginBottom: 10 }}>
                 <label style={labelSt}>취득연도 (과거 거래 조회 시 입력)</label>
