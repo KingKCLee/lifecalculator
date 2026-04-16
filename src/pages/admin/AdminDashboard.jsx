@@ -33,9 +33,16 @@ export default function AdminDashboard({ token, session, onLogout }) {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState(null);
+  const [myIp, setMyIp] = useState("");
+  const [excludeAdminIp, setExcludeAdminIp] = useState(false);
   const authFetch = (path, opts = {}) => fetch(API + path, { ...opts, credentials: "include", headers: { "Content-Type": "application/json", Authorization: "Bearer " + token, ...(opts.headers || {}) } });
   const loadStats = async () => { setLoading(true); setErr(null); try { const r = await authFetch("/api/admin/stats"); const j = await r.json().catch(() => ({})); if (r.ok && j.ok) setStats(j); else if (r.status === 401) { onLogout(); return; } else setErr(j.error || "Load failed"); } catch { setErr("Network error"); } finally { setLoading(false); } };
-  useEffect(() => { loadStats(); }, []);
+  const toggleExclude = async () => { const next = !excludeAdminIp; setExcludeAdminIp(next); try { await authFetch("/api/admin/settings", { method: "POST", body: JSON.stringify({ excludeAdminIp: next }) }); loadStats(); } catch {} };
+  useEffect(() => {
+    loadStats();
+    authFetch("/api/admin/my-ip").then(r => r.json()).then(j => { if (j.ip) setMyIp(j.ip); }).catch(() => {});
+    authFetch("/api/admin/settings").then(r => r.json()).then(j => { if (typeof j.excludeAdminIp === "boolean") setExcludeAdminIp(j.excludeAdminIp); }).catch(() => {});
+  }, []);
   const doLogout = async () => { try { await authFetch("/api/admin/logout", { method: "POST" }); } catch {} localStorage.removeItem("lc_admin_token"); onLogout(); };
   const now = new Date();
   const dateStr = now.getFullYear() + "." + String(now.getMonth() + 1).padStart(2, "0") + "." + String(now.getDate()).padStart(2, "0");
@@ -61,6 +68,16 @@ export default function AdminDashboard({ token, session, onLogout }) {
         <h1 style={{ fontSize: 22, fontWeight: 800, color: "#0a1628", margin: 0 }}>{MENU.find(m => m.id === tab)?.label}</h1>
         <button onClick={loadStats} style={{ padding: "10px 20px", background: "#f1f5f9", color: "#0a1628", border: "1px solid #E5E7EB", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>{"\uC0C8\uB85C\uACE0\uCE68"}</button>
       </div>
+      {myIp && <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", background: "#f9fafb", borderRadius: 8, border: "1px solid #e5e7eb", marginBottom: 16, flexWrap: "wrap" }}>
+        <div style={{ fontSize: 13, color: "#6b7280" }}>내 IP:</div>
+        <div style={{ fontSize: 13, fontWeight: 600, color: "#0141f9", fontFamily: "monospace" }}>{myIp}</div>
+        <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 8 }}>
+          <span style={{ fontSize: 13, color: "#374151" }}>내 접속 통계 제외</span>
+          <div onClick={toggleExclude} style={{ width: 44, height: 24, borderRadius: 12, background: excludeAdminIp ? "#0141f9" : "#d1d5db", cursor: "pointer", position: "relative", transition: "background 0.2s" }}>
+            <div style={{ position: "absolute", top: 2, left: excludeAdminIp ? 22 : 2, width: 20, height: 20, borderRadius: "50%", background: "#fff", transition: "left 0.2s", boxShadow: "0 1px 3px rgba(0,0,0,.2)" }} />
+          </div>
+        </div>
+      </div>}
       {loading && <div style={{ textAlign: "center", padding: 60, color: "#6b778c" }}>{"\uB370\uC774\uD130 \uB85C\uB4DC \uC911..."}</div>}
       {err && <div style={{ padding: "14px 18px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10, color: "#dc2626", fontSize: 13, marginBottom: 20 }}>{err}</div>}
       {tab === "dashboard" && stats && <DashContent stats={stats} cardSt={cardSt} secSt={secSt} />}

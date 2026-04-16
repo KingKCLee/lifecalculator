@@ -6324,7 +6324,7 @@ button:active{transform:scale(0.98)}
 /* 2026.04.16 CalcAcq spec: 우측 RP sticky top 90 (PC) */
 @media(min-width:769px){.calc-container>div>div[style*="grid-template-columns"]>div:nth-child(2){position:sticky;top:90px;align-self:start}}
 /* 2026.04.16 sample-calc spec 정확 매칭: 2컬럼 60% 40% gap 28 (PC, 62개 공통 CSS) */
-@media(min-width:769px){.calc-container>div>div[style*="grid-template-columns"]{grid-template-columns:60% 40%!important;gap:28px!important;align-items:start!important}}
+@media(min-width:769px){.calc-container>div>div[style*="grid-template-columns"]{grid-template-columns:3fr 2fr!important;gap:28px!important;align-items:start!important}}
 /* 2026.04.15 sample-calc .form-card 적용 — 좌측 컬럼을 흰 카드로 감싸고, 외부 calc-container 카드 스타일 해제 (PC 전용) */
 @media(min-width:769px){.calc-container{background:transparent!important;border:none!important;padding:0!important;box-shadow:none!important;overflow:visible}}
 @media(min-width:769px){.calc-container>div>div[style*="grid-template-columns"]>div:first-child{background:#fff!important;border:1px solid #dfe1e6!important;border-radius:16px!important;padding:32px!important;min-width:0;box-shadow:0 1px 3px rgba(0,0,0,.04)}}
