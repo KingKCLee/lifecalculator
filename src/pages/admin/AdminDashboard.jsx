@@ -23,6 +23,7 @@ const MENU = [
   { id: "consult", label: "상담 신청", icon: "C" },
   { id: "newsletter", label: "뉴스레터", icon: "E" },
   { id: "members", label: "회원 관리", icon: "U" },
+  { id: "keywords", label: "검색 키워드", icon: "K" },
 ];
 
 export default function AdminDashboard({ token, session, onLogout }) {
@@ -68,6 +69,7 @@ export default function AdminDashboard({ token, session, onLogout }) {
       {tab === "consult" && <ConsultTab authFetch={authFetch} />}
       {tab === "newsletter" && <NewsletterTab authFetch={authFetch} />}
         {tab === "members" && <MembersTab authFetch={authFetch} />}
+        {tab === "keywords" && <KeywordsTab authFetch={authFetch} stats={stats} />}
     </main>
   </div>);
 }
@@ -409,5 +411,92 @@ function MembersTab({ authFetch }) {
         </div>
       )}
     </div>
+  </div>);
+}
+
+/* --- 키워드 탭 --- */
+function KeywordsTab({ authFetch, stats }) {
+  const [gscData, setGscData] = useState(null);
+  const [gscLoading, setGscLoading] = useState(false);
+  const [gscErr, setGscErr] = useState(null);
+  const [activeTab, setActiveTab] = useState("naver");
+
+  const loadGsc = async () => {
+    setGscLoading(true); setGscErr(null);
+    try {
+      const r = await authFetch("/api/admin/gsc-keywords");
+      const j = await r.json().catch(() => ({}));
+      if (j.ok) setGscData(j);
+      else setGscErr(j.error || j.note || "GSC 조회 실패");
+    } catch { setGscErr("네트워크 오류"); }
+    finally { setGscLoading(false); }
+  };
+
+  useEffect(() => { loadGsc(); }, []);
+
+  const naverKw = stats?.naverKeywords || [];
+  const secSt = { background: "#fff", borderRadius: 14, padding: "24px 28px", border: "1px solid #E5E7EB", marginBottom: 20 };
+
+  return (<div>
+    <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
+      {[{ id: "naver", l: "네이버 키워드" }, { id: "google", l: "구글 키워드 (GSC)" }].map(t => (
+        <button key={t.id} onClick={() => setActiveTab(t.id)} style={{ padding: "10px 20px", borderRadius: 8, border: activeTab === t.id ? "2px solid #0141f9" : "1px solid #E5E7EB", background: activeTab === t.id ? "#eff6ff" : "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", color: activeTab === t.id ? "#0141f9" : "#6b778c" }}>{t.l}</button>
+      ))}
+    </div>
+
+    {activeTab === "naver" && (
+      <div style={secSt}>
+        <div style={{ fontSize: 14, fontWeight: 800, color: "#0a1628", marginBottom: 16 }}>네이버 유입 키워드 TOP 10 (최근 7일)</div>
+        {naverKw.length === 0 ? <div style={{ color: "#94a3b8", fontSize: 13 }}>데이터 없음 (트래킹 시작 후 누적됩니다)</div> :
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+            <thead><tr style={{ borderBottom: "2px solid #E5E7EB" }}>
+              <th style={{ textAlign: "left", padding: "8px 0", color: "#6b778c", fontWeight: 600 }}>순위</th>
+              <th style={{ textAlign: "left", padding: "8px 0", color: "#6b778c", fontWeight: 600 }}>키워드</th>
+              <th style={{ textAlign: "right", padding: "8px 0", color: "#6b778c", fontWeight: 600 }}>방문수</th>
+            </tr></thead>
+            <tbody>{naverKw.map((kw, i) => (
+              <tr key={i} style={{ borderBottom: "1px solid #f4f5f7" }}>
+                <td style={{ padding: "8px 0", fontWeight: 700, color: i < 3 ? "#0141f9" : "#6b778c" }}>{i + 1}</td>
+                <td style={{ padding: "8px 0", color: "#0a1628" }}>{kw.keyword}</td>
+                <td style={{ padding: "8px 0", textAlign: "right", fontWeight: 700, color: "#0141f9" }}>{fNum(kw.cnt)}</td>
+              </tr>
+            ))}</tbody>
+          </table>
+        }
+      </div>
+    )}
+
+    {activeTab === "google" && (
+      <div style={secSt}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+          <div style={{ fontSize: 14, fontWeight: 800, color: "#0a1628" }}>구글 검색 키워드 TOP 20 (GSC)</div>
+          <button onClick={loadGsc} disabled={gscLoading} style={{ padding: "6px 14px", background: "#f1f5f9", border: "1px solid #E5E7EB", borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>{gscLoading ? "조회 중..." : "새로고침"}</button>
+        </div>
+        {gscErr && <div style={{ padding: "10px 14px", background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 8, fontSize: 12, color: "#1e40af", marginBottom: 12, lineHeight: 1.6 }}>{gscErr}</div>}
+        {gscData && gscData.keywords && gscData.keywords.length > 0 ? (
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+            <thead><tr style={{ borderBottom: "2px solid #E5E7EB" }}>
+              <th style={{ textAlign: "left", padding: "8px 4px", color: "#6b778c", fontWeight: 600 }}>#</th>
+              <th style={{ textAlign: "left", padding: "8px 4px", color: "#6b778c", fontWeight: 600 }}>키워드</th>
+              <th style={{ textAlign: "right", padding: "8px 4px", color: "#6b778c", fontWeight: 600 }}>클릭</th>
+              <th style={{ textAlign: "right", padding: "8px 4px", color: "#6b778c", fontWeight: 600 }}>노출</th>
+              <th style={{ textAlign: "right", padding: "8px 4px", color: "#6b778c", fontWeight: 600 }}>CTR</th>
+              <th style={{ textAlign: "right", padding: "8px 4px", color: "#6b778c", fontWeight: 600 }}>순위</th>
+            </tr></thead>
+            <tbody>{gscData.keywords.map((kw, i) => (
+              <tr key={i} style={{ borderBottom: "1px solid #f4f5f7" }}>
+                <td style={{ padding: "6px 4px", fontWeight: 700, color: i < 3 ? "#0141f9" : "#6b778c" }}>{i + 1}</td>
+                <td style={{ padding: "6px 4px", color: "#0a1628", maxWidth: 200, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{kw.query}</td>
+                <td style={{ padding: "6px 4px", textAlign: "right", fontWeight: 700, color: "#0141f9" }}>{fNum(kw.clicks)}</td>
+                <td style={{ padding: "6px 4px", textAlign: "right", color: "#6b778c" }}>{fNum(kw.impressions)}</td>
+                <td style={{ padding: "6px 4px", textAlign: "right", color: "#6b778c" }}>{kw.ctr}%</td>
+                <td style={{ padding: "6px 4px", textAlign: "right", color: "#6b778c" }}>{kw.position}</td>
+              </tr>
+            ))}</tbody>
+          </table>
+        ) : (!gscLoading && !gscErr && <div style={{ color: "#94a3b8", fontSize: 13 }}>GSC_SERVICE_ACCOUNT 환경변수를 등록하면 구글 키워드 데이터를 조회할 수 있습니다.</div>)}
+        {gscData?.period && <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 12 }}>기간: {gscData.period.start} ~ {gscData.period.end}</div>}
+      </div>
+    )}
   </div>);
 }
