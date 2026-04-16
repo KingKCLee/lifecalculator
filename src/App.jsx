@@ -1992,8 +1992,7 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
       alertType={!stdPrice?"warning":firstDed>0?"success":"danger"}
       items={[{l:"취득세액 ("+fP(r*100)+")",v:fW(ac)},{l:"지방교육세 ("+fP((isHeavy?0.4:r*100*0.1))+")",v:fW(ed)},{l:"농어촌특별세"+(fm>0?" (0.2%)":""),v:fm>0?fW(fm):"없음"},{l:"합계 납부세액",v:fW(total)}]}/>
     <SavingsGuide tips={_tips}/>
-    
-    {/* 2026.04.16 sample-calc 기준: 근처 실거래가 조회 버튼 제거 */}
+    <NextStep calcId="acquisition" onNav={onNav} isMo={isMo}/>
     </div>
   </div>);
 }
