@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "fix(AddressModal): replace all unicode escapes with UTF-8 chars, remove JUSO subtitle",
+      "desc": "fix(AddressModal): replace all unicode escapes with UTF-8 chars, remove JUSO subtitle"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "feat(AddressModal): full UX overhaul — 9 modifications (button, procedure, search, results, apt info card, errors, source)",
       "desc": "feat(AddressModal): full UX overhaul — 9 modifications (button, procedure, search, results, apt info card, errors, source)"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "fix(calc): 계산기 진입 시 완전 초기화 3종 보강",
       "desc": "fix(calc): 계산기 진입 시 완전 초기화 3종 보강"
-    },
-    {
-      "date": "2026.04.15",
-      "category": "세금",
-      "title": "feat(home): 히어로 배지 텍스트 확장 — 부동산·세금·대출·비용·생활",
-      "desc": "feat(home): 히어로 배지 텍스트 확장 — 부동산·세금·대출·비용·생활"
     }
   ],
   "rates": {
