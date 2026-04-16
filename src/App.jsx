@@ -4141,6 +4141,74 @@ function HomeSections({isMo, effectiveUser, navigateCalc, setAuthMode, setShowAu
   </div>);
 }
 
+
+function MarketDashboard({isMo}){
+  const[data,setData]=useState(null);const[loading,setLoading]=useState(true);
+  useEffect(()=>{
+    fetch(LC_REALESTATE_WORKER+"/api/market/dashboard",{cache:"no-store"})
+      .then(r=>r.json()).then(j=>{if(j.ok)setData(j);}).catch(()=>{}).finally(()=>setLoading(false));
+  },[]);
+  if(loading)return(<div style={{padding:40,textAlign:"center",color:"#9CA3AF",fontSize:13}}>시장동향 데이터 로딩 중...</div>);
+  if(!data)return null;
+  const s=data.summary||{};
+  const fIdx=v=>typeof v==="number"?v.toFixed(1):"—";
+  const fChg=v=>{if(!v||v===0)return"";const n=Number(v);return n>100?{c:"#dc2626",t:"상승"}:n<100?{c:"#16a34a",t:"하락"}:{c:"#6b7280",t:"보합"};};
+  const aptChg=fChg(s.aptPriceIndex);const jeonseChg=fChg(s.jeonseIndex);
+  const cards=[
+    {label:"아파트 매매지수",value:fIdx(s.aptPriceIndex),sub:aptChg.t||"—",subC:aptChg.c||"#6b7280"},
+    {label:"아파트 전세지수",value:fIdx(s.jeonseIndex),sub:jeonseChg.t||"—",subC:jeonseChg.c||"#6b7280"},
+    {label:"매매 거래건수",value:s.tradeCount?s.tradeCount.toLocaleString():"—",sub:"전국 합계",subC:"#6b7280"},
+    {label:"경매 신청건수",value:s.auctionCount?s.auctionCount.toLocaleString():"—",sub:"전국 합계",subC:"#6b7280"},
+  ];
+  const regions=["서울","경기","인천","부산","대구","광주","대전","울산"];
+  const aptByRegion=regions.map(r=>{const found=(data.aptPriceIndex||[]).find(d=>(d.region||"").includes(r));return{region:r,value:found?found.value:null};});
+  const tradeByRegion=(data.tradeCount||[]).filter(r=>r.region1&&!r.region2).slice(0,10);
+  const jeonseByRegion=(data.jeonseAvg||[]).filter(r=>r.region1&&!r.region2).slice(0,10);
+  return(<div style={{marginBottom:40}}>
+    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16,flexWrap:"wrap",gap:8}}>
+      <h2 style={{fontSize:18,fontWeight:700,color:"#0a1628",margin:0}}>부동산 시장동향</h2>
+      <span style={{fontSize:12,color:"#9CA3AF"}}>{data.period?data.period.slice(0,4)+"."+data.period.slice(4)+"월 기준":""}  |  {data.source||""}</span>
+    </div>
+    <div style={{display:"grid",gridTemplateColumns:isMo?"repeat(2,1fr)":"repeat(4,1fr)",gap:12,marginBottom:24}}>
+      {cards.map((cd,i)=>(<div key={i} style={{background:"#f8fafc",borderRadius:12,padding:"16px 18px",border:"1px solid #e5e7eb"}}>
+        <div style={{fontSize:12,color:"#6b7280",marginBottom:6}}>{cd.label}</div>
+        <div style={{fontSize:isMo?22:28,fontWeight:800,color:"#0a1628",fontVariantNumeric:"tabular-nums"}}>{cd.value}</div>
+        <div style={{fontSize:12,color:cd.subC,fontWeight:600,marginTop:4}}>{cd.sub}</div>
+      </div>))}
+    </div>
+    <div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"2fr 1fr",gap:16}}>
+      <div style={{background:"#fff",border:"1px solid #e5e7eb",borderRadius:12,padding:"20px 22px"}}>
+        <h3 style={{fontSize:15,fontWeight:700,color:"#0a1628",margin:"0 0 16px"}}>지역별 매매가격지수 (기준=100)</h3>
+        <div style={{display:"flex",flexDirection:"column",gap:8}}>
+          {aptByRegion.map((r,i)=>{const v=r.value||100;const w=Math.max(0,Math.min(100,(v/110)*100));const isUp=v>100;return(<div key={i} style={{display:"flex",alignItems:"center",gap:10}}>
+            <span style={{width:40,fontSize:12,fontWeight:600,color:"#374151",textAlign:"right",flexShrink:0}}>{r.region}</span>
+            <div style={{flex:1,background:"#f1f5f9",borderRadius:4,height:20,overflow:"hidden"}}>
+              <div style={{width:w+"%",height:"100%",background:isUp?"#3b82f6":"#22c55e",borderRadius:4,transition:"width .5s"}}/>
+            </div>
+            <span style={{width:50,fontSize:12,fontWeight:700,color:isUp?"#1e40af":"#16a34a",textAlign:"right",flexShrink:0,fontVariantNumeric:"tabular-nums"}}>{v.toFixed(1)}</span>
+          </div>);})}
+        </div>
+      </div>
+      <div style={{display:"flex",flexDirection:"column",gap:16}}>
+        <div style={{background:"#fff",border:"1px solid #e5e7eb",borderRadius:12,padding:"16px 18px",flex:1}}>
+          <h3 style={{fontSize:14,fontWeight:700,color:"#0a1628",margin:"0 0 12px"}}>지역별 거래건수</h3>
+          {tradeByRegion.length>0?tradeByRegion.slice(0,6).map((r,i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:i<5?"1px solid #f3f4f6":"none",fontSize:13}}>
+            <span style={{color:"#374151"}}>{r.region1}</span>
+            <span style={{fontWeight:700,color:"#0a1628",fontVariantNumeric:"tabular-nums"}}>{r.tot.toLocaleString()}건</span>
+          </div>)):<div style={{fontSize:12,color:"#9CA3AF"}}>데이터 없음</div>}
+        </div>
+        <div style={{background:"#fff",border:"1px solid #e5e7eb",borderRadius:12,padding:"16px 18px",flex:1}}>
+          <h3 style={{fontSize:14,fontWeight:700,color:"#0a1628",margin:"0 0 12px"}}>지역별 평균 전세금</h3>
+          {jeonseByRegion.length>0?jeonseByRegion.slice(0,6).map((r,i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:i<5?"1px solid #f3f4f6":"none",fontSize:13}}>
+            <span style={{color:"#374151"}}>{r.region1}</span>
+            <span style={{fontWeight:700,color:"#0a1628",fontVariantNumeric:"tabular-nums"}}>{r.tot1?Math.round(r.tot1/10000).toLocaleString()+"만":r.tot.toLocaleString()+"건"}</span>
+          </div>)):<div style={{fontSize:12,color:"#9CA3AF"}}>데이터 없음</div>}
+        </div>
+      </div>
+    </div>
+  </div>);
+}
+
 function InfoHub({isMo,navigateHome}){
   const [newsCat,setNewsCat]=useState("all");
   const [news,setNews]=useState({l:true,d:[]});
@@ -4186,6 +4254,7 @@ function InfoHub({isMo,navigateHome}){
         <h1 style={{fontSize:isMo?24:32,fontWeight:800,color:"#0a1628",margin:"0 0 8px"}}>정보센터</h1>
         <p style={{fontSize:14,color:"#6B7280",margin:0}}>부동산 세금·정책·뉴스를 한 곳에서</p>
       </header>
+      <MarketDashboard isMo={isMo}/>
 
       <section style={{marginBottom:40}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12,flexWrap:"wrap",gap:8}}>
