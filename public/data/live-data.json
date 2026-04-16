@@ -1168,6 +1168,12 @@
   "updateLog": [
     {
       "date": "2026.04.16",
+      "category": "전체",
+      "title": "feat: 계산기별 주소조회 목적 명확화 + 안내문 차별화 (5 calcType: acquisition/holding/transfer/gift/vat)",
+      "desc": "feat: 계산기별 주소조회 목적 명확화 + 안내문 차별화 (5 calcType: acquisition/holding/transfer/gift/vat)"
+    },
+    {
+      "date": "2026.04.16",
       "category": "세금",
       "title": "fix: 전체 계산기 톤앤매너 취득세 기준 통일 (에러 빨간→파란, glow 추가)",
       "desc": "fix: 전체 계산기 톤앤매너 취득세 기준 통일 (에러 빨간→파란, glow 추가)"
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "feat(calc): sample-calc 정확 spec 5항목 추가 반영",
       "desc": "feat(calc): sample-calc 정확 spec 5항목 추가 반영"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "feat(calc): sample-calc 정확 수치 재매칭 4항목 (PC)",
-      "desc": "feat(calc): sample-calc 정확 수치 재매칭 4항목 (PC)"
     }
   ],
   "rates": {
