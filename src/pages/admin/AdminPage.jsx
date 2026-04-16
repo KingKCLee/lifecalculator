@@ -12,7 +12,7 @@ export default function AdminPage({ subPage }) {
   const verifySession = () => {
     const token = localStorage.getItem("lc_admin_token") || "";
     if (!token) { setChecking(false); return; }
-    fetch(API + "/api/admin/verify", { credentials: "include", headers: { Authorization: "Bearer " + token } })
+    fetch(API + "/api/admin/verify", { headers: { Authorization: "Bearer " + token } })
       .then(r => r.json())
       .then(j => {
         if (j.valid) setSession({ email: j.email, name: j.name, picture: j.picture });
@@ -34,7 +34,7 @@ export default function AdminPage({ subPage }) {
         window.history.replaceState(null, "", "/admin");
         return;
       }
-      fetch(API + "/api/admin/callback?code=" + encodeURIComponent(code) + "&state=" + encodeURIComponent(state || ""), { credentials: "include" })
+      fetch(API + "/api/admin/callback?code=" + encodeURIComponent(code) + "&state=" + encodeURIComponent(state || ""))
         .then(r => r.json())
         .then(j => {
           if (j.ok && j.token) {

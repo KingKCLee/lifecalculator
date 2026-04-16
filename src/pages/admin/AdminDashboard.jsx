@@ -16,11 +16,11 @@ function DonutChart({ data, size = 160 }) {
 }
 
 const MENU = [
-  { id: "dashboard", label: "\uB300\uC2DC\uBCF4\uB4DC", icon: "\uD83D\uDCCA" },
-  { id: "ads", label: "\uAD11\uACE0 \uAD00\uB9AC", icon: "\uD83D\uDCE2" },
-  { id: "notice", label: "\uACF5\uC9C0\uC0AC\uD56D", icon: "\uD83D\uDCCC" },
-  { id: "consult", label: "\uC0C1\uB2F4 \uC2E0\uCCAD", icon: "\uD83D\uDCAC" },
-  { id: "newsletter", label: "\uB274\uC2A4\uB808\uD130", icon: "\uD83D\uDCE7" },
+  { id: "dashboard", label: "대시보드", icon: "D" },
+  { id: "ads", label: "광고 관리", icon: "A" },
+  { id: "notice", label: "공지사항", icon: "N" },
+  { id: "consult", label: "상담 신청", icon: "C" },
+  { id: "newsletter", label: "뉴스레터", icon: "E" },
 ];
 
 export default function AdminDashboard({ token, session, onLogout }) {
