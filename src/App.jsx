@@ -4357,7 +4357,7 @@ function AuthModal({mode,setMode,onClose,isMo,onAuthSuccess}){
     if(mode==="signup"&&!agreeAll){alert("서비스 이용을 위해 전체 동의가 필요합니다.");return;}
     try{
       if(provider==="구글"){
-        window.location.href=LC_API+"/auth/google";
+        window.location.href=LC_REALESTATE_WORKER+"/auth/google";
       } else if(provider==="네이버"){
         alert("네이버 로그인은 심사 진행 중입니다. 구글 로그인을 이용해주세요.");
       }
@@ -5923,7 +5923,16 @@ export default function App(){
   useEffect(()=>{
     if(hash==="mypage"){setPage("mypage");return;}
     if(hash==="info"){setPage("info");return;}
-    if(hash==="auth/callback"){return;}
+    if(hash==="auth/callback"){
+      const params=new URLSearchParams(window.location.search);
+      const code=params.get("code"),state=params.get("state"),err=params.get("error");
+      if(err||!code){window.history.replaceState(null,"","/");setPage("home");return;}
+      fetch(LC_REALESTATE_WORKER+"/auth/callback?code="+encodeURIComponent(code)+"&state="+encodeURIComponent(state||""))
+        .then(r=>r.json()).then(j=>{
+          if(j.ok&&j.token){try{localStorage.setItem("lc_token",j.token);localStorage.setItem("lc_email",j.email||"");}catch{}setLcToken(j.token);setLcEmail(j.email||"");}
+        }).catch(()=>{}).finally(()=>{window.history.replaceState(null,"","/");setPage("home");});
+      return;
+    }
     if(hash==="news"){setPage("news");return;}
     if(hash==="community"){setPage("community");return;}
     if(hash==="policy"){setPage("policy");return;}
@@ -5977,14 +5986,14 @@ export default function App(){
   const[noticeBanner,setNoticeBanner]=useState(null);
   const[noticeDismissed,setNoticeDismissed]=useState(()=>sessionStorage.getItem("lc_notice_dismissed")==="1");
   useEffect(()=>{
-    fetch(LC_API+"/api/admin/notice").then(r=>r.json()).then(j=>{if(j&&j.enabled)setNoticeBanner(j);}).catch(()=>{});
+    fetch(LC_REALESTATE_WORKER+"/api/admin/notice").then(r=>r.json()).then(j=>{if(j&&j.enabled)setNoticeBanner(j);}).catch(()=>{});
   },[]);
   const dismissNotice=()=>{setNoticeDismissed(true);sessionStorage.setItem("lc_notice_dismissed","1");};
 
   /* ═══ 2026.04.16 STEP 3: AdSense 광고 슬롯 연동 ═══ */
   const[adSlots,setAdSlots]=useState(null);
   useEffect(()=>{
-    fetch(LC_API+"/api/admin/adsense").then(r=>r.json()).then(j=>{if(j)setAdSlots(j);}).catch(()=>{});
+    fetch(LC_REALESTATE_WORKER+"/api/admin/adsense").then(r=>r.json()).then(j=>{if(j)setAdSlots(j);}).catch(()=>{});
   },[]);
 
   return(<div style={{minHeight:"100vh",background:"#F5F6F8",fontFamily:"'Pretendard','Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif",width:"100%",maxWidth:"100vw",overflowX:"hidden",paddingTop:64,color:"#1A1A2E",fontSize:14,lineHeight:1.7}}>
