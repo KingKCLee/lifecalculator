@@ -6215,7 +6215,7 @@ button:active{transform:scale(0.98)}
 /* 2026.04.15 sample-calc: 입력 폼 끝 구분선 (PC 전용) — RateTable 위에 1개 divider */
 @media(min-width:769px){.calc-container .lc-ratetable{margin-top:28px!important;padding:0!important;border-radius:12px;border:1px solid #dfe1e6!important;overflow:hidden!important;background:#fff}}
 .calc-container>div>div[style*="grid-template-columns"]>.lc-ratetable{grid-column:1!important}
-.calc-container>div>div[style*="grid-template-columns"]>.lc-nextstep{grid-column:1!important}
+.calc-container>div>div[style*="grid-template-columns"]>.lc-nextstep{grid-column:2!important}
 @media(min-width:769px){.calc-container .lc-ratetable+.lc-ratetable{margin-top:20px!important}}
 /* 2026.04.16 sample-calc: 페이지 바탕 #f8f9fc (PC 전용, 계산기 페이지) */
 @media(min-width:769px){body:has(.calc-container){background:#f8f9fc}.calc-grid.page-layout{background:#f8f9fc}}
