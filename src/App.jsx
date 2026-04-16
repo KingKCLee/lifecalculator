@@ -5866,6 +5866,7 @@ export default function App(){
     setAuthLoading(false);
   },[]);
   const[page,setPage]=useState("home");
+  const[heroIdx,setHeroIdx]=useState(0);const[heroVisible,setHeroVisible]=useState(true);
   const[cat,setCat]=useState("tax");const[calc,setCalc]=useState("acquisition");const[eduTab,setEduTab]=useState("rates");
   const[search,setSearch]=useState("");
   const[modal,setModal]=useState(null);
@@ -6093,6 +6094,7 @@ export default function App(){
   };
   const hCat=c=>{const f=CL.find(x=>x.c===c);if(f)navigateCalc(c,f.id);};
   const goCalc=(cId)=>{const info=CL.find(c=>c.id===cId);if(info)navigateCalc(info.c,info.id);};
+  useEffect(()=>{const t=setInterval(()=>{setHeroVisible(false);setTimeout(()=>{setHeroIdx(i=>(i+1)%4);setHeroVisible(true);},500);},4000);return()=>clearInterval(t);},[]);
   const hash=usePathRoute();
   useEffect(()=>{
     if(hash==="mypage"){setPage("mypage");return;}
@@ -6423,7 +6425,7 @@ body.lc-embed main{padding-top:0!important}
             대한민국 NO.1 세금·부동산·재테크 계산기
           </span>
           <h1 style={{fontSize:52,fontWeight:800,color:"#0a1628",lineHeight:1.18,letterSpacing:-1.5,margin:"0 0 20px"}}>복잡한 세법·대출 규제,<br/><span style={{color:"#3b82f6"}}>10초 만에</span> 완벽 계산</h1>
-          <p style={{fontSize:17,color:"#505f79",margin:"0 0 36px",lineHeight:1.7}}>취득세, 양도소득세, 연말정산, 대출이자, 실수령액까지<br/>62가지 전문 계산기를 2026년 최신 세법 기준으로 무료 제공합니다.</p>
+          {(()=>{const _ht=[{l1:"취득세·양도세·DSR·연말정산까지",l2:"62가지 계산기를 2026년 최신 세법으로 무료 제공합니다"},{l1:"아파트 살 때 세금이 얼마인지 몰라 불안하셨나요?",l2:"주소만 입력하면 실거래가·공시가격이 자동으로 계산됩니다"},{l1:"DSR·LTV·대출한도, 내가 얼마나 빌릴 수 있을까요?",l2:"복잡한 대출 규제를 10초 만에 정확하게 계산해드립니다"},{l1:"임대수익률·투자수익·절세 전략까지",l2:"재테크 의사결정을 숫자로 명확하게 확인하세요"}];return(<><div style={{opacity:heroVisible?1:0,transition:"opacity 0.5s ease",minHeight:56,margin:"0 0 24px"}}><p style={{fontSize:17,color:"#505f79",margin:"0 0 6px",lineHeight:1.7}}>{_ht[heroIdx].l1}</p><p style={{fontSize:17,color:"#505f79",margin:0,lineHeight:1.7}}>{_ht[heroIdx].l2}</p></div><div style={{display:"flex",justifyContent:"center",gap:6,marginBottom:24}}>{_ht.map((_,i)=>(<div key={i} onClick={()=>{setHeroIdx(i);setHeroVisible(true);}} style={{width:i===heroIdx?20:6,height:6,borderRadius:3,background:i===heroIdx?"#3b82f6":"#c1c7cd",transition:"all 0.3s",cursor:"pointer"}}/>))}</div></>);})()}
           {/* 2026.04.15 sample-home 검색바 (precise spec) */}
           <style>{`.lc-hero-search input::placeholder{color:#9ca3af}.lc-hero-search-btn:hover{background:#0747A6!important}`}</style>
           <form className="lc-hero-search" onSubmit={e=>{e.preventDefault();const q=(e.target.q.value||"").trim();if(!q){navigateCalc("tax","acquisition");return;}const hit=CL.find(c=>c.l.includes(q)||q.includes(c.l))||CL.find(c=>(DESC[c.id]||"").includes(q));if(hit)navigateCalc(hit.c,hit.id);else window.location.href="/terms/search.html?q="+encodeURIComponent(q);}} style={{display:"flex",alignItems:"center",background:"#fff",border:"1.5px solid #dfe1e6",borderRadius:14,padding:8,boxShadow:"0 4px 16px rgba(10,22,40,0.06)",maxWidth:680,margin:"0 auto"}}>
