@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "feat(report): pro tax invoice design for PDF/Image export (navy header, main card, styled table)",
+      "desc": "feat(report): pro tax invoice design for PDF/Image export (navy header, main card, styled table)"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "feat(AddressModal): compare real vs std, 과세표준 badge on higher, collapsible extra trades",
       "desc": "feat(AddressModal): compare real vs std, 과세표준 badge on higher, collapsible extra trades"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "fix: 커스텀 레이블 div + Inp label 중복 일괄 제거",
       "desc": "fix: 커스텀 레이블 div + Inp label 중복 일괄 제거"
-    },
-    {
-      "date": "2026.04.15",
-      "category": "전체",
-      "title": "style: 중복 라벨 커스텀 헬퍼 div 강조 스타일 통일",
-      "desc": "style: 중복 라벨 커스텀 헬퍼 div 강조 스타일 통일"
     }
   ],
   "rates": {
