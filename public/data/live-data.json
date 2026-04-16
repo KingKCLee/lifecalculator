@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "fix: 어드민 API fetch에 credentials: include 추가",
+      "desc": "fix: 어드민 API fetch에 credentials: include 추가"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "fix: H2 계산기 수 39가지 → 62가지 수정",
       "desc": "fix: H2 계산기 수 39가지 → 62가지 수정"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "feat: 계산기별 부제목 CALC_SUBTITLE 매핑",
       "desc": "feat: 계산기별 부제목 CALC_SUBTITLE 매핑"
-    },
-    {
-      "date": "2026.04.15",
-      "category": "전체",
-      "title": "feat: 드롭다운 안내 텍스트 깜빡임 애니메이션",
-      "desc": "feat: 드롭다운 안내 텍스트 깜빡임 애니메이션"
     }
   ],
   "rates": {
