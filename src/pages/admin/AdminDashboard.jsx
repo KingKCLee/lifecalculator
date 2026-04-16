@@ -164,3 +164,126 @@ function NewsletterTab({ authFetch }) {
     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}><div style={{ fontSize: 14, fontWeight: 700 }}>{"\uB274\uC2A4\uB808\uD130 \uAD6C\uB3C5\uC790"}</div><div style={{ padding: "6px 14px", background: "#eff6ff", borderRadius: 8, fontSize: 13, fontWeight: 700, color: "#0141f9" }}>{"\uCD1D "}{fNum(subs.length)}{"\uBA85"}</div></div>
     {loading ? <div style={{ color: "#6b778c", padding: 20 }}>{"\uB85C\uB4DC \uC911..."}</div> : subs.length === 0 ? <div style={{ padding: 40, textAlign: "center", color: "#9ca3af", fontSize: 13 }}>{"\uC544\uC9C1 \uAD6C\uB3C5\uC790\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4"}</div> : (<table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}><thead><tr style={{ borderBottom: "2px solid #E5E7EB" }}><th style={{ padding: "10px 12px", textAlign: "left", color: "#6b778c", fontWeight: 600 }}>#</th><th style={{ padding: "10px 12px", textAlign: "left", color: "#6b778c", fontWeight: 600 }}>{"\uC774\uBA54\uC77C"}</th><th style={{ padding: "10px 12px", textAlign: "left", color: "#6b778c", fontWeight: 600 }}>{"\uAC00\uC785\uC77C"}</th></tr></thead><tbody>{subs.map((s, i) => (<tr key={i} style={{ borderBottom: "1px solid #f4f5f7" }}><td style={{ padding: "10px 12px", color: "#6b778c" }}>{i + 1}</td><td style={{ padding: "10px 12px", fontWeight: 600 }}>{s.email}</td><td style={{ padding: "10px 12px", color: "#6b778c" }}>{s.created_at || "-"}</td></tr>))}</tbody></table>)}</div>);
 }
+
+function LawTab({ authFetch }) {
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [detail, setDetail] = useState(null);
+  const [acting, setActing] = useState(null);
+  const [msg, setMsg] = useState(null);
+  const [filter, setFilter] = useState("all");
+
+  const load = async () => {
+    setLoading(true);
+    try {
+      const r = await authFetch("/api/admin/law-pending");
+      const j = await r.json().catch(() => ({}));
+      if (j.ok) setItems(j.items || []);
+    } catch {}
+    finally { setLoading(false); }
+  };
+  useEffect(() => { load(); }, []);
+
+  const doAction = async (id, action) => {
+    setActing(id);
+    setMsg(null);
+    try {
+      const r = await authFetch("/api/admin/law-approve", {
+        method: "POST",
+        body: JSON.stringify({ pendingId: id, action })
+      });
+      const j = await r.json().catch(() => ({}));
+      if (j.ok) {
+        setMsg(action === "approve" ? "\uC2B9\uC778 \uC644\uB8CC" : "\uBB34\uC2DC \uCC98\uB9AC \uC644\uB8CC");
+        setDetail(null);
+        load();
+      } else {
+        setMsg(j.error || "\uCC98\uB9AC \uC2E4\uD328");
+      }
+    } catch { setMsg("\uB124\uD2B8\uC6CC\uD06C \uC624\uB958"); }
+    finally { setActing(null); }
+  };
+
+  const URGENCY = { high: { bg: "#fef2f2", bd: "#fecaca", tx: "#dc2626", label: "\uB192\uC74C" }, medium: { bg: "#fff8e1", bd: "#ffe082", tx: "#92400e", label: "\uC911\uAC04" }, low: { bg: "#f0fdf4", bd: "#86efac", tx: "#166534", label: "\uB0AE\uC74C" } };
+  const STATUS_STYLE = { pending: { bg: "#f59e0b", label: "\uB300\uAE30" }, approved: { bg: "#10b981", label: "\uC2B9\uC778" }, dismissed: { bg: "#6b778c", label: "\uBB34\uC2DC" } };
+
+  const filtered = filter === "all" ? items : items.filter(i => i.status === filter);
+
+  if (detail) {
+    const u = URGENCY[detail.analysis?.urgency] || URGENCY.medium;
+    return (<div>
+      <button onClick={() => setDetail(null)} style={{ padding: "8px 16px", background: "#f1f5f9", border: "1px solid #E5E7EB", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit", marginBottom: 16 }}>{"\u2190 \uBAA9\uB85D\uC73C\uB85C"}</button>
+      <div style={{ background: "#fff", borderRadius: 14, padding: "28px 32px", border: "1px solid #E5E7EB", marginBottom: 16 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+          <div style={{ fontSize: 16, fontWeight: 800, color: "#0a1628" }}>{"\uBCC0\uACBD \uC0C1\uC138"}</div>
+          <span style={{ padding: "4px 12px", borderRadius: 8, fontSize: 12, fontWeight: 700, background: u.bg, color: u.tx, border: "1px solid " + u.bd }}>{"\uAE34\uAE09\uB3C4: "}{u.label}</span>
+        </div>
+        <div style={{ fontSize: 13, color: "#374151", lineHeight: 1.7, marginBottom: 16 }}>{detail.analysis?.summary}</div>
+        <div style={{ fontSize: 12, color: "#6b778c", marginBottom: 20 }}>{"\uAC10\uC9C0\uC77C: "}{(detail.createdAt || "").slice(0, 10)}{detail.reviewedBy ? ` | \uCC98\uB9AC: ${detail.reviewedBy} (${(detail.reviewedAt || "").slice(0, 10)})` : ""}</div>
+
+        <div style={{ fontSize: 14, fontWeight: 700, color: "#0a1628", marginBottom: 10 }}>{"\uBCC0\uACBD \uB0B4\uC5ED"}</div>
+        {(detail.changes || []).map((c, i) => (<div key={i} style={{ padding: "12px 16px", background: "#f8f9fc", borderRadius: 10, border: "1px solid #E5E7EB", marginBottom: 8, fontSize: 13 }}>
+          <div style={{ fontWeight: 700, color: "#0a1628", marginBottom: 4 }}>{c.message}</div>
+          {c.affectedCalcs && <div style={{ fontSize: 12, color: "#6b778c" }}>{"\uC601\uD5A5 \uACC4\uC0B0\uAE30: "}{c.affectedCalcs.join(", ")}</div>}
+        </div>))}
+
+        {(detail.suggestedFixes || []).length > 0 && (<>
+          <div style={{ fontSize: 14, fontWeight: 700, color: "#0a1628", marginBottom: 10, marginTop: 20 }}>{"\uAD8C\uC7A5 \uC218\uC815\uC0AC\uD56D"}</div>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13, marginBottom: 16 }}>
+            <thead><tr style={{ borderBottom: "2px solid #E5E7EB" }}>
+              <th style={{ padding: "10px 12px", textAlign: "left", color: "#6b778c", fontWeight: 600 }}>{"\uACC4\uC0B0\uAE30"}</th>
+              <th style={{ padding: "10px 12px", textAlign: "left", color: "#6b778c", fontWeight: 600 }}>{"\uBCC0\uACBD \uB0B4\uC6A9"}</th>
+              <th style={{ padding: "10px 12px", textAlign: "center", color: "#6b778c", fontWeight: 600 }}>{"\uD604\uC7AC \uAC12"}</th>
+              <th style={{ padding: "10px 12px", textAlign: "center", color: "#6b778c", fontWeight: 600 }}>{"\uBCC0\uACBD \uAC12"}</th>
+            </tr></thead>
+            <tbody>{detail.suggestedFixes.map((f, i) => (<tr key={i} style={{ borderBottom: "1px solid #f4f5f7" }}>
+              <td style={{ padding: "10px 12px", fontWeight: 600 }}>{f.calculator}</td>
+              <td style={{ padding: "10px 12px" }}>{f.change}</td>
+              <td style={{ padding: "10px 12px", textAlign: "center", color: "#dc2626" }}>{f.currentValue}</td>
+              <td style={{ padding: "10px 12px", textAlign: "center", color: "#10b981", fontWeight: 700 }}>{f.newValue}</td>
+            </tr>))}</tbody>
+          </table>
+        </>)}
+
+        {detail.status === "pending" && (<div style={{ display: "flex", gap: 12, marginTop: 20 }}>
+          <button onClick={() => doAction(detail.id, "approve")} disabled={!!acting} style={{ padding: "12px 28px", background: "#0747A6", color: "#fff", border: "none", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>{acting === detail.id ? "\uCC98\uB9AC \uC911..." : "\uC2B9\uC778 (GitHub Issue \uC0DD\uC131)"}</button>
+          <button onClick={() => doAction(detail.id, "dismiss")} disabled={!!acting} style={{ padding: "12px 28px", background: "#f1f5f9", color: "#6b778c", border: "1px solid #E5E7EB", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>{"\uBB34\uC2DC"}</button>
+        </div>)}
+        {msg && <div style={{ marginTop: 12, fontSize: 13, fontWeight: 600, color: msg.includes("\uC644\uB8CC") ? "#10b981" : "#ef4444" }}>{msg}</div>}
+      </div>
+    </div>);
+  }
+
+  return (<div>
+    <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+      {[{ id: "all", label: "\uC804\uCCB4" }, { id: "pending", label: "\uB300\uAE30" }, { id: "approved", label: "\uC2B9\uC778" }, { id: "dismissed", label: "\uBB34\uC2DC" }].map(f => (
+        <button key={f.id} onClick={() => setFilter(f.id)} style={{ padding: "8px 16px", borderRadius: 8, border: filter === f.id ? "2px solid #0141f9" : "1px solid #E5E7EB", background: filter === f.id ? "#eff6ff" : "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit", color: filter === f.id ? "#0141f9" : "#6b778c" }}>{f.label}{f.id !== "all" ? ` (${items.filter(i => i.status === f.id).length})` : ` (${items.length})`}</button>
+      ))}
+    </div>
+    <div style={{ background: "#fff", borderRadius: 14, padding: "24px 28px", border: "1px solid #E5E7EB" }}>
+      {loading ? <div style={{ color: "#6b778c", padding: 20 }}>{"\uB85C\uB4DC \uC911..."}</div> :
+        filtered.length === 0 ? <div style={{ padding: 40, textAlign: "center", color: "#9ca3af", fontSize: 13 }}>{"\uBC95\uB839 \uBCC0\uACBD \uAC10\uC9C0 \uC774\uB825\uC774 \uC5C6\uC2B5\uB2C8\uB2E4"}</div> :
+        (<table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+          <thead><tr style={{ borderBottom: "2px solid #E5E7EB" }}>
+            <th style={{ padding: "10px 12px", textAlign: "left", color: "#6b778c", fontWeight: 600 }}>{"\uB0A0\uC9DC"}</th>
+            <th style={{ padding: "10px 12px", textAlign: "left", color: "#6b778c", fontWeight: 600 }}>{"\uBCC0\uACBD \uC694\uC57D"}</th>
+            <th style={{ padding: "10px 12px", textAlign: "center", color: "#6b778c", fontWeight: 600 }}>{"\uAE34\uAE09\uB3C4"}</th>
+            <th style={{ padding: "10px 12px", textAlign: "center", color: "#6b778c", fontWeight: 600 }}>{"\uC0C1\uD0DC"}</th>
+            <th style={{ padding: "10px 12px", textAlign: "center", color: "#6b778c", fontWeight: 600 }}>{""}</th>
+          </tr></thead>
+          <tbody>{filtered.map((item, i) => {
+            const u = URGENCY[item.analysis?.urgency] || URGENCY.medium;
+            const s = STATUS_STYLE[item.status] || STATUS_STYLE.pending;
+            return (<tr key={item.id || i} style={{ borderBottom: "1px solid #f4f5f7" }}>
+              <td style={{ padding: "10px 12px", color: "#6b778c", fontSize: 12 }}>{(item.createdAt || "").slice(0, 10)}</td>
+              <td style={{ padding: "10px 12px", fontWeight: 600, maxWidth: 300, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.analysis?.summary || (item.changes || []).map(c => c.message).join(", ") || "-"}</td>
+              <td style={{ padding: "10px 12px", textAlign: "center" }}><span style={{ padding: "3px 10px", borderRadius: 6, fontSize: 11, fontWeight: 700, background: u.bg, color: u.tx, border: "1px solid " + u.bd }}>{u.label}</span></td>
+              <td style={{ padding: "10px 12px", textAlign: "center" }}><span style={{ padding: "3px 10px", borderRadius: 6, fontSize: 11, fontWeight: 700, color: "#fff", background: s.bg }}>{s.label}</span></td>
+              <td style={{ padding: "10px 12px", textAlign: "center" }}><button onClick={() => setDetail(item)} style={{ padding: "6px 14px", background: "#f1f5f9", border: "1px solid #E5E7EB", borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>{"\uC0C1\uC138"}</button></td>
+            </tr>);
+          })}</tbody>
+        </table>)}
+    </div>
+    {msg && <div style={{ marginTop: 12, fontSize: 13, fontWeight: 600, color: msg.includes("\uC644\uB8CC") ? "#10b981" : "#ef4444" }}>{msg}</div>}
+  </div>);
+}
