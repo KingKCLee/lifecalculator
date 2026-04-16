@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "feat(AddressModal): full UX overhaul — 9 modifications (button, procedure, search, results, apt info card, errors, source)",
+      "desc": "feat(AddressModal): full UX overhaul — 9 modifications (button, procedure, search, results, apt info card, errors, source)"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "feat(address-modal): 절차 설명·인라인 힌트·에러 메시지·출처 표기 개선",
       "desc": "feat(address-modal): 절차 설명·인라인 힌트·에러 메시지·출처 표기 개선"
     },
@@ -1460,12 +1466,6 @@
       "category": "세금",
       "title": "feat(home): 히어로 배지 텍스트 확장 — 부동산·세금·대출·비용·생활",
       "desc": "feat(home): 히어로 배지 텍스트 확장 — 부동산·세금·대출·비용·생활"
-    },
-    {
-      "date": "2026.04.15",
-      "category": "전체",
-      "title": "feat: Phase 2 정적 페이지 React 풀 포팅 (Terms/Learn×6/Law×7/About/Pricing/Verification/Guide)",
-      "desc": "feat: Phase 2 정적 페이지 React 풀 포팅 (Terms/Learn×6/Law×7/About/Pricing/Verification/Guide)"
     }
   ],
   "rates": {
