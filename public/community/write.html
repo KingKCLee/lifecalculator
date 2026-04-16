@@ -28,12 +28,13 @@ h1{font-size:26px;margin:0 0 20px;color:var(--pri);letter-spacing:-0.5px}
 .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--pri)}
 .field textarea{min-height:320px;resize:vertical;line-height:1.7;font-size:15px}
 .field .hint{font-size:11px;color:var(--mt);margin-top:4px}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .field-required::after{content:" *";color:#DE350B}
 .warn{padding:12px 16px;background:#FFF8E1;border:1px solid #FFE082;border-radius:10px;font-size:13px;color:#F57F17;margin-bottom:18px;line-height:1.7}
 .warn strong{color:#BF2600}
 .notice-box{padding:14px 18px;background:#eff6ff;border:1px solid #93c5fd;border-radius:10px;font-size:13px;color:#1e40af;margin-bottom:20px;line-height:1.7}
 .notice-box strong{color:var(--pri)}
+.user-info{padding:14px 18px;background:#f0fdf4;border:1px solid #86efac;border-radius:10px;font-size:13px;color:#166534;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.user-info .name{font-weight:700;font-size:14px}
 .actions{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap}
 .btn{padding:12px 24px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;border:none;transition:opacity .15s}
 .btn-primary{background:var(--pri);color:#fff;flex:1;min-width:120px}
@@ -51,7 +52,6 @@ h1{font-size:26px;margin:0 0 20px;color:var(--pri);letter-spacing:-0.5px}
   .wrap{padding:16px 12px 48px}
   h1{font-size:22px}
   .form{padding:18px}
-  .row2{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -67,8 +67,8 @@ h1{font-size:26px;margin:0 0 20px;color:var(--pri);letter-spacing:-0.5px}
 
   <h1>✏️ 글쓰기</h1>
 
-  <div class="notice-box">
-    ℹ️ <strong>D1 백엔드 연동 완료</strong>: 작성된 글은 Cloudflare D1 데이터베이스에 저장되며, 목록 페이지에 즉시 반영됩니다. 타인을 비방하거나 개인정보가 포함된 글은 삭제될 수 있습니다.
+  <div id="userInfo" class="user-info" style="display:none">
+    ✅ <span class="name" id="userName"></span>님으로 작성합니다
   </div>
 
   <div class="warn">
@@ -110,18 +110,6 @@ h1{font-size:26px;margin:0 0 20px;color:var(--pri);letter-spacing:-0.5px}
       <div class="hint"><span id="charCount">0</span> / 10,000자</div>
     </div>
 
-    <div class="row2">
-      <div class="field">
-        <label for="author" class="field-required">작성자</label>
-        <input type="text" id="author" name="author" maxlength="20" placeholder="닉네임" required>
-      </div>
-      <div class="field">
-        <label for="password" class="field-required">비밀번호</label>
-        <input type="password" id="password" name="password" maxlength="20" placeholder="수정·삭제용" required>
-        <div class="hint">4~20자 · 글 수정/삭제 시 필요</div>
-      </div>
-    </div>
-
     <div class="agree">
       <input type="checkbox" id="agree" name="agree" required>
       <label for="agree">
@@ -141,6 +129,32 @@ h1{font-size:26px;margin:0 0 20px;color:var(--pri);letter-spacing:-0.5px}
 </main>
 
 <script>
+const WORKER = 'https://lc-realestate-worker.noble-kclee.workers.dev';
+const lcToken = (function(){try{return localStorage.getItem('lc_token')||''}catch{return ''}})();
+const lcName = (function(){try{return localStorage.getItem('lc_name')||''}catch{return ''}})();
+let verifiedName = '';
+
+// 인증 체크
+(async function checkAuth(){
+  if(!lcToken){alert('로그인이 필요합니다.');location.href='/';return;}
+  try{
+    const r=await fetch(WORKER+'/auth/verify',{headers:{'Authorization':'Bearer '+lcToken}});
+    const j=await r.json().catch(()=>({}));
+    if(!j.valid){
+      try{localStorage.removeItem('lc_token');localStorage.removeItem('lc_email');localStorage.removeItem('lc_name');}catch{}
+      alert('로그인 세션이 만료되었습니다. 다시 로그인해주세요.');
+      location.href='/';
+      return;
+    }
+    verifiedName=j.name||lcName||j.email.split('@')[0];
+    document.getElementById('userName').textContent=verifiedName;
+    document.getElementById('userInfo').style.display='flex';
+  }catch{
+    alert('인증 서버에 연결할 수 없습니다.');
+    location.href='/';
+  }
+})();
+
 // 본문 글자 수 카운터
 const content = document.getElementById('content');
 const charCount = document.getElementById('charCount');
@@ -152,7 +166,7 @@ content.addEventListener('input', () => {
   }
 });
 
-// 툴바 (간단한 마크다운 삽입)
+// 툴바
 document.querySelectorAll('.toolbar button').forEach(btn => {
   btn.addEventListener('click', () => {
     const act = btn.dataset.act;
@@ -182,44 +196,41 @@ document.getElementById('cancelBtn').addEventListener('click', () => {
   }
 });
 
-// lc-auth-worker POST /posts 연동 — Cloudflare D1
-const POSTS_ENDPOINT = 'https://lc-auth-worker.noble-kclee.workers.dev/posts';
+// 등록
 const CAT_MAP = {tax:'세금', loan:'대출', market:'시장', qna:'질문', free:'자유'};
 
 document.getElementById('writeForm').addEventListener('submit', async e => {
   e.preventDefault();
   const f = e.target;
   const submitBtn = f.querySelector('.btn-primary');
-  if(!f.category.value || !f.title.value.trim() || !f.content.value.trim() || !f.author.value.trim() || !f.password.value || !f.agree.checked){
+  if(!f.category.value || !f.title.value.trim() || !f.content.value.trim() || !f.agree.checked){
     alert('모든 필수 항목을 입력하고 이용 규칙에 동의해주세요.');
-    return;
-  }
-  if(f.password.value.length < 4){
-    alert('비밀번호는 4자 이상이어야 합니다.');
     return;
   }
   const originalText = submitBtn.textContent;
   submitBtn.disabled = true;
   submitBtn.textContent = '등록 중...';
   try {
-    const res = await fetch(POSTS_ENDPOINT, {
+    const res = await fetch(WORKER+'/api/posts', {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + lcToken
+      },
       body: JSON.stringify({
         title: f.title.value.trim(),
         content: f.content.value.trim(),
-        category: CAT_MAP[f.category.value] || f.category.value,
-        author: f.author.value.trim()
+        category: CAT_MAP[f.category.value] || f.category.value
       })
     });
     const data = await res.json().catch(() => ({}));
     if(!res.ok){
       throw new Error(data.error || ('HTTP ' + res.status));
     }
-    alert('✅ 게시글이 등록되었습니다.\n\n글번호: ' + (data.id || '-') + '\n\n목록으로 이동합니다.');
+    alert('✅ 게시글이 등록되었습니다.\n\n목록으로 이동합니다.');
     location.href = '/community/';
   } catch(err) {
-    alert('❌ 게시글 등록 실패: ' + (err.message || err) + '\n\n잠시 후 다시 시도하거나 운영자에게 문의해주세요.');
+    alert('❌ 게시글 등록 실패: ' + (err.message || err));
     submitBtn.disabled = false;
     submitBtn.textContent = originalText;
   }

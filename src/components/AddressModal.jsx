@@ -38,7 +38,9 @@ const bucketToRange = (b) => {
 
 const fKRW = (n) => "₩" + Number(n || 0).toLocaleString("ko-KR");
 
-export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onApplyArea, onApplyInfo, currentArea }) {
+// calcType: "acquisition"(기본, 실거래가+공시가격), "holding"(공시가격만), "transfer"(실거래가만)
+export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onApplyArea, onApplyInfo, currentArea, calcType }) {
+  const mode = calcType || (onApplyPrice && onApplyStd ? "acquisition" : onApplyStd ? "holding" : onApplyPrice ? "transfer" : "acquisition");
   const [stage, setStage] = useState(1);
   const [keyword, setKeyword] = useState("");
   const [searching, setSearching] = useState(false);
@@ -241,17 +243,24 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
           const tradeDate = sel ? sel.year + "." + String(sel.month).padStart(2, "0") : "";
 
           const applyBoth = () => {
-            if (sel) { onApplyPrice(sel.amount); if (onApplyArea && sel.area) onApplyArea(areaToBucket(sel.area)); }
-            if (stdInfo) onApplyStd(stdInfo.price);
+            if (mode !== "holding" && sel && onApplyPrice) { onApplyPrice(sel.amount); if (onApplyArea && sel.area) onApplyArea(areaToBucket(sel.area)); }
+            if (mode !== "transfer" && stdInfo && onApplyStd) onApplyStd(stdInfo.price);
             if (onApplyInfo) onApplyInfo({
               aptName: picked ? picked.bdNm : (sel ? sel.apt : ""),
               dongNm: dongNm || (stdInfo ? stdInfo.dong : ""),
               hoNm: hoNm || (stdInfo ? stdInfo.ho : ""),
-              tradePrice: rAmt, tradeDate,
-              publicPrice: sAmt, priceYear: stdInfo ? String(stdInfo.year) : ""
+              tradePrice: mode !== "holding" ? rAmt : 0, tradeDate: mode !== "holding" ? tradeDate : "",
+              publicPrice: mode !== "transfer" ? sAmt : 0, priceYear: stdInfo ? String(stdInfo.year) : ""
             });
             onClose();
           };
+
+          // 모드별 라벨
+          const guideTitle = mode === "holding" ? "▶ 보유세 공시가격 안내" : mode === "transfer" ? "▶ 양도소득세 실거래가 안내" : "▶ 취득세 과세표준 안내";
+          const guideBody = mode === "holding" ? "재산세·종부세는 공시가격을 기준으로 과세됩니다." : mode === "transfer" ? "양도가액(실거래가)을 선택해주세요." : <>실거래가와 공시가격 중 <b>높은 금액</b>이 과세표준입니다.<br />아래 버튼으로 두 값을 모두 입력하세요.</>;
+          const btnLabel = mode === "holding" ? "공시가격 입력하고 계산하기 →" : mode === "transfer" ? "실거래가 입력하고 계산하기 →" : (hasBoth ? "두 값 모두 입력하고 계산하기 →" : (sel ? "취득가액 입력하고 계산하기 →" : "시가표준액 입력하고 계산하기 →"));
+          const stdTarget = mode === "holding" ? "공시가격" : "시가표준액";
+          const realTarget = mode === "transfer" ? "양도가액" : "취득가액";
 
           const priceRow = (label, amount, detail, targetLabel, isHigher) => (
             <div style={{ padding: "14px 16px", borderBottom: "1px solid #E5E7EB", background: isHigher ? "#eff6ff" : "#fff" }}>
@@ -271,10 +280,8 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
           return (
             <div>
               <div style={{ padding: "12px 16px", background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 10, marginBottom: 14 }}>
-                <div style={{ fontSize: 12, fontWeight: 800, color: "#1e40af", marginBottom: 4 }}>▶ 취득세 과세표준 안내</div>
-                <div style={{ fontSize: 12, color: "#1e3a8a", lineHeight: 1.65 }}>
-                  실거래가와 공시가격 중 <b>높은 금액</b>이 과세표준입니다.<br />아래 버튼으로 두 값을 모두 입력하세요.
-                </div>
+                <div style={{ fontSize: 12, fontWeight: 800, color: "#1e40af", marginBottom: 4 }}>{guideTitle}</div>
+                <div style={{ fontSize: 12, color: "#1e3a8a", lineHeight: 1.65 }}>{guideBody}</div>
               </div>
 
               {lookupErr && <div style={{ padding: "10px 14px", background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 8, fontSize: 12, color: "#1e40af", lineHeight: 1.6, marginBottom: 12, whiteSpace: "pre-line" }}>{lookupErr}</div>}
@@ -286,13 +293,25 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
 
               {(sel || stdInfo) && (
                 <div style={{ border: "1.5px solid #0141f9", borderRadius: 12, overflow: "hidden", marginBottom: 14, boxShadow: "0 2px 8px rgba(1,65,249,.08)" }}>
-                  {hasBoth && rHigher && (<>{priceRow("실거래가", rAmt, realDetail, "취득가액", true)}{priceRow("공시가격 (" + (stdInfo.year || "") + "년)", sAmt, stdDetail, "시가표준액", false)}</>)}
-                  {hasBoth && !rHigher && (<>{priceRow("공시가격 (" + (stdInfo.year || "") + "년)", sAmt, stdDetail, "시가표준액", true)}{priceRow("실거래가", rAmt, realDetail, "취득가액", false)}</>)}
-                  {!hasBoth && sel && priceRow("실거래가", rAmt, realDetail, "취득가액", true)}
-                  {!hasBoth && stdInfo && priceRow("공시가격 (" + (stdInfo.year || "") + "년)", sAmt, stdDetail, "시가표준액", true)}
-                  <button onClick={applyBoth} style={{ display: "block", width: "100%", padding: "14px 16px", background: "#0141f9", color: "#fff", border: "none", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "inherit" }}>
-                    {hasBoth ? "두 값 모두 입력하고 계산하기 →" : (sel ? "취득가액 입력하고 계산하기 →" : "시가표준액 입력하고 계산하기 →")}
-                  </button>
+                  {mode === "holding" ? (<>
+                    {stdInfo && priceRow("공시가격 (" + (stdInfo.year || "") + "년)", sAmt, stdDetail, stdTarget, true)}
+                    {sel && <div style={{ padding: "12px 16px", background: "#f8f9fc", borderBottom: "1px solid #E5E7EB" }}>
+                      <div style={{ fontSize: 11, color: "#6b778c", marginBottom: 2 }}>참고: 최근 실거래가</div>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: "#374151" }}>{fKRW(rAmt)} <span style={{ fontSize: 11, fontWeight: 400, color: "#9ca3af" }}>{realDetail}</span></div>
+                    </div>}
+                  </>) : mode === "transfer" ? (<>
+                    {sel && priceRow("실거래가", rAmt, realDetail, realTarget, true)}
+                    {stdInfo && <div style={{ padding: "12px 16px", background: "#f8f9fc", borderBottom: "1px solid #E5E7EB" }}>
+                      <div style={{ fontSize: 11, color: "#6b778c", marginBottom: 2 }}>참고: 공시가격 ({stdInfo.year || ""}년)</div>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: "#374151" }}>{fKRW(sAmt)} <span style={{ fontSize: 11, fontWeight: 400, color: "#9ca3af" }}>{stdDetail}</span></div>
+                    </div>}
+                  </>) : (<>
+                    {hasBoth && rHigher && (<>{priceRow("실거래가", rAmt, realDetail, realTarget, true)}{priceRow("공시가격 (" + (stdInfo.year || "") + "년)", sAmt, stdDetail, stdTarget, false)}</>)}
+                    {hasBoth && !rHigher && (<>{priceRow("공시가격 (" + (stdInfo.year || "") + "년)", sAmt, stdDetail, stdTarget, true)}{priceRow("실거래가", rAmt, realDetail, realTarget, false)}</>)}
+                    {!hasBoth && sel && priceRow("실거래가", rAmt, realDetail, realTarget, true)}
+                    {!hasBoth && stdInfo && priceRow("공시가격 (" + (stdInfo.year || "") + "년)", sAmt, stdDetail, stdTarget, true)}
+                  </>)}
+                  <button onClick={applyBoth} style={{ display: "block", width: "100%", padding: "14px 16px", background: "#0141f9", color: "#fff", border: "none", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "inherit" }}>{btnLabel}</button>
                   <div style={{ padding: "8px 16px", background: "#f8f9fc", fontSize: 11, color: "#6b778c", textAlign: "center" }}>입력 후 직접 수정 가능</div>
                 </div>
               )}
