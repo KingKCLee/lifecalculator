@@ -65,6 +65,7 @@ export default function CalcBldVat({isMo=false, onNav=()=>{}}){
       <button type="button" onClick={()=>setShowLookup(true)} style={{width:"100%",padding:"12px 16px",background:"linear-gradient(135deg,#eff6ff,#dbeafe)",border:"1.5px solid #bfdbfe",borderRadius:10,fontSize:13,fontWeight:700,color:"#1e40af",cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>📍 주소로 실거래가·공시가격 자동입력</button>
     </div>}
     {showLookup&&<AddressModal
+      calcType="vat"
       onClose={()=>setShowLookup(false)}
       onApplyPrice={v=>{setPrice(String(Math.round(v/10000)));setAutoInfo(prev=>({...prev,tradeApplied:true}));}}
       onApplyStd={v=>{

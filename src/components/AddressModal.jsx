@@ -255,7 +255,9 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
           const tradeDate = sel ? sel.year + "." + String(sel.month).padStart(2, "0") : "";
 
           const applyBoth = () => {
+            // 실거래가 입력: holding 제외 모든 모드
             if (mode !== "holding" && sel && onApplyPrice) { onApplyPrice(sel.amount); if (onApplyArea && sel.area) onApplyArea(areaToBucket(sel.area)); }
+            // 공시가격 입력: transfer 제외 모든 모드 (gift/vat/acquisition/holding)
             if (mode !== "transfer" && stdInfo && onApplyStd) onApplyStd(stdInfo.price);
             if (onApplyDate && sel) {
               const y = sel.year || ""; const mo = String(sel.month || "").padStart(2, "0"); const d = String(sel.day || "").padStart(2, "0");
@@ -272,11 +274,19 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
           };
 
           // 모드별 라벨
-          const guideTitle = mode === "holding" ? "▶ 보유세 공시가격 안내" : mode === "transfer" ? "▶ 양도소득세 실거래가 안내" : "▶ 취득세 과세표준 안내";
-          const guideBody = mode === "holding" ? "재산세·종부세는 공시가격을 기준으로 과세됩니다." : mode === "transfer" ? "양도가액(실거래가)을 선택해주세요." : <>실거래가와 공시가격 중 <b>높은 금액</b>이 과세표준입니다.<br />아래 버튼으로 두 값을 모두 입력하세요.</>;
-          const btnLabel = mode === "holding" ? "공시가격 입력하고 계산하기 →" : mode === "transfer" ? "실거래가 입력하고 계산하기 →" : (hasBoth ? "두 값 모두 입력하고 계산하기 →" : (sel ? "취득가액 입력하고 계산하기 →" : "시가표준액 입력하고 계산하기 →"));
-          const stdTarget = mode === "holding" ? "공시가격" : "시가표준액";
-          const realTarget = mode === "transfer" ? "양도가액" : "취득가액";
+          const GUIDE = {
+            acquisition: { title: "▶ 취득세 과세표준 안내", body: <>실거래가와 공시가격 중 <b>높은 금액</b>이 과세표준입니다.<br />아래 버튼으로 두 값을 모두 입력하세요.</>, btn: hasBoth ? "두 값 모두 입력하고 계산하기 →" : (sel ? "취득가액 입력하고 계산하기 →" : "시가표준액 입력하고 계산하기 →"), std: "시가표준액", real: "취득가액" },
+            holding: { title: "▶ 보유세 공시가격 안내", body: "보유세는 공시가격이 과세표준입니다. 실거래가는 참고용입니다.", btn: "공시가격 입력하고 계산하기 →", std: "공시가격", real: "실거래가" },
+            transfer: { title: "▶ 양도소득세 실거래가 안내", body: "취득 당시 실거래가를 조회합니다. 취득연도를 입력하면 과거 거래도 조회됩니다.", btn: "실거래가 입력하고 계산하기 →", std: "공시가격", real: "취득가액" },
+            gift: { title: "▶ 증여·상속 재산가액 안내", body: "증여재산가액은 시가(실거래가)가 원칙이며, 없으면 공시가격을 사용합니다.", btn: hasBoth ? "시가·공시가격 모두 입력 →" : (sel ? "시가(실거래가) 입력 →" : "공시가격 입력 →"), std: "공시가격(시가 없는 경우)", real: "시가(증여재산가액)" },
+            vat: { title: "▶ 건물부가세 매매가·토지비율 안내", body: "총 매매가(실거래가)와 공시가격 기준 토지비율을 자동계산합니다.", btn: hasBoth ? "매매가·토지비율 입력 →" : (sel ? "총 매매가 입력 →" : "공시가격 입력 →"), std: "토지비율(공시가격 기준)", real: "총 매매가" },
+          };
+          const g = GUIDE[mode] || GUIDE.acquisition;
+          const guideTitle = g.title;
+          const guideBody = g.body;
+          const btnLabel = g.btn;
+          const stdTarget = g.std;
+          const realTarget = g.real;
 
           const priceRow = (label, amount, detail, targetLabel, isHigher) => (
             <div style={{ padding: "14px 16px", borderBottom: "1px solid #E5E7EB", background: isHigher ? "#eff6ff" : "#fff" }}>
@@ -309,18 +319,25 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
 
               {(sel || stdInfo) && (
                 <div style={{ border: "1.5px solid #0141f9", borderRadius: 12, overflow: "hidden", marginBottom: 14, boxShadow: "0 2px 8px rgba(1,65,249,.08)" }}>
-                  {mode === "holding" ? (<>
+                  {(mode === "holding") ? (<>
                     {stdInfo && priceRow("공시가격 (" + (stdInfo.year || "") + "년)", sAmt, stdDetail, stdTarget, true)}
                     {sel && <div style={{ padding: "12px 16px", background: "#f8f9fc", borderBottom: "1px solid #E5E7EB" }}>
                       <div style={{ fontSize: 11, color: "#6b778c", marginBottom: 2 }}>참고: 최근 실거래가</div>
                       <div style={{ fontSize: 14, fontWeight: 700, color: "#374151" }}>{fKRW(rAmt)} <span style={{ fontSize: 11, fontWeight: 400, color: "#9ca3af" }}>{realDetail}</span></div>
                     </div>}
-                  </>) : mode === "transfer" ? (<>
+                  </>) : (mode === "transfer") ? (<>
                     {sel && priceRow("실거래가", rAmt, realDetail, realTarget, true)}
                     {stdInfo && <div style={{ padding: "12px 16px", background: "#f8f9fc", borderBottom: "1px solid #E5E7EB" }}>
                       <div style={{ fontSize: 11, color: "#6b778c", marginBottom: 2 }}>참고: 공시가격 ({stdInfo.year || ""}년)</div>
                       <div style={{ fontSize: 14, fontWeight: 700, color: "#374151" }}>{fKRW(sAmt)} <span style={{ fontSize: 11, fontWeight: 400, color: "#9ca3af" }}>{stdDetail}</span></div>
                     </div>}
+                  </>) : (mode === "gift") ? (<>
+                    {sel && priceRow("시가 (실거래가)", rAmt, realDetail, realTarget, true)}
+                    {stdInfo && priceRow("공시가격 (" + (stdInfo.year || "") + "년)", sAmt, stdDetail, stdTarget, !sel)}
+                    {!sel && !stdInfo && null}
+                  </>) : (mode === "vat") ? (<>
+                    {sel && priceRow("실거래가 (총 매매가)", rAmt, realDetail, realTarget, true)}
+                    {stdInfo && priceRow("공시가격 → 토지비율", sAmt, stdDetail, stdTarget, !sel)}
                   </>) : (<>
                     {hasBoth && rHigher && (<>{priceRow("실거래가", rAmt, realDetail, realTarget, true)}{priceRow("공시가격 (" + (stdInfo.year || "") + "년)", sAmt, stdDetail, stdTarget, false)}</>)}
                     {hasBoth && !rHigher && (<>{priceRow("공시가격 (" + (stdInfo.year || "") + "년)", sAmt, stdDetail, stdTarget, true)}{priceRow("실거래가", rAmt, realDetail, realTarget, false)}</>)}
