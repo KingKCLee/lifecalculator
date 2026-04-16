@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "feat(mypage): ADMIN_EMAIL 일치 시 어드민 대시보드 메뉴 표시",
+      "desc": "feat(mypage): ADMIN_EMAIL 일치 시 어드민 대시보드 메뉴 표시"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "fix: Google 로그인 전체 수정 (admin + 일반 사용자)",
       "desc": "fix: Google 로그인 전체 수정 (admin + 일반 사용자)"
     },
@@ -1460,12 +1466,6 @@
       "category": "세금",
       "title": "fix: 모바일 인라인 스타일 isMo 조건 직접 수정 (취득세 파일럿 + 공통 Inp/Sel/Tog)",
       "desc": "fix: 모바일 인라인 스타일 isMo 조건 직접 수정 (취득세 파일럿 + 공통 Inp/Sel/Tog)"
-    },
-    {
-      "date": "2026.04.15",
-      "category": "전체",
-      "title": "fix: 모바일 UI 종합 개선 (62개 계산기 공통 레이어)",
-      "desc": "fix: 모바일 UI 종합 개선 (62개 계산기 공통 레이어)"
     }
   ],
   "rates": {
