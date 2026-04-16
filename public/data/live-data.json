@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "fix: 중복된 함께계산하면좋은 박스 제거",
+      "desc": "fix: 중복된 함께계산하면좋은 박스 제거"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "fix: 어드민 lc_token으로 verify 통합",
       "desc": "fix: 어드민 lc_token으로 verify 통합"
     },
@@ -1459,12 +1465,6 @@
       "category": "전체",
       "title": "fix(RPFull): sample-calc 4+3 PC grid, fix '공유' to actually share (shareKakao)",
       "desc": "fix(RPFull): sample-calc 4+3 PC grid, fix '공유' to actually share (shareKakao)"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "feat(report): pro tax invoice design for PDF/Image export (navy header, main card, styled table)",
-      "desc": "feat(report): pro tax invoice design for PDF/Image export (navy header, main card, styled table)"
     }
   ],
   "rates": {
