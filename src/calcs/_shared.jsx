@@ -79,18 +79,25 @@ export function Tog({label, value, onChange, options}){
   const isMo = useIsMobile();
   return(<div style={{marginBottom:isMo?14:16}}>
     <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:8,letterSpacing:.5,textTransform:"uppercase"}}>{label}</label>
-    <div style={{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6",flexWrap:options.length>=4?"wrap":"nowrap"}}>
-      {options.map((o,i)=>(
+    <div style={isMo?{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6"}:{display:"flex",flexWrap:"wrap",gap:8}}>
+      {options.map((o,i)=>{
+        const on=value===o.value;
+        return(
         <button key={o.value} onClick={()=>onChange(o.value)}
-          style={{flex:"1 1 auto",minWidth:isMo?48:72,padding:isMo?"11px 8px":"11px 12px",border:"none",
+          onMouseEnter={e=>{if(!isMo&&!on){e.currentTarget.style.background="#F0F4FF";e.currentTarget.style.borderColor="#0141f9";e.currentTarget.style.color="#0141f9";}}}
+          onMouseLeave={e=>{if(!isMo&&!on){e.currentTarget.style.background="#fff";e.currentTarget.style.borderColor="#dfe1e6";e.currentTarget.style.color="#505f79";}}}
+          style={isMo?{flex:"1 1 auto",minWidth:48,padding:"11px 8px",border:"none",
             borderRight:i<options.length-1?"1px solid #dfe1e6":"none",
-            background:value===o.value?"#0747A6":"#fff",
-            color:value===o.value?"#fff":"#505f79",
-            fontSize:isMo?12:13,
-            fontWeight:value===o.value?700:500,
-            cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",wordBreak:"keep-all",overflow:"hidden",textOverflow:"ellipsis",textAlign:"center",
-            lineHeight:1.3,transition:"background .15s,color .15s"}}>{o.label}</button>
-      ))}
+            background:on?"#0141f9":"#fff",color:on?"#fff":"#505f79",
+            fontSize:12,fontWeight:on?700:500,
+            cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.3,transition:"background .15s,color .15s"}
+          :{flex:"1 1 auto",minWidth:60,padding:"10px 12px",
+            border:on?"none":"1.5px solid #dfe1e6",borderRadius:8,
+            background:on?"#0141f9":"#fff",color:on?"#fff":"#505f79",
+            fontSize:13,fontWeight:on?700:500,
+            cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,
+            transition:"background .15s,color .15s,border-color .15s"}}>{o.label}</button>
+      );})}
     </div>
   </div>);
 }

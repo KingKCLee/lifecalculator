@@ -2172,22 +2172,18 @@ function CalcTrans({isMo=false,onNav=()=>{}}){
   const _dateInput=(val,set,ph)=>(<input type="text" value={val} onChange={e=>{const raw=e.target.value.replace(/[^0-9]/g,"");if(raw.length<=8)set(raw);}} placeholder={ph||"20200101"} style={_inlineInputStyle}/>);
   const _numInput=(val,set,ph)=>(<input type="text" value={val} onChange={e=>set(e.target.value)} placeholder={ph||""} style={_inlineInputStyle}/>);
   return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}><div>
-      {!isMo&&<div style={{marginBottom:24,display:"flex",alignItems:"center",gap:12,flexWrap:"wrap"}}>
-        <h3 style={{fontSize:28,fontWeight:700,color:"#0a1628",margin:0,letterSpacing:-1}}>양도소득세</h3>
-        <span style={{fontSize:13,color:"#6B7280",flex:"1 1 auto",minWidth:0}}>2026년 최신 세법 기반 정밀 계산</span>
-      </div>}
       <div style={{marginBottom:16}}>
         <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>양도물건 종류<TipModal title="양도물건 종류별 과세"><ul style={{paddingLeft:20}}><li><b>분양권:</b> 1년 미만 70%, 1년 이상 60%</li><li><b>입주권:</b> 관리처분인가일 기준 분리 계산</li><li><b>비사업용토지:</b> 기본세율 + 10%p 추가과세</li><li><b>주택·일반:</b> 기본 누진세율 적용</li></ul></TipModal></label>
-        <div style={{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6"}}>
-          {[["house","주택"],["right","분양권"],["union","입주권"],["land","비사업토지"],["other","기타"]].map(([v,l],i,arr)=>(<button key={v} onClick={()=>{setAssetType(v);if(v==="land"||v==="other"){setOwn("one");setConArea(false)}}} style={{flex:1,padding:"10px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:assetType===v?"#0747A6":"#fff",color:assetType===v?"#fff":"#505f79",fontWeight:assetType===v?700:500,fontSize:isMo?12:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s"}}>{l}</button>))}
+        <div style={isMo?{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6"}:{display:"flex",flexWrap:"wrap",gap:8}}>
+          {[["house","주택"],["right","분양권"],["union","입주권"],["land","비사업토지"],["other","기타"]].map(([v,l],i,arr)=>(<button key={v} onClick={()=>{setAssetType(v);if(v==="land"||v==="other"){setOwn("one");setConArea(false)}}} style={isMo?{flex:1,padding:"12px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:assetType===v?"#0141f9":"#fff",color:assetType===v?"#fff":"#505f79",fontWeight:assetType===v?700:500,fontSize:12,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s",minHeight:44}:{flex:"1 1 auto",minWidth:60,padding:"10px 16px",border:assetType===v?"1.5px solid #0141f9":"1.5px solid #dfe1e6",borderRadius:8,background:assetType===v?"#0141f9":"#fff",color:assetType===v?"#fff":"#172B4D",fontWeight:assetType===v?700:500,fontSize:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s,border-color .15s"}}>{l}</button>))}
         </div>
       </div>
       <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"16px 0"}}/>
       {showOwn&&<>
         <div style={{marginBottom:16}}>
           <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>보유 주택 수</label>
-          <div style={{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6"}}>
-            {[["one","1주택자"],["two","2주택자"],["more","3주택 이상"]].map(([v,l],i,arr)=>(<button key={v} onClick={()=>setOwn(v)} style={{flex:1,padding:"10px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:own===v?"#0747A6":"#fff",color:own===v?"#fff":"#505f79",fontWeight:own===v?700:500,fontSize:isMo?12:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s"}}>{l}</button>))}
+          <div style={isMo?{display:"flex",borderRadius:10,overflow:"hidden",border:"1.5px solid #dfe1e6"}:{display:"flex",flexWrap:"wrap",gap:8}}>
+            {[["one","1주택자"],["two","2주택자"],["more","3주택 이상"]].map(([v,l],i,arr)=>(<button key={v} onClick={()=>setOwn(v)} style={isMo?{flex:1,padding:"12px 2px",border:"none",borderRight:i<arr.length-1?"1px solid #dfe1e6":"none",background:own===v?"#0141f9":"#fff",color:own===v?"#fff":"#505f79",fontWeight:own===v?700:500,fontSize:12,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s",minHeight:44}:{flex:"1 1 auto",minWidth:60,padding:"10px 16px",border:own===v?"1.5px solid #0141f9":"1.5px solid #dfe1e6",borderRadius:8,background:own===v?"#0141f9":"#fff",color:own===v?"#fff":"#172B4D",fontWeight:own===v?700:500,fontSize:13,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",textAlign:"center",lineHeight:1.4,transition:"background .15s,color .15s,border-color .15s"}}>{l}</button>))}
           </div>
         </div>
         <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"16px 0"}}/>
