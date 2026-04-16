@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
+Allow: /about
+Allow: /contact
 Allow: /terms/
 Allow: /learn/
 Allow: /law/
@@ -8,9 +10,13 @@ Allow: /guide/
 Allow: /community/
 Allow: /news/
 Allow: /consult/
+Allow: /privacy
+Allow: /disclaimer
+Allow: /reports
 Disallow: /payment/
 Disallow: /api/
 Disallow: /admin/
+Disallow: /auth/
 Disallow: /*?embed=y$
 
 # 크롤러 부하 제한
