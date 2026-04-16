@@ -1,7 +1,10 @@
 User-agent: *
 Allow: /
+<<<<<<< Updated upstream
 Allow: /about
 Allow: /contact
+=======
+>>>>>>> Stashed changes
 Allow: /terms/
 Allow: /learn/
 Allow: /law/
@@ -10,9 +13,12 @@ Allow: /guide/
 Allow: /community/
 Allow: /news/
 Allow: /consult/
+<<<<<<< Updated upstream
 Allow: /privacy
 Allow: /disclaimer
 Allow: /reports
+=======
+>>>>>>> Stashed changes
 Disallow: /payment/
 Disallow: /api/
 Disallow: /admin/
