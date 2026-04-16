@@ -1168,6 +1168,12 @@
   "updateLog": [
     {
       "date": "2026.04.16",
+      "category": "부동산",
+      "title": "feat: RateTable 19개 + 구조별 내용연수/리모델링 참고표 추가",
+      "desc": "feat: RateTable 19개 + 구조별 내용연수/리모델링 참고표 추가"
+    },
+    {
+      "date": "2026.04.16",
       "category": "전체",
       "title": "feat: 전체 계산기 NextStep/RateTable/RP패널 100% 완성",
       "desc": "feat: 전체 계산기 NextStep/RateTable/RP패널 100% 완성"
@@ -1459,12 +1465,6 @@
       "category": "전체",
       "title": "fix(acq): align 실거래가·시가표준액 inputs in same grid column",
       "desc": "fix(acq): align 실거래가·시가표준액 inputs in same grid column"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "feat(home): sample-home 1:1 매칭 — PC에서 sample 외 3개 섹션 숨김",
-      "desc": "feat(home): sample-home 1:1 매칭 — PC에서 sample 외 3개 섹션 숨김"
     }
   ],
   "rates": {
