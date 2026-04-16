@@ -84,10 +84,11 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
   };
 
   const [stdSkipped, setStdSkipped] = useState(false);
+  const [stdApplied, setStdApplied] = useState(false);
 
   const doLookup = async () => {
     if (!picked) return;
-    setLoading(true); setLookupErr(null); setRealList([]); setStdInfo(null); setStdSkipped(false);
+    setLoading(true); setLookupErr(null); setRealList([]); setStdInfo(null); setStdSkipped(false); setStdApplied(false);
     try {
       const lawdCd = (picked.admCd || "").slice(0, 5);
       const pnu = buildPnu(picked.admCd, picked.lnbrMnnm, picked.lnbrSlno, picked.udrtYn);
@@ -255,6 +256,14 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
 
         {stage === 3 && (
           <div>
+            {/* 세법 안내 배너 */}
+            <div style={{ padding: "12px 14px", background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 10, marginBottom: 14 }}>
+              <div style={{ fontSize: 12, fontWeight: 800, color: "#1e40af", marginBottom: 4 }}>📌 취득세 과세표준 선택 안내</div>
+              <div style={{ fontSize: 11.5, color: "#1e3a8a", lineHeight: 1.65 }}>
+                취득세는 <b>실거래가와 공시가격 중 높은 금액</b>이 과세표준이 됩니다. 일반적으로 실거래가를 <b>취득가액</b>으로 입력하시고, 공시가격은 <b>시가표준액</b>으로 자동 입력됩니다.
+              </div>
+            </div>
+
             {lookupErr && <div style={{ padding: "10px 14px", background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 8, fontSize: 12, color: "#1e40af", lineHeight: 1.5, marginBottom: 12 }}>{lookupErr}</div>}
             {stdSkipped && !stdInfo && (
               <div style={{ padding: "10px 14px", background: "#fff8e1", border: "1px solid #ffe082", borderRadius: 8, fontSize: 12, color: "#8a5a00", lineHeight: 1.5, marginBottom: 12 }}>
@@ -264,15 +273,18 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
 
             {stdInfo && (
               <div style={{ marginBottom: 16, padding: "16px 18px", background: "#eff6ff", border: "1px solid #0141f9", borderRadius: 10 }}>
+                <div style={{ fontSize: 12, fontWeight: 800, color: "#0a1628", marginBottom: 2 }}>시가표준액 (공시가격) — 자동 입력됩니다</div>
+                <div style={{ fontSize: 11, color: "#6b778c", marginBottom: 8, lineHeight: 1.6 }}>취득가액보다 낮으면 실거래가가 과세표준이 됩니다</div>
                 <div style={{ fontSize: 11, color: "#6B7280", marginBottom: 4 }}>{stdInfo.year}년 공시가격 · {stdInfo.dong || dongNm}동 {stdInfo.ho || hoNm}호</div>
                 <div style={{ fontSize: 24, fontWeight: 800, color: "#0141f9", marginBottom: 10, fontVariantNumeric: "tabular-nums" }}>₩{Number(stdInfo.price).toLocaleString("ko-KR")}</div>
-                <button onClick={() => { onApplyStd(stdInfo.price); onClose(); }} style={{ width: "100%", padding: "10px 14px", background: "#0141f9", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>공시가격으로 시가표준액 입력</button>
+                <button onClick={() => { onApplyStd(stdInfo.price); setStdApplied(true); }} disabled={stdApplied} style={{ width: "100%", padding: "10px 14px", background: stdApplied ? "#10b981" : "#0141f9", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: stdApplied ? "default" : "pointer", fontFamily: "inherit" }}>{stdApplied ? "✓ 시가표준액 입력 완료" : "공시가격으로 시가표준액 입력"}</button>
               </div>
             )}
 
             {realList.length > 0 && (
               <div style={{ marginBottom: 12 }}>
-                <div style={{ fontSize: 12, fontWeight: 700, color: "#0a1628", marginBottom: 6 }}>최근 3개월 실거래가 ({realList.length}건) — 클릭 시 취득가액·면적 자동입력</div>
+                <div style={{ fontSize: 12, fontWeight: 800, color: "#0a1628", marginBottom: 2 }}>실거래가 — 취득가액으로 입력하세요</div>
+                <div style={{ fontSize: 11, color: "#6b778c", marginBottom: 8, lineHeight: 1.6 }}>실제 매매가격을 선택하시면 취득가액에 자동 입력됩니다 · 최근 3개월 {realList.length}건</div>
                 <div style={{ maxHeight: 340, overflowY: "auto", border: "1px solid #E5E7EB", borderRadius: 8 }}>
                   {realList.map((it, i) => (
                     <button key={i} onClick={() => { onApplyPrice(it.amount); if (onApplyArea && it.area) onApplyArea(areaToBucket(it.area)); onClose(); }} style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 8, alignItems: "center", width: "100%", padding: "10px 14px", border: "none", borderBottom: i < realList.length - 1 ? "1px solid #F3F4F6" : "none", background: "#fff", cursor: "pointer", fontFamily: "inherit", textAlign: "left" }} onMouseEnter={e => e.currentTarget.style.background = "#eff6ff"} onMouseLeave={e => e.currentTarget.style.background = "#fff"}>
@@ -287,9 +299,14 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
               </div>
             )}
 
+            {/* 권장 플로우 안내 */}
+            <div style={{ padding: "10px 12px", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 8, fontSize: 11.5, color: "#166534", lineHeight: 1.65, marginTop: 12 }}>
+              💡 <b>권장 순서</b>: 공시가격 먼저 <b>시가표준액 입력</b> → 실거래가 클릭으로 <b>취득가액 입력</b> → 두 값 모두 입력 시 과세표준 계산 정확도가 높아집니다.
+            </div>
+
             <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
               <button onClick={() => setStage(2)} style={{ padding: "12px 18px", background: "#f4f5f7", color: "#505f79", border: "1.5px solid #E5E7EB", borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>이전</button>
-              <button onClick={() => { setStage(1); setPicked(null); setResults(null); setKeyword(""); setRealList([]); setStdInfo(null); }} style={{ padding: "12px 18px", background: "#f4f5f7", color: "#505f79", border: "1.5px solid #E5E7EB", borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", flex: 1 }}>다른 주소 검색</button>
+              <button onClick={() => { setStage(1); setPicked(null); setResults(null); setKeyword(""); setRealList([]); setStdInfo(null); setStdApplied(false); }} style={{ padding: "12px 18px", background: "#f4f5f7", color: "#505f79", border: "1.5px solid #E5E7EB", borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", flex: 1 }}>다른 주소 검색</button>
             </div>
           </div>
         )}
