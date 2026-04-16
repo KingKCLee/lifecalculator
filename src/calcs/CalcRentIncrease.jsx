@@ -38,5 +38,6 @@ export default function CalcRentIncrease({isMo=false, onNav=()=>{}}){
         {l:"B. 월세만 인상 시 최대", v:fW(maxMonthlyOnly)},
         {l:"인상 여력", v:fW(increase)}
       ]}/>
+    <RateTable title="임대료 인상 제한 기준" headers={["구분","기준"]} rows={[["인상 상한","직전 계약의 5%"],["전환율 상한","기준금리 + 2%p"],["갱신청구권","1회 (2년)"],["2026 전환율 상한","5.0%"]]}/>
   </CalcShell>);
 }

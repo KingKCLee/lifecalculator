@@ -39,5 +39,6 @@ export default function CalcStamp({isMo=false, onNav=()=>{}}){
         {l:"매수인 부담", v:fW(buyerShare)},
         {l:"매도인 부담", v:fW(sellerShare)}
       ]}/>
+    <RateTable title="전자계약 인지세 (50% 감면)" headers={["거래금액","일반 인지세","전자계약"]} rows={[["1억 이하","비과세","비과세"],["1~10억","15만원","7.5만원"],["10~30억","35만원","17.5만원"],["30억 초과","50만원","25만원"]]}/>
   </CalcShell>);
 }
