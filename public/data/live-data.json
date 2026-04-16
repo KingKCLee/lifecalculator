@@ -1168,6 +1168,12 @@
   "updateLog": [
     {
       "date": "2026.04.16",
+      "category": "대출",
+      "title": "feat(loan): add /api/base-rate endpoint + BaseRateHint on 7 loan calcs (Mort/DSR/DTI/LoanMax/RTI/Refinance/AuctionLoan)",
+      "desc": "feat(loan): add /api/base-rate endpoint + BaseRateHint on 7 loan calcs (Mort/DSR/DTI/LoanMax/RTI/Refinance/AuctionLoan)"
+    },
+    {
+      "date": "2026.04.16",
       "category": "전체",
       "title": "feat(mypage): ADMIN_EMAIL 일치 시 어드민 대시보드 메뉴 표시",
       "desc": "feat(mypage): ADMIN_EMAIL 일치 시 어드민 대시보드 메뉴 표시"
@@ -1460,12 +1466,6 @@
       "category": "세금",
       "title": "feat: PC UI 6종 개선 (취득세 파일럿 + 공통 RP/sub-tabs/pro-cards)",
       "desc": "feat: PC UI 6종 개선 (취득세 파일럿 + 공통 RP/sub-tabs/pro-cards)"
-    },
-    {
-      "date": "2026.04.15",
-      "category": "세금",
-      "title": "fix: 모바일 인라인 스타일 isMo 조건 직접 수정 (취득세 파일럿 + 공통 Inp/Sel/Tog)",
-      "desc": "fix: 모바일 인라인 스타일 isMo 조건 직접 수정 (취득세 파일럿 + 공통 Inp/Sel/Tog)"
     }
   ],
   "rates": {
