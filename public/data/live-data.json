@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "fix: 건물부가세 공시가격 토지/건물 비율 → 유형별 기본값 유지 + 공시가격 참고 표시",
+      "desc": "fix: 건물부가세 공시가격 토지/건물 비율 → 유형별 기본값 유지 + 공시가격 참고 표시"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "feat: 계산기별 주소조회 목적 명확화 + 안내문 차별화 (5 calcType: acquisition/holding/transfer/gift/vat)",
       "desc": "feat: 계산기별 주소조회 목적 명확화 + 안내문 차별화 (5 calcType: acquisition/holding/transfer/gift/vat)"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "style: 로고 그라데이션·버튼 ON 상태 색상 #0141f9 통일",
       "desc": "style: 로고 그라데이션·버튼 ON 상태 색상 #0141f9 통일"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "feat(calc): sample-calc 정확 spec 5항목 추가 반영",
-      "desc": "feat(calc): sample-calc 정확 spec 5항목 추가 반영"
     }
   ],
   "rates": {
