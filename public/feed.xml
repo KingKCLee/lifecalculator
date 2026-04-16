@@ -5,8 +5,15 @@
     <link>https://xn--989a00a691bdfa717h.com/</link>
     <description>취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 등 39가지 무료 계산기. 매일 자동 업데이트.</description>
     <language>ko</language>
-    <lastBuildDate>Thu, 16 Apr 2026 11:16:03 +0900</lastBuildDate>
+    <lastBuildDate>Thu, 16 Apr 2026 11:24:47 +0900</lastBuildDate>
     <atom:link href="https://xn--989a00a691bdfa717h.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+    <title>fix: H2 계산기 수 39가지 → 62가지 수정</title>
+    <link>https://xn--989a00a691bdfa717h.com/</link>
+    <description>fix: H2 계산기 수 39가지 → 62가지 수정</description>
+    <pubDate>Thu, 16 Apr 2026 11:24:47 +0900</pubDate>
+    <guid>https://xn--989a00a691bdfa717h.com/#update-202604160224</guid>
+  </item>
     <item>
     <title>fix: Supabase 완전 제거 + 어드민 대시보드 API 매핑 수정</title>
     <link>https://xn--989a00a691bdfa717h.com/</link>
