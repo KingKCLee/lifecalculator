@@ -2013,7 +2013,6 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
       alertType={!stdPrice?"warning":firstDed>0?"success":"danger"}
       items={[{l:"취득세액 ("+fP(r*100)+")",v:fW(ac)},{l:"지방교육세 ("+fP((isHeavy?0.4:r*100*0.1))+")",v:fW(ed)},{l:"농어촌특별세"+(fm>0?" (0.2%)":""),v:fm>0?fW(fm):"없음"},{l:"합계 납부세액",v:fW(total)}]}/>
     <SavingsGuide tips={_tips}/>
-    <NextStep calcId="acquisition" onNav={onNav} isMo={isMo}/>
     </div>
   </div>);
 }
@@ -3793,21 +3792,26 @@ disclaimer:{title:"면책조항",body:<div>
 <h3 style={LS.h}>제8조 (준거법 및 관할법원)</h3><p>본 면책 조항은 대한민국 법률에 따라 해석되며, 본 서비스와 관련된 분쟁은 서울중앙지방법원을 제1심 관할법원으로 합니다.</p>
 </div>},
 privacy:{title:"개인정보처리방침",body:<div>
-<p>더블유부동산(이하 "회사")이 운영하는 생활계산기.com(이하 "서비스")은 「개인정보 보호법」 제30조에 따라 이용자의 개인정보를 보호하고 관련 고충을 신속히 처리하기 위해 다음과 같이 개인정보 처리방침을 수립·공개합니다. 본 방침은 2026년 4월 6일부터 시행됩니다.</p>
+<p>더블유부동산(이하 "회사")이 운영하는 생활계산기.com(이하 "서비스")은 「개인정보 보호법」 제30조에 따라 이용자의 개인정보를 보호하고 관련 고충을 신속히 처리하기 위해 다음과 같이 개인정보 처리방침을 수립·공개합니다. 본 방침은 2026년 4월 16일부터 시행됩니다.</p>
 <h3 style={LS.h}>제1조 (수집하는 개인정보 항목 및 수집 방법)</h3>
 <p><strong>① 회원가입 시 수집 항목 (소셜 로그인)</strong></p>
+<p>• Google 로그인: 이름, 이메일 주소, 프로필 사진</p>
 <p>• 네이버 로그인: 이름, 이메일 주소, 성별, 연령대, 휴대폰 번호 (이용자 동의 항목에 한함)</p>
-<p>• 구글 로그인: 이름, 이메일 주소, 프로필 사진</p>
-<p><strong>② 서비스 이용 중 자동 수집 항목</strong></p>
+<p>• 카카오 로그인: 이름(닉네임), 이메일 주소, 프로필 사진</p>
+<p><strong>② 문의하기 이용 시 수집 항목</strong></p>
+<p>• 이름, 이메일 주소, 문의 유형, 문의 내용</p>
+<p><strong>③ 서비스 이용 중 자동 수집 항목</strong></p>
 <p>• 접속 IP 주소, 브라우저 종류·버전, 운영체제, 접속 일시, 방문 페이지, 쿠키, 서비스 이용 기록</p>
 <h3 style={LS.h}>제2조 (개인정보의 수집 및 이용 목적)</h3>
 <p>• 회원 가입·관리: 본인 확인, 서비스 이용 자격 부여, 계정 관리</p>
 <p>• 서비스 제공: 계산기 기능 제공, 계산 이력 저장, 맞춤형 서비스 제공</p>
+<p>• 문의 응대: 이용자 문의에 대한 회신 및 처리</p>
 <p>• 마케팅·광고: 이용자 동의 시 신규 기능·이벤트 안내 (동의 철회 가능)</p>
 <p>• 서비스 개선: 이용 패턴 분석, 통계 작성, 서비스 품질 향상</p>
 <p>• 부정 이용 방지: 비정상 이용 탐지 및 차단</p>
 <h3 style={LS.h}>제3조 (개인정보의 보유 및 이용 기간)</h3>
 <p>• 회원 정보: 회원 탈퇴 시까지 보유 후 즉시 파기</p>
+<p>• 문의 기록: 문의 접수일로부터 3년간 보유 후 파기</p>
 <p>• 자동 수집 정보: 수집일로부터 1년간 보유 후 파기</p>
 <p>• 법령에 따른 보존 기간:</p>
 <p style={{paddingLeft:16}}>- 계약·청약철회 기록: 5년 (전자상거래법)</p>
@@ -3817,34 +3821,59 @@ privacy:{title:"개인정보처리방침",body:<div>
 <p>회사는 이용자의 사전 동의 없이 개인정보를 제3자에게 제공하지 않습니다. 다만 다음의 경우 예외로 합니다.</p>
 <p>• 이용자가 사전에 동의한 경우</p>
 <p>• 법령에 의거하거나 수사 목적으로 법령에 정해진 절차·방법에 따라 수사기관이 요구하는 경우</p>
+<p><strong>소셜 로그인 시 제3자 제공</strong></p>
+<p>• Google LLC — 소셜 로그인 인증 — 이메일, 이름 — 인증 세션 종료 시</p>
+<p>• 네이버(주) — 소셜 로그인 인증 — 이메일, 이름 — 인증 세션 종료 시</p>
+<p>• (주)카카오 — 소셜 로그인 인증 — 이메일, 닉네임 — 인증 세션 종료 시</p>
 <h3 style={LS.h}>제5조 (개인정보 처리 위탁)</h3>
 <p>회사는 서비스 제공을 위해 다음과 같이 개인정보 처리를 위탁하고 있습니다.</p>
 <div style={LS.ib}>
-<p>• 수탁자: Google LLC | 위탁 업무: Google 소셜 로그인 인증 | 보유 기간: 인증 세션 종료 시</p>
+<p>• 수탁자: Google LLC | 위탁 업무: Google 소셜 로그인 인증, Google Analytics 분석, Google AdSense 광고 게재 | 보유 기간: 서비스 이용 중</p>
 <p>• 수탁자: Naver Corp. | 위탁 업무: 네이버 소셜 로그인 인증 | 보유 기간: 인증 세션 종료 시</p>
+<p>• 수탁자: (주)카카오 | 위탁 업무: 카카오 소셜 로그인 인증 | 보유 기간: 인증 세션 종료 시</p>
 <p>• 수탁자: Cloudflare Inc. | 위탁 업무: 서비스 호스팅·CDN·보안 | 보유 기간: 서비스 종료 시까지</p>
+<p>• 수탁자: Resend Inc. | 위탁 업무: 이메일 발송 | 보유 기간: 발송 완료 시</p>
 </div>
 <h3 style={LS.h}>제6조 (개인정보의 파기)</h3>
 <p>보유 기간이 경과하거나 처리 목적이 달성된 경우 지체 없이 파기합니다.</p>
 <p>• 전자적 파일: 복구 불가능한 방법으로 영구 삭제</p>
 <p>• 종이 문서: 분쇄 또는 소각</p>
-<h3 style={LS.h}>제7조 (쿠키의 사용)</h3>
-<p>서비스는 맞춤형 서비스 제공을 위해 쿠키를 사용합니다. 이용자는 브라우저 설정을 통해 쿠키 저장을 거부할 수 있으며, 이 경우 로그인 등 일부 서비스 이용에 제한이 있을 수 있습니다.</p>
+<h3 style={LS.h}>제7조 (쿠키 및 광고 식별자의 사용)</h3>
+<p>서비스는 맞춤형 서비스 제공 및 광고 게재를 위해 쿠키를 사용합니다.</p>
+<p><strong>① Google Analytics (GA4)</strong></p>
+<p>• 측정 ID: G-58SYV64E1C</p>
+<p>• 수집 정보: 페이지 조회, 이벤트, 사용자 속성 (익명화)</p>
+<p>• 목적: 서비스 이용 통계 분석, 사용자 경험 개선</p>
+<p>• 쿠키명: _ga, _ga_*, _gid 등 | 보유 기간: 최대 2년</p>
+<p><strong>② Google AdSense</strong></p>
+<p>• 게시자 ID: ca-pub-8857637137858335</p>
+<p>• 수집 정보: 쿠키 기반 관심사 정보 (익명화)</p>
+<p>• 목적: 맞춤형 광고 게재, 광고 성과 측정</p>
+<p>• Google의 광고 개인정보 설정은 adssettings.google.com에서 변경 가능합니다.</p>
+<p><strong>③ 쿠키 거부 방법</strong></p>
+<p>• 브라우저 설정에서 쿠키 저장을 거부하거나 삭제할 수 있습니다.</p>
+<p>• Chrome: 설정 > 개인정보 및 보안 > 쿠키 및 기타 사이트 데이터</p>
+<p>• Safari: 환경설정 > 개인정보 보호 > 쿠키 및 웹사이트 데이터 관리</p>
+<p>• 쿠키를 거부하면 로그인 유지, 맞춤형 서비스 등 일부 기능에 제한이 있을 수 있습니다.</p>
 <h3 style={LS.h}>제8조 (이용자의 권리 및 행사 방법)</h3>
 <p>이용자는 언제든지 다음 권리를 행사할 수 있습니다.</p>
 <p>• 개인정보 열람, 정정, 삭제, 처리정지 요청</p>
 <p>• 마케팅 수신 동의 철회 (서비스 내 설정 또는 이메일 요청)</p>
 <p>• 회원 탈퇴 (서비스 내 탈퇴 기능 또는 이메일 요청)</p>
+<p>• 소셜 로그인 연동 해제 (각 플랫폼 설정에서 가능)</p>
 <p>권리 행사는 <strong>noble.kclee@gmail.com</strong>으로 이메일 요청 시 지체 없이 처리합니다.</p>
 <h3 style={LS.h}>제9조 (안전성 확보 조치)</h3>
-<p>• 기술적 조치: HTTPS(SSL/TLS) 암호화 통신, 보안 헤더(HSTS·CSP·X-Frame-Options) 적용</p>
+<p>• 기술적 조치: HTTPS(SSL/TLS) 암호화 통신, 보안 헤더 적용</p>
 <p>• 접근 통제: 개인정보 취급 인원 최소화, 접근 권한 관리</p>
 <p>• 물리적 조치: Cloudflare 클라우드 기반 보안 인프라 운영</p>
+<p>• 비밀번호: 소셜 로그인 기반으로 비밀번호를 자체 보관하지 않음</p>
 <h3 style={LS.h}>제10조 (개인정보 보호책임자)</h3>
 <div style={LS.ib}>
 <p style={{margin:"4px 0"}}>• 성명: 이광철</p>
 <p style={{margin:"4px 0"}}>• 직책: 대표 (더블유부동산)</p>
 <p style={{margin:"4px 0"}}>• 이메일: noble.kclee@gmail.com</p>
+<p style={{margin:"4px 0"}}>• 사업자등록번호: 589-24-01721</p>
+<p style={{margin:"4px 0"}}>• 통신판매업 신고번호: 제2025-인천부평-0992호</p>
 <p style={{margin:"4px 0"}}>• 개인정보 관련 문의·불만·피해구제는 위 이메일로 접수하며 영업일 기준 2일 이내 답변합니다.</p>
 </div>
 <h3 style={LS.h}>제11조 (권익침해 구제방법)</h3>
@@ -3853,7 +3882,7 @@ privacy:{title:"개인정보처리방침",body:<div>
 <p>• 대검찰청 사이버수사과: spo.go.kr / 1301</p>
 <p>• 경찰청 사이버안전국: cyberbureau.police.go.kr / 182</p>
 <h3 style={LS.h}>제12조 (개인정보 처리방침 변경)</h3>
-<p>본 방침은 법령·정책 변경 시 사전 공지 후 개정됩니다. 시행일: 2026년 4월 6일</p>
+<p>본 방침은 법령·정책 변경 시 사전 공지 후 개정됩니다. 시행일: 2026년 4월 16일</p>
 </div>},
 resource:{title:"자료실",body:<div>
 <h3 style={LS.h}>세율 참고 자료</h3><p>• 2025년 취득세율표 — 1주택(1~3%), 2주택(8%), 3주택(12%)</p><p>• 양도소득세 기본세율 — 6~45% 8단계 누진</p><p>• 종합부동산세율 — 일반 0.5~2.7%, 법인 2.7~5.0%</p><p>• 증여세율 — 10~50% 5단계 누진 (10년 합산)</p><p>• 상속세율 — 10~50% 5단계 누진</p>
@@ -5196,6 +5225,99 @@ function PricingPage({isMo,navigateHome}){
   </div>);
 }
 
+
+
+function NotFoundPage({isMo,navigateHome,navigateCalc}){
+  const popular=[
+    {id:'acquisition',name:'취득세',cat:'tax'},
+    {id:'transfer',name:'양도소득세',cat:'tax'},
+    {id:'netsalary',name:'연봉 실수령액',cat:'life'},
+    {id:'dsr',name:'DSR',cat:'loan'},
+    {id:'yearend',name:'연말정산',cat:'tax'},
+    {id:'commission',name:'중개수수료',cat:'cost'},
+    {id:'compre',name:'종부세',cat:'tax'},
+    {id:'pension',name:'국민연금',cat:'life'},
+    {id:'insurance4',name:'4대보험',cat:'life'},
+    {id:'gift',name:'증여세',cat:'tax'}
+  ];
+  return(<div style={{maxWidth:720,margin:'0 auto',padding:isMo?'40px 16px':'60px 24px',minHeight:'60vh',textAlign:'center'}}>
+    <div style={{fontSize:64,fontWeight:800,color:'#dfe1e6',margin:'0 0 12px'}}>404</div>
+    <h1 style={{fontSize:isMo?22:28,fontWeight:800,color:'#172B4D',margin:'0 0 12px'}}>페이지를 찾을 수 없습니다</h1>
+    <p style={{fontSize:15,color:'#505f79',margin:'0 0 32px',lineHeight:1.7}}>요청하신 페이지가 존재하지 않거나, 주소가 변경되었을 수 있습니다.<br/>아래 인기 계산기를 이용하시거나 홈으로 이동해 주세요.</p>
+    <button onClick={navigateHome} style={{padding:'14px 32px',background:'#0747A6',color:'#fff',border:'none',borderRadius:10,fontSize:15,fontWeight:700,cursor:'pointer',fontFamily:'inherit',marginBottom:40}}>홈으로 이동</button>
+    <div style={{textAlign:'left',background:'#fff',border:'1px solid #dfe1e6',borderRadius:16,padding:isMo?'24px 20px':'32px 28px',marginBottom:32}}>
+      <h2 style={{fontSize:18,fontWeight:800,color:'#172B4D',margin:'0 0 20px'}}>자주 찾는 계산기</h2>
+      <div style={{display:'grid',gridTemplateColumns:isMo?'1fr 1fr':'repeat(5,1fr)',gap:10}}>
+        {popular.map(p=>(<button key={p.id} onClick={()=>navigateCalc(p.cat,p.id)} style={{padding:'14px 12px',background:'#f8f9fc',border:'1px solid #dfe1e6',borderRadius:10,fontSize:13,fontWeight:700,color:'#172B4D',cursor:'pointer',fontFamily:'inherit',transition:'all .15s'}} onMouseEnter={e=>{e.currentTarget.style.borderColor='#0747A6';e.currentTarget.style.background='#deebff'}} onMouseLeave={e=>{e.currentTarget.style.borderColor='#dfe1e6';e.currentTarget.style.background='#f8f9fc'}}>{p.name}</button>))}
+      </div>
+    </div>
+    <div style={{textAlign:'left',background:'#f4f5f7',borderRadius:12,padding:'20px 24px',fontSize:14,color:'#505f79',lineHeight:1.8}}>
+      <p style={{margin:'0 0 8px',fontWeight:700,color:'#172B4D'}}>생활계산기.com 소개</p>
+      <p style={{margin:0}}>생활계산기.com은 대한민국 NO.1 세금·부동산·재테크 계산기 플랫폼입니다. 취득세, 양도소득세, 종합소득세, 연말정산, DSR, LTV, 중개수수료, 연봉 실수령액 등 62가지 전문 계산기를 2026년 최신 세법을 반영하여 무료로 제공합니다. 국세청, 행정안전부, 한국은행 등 12개 공식 기관의 데이터를 기반으로 정확한 계산 결과를 제공하며, 세법 개정 사항을 24시간 내 자동 반영합니다.</p>
+    </div>
+  </div>);
+}
+
+function ContactPage({isMo,navigateHome}){
+  const[form,setForm]=useState({name:'',email:'',type:'계산기 오류신고',content:''});
+  const[sending,setSending]=useState(false);
+  const[sent,setSent]=useState(false);
+  const[error,setError]=useState('');
+  const handleSubmit=async(e)=>{
+    e.preventDefault();setError('');
+    if(!form.name.trim()||!form.email.trim()||!form.content.trim()){setError('모든 항목을 입력해주세요.');return;}
+    if(!/^[^s@]+@[^s@]+.[^s@]+$/.test(form.email)){setError('올바른 이메일 주소를 입력해주세요.');return;}
+    setSending(true);
+    try{
+      const r=await fetch(LC_REALESTATE_WORKER+'/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(form)});
+      const j=await r.json();
+      if(j.ok){setSent(true);}else{setError(j.error||'전송에 실패했습니다. 잠시 후 다시 시도해주세요.');}
+    }catch{setError('네트워크 오류가 발생했습니다.');}
+    setSending(false);
+  };
+  const types=['계산기 오류신고','세법 업데이트 요청','서비스 제안','제휴/협력 문의','기타'];
+  return(<div style={{maxWidth:720,margin:'0 auto',padding:isMo?'24px 16px':'40px 24px',minHeight:'60vh'}}>
+    <SpaBackBtn navigateHome={navigateHome}/>
+    <h1 style={{fontSize:isMo?24:32,fontWeight:800,color:'#172B4D',margin:'0 0 8px',letterSpacing:-0.5}}>문의하기</h1>
+    <p style={{fontSize:15,color:'#505f79',margin:'0 0 32px',lineHeight:1.7}}>생활계산기.com에 대한 문의, 오류 신고, 세법 업데이트 요청, 서비스 제안 등을 보내주세요. 영업일 기준 1~2일 이내 회신드립니다.</p>
+    {sent?(<div style={{background:'#f0fdf4',border:'1px solid #bbf7d0',borderRadius:16,padding:'48px 32px',textAlign:'center'}}>
+      <div style={{fontSize:48,marginBottom:16}}>&#10003;</div>
+      <h2 style={{fontSize:22,fontWeight:800,color:'#166534',margin:'0 0 12px'}}>문의가 접수되었습니다</h2>
+      <p style={{fontSize:15,color:'#505f79',lineHeight:1.7,margin:'0 0 24px'}}>보내주신 내용을 확인하여 영업일 기준 1~2일 이내에 이메일로 회신드리겠습니다.</p>
+      <button onClick={navigateHome} style={{padding:'12px 28px',background:'#0747A6',color:'#fff',border:'none',borderRadius:10,fontSize:14,fontWeight:700,cursor:'pointer',fontFamily:'inherit'}}>홈으로 이동</button>
+    </div>):(<form onSubmit={handleSubmit} style={{background:'#fff',border:'1px solid #dfe1e6',borderRadius:16,padding:isMo?'24px 20px':'36px 32px',boxShadow:'0 1px 3px rgba(0,0,0,.04)'}}>
+      <div style={{marginBottom:20}}>
+        <label style={{display:'block',fontSize:13,fontWeight:700,color:'#172B4D',marginBottom:6}}>문의 유형</label>
+        <select value={form.type} onChange={e=>setForm(f=>({...f,type:e.target.value}))} style={{width:'100%',padding:'12px 14px',border:'1px solid #dfe1e6',borderRadius:10,fontSize:14,color:'#172B4D',background:'#fff',fontFamily:'inherit'}}>
+          {types.map(t=>(<option key={t} value={t}>{t}</option>))}
+        </select>
+      </div>
+      <div style={{display:'grid',gridTemplateColumns:isMo?'1fr':'1fr 1fr',gap:16,marginBottom:20}}>
+        <div>
+          <label style={{display:'block',fontSize:13,fontWeight:700,color:'#172B4D',marginBottom:6}}>이름</label>
+          <input value={form.name} onChange={e=>setForm(f=>({...f,name:e.target.value}))} placeholder='홍길동' style={{width:'100%',padding:'12px 14px',border:'1px solid #dfe1e6',borderRadius:10,fontSize:14,fontFamily:'inherit',boxSizing:'border-box'}}/>
+        </div>
+        <div>
+          <label style={{display:'block',fontSize:13,fontWeight:700,color:'#172B4D',marginBottom:6}}>이메일</label>
+          <input value={form.email} onChange={e=>setForm(f=>({...f,email:e.target.value}))} placeholder='email@example.com' type='email' style={{width:'100%',padding:'12px 14px',border:'1px solid #dfe1e6',borderRadius:10,fontSize:14,fontFamily:'inherit',boxSizing:'border-box'}}/>
+        </div>
+      </div>
+      <div style={{marginBottom:20}}>
+        <label style={{display:'block',fontSize:13,fontWeight:700,color:'#172B4D',marginBottom:6}}>문의 내용</label>
+        <textarea value={form.content} onChange={e=>setForm(f=>({...f,content:e.target.value}))} rows={6} placeholder='문의하실 내용을 입력해주세요. 계산기 오류의 경우 계산기명, 입력값, 예상 결과를 함께 알려주시면 빠르게 수정합니다.' style={{width:'100%',padding:'12px 14px',border:'1px solid #dfe1e6',borderRadius:10,fontSize:14,fontFamily:'inherit',resize:'vertical',lineHeight:1.7,boxSizing:'border-box'}}/>
+      </div>
+      {error&&<div style={{padding:'10px 14px',background:'#FFEBE6',border:'1px solid #FFBDAD',borderRadius:8,fontSize:13,color:'#BF2600',marginBottom:16}}>{error}</div>}
+      <button type='submit' disabled={sending} style={{width:'100%',padding:'14px',background:sending?'#6b778c':'#0747A6',color:'#fff',border:'none',borderRadius:10,fontSize:15,fontWeight:700,cursor:sending?'default':'pointer',fontFamily:'inherit'}}>{sending?'전송 중...':'문의 보내기'}</button>
+    </form>)}
+    <div style={{marginTop:32,padding:'24px 20px',background:'#f4f5f7',borderRadius:12,fontSize:14,color:'#505f79',lineHeight:1.8}}>
+      <h3 style={{fontSize:15,fontWeight:700,color:'#172B4D',margin:'0 0 12px'}}>직접 연락</h3>
+      <p style={{margin:'0 0 4px'}}>이메일: <a href='mailto:noble.kclee@gmail.com' style={{color:'#0747A6',fontWeight:600}}>noble.kclee@gmail.com</a></p>
+      <p style={{margin:'0 0 4px'}}>운영시간: 평일 09:00~18:00 (공휴일 제외)</p>
+      <p style={{margin:0}}>운영자: 이광철 (더블유부동산)</p>
+    </div>
+  </div>);
+}
+
 function VerificationPage({isMo,navigateHome}){return(<div style={{maxWidth:820,margin:"0 auto",padding:isMo?"24px 16px":"40px 24px",minHeight:"60vh"}}>
   <SpaBackBtn navigateHome={navigateHome}/>
   <h1 style={{fontSize:isMo?24:28,margin:"0 0 16px",color:"#0747A6",letterSpacing:-0.5,fontWeight:800}}>계산 검증 가이드</h1>
@@ -6127,6 +6249,7 @@ export default function App(){
     if(hash==="policy"){setPage("policy");return;}
     if(hash==="market"){setPage("market");return;}
     if(hash==="about"){setPage("about");return;}
+    if(hash==="contact"){setPage("contact");return;}
     if(hash==="guide"){setPage("guide");return;}
     if(hash==="pricing"){setPage("pricing");return;}
     if(hash==="verification"){setPage("verification");return;}
@@ -6141,6 +6264,7 @@ export default function App(){
     if(["privacy","contact","disclaimer","resource"].includes(hash)){setPage("legal_"+hash);}
     else if(hash&&SLUG_REVERSE[hash]){const cId=SLUG_REVERSE[hash];const it=CL.find(c=>c.id===cId);if(it){setCat(it.c);setCalc(cId);setPage("calc");fetch(LC_REALESTATE_WORKER+"/api/admin/track",{method:"POST",headers:{"Content-Type":"application/json; charset=utf-8"},body:JSON.stringify({calcId:cId,calcName:it.l,referrer:document.referrer})}).catch(()=>{});}}
     else if(!hash){setPage("home");}
+    else{setPage("404");}
   },[hash]);
   useEffect(()=>{
     const h=(e)=>{
@@ -6149,7 +6273,7 @@ export default function App(){
       const href=a.getAttribute("href");
       if(!href||!href.startsWith("/"))return;
       if(a.target==="_blank")return;
-      const spaPaths=["/news","/community","/policy","/market","/info","/about","/guide","/pricing","/verification","/terms","/reports"];
+      const spaPaths=["/news","/community","/policy","/market","/info","/about","/contact","/guide","/pricing","/verification","/terms","/reports"];
       const spaPrefixes=["/terms/","/learn/","/law/","/reports/"];
       const isSpa=spaPaths.includes(href)||spaPrefixes.some(p=>href.startsWith(p));
       if(!isSpa)return;
@@ -6182,6 +6306,7 @@ export default function App(){
 
   /* ═══ 2026.04.16 STEP 3: AdSense 광고 슬롯 연동 ═══ */
   const[adSlots,setAdSlots]=useState(null);
+  const noAds=page==="admin"||page==="404"||page?.startsWith("admin/");
   useEffect(()=>{
     fetch(LC_REALESTATE_WORKER+"/api/admin/adsense").then(r=>r.json()).then(j=>{if(j)setAdSlots(j);}).catch(()=>{});
   },[]);
@@ -6379,7 +6504,7 @@ body.lc-embed main{padding-top:0!important}
     <div style={{display:"flex",alignItems:"flex-start"}}>
     {/* 2026.04.15 PC LeftNav (좌측 Expert Guide 사이드바) 제거 — 모바일 드로어는 L5602에 유지 */}
     <main style={{flex:"1 1 auto",minWidth:0,width:"100%",background:(!isMo&&page!=="home")?"#f8f9fc":undefined}}>
-    {page==="mypage"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><MyPage user={effectiveUser} lcToken={lcToken} lcEmail={lcEmail} onLcLogout={()=>{try{localStorage.removeItem('lc_token');localStorage.removeItem('lc_email');}catch{}setLcToken("");setLcEmail("");}} onBack={navigateHome} onLogout={handleLogout}/></div>):page==="info"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><InfoHub isMo={isMo} navigateHome={navigateHome}/></div>):page==="news"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><NewsPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="community"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><CommunityPage isMo={isMo} navigateHome={navigateHome} effectiveUser={effectiveUser} setAuthMode={setAuthMode} setShowAuth={setShowAuth}/></div>):page==="policy"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><PolicyPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="market"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><MarketPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="terms"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><TermsHubPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="about"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><AboutPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="guide"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><GuidePage isMo={isMo} navigateHome={navigateHome}/></div>):page==="pricing"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><PricingPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="verification"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><VerificationPage isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("reports:")?(<div style={{background:"#f8f9fb",minHeight:"100vh"}}><ReportsPage slug={page.replace("reports:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("learn:")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LearnPage slug={page.replace("learn:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("law:")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LawPage slug={page.replace("law:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("html:")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><HtmlAdapterPage url={page.replace("html:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("legal_")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LegalPage type={page.replace("legal_","")} onBack={navigateHome}/></div>):page==="admin"?(<AdminPage/>):page==="admin/callback"?(<AdminPage subPage="callback"/>):page==="home"?(<>
+    {page==="mypage"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><MyPage user={effectiveUser} lcToken={lcToken} lcEmail={lcEmail} onLcLogout={()=>{try{localStorage.removeItem('lc_token');localStorage.removeItem('lc_email');}catch{}setLcToken("");setLcEmail("");}} onBack={navigateHome} onLogout={handleLogout}/></div>):page==="info"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><InfoHub isMo={isMo} navigateHome={navigateHome}/></div>):page==="news"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><NewsPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="community"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><CommunityPage isMo={isMo} navigateHome={navigateHome} effectiveUser={effectiveUser} setAuthMode={setAuthMode} setShowAuth={setShowAuth}/></div>):page==="policy"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><PolicyPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="market"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><MarketPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="terms"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><TermsHubPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="about"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><AboutPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="contact"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><ContactPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="guide"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><GuidePage isMo={isMo} navigateHome={navigateHome}/></div>):page==="pricing"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><PricingPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="verification"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><VerificationPage isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("reports:")?(<div style={{background:"#f8f9fb",minHeight:"100vh"}}><ReportsPage slug={page.replace("reports:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("learn:")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LearnPage slug={page.replace("learn:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("law:")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LawPage slug={page.replace("law:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("html:")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><HtmlAdapterPage url={page.replace("html:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("legal_")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LegalPage type={page.replace("legal_","")} onBack={navigateHome}/></div>):page==="admin"?(<AdminPage/>):page==="admin/callback"?(<AdminPage subPage="callback"/>):page==="404"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><NotFoundPage isMo={isMo} navigateHome={navigateHome} navigateCalc={navigateCalc}/></div>):page==="home"?(<>
       {/* 2026.04.16 sample-home 1:1 매칭 — 즐겨찾기 섹션 PC 숨김 (모바일만 유지) */}
       {isMo&&favorites.length>0&&<div style={{maxWidth:1200,margin:"0 auto",padding:"16px 16px 0",background:"#f8f9fc"}}>
         <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12}}>
@@ -6638,12 +6763,12 @@ body.lc-embed main{padding-top:0!important}
               <button onClick={()=>{const url=window.location.href;if(navigator.share){navigator.share({title:(CL.find(c=>c.id===calc)?.l||"")+" 계산기",url}).catch(()=>{});}else if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(url).then(()=>showToast("링크가 복사되었습니다")).catch(()=>showToast("복사 실패"));}else{const ta=document.createElement("textarea");ta.value=url;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);showToast("링크가 복사되었습니다");}}} aria-label="공유" style={{background:"#fff",border:"1px solid #E5E7EB",borderRadius:8,padding:"8px 14px",cursor:"pointer",fontSize:13,fontWeight:500,color:"#6B7280",display:"inline-flex",alignItems:"center",gap:6,fontFamily:"inherit"}}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>공유</button>
             </div>
           </div>
-          {adSlots?.header?.enabled&&!isMo&&<div style={{marginBottom:16}} dangerouslySetInnerHTML={{__html:adSlots.header.code||""}}/>}
+          {adSlots?.header?.enabled&&!isMo&&!noAds&&<div style={{marginBottom:16}} dangerouslySetInnerHTML={{__html:adSlots.header.code||""}}/>}
           <div className="calc-container" style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:isMo?16:32,marginBottom:24,boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
             {isMo?(<MobileCalcWrapper><Comp key={calc+"_"+sessionKey} isMo={true} onNav={navigateCalc}/></MobileCalcWrapper>):(<div><Comp key={calc+"_"+sessionKey} isMo={false} onNav={navigateCalc}/></div>)}
           </div>
-          {!isMo&&calc!=="acquisition"&&<NextStep calcId={calc} onNav={navigateCalc} isMo={false}/>}
-          {adSlots?.rp_bottom?.enabled&&!isMo&&<div style={{marginBottom:16}} dangerouslySetInnerHTML={{__html:adSlots.rp_bottom.code||""}}/>}
+          {!isMo&&<NextStep calcId={calc} onNav={navigateCalc} isMo={false}/>}
+          {adSlots?.rp_bottom?.enabled&&!isMo&&!noAds&&<div style={{marginBottom:16}} dangerouslySetInnerHTML={{__html:adSlots.rp_bottom.code||""}}/>}
 
           {/* 2026.04.15 sample-calc 기준 계산기 페이지 슬림화: MarketIntel·AdSlot·FUN_STATS 제거 */}
           {/* 완벽가이드: GUIDE_DATA가 있으면 GuideCard, 없으면 SEO_CONTENT fallback */}
@@ -6652,7 +6777,7 @@ body.lc-embed main{padding-top:0!important}
               <div className="seo" dangerouslySetInnerHTML={{__html:SEO_CONTENT[calc]}} style={{fontSize:15,color:"#374151",lineHeight:1.8}}/>
             </div>
           </div>)}
-          {adSlots?.guide_bottom?.enabled&&!isMo&&<div style={{marginBottom:16}} dangerouslySetInnerHTML={{__html:adSlots.guide_bottom.code||""}}/>}
+          {adSlots?.guide_bottom?.enabled&&!isMo&&!noAds&&<div style={{marginBottom:16}} dangerouslySetInnerHTML={{__html:adSlots.guide_bottom.code||""}}/>}
           {/* 2026.04.15 sample-calc 기준 계산기 페이지 슬림화: PRO 분석 카드 3종 제거 */}
         </div>
 
@@ -6720,7 +6845,7 @@ body.lc-embed main{padding-top:0!important}
         <div>
           <h4 style={{fontSize:13,fontWeight:800,color:"#fff",margin:"0 0 16px"}}>고객지원</h4>
           <ul style={{listStyle:"none",padding:0,margin:0}}>
-            {[{l:"공지사항",k:"notice"},{l:"자주 묻는 질문",k:"faq"},{l:"문의하기",k:"contact"},{l:"이용약관",k:"terms"}].map((it,i)=>(<li key={i} onClick={()=>navigateLegal(it.k==="contact"?"contact":it.k==="terms"?"privacy":"disclaimer")} style={{fontSize:13,color:"rgba(255,255,255,0.65)",padding:"6px 0",cursor:"pointer",transition:"color .15s"}} onMouseEnter={e=>e.currentTarget.style.color="#3b82f6"} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.65)"}>{it.l}</li>))}
+            {[{l:"회사 소개",k:"about"},{l:"문의하기",k:"contact"},{l:"공지사항",k:"notice"},{l:"이용약관",k:"terms"}].map((it,i)=>(<li key={i} onClick={()=>{if(it.k==="about"){setPage("about");history.pushState(null,"","/about");window.scrollTo(0,0);}else if(it.k==="contact"){setPage("contact");history.pushState(null,"","/contact");window.scrollTo(0,0);}else{navigateLegal(it.k==="terms"?"privacy":"disclaimer");}}} style={{fontSize:13,color:"rgba(255,255,255,0.65)",padding:"6px 0",cursor:"pointer",transition:"color .15s"}} onMouseEnter={e=>e.currentTarget.style.color="#3b82f6"} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.65)"}>{it.l}</li>))}
           </ul>
         </div>
         <div>
@@ -6745,7 +6870,7 @@ body.lc-embed main{padding-top:0!important}
         <div style={{fontSize:13,color:"#6B7280",lineHeight:1.6,maxWidth:640}}>생활 속 세금·대출·비용·부동산 종합 계산 플랫폼</div>
         <div style={{fontSize:12,color:"#6B7280",lineHeight:1.6,maxWidth:640}}>본 계산기는 참고용이며, 실제 세금·수수료는 세무사 또는 관할 기관에 반드시 확인하시기 바랍니다.</div>
         <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:20,flexWrap:"wrap",marginTop:12}}>
-          {[{l:"면책조항",k:"disclaimer"},{l:"자료실",k:"resource"},{l:"개인정보처리방침",k:"privacy"},{l:"문의",k:"contact"}].map(item=><span key={item.k} onClick={()=>navigateLegal(item.k)} style={{fontSize:13,color:"#6B7280",cursor:"pointer"}}>{item.l}</span>)}
+          {[{l:"회사 소개",k:"about"},{l:"문의하기",k:"contact"},{l:"개인정보처리방침",k:"privacy"},{l:"면책조항",k:"disclaimer"}].map(item=><span key={item.k} onClick={()=>{if(item.k==="about"){setPage("about");history.pushState(null,"","/about");window.scrollTo(0,0);}else if(item.k==="contact"){setPage("contact");history.pushState(null,"","/contact");window.scrollTo(0,0);}else{navigateLegal(item.k);}}} style={{fontSize:13,color:"#6B7280",cursor:"pointer"}}>{item.l}</span>)}
         </div>
         <div style={{fontSize:11,color:"#6B7280",marginTop:20,borderTop:"1px solid #E5E7EB",paddingTop:20,width:"100%",maxWidth:900}}>
           © {new Date().getFullYear()} 생활계산기.com. All rights reserved. | 세법 검증: {UPDATE_LOG[0]?.date}
