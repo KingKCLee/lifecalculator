@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "fix: 세율표 1열/nextstep 2열 JSX 구조 직접 수정",
+      "desc": "fix: 세율표 1열/nextstep 2열 JSX 구조 직접 수정"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "fix: 전체 계산기 nextstep Expert Guide 아래/세율표 1열 위치 통일",
       "desc": "fix: 전체 계산기 nextstep Expert Guide 아래/세율표 1열 위치 통일"
     },
@@ -1459,12 +1465,6 @@
       "category": "전체",
       "title": "fix(AddressModal): normalize whitespace in building name filter",
       "desc": "fix(AddressModal): normalize whitespace in building name filter"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "fix(AddressModal): optional 동/호, area-bucket filter, separated real/std flow",
-      "desc": "fix(AddressModal): optional 동/호, area-bucket filter, separated real/std flow"
     }
   ],
   "rates": {
