@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {tW, pN, fW, Inp, Tog, RP, CalcShell, MI, BaseRateHint} from "./_shared";
+import {tW, pN, fW, Inp, Tog, RP, CalcShell} from './_shared';
 
 // 경락잔금대출 계산기
 // - LTV: 비규제 80%, 조정 70%, 투기과열 60% (경락잔금은 일반 주담대보다 유리할 수 있음)
@@ -10,7 +10,7 @@ export default function CalcAuctionLoan({isMo=false, onNav=()=>{}}){
   const [appraisal, setAppraisal] = useState("");
   const [region, setRegion] = useState("normal");
   const [rate, setRate] = useState("");
-  const [years, setYears] = useState("");
+  const [years, setYears] = useState("30");
   const [rooms, setRooms] = useState("0");
   const bW = tW(bidPrice);
   const aW = tW(appraisal);
@@ -25,15 +25,14 @@ export default function CalcAuctionLoan({isMo=false, onNav=()=>{}}){
   const n = (parseInt(years)||0)*12;
   const monthly = maxLoan>0&&mRate>0&&n>0 ? Math.round(maxLoan*mRate*Math.pow(1+mRate,n)/(Math.pow(1+mRate,n)-1)) : 0;
 
-  return(<CalcShell title="경락잔금대출 계산기" isMo={isMo} wide>
-    <Inp label="낙찰가" value={bidPrice} onChange={setBidPrice} suffix="만원" error={!bidPrice||bidPrice==="0"}/>
-    <Inp label="감정가" value={appraisal} onChange={setAppraisal} suffix="만원" error={!appraisal||appraisal==="0"}/>
+  return(<CalcShell title="경락잔금대출 계산기" isMo={isMo}>
+    <Inp label="낙찰가" value={bidPrice} onChange={setBidPrice} suffix="만원"/>
+    <Inp label="감정가" value={appraisal} onChange={setAppraisal} suffix="만원"/>
     <Tog label="규제 지역" value={region} onChange={setRegion} options={[{value:"normal",label:"비규제 (80%)"},{value:"adj",label:"조정 (70%)"},{value:"spec",label:"투기과열 (60%)"}]}/>
     <Inp label="대출 금리" value={rate} onChange={setRate} suffix="%"/>
-    {!isMo&&<BaseRateHint/>}
     <Inp label="대출 기간" value={years} onChange={setYears} note="년"/>
     <Inp label="방 개수" value={rooms} onChange={setRooms} note="방공제 차감용 (소액임차보증금)"/>
-    <RP miss={(bidPrice&&bidPrice!=="0")?null:MI.auctionloan} title="경락잔금대출 한도" total={maxLoan}
+    <RP title="경락잔금대출 한도" total={maxLoan}
       sub={"LTV "+(ltv*100)+"% 기준"}
       alertMsg={bidCap<apprCap?"낙찰가 기준 LTV가 한도":"감정가 × 90% × LTV가 한도"}
       alertType="info"
