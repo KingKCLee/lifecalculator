@@ -250,7 +250,7 @@ export default function CalcRealPrice({isMo=false, onNav=()=>{}}){
 
   const btnBase = {padding:isMo?'12px 18px':'14px 24px', borderRadius:10, border:'none', fontSize:15, fontWeight:800, cursor:'pointer', fontFamily:'inherit', transition:'background .15s'};
 
-  return(<CalcShell title="실거래가 조회" isMo={isMo}>
+  return(<CalcShell title="실거래가 조회" isMo={isMo} wide>
     <div style={{marginBottom:16, padding:'14px 16px', background:'#eff6ff', border:'1px solid #93c5fd', borderRadius:10, fontSize:13, color:'#1e40af', lineHeight:1.6}}>
       📡 국토교통부 실거래가 공개 API를 직접 조회하여 최근 3개월 아파트 거래 내역을 실시간으로 표시합니다. 데이터는 매매 확정분만 포함됩니다.
     </div>

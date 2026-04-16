@@ -33,7 +33,7 @@ export default function CalcAuctionDiv({isMo=false, onNav=()=>{}}){
   take("⑥ 일반채권", general);
   dist.push({l:"잉여 (소유자 환급)", v:fW(Math.max(0,remain))});
 
-  return(<CalcShell title="경매 배당표 계산기" isMo={isMo}>
+  return(<CalcShell title="경매 배당표 계산기" isMo={isMo} wide>
     <Inp label="매각대금 (낙찰가)" value={salePrice} onChange={setSalePrice} suffix="만원" error={!salePrice||salePrice==="0"}/>
     <Inp label="집행비용" value={execCost} onChange={setExecCost} suffix="만원"/>
     <Inp label="최우선변제 (소액임차 보증금)" value={smallTenant} onChange={setSmallTenant} suffix="만원"/>

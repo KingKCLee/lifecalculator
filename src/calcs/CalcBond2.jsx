@@ -34,7 +34,7 @@ export default function CalcBond2({isMo=false, onNav=()=>{}}){
   // 채권을 즉시 매도(할인) 시 실부담액 = 매입금액 × 할인율
   const discount = Math.round(buyAmt * (pN(discountRate)/100));
 
-  return(<CalcShell title="국민주택채권 계산기" isMo={isMo}>
+  return(<CalcShell title="국민주택채권 계산기" isMo={isMo} wide>
     <Inp label="주택 공시가격 (시가표준액)" value={stdPrice} onChange={setStdPrice} suffix="만원" placeholder="예: 30000" error={!stdPrice||stdPrice==="0"}/>
     <Tog label="소재지" value={region} onChange={setRegion} options={[{value:"metro",label:"서울·광역시"},{value:"other",label:"그 외 지역"}]}/>
     <Inp label="즉시 매도(할인) 손실률" value={discountRate} onChange={setDiscountRate} suffix="%" note="시중 매입가와 액면가 차이 (통상 10~13%)"/>

@@ -21,7 +21,7 @@ export default function CalcAuction2({isMo=false, onNav=()=>{}}){
   const riskDisc = riskLevel==="low"?0:riskLevel==="mid"?0.05:0.12;
   const safeBid = Math.round(marketBid * (1-riskDisc));
 
-  return(<CalcShell title="경매 적정 입찰가 계산기" isMo={isMo}>
+  return(<CalcShell title="경매 적정 입찰가 계산기" isMo={isMo} wide>
     <Inp label="감정가" value={appraisal} onChange={setAppraisal} suffix="만원" placeholder="예: 80000" error={!appraisal||appraisal==="0"}/>
     <Tog label="소재지" value={region} onChange={setRegion} options={[{value:"metro",label:"수도권 (유찰-20%)"},{value:"other",label:"지방 (유찰-30%)"}]}/>
     <Inp label="유찰 횟수" value={fails} onChange={setFails} note="1회당 최저매각가격 하락"/>

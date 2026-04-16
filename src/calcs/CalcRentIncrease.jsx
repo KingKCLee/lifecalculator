@@ -22,7 +22,7 @@ export default function CalcRentIncrease({isMo=false, onNav=()=>{}}){
   // 선택지 B: 월세만 인상
   const maxMonthlyOnly = mW>0 ? Math.round(mW * (1+capR)) : 0;
 
-  return(<CalcShell title="임대료 5% 상한 계산기" isMo={isMo}>
+  return(<CalcShell title="임대료 5% 상한 계산기" isMo={isMo} wide>
     <Inp label="기존 보증금" value={deposit} onChange={setDeposit} suffix="만원" error={!deposit||deposit==="0"}/>
     <Inp label="기존 월세" value={monthly} onChange={setMonthly} suffix="만원"/>
     <Inp label="전월세전환율" value={convRate} onChange={setConvRate} suffix="%" note="기준금리(3.0%)+2%=5.0% (주임법 §7의2)"/>

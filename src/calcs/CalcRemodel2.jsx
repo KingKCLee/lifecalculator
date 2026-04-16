@@ -23,7 +23,7 @@ export default function CalcRemodel2({isMo=false, onNav=()=>{}}){
   const roi = costW>0 ? (netGain/costW)*100 : 0;
   const annualROI = m>0 ? (roi*12/m) : 0;
 
-  return(<CalcShell title="리모델링 타당성 계산기" isMo={isMo}>
+  return(<CalcShell title="리모델링 타당성 계산기" isMo={isMo} wide>
     <Inp label="현재 주택 시세" value={current} onChange={setCurrent} suffix="만원" error={!current||current==="0"}/>
     <Inp label="리모델링 후 예상가" value={afterValue} onChange={setAfterValue} suffix="만원" error={!afterValue||afterValue==="0"}/>
     <Inp label="총 공사비" value={cost} onChange={setCost} suffix="만원" error={!cost||cost==="0"}/>

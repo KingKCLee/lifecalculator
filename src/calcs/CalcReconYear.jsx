@@ -19,7 +19,7 @@ export default function CalcReconYear({isMo=false, onNav=()=>{}}){
   const canApply = age >= limit;
   const targetYear = by + limit;
 
-  return(<CalcShell title="재건축 가능연한 계산기" isMo={isMo}>
+  return(<CalcShell title="재건축 가능연한 계산기" isMo={isMo} wide>
     <Inp label="준공연도" value={builtYear} onChange={setBuiltYear} note="예: 1995" error={!builtYear}/>
     <Tog label="소재지" value={region} onChange={setRegion} options={[{value:"seoul",label:"서울"},{value:"metro",label:"광역시·경기"},{value:"other",label:"지방"}]}/>
     <Tog label="구조" value={structure} onChange={setStructure} options={[{value:"rc",label:"철근콘크리트"},{value:"brick",label:"조적·기타 (20년)"}]}/>

@@ -155,15 +155,28 @@ export function RP({title, total, sub, items, alertMsg, alertType="info", miss})
   </div>);
 }
 
-export function CalcShell({title, isMo, children}){
+const LC_REALESTATE_WORKER = "https://lc-realestate-worker.noble-kclee.workers.dev";
+export function BaseRateHint(){
+  const[rate,setRate]=React.useState(null);
+  React.useEffect(()=>{
+    fetch(LC_REALESTATE_WORKER+"/api/base-rate").then(r=>r.json()).then(j=>{if(j.ok)setRate(j);}).catch(()=>{});
+  },[]);
+  if(!rate)return null;
+  return(<div style={{fontSize:11,color:"#0141f9",fontWeight:600,marginTop:4,display:"flex",alignItems:"center",gap:4}}>
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+    현재 기준금리: {rate.rate}% ({rate.date})
+  </div>);
+}
+
+export function CalcShell({title, isMo, wide, children}){
   // 2026.04.14 2열 그리드 (입력 좌·RP 우). 모바일은 1열. RP 기준으로 children 분리.
+  // wide: 60/40 레이아웃 + 페이지 래퍼 h1 사용 (내부 h3 숨김)
   const arr = React.Children.toArray(children);
   const rpIdx = arr.findIndex(c => c && c.type === RP);
   const left = rpIdx >= 0 ? arr.slice(0, rpIdx) : arr;
   const right = rpIdx >= 0 ? arr.slice(rpIdx) : [];
-  return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}>
+  return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}>
     <div style={{minWidth:0}}>
-      {!isMo&&<h3 style={{fontSize:18,fontWeight:700,color:P.tx,margin:"0 0 20px"}}>{title}</h3>}
       {left}
     </div>
     {right.length>0 && <div style={{minWidth:0}}>{right}</div>}

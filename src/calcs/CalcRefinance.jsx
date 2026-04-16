@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {tW, pN, fW, Inp, Tog, RP, CalcShell, MI} from "./_shared";
+import {tW, pN, fW, Inp, Tog, RP, CalcShell, MI, BaseRateHint} from "./_shared";
 
 // 대환대출 (갈아타기) 비교 계산기
 // 기존 대출 vs 신규 대출 월 상환액·총 이자·중도상환수수료 포함 손익
@@ -37,6 +37,7 @@ export default function CalcRefinance({isMo=false, onNav=()=>{}}){
     <Inp label="기존 금리" value={oldRate} onChange={setOldRate} suffix="%" error={!oldRate||oldRate==="0"}/>
     <Inp label="기존 잔여 기간" value={oldYears} onChange={setOldYears} note="년"/>
     <Inp label="신규 금리" value={newRate} onChange={setNewRate} suffix="%"/>
+    {!isMo&&<BaseRateHint/>}
     <Inp label="신규 대출 기간" value={newYears} onChange={setNewYears} note="년"/>
     <Inp label="중도상환수수료율" value={ppFee} onChange={setPpFee} suffix="%" note="통상 1.2~1.5%"/>
     <Inp label="기존 대출 경과연수" value={elapsed} onChange={setElapsed} note="3년 슬라이딩 가정"/>
