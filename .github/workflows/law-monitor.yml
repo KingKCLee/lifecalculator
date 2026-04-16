@@ -14,7 +14,7 @@ jobs:
           response=$(curl -s -o /tmp/response.json -w "%{http_code}" \
             -X POST \
             "https://lc-realestate-worker.noble-kclee.workers.dev/api/admin/law-test" \
-            -H "Authorization: Bearer ${{ secrets.ADMIN_JWT_TOKEN }}" \
+            -H "X-Monitor-Secret: ${{ secrets.LAW_MONITOR_SECRET }}" \
             -H "Content-Type: application/json")
           echo "Response code: $response"
           cat /tmp/response.json 2>/dev/null || true
