@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.17",
       "category": "세금",
+      "title": "fix: 취득세 2열 grid 레이아웃 복구",
+      "desc": "fix: 취득세 2열 grid 레이아웃 복구"
+    },
+    {
+      "date": "2026.04.17",
+      "category": "세금",
       "title": "fix: 취득세 NextStep 2열 고정 + 전체 세율표 + Expert Guide 완벽가이드 통합",
       "desc": "fix: 취득세 NextStep 2열 고정 + 전체 세율표 + Expert Guide 완벽가이드 통합"
     },
@@ -1459,12 +1465,6 @@
       "category": "전체",
       "title": "fix: 소셜 로그인 이름 표시 + 속도 개선",
       "desc": "fix: 소셜 로그인 이름 표시 + 속도 개선"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "fix: 네이버/카카오 OAuth 콜백 플로우 수정",
-      "desc": "fix: 네이버/카카오 OAuth 콜백 플로우 수정"
     }
   ],
   "rates": {
