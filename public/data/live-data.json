@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "fix: Supabase 완전 제거 + 어드민 대시보드 API 매핑 수정",
+      "desc": "fix: Supabase 완전 제거 + 어드민 대시보드 API 매핑 수정"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "feat: 어드민 대시보드 고도화 — 사이드바 + 5탭 + 도넛차트 + 시간대바",
       "desc": "feat: 어드민 대시보드 고도화 — 사이드바 + 5탭 + 도넛차트 + 시간대바"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "feat: 모바일 Comp onNav 주입 + 브레드크럼 제거",
       "desc": "feat: 모바일 Comp onNav 주입 + 브레드크럼 제거"
-    },
-    {
-      "date": "2026.04.15",
-      "category": "전체",
-      "title": "feat: 메인 탭 onClick 토글로 변경 (페이지 이동 없음)",
-      "desc": "feat: 메인 탭 onClick 토글로 변경 (페이지 이동 없음)"
     }
   ],
   "rates": {
