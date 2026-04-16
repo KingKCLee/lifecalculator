@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "fix: 동호 입력 영문 허용",
+      "desc": "fix: 동호 입력 영문 허용"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "feat: PHASE2 - 네이버 키워드 통계 + GSC API 연동 + 키워드 탭 + stats 확장",
       "desc": "feat: PHASE2 - 네이버 키워드 통계 + GSC API 연동 + 키워드 탭 + stats 확장"
     },
@@ -1459,12 +1465,6 @@
       "category": "전체",
       "title": "fix: 트래킹 한글 깨짐 수정 (Content-Type charset=utf-8)",
       "desc": "fix: 트래킹 한글 깨짐 수정 (Content-Type charset=utf-8)"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "대출",
-      "title": "feat(loan): add /api/base-rate endpoint + BaseRateHint on 7 loan calcs (Mort/DSR/DTI/LoanMax/RTI/Refinance/AuctionLoan)",
-      "desc": "feat(loan): add /api/base-rate endpoint + BaseRateHint on 7 loan calcs (Mort/DSR/DTI/LoanMax/RTI/Refinance/AuctionLoan)"
     }
   ],
   "rates": {
