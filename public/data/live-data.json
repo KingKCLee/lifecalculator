@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "feat(address-modal): 절차 설명·인라인 힌트·에러 메시지·출처 표기 개선",
+      "desc": "feat(address-modal): 절차 설명·인라인 힌트·에러 메시지·출처 표기 개선"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "fix(RPFull): sample-calc 4+3 PC grid, fix '공유' to actually share (shareKakao)",
       "desc": "fix(RPFull): sample-calc 4+3 PC grid, fix '공유' to actually share (shareKakao)"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "feat: Phase 2 정적 페이지 React 풀 포팅 (Terms/Learn×6/Law×7/About/Pricing/Verification/Guide)",
       "desc": "feat: Phase 2 정적 페이지 React 풀 포팅 (Terms/Learn×6/Law×7/About/Pricing/Verification/Guide)"
-    },
-    {
-      "date": "2026.04.15",
-      "category": "전체",
-      "title": "feat: Phase 1 SPA 라우트 통합 (News/Community/Policy/Market/HTML 어댑터)",
-      "desc": "feat: Phase 1 SPA 라우트 통합 (News/Community/Policy/Market/HTML 어댑터)"
     }
   ],
   "rates": {
