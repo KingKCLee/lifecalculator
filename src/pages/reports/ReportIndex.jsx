@@ -62,11 +62,11 @@ export function ReportLayout({id, title, tag, date, toc, children, relatedCalcId
   return (
     <div style={{background:PALETTE.bg,minHeight:"100vh"}}>
       <div style={{maxWidth:880,margin:"0 auto",padding:isMo?"24px 16px 64px":"48px 24px 72px"}}>
-        <nav style={{fontSize:13,color:PALETTE.textMt,marginBottom:16}}>
-          <a href="/" onClick={e=>{e.preventDefault();navigateHome&&navigateHome();}} style={{color:PALETTE.textMt,textDecoration:"none"}}>생활계산기</a>
-          <span> › </span>
+        <nav style={{fontSize:13,color:PALETTE.textMt,marginBottom:16,display:"flex",alignItems:"center",gap:8}}>
+          <span onClick={()=>navigateHome&&navigateHome()} style={{cursor:"pointer",color:PALETTE.textMt}}>홈</span>
+          <span style={{color:"#d1d5db"}}>›</span>
           <a href="/reports" style={{color:PALETTE.textMt,textDecoration:"none"}}>AI 분석 보고서</a>
-          <span> › </span>
+          <span style={{color:"#d1d5db"}}>›</span>
           <span style={{color:PALETTE.navy,fontWeight:600}}>{me?.title||title}</span>
         </nav>
 
@@ -171,9 +171,9 @@ export default function ReportIndex({navigateHome, isMo}){
   return (
     <div style={{background:PALETTE.bg,minHeight:"100vh"}}>
       <div style={{maxWidth:1000,margin:"0 auto",padding:isMo?"24px 16px 64px":"48px 24px 72px"}}>
-        <nav style={{fontSize:13,color:PALETTE.textMt,marginBottom:16}}>
-          <a href="/" onClick={e=>{e.preventDefault();navigateHome&&navigateHome();}} style={{color:PALETTE.textMt,textDecoration:"none"}}>생활계산기</a>
-          <span> › </span>
+        <nav style={{fontSize:13,color:PALETTE.textMt,marginBottom:16,display:"flex",alignItems:"center",gap:8}}>
+          <span onClick={()=>navigateHome&&navigateHome()} style={{cursor:"pointer",color:PALETTE.textMt}}>홈</span>
+          <span style={{color:"#d1d5db"}}>›</span>
           <span style={{color:PALETTE.navy,fontWeight:600}}>AI 분석 보고서</span>
         </nav>
 
