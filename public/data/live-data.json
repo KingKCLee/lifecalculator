@@ -1168,6 +1168,12 @@
   "updateLog": [
     {
       "date": "2026.04.16",
+      "category": "전체",
+      "title": "feat: 회원혜택 배너 SVG 아이콘 적용",
+      "desc": "feat: 회원혜택 배너 SVG 아이콘 적용"
+    },
+    {
+      "date": "2026.04.16",
       "category": "세금",
       "title": "fix: 혜택배너/재산세정보표시/종부세보유세주소조회연동",
       "desc": "fix: 혜택배너/재산세정보표시/종부세보유세주소조회연동"
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "fix(home): AI 인사이트 카드 \"전체 보고서 보기 →\" 버튼을 /reports 로 연결",
       "desc": "fix(home): AI 인사이트 카드 \"전체 보고서 보기 →\" 버튼을 /reports 로 연결"
-    },
-    {
-      "date": "2026.04.15",
-      "category": "전체",
-      "title": "feat(home): sample-home 3개 섹션 추가 — 인기 12카드 + 통계 + 디렉토리 5열",
-      "desc": "feat(home): sample-home 3개 섹션 추가 — 인기 12카드 + 통계 + 디렉토리 5열"
     }
   ],
   "rates": {
