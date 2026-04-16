@@ -4434,7 +4434,7 @@ function AuthModal({mode,setMode,onClose,isMo,onAuthSuccess}){
         </div>
       </div>}
       <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:20}}>
-        <button onClick={()=>handleSocialLogin("구글")} style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,padding:14,background:"#fff",color:"#172B4D",border:"1.5px solid #dfe1e6",borderRadius:10,fontSize:15,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}><span style={{fontSize:18}}>G</span>Google로 {mode==="login"?"로그인":"시작하기"}</button>
+        <button onClick={()=>handleSocialLogin("구글")} onMouseEnter={e=>e.currentTarget.style.background="#3367D6"} onMouseLeave={e=>e.currentTarget.style.background="#4285F4"} style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,padding:14,background:"#4285F4",color:"#fff",border:"none",borderRadius:10,fontSize:15,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}><svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Google로 {mode==="login"?"로그인":"시작하기"}</button>
         <button onClick={()=>handleSocialLogin("네이버")} style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,padding:14,background:"#03C75A",color:"#fff",border:"none",borderRadius:10,fontSize:15,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}><span style={{fontSize:18,fontWeight:900}}>N</span>네이버로 {mode==="login"?"로그인":"시작하기"}</button>
         <button onClick={()=>handleSocialLogin("카카오")} style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,padding:14,background:"#FEE500",color:"#000000",border:"none",borderRadius:10,fontSize:15,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}><svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 3C6.5 3 2 6.58 2 11c0 2.84 1.87 5.33 4.68 6.73l-1.2 4.46c-.08.3.26.54.52.36L10.67 19c.43.05.88.07 1.33.07 5.5 0 10-3.58 10-8s-4.5-8-10-8z" fill="#000000"/></svg>카카오로 {mode==="login"?"로그인":"시작하기"}</button>
       </div>
@@ -6363,20 +6363,21 @@ body.lc-embed main{padding-top:0!important}
       {/* 회원 혜택 배너 (비회원 전용, PC) */}
       {!isMo&&!effectiveUser&&<div style={{padding:"0 32px 0"}}><div style={{maxWidth:1200,margin:"0 auto",background:"linear-gradient(135deg,#0747A6 0%,#0052CC 50%,#0065FF 100%)",borderRadius:16,padding:"36px 40px",color:"#fff",position:"relative",overflow:"hidden"}}>
         <div style={{position:"absolute",top:-40,right:-40,width:200,height:200,borderRadius:"50%",background:"rgba(255,255,255,0.06)"}}/>
-        <div style={{position:"relative"}}>
-          <div style={{fontSize:22,fontWeight:800,marginBottom:6,letterSpacing:"-0.5px"}}>무료 회원가입으로 더 많은 혜택을</div>
+        <div style={{position:"relative",display:"flex",gap:32,alignItems:"center"}}>
+          <div style={{flex:"1 1 auto",minWidth:0}}><div style={{fontSize:22,fontWeight:800,marginBottom:6,letterSpacing:"-0.5px"}}>무료 회원가입으로 더 많은 혜택을</div>
           <div style={{fontSize:14,opacity:.85,marginBottom:24,lineHeight:1.6}}>로그인 한 번으로 계산기 전체 기능을 이용하세요</div>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:14,marginBottom:24}}>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:14}}>
             {[{svg:<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>,t:"계산 내역 저장",d:"히스토리 자동 보관"},{svg:<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>,t:"AI 절세 가이드",d:"비회원 1회 → 회원 3회"},{svg:<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>,t:"금리·공시가 알림",d:"변동 시 즉시 알림"},{svg:<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>,t:"맞춤 보고서",d:"PDF 다운로드"}].map((b,i)=>(
               <div key={i} style={{background:"rgba(255,255,255,0.1)",borderRadius:12,padding:"16px",border:"1px solid rgba(255,255,255,0.15)",transition:"transform .2s,background .2s",cursor:"default"}} onMouseEnter={e=>{e.currentTarget.style.transform="scale(1.05)";e.currentTarget.style.background="rgba(255,255,255,0.18)";}} onMouseLeave={e=>{e.currentTarget.style.transform="scale(1)";e.currentTarget.style.background="rgba(255,255,255,0.1)";}}>
                 <div style={{width:48,height:48,borderRadius:"50%",background:"rgba(255,255,255,0.12)",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:10,color:"#fff"}}>{b.svg}</div>
                 <div style={{fontSize:13,fontWeight:700,marginBottom:2}}>{b.t}</div>
                 <div style={{fontSize:11,opacity:.75}}>{b.d}</div>
               </div>))}
+            </div>
           </div>
-          <div style={{display:"flex",gap:10}}>
-            <button onClick={()=>{setAuthMode("signup");setShowAuth(true);}} style={{padding:"12px 28px",background:"#fff",color:"#0747A6",border:"none",borderRadius:10,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>무료 회원가입</button>
-            <button onClick={()=>{setAuthMode("login");setShowAuth(true);}} style={{padding:"12px 28px",background:"rgba(255,255,255,0.15)",color:"#fff",border:"1px solid rgba(255,255,255,0.3)",borderRadius:10,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>로그인</button>
+          <div style={{width:170,flexShrink:0,display:"flex",flexDirection:"column",gap:8,alignSelf:"center"}}>
+            <button onClick={()=>{setAuthMode("signup");setShowAuth(true);}} style={{width:"100%",padding:"14px 0",background:"#fff",color:"#0747A6",border:"none",borderRadius:10,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit",textAlign:"center"}}>무료 회원가입</button>
+            <button onClick={()=>{setAuthMode("login");setShowAuth(true);}} style={{width:"100%",padding:"14px 0",background:"rgba(255,255,255,0.15)",color:"#fff",border:"1px solid rgba(255,255,255,0.3)",borderRadius:10,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit",textAlign:"center"}}>로그인</button>
           </div>
         </div>
       </div></div>}
