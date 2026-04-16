@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {tW, pN, fW, Inp, Sel, Tog, RP, CalcShell, MI, RateTable} from "./_shared";
+import {tW, pN, fW, Inp, Sel, Tog, RP, CalcShell, MI} from "./_shared";
 import AddressModal from "../components/AddressModal";
 
 const LAND_DEFAULTS = { apt_metro: 65, apt_local: 40, house: 50, commercial: 40, officetel: 40, other: 50 };
@@ -130,6 +130,5 @@ export default function CalcBldVat({isMo=false, onNav=()=>{}}){
         {l:"건물 공급가액", v:fW(supplyW), note:isTaxable?"총액÷1.1":"면세"},
         {l:"건물분 부가세", v:fW(vat), note:isTaxable?"공급가액×10%":"면세"}
       ]}/>
-    <RateTable title="건물분 부가세 과세 기준" headers={["구분","부가세"]} rows={[["주택 85㎡ 이하","면세"],["주택 85㎡ 초과","10%"],["상가·오피스텔(업무)","10%"],["토지","면세"]]}/>
   </CalcShell>);
 }

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Inp, Tog, RP, CalcShell, MI, RateTable} from "./_shared";
+import {Inp, Tog, RP, CalcShell, MI} from "./_shared";
 
 // 날짜 간격 계산기 (부동산 계약·전입·보유기간 계산용)
 // 두 날짜 간 일수, 개월, 년수 및 D-day
@@ -56,6 +56,5 @@ export default function CalcDateDiff({isMo=false, onNav=()=>{}}){
         {l:"만 연수", v:years+"년"},
         {l:"년-월-일", v:years+"년 "+(months-years*12)+"개월"}
       ]}/>
-    <RateTable title="주요 세금 신고기한" headers={["세목","신고기한"]} rows={[["취득세","취득일로부터 60일"],["양도세 (예정)","양도일 속한 달 말일 + 2개월"],["상속세","사망일 속한 달 말일 + 6개월"],["증여세","증여일 속한 달 말일 + 3개월"],["종합소득세","매년 5.1~5.31"],["종부세","매년 12.1~12.15"]]}/>
   </CalcShell>);
 }

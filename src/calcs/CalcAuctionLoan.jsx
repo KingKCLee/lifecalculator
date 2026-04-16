@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {tW, pN, fW, Inp, Tog, RP, CalcShell, RateTable} from './_shared';
+import {tW, pN, fW, Inp, Tog, RP, CalcShell} from './_shared';
 
 // 경락잔금대출 계산기
 // - LTV: 비규제 80%, 조정 70%, 투기과열 60% (경락잔금은 일반 주담대보다 유리할 수 있음)
@@ -44,6 +44,5 @@ export default function CalcAuctionLoan({isMo=false, onNav=()=>{}}){
         {l:"예상 월 원리금", v:fW(monthly)},
         {l:"필요 현금 (잔금-대출)", v:fW(Math.max(0, bW - maxLoan))}
       ]}/>
-    <RateTable title="경락잔금대출 LTV 기준" headers={["지역","LTV 한도"]} rows={[["비규제지역","80%"],["조정대상지역","70%"],["투기과열지구","60%"]]}/>
   </CalcShell>);
 }

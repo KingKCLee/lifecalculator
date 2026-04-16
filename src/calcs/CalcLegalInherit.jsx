@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {tW, pN, fW, Inp, Tog, RP, CalcShell, MI, RateTable} from "./_shared";
+import {tW, pN, fW, Inp, Tog, RP, CalcShell, MI} from "./_shared";
 
 // 법정상속분 계산기 (민법 제1009조)
 // - 배우자: 1.5 (공동상속인 중 직계비속/존속이 있을 때)
@@ -49,6 +49,5 @@ export default function CalcLegalInherit({isMo=false, onNav=()=>{}}){
       alertMsg={"민법 제1009조 법정상속분 기준. 유류분(배우자·자녀 1/2, 존속 1/3) 침해 여부는 별도 판단"}
       alertType="info"
       items={items}/>
-    <RateTable title="법정상속 순위 및 비율" headers={["순위","상속인","비율"]} rows={[["1순위","직계비속 + 배우자","각 1 : 배우자 1.5"],["2순위","직계존속 + 배우자","각 1 : 배우자 1.5"],["3순위","형제자매","균분"],["4순위","4촌 이내 방계혈족","균분"],["단독","배우자만","전액"]]}/>
   </CalcShell>);
 }

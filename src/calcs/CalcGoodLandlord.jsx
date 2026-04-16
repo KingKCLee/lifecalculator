@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {tW, pN, fW, Inp, Tog, RP, CalcShell, MI, RateTable} from "./_shared";
+import {tW, pN, fW, Inp, Tog, RP, CalcShell, MI} from "./_shared";
 
 // 착한임대인 세액공제 (조세특례제한법 제96조의3)
 // 상가 임대료 인하액의 70% 세액공제 (소득금액 1억 이하 시)
@@ -34,6 +34,5 @@ export default function CalcGoodLandlord({isMo=false, onNav=()=>{}}){
         {l:"세액공제액", v:fW(credit)},
         {l:"임대인 실손실", v:fW(netLoss)}
       ]}/>
-    <RateTable title="착한임대인 세액공제율" headers={["소득금액","공제율"]} rows={[["1억원 이하","인하액의 70%"],["1억원 초과","인하액의 50%"]]}/>
   </CalcShell>);
 }

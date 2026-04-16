@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {tW, pN, fW, Inp, Tog, RP, CalcShell, MI, RateTable} from "./_shared";
+import {tW, pN, fW, Inp, Tog, RP, CalcShell, MI} from "./_shared";
 
 // 간주임대료 계산기 (소득세법 제25조)
 // 3주택 이상 보유 + 전세보증금 합계가 3억원 초과인 경우 과세
@@ -38,6 +38,5 @@ export default function CalcImputedRent({isMo=false, onNav=()=>{}}){
         {l:"금융소득 차감", v:"-"+fW(finW)},
         {l:"과세 간주임대료", v:fW(netImputed)}
       ]}/>
-    <RateTable title="간주임대료 과세 기준" headers={["구분","기준"]} rows={[["과세 요건","3주택 이상 + 보증금 3억 초과"],["공제액","3억원"],["적용 비율","60%"],["정기예금이자율","약 3.5% (국세청 고시)"],["소형주택 제외","전용 40㎡ + 기준시가 2억 이하"]]}/>
   </CalcShell>);
 }

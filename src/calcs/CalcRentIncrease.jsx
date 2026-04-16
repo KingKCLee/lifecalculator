@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {tW, pN, fW, Inp, Tog, RP, CalcShell, MI, RateTable} from "./_shared";
+import {tW, pN, fW, Inp, Tog, RP, CalcShell, MI} from "./_shared";
 
 // 임대료 5% 상한 계산기 (주택임대차보호법 제7조)
 // - 계약갱신청구권 행사 시 기존 임대료 대비 5% 이내 인상만 가능
@@ -38,6 +38,5 @@ export default function CalcRentIncrease({isMo=false, onNav=()=>{}}){
         {l:"B. 월세만 인상 시 최대", v:fW(maxMonthlyOnly)},
         {l:"인상 여력", v:fW(increase)}
       ]}/>
-    <RateTable title="임대료 인상 제한 기준" headers={["구분","기준"]} rows={[["인상 상한","직전 계약의 5%"],["전환율 상한","기준금리 + 2%p"],["갱신청구권","1회 (2년)"],["2026 전환율 상한","5.0%"]]}/>
   </CalcShell>);
 }

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Inp, Sel, Tog, RP, CalcShell, MI, RateTable} from "./_shared";
+import {Inp, Sel, Tog, RP, CalcShell, MI} from "./_shared";
 
 // 재건축 가능연한 계산기 (도시 및 주거환경정비법)
 // 서울: 30년 (2014년 단축), 광역시·경기 27~30년, 지방 20~30년
@@ -34,6 +34,5 @@ export default function CalcReconYear({isMo=false, onNav=()=>{}}){
         {l:"연한 충족 시점", v:targetYear+"년"},
         {l:"남은 기간", v:yearsLeft+"년"}
       ]}/>
-    <RateTable title="지역별 재건축 가능연한" headers={["지역","연한"]} rows={[["서울특별시","30년"],["광역시","25~30년"],["경기도","25~30년"],["기타 지방","20~25년"]]}/>
   </CalcShell>);
 }

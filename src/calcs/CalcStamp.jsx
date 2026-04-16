@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {tW, fW, Inp, Tog, RP, CalcShell, MI, RateTable} from "./_shared";
+import {tW, fW, Inp, Tog, RP, CalcShell, MI} from "./_shared";
 
 // 부동산 매매계약서 인지세 (지방세법 + 인지세법)
 // 과세표준: 1천만원 이하 비과세, 1천만~3천만 2만, 3천만~5천만 4만, 5천만~1억 7만,
@@ -39,6 +39,5 @@ export default function CalcStamp({isMo=false, onNav=()=>{}}){
         {l:"매수인 부담", v:fW(buyerShare)},
         {l:"매도인 부담", v:fW(sellerShare)}
       ]}/>
-    <RateTable title="전자계약 인지세 (50% 감면)" headers={["거래금액","일반 인지세","전자계약"]} rows={[["1억 이하","비과세","비과세"],["1~10억","15만원","7.5만원"],["10~30억","35만원","17.5만원"],["30억 초과","50만원","25만원"]]}/>
   </CalcShell>);
 }

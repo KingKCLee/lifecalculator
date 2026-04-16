@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {tW, pN, fW, Inp, Tog, RP, CalcShell, MI, RateTable} from './_shared';
+import {tW, pN, fW, Inp, Tog, RP, CalcShell, MI} from './_shared';
 
 // 경매 적정 입찰가 추정기
 // - 감정가 기준 낙찰률 (지역/용도별 통계)
@@ -37,6 +37,5 @@ export default function CalcAuction2({isMo=false, onNav=()=>{}}){
         {l:"리스크 할인", v:"-"+(riskDisc*100)+"%"},
         {l:"권장 입찰가", v:fW(safeBid)}
       ]}/>
-    <RateTable title="지역별 평균 낙찰가율" headers={["물건 유형","서울","수도권","지방"]} rows={[["아파트","87~92%","80~88%","70~82%"],["단독/다가구","75~85%","65~78%","55~70%"],["상가","60~75%","50~65%","40~55%"],["토지","65~80%","55~70%","45~60%"]]}/>
   </CalcShell>);
 }

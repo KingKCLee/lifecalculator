@@ -104,25 +104,7 @@ export function Tog({label, value, onChange, options}){
 
 export const Radio = Tog;
 
-export function RateTable({title, headers, rows}){
-  const isMo = useIsMobile();
-  return(
-    <div style={{marginTop:16,borderRadius:12,overflow:"hidden",border:"1px solid #dfe1e6"}}>
-      <div style={{padding:isMo?"10px 12px":"10px 14px",background:"#f4f5f7",fontSize:12,fontWeight:700,color:"#172B4D",display:"flex",alignItems:"center",gap:6}}>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 20h18"/><path d="M6 16V8"/><path d="M12 16V4"/><path d="M18 16v-6"/></svg>
-        {title}
-      </div>
-      <div style={{overflowX:"auto",WebkitOverflowScrolling:"touch"}}>
-        <table style={{width:"100%",borderCollapse:"collapse",fontSize:12,background:"#fff"}}>
-          <thead><tr>{headers.map((h,i)=><th key={i} style={{padding:"8px 10px",background:"#0747A6",color:"#fff",fontWeight:600,textAlign:i===0?"left":"center",whiteSpace:"nowrap",fontSize:11}}>{h}</th>)}</tr></thead>
-          <tbody>{rows.map((r,ri)=><tr key={ri} style={{background:ri%2===0?"#fff":"#f8f9fc"}}>
-            {r.map((c,ci)=><td key={ci} style={{padding:"7px 10px",borderBottom:"1px solid #f0f0f0",textAlign:ci===0?"left":"center",whiteSpace:"nowrap",fontSize:11,color:ci===0?"#172B4D":"#505f79"}}>{c}</td>)}
-          </tr>)}</tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
+// RateTable removed — rate data now in GuideCard section3
 
 // 2026.04.15 계산기별 필수 입력 항목 안내 (외부 calcs 공용)
 export const MI = {
