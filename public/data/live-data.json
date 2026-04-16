@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "feat: PHASE2 - 네이버 키워드 통계 + GSC API 연동 + 키워드 탭 + stats 확장",
+      "desc": "feat: PHASE2 - 네이버 키워드 통계 + GSC API 연동 + 키워드 탭 + stats 확장"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "feat: 전체 62개 완벽가이드 GuideCard JSX 컴포넌트 통일",
       "desc": "feat: 전체 62개 완벽가이드 GuideCard JSX 컴포넌트 통일"
     },
@@ -1459,12 +1465,6 @@
       "category": "대출",
       "title": "feat(loan): add /api/base-rate endpoint + BaseRateHint on 7 loan calcs (Mort/DSR/DTI/LoanMax/RTI/Refinance/AuctionLoan)",
       "desc": "feat(loan): add /api/base-rate endpoint + BaseRateHint on 7 loan calcs (Mort/DSR/DTI/LoanMax/RTI/Refinance/AuctionLoan)"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "feat(mypage): ADMIN_EMAIL 일치 시 어드민 대시보드 메뉴 표시",
-      "desc": "feat(mypage): ADMIN_EMAIL 일치 시 어드민 대시보드 메뉴 표시"
     }
   ],
   "rates": {
