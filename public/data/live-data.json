@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "fix: 주소조회 팝업 보유세 공시가격만 입력되도록 분기",
+      "desc": "fix: 주소조회 팝업 보유세 공시가격만 입력되도록 분기"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "feat: AI가이드 횟수제한 + 회원혜택 홈 노출 + 비회원 로그인 유도 CTA",
       "desc": "feat: AI가이드 횟수제한 + 회원혜택 홈 노출 + 비회원 로그인 유도 CTA"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "feat: AI PRO 인사이트 보고서 #08, #09 추가",
       "desc": "feat: AI PRO 인사이트 보고서 #08, #09 추가"
-    },
-    {
-      "date": "2026.04.15",
-      "category": "전체",
-      "title": "feat(reports): AI PRO 인사이트 보고서 7편 + 목록 페이지 + 라우팅 연결",
-      "desc": "feat(reports): AI PRO 인사이트 보고서 7편 + 목록 페이지 + 라우팅 연결"
     }
   ],
   "rates": {
