@@ -22,6 +22,7 @@ const MENU = [
   { id: "notice", label: "공지사항", icon: "N" },
   { id: "consult", label: "상담 신청", icon: "C" },
   { id: "newsletter", label: "뉴스레터", icon: "E" },
+  { id: "members", label: "회원 관리", icon: "U" },
 ];
 
 export default function AdminDashboard({ token, session, onLogout }) {
@@ -66,6 +67,7 @@ export default function AdminDashboard({ token, session, onLogout }) {
       {tab === "notice" && <NoticeTab authFetch={authFetch} />}
       {tab === "consult" && <ConsultTab authFetch={authFetch} />}
       {tab === "newsletter" && <NewsletterTab authFetch={authFetch} />}
+        {tab === "members" && <MembersTab authFetch={authFetch} />}
     </main>
   </div>);
 }
@@ -332,5 +334,80 @@ function LawTab({ authFetch }) {
         </table>)}
     </div>
     {msg && <div style={{ marginTop: 12, fontSize: 13, fontWeight: 600, color: msg.includes("\uC644\uB8CC") ? "#10b981" : "#ef4444" }}>{msg}</div>}
+  </div>);
+}
+
+/* --- 회원 관리 탭 --- */
+function MembersTab({ authFetch }) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const fNum = (n) => Number(n || 0).toLocaleString("ko-KR");
+
+  const load = async (q) => {
+    setLoading(true);
+    try {
+      const qs = q ? "?q=" + encodeURIComponent(q) : "";
+      const r = await authFetch("/api/admin/members" + qs);
+      const j = await r.json().catch(() => ({}));
+      if (j.ok) setData(j);
+    } catch {}
+    finally { setLoading(false); }
+  };
+  useEffect(() => { load(); }, []);
+
+  const cardSt = { background: "#fff", borderRadius: 14, padding: "18px 22px", border: "1px solid #E5E7EB", flex: "1 1 140px", minWidth: 0 };
+
+  return (<div>
+    {data && <div style={{ display: "flex", gap: 14, flexWrap: "wrap", marginBottom: 24 }}>
+      {[
+        { l: "\uCD1D \uD68C\uC6D0\uC218", v: fNum(data.stats?.total) },
+        { l: "\uC624\uB298 \uAC00\uC785", v: fNum(data.stats?.today), color: "#10b981" },
+        { l: "\uC774\uBC88 \uC8FC", v: fNum(data.stats?.week) },
+        { l: "\uC774\uBC88 \uB2EC", v: fNum(data.stats?.month) },
+      ].map((c, i) => (
+        <div key={i} style={cardSt}>
+          <div style={{ fontSize: 12, color: "#6b778c", fontWeight: 600, marginBottom: 6 }}>{c.l}</div>
+          <div style={{ fontSize: 24, fontWeight: 800, color: c.color || "#0a1628" }}>{c.v}</div>
+        </div>
+      ))}
+    </div>}
+
+    <div style={{ display: "flex", gap: 10, marginBottom: 16 }}>
+      <input value={search} onChange={e => setSearch(e.target.value)} onKeyDown={e => { if (e.key === "Enter") load(search); }}
+        placeholder={"\uC774\uB984/\uC774\uBA54\uC77C/\uC804\uD654\uBC88\uD638 \uAC80\uC0C9"}
+        style={{ flex: 1, padding: "10px 14px", border: "1px solid #E5E7EB", borderRadius: 8, fontSize: 14, fontFamily: "inherit", outline: "none" }} />
+      <button onClick={() => load(search)} style={{ padding: "10px 20px", background: "#0141f9", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>{"\uAC80\uC0C9"}</button>
+    </div>
+
+    <div style={{ background: "#fff", borderRadius: 14, padding: "20px 24px", border: "1px solid #E5E7EB" }}>
+      {loading ? <div style={{ color: "#6b778c", padding: 20 }}>{"\uB85C\uB4DC \uC911..."}</div> : (
+        <div style={{ overflowX: "auto" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+            <thead><tr style={{ borderBottom: "2px solid #E5E7EB" }}>
+              {["", "\uC774\uB984", "\uC774\uBA54\uC77C", "\uAC00\uC785\uACBD\uB85C", "\uAC00\uC785\uC77C", "\uCD5C\uADFC \uB85C\uADF8\uC778", "\uB85C\uADF8\uC778"].map((h, i) => (
+                <th key={i} style={{ padding: "10px 10px", textAlign: "left", color: "#6b778c", fontWeight: 600, whiteSpace: "nowrap" }}>{h}</th>
+              ))}
+            </tr></thead>
+            <tbody>
+              {(!data?.members || data.members.length === 0) ?
+                <tr><td colSpan={7} style={{ padding: 30, textAlign: "center", color: "#9ca3af" }}>{"\uD68C\uC6D0 \uC5C6\uC74C"}</td></tr> :
+                data.members.map((m, i) => (
+                  <tr key={i} style={{ borderBottom: "1px solid #f4f5f7" }}>
+                    <td style={{ padding: "10px 10px" }}>{m.profile_image ? <img src={m.profile_image} alt="" style={{ width: 28, height: 28, borderRadius: "50%", objectFit: "cover" }} /> : <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#E5E7EB", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, color: "#6b778c" }}>{(m.name || "?")[0]}</div>}</td>
+                    <td style={{ padding: "10px 10px", fontWeight: 600, color: "#0a1628" }}>{m.name || "-"}</td>
+                    <td style={{ padding: "10px 10px", color: "#505f79" }}>{m.email}</td>
+                    <td style={{ padding: "10px 10px" }}><span style={{ fontSize: 11, padding: "2px 8px", borderRadius: 4, background: m.provider === "google" ? "#E8F5E9" : m.provider === "naver" ? "#E8F5E9" : "#FFF3E0", color: m.provider === "google" ? "#2E7D32" : m.provider === "naver" ? "#2E7D32" : "#E65100", fontWeight: 600 }}>{m.provider || "-"}</span></td>
+                    <td style={{ padding: "10px 10px", color: "#6b778c", whiteSpace: "nowrap" }}>{m.created_at_str}</td>
+                    <td style={{ padding: "10px 10px", color: "#6b778c", whiteSpace: "nowrap" }}>{m.last_login_str}</td>
+                    <td style={{ padding: "10px 10px", fontWeight: 700, color: "#0a1628", textAlign: "center" }}>{m.login_count}</td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
   </div>);
 }
