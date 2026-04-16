@@ -39,7 +39,7 @@ const bucketToRange = (b) => {
 const fKRW = (n) => "₩" + Number(n || 0).toLocaleString("ko-KR");
 
 // calcType: "acquisition"(기본, 실거래가+공시가격), "holding"(공시가격만), "transfer"(실거래가만)
-export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onApplyArea, onApplyInfo, currentArea, calcType }) {
+export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onApplyArea, onApplyInfo, onApplyDate, currentArea, calcType }) {
   const mode = calcType || (onApplyPrice && onApplyStd ? "acquisition" : onApplyStd ? "holding" : onApplyPrice ? "transfer" : "acquisition");
   const [stage, setStage] = useState(1);
   const [keyword, setKeyword] = useState("");
@@ -245,6 +245,10 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
           const applyBoth = () => {
             if (mode !== "holding" && sel && onApplyPrice) { onApplyPrice(sel.amount); if (onApplyArea && sel.area) onApplyArea(areaToBucket(sel.area)); }
             if (mode !== "transfer" && stdInfo && onApplyStd) onApplyStd(stdInfo.price);
+            if (onApplyDate && sel) {
+              const y = sel.year || ""; const mo = String(sel.month || "").padStart(2, "0"); const d = String(sel.day || "").padStart(2, "0");
+              if (y && mo && d) onApplyDate(y + mo + d);
+            }
             if (onApplyInfo) onApplyInfo({
               aptName: picked ? picked.bdNm : (sel ? sel.apt : ""),
               dongNm: dongNm || (stdInfo ? stdInfo.dong : ""),

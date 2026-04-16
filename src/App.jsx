@@ -1990,7 +1990,7 @@ function CalcTrans({isMo=false,onNav=()=>{}}){
   const[sellAmt,setSellAmt]=useState("");
   const[costTotal,setCostTotal]=useState("");
   const[buyDate,setBuyDate]=useState("");
-  const[sellDate,setSellDate]=useState("");
+  const[sellDate,setSellDate]=useState(()=>{const d=new Date();return d.getFullYear()+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0");});
   const[inheritBuyDate,setInheritBuyDate]=useState("");
   const[approveDate,setApproveDate]=useState("");const[showTransBuyLookup,setShowTransBuyLookup]=useState(false);const[showTransSellLookup,setShowTransSellLookup]=useState(false);
   const[unionPrice,setUnionPrice]=useState("");
@@ -2219,7 +2219,7 @@ function CalcTrans({isMo=false,onNav=()=>{}}){
         </div>
       </div>
       <hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"16px 0"}}/>
-      {!isMo&&<div style={{marginBottom:10}}><button type="button" onClick={()=>setShowTransBuyLookup(true)} style={{width:"100%",padding:"12px 16px",background:"linear-gradient(135deg,#eff6ff,#dbeafe)",border:"1.5px solid #bfdbfe",borderRadius:10,fontSize:13,fontWeight:700,color:"#1e40af",cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>📍 취득 당시 주소로 실거래가 조회</button></div>}{showTransBuyLookup&&<AddressModal onClose={()=>setShowTransBuyLookup(false)} onApplyPrice={v=>{setBuyAmt(String(Math.round(v/10000)));}}/>}{_inlineRow("취득가액",_moneyInput(buyAmt,setBuyAmt,"예: 50000"),"만원")}
+      {!isMo&&<div style={{marginBottom:10}}><button type="button" onClick={()=>setShowTransBuyLookup(true)} style={{width:"100%",padding:"12px 16px",background:"linear-gradient(135deg,#eff6ff,#dbeafe)",border:"1.5px solid #bfdbfe",borderRadius:10,fontSize:13,fontWeight:700,color:"#1e40af",cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>📍 취득 당시 주소로 실거래가 조회</button></div>}{showTransBuyLookup&&<AddressModal onClose={()=>setShowTransBuyLookup(false)} onApplyPrice={v=>{setBuyAmt(String(Math.round(v/10000)));}} onApplyDate={d=>setBuyDate(d)}/>}{_inlineRow("취득가액",_moneyInput(buyAmt,setBuyAmt,"예: 50000"),"만원")}
       {!isMo&&<div style={{marginBottom:10}}><button type="button" onClick={()=>setShowTransSellLookup(true)} style={{width:"100%",padding:"12px 16px",background:"linear-gradient(135deg,#eff6ff,#dbeafe)",border:"1.5px solid #bfdbfe",borderRadius:10,fontSize:13,fontWeight:700,color:"#1e40af",cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>📍 양도 시점 주소로 실거래가 조회</button></div>}{showTransSellLookup&&<AddressModal onClose={()=>setShowTransSellLookup(false)} onApplyPrice={v=>{setSellAmt(String(Math.round(v/10000)));}}/>}{_inlineRow("양도가액",_moneyInput(sellAmt,setSellAmt,"예: 80000"),"만원")}
       {_inlineRow(<>필요경비 <TipModal title="필요경비"><p>취득세·등기비·중개수수료·인테리어비(자본적지출) 등이 필요경비로 인정됩니다.</p><p>대출이자·재산세는 필요경비 불인정.</p></TipModal></>,_moneyInput(costTotal,setCostTotal,"취득세+중개수수료+법무사비 등"),"만원")}
       {showJoint&&_inlineRow("공동명의 지분",_numInput(jointRate,setJointRate,"1~99"),"%")}
