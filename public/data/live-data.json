@@ -1168,6 +1168,12 @@
   "updateLog": [
     {
       "date": "2026.04.16",
+      "category": "전체",
+      "title": "fix: 트래킹 한글 깨짐 수정 (Content-Type charset=utf-8)",
+      "desc": "fix: 트래킹 한글 깨짐 수정 (Content-Type charset=utf-8)"
+    },
+    {
+      "date": "2026.04.16",
       "category": "대출",
       "title": "feat(loan): add /api/base-rate endpoint + BaseRateHint on 7 loan calcs (Mort/DSR/DTI/LoanMax/RTI/Refinance/AuctionLoan)",
       "desc": "feat(loan): add /api/base-rate endpoint + BaseRateHint on 7 loan calcs (Mort/DSR/DTI/LoanMax/RTI/Refinance/AuctionLoan)"
@@ -1460,12 +1466,6 @@
       "category": "세금",
       "title": "style: 취득세 '공시가격 1억 이하 중과 제외' 안내박스 하단 여백 16px 추가",
       "desc": "style: 취득세 '공시가격 1억 이하 중과 제외' 안내박스 하단 여백 16px 추가"
-    },
-    {
-      "date": "2026.04.15",
-      "category": "세금",
-      "title": "feat: PC UI 6종 개선 (취득세 파일럿 + 공통 RP/sub-tabs/pro-cards)",
-      "desc": "feat: PC UI 6종 개선 (취득세 파일럿 + 공통 RP/sub-tabs/pro-cards)"
     }
   ],
   "rates": {

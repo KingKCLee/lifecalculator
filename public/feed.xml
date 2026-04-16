@@ -5,8 +5,15 @@
     <link>https://xn--989a00a691bdfa717h.com/</link>
     <description>취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 등 39가지 무료 계산기. 매일 자동 업데이트.</description>
     <language>ko</language>
-    <lastBuildDate>Thu, 16 Apr 2026 12:11:45 +0900</lastBuildDate>
+    <lastBuildDate>Thu, 16 Apr 2026 12:15:42 +0900</lastBuildDate>
     <atom:link href="https://xn--989a00a691bdfa717h.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+    <title>fix: 트래킹 한글 깨짐 수정 (Content-Type charset=utf-8)</title>
+    <link>https://xn--989a00a691bdfa717h.com/</link>
+    <description>fix: 트래킹 한글 깨짐 수정 (Content-Type charset=utf-8)</description>
+    <pubDate>Thu, 16 Apr 2026 12:15:42 +0900</pubDate>
+    <guid>https://xn--989a00a691bdfa717h.com/#update-202604160315</guid>
+  </item>
     <item>
     <title>feat(loan): add /api/base-rate endpoint + BaseRateHint on 7 loan calcs (Mort/DSR/DTI/LoanMax/RTI/Refinance/AuctionLoan)</title>
     <link>https://xn--989a00a691bdfa717h.com/</link>
