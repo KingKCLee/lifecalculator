@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "feat: 네이버 + 카카오 소셜 로그인 추가",
+      "desc": "feat: 네이버 + 카카오 소셜 로그인 추가"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "feat: 부동산 카테고리 21개 계산기 포맷 전파 — 60/40 그리드 + h3 제거 + AddressModal 연동 6종",
       "desc": "feat: 부동산 카테고리 21개 계산기 포맷 전파 — 60/40 그리드 + h3 제거 + AddressModal 연동 6종"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "fix: 메가메뉴 hover/click 동작 강화 (type/preventDefault/borderBottom none)",
       "desc": "fix: 메가메뉴 hover/click 동작 강화 (type/preventDefault/borderBottom none)"
-    },
-    {
-      "date": "2026.04.15",
-      "category": "전체",
-      "title": "style: 홈 섹션 헤더 이모지 5종 SVG 아이콘 교체",
-      "desc": "style: 홈 섹션 헤더 이모지 5종 SVG 아이콘 교체"
     }
   ],
   "rates": {
