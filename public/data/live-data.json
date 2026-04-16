@@ -1168,6 +1168,12 @@
   "updateLog": [
     {
       "date": "2026.04.16",
+      "category": "세금",
+      "title": "fix: 전체 계산기 UI 취득세 기준으로 통일 (버튼/모달/레이아웃)",
+      "desc": "fix: 전체 계산기 UI 취득세 기준으로 통일 (버튼/모달/레이아웃)"
+    },
+    {
+      "date": "2026.04.16",
       "category": "전체",
       "title": "fix: 전체 계산기 모든 표 위치 좌열 입력박스 아래로 통일",
       "desc": "fix: 전체 계산기 모든 표 위치 좌열 입력박스 아래로 통일"
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "feat(calc): sample-calc .field-label 스타일 전역 CSS 적용 (PC)",
       "desc": "feat(calc): sample-calc .field-label 스타일 전역 CSS 적용 (PC)"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "feat(calc): CalcAcq 본문 레이아웃 spec 5종 업데이트 (CSS only)",
-      "desc": "feat(calc): CalcAcq 본문 레이아웃 spec 5종 업데이트 (CSS only)"
     }
   ],
   "rates": {
