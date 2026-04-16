@@ -3069,14 +3069,14 @@ function CalcAppraisal({isMo=false,onNav=()=>{}}){
       deadline="※ 감정평가협회 표준보수표 기준 (실제는 협의)"
       alertMsg={pW>=50e8?"고가 부동산: 감정평가 2인 이상 권장":null}
       alertType="info"
-      total={total} sub={vatType==="include"?"부가세 포함":"부가세 별도"} items={[{l:"감정가액",v:fW(pW)},{l:"기본 수수료 (누진)",v:fW(fee),note:"구간별 누진 계산"},{l:"부가가치세 (10%)",v:fW(vat)},{l:"합계 ("+(vatType==="include"?"VAT 포함":"VAT 별도")+")",v:fW(total)}]}/></div>);}
+      total={total} sub={vatType==="include"?"부가세 포함":"부가세 별도"} items={[{l:"감정가액",v:fW(pW)},{l:"기본 수수료 (누진)",v:fW(fee),note:"구간별 누진 계산"},{l:"부가가치세 (10%)",v:fW(vat)},{l:"합계 ("+(vatType==="include"?"VAT 포함":"VAT 별도")+")",v:fW(total)}]}/><RateTable title="감정평가 수수료 기준" headers={["감정가액","수수료"]} rows={[["5천만 이하","20만원"],["5천~2억","20만+초과×0.09%"],["2~5억","15.5만+초과×0.08%"],["5~10억","39.5만+초과×0.06%"],["10~50억","69.5만+초과×0.04%"],["50억 초과","229.5만+초과×0.02%"]]}/></div>);}
 
 /* 경매비용 */
 function CalcAuction({isMo=false,onNav=()=>{}}){const[bp,sBp]=useState("");const[ap,sAp]=useState("");const[fail,sFail]=useState("0");const bpW=tW(bp),apW=tW(ap),failN=parseInt(fail);const ratio=failN>0?Math.pow(0.8,failN):1;const minBid=Math.round(apW*ratio);const acqTax=Math.round(bpW*0.04);const regTax=Math.round(bpW*0.02*1.2);const legalFee=bpW<=3e8?220000:bpW<=5e8?310000:bpW<=10e8?420000:600000;const moveFee=3000000;const total=acqTax+regTax+legalFee+moveFee;const invested=bpW+total;const profit=apW>0?apW-invested:0;const roi=invested>0?profit/invested*100:0;return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}><div><Inp label="낙찰가 (예상)" value={bp} onChange={sBp} suffix="만원" placeholder="예: 50000"/><Inp label="감정가" value={ap} onChange={sAp} suffix="만원" placeholder="예: 70000"/><Sel label="유찰 횟수" value={fail} onChange={sFail} options={[0,1,2,3,4,5].map(n=>({value:String(n),label:n===0?"신건 (유찰 없음)":n+"회 유찰 (최저가 "+(Math.pow(0.8,n)*100).toFixed(0)+"%)"}))}/></div><RP miss={bpW>0?null:MI.auction} expertGuide={CALC_NAV_CONTENT.auction?.items} expertGuide={CALC_NAV_CONTENT.auction?.items} title="경매 총비용"
       deadline="대금 납부: 낙찰허가 결정 후 약 30~45일 / 미납 시 입찰보증금 몰수"
       alertMsg={failN>=3?"유찰 "+failN+"회: 최저가 대폭 하락, 권리분석 철저히":profit<0?"낙찰가가 감정가보다 높음: 재검토 필요":roi>=20?"예상 수익률 우수":null}
       alertType={failN>=3?"warning":profit<0?"danger":"success"}
-      total={total} sub={"실투자금 "+fW(invested)} items={[{l:"감정가",v:fW(apW)},{l:"유찰 "+failN+"회 최저입찰가",v:apW>0?fW(minBid):"—",note:"감정가×"+(ratio*100).toFixed(0)+"%"},{l:"낙찰가 (입력)",v:fW(bpW)},{l:"▼ 부대비용",v:fW(total)},{l:"  취득세 (4%)",v:fW(acqTax)},{l:"  등기비용",v:fW(regTax)},{l:"  법무사 수수료",v:fW(legalFee)},{l:"  명도비 (예상)",v:fW(moveFee)},{l:"실투자금 (낙찰+부대)",v:fW(invested)},{l:"예상수익 (감정가 기준)",v:fW(profit)},{l:"예상수익률",v:fP(roi)}]}/></div>);}
+      total={total} sub={"실투자금 "+fW(invested)} items={[{l:"감정가",v:fW(apW)},{l:"유찰 "+failN+"회 최저입찰가",v:apW>0?fW(minBid):"—",note:"감정가×"+(ratio*100).toFixed(0)+"%"},{l:"낙찰가 (입력)",v:fW(bpW)},{l:"▼ 부대비용",v:fW(total)},{l:"  취득세 (4%)",v:fW(acqTax)},{l:"  등기비용",v:fW(regTax)},{l:"  법무사 수수료",v:fW(legalFee)},{l:"  명도비 (예상)",v:fW(moveFee)},{l:"실투자금 (낙찰+부대)",v:fW(invested)},{l:"예상수익 (감정가 기준)",v:fW(profit)},{l:"예상수익률",v:fP(roi)}]}/><RateTable title="경매 취득 비용 기준" headers={["항목","기준"]} rows={[["취득세","주택 1~12%"],["등록면허세","취득세의 일부"],["법무사 보수","30~100만"],["명도비용","30~100만"],["점유이전비","약 300만"]]}/></div>);}
 
 /* 리모델링수익 */
 function CalcRemodel({isMo=false,onNav=()=>{}}){const[cv,sCv]=useState("");const[cost,sCost]=useState("");const[ev,sEv]=useState("");const cvW=tW(cv),costW=tW(cost),evW=tW(ev);const profit=evW-cvW-costW;const roi=costW>0?profit/costW*100:0;const totalRoi=(cvW+costW)>0?profit/(cvW+costW)*100:0;return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:32,alignItems:"start",minWidth:0}}><div><Inp label="기존 평가액 (현재 시세)" value={cv} onChange={sCv} suffix="만원" placeholder="예: 80000"/><Inp label="리모델링 분담금" value={cost} onChange={sCost} suffix="만원" placeholder="예: 15000"/><Inp label="리모델링 후 예상가" value={ev} onChange={sEv} suffix="만원" placeholder="예: 120000"/></div><RP miss={(cvW>0&&costW>0)?null:MI.remodel} expertGuide={CALC_NAV_CONTENT.remodel?.items} expertGuide={CALC_NAV_CONTENT.remodel?.items} title={profit>=0?"예상 수익":"예상 손실"}
@@ -3238,7 +3238,7 @@ function CalcPension({isMo=false,onNav=()=>{}}){const[age,sAge]=useState("35");c
     <div style={{background:P.card,borderRadius:16,padding:20,border:"1px solid "+P.bd}}>
       {[["기준소득월액",fW(baseSal)],["월 납입액 (4.75%)",fW(monthlyPayment)],["총 가입기간",totalYears+"년"+(totalYears<10?" (10년 미만)":"")],["총 납입 예상액",fW(totalPaid)],["기본 연금액 (65세)",fW(monthlyPension)+"/월"]].concat(retireA!==65?[["조정 후 연금액",fW(actualPension)+"/월"]]:[]).concat([["총 수령 예상 ("+expectLife+"세)",fW(totalReceive)],["납입 대비 수령",totalPaid>0?(totalReceive/totalPaid).toFixed(1)+"배":""]]).map(([l,v],i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:"1px solid "+P.lt,fontSize:13}}><span style={{color:P.mt}}>{l}</span><span style={{fontWeight:600,color:String(v).includes("10년 미만")?"#DE350B":P.tx}}>{v}</span></div>))}
     </div>
-  </div></div>);}
+  </div><RateTable title="국민연금 기준 (2026)" headers={["항목","기준"]} rows={[["보험료율","9% (근로자 4.5%)"],["소득상한","637만원"],["수급개시","65세"],["조기수급","60세~ (-6%/년)"],["연기수급","+7.2%/년 (최대 36%)"],["소득대체율","40%"]]}/></div>);}
 
 /* 퇴직금 */
 function CalcRetire({isMo=false,onNav=()=>{}}){const[monthly,sM]=useState("");const[years,sY]=useState("");const[months,sMo]=useState("0");
@@ -3253,7 +3253,7 @@ function CalcRetire({isMo=false,onNav=()=>{}}){const[monthly,sM]=useState("");co
       deadline="지급기한: 퇴직 후 14일 이내 (합의 시 연장 가능) / IRP 계좌 의무 이체"
       alertMsg={y<1?"1년 미만 근무: 퇴직금 지급 대상 아님":y>=10?"장기근속: 퇴직소득세 우대 공제 적용":null}
       alertType={y<1?"danger":"info"}
-      total={severance} sub={y+"년 "+m+"개월 근속 기준"} items={[{l:"월 평균임금",v:fW(monthlyW),note:"최근 3개월 평균"},{l:"근속기간",v:y+"년 "+m+"개월 ("+totalDays+"일)"},{l:"1일 평균임금",v:fW(Math.round(monthlyW/30))},{l:"계산식",v:"월급×30일×근속일수÷365",note:"법정 공식"},{l:"퇴직금 (세전)",v:fW(severance)},{l:"퇴직소득세 (추정)",v:fW(Math.round(retireTax)),note:"간이 계산"},{l:"실수령 퇴직금 (추정)",v:fW(severance-Math.round(retireTax))}]}/></div>);}
+      total={severance} sub={y+"년 "+m+"개월 근속 기준"} items={[{l:"월 평균임금",v:fW(monthlyW),note:"최근 3개월 평균"},{l:"근속기간",v:y+"년 "+m+"개월 ("+totalDays+"일)"},{l:"1일 평균임금",v:fW(Math.round(monthlyW/30))},{l:"계산식",v:"월급×30일×근속일수÷365",note:"법정 공식"},{l:"퇴직금 (세전)",v:fW(severance)},{l:"퇴직소득세 (추정)",v:fW(Math.round(retireTax)),note:"간이 계산"},{l:"실수령 퇴직금 (추정)",v:fW(severance-Math.round(retireTax))}]}/><RateTable title="퇴직소득 공제액" headers={["근속연수","공제액"]} rows={[["5년 이하","30만×근속"],["10년 이하","150만+50만×(근속-5)"],["20년 이하","400만+80만×(근속-10)"],["20년 초과","1,200만+120만×(근속-20)"]]}/></div>);}
 
 /* 실업급여 */
 function CalcUnemploy({isMo=false,onNav=()=>{}}){const[age,sAge]=useState("30");const[years,sY]=useState("3");const[daily,sD]=useState("");
@@ -3278,7 +3278,7 @@ function CalcUnemploy({isMo=false,onNav=()=>{}}){const[age,sAge]=useState("30");
       deadlineLink="https://www.ei.go.kr" deadlineLinkLabel="고용보험 →"
       alertMsg={calcDaily>=maxDaily?"상한액 66,000원 도달":calcDaily<=minDaily?"하한액 (최저임금 80%) 적용 중":null}
       alertType="info"
-      total={monthlyAmount} sub={"월 수령액 기준 · 최대 "+duration+"일"} items={[{l:"1일 평균임금",v:fmt(dailyW)+"원"},{l:"1일 실업급여액 (60%)",v:fmt(calcDaily)+"원",note:"평균임금 × 60%"},{l:"상한액",v:fmt(maxDaily)+"원",note:"2026년 기준"},{l:"하한액 (최저임금80%)",v:fmt(minDaily)+"원"},{l:"수급 기간",v:duration+"일 (약 "+(duration/30).toFixed(1)+"개월)",note:ageV+"세 "+yV+"년 가입"},{l:"월 수령액 (30일)",v:fmt(monthlyAmount)+"원"},{l:"총 수령액",v:fmt(totalAmount)+"원"}]}/></div>);}
+      total={monthlyAmount} sub={"월 수령액 기준 · 최대 "+duration+"일"} items={[{l:"1일 평균임금",v:fmt(dailyW)+"원"},{l:"1일 실업급여액 (60%)",v:fmt(calcDaily)+"원",note:"평균임금 × 60%"},{l:"상한액",v:fmt(maxDaily)+"원",note:"2026년 기준"},{l:"하한액 (최저임금80%)",v:fmt(minDaily)+"원"},{l:"수급 기간",v:duration+"일 (약 "+(duration/30).toFixed(1)+"개월)",note:ageV+"세 "+yV+"년 가입"},{l:"월 수령액 (30일)",v:fmt(monthlyAmount)+"원"},{l:"총 수령액",v:fmt(totalAmount)+"원"}]}/><RateTable title="실업급여 수급기간" headers={["피보험기간","50세 미만","50세↑·장애"]} rows={[["1년 미만","120일","120일"],["1~3년","150일","180일"],["3~5년","180일","210일"],["5~10년","210일","240일"],["10년↑","240일","270일"]]}/></div>);}
 
 /* 자동차세 */
 function CalcCarTax({isMo=false,onNav=()=>{}}){const[carType,sCT]=useState("normal");const[cc,sCC]=useState("");const[year,sYear]=useState("0");const[isElec,sElec]=useState("no");
@@ -3296,7 +3296,8 @@ function CalcCarTax({isMo=false,onNav=()=>{}}){const[carType,sCT]=useState("norm
       deadlineLink="https://wetax.go.kr" deadlineLinkLabel="위택스 →"
       alertMsg={isElec==="yes"?"전기차 정액 100,000원 (배기량 무관)":discount>=0.5?"최대 할인 50% 적용 (12년+)":yearVal<3?"3년 미만: 차령 할인 없음":null}
       alertType="info"
-      total={totalYear} sub={discount>0?"차령 할인 "+Math.round(discount*100)+"%":"할인 없음 (3년 미만)"} items={[{l:"기본 자동차세",v:fW(baseTax),note:isElec==="yes"?"전기·수소차 정액":ccVal+"cc 기준"},{l:"차령 할인",v:discount>0?"-"+fW(baseTax-discountedTax):"해당없음",note:discount>0?Math.round(discount*100)+"%":""},{l:"할인 후 자동차세",v:fW(discountedTax)},{l:"지방교육세 (30%)",v:fW(localEdu)},{l:"연간 합계",v:fW(totalYear)},{l:"6월 납부",v:fW(halfYear)},{l:"12월 납부",v:fW(totalYear-halfYear)},{l:"1월 연납 시 (5% 할인)",v:fW(Math.round(totalYear*.95)),note:"✓ 추천"}]}/></div>);}
+      total={totalYear} sub={discount>0?"차령 할인 "+Math.round(discount*100)+"%":"할인 없음 (3년 미만)"} items={[{l:"기본 자동차세",v:fW(baseTax),note:isElec==="yes"?"전기·수소차 정액":ccVal+"cc 기준"},{l:"차령 할인",v:discount>0?"-"+fW(baseTax-discountedTax):"해당없음",note:discount>0?Math.round(discount*100)+"%":""},{l:"할인 후 자동차세",v:fW(discountedTax)},{l:"지방교육세 (30%)",v:fW(localEdu)},{l:"연간 합계",v:fW(totalYear)},{l:"6월 납부",v:fW(halfYear)},{l:"12월 납부",v:fW(totalYear-halfYear)},{l:"1월 연납 시 (5% 할인)",v:fW(Math.round(totalYear*.95)),note:"✓ 추천"}]}/><RateTable title="자동차세율표 (2026)" headers={["배기량","cc당 세액"]} rows={[["1,000cc 이하","80원"],["1,000~1,600cc","140원"],["1,600cc 초과","200원"],["전기차","10만원 (정액)"],["3년↑ 경감","매년 5% (최대 50%)"]]}/>
+</div>);}
 
 /* 4대보험료 */
 function CalcInsurance4({isMo=false,onNav=()=>{}}){const[type,sType]=useState("worker");const[salary,sSal]=useState("");const[bonus,sBonus]=useState("");
@@ -3322,7 +3323,7 @@ function CalcInsurance4({isMo=false,onNav=()=>{}}){const[type,sType]=useState("w
       <div style={{display:"flex",justifyContent:"space-between",padding:"12px 0 0",fontSize:15,fontWeight:700}}><span>합계</span><span style={{color:"#0747A6"}}>{fW(total)}</span></div>
       {isWorker&&<><div style={{fontSize:13,fontWeight:600,color:P.mt,marginTop:20,marginBottom:12}}>사업주 부담</div>{[["국민연금",empNpn],["건강보험",empHi],["장기요양",empLtc],["고용보험",empEi],["산재보험 (평균)",empSan]].map(([l,v],i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:"1px solid "+P.lt,fontSize:12}}><span style={{color:P.mt}}>{l}</span><span style={{fontWeight:600}}>{fW(v)}</span></div>))}<div style={{display:"flex",justifyContent:"space-between",padding:"10px 0 0",fontSize:14,fontWeight:700}}><span>사업주 합계</span><span>{fW(empTotal)}</span></div></>}
     </div>
-  </div><RequiredGuide items={[{label:"월 급여 (세전)",filled:false}]}/></div>);}
+  </div><RequiredGuide items={[{label:"월 급여 (세전)",filled:false}]}/><RateTable title="4대보험 요율 (2026)" headers={["보험","근로자","사업주"]} rows={[["국민연금","4.5%","4.5%"],["건강보험","3.545%","3.545%"],["장기요양","건보×12.95%","건보×12.95%"],["고용보험","0.9%","0.9~1.65%"]]}/></div>);}
 
 function NextStep({calcId,onNav,isMo=false}){
   const links=(INTERNAL_LINKS[calcId]||[]).map(l=>({id:l.id,label:l.label}));
