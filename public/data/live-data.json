@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "fix: 완벽가이드 하단 여�� 추가 (marginBottom:64)",
+      "desc": "fix: 완벽가이드 하단 여�� 추가 (marginBottom:64)"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "fix: 완벽가이드 외곽박스 추가",
       "desc": "fix: 완벽가이드 외곽박스 추가"
     },
@@ -1459,12 +1465,6 @@
       "category": "전체",
       "title": "fix: Google 로그인 전체 수정 (admin + 일반 사용자)",
       "desc": "fix: Google 로그인 전체 수정 (admin + 일반 사용자)"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "fix: 어드민 API fetch에 credentials: include 추가",
-      "desc": "fix: 어드민 API fetch에 credentials: include 추가"
     }
   ],
   "rates": {
