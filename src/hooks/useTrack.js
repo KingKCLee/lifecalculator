@@ -7,7 +7,7 @@ export const useTrack = (calcId, calcName) => {
     if (!calcId) return;
     fetch(LC_API + "/api/admin/track", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json; charset=utf-8" },
       body: JSON.stringify({
         calcId,
         calcName: calcName || calcId,
