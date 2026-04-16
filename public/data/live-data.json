@@ -1168,6 +1168,12 @@
   "updateLog": [
     {
       "date": "2026.04.17",
+      "category": "전체",
+      "title": "feat: 부동산 유형별 실거래가/공시가격 전체 연동 (오피스텔/빌라/단독/상가/토지)",
+      "desc": "feat: 부동산 유형별 실거래가/공시가격 전체 연동 (오피스텔/빌라/단독/상가/토지)"
+    },
+    {
+      "date": "2026.04.17",
       "category": "세금",
       "title": "fix: 취득세 2열 grid 레이아웃 복구",
       "desc": "fix: 취득세 2열 grid 레이아웃 복구"
@@ -1459,12 +1465,6 @@
       "category": "전체",
       "title": "fix: 소셜 로그인 이름 표시 수정 (Google given_name fallback + lc_name 저장 누락)",
       "desc": "fix: 소셜 로그인 이름 표시 수정 (Google given_name fallback + lc_name 저장 누락)"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "fix: 소셜 로그인 이름 표시 + 속도 개선",
-      "desc": "fix: 소셜 로그인 이름 표시 + 속도 개선"
     }
   ],
   "rates": {
