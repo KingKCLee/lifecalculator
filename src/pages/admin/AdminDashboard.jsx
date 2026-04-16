@@ -17,6 +17,7 @@ function DonutChart({ data, size = 160 }) {
 
 const MENU = [
   { id: "dashboard", label: "대시보드", icon: "D" },
+  { id: "law", label: "법령 모니터링", icon: "L" },
   { id: "ads", label: "광고 관리", icon: "A" },
   { id: "notice", label: "공지사항", icon: "N" },
   { id: "consult", label: "상담 신청", icon: "C" },
@@ -24,7 +25,8 @@ const MENU = [
 ];
 
 export default function AdminDashboard({ token, session, onLogout }) {
-  const [tab, setTab] = useState("dashboard");
+  const initTab = (() => { const p = new URLSearchParams(window.location.search); return p.get("tab") || "dashboard"; })();
+  const [tab, setTab] = useState(initTab);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState(null);
@@ -59,6 +61,7 @@ export default function AdminDashboard({ token, session, onLogout }) {
       {loading && <div style={{ textAlign: "center", padding: 60, color: "#6b778c" }}>{"\uB370\uC774\uD130 \uB85C\uB4DC \uC911..."}</div>}
       {err && <div style={{ padding: "14px 18px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10, color: "#dc2626", fontSize: 13, marginBottom: 20 }}>{err}</div>}
       {tab === "dashboard" && stats && <DashContent stats={stats} cardSt={cardSt} secSt={secSt} />}
+      {tab === "law" && <LawTab authFetch={authFetch} />}
       {tab === "ads" && <AdsTab authFetch={authFetch} />}
       {tab === "notice" && <NoticeTab authFetch={authFetch} />}
       {tab === "consult" && <ConsultTab authFetch={authFetch} />}
