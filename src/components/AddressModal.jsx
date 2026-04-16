@@ -56,6 +56,7 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
   const [stdSkipped, setStdSkipped] = useState(false);
   const [showMoreReal, setShowMoreReal] = useState(false);
   const [selectedRealIdx, setSelectedRealIdx] = useState(0);
+  const [buyYear, setBuyYear] = useState("");
 
   const doSearch = async () => {
     if (!keyword.trim()) { setSearchErr("주소를 입력하세요"); return; }
@@ -83,7 +84,11 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
       const pnu = buildPnu(picked.admCd, picked.lnbrMnnm, picked.lnbrSlno, picked.udrtYn);
       const hasDongHo = !!(dongNm && hoNm);
 
-      const months = recentMonths(3);
+      // buyYear 입력 시 해당 연도 12개월 조회, 미입력 시 최근 3개월
+      const yr = parseInt(buyYear);
+      const months = (yr >= 2006 && yr <= new Date().getFullYear())
+        ? Array.from({ length: 12 }, (_, i) => yr + String(i + 1).padStart(2, "0"))
+        : recentMonths(3);
       const realPromises = months.map((ym) => {
         const qs = new URLSearchParams({
           LAWD_CD: lawdCd, DEAL_YMD: ym,
@@ -122,7 +127,7 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
         const kb = (b.year || "") + String(b.month || "").padStart(2, "0") + String(b.day || "").padStart(2, "0");
         return kb.localeCompare(ka);
       });
-      setRealList(filtered.slice(0, 20));
+      setRealList(filtered.slice(0, 50));
 
       if (stdRes && stdRes.ok && (stdRes.list || []).length > 0) {
         setStdInfo(stdRes.list[0]);
@@ -223,8 +228,15 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
                 <input type="text" value={hoNm} onChange={e => setHoNm(e.target.value.replace(/\D/g, ""))} placeholder="예: 1205" style={inpSt} />
               </div>
             </div>
+            {mode === "transfer" && (
+              <div style={{ marginBottom: 10 }}>
+                <label style={labelSt}>취득연도 (과거 거래 조회 시 입력)</label>
+                <input type="number" value={buyYear} onChange={e => setBuyYear(e.target.value)} min={2006} max={new Date().getFullYear()} placeholder={"예: 2019 (미입력 시 최근 3개월)"} style={inpSt} />
+              </div>
+            )}
             <div style={{ fontSize: 12, color: "#505f79", lineHeight: 1.7, marginBottom: 14, padding: "10px 12px", background: "#f8f9fc", borderRadius: 8 }}>
               동/호를 입력하면 해당 호수의 공시가격을 정확히 조회할 수 있습니다. (선택사항)
+              {mode === "transfer" && buyYear && <><br />· <b>{buyYear}년</b> 1~12월 실거래가를 조회합니다</>}
               {currentArea && <><br />· 현재 선택 면적 <b>{currentArea === "big" ? "85㎡ 초과" : currentArea + "㎡ 이하"}</b> 로 실거래가 필터링</>}
             </div>
             <div style={{ display: "flex", gap: 8 }}>
