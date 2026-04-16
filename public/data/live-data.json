@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "fix: 네이버/카카오 OAuth 콜백 플로우 수정",
+      "desc": "fix: 네이버/카카오 OAuth 콜백 플로우 수정"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "feat: 네이버 + 카카오 소셜 로그인 추가",
       "desc": "feat: 네이버 + 카카오 소셜 로그인 추가"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "fix(megamenu): 탑메뉴 hover 배경·scale·클릭 이동 방지 근본 수정",
       "desc": "fix(megamenu): 탑메뉴 hover 배경·scale·클릭 이동 방지 근본 수정"
-    },
-    {
-      "date": "2026.04.15",
-      "category": "전체",
-      "title": "fix: 메가메뉴 hover/click 동작 강화 (type/preventDefault/borderBottom none)",
-      "desc": "fix: 메가메뉴 hover/click 동작 강화 (type/preventDefault/borderBottom none)"
     }
   ],
   "rates": {
