@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "feat: AI가이드 횟수제한 + 회원혜택 홈 노출 + 비회원 로그인 유도 CTA",
+      "desc": "feat: AI가이드 횟수제한 + 회원혜택 홈 노출 + 비회원 로그인 유도 CTA"
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "fix: 소셜 로그인 이름 표시 수정 (Google given_name fallback + lc_name 저장 누락)",
       "desc": "fix: 소셜 로그인 이름 표시 수정 (Google given_name fallback + lc_name 저장 누락)"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "feat(reports): AI PRO 인사이트 보고서 7편 + 목록 페이지 + 라우팅 연결",
       "desc": "feat(reports): AI PRO 인사이트 보고서 7편 + 목록 페이지 + 라우팅 연결"
-    },
-    {
-      "date": "2026.04.15",
-      "category": "전체",
-      "title": "style: 탑메뉴 hover 애니메이션 D(scale) → C(translateY+color) 변경",
-      "desc": "style: 탑메뉴 hover 애니메이션 D(scale) → C(translateY+color) 변경"
     }
   ],
   "rates": {
