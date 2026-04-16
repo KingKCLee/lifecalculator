@@ -8,7 +8,6 @@ export default defineConfig({
       output: {
         manualChunks: {
           'react-vendor': ['react', 'react-dom'],
-          'supabase': ['@supabase/supabase-js'],
         }
       }
     },
@@ -25,6 +24,6 @@ export default defineConfig({
     }
   },
   optimizeDeps: {
-    include: ['react', 'react-dom', '@supabase/supabase-js']
+    include: ['react', 'react-dom']
   }
 })

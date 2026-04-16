@@ -65,5 +65,5 @@ export default function AdminPage({ subPage }) {
 
   if (!session) return <AdminLogin error={error} />;
 
-  return <AdminDashboard session={session} onLogout={() => { setSession(null); setError(null); localStorage.removeItem("lc_admin_token"); }} />;
+  return <AdminDashboard token={localStorage.getItem("lc_admin_token")||""} session={session} onLogout={() => { setSession(null); setError(null); localStorage.removeItem("lc_admin_token"); }} />;
 }

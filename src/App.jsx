@@ -1,4 +1,3 @@
-import { supabase } from './supabase.js';
 // build: 2026.04.06.001
 // v2026.04.06
 import { useState, useEffect, useRef, useMemo } from "react";
@@ -3728,7 +3727,6 @@ privacy:{title:"개인정보처리방침",body:<div>
 <h3 style={LS.h}>제5조 (개인정보 처리 위탁)</h3>
 <p>회사는 서비스 제공을 위해 다음과 같이 개인정보 처리를 위탁하고 있습니다.</p>
 <div style={LS.ib}>
-<p>• 수탁자: Supabase Inc. | 위탁 업무: 회원 데이터베이스 관리 | 보유 기간: 회원 탈퇴 시까지</p>
 <p>• 수탁자: Google LLC | 위탁 업무: Google 소셜 로그인 인증 | 보유 기간: 인증 세션 종료 시</p>
 <p>• 수탁자: Naver Corp. | 위탁 업무: 네이버 소셜 로그인 인증 | 보유 기간: 인증 세션 종료 시</p>
 <p>• 수탁자: Cloudflare Inc. | 위탁 업무: 서비스 호스팅·CDN·보안 | 보유 기간: 서비스 종료 시까지</p>
@@ -4359,8 +4357,7 @@ function AuthModal({mode,setMode,onClose,isMo,onAuthSuccess}){
     if(mode==="signup"&&!agreeAll){alert("서비스 이용을 위해 전체 동의가 필요합니다.");return;}
     try{
       if(provider==="구글"){
-        const{error}=await supabase.auth.signInWithOAuth({provider:"google",options:{redirectTo:"https://xn--989a00a691bdfa717h.com/auth/callback",queryParams:{access_type:"offline",prompt:"consent"}}});
-        if(error)throw error;
+        window.location.href=LC_API+"/auth/google";
       } else if(provider==="네이버"){
         alert("네이버 로그인은 심사 진행 중입니다. 구글 로그인을 이용해주세요.");
       }
@@ -4422,7 +4419,7 @@ function AuthModal({mode,setMode,onClose,isMo,onAuthSuccess}){
 function MyPage({user,lcToken,lcEmail,onBack,onLogout,onLcLogout}){
   const[tab,setTab]=useState("profile");const[delConfirm,setDelConfirm]=useState(false);
   const[lcHistory,setLcHistory]=useState(null);const[lcHistErr,setLcHistErr]=useState("");
-  const deleteAccount=async()=>{await supabase.auth.signOut();onLogout();onBack();};
+  const deleteAccount=async()=>{onLogout();onBack();};
   useEffect(()=>{
     if(tab!=="history"||!lcToken)return;
     setLcHistory(null);setLcHistErr("");
@@ -5696,24 +5693,10 @@ export default function App(){
   const[navOpen,setNavOpen]=useState(false);
   const[user,setUser]=useState(null);
   const[authLoading,setAuthLoading]=useState(true);
-  // 2026.04.14 AI해설 게이트에서 Supabase 로그인 상태 참조용 ref
   const authUserRef=useRef(null);
   useEffect(()=>{authUserRef.current=user;},[user]);
   useEffect(()=>{
-    const params=new URLSearchParams(window.location.search);
-    const code=params.get("code");
-    const isCallback=window.location.pathname.includes("auth/callback");
-    if(code||isCallback){
-      supabase.auth.exchangeCodeForSession(code||"").then(({data})=>{
-        if(data?.session){setUser(data.session.user);setShowAuth(false);}
-        else{supabase.auth.getSession().then(({data:{session}})=>{setUser(session?.user||null);});}
-        history.replaceState(null,"","/");setPage("home");setAuthLoading(false);
-      });
-    } else {
-      supabase.auth.getSession().then(({data:{session}})=>{setUser(session?.user||null);setAuthLoading(false);});
-    }
-    const{data:{subscription}}=supabase.auth.onAuthStateChange((_event,session)=>{setUser(session?.user||null);if(session?.user){setShowAuth(false);}setAuthLoading(false);});
-    return()=>subscription.unsubscribe();
+    setAuthLoading(false);
   },[]);
   const[page,setPage]=useState("home");
   const[cat,setCat]=useState("tax");const[calc,setCalc]=useState("acquisition");const[eduTab,setEduTab]=useState("rates");
@@ -5795,7 +5778,7 @@ export default function App(){
   const navigateInfo=()=>{setPage("info");history.pushState(null,"","/info");window.scrollTo(0,0);setShowInfoMenu(false);};
   const navigateLegal=(type)=>{setPage("legal_"+type);history.pushState(null,"","/"+type);window.scrollTo(0,0);};
   const navigateMyPage=()=>{setPage("mypage");history.pushState(null,"","/mypage");window.scrollTo(0,0);};
-  const handleLogout=async()=>{await supabase.auth.signOut();setUser(null);try{localStorage.removeItem('lc_token');localStorage.removeItem('lc_email');}catch{}setLcToken("");setLcEmail("");history.pushState(null,"","/");setPage("home");window.scrollTo(0,0);};
+  const handleLogout=async()=>{setUser(null);try{localStorage.removeItem('lc_token');localStorage.removeItem('lc_email');}catch{}setLcToken("");setLcEmail("");history.pushState(null,"","/");setPage("home");window.scrollTo(0,0);};
   const effectiveUser=user||(lcEmail?{email:lcEmail,user_metadata:{full_name:lcEmail.split("@")[0]},created_at:new Date().toISOString()}:null);
   const lcTokenRef=useRef(lcToken);useEffect(()=>{lcTokenRef.current=lcToken},[lcToken]);
   const calcSaveRef=useRef(calc);useEffect(()=>{calcSaveRef.current=calc},[calc]);
@@ -5888,7 +5871,7 @@ export default function App(){
       // 2026.04.14 AI해설 게이팅: 비로그인→로그인유도 / 무료→월3회 / pro·agent→무제한
       const _tok=(()=>{try{return localStorage.getItem('lc_token')||""}catch{return""}})();
       const _plan=(()=>{try{return localStorage.getItem('lc_plan')||""}catch{return""}})();
-      // 2026.04.14 lc_token 또는 Supabase 로그인(OAuth) 중 하나라도 있으면 로그인 상태로 판단
+      // 2026.04.16 lc_token 또는 OAuth 중 하나라도 있으면 로그인 상태로 판단
       const _loggedIn=(typeof _tok==="string"&&_tok.length>0)||!!authUserRef.current;
       if(!_loggedIn){setAiModal({gate:"login",title:d.title});return;}
       const isPaid=_plan==="pro"||_plan==="agent";

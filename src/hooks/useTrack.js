@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const LC_API = "https://lc-auth-worker.noble-kclee.workers.dev";
+const LC_API = "https://lc-realestate-worker.noble-kclee.workers.dev";
 
 export const useTrack = (calcId, calcName) => {
   useEffect(() => {
