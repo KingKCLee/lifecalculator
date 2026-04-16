@@ -5,8 +5,15 @@
     <link>https://xn--989a00a691bdfa717h.com/</link>
     <description>취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 등 39가지 무료 계산기. 매일 자동 업데이트.</description>
     <language>ko</language>
-    <lastBuildDate>Fri, 17 Apr 2026 07:09:09 +0900</lastBuildDate>
+    <lastBuildDate>Fri, 17 Apr 2026 07:24:26 +0900</lastBuildDate>
     <atom:link href="https://xn--989a00a691bdfa717h.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+    <title>fix: 취득세 NextStep 2열 고정 + 전체 세율표 + Expert Guide 완벽가이드 통합</title>
+    <link>https://xn--989a00a691bdfa717h.com/</link>
+    <description>fix: 취득세 NextStep 2열 고정 + 전체 세율표 + Expert Guide 완벽가이드 통합</description>
+    <pubDate>Fri, 17 Apr 2026 07:24:26 +0900</pubDate>
+    <guid>https://xn--989a00a691bdfa717h.com/#update-202604162224</guid>
+  </item>
     <item>
     <title>fix: JSX > 이스케이프 + dsr 중복키 제거 + _redirects 정적파일 예외</title>
     <link>https://xn--989a00a691bdfa717h.com/</link>
