@@ -5,8 +5,15 @@
     <link>https://xn--989a00a691bdfa717h.com/</link>
     <description>취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 등 39가지 무료 계산기. 매일 자동 업데이트.</description>
     <language>ko</language>
-    <lastBuildDate>Thu, 16 Apr 2026 10:50:11 +0900</lastBuildDate>
+    <lastBuildDate>Thu, 16 Apr 2026 10:58:17 +0900</lastBuildDate>
     <atom:link href="https://xn--989a00a691bdfa717h.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+    <title>feat(admin): Google OAuth login, session via KV+Bearer token, callback SPA handler</title>
+    <link>https://xn--989a00a691bdfa717h.com/</link>
+    <description>feat(admin): Google OAuth login, session via KV+Bearer token, callback SPA handler</description>
+    <pubDate>Thu, 16 Apr 2026 10:58:17 +0900</pubDate>
+    <guid>https://xn--989a00a691bdfa717h.com/#update-202604160158</guid>
+  </item>
     <item>
     <title>feat(admin): dashboard with D1 tracking, KV auth, /admin route, calc event logging</title>
     <link>https://xn--989a00a691bdfa717h.com/</link>
