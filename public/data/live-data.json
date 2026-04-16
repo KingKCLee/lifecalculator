@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.16",
       "category": "전체",
+      "title": "Revert \"fix: 어드민 별도 로그인 제거 홈페이지 로그인으로 통합\"",
+      "desc": "Revert \"fix: 어드민 별도 로그인 제거 홈페이지 로그인으로 통합\""
+    },
+    {
+      "date": "2026.04.16",
+      "category": "전체",
       "title": "fix: 어드민 별도 로그인 제거 홈페이지 로그인으로 통합",
       "desc": "fix: 어드민 별도 로그인 제거 홈페이지 로그인으로 통합"
     },
@@ -1459,12 +1465,6 @@
       "category": "전체",
       "title": "feat(AddressModal): add tax guidance banner, dual-apply flow (std stays open, real closes)",
       "desc": "feat(AddressModal): add tax guidance banner, dual-apply flow (std stays open, real closes)"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "fix(AddressModal): close modal on apply (real-price + std-price)",
-      "desc": "fix(AddressModal): close modal on apply (real-price + std-price)"
     }
   ],
   "rates": {
