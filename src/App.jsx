@@ -1905,7 +1905,7 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
       {/* 취득가액 — 인라인 레이아웃 (PC width:480, 모바일 100%) */}
       <div style={{marginBottom:isMo?8:12}}>
         <div style={isMo?{display:"flex",alignItems:"stretch",flexDirection:"column",gap:6,marginBottom:4}:{display:"grid",gridTemplateColumns:"1fr 520px",alignItems:"center",gap:8,marginBottom:4}}>
-          <label style={{fontSize:isMo?13:14,fontWeight:600,color:"#0a1628",lineHeight:1.6,wordBreak:"keep-all"}}>{acqType==="sale"?"취득가액 (실거래가)":acqType==="gift"||acqType==="inherit"?"시가인정액 또는 시가표준액":acqType==="newbuild"?"건축 원가":"취득가액"}</label>
+          <label style={{fontSize:isMo?13:14,fontWeight:600,color:"#0a1628",lineHeight:1.6,wordBreak:"keep-all"}}>{acqType==="sale"?"취득가액 (실거래가)":acqType==="gift"||acqType==="inherit"?"취득가액 (실거래가)":acqType==="newbuild"?"건축 원가":"취득가액"}</label>
           <div style={{display:"flex",alignItems:"center",gap:6,width:isMo?"100%":"auto",justifyContent:"flex-end"}}>
             <input type="text" value={price?Number(String(price).replace(/,/g,"")).toLocaleString("ko-KR"):""} onChange={e=>{const raw=e.target.value.replace(/,/g,"");if(raw===""||/^\d+$/.test(raw)){sP(raw);setAutoPriceFlag(false);}}} placeholder="예: 12500" style={{width:isMo?"100%":480,maxWidth:"100%",textAlign:"right",padding:isMo?"12px 14px":"8px 12px",border:_hasErrors?"1.5px solid #3b82f6":"1.5px solid #dfe1e6",borderRadius:8,fontSize:isMo?16:15,fontWeight:700,color:P.tx,background:P.lt,outline:"none",fontFamily:"inherit",minHeight:isMo?48:undefined,boxShadow:_hasErrors?"0 0 0 3px rgba(59,130,246,0.1)":"none"}}/>
             <span style={{fontSize:13,color:P.mt,fontWeight:500}}>만원</span>
@@ -6435,9 +6435,11 @@ body.lc-embed main{padding-top:0!important}
               <button onClick={()=>{const url=window.location.href;if(navigator.share){navigator.share({title:(CL.find(c=>c.id===calc)?.l||"")+" 계산기",url}).catch(()=>{});}else if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(url).then(()=>showToast("링크가 복사되었습니다")).catch(()=>showToast("복사 실패"));}else{const ta=document.createElement("textarea");ta.value=url;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);showToast("링크가 복사되었습니다");}}} aria-label="공유" style={{background:"#fff",border:"1px solid #E5E7EB",borderRadius:8,padding:"8px 14px",cursor:"pointer",fontSize:13,fontWeight:500,color:"#6B7280",display:"inline-flex",alignItems:"center",gap:6,fontFamily:"inherit"}}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>공유</button>
             </div>
           </div>
+          {adSlots?.header?.enabled&&!isMo&&<div style={{marginBottom:16}} dangerouslySetInnerHTML={{__html:adSlots.header.code||""}}/>}
           <div className="calc-container" style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:isMo?16:32,marginBottom:24,boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
             {isMo?(<MobileCalcWrapper><Comp key={calc+"_"+sessionKey} isMo={true} onNav={navigateCalc}/></MobileCalcWrapper>):(<div><Comp key={calc+"_"+sessionKey} isMo={false} onNav={navigateCalc}/></div>)}
           </div>
+          {adSlots?.rp_bottom?.enabled&&!isMo&&<div style={{marginBottom:16}} dangerouslySetInnerHTML={{__html:adSlots.rp_bottom.code||""}}/>}
 
           {/* 2026.04.15 sample-calc 기준 계산기 페이지 슬림화: MarketIntel·AdSlot·FUN_STATS 제거 */}
           {/* 2026.04.16 sample-calc .guide-section > .guide-card 구조 */}
@@ -6446,6 +6448,7 @@ body.lc-embed main{padding-top:0!important}
               <div className="seo" dangerouslySetInnerHTML={{__html:SEO_CONTENT[calc]}} style={{fontSize:14,color:"#374151",lineHeight:1.8}}/>
             </div>
           </div>}
+          {adSlots?.guide_bottom?.enabled&&!isMo&&<div style={{marginBottom:16}} dangerouslySetInnerHTML={{__html:adSlots.guide_bottom.code||""}}/>}
           {/* 2026.04.15 sample-calc 기준 계산기 페이지 슬림화: PRO 분석 카드 3종 제거 */}
         </div>
 
