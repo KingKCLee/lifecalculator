@@ -41,7 +41,7 @@ import AddressModal from './components/AddressModal';
 import SEO_CONTENT from './data/seoContent';
 import Breadcrumb from './components/Breadcrumb';
 // 2026.04.16 계산기 트래킹 훅
-import { useTrack } from './hooks/useTrack';
+import { useTrack, usePageTrack, trackSignup } from './hooks/useTrack';
 
 // 중앙 집중 세율·요율 관리. live-data.json의 rates에서 로드됨. 로드 전 빈 객체 → 각 계산기는 하드코딩 fallback 사용.
 // 점진적 교체: 각 계산기가 RATES.xxx ?? 하드코딩값 형태로 참조하도록 변환.
@@ -6082,7 +6082,7 @@ export default function App(){
       if(err||!code){window.history.replaceState(null,"","/");setPage("home");return;}
       fetch(LC_REALESTATE_WORKER+"/auth/callback?code="+encodeURIComponent(code)+"&state="+encodeURIComponent(state||""))
         .then(r=>r.json()).then(j=>{
-          if(j.ok&&j.token){try{localStorage.setItem("lc_token",j.token);localStorage.setItem("lc_email",j.email||"");if(j.name)localStorage.setItem("lc_name",j.name);}catch{}setLcToken(j.token);setLcEmail(j.email||"");if(j.name)setLcName(j.name);}
+          if(j.ok&&j.token){try{localStorage.setItem("lc_token",j.token);localStorage.setItem("lc_email",j.email||"");if(j.name)localStorage.setItem("lc_name",j.name);}catch{}setLcToken(j.token);setLcEmail(j.email||"");if(j.name)setLcName(j.name);trackSignup(j.email||"","google",j.name||"");}
         }).catch(()=>{}).finally(()=>{window.history.replaceState(null,"","/");setPage("home");});
       return;
     }
@@ -6095,7 +6095,7 @@ export default function App(){
     if(hash==="auth/naver/result"||hash==="auth/kakao/result"){
       const params=new URLSearchParams(window.location.search);
       const token=params.get("token"),email=params.get("email"),name=params.get("name")||"",err=params.get("error");
-      if(token&&email){try{localStorage.setItem("lc_token",token);localStorage.setItem("lc_email",email);if(name)localStorage.setItem("lc_name",name);}catch{}setLcToken(token);setLcEmail(email);if(name)setLcName(name);}
+      if(token&&email){try{localStorage.setItem("lc_token",token);localStorage.setItem("lc_email",email);if(name)localStorage.setItem("lc_name",name);}catch{}setLcToken(token);setLcEmail(email);if(name)setLcName(name);const prov=hash.includes("naver")?"naver":"kakao";trackSignup(email,prov,name);}
       window.history.replaceState(null,"","/");setPage("home");
       return;
     }
@@ -6147,6 +6147,7 @@ export default function App(){
   /* ═══ 2026.04.16 STEP 1: 62개 계산기 중앙 집중 트래킹 ═══ */
   const calcNameForTrack=useMemo(()=>page==="calc"&&calc?(CL.find(c=>c.id===calc)?.l||calc)+" 계산기":null,[page,calc]);
   useTrack(page==="calc"?calc:null,calcNameForTrack);
+  usePageTrack(page);
 
   /* ═══ 2026.04.16 STEP 2: 공지사항 배너 연동 ═══ */
   const[noticeBanner,setNoticeBanner]=useState(null);
@@ -6623,7 +6624,7 @@ body.lc-embed main{padding-top:0!important}
 
           {/* 2026.04.15 sample-calc 기준 계산기 페이지 슬림화: MarketIntel·AdSlot·FUN_STATS 제거 */}
           {/* 2026.04.16 sample-calc .guide-section > .guide-card 구조 */}
-          {SEO_CONTENT[calc]&&<div className="guide-section" style={{maxWidth:1200,margin:"0 auto",padding:isMo?"24px 16px":"40px 32px 72px"}}>
+          {SEO_CONTENT[calc]&&<div className="guide-section" style={{padding:isMo?"24px 0":"40px 0 72px"}}>
             <div className="seo" dangerouslySetInnerHTML={{__html:SEO_CONTENT[calc]}} style={{fontSize:15,color:"#374151",lineHeight:1.8}}/>
           </div>}
           {adSlots?.guide_bottom?.enabled&&!isMo&&<div style={{marginBottom:16}} dangerouslySetInnerHTML={{__html:adSlots.guide_bottom.code||""}}/>}
