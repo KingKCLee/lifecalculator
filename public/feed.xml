@@ -5,8 +5,15 @@
     <link>https://xn--989a00a691bdfa717h.com/</link>
     <description>취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 등 39가지 무료 계산기. 매일 자동 업데이트.</description>
     <language>ko</language>
-    <lastBuildDate>Thu, 16 Apr 2026 13:50:31 +0900</lastBuildDate>
+    <lastBuildDate>Thu, 16 Apr 2026 13:53:08 +0900</lastBuildDate>
     <atom:link href="https://xn--989a00a691bdfa717h.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+    <title>fix: 어드민 JWT 로그인 플로우 수정 (credentials 제거, unicode 수정)</title>
+    <link>https://xn--989a00a691bdfa717h.com/</link>
+    <description>fix: 어드민 JWT 로그인 플로우 수정 (credentials 제거, unicode 수정)</description>
+    <pubDate>Thu, 16 Apr 2026 13:53:08 +0900</pubDate>
+    <guid>https://xn--989a00a691bdfa717h.com/#update-202604160453</guid>
+  </item>
     <item>
     <title>feat: Google 로그인 버튼 블루 컬러 적용</title>
     <link>https://xn--989a00a691bdfa717h.com/</link>
