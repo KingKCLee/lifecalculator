@@ -1168,6 +1168,12 @@
   "updateLog": [
     {
       "date": "2026.04.16",
+      "category": "전체",
+      "title": "fix: 완벽가이드 외부박스 1개/글자크기 가시성 개선",
+      "desc": "fix: 완벽가이드 외부박스 1개/글자크기 가시성 개선"
+    },
+    {
+      "date": "2026.04.16",
       "category": "세금",
       "title": "fix: 취득세 nextstep 2열 JSX 구조 직접 이동",
       "desc": "fix: 취득세 nextstep 2열 JSX 구조 직접 이동"
@@ -1459,12 +1465,6 @@
       "category": "전체",
       "title": "feat(AddressModal): full UX overhaul — 9 modifications (button, procedure, search, results, apt info card, errors, source)",
       "desc": "feat(AddressModal): full UX overhaul — 9 modifications (button, procedure, search, results, apt info card, errors, source)"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "feat(address-modal): 절차 설명·인라인 힌트·에러 메시지·출처 표기 개선",
-      "desc": "feat(address-modal): 절차 설명·인라인 힌트·에러 메시지·출처 표기 개선"
     }
   ],
   "rates": {
