@@ -1,0 +1,24 @@
+name: 법령 모니터링 자동 실행
+
+on:
+  schedule:
+    - cron: '0 16 * * *'  # KST 01:00 = UTC 16:00
+  workflow_dispatch:  # 수동 실행 가능
+
+jobs:
+  law-monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 법령 모니터링 API 호출
+        run: |
+          response=$(curl -s -o /tmp/response.json -w "%{http_code}" \
+            -X POST \
+            "https://lc-realestate-worker.noble-kclee.workers.dev/api/admin/law-test" \
+            -H "Authorization: Bearer ${{ secrets.ADMIN_JWT_TOKEN }}" \
+            -H "Content-Type: application/json")
+          echo "Response code: $response"
+          cat /tmp/response.json 2>/dev/null || true
+          if [ "$response" != "200" ]; then
+            echo "법령 모니터링 API 호출 실패: $response"
+            exit 1
+          fi
