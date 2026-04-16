@@ -1,52 +1,31 @@
-import { useState } from "react";
-
 const API = "https://lc-realestate-worker.noble-kclee.workers.dev";
 
-export default function AdminLogin({ onLogin }) {
-  const [pw, setPw] = useState("");
-  const [err, setErr] = useState("");
-  const [busy, setBusy] = useState(false);
-
-  const submit = async (e) => {
-    e.preventDefault();
-    if (!pw) { setErr("비밀번호를 입력하세요"); return; }
-    setBusy(true); setErr("");
-    try {
-      const r = await fetch(API + "/api/admin/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password: pw })
-      });
-      const j = await r.json().catch(() => ({}));
-      if (r.ok && j.token) {
-        localStorage.setItem("lc_admin_token", j.token);
-        onLogin(j.token);
-      } else {
-        setErr(j.error || "로그인 실패");
-      }
-    } catch {
-      setErr("네트워크 오류");
-    } finally { setBusy(false); }
-  };
-
+export default function AdminLogin({ error }) {
   return (
     <div style={{ minHeight: "100vh", background: "#0a1628", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Pretendard',-apple-system,sans-serif" }}>
-      <form onSubmit={submit} style={{ background: "#fff", borderRadius: 16, padding: "40px 36px", width: 380, maxWidth: "90vw", boxShadow: "0 20px 60px rgba(0,0,0,.3)" }}>
-        <div style={{ textAlign: "center", marginBottom: 28 }}>
-          <div style={{ fontSize: 22, fontWeight: 800, color: "#0a1628", marginBottom: 4 }}>생활계산기.com</div>
-          <div style={{ fontSize: 14, color: "#6b778c" }}>관리자 로그인</div>
-        </div>
-        <input
-          type="password" value={pw} onChange={e => setPw(e.target.value)}
-          placeholder="관리자 비밀번호"
-          autoFocus
-          style={{ width: "100%", padding: "14px 16px", border: "1.5px solid #E5E7EB", borderRadius: 10, fontSize: 15, fontFamily: "inherit", outline: "none", boxSizing: "border-box", marginBottom: 12 }}
-        />
-        {err && <div style={{ color: "#dc2626", fontSize: 13, marginBottom: 10, fontWeight: 600 }}>{err}</div>}
-        <button type="submit" disabled={busy} style={{ width: "100%", padding: "14px 16px", background: busy ? "#9CA3AF" : "#0141f9", color: "#fff", border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: busy ? "wait" : "pointer", fontFamily: "inherit" }}>
-          {busy ? "로그인 중..." : "로그인"}
-        </button>
-      </form>
+      <div style={{ background: "#fff", borderRadius: 20, padding: "44px 40px", width: 400, maxWidth: "90vw", boxShadow: "0 20px 60px rgba(0,0,0,.3)", textAlign: "center" }}>
+        <div style={{ fontSize: 24, fontWeight: 800, color: "#0a1628", marginBottom: 4 }}>생활계산기.com</div>
+        <div style={{ fontSize: 14, color: "#6b778c", marginBottom: 32 }}>관리자 전용</div>
+
+        {error && (
+          <div style={{ padding: "10px 14px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10, color: "#dc2626", fontSize: 13, marginBottom: 20, fontWeight: 600 }}>
+            {error === "unauthorized" ? "허가되지 않은 계정입니다" :
+             error === "cancelled" ? "로그인이 취소되었습니다" :
+             error === "invalid_state" ? "인증 상태 오류 - 다시 시도해주세요" :
+             error === "token_exchange" ? "인증 토큰 교환 실패" :
+             "로그인 오류: " + error}
+          </div>
+        )}
+
+        <a href={API + "/api/admin/google-auth"} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, padding: "14px 24px", background: "#fff", border: "1px solid #dfe1e6", borderRadius: 10, fontSize: 15, fontWeight: 600, color: "#0a1628", textDecoration: "none", cursor: "pointer", transition: "box-shadow .15s" }}
+          onMouseEnter={e => e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,.1)"}
+          onMouseLeave={e => e.currentTarget.style.boxShadow = "none"}>
+          <svg width="20" height="20" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+          Google 계정으로 로그인
+        </a>
+
+        <div style={{ fontSize: 12, color: "#9ca3af", marginTop: 24 }}>허가된 계정만 접근 가능합니다</div>
+      </div>
     </div>
   );
 }

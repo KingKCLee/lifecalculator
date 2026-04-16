@@ -1,7 +1,7 @@
 import { supabase } from './supabase.js';
 // build: 2026.04.06.001
 // v2026.04.06
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { createPortal } from "react-dom";
 // 2026.04.15 AI PRO 인사이트 보고서 9편
 import ReportIndex, {REPORTS_META, REPORTS_BY_CALC} from './pages/reports/ReportIndex';
@@ -38,6 +38,8 @@ import AdminPage from './pages/admin/AdminPage';
 import CalcRealPrice from './calcs/CalcRealPrice';
 // 2026.04.16 주소→실거래가·공시가격 자동조회 모달
 import AddressModal from './components/AddressModal';
+// 2026.04.16 계산기 트래킹 훅
+import { useTrack } from './hooks/useTrack';
 
 // 중앙 집중 세율·요율 관리. live-data.json의 rates에서 로드됨. 로드 전 빈 객체 → 각 계산기는 하드코딩 fallback 사용.
 // 점진적 교체: 각 계산기가 RATES.xxx ?? 하드코딩값 형태로 참조하도록 변환.
@@ -5948,6 +5950,7 @@ export default function App(){
     if(hash==="pricing"){setPage("pricing");return;}
     if(hash==="verification"){setPage("verification");return;}
     if(hash==="admin"){setPage("admin");return;}
+    if(hash==="admin/callback"){setPage("admin/callback");return;}
     if(hash==="terms"){setPage("terms");return;}
     if(hash.startsWith("terms/")){setPage("html:/"+hash+".html");return;}
     if(hash==="reports"){setPage("reports:index");return;}
@@ -5983,7 +5986,30 @@ export default function App(){
   const catInfo=CATS.find(c=>c.id===cat);
   const searchResults=search.trim()?CL.filter(c=>(c.l+"|"+(DESC[c.id]||"")).includes(search.trim())):[];
 
+  /* ═══ 2026.04.16 STEP 1: 62개 계산기 중앙 집중 트래킹 ═══ */
+  const calcNameForTrack=useMemo(()=>page==="calc"&&calc?(CL.find(c=>c.id===calc)?.l||calc)+" 계산기":null,[page,calc]);
+  useTrack(page==="calc"?calc:null,calcNameForTrack);
+
+  /* ═══ 2026.04.16 STEP 2: 공지사항 배너 연동 ═══ */
+  const[noticeBanner,setNoticeBanner]=useState(null);
+  const[noticeDismissed,setNoticeDismissed]=useState(()=>sessionStorage.getItem("lc_notice_dismissed")==="1");
+  useEffect(()=>{
+    fetch(LC_API+"/api/admin/notice").then(r=>r.json()).then(j=>{if(j&&j.enabled)setNoticeBanner(j);}).catch(()=>{});
+  },[]);
+  const dismissNotice=()=>{setNoticeDismissed(true);sessionStorage.setItem("lc_notice_dismissed","1");};
+
+  /* ═══ 2026.04.16 STEP 3: AdSense 광고 슬롯 연동 ═══ */
+  const[adSlots,setAdSlots]=useState(null);
+  useEffect(()=>{
+    fetch(LC_API+"/api/admin/adsense").then(r=>r.json()).then(j=>{if(j)setAdSlots(j);}).catch(()=>{});
+  },[]);
+
   return(<div style={{minHeight:"100vh",background:"#F5F6F8",fontFamily:"'Pretendard','Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif",width:"100%",maxWidth:"100vw",overflowX:"hidden",paddingTop:64,color:"#1A1A2E",fontSize:14,lineHeight:1.7}}>
+    {/* 공지사항 배너 */}
+    {noticeBanner&&!noticeDismissed&&(()=>{const colors={info:{bg:"#eff6ff",c:"#1e40af",bc:"#bfdbfe"},warning:{bg:"#fef9c3",c:"#854d0e",bc:"#fde68a"},success:{bg:"#f0fdf4",c:"#166534",bc:"#bbf7d0"}};const t=colors[noticeBanner.type]||colors.info;return(<div style={{background:t.bg,borderBottom:"1px solid "+t.bc,padding:"10px 24px",fontSize:13,color:t.c,display:"flex",alignItems:"center",justifyContent:"center",gap:12,position:"relative",zIndex:999,lineHeight:1.5,textAlign:"center"}}>
+      <span style={{flex:"1 1 auto"}} dangerouslySetInnerHTML={{__html:noticeBanner.message||""}}/>
+      <button onClick={dismissNotice} aria-label="닫기" style={{background:"none",border:"none",color:t.c,fontSize:18,cursor:"pointer",flexShrink:0,padding:"0 4px",fontFamily:"inherit"}}>✕</button>
+    </div>);})()}
     <SidePanel/>
     {isMo&&<button onClick={()=>setNavOpen(true)} aria-label="메뉴 열기" style={{position:"fixed",top:10,left:10,zIndex:9997,width:40,height:40,background:"#0a1628",color:"#fff",border:"none",borderRadius:10,cursor:"pointer",fontSize:20,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 8px rgba(0,0,0,.2)"}}>☰</button>}
     {/* 모바일/홈에서는 LeftNav 숨김 — 모바일은 drawer로 별도 렌더 */}
@@ -6167,7 +6193,7 @@ body.lc-embed main{padding-top:0!important}
     <div style={{display:"flex",alignItems:"flex-start"}}>
     {/* 2026.04.15 PC LeftNav (좌측 Expert Guide 사이드바) 제거 — 모바일 드로어는 L5602에 유지 */}
     <main style={{flex:"1 1 auto",minWidth:0,width:"100%",background:(!isMo&&page!=="home")?"#f8f9fc":undefined}}>
-    {page==="mypage"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><MyPage user={effectiveUser} lcToken={lcToken} lcEmail={lcEmail} onLcLogout={()=>{try{localStorage.removeItem('lc_token');localStorage.removeItem('lc_email');}catch{}setLcToken("");setLcEmail("");}} onBack={navigateHome} onLogout={handleLogout}/></div>):page==="info"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><InfoHub isMo={isMo} navigateHome={navigateHome}/></div>):page==="news"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><NewsPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="community"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><CommunityPage isMo={isMo} navigateHome={navigateHome} effectiveUser={effectiveUser}/></div>):page==="policy"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><PolicyPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="market"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><MarketPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="terms"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><TermsHubPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="about"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><AboutPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="guide"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><GuidePage isMo={isMo} navigateHome={navigateHome}/></div>):page==="pricing"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><PricingPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="verification"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><VerificationPage isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("reports:")?(<div style={{background:"#f8f9fb",minHeight:"100vh"}}><ReportsPage slug={page.replace("reports:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("learn:")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LearnPage slug={page.replace("learn:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("law:")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LawPage slug={page.replace("law:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("html:")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><HtmlAdapterPage url={page.replace("html:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("legal_")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LegalPage type={page.replace("legal_","")} onBack={navigateHome}/></div>):page==="admin"?(<AdminPage/>):page==="home"?(<>
+    {page==="mypage"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><MyPage user={effectiveUser} lcToken={lcToken} lcEmail={lcEmail} onLcLogout={()=>{try{localStorage.removeItem('lc_token');localStorage.removeItem('lc_email');}catch{}setLcToken("");setLcEmail("");}} onBack={navigateHome} onLogout={handleLogout}/></div>):page==="info"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><InfoHub isMo={isMo} navigateHome={navigateHome}/></div>):page==="news"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><NewsPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="community"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><CommunityPage isMo={isMo} navigateHome={navigateHome} effectiveUser={effectiveUser}/></div>):page==="policy"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><PolicyPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="market"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><MarketPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="terms"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><TermsHubPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="about"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><AboutPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="guide"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><GuidePage isMo={isMo} navigateHome={navigateHome}/></div>):page==="pricing"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><PricingPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="verification"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><VerificationPage isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("reports:")?(<div style={{background:"#f8f9fb",minHeight:"100vh"}}><ReportsPage slug={page.replace("reports:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("learn:")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LearnPage slug={page.replace("learn:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("law:")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LawPage slug={page.replace("law:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("html:")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><HtmlAdapterPage url={page.replace("html:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("legal_")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LegalPage type={page.replace("legal_","")} onBack={navigateHome}/></div>):page==="admin"?(<AdminPage/>):page==="admin/callback"?(<AdminPage subPage="callback"/>):page==="home"?(<>
       {/* 2026.04.16 sample-home 1:1 매칭 — 즐겨찾기 섹션 PC 숨김 (모바일만 유지) */}
       {isMo&&favorites.length>0&&<div style={{maxWidth:1200,margin:"0 auto",padding:"16px 16px 0",background:"#f8f9fc"}}>
         <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12}}>
