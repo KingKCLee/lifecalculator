@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {tW, fW, Inp, Tog, RP, CalcShell, MI} from "./_shared";
+import {tW, fW, Inp, Tog, RP, CalcShell, MI, RateTable} from "./_shared";
 
 // 부동산 매매계약서 인지세 (지방세법 + 인지세법)
 // 과세표준: 1천만원 이하 비과세, 1천만~3천만 2만, 3천만~5천만 4만, 5천만~1억 7만,

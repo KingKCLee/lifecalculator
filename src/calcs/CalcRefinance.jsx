@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {tW, pN, fW, Inp, Tog, RP, CalcShell, MI, BaseRateHint} from "./_shared";
+import {tW, pN, fW, Inp, Tog, RP, CalcShell, MI, BaseRateHint, RateTable} from "./_shared";
 
 // 대환대출 (갈아타기) 비교 계산기
 // 기존 대출 vs 신규 대출 월 상환액·총 이자·중도상환수수료 포함 손익
@@ -54,5 +54,6 @@ export default function CalcRefinance({isMo=false, onNav=()=>{}}){
         {l:"손익분기 개월", v:breakEvenMonths+"개월"},
         {l:"신규기간 총 절감", v:fW(totalSave)}
       ]}/>
+    <RateTable title="대환대출 중도상환수수료" headers={["금융기관","수수료율","면제 시점"]} rows={[["시중은행","1.2~1.4%","3년 이후"],["인터넷은행","0.5~1.0%","3년 이후"],["보험사","1.0~1.5%","3년 이후"]]}/>
   </CalcShell>);
 }

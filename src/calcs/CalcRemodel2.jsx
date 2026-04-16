@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {tW, pN, fW, Inp, Tog, RP, CalcShell, MI} from "./_shared";
+import {tW, pN, fW, Inp, Tog, RP, CalcShell, MI, RateTable} from "./_shared";
 
 // 리모델링 타당성 2 (레버리지 + 공사기간 기회비용 포함)
 // 순이익 = (예상 매도가 - 현 시세 - 공사비 - 공사기간 이자 - 이사/임시거주비) - 양도세 추정
@@ -43,5 +43,6 @@ export default function CalcRemodel2({isMo=false, onNav=()=>{}}){
         {l:"순이익", v:fW(netGain)},
         {l:"공사비 대비 수익률", v:roi.toFixed(1)+"%"}
       ]}/>
+    <RateTable title="리모델링 유형별 기간" headers={["유형","공사기간","분담금 범위"]} rows={[["수직증축","3~4년","2~5억"],["수평증축","2~3년","1~3억"],["별동증축","2~3년","1~3억"],["대수선","1~2년","0.5~1.5억"]]}/>
   </CalcShell>);
 }

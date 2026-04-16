@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {tW, pN, fW, Inp, Tog, RP, CalcShell, MI} from "./_shared";
+import {tW, pN, fW, Inp, Tog, RP, CalcShell, MI, RateTable} from "./_shared";
 
 // 임대료 → 추정 연소득 환산 계산기
 // 주택임대사업자 필요경비율: 주택임대 60% (단순경비율) / 장부 필요경비 별도
@@ -36,5 +36,6 @@ export default function CalcEstIncome({isMo=false, onNav=()=>{}}){
         {l:"필요경비 ("+expenseRate+"%)", v:"-"+fW(Math.round(gross*eRate))},
         {l:"추정 소득금액", v:fW(estIncome)}
       ]}/>
+    <RateTable title="주택임대소득 과세 기준" headers={["구분","기준"]} rows={[["분리과세 요건","수입 2,000만원 이하"],["분리과세 세율","14%"],["필요경비율 (미등록)","50%"],["필요경비율 (등록)","60%"],["기본공제 (미등록)","200만원"],["기본공제 (등록)","400만원"]]}/>
   </CalcShell>);
 }

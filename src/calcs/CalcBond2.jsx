@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {tW, pN, fW, Inp, Sel, Tog, RP, CalcShell, MI} from "./_shared";
+import {tW, pN, fW, Inp, Sel, Tog, RP, CalcShell, MI, RateTable} from "./_shared";
 
 // 국민주택채권 매입·할인 계산기 (주택도시기금)
 // 주택분 공시지가 구간별 매입요율 (2026 기준 일반 아파트):
@@ -49,5 +49,6 @@ export default function CalcBond2({isMo=false, onNav=()=>{}}){
         {l:"할인손실률", v:pN(discountRate).toFixed(2)+"%"},
         {l:"실부담 할인손실", v:fW(discount)}
       ]}/>
+    <RateTable title="국민주택채권 매입률" headers={["지역","6억 초과","1.6~6억","1.6억 이하"]} rows={[["서울","5%","4%","3%"],["광역시","4%","3%","2%"],["기타","3%","2%","1%"]]}/>
   </CalcShell>);
 }

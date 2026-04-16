@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Inp, Tog, RP, CalcShell, MI} from "./_shared";
+import {Inp, Tog, RP, CalcShell, MI, RateTable} from "./_shared";
 
 // 날짜 간격 계산기 (부동산 계약·전입·보유기간 계산용)
 // 두 날짜 간 일수, 개월, 년수 및 D-day

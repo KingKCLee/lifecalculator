@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {tW, pN, fW, Inp, Tog, RP, CalcShell, MI} from "./_shared";
+import {tW, pN, fW, Inp, Tog, RP, CalcShell, MI, RateTable} from "./_shared";
 
 // 경매 배당표 간이 계산기
 // 배당 순위:
@@ -46,5 +46,6 @@ export default function CalcAuctionDiv({isMo=false, onNav=()=>{}}){
       alertMsg={remain<=0?"매각대금 소진":"잉여금 발생 (소유자 귀속)"}
       alertType={remain<=0?"warning":"success"}
       items={dist}/>
+    <RateTable title="배당 우선순위" headers={["순위","채권 종류"]} rows={[["1","집행비용 (법원 비용)"],["2","최우선변제 소액임차인"],["3","확정일자 임차인 / 근저당 (설정일순)"],["4","임금채권 (최종 3개월분)"],["5","일반 조세채권"],["6","일반 채권"]]}/>
   </CalcShell>);
 }

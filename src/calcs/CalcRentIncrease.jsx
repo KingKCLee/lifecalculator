@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {tW, pN, fW, Inp, Tog, RP, CalcShell, MI} from "./_shared";
+import {tW, pN, fW, Inp, Tog, RP, CalcShell, MI, RateTable} from "./_shared";
 
 // 임대료 5% 상한 계산기 (주택임대차보호법 제7조)
 // - 계약갱신청구권 행사 시 기존 임대료 대비 5% 이내 인상만 가능

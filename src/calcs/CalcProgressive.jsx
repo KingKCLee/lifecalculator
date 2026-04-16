@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {tW, pN, fW, Inp, Tog, RP, CalcShell, pTx, MI} from "./_shared";
+import {tW, pN, fW, Inp, Tog, RP, CalcShell, pTx, MI, RateTable} from "./_shared";
 
 // 누진세 범용 계산기
 // 선택한 세목의 과세표준 구간별 세율을 적용해 세액과 한계세율/실효세율을 계산
@@ -54,5 +54,6 @@ export default function CalcProgressive({isMo=false, onNav=()=>{}}){
         {l:"산출세액", v:fW(tax)},
         {l:"실효세율", v:effective.toFixed(2)+"%"}
       ]}/>
+    <RateTable title="종합소득세율표 (2026)" headers={["과세표준","세율","누진공제"]} rows={[["1,400만 이하","6%","-"],["5,000만 이하","15%","126만"],["8,800만 이하","24%","576만"],["1.5억 이하","35%","1,544만"],["3억 이하","38%","1,994만"],["5억 이하","40%","2,594만"],["10억 이하","42%","3,594만"],["10억 초과","45%","6,594만"]]}/>
   </CalcShell>);
 }
