@@ -266,7 +266,7 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
               <div style={{ marginBottom: 16, padding: "16px 18px", background: "#eff6ff", border: "1px solid #0141f9", borderRadius: 10 }}>
                 <div style={{ fontSize: 11, color: "#6B7280", marginBottom: 4 }}>{stdInfo.year}년 공시가격 · {stdInfo.dong || dongNm}동 {stdInfo.ho || hoNm}호</div>
                 <div style={{ fontSize: 24, fontWeight: 800, color: "#0141f9", marginBottom: 10, fontVariantNumeric: "tabular-nums" }}>₩{Number(stdInfo.price).toLocaleString("ko-KR")}</div>
-                <button onClick={() => { onApplyStd(stdInfo.price); }} style={{ width: "100%", padding: "10px 14px", background: "#0141f9", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>공시가격으로 시가표준액 입력</button>
+                <button onClick={() => { onApplyStd(stdInfo.price); onClose(); }} style={{ width: "100%", padding: "10px 14px", background: "#0141f9", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>공시가격으로 시가표준액 입력</button>
               </div>
             )}
 
@@ -275,7 +275,7 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
                 <div style={{ fontSize: 12, fontWeight: 700, color: "#0a1628", marginBottom: 6 }}>최근 3개월 실거래가 ({realList.length}건) — 클릭 시 취득가액·면적 자동입력</div>
                 <div style={{ maxHeight: 340, overflowY: "auto", border: "1px solid #E5E7EB", borderRadius: 8 }}>
                   {realList.map((it, i) => (
-                    <button key={i} onClick={() => { onApplyPrice(it.amount); if (onApplyArea && it.area) onApplyArea(areaToBucket(it.area)); }} style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 8, alignItems: "center", width: "100%", padding: "10px 14px", border: "none", borderBottom: i < realList.length - 1 ? "1px solid #F3F4F6" : "none", background: "#fff", cursor: "pointer", fontFamily: "inherit", textAlign: "left" }} onMouseEnter={e => e.currentTarget.style.background = "#eff6ff"} onMouseLeave={e => e.currentTarget.style.background = "#fff"}>
+                    <button key={i} onClick={() => { onApplyPrice(it.amount); if (onApplyArea && it.area) onApplyArea(areaToBucket(it.area)); onClose(); }} style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 8, alignItems: "center", width: "100%", padding: "10px 14px", border: "none", borderBottom: i < realList.length - 1 ? "1px solid #F3F4F6" : "none", background: "#fff", cursor: "pointer", fontFamily: "inherit", textAlign: "left" }} onMouseEnter={e => e.currentTarget.style.background = "#eff6ff"} onMouseLeave={e => e.currentTarget.style.background = "#fff"}>
                       <div>
                         <div style={{ fontSize: 13, fontWeight: 700, color: "#0a1628" }}>{it.apt} <span style={{ fontWeight: 400, color: "#6b778c", fontSize: 11 }}>{it.dong} {it.jibun}</span></div>
                         <div style={{ fontSize: 11, color: "#6b778c", marginTop: 2 }}>{it.floor}층 · {it.area}㎡ · {it.year}.{String(it.month).padStart(2, "0")}.{String(it.day).padStart(2, "0")}</div>
