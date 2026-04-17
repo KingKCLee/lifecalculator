@@ -1282,16 +1282,13 @@ function RP({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlin
       <span><IconCal c="#fff"/></span><span style={{opacity:.88,flex:"1 1 auto",minWidth:0}}>{deadline}</span>
       {deadlineLink&&<a href={deadlineLink} target="_blank" rel="noopener noreferrer" style={{color:"#FFC400",fontWeight:700,textDecoration:"none"}}>{deadlineLinkLabel||"바로가기 →"}</a>}
     </div>}
-    {/* Unified action buttons: PDF / 이미지 / CSV / 링크 / AI 해설 / 중개사 PDF / 전문가 상담 */}
+    {/* Unified action buttons: PDF / 이미지 / CSV / 링크 */}
     <div className="result-actions" style={{display:"flex",flexWrap:"wrap",gap:6,marginTop:14}}>
       {[
         {fn:()=>downloadPDF(title,total,sub,items),icon:<IconDoc c="#fff"/>,l:"PDF"},
         {fn:()=>downloadImage(title,total,sub,items),icon:<IconCam c="#fff"/>,l:"이미지"},
         {fn:()=>downloadCSV(title,total,sub,items),icon:<IconChart c="#fff"/>,l:"CSV"},
         {fn:()=>window.dispatchEvent(new CustomEvent('lc-share-url')),icon:<IconLink c="#fff"/>,l:"링크"},
-        {fn:()=>window.dispatchEvent(new CustomEvent('lc-ai-explain',{detail:{title,total,items,sub}})),icon:<IconBot c="#fff"/>,l:"AI 해설"},
-        {fn:()=>window.dispatchEvent(new CustomEvent('lc-brand-pdf',{detail:{title,total,items,sub}})),icon:<IconDoc c="#fff"/>,l:"AI PDF"},
-        {fn:()=>window.dispatchEvent(new CustomEvent('lc-consult',{detail:{title,total}})),icon:<IconUser c="#fff"/>,l:"정보공유"}
       ].map((b,i)=>(
         <button key={i} onClick={b.fn} style={{flex:"1 1 auto",minWidth:80,padding:"9px 10px",background:"rgba(255,255,255,.12)",color:"#fff",border:"1px solid rgba(255,255,255,.28)",borderRadius:8,fontSize:11,fontWeight:700,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:4,fontFamily:"inherit",transition:"background .15s"}}
           onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,.22)"}} onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,.12)"}}>
@@ -1299,9 +1296,9 @@ function RP({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlin
         </button>))}
     </div>
     {/* Row 3: -10% / 원래 / +10% */}
-    <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:6,marginTop:8}}>
-      {[{m:0.9,l:"−10%"},{m:1,l:"원래"},{m:1.1,l:"+10%"}].map(s=>(
-        <button key={s.l} onClick={()=>window.dispatchEvent(new CustomEvent('lc-scenario',{detail:{mult:s.m}}))} style={{padding:"8px 4px",background:"rgba(255,255,255,.12)",color:"#fff",border:"1px solid rgba(255,255,255,.28)",borderRadius:8,fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>{s.l}</button>
+    <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:6,marginTop:8}}>
+      {[{m:0.9,l:"−10%"},{m:1.1,l:"+10%"}].map(s=>(
+        <button key={s.l} onClick={()=>onAdjustPrice?.(s.m<1?-10:10)} style={{padding:"8px 4px",background:"rgba(255,255,255,.12)",color:"#fff",border:"1px solid rgba(255,255,255,.28)",borderRadius:8,fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>{s.l}</button>
       ))}
     </div>
     {snapshot&&snapshot.total!==total&&<div style={{marginTop:8,padding:"8px 12px",background:"rgba(255,255,255,.12)",borderRadius:8,fontSize:11,display:"flex",justifyContent:"space-between",alignItems:"center",gap:8}}>
@@ -1328,7 +1325,7 @@ function RP({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlin
   </>);
 }
 // 2026.04.16 RPFull — CalcAcq 전용 sample-calc 정확 매칭 버전 (funnel/snapshot 제거, 버튼 라벨/순서 sample 고정)
-function RPFull({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlineLinkLabel,alertMsg,alertType="info",miss,itemFilter}){
+function RPFull({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlineLinkLabel,alertMsg,alertType="info",miss,itemFilter,onAdjustPrice}){
   const hasMiss=Array.isArray(miss)&&miss.length>0;
   if(isExample||hasMiss){total=total||0;if(hasMiss){items=[];sub="필수 항목을 입력해주세요";}else{items=[];sub="입력값을 입력하면 결과가 표시됩니다";}}
   // 2026.04.16 sample-calc 기준: itemFilter 라벨 배열이 있으면 해당 라벨만 표시 (합계는 제외)
@@ -1379,26 +1376,23 @@ function RPFull({title,total,sub,items,isExample=false,deadline,deadlineLink,dea
         {fn:()=>window.dispatchEvent(new CustomEvent('lc-share-url')),icon:<IconLink c="#fff"/>,l:"링크"}
       ];
       const row2=[
-        {fn:()=>window.dispatchEvent(new CustomEvent('lc-ai-explain',{detail:{title,total,items,sub}})),icon:<IconBot c="#fff"/>,l:"AI 해설"},
-        {fn:()=>window.dispatchEvent(new CustomEvent('lc-brand-pdf',{detail:{title,total,items,sub}})),icon:<IconDoc c="#fff"/>,l:"AI PDF"},
         {fn:()=>shareKakao(title,total,sub,items),icon:<IconLink c="#fff"/>,l:"공유"}
       ];
       const btnSt={padding:"9px 10px",background:"rgba(255,255,255,.12)",color:"#fff",border:"1px solid rgba(255,255,255,.28)",borderRadius:8,fontSize:11,fontWeight:700,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:4,fontFamily:"inherit",transition:"background .15s"};
       const renderBtn=(b,i)=>(<button key={i} onClick={b.fn} style={btnSt} onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,.22)"}} onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,.12)"}}>{b.icon}{b.l}</button>);
       if(isMo){
         return (<div className="result-actions" style={{display:"flex",flexWrap:"wrap",gap:6,marginTop:14}}>
-          {[...row1,...row2].map((b,i)=>renderBtn({...b,fn:b.fn},i))}
+          {row1.map((b,i)=>renderBtn(b,i))}
         </div>);
       }
       return (<div className="result-actions" style={{marginTop:14,display:"flex",flexDirection:"column",gap:6}}>
         <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6}}>{row1.map(renderBtn)}</div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:6}}>{row2.map(renderBtn)}</div>
       </div>);
     })()}
     {/* [6] -10% / 절세 팁 / +10% — sample-calc .rp-scenario */}
     <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:6,marginTop:8}}>
       {[{m:0.9,l:"−10%"},{m:1,l:"절세 팁"},{m:1.1,l:"+10%"}].map(s=>(
-        <button key={s.l} onClick={()=>window.dispatchEvent(new CustomEvent(s.l==="절세 팁"?'lc-ai-explain':'lc-scenario',{detail:s.l==="절세 팁"?{title,total,items,sub}:{mult:s.m}}))} style={{padding:"8px 4px",background:"rgba(255,255,255,.12)",color:"#fff",border:"1px solid rgba(255,255,255,.28)",borderRadius:8,fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>{s.l}</button>
+        <button key={s.l} onClick={()=>onAdjustPrice?.(s.m<1?-10:10)} style={{padding:"8px 4px",background:"rgba(255,255,255,.12)",color:"#fff",border:"1px solid rgba(255,255,255,.28)",borderRadius:8,fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>{s.l}</button>
       ))}
     </div>
     {/* [7] 1:1 세금 상담 카드 */}
@@ -1409,8 +1403,6 @@ function RPFull({title,total,sub,items,isExample=false,deadline,deadlineLink,dea
       </div>
       <button onClick={()=>window.dispatchEvent(new CustomEvent('lc-consult',{detail:{title,total}}))} style={{flexShrink:0,padding:"8px 14px",background:"#fff",color:"#0747A6",border:"none",borderRadius:8,fontSize:12,fontWeight:800,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>상담 →</button>
     </div>}
-    {/* [8] AI 절세 가이드 (초록) */}
-    {!isExample&&!hasMiss&&total>0&&<AIGuide items={items} title={title}/>}
     {/* [8.5] 비회원 계산 완료 후 로그인 유도 CTA */}
     {!isExample&&!hasMiss&&total>0&&(()=>{try{return !localStorage.getItem('lc_token');}catch{return true;}})()&&<div style={{marginTop:10,padding:"12px 14px",background:"rgba(255,255,255,0.1)",border:"1px solid rgba(255,255,255,0.2)",borderRadius:10,display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,flexWrap:"wrap"}}>
       <div style={{flex:"1 1 auto",minWidth:0}}><div style={{fontSize:12,fontWeight:600,color:"#fff"}}>계산 결과를 저장하려면 로그인하세요</div><div style={{fontSize:11,opacity:.7,marginTop:2}}>히스토리 보관 · AI 가이드 3회 · 맞춤 알림</div></div>
@@ -1980,7 +1972,7 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
       deadlineLink="https://wetax.go.kr" deadlineLinkLabel="위택스 신고 →"
       alertMsg={!stdPrice?"시가표준액 미입력 시 정확도가 낮아질 수 있습니다":firstDed>0?"생애최초 감면 "+fW(firstDed)+" 적용됨":conArea&&n>=2&&!heavyTaxExclude&&!lowVal&&!tempTwo?"조정대상지역 "+n+"주택 중과세율 "+fP(r*100)+" 적용":null}
       alertType={!stdPrice?"warning":firstDed>0?"success":"danger"}
-      items={[{l:"취득세액 ("+fP(r*100)+")",v:fW(ac)},{l:"지방교육세 ("+fP((isHeavy?0.4:r*100*0.1))+")",v:fW(ed)},{l:"농어촌특별세"+(fm>0?" (0.2%)":""),v:fm>0?fW(fm):"없음"},{l:"합계 납부세액",v:fW(total)}]}/>
+      items={[{l:"취득세액 ("+fP(r*100)+")",v:fW(ac)},{l:"지방교육세 ("+fP((isHeavy?0.4:r*100*0.1))+")",v:fW(ed)},{l:"농어촌특별세"+(fm>0?" (0.2%)":""),v:fm>0?fW(fm):"없음"},{l:"합계 납부세액",v:fW(total)}]} onAdjustPrice={(pct)=>sP(prev=>{const n=Math.round(Number(String(prev).replace(/,/g,""))*(1+pct/100));return String(n>0?n:prev);})}/>
     
     <NextStep calcId="acquisition" onNav={onNav} isMo={isMo}/></div>
   </div>);

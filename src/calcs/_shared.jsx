@@ -128,7 +128,7 @@ export const MI = {
   luckyday:["이사 예정 월을 입력해주세요"],
 };
 
-export function RP({title, total, sub, items, alertMsg, alertType="info", miss, isExample=false}){
+export function RP({title, total, sub, items, alertMsg, alertType="info", miss, isExample=false, onAdjustPrice}){
   const isMo = useIsMobile();
   const hasMiss = Array.isArray(miss) && miss.length>0;
   if(isExample||hasMiss){total=total||0;if(hasMiss){items=[];sub="필수 항목을 입력해주세요";}else if(!items||items.length===0){sub=sub||"입력값을 입력하면 결과가 표시됩니다";}}
@@ -186,15 +186,14 @@ export function RP({title, total, sub, items, alertMsg, alertType="info", miss, 
         {fn:()=>_ev('lc-share-kakao',d),icon:Ic.link,l:"공유"}
       ];
       const renderBtn=(b,i)=>(<button key={i} onClick={b.fn} style={btnSt} onMouseEnter={bHov} onMouseLeave={bOut}>{b.icon}{b.l}</button>);
-      if(isMo) return(<div style={{display:"flex",flexWrap:"wrap",gap:6,marginTop:14}}>{[...row1,...row2].map(renderBtn)}</div>);
+      if(isMo) return(<div style={{display:"flex",flexWrap:"wrap",gap:6,marginTop:14}}>{row1.map(renderBtn)}</div>);
       return(<div style={{marginTop:14,display:"flex",flexDirection:"column",gap:6}}>
         <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6}}>{row1.map(renderBtn)}</div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:6}}>{row2.map(renderBtn)}</div>
       </div>);
     })()}
-    {!hasMiss&&total>0&&<div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:6,marginTop:8}}>
-      {[{l:"−10%"},{l:"절세 팁"},{l:"+10%"}].map(s=>(
-        <button key={s.l} onClick={()=>_ev(s.l==="절세 팁"?'lc-ai-explain':'lc-scenario',s.l==="절세 팁"?{title,total,items,sub}:{mult:s.l==="−10%"?0.9:1.1})} style={{padding:"8px 4px",background:"rgba(255,255,255,.12)",color:"#fff",border:"1px solid rgba(255,255,255,.28)",borderRadius:8,fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>{s.l}</button>
+    {!hasMiss&&total>0&&<div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:6,marginTop:8}}>
+      {[{l:"−10%"},{l:"+10%"}].map(s=>(
+        <button key={s.l} onClick={()=>onAdjustPrice?.(s.l==="−10%"?-10:10)} style={{padding:"8px 4px",background:"rgba(255,255,255,.12)",color:"#fff",border:"1px solid rgba(255,255,255,.28)",borderRadius:8,fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>{s.l}</button>
       ))}
     </div>}
     {!hasMiss&&total>0&&<div style={{marginTop:10,padding:"12px 14px",background:"rgba(255,255,255,0.14)",border:"1px solid rgba(255,255,255,0.22)",borderRadius:10,display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,flexWrap:"wrap"}}>
