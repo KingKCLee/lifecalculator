@@ -169,7 +169,25 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
       <div onClick={e => e.stopPropagation()} style={{ background: "#fff", borderRadius: 16, padding: 24, maxWidth: 640, width: "100%", maxHeight: "90vh", overflowY: "auto", position: "relative", fontFamily: "inherit" }}>
         <button onClick={onClose} aria-label="닫기" style={{ position: "absolute", top: 12, right: 12, background: "none", border: "none", fontSize: 22, cursor: "pointer", color: "#6B7280" }}>✕</button>
 
-        <div style={{ fontSize: 18, fontWeight: 800, color: "#0a1628", marginBottom: 16 }}>주소·단지명으로 실거래가·공시가격 자동조회 및 자동입력</div>
+        <div style={{ fontSize: 18, fontWeight: 800, color: "#0a1628", marginBottom: 12 }}>주소·단지명으로 실거래가·공시가격 자동조회 및 자동입���</div>
+
+        {(() => {
+          const BT_GUIDE = {
+            apt: { icon: "✓", color: "#0F6E56", bg: "#E1F5EE", text: "최근 실거래 목록에서 선택하면 취득가액·공시가격 자동 입력" },
+            officetel: { icon: "✓", color: "#0F6E56", bg: "#E1F5EE", text: "최근 실거래 목록에서 선택하면 취득가액·공시가격 자동 입력" },
+            house: { icon: "i", color: "#185FA5", bg: "#E6F1FB", text: "개별주택가격(공시가격) 자동 입력 · 취득가액은 직접 입력하세요" },
+            villa: { icon: "!", color: "#633806", bg: "#FAEEDA", text: "빌라·연립은 공시가격 자동조회가 제한적입니다 · 직접 입력 권장" },
+            commercial: { icon: "i", color: "#185FA5", bg: "#E6F1FB", text: "토지공시지가 자동 입력 · 취득가액은 실제 계약금액을 직접 입력하세요" },
+            land: { icon: "i", color: "#185FA5", bg: "#E6F1FB", text: "개별공시지가 자동 입력 · 취득가액은 실제 거래금액을 직접 입력하세요" },
+          };
+          const g = BT_GUIDE[buildingType] || BT_GUIDE.apt;
+          return (
+            <div style={{ background: g.bg, borderRadius: 8, padding: "10px 14px", marginBottom: 12, display: "flex", alignItems: "flex-start", gap: 8, fontSize: 13, color: g.color, lineHeight: 1.5 }}>
+              <span style={{ fontWeight: 700, flexShrink: 0, width: 20, height: 20, borderRadius: "50%", background: g.color, color: "#fff", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 11 }}>{g.icon}</span>
+              <span>{g.text}</span>
+            </div>
+          );
+        })()}
 
         <div style={{ background: "#f8f9fc", borderRadius: 10, padding: 16, marginBottom: 16, fontSize: 13, color: "#505f79", lineHeight: 1.7 }}>
           <div style={{ marginBottom: 10 }}>
