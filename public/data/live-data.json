@@ -1168,6 +1168,12 @@
   "updateLog": [
     {
       "date": "2026.04.17",
+      "category": "대출",
+      "title": "fix: 대출이자 계산기 결과 패널 항상 표시",
+      "desc": "fix: 대출이자 계산기 결과 패널 항상 표시"
+    },
+    {
+      "date": "2026.04.17",
       "category": "전체",
       "title": "fix: guideData.js 깨진 문자 39개 수정",
       "desc": "fix: guideData.js 깨진 문자 39개 수정"
@@ -1460,12 +1466,6 @@
       "category": "세금",
       "title": "feat: 양도세 취득연도 입력으로 과거 실거래가 조회 (12개월 병렬, Worker 50건)",
       "desc": "feat: 양도세 취득연도 입력으로 과거 실거래가 조회 (12개월 병렬, Worker 50건)"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "세금",
-      "title": "fix: 전체 계산기 UI 취득세 기준으로 통일 (버튼/모달/레이아웃)",
-      "desc": "fix: 전체 계산기 UI 취득세 기준으로 통일 (버튼/모달/레이아웃)"
     }
   ],
   "rates": {
