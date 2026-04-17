@@ -2761,25 +2761,24 @@ function CalcRti({isMo=false,onNav=()=>{}}){
     <Inp label="연 금리" value={interestRate} onChange={setIR} suffix="%" placeholder="예: 5.0" error={!interestRate||interestRate==="0"}/>
     {!isMo&&<BaseRateHint/>}
   </div><div>
-    {rentW>0&&loanW>0?<><div style={{background:"linear-gradient(315deg, #0747A6 0%, #0052CC 50%, #0065FF 100%)",borderRadius:20,padding:"28px 24px",color:"#fff",textAlign:"center",boxShadow:"0 8px 28px rgba(7,71,166,.28)"}}>
-      <div style={{fontSize:11,letterSpacing:1.5,opacity:.8,marginBottom:16}}>RTI 분석 결과</div>
-      <div style={{fontSize:52,fontWeight:800,color:pass?"#57D9A3":"#FF5630",fontVariantNumeric:"tabular-nums"}}>{rti.toFixed(2)}배</div>
-      <div style={{fontSize:16,fontWeight:600,marginTop:4,color:pass?"#57D9A3":"#FF5630"}}>{st}</div>
-      <div style={{background:"rgba(255,255,255,.2)",borderRadius:8,height:12,margin:"12px 0 4px"}}>
-        <div style={{height:"100%",borderRadius:8,width:Math.min(rti/3*100,100)+"%",background:pass?"#22c55e":"#ef4444",transition:"width .4s"}}/>
-      </div>
-      <div style={{display:"flex",justifyContent:"space-between",fontSize:10,opacity:.7,marginBottom:8}}><span>0배</span><span>{minRatio}배 기준</span><span>3배</span></div>
-      <div style={{fontSize:12,opacity:.7,marginTop:8}}>{propType==="res"?"주거용 1.25배":"비주거용 1.5배"} 기준</div>
-      <div style={{borderTop:"1px solid rgba(255,255,255,.2)",marginTop:16,paddingTop:12,textAlign:"left",fontSize:13}}>
-        <div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",opacity:.85}}><span>연간 임대소득</span><span style={{fontWeight:600}}>{fW(rentW)}</span></div>
-        <div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",opacity:.85}}><span>연간 이자비용</span><span style={{fontWeight:600}}>{fW(annualInterest)}</span></div>
-        <div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",opacity:.85}}><span>최대 대출 (기준 충족)</span><span style={{fontWeight:600}}>{fW(gapLoan)}</span></div>
-      </div>
-    </div>
-    <div style={{marginTop:12,padding:"10px 14px",background:pass?"#E3FCEF":"#FFEBE6",border:"1px solid "+(pass?"#57D9A3":"#FFBDAD"),borderRadius:8,fontSize:12,color:pass?"#006644":"#BF2600",lineHeight:1.6}}>{pass?"✓ 기준 충족 — 임대사업자 대출 심사 RTI 요건 통과":"기준 미달 — 대출금액 축소 또는 임대료 조정 필요. 기준 충족 최대대출: "+fW(gapLoan)}</div>
-    <div style={{marginTop:8,padding:"10px 14px",background:"#f8f9fc",border:"1px solid #dfe1e6",borderRadius:8,fontSize:12,color:"#505f79",lineHeight:1.6,display:"flex",alignItems:"center",gap:6}}><span><IconCal/></span><span>2018.3.26 여신심사 가이드라인 시행. 임대사업자 주담대 심사 필수 항목</span></div></>:<StepsGuide steps={[{label:"연간 임대소득 입력",filled:rentW>0},{label:"대출금액 입력",filled:loanW>0},{label:"금리 입력",filled:pN(interestRate)>0}]}/>}
-    
-    
+    <RPFull miss={(rentW>0&&loanW>0)?null:MI.rti||["연간 임대소득을 입력해주세요","대출금액을 입력해주세요","금리를 입력해주세요"]}
+      title="RTI (임대업이자상환비율)"
+      total={annualInterest>0?Math.round(rti*100):0}
+      sub={annualInterest>0?(rti.toFixed(2)+"배 · "+(propType==="res"?"주거용 1.25배":"비주거용 1.5배")+" 기준 · "+(pass?"통과":"미달")):"필수 항목을 입력해주세요"}
+      deadline="2018.3.26 여신심사 가이드라인 시행. 임대사업자 주담대 심사 필수 항목"
+      alertMsg={annualInterest>0?(pass?"RTI "+rti.toFixed(2)+"배 — 대출 기준 충족":"RTI "+rti.toFixed(2)+"배 — 기준 미달. 기준 충족 최대대출: "+fW(gapLoan)):null}
+      alertType={pass?"success":"danger"}
+      items={annualInterest>0?[
+        {l:"연간 임대소득",v:fW(rentW)},
+        {l:"대출금액",v:fW(loanW)},
+        {l:"연 금리",v:fP(irV*100)},
+        {l:"연간 이자비용",v:fW(annualInterest)},
+        {l:"RTI",v:rti.toFixed(2)+"배"},
+        {l:"기준",v:propType==="res"?"주거용 1.25배 이상":"비주거용 1.5배 이상"},
+        {l:"판정",v:pass?"대출 가능":"대출 제한"},
+        {l:"기준 충족 최대대출",v:fW(gapLoan),note:"임대소득÷기준배율÷금리"}
+      ]:[]}
+    />
   </div></div>);
 }
 
