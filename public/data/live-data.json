@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.17",
       "category": "전체",
+      "title": "feat: 정보센터 전체 탭 공통 헤더 컴포넌트 적용",
+      "desc": "feat: 정보센터 전체 탭 공통 헤더 컴포넌트 적용"
+    },
+    {
+      "date": "2026.04.17",
+      "category": "전체",
       "title": "fix: 정보센터 nav 밑줄 제거 + 다른 메뉴와 동일 스타일",
       "desc": "fix: 정보센터 nav 밑줄 제거 + 다른 메뉴와 동일 스타일"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "feat: 개별공시지가 API 토지비율 정확 계산 (Worker landPrice + CalcBldVat onApplyInfo)",
       "desc": "feat: 개별공시지가 API 토지비율 정확 계산 (Worker landPrice + CalcBldVat onApplyInfo)"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "fix: 애드센스 승인 완벽 준비 - 전체 콘텐츠/링크/광고차단/sitemap 보강",
-      "desc": "fix: 애드센스 승인 완벽 준비 - 전체 콘텐츠/링크/광고차단/sitemap 보강"
     }
   ],
   "rates": {
