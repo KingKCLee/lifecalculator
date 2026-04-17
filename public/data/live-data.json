@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.17",
       "category": "전체",
+      "title": "fix: 상담신청 상세보기 모달 구현 + 상태 변경",
+      "desc": "fix: 상담신청 상세보기 모달 구현 + 상태 변경"
+    },
+    {
+      "date": "2026.04.17",
+      "category": "전체",
       "title": "feat: 정보센터 하위메뉴 계산기 페이지와 동일 포맷 적용",
       "desc": "feat: 정보센터 하위메뉴 계산기 페이지와 동일 포맷 적용"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "feat: 계산기별 주소조회 목적 명확화 + 안내문 차별화 (5 calcType: acquisition/holding/transfer/gift/vat)",
       "desc": "feat: 계산기별 주소조회 목적 명확화 + 안내문 차별화 (5 calcType: acquisition/holding/transfer/gift/vat)"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "세금",
-      "title": "fix: 전체 계산기 톤앤매너 취득세 기준 통일 (에러 빨간→파란, glow 추가)",
-      "desc": "fix: 전체 계산기 톤앤매너 취득세 기준 통일 (에러 빨간→파란, glow 추가)"
     }
   ],
   "rates": {
