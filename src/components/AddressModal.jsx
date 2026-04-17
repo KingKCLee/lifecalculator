@@ -169,7 +169,7 @@ export default function AddressModal({ onClose, onApplyPrice, onApplyStd, onAppl
       <div onClick={e => e.stopPropagation()} style={{ background: "#fff", borderRadius: 16, padding: 24, maxWidth: 640, width: "100%", maxHeight: "90vh", overflowY: "auto", position: "relative", fontFamily: "inherit" }}>
         <button onClick={onClose} aria-label="닫기" style={{ position: "absolute", top: 12, right: 12, background: "none", border: "none", fontSize: 22, cursor: "pointer", color: "#6B7280" }}>✕</button>
 
-        <div style={{ fontSize: 18, fontWeight: 800, color: "#0a1628", marginBottom: 12 }}>주소·단지명으로 실거래가·공시가격 자동조회 및 자동입���</div>
+        <div style={{ fontSize: 18, fontWeight: 800, color: "#0a1628", marginBottom: 12 }}>주소·단지명으로 실거래가·공시가격 자동조회 및 자동입력</div>
 
         {(() => {
           const BT_GUIDE = {
