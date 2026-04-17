@@ -1906,8 +1906,8 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
       {isMo&&(realType==="house"||realType==="officetel")&&<hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"8px 0"}}/>}
       {/* 2026.04.16 주소→공시가격·실거래가 자동조회 트리거 */}
       {!isMo&&<div style={{marginBottom:10}}>
-        <button type="button" onClick={()=>setShowAcqLookup(true)} style={{width:"100%",padding:"12px 16px",background:"linear-gradient(135deg,#eff6ff,#dbeafe)",border:"1.5px solid #bfdbfe",borderRadius:10,fontSize:13,fontWeight:700,color:"#1e40af",cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",gap:8,transition:"background .15s"}}>📍 주소·단지명으로 자동입력</button>
-        <div style={{fontSize:11,color:"#9ca3af",textAlign:"center",marginTop:4}}>실거래가·공시가격 자동조회 후 취득가액·시가표준액 자동입력</div>
+        <button type="button" onClick={()=>setShowAcqLookup(true)} style={{width:"100%",padding:"12px 16px",background:"linear-gradient(135deg,#eff6ff,#dbeafe)",border:"1.5px solid #bfdbfe",borderRadius:10,fontSize:13,fontWeight:700,color:"#1e40af",cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",gap:8,transition:"background .15s"}}>{"📍 "+({house:"주소·단지명으로 실거래가·공시가격 자동입력",officetel:"주소·단지명으로 실거래가·공시가격 자동입력",farmLand:"주소로 개별공시지가 자동입력",building:"주소로 토지공시지가 자동입력"}[realType]||"주소·단지명으로 자동입력")}</button>
+        <div style={{fontSize:11,color:"#9ca3af",textAlign:"center",marginTop:4}}>{({house:"최근 실거래 목록에서 선택하면 취득가액도 자동 입력됩니다",officetel:"최근 실거래 목록에서 선택하면 취득가액도 자동 입력됩니다",farmLand:"취득가액(계약금액)은 직접 입력해주세요",building:"취득가액(계약금액)은 직접 입력해주세요"})[realType]||"실거래가·공시가격 자동조회 후 자동입력"}</div>
       </div>}
       {showAcqLookup&&<AddressModal onClose={()=>setShowAcqLookup(false)} onApplyPrice={v=>{sP(String(Math.round(v/10000)));setAutoPriceFlag(true);}} onApplyStd={v=>{setStdPrice(String(Math.round(v/10000)));setAutoStdFlag(true);}} onApplyArea={b=>sAreaType(b)} onApplyInfo={info=>setSelectedAptInfo(info)} currentArea={areaType} buildingType={{house:"apt",officetel:"officetel",farmLand:"land",building:"commercial"}[realType]||"apt"}/>}
       {/* 수정 6: 선택 완료 후 단지 정보 카드 (PC only) */}
