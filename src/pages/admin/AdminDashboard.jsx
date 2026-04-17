@@ -218,13 +218,62 @@ function NoticeTab({ authFetch }) {
 
 function ConsultTab({ authFetch }) {
   const [list, setList] = useState([]); const [loading, setLoading] = useState(true);
+  const [sel, setSel] = useState(null);
   const load = async () => { setLoading(true); try { const r = await authFetch("/api/admin/consult"); const j = await r.json().catch(() => ({})); setList(j.requests || []); } catch {} finally { setLoading(false); } };
   useEffect(() => { load(); }, []);
-  const STATUS_LABEL = { pending: "\uB300\uAE30", in_progress: "\uC9C4\uD589 \uC911", done: "\uC644\uB8CC" };
+  const STATUS_LABEL = { pending: "대기", in_progress: "진행 중", done: "완료" };
   const STATUS_COLOR = { pending: "#f59e0b", in_progress: "#3b82f6", done: "#10b981" };
+  const changeStatus = async (id, status) => {
+    try { await authFetch("/api/admin/consult", { method: "PATCH", body: JSON.stringify({ id, status }) }); setSel(null); load(); } catch {}
+  };
   return (<div style={{ background: "#fff", borderRadius: 14, padding: "24px 28px", border: "1px solid #E5E7EB" }}>
-    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}><div style={{ fontSize: 14, fontWeight: 700 }}>{"\uC0C1\uB2F4 \uC2E0\uCCAD \uD604\uD669"} <span style={{ fontSize: 12, color: "#6b778c", fontWeight: 500 }}>({fNum(list.length)}{"\uAC74"})</span></div><button onClick={load} style={{ padding: "6px 14px", background: "#f1f5f9", border: "1px solid #E5E7EB", borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>{"\uC0C8\uB85C\uACE0\uCE68"}</button></div>
-    {loading ? <div style={{ color: "#6b778c", padding: 20 }}>{"\uB85C\uB4DC \uC911..."}</div> : (<table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}><thead><tr style={{ borderBottom: "2px solid #E5E7EB" }}><th style={{ padding: "10px 12px", textAlign: "left", color: "#6b778c", fontWeight: 600 }}>{"\uC774\uB984"}</th><th style={{ padding: "10px 12px", textAlign: "left", color: "#6b778c", fontWeight: 600 }}>{"\uC5F0\uB77D\uCC98"}</th><th style={{ padding: "10px 12px", textAlign: "left", color: "#6b778c", fontWeight: 600 }}>{"\uBA54\uC2DC\uC9C0"}</th><th style={{ padding: "10px 12px", textAlign: "center", color: "#6b778c", fontWeight: 600 }}>{"\uC0C1\uD0DC"}</th><th style={{ padding: "10px 12px", textAlign: "left", color: "#6b778c", fontWeight: 600 }}>{"\uB0A0\uC9DC"}</th></tr></thead><tbody>{list.length === 0 ? <tr><td colSpan={5} style={{ padding: 20, textAlign: "center", color: "#9ca3af" }}>{"\uC0C1\uB2F4 \uC2E0\uCCAD \uC5C6\uC74C"}</td></tr> : list.map((d, i) => (<tr key={i} style={{ borderBottom: "1px solid #f4f5f7" }}><td style={{ padding: "10px 12px", fontWeight: 600 }}>{d.name || "-"}</td><td style={{ padding: "10px 12px" }}>{d.phone || "-"}</td><td style={{ padding: "10px 12px", maxWidth: 200, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{d.message || "-"}</td><td style={{ padding: "10px 12px", textAlign: "center" }}><span style={{ padding: "3px 10px", borderRadius: 6, fontSize: 11, fontWeight: 700, color: "#fff", background: STATUS_COLOR[d.status] || "#6b778c" }}>{STATUS_LABEL[d.status] || d.status}</span></td><td style={{ padding: "10px 12px", color: "#6b778c", fontSize: 12 }}>{(d.created_at || "").slice(0, 10)}</td></tr>))}</tbody></table>)}</div>);
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+      <div style={{ fontSize: 14, fontWeight: 700 }}>상담 신청 현황 <span style={{ fontSize: 12, color: "#6b778c", fontWeight: 500 }}>({fNum(list.length)}건)</span></div>
+      <button onClick={load} style={{ padding: "6px 14px", background: "#f1f5f9", border: "1px solid #E5E7EB", borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>새로고침</button>
+    </div>
+    {loading ? <div style={{ color: "#6b778c", padding: 20 }}>로드 중...</div> : (
+      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+        <thead><tr style={{ borderBottom: "2px solid #E5E7EB" }}>
+          <th style={{ padding: "10px 12px", textAlign: "left", color: "#6b778c", fontWeight: 600 }}>이름</th>
+          <th style={{ padding: "10px 12px", textAlign: "left", color: "#6b778c", fontWeight: 600 }}>이메일</th>
+          <th style={{ padding: "10px 12px", textAlign: "left", color: "#6b778c", fontWeight: 600 }}>메시지</th>
+          <th style={{ padding: "10px 12px", textAlign: "center", color: "#6b778c", fontWeight: 600 }}>상태</th>
+          <th style={{ padding: "10px 12px", textAlign: "left", color: "#6b778c", fontWeight: 600 }}>날짜</th>
+        </tr></thead>
+        <tbody>{list.length === 0 ? <tr><td colSpan={5} style={{ padding: 20, textAlign: "center", color: "#9ca3af" }}>상담 신청 없음</td></tr> : list.map((d, i) => (
+          <tr key={d.id || i} onClick={() => setSel(d)} style={{ borderBottom: "1px solid #f4f5f7", cursor: "pointer", transition: "background .1s" }} onMouseEnter={e => e.currentTarget.style.background = "#f8fafc"} onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+            <td style={{ padding: "10px 12px", fontWeight: 600 }}>{d.name || "-"}</td>
+            <td style={{ padding: "10px 12px" }}>{d.email || d.phone || "-"}</td>
+            <td style={{ padding: "10px 12px", maxWidth: 200, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{d.message || "-"}</td>
+            <td style={{ padding: "10px 12px", textAlign: "center" }}><span style={{ padding: "3px 10px", borderRadius: 6, fontSize: 11, fontWeight: 700, color: "#fff", background: STATUS_COLOR[d.status] || "#6b778c" }}>{STATUS_LABEL[d.status] || d.status}</span></td>
+            <td style={{ padding: "10px 12px", color: "#6b778c", fontSize: 12 }}>{(d.created_at || "").slice(0, 16)}</td>
+          </tr>))}</tbody>
+      </table>
+    )}
+    {sel && (
+      <div onClick={() => setSel(null)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div onClick={e => e.stopPropagation()} style={{ background: "#fff", borderRadius: 12, padding: 32, maxWidth: 500, width: "90%" }}>
+          <h3 style={{ margin: "0 0 20px", fontSize: 18, fontWeight: 700 }}>상담 신청 상세</h3>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
+            <tbody>
+              <tr><td style={{ padding: 8, color: "#6b7280", width: 80 }}>이름</td><td style={{ padding: 8, fontWeight: 600 }}>{sel.name}</td></tr>
+              <tr style={{ background: "#f8fafc" }}><td style={{ padding: 8, color: "#6b7280" }}>연락처</td><td style={{ padding: 8 }}>{sel.phone || "-"}</td></tr>
+              <tr><td style={{ padding: 8, color: "#6b7280" }}>이메일</td><td style={{ padding: 8 }}>{sel.email || "-"}</td></tr>
+              <tr style={{ background: "#f8fafc" }}><td style={{ padding: 8, color: "#6b7280", verticalAlign: "top" }}>내용</td><td style={{ padding: 8, lineHeight: 1.6, whiteSpace: "pre-wrap" }}>{sel.message}</td></tr>
+              {sel.calc_type && <tr><td style={{ padding: 8, color: "#6b7280" }}>계산기</td><td style={{ padding: 8 }}>{sel.calc_type}</td></tr>}
+              <tr style={{ background: "#f8fafc" }}><td style={{ padding: 8, color: "#6b7280" }}>상태</td><td style={{ padding: 8 }}><span style={{ padding: "3px 10px", borderRadius: 6, fontSize: 11, fontWeight: 700, color: "#fff", background: STATUS_COLOR[sel.status] || "#6b778c" }}>{STATUS_LABEL[sel.status] || sel.status}</span></td></tr>
+              <tr><td style={{ padding: 8, color: "#6b7280" }}>날짜</td><td style={{ padding: 8 }}>{sel.created_at}</td></tr>
+            </tbody>
+          </table>
+          <div style={{ display: "flex", gap: 8, marginTop: 20, justifyContent: "flex-end" }}>
+            {sel.status !== "done" && <button onClick={() => changeStatus(sel.id, "done")} style={{ background: "#10b981", color: "#fff", border: "none", borderRadius: 8, padding: "8px 20px", cursor: "pointer", fontSize: 13, fontWeight: 700, fontFamily: "inherit" }}>처리완료</button>}
+            {sel.status === "pending" && <button onClick={() => changeStatus(sel.id, "in_progress")} style={{ background: "#3b82f6", color: "#fff", border: "none", borderRadius: 8, padding: "8px 20px", cursor: "pointer", fontSize: 13, fontWeight: 700, fontFamily: "inherit" }}>진행중</button>}
+            <button onClick={() => setSel(null)} style={{ background: "#f3f4f6", border: "none", borderRadius: 8, padding: "8px 20px", cursor: "pointer", fontSize: 13, fontFamily: "inherit" }}>닫기</button>
+          </div>
+        </div>
+      </div>
+    )}
+  </div>);
 }
 
 function NewsletterTab({ authFetch }) {
