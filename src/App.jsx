@@ -4632,6 +4632,18 @@ function LegalPage({type,onBack}){
 }
 
 /* 2026.04.15 SPA 라우트 통합: News/Community/Policy/Market/HtmlAdapter */
+function InfoPageHeader({tab,navigateHome}){
+  const META={news:{l:"실시간 뉴스",t:"부동산·세금 실시간 뉴스",s:"국토부·기재부·금융위 최신 뉴스를 한곳에서"},policy:{l:"정책 브리핑",t:"정책 브리핑",s:"부동산·세금·금융 최신 정책 요약"},market:{l:"시장동향",t:"부동산 시장동향",s:"아파트 매매·전세 가격지수 및 거래현황"},terms:{l:"용어사전",t:"부동산 용어사전",s:"부동산·세금·대출 핵심 용어 완벽 정리"},community:{l:"Q&A 게시판",t:"Q&A 게시판",s:"부동산·세금 관련 질문과 답변"},guide:{l:"절세 가이드",t:"절세 가이드",s:"취득·보유·매도 단계별 절세 전략"},reports:{l:"AI 분석 보고서",t:"AI 분석 보고서",s:"PRO 인사이트"}};
+  const m=META[tab]||{l:tab,t:tab,s:""};
+  return(<div style={{marginBottom:32}}>
+    <div style={{fontSize:13,color:"#6b7280",marginBottom:12,display:"flex",gap:6,alignItems:"center"}}>
+      <span onClick={navigateHome} style={{cursor:"pointer",color:"#6b7280"}}>홈</span><span style={{color:"#d1d5db"}}>›</span><span style={{color:"#0a1628",fontWeight:500}}>{m.l}</span>
+    </div>
+    <h1 style={{fontSize:28,fontWeight:800,color:"#0a1628",margin:"0 0 8px",lineHeight:1.3}}>{m.t}</h1>
+    <p style={{fontSize:15,color:"#6b7280",margin:0,lineHeight:1.6}}>{m.s}</p>
+  </div>);
+}
+
 function SpaBackBtn({navigateHome}){return(<button onClick={navigateHome} style={{display:"flex",alignItems:"center",gap:8,background:"none",border:"none",color:"#0747A6",fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit",marginBottom:16,padding:0}}>← 홈</button>);}
 const _spaExtract=o=>Array.isArray(o)?o:(o?.items||o?.data||o?.news||o?.articles||o?.posts||o?.policies||[]);
 
@@ -4645,9 +4657,10 @@ function NewsPage({isMo,navigateHome}){
   },[cat,tick]);
   const cats=[{k:"all",l:"전체"},{k:"policy",l:"정책"},{k:"tax",l:"세금"},{k:"loan",l:"대출"},{k:"market",l:"시장"}];
   return(<div style={{maxWidth:1000,margin:"0 auto",padding:isMo?"24px 16px":"40px 24px",minHeight:"60vh"}}>
-    <div style={{fontSize:13,color:"#6b7280",marginBottom:8}}><span onClick={navigateHome} style={{cursor:"pointer",color:"#6b7280"}} onMouseEnter={e=>e.currentTarget.style.color="#0747A6"} onMouseLeave={e=>e.currentTarget.style.color="#6b7280"}>홈</span><span style={{margin:"0 6px",color:"#d1d5db"}}>›</span><span style={{color:"#0a1628",fontWeight:500}}>실시간 뉴스</span></div>
+      <InfoPageHeader tab="news" navigateHome={navigateHome}/>
+    
     <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:8,flexWrap:"wrap",gap:8}}>
-      <div><div style={{fontSize:13,color:"#6b7280",marginBottom:8,display:"flex",gap:4,alignItems:"center"}}><span onClick={navigateHome} style={{cursor:"pointer",color:"#6b7280"}}>홈</span><span>›</span><span style={{color:"#0a1628",fontWeight:500}}>실시간 뉴스</span></div><h1 style={{fontSize:isMo?22:28,fontWeight:800,color:"#0a1628",margin:"0 0 6px"}}>부동산·세금 실시간 뉴스</h1><p style={{fontSize:15,color:"#6b7280",margin:"0 0 20px"}}>국토부·기재부·금융위 최신 뉴스를 한곳에서</p></div>
+      
       <button onClick={()=>setTick(t=>t+1)} style={{background:"#0747A6",color:"#fff",border:"none",borderRadius:8,padding:"8px 16px",fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit",marginBottom:20}}>새로고침</button>
     </div>
     <div style={{display:"flex",gap:8,marginBottom:20,flexWrap:"wrap"}}>{cats.map(c=>(<button key={c.k} onClick={()=>setCat(c.k)} style={{padding:"8px 16px",borderRadius:20,border:"1px solid "+(cat===c.k?"#0747A6":"#dfe1e6"),background:cat===c.k?"#0747A6":"#fff",color:cat===c.k?"#fff":"#505f79",fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>{c.l}</button>))}</div>
@@ -4672,6 +4685,7 @@ function CommunityPage({isMo,navigateHome,effectiveUser,setAuthMode,setShowAuth}
   const handleDelete=async(id,e)=>{e.preventDefault();e.stopPropagation();if(!confirm("게시글 #"+id+"을 삭제하시겠습니까?"))return;try{const r=await fetch(LC_REALESTATE_WORKER+"/api/posts/"+id,{method:"DELETE",headers:{Authorization:"Bearer "+lcToken}});const j=await r.json().catch(()=>({}));if(r.ok){setItems(prev=>prev.filter(p=>p.id!==id));}else{alert(j.error||"삭제 실패");}}catch{alert("네트워크 오류");}};
   const handlePin=async(id,e)=>{e.preventDefault();e.stopPropagation();try{const r=await fetch(LC_REALESTATE_WORKER+"/api/posts/"+id+"/pin",{method:"PATCH",headers:{Authorization:"Bearer "+lcToken}});const j=await r.json().catch(()=>({}));if(r.ok){alert("고정 처리 완료");}else{alert(j.error||"고정 실패");}}catch{alert("네트워크 오류");}};
   return(<div style={{maxWidth:1000,margin:"0 auto",padding:isMo?"24px 16px":"40px 24px",minHeight:"60vh"}}>
+    <InfoPageHeader tab="community" navigateHome={navigateHome}/>
     <div style={{fontSize:13,color:"#6b7280",marginBottom:8}}><span onClick={navigateHome} style={{cursor:"pointer",color:"#6b7280"}} onMouseEnter={e=>e.currentTarget.style.color="#0747A6"} onMouseLeave={e=>e.currentTarget.style.color="#6b7280"}>홈</span><span style={{margin:"0 6px",color:"#d1d5db"}}>›</span><span style={{color:"#0a1628",fontWeight:500}}>Q&A 게시판</span></div>
     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20,flexWrap:"wrap",gap:8}}>
       <div><h1 style={{fontSize:isMo?22:28,fontWeight:800,color:"#0a1628",margin:"0 0 6px"}}>Q&A 게시판</h1><p style={{fontSize:15,color:"#6b7280",margin:0}}>세금·대출·부동산 궁금한 점을 질문하세요</p></div>
@@ -4699,8 +4713,9 @@ function PolicyPage({isMo,navigateHome}){
     return()=>{alive=false};
   },[]);
   return(<div style={{maxWidth:1000,margin:"0 auto",padding:isMo?"24px 16px":"40px 24px",minHeight:"60vh"}}>
-    <div style={{fontSize:13,color:"#6b7280",marginBottom:8}}><span onClick={navigateHome} style={{cursor:"pointer",color:"#6b7280"}} onMouseEnter={e=>e.currentTarget.style.color="#0747A6"} onMouseLeave={e=>e.currentTarget.style.color="#6b7280"}>홈</span><span style={{margin:"0 6px",color:"#d1d5db"}}>›</span><span style={{color:"#0a1628",fontWeight:500}}>정책 브리핑</span></div>
-    <div style={{fontSize:13,color:"#6b7280",marginBottom:8,display:"flex",gap:4,alignItems:"center"}}><span onClick={navigateHome} style={{cursor:"pointer",color:"#6b7280"}}>홈</span><span>›</span><span style={{color:"#0a1628",fontWeight:500}}>정책 브리핑</span></div><h1 style={{fontSize:isMo?22:28,fontWeight:800,color:"#0a1628",margin:"0 0 6px"}}>정책 브리핑</h1><p style={{fontSize:15,color:"#6b7280",margin:"0 0 20px"}}>부동산·세금·금융 최신 정책 요약</p>
+    <InfoPageHeader tab="policy" navigateHome={navigateHome}/>
+    
+    
     <p style={{fontSize:15,color:"#6b7280",margin:"0 0 24px"}}>국토부·기재부·금융위 최신 정책 요약</p>
     {loading?<div style={{padding:40,textAlign:"center",color:"#6b778c"}}>불러오는 중...</div>:items.length===0?<div style={{padding:40,textAlign:"center",color:"#6b778c"}}>정책 데이터가 없습니다.</div>:<div style={{display:"grid",gridTemplateColumns:"1fr",gap:12}}>{items.map((p,i)=>(<div key={i} style={{background:"#fff",border:"1px solid #dfe1e6",borderRadius:12,padding:"16px 20px"}}>
       <div style={{fontSize:15,fontWeight:700,color:"#172B4D",marginBottom:6}}>{p.title||p.name||"(제목 없음)"}</div>
@@ -4721,8 +4736,9 @@ function MarketPage({isMo,navigateHome}){
   },[]);
   const fV=v=>typeof v==="number"?v.toLocaleString():v||"—";
   return(<div style={{maxWidth:1200,margin:"0 auto",padding:isMo?"24px 16px":"40px 24px",minHeight:"60vh"}}>
-    <div style={{fontSize:13,color:"#6b7280",marginBottom:8}}><span onClick={navigateHome} style={{cursor:"pointer",color:"#6b7280"}} onMouseEnter={e=>e.currentTarget.style.color="#0747A6"} onMouseLeave={e=>e.currentTarget.style.color="#6b7280"}>홈</span><span style={{margin:"0 6px",color:"#d1d5db"}}>›</span><span style={{color:"#0a1628",fontWeight:500}}>시장동향</span></div>
-    <div style={{fontSize:13,color:"#6b7280",marginBottom:8,display:"flex",gap:4,alignItems:"center"}}><span onClick={navigateHome} style={{cursor:"pointer",color:"#6b7280"}}>홈</span><span>›</span><span style={{color:"#0a1628",fontWeight:500}}>시장동향</span></div><h1 style={{fontSize:isMo?24:32,fontWeight:800,color:"#0a1628",margin:"0 0 8px"}}>부동산 시장동향</h1>
+    <InfoPageHeader tab="market" navigateHome={navigateHome}/>
+    
+    
     <p style={{fontSize:15,color:"#6b7280",margin:"0 0 32px"}}>아파트 매매·전세 가격지수 및 거래현황 실시간 조회</p>
     {loading?<div style={{padding:60,textAlign:"center",color:"#9CA3AF"}}>시장 데이터 로딩 중...</div>:<>
     {ld&&<div style={{display:"grid",gridTemplateColumns:isMo?"repeat(2,1fr)":"repeat(4,1fr)",gap:12,marginBottom:24}}>
@@ -4825,8 +4841,9 @@ function TermsHubPage({isMo,navigateHome}){
   Object.values(byCat).forEach(arr=>arr.sort((a,b)=>a.term.localeCompare(b.term,'ko')));
   const cats=Object.keys(byCat).sort();
   return(<div style={{maxWidth:900,margin:"0 auto",padding:isMo?"24px 16px":"40px 24px",minHeight:"60vh"}}>
-    <div style={{fontSize:13,color:"#6b7280",marginBottom:8}}><span onClick={navigateHome} style={{cursor:"pointer",color:"#6b7280"}} onMouseEnter={e=>e.currentTarget.style.color="#0747A6"} onMouseLeave={e=>e.currentTarget.style.color="#6b7280"}>홈</span><span style={{margin:"0 6px",color:"#d1d5db"}}>›</span><span style={{color:"#0a1628",fontWeight:500}}>용어사전</span></div>
-    <div style={{fontSize:13,color:"#6b7280",marginBottom:8,display:"flex",gap:4,alignItems:"center"}}><span onClick={navigateHome} style={{cursor:"pointer",color:"#6b7280"}}>홈</span><span>›</span><span style={{color:"#0a1628",fontWeight:500}}>용어사전</span></div><h1 style={{fontSize:isMo?24:28,fontWeight:800,color:"#0a1628",margin:"0 0 6px"}}>부동산 용어사전</h1><p style={{fontSize:15,color:"#6b7280",margin:"0 0 20px"}}>부동산·세금·대출 핵심 용어 완벽 정리</p>
+    <InfoPageHeader tab="terms" navigateHome={navigateHome}/>
+    
+    
     <p style={{fontSize:15,color:"#6b7280",margin:"0 0 8px"}}>부동산·세금·대출 핵심 용어 완벽 정리</p>
     <p style={{fontSize:13,color:"#505f79",marginBottom:20}}>총 <b style={{color:"#0747A6"}}>{terms.length}</b>개 용어</p>
     <div style={{display:"flex",gap:8,marginBottom:20}}>
