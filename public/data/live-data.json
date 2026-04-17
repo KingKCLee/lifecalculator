@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.17",
       "category": "전체",
+      "title": "fix: NextStep z-index RPFull보다 높게 설정",
+      "desc": "fix: NextStep z-index RPFull보다 높게 설정"
+    },
+    {
+      "date": "2026.04.17",
+      "category": "전체",
       "title": "feat: guideData.js 62개 전체 section3 세율표/요율표 테이블 완성",
       "desc": "feat: guideData.js 62개 전체 section3 세율표/요율표 테이블 완성"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "fix: 전체 계산기 모든 표 위치 좌열 입력박스 아래로 통일",
       "desc": "fix: 전체 계산기 모든 표 위치 좌열 입력박스 아래로 통일"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "세금",
-      "title": "feat: 연말정산 근로소득세율표 + 대출이자 기준금리 참고표 추가",
-      "desc": "feat: 연말정산 근로소득세율표 + 대출이자 기준금리 참고표 추가"
     }
   ],
   "rates": {
