@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.17",
       "category": "전체",
+      "title": "fix: NextStep 전체 계산기 RPFull 하단 고정",
+      "desc": "fix: NextStep 전체 계산기 RPFull 하단 고정"
+    },
+    {
+      "date": "2026.04.17",
+      "category": "전체",
       "title": "fix: 전체 계산기 RPFull/RP 버튼 정리 + ±10% onAdjustPrice",
       "desc": "fix: 전체 계산기 RPFull/RP 버튼 정리 + ±10% onAdjustPrice"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "feat: 회원혜택 배너 레이아웃 개선 (제목+버튼 상단행, 카드 4열 하단행, 버튼 우측정렬)",
       "desc": "feat: 회원혜택 배너 레이아웃 개선 (제목+버튼 상단행, 카드 4열 하단행, 버튼 우측정렬)"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "fix: 어드민 JWT 로그인 플로우 수정 (credentials 제거, unicode 수정)",
-      "desc": "fix: 어드민 JWT 로그인 플로우 수정 (credentials 제거, unicode 수정)"
     }
   ],
   "rates": {
