@@ -1170,6 +1170,7 @@ function AcqGuide({isMo}){
 
 // 2026.04.15 동적 광고 슬롯 — lc-auth-worker /ads?position= 호출, 없으면 숨김
 function AdSlot({position}){
+  // 승인 전 비활성화: AdSlot은 lc-auth-worker 광고 서버 연동이므로 별도 플래그 불필요 (서버에 광고 없으면 자동 숨김)
   const[ads,setAds]=useState(null);
   useEffect(()=>{
     let cancelled=false;
@@ -6369,8 +6370,9 @@ export default function App(){
   const dismissNotice=()=>{setNoticeDismissed(true);sessionStorage.setItem("lc_notice_dismissed","1");};
 
   /* ═══ 2026.04.16 STEP 3: AdSense 광고 슬롯 연동 ═══ */
+  const ADSENSE_APPROVED = false; // 승인 후 true로 변경
   const[adSlots,setAdSlots]=useState(null);
-  const noAds=page==="admin"||page==="404"||page?.startsWith("admin/");
+  const noAds=!ADSENSE_APPROVED||page==="admin"||page==="404"||page?.startsWith("admin/");
   useEffect(()=>{
     fetch(LC_REALESTATE_WORKER+"/api/admin/adsense").then(r=>r.json()).then(j=>{if(j)setAdSlots(j);}).catch(()=>{});
   },[]);
