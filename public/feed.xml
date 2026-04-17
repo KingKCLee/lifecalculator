@@ -5,8 +5,15 @@
     <link>https://xn--989a00a691bdfa717h.com/</link>
     <description>취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 등 39가지 무료 계산기. 매일 자동 업데이트.</description>
     <language>ko</language>
-    <lastBuildDate>Fri, 17 Apr 2026 12:07:06 +0900</lastBuildDate>
+    <lastBuildDate>Fri, 17 Apr 2026 12:15:21 +0900</lastBuildDate>
     <atom:link href="https://xn--989a00a691bdfa717h.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+    <title>fix: guideData.js 깨진 문자 39개 수정</title>
+    <link>https://xn--989a00a691bdfa717h.com/</link>
+    <description>fix: guideData.js 깨진 문자 39개 수정</description>
+    <pubDate>Fri, 17 Apr 2026 12:15:21 +0900</pubDate>
+    <guid>https://xn--989a00a691bdfa717h.com/#update-202604170315</guid>
+  </item>
     <item>
     <title>fix: NextStep z-index RPFull보다 높게 설정</title>
     <link>https://xn--989a00a691bdfa717h.com/</link>
