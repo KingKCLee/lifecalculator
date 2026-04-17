@@ -1168,6 +1168,12 @@
   "updateLog": [
     {
       "date": "2026.04.17",
+      "category": "세금",
+      "title": "feat: guideData 핵심 세금 4개 완벽가이드 세율 테이블 추가",
+      "desc": "feat: guideData 핵심 세금 4개 완벽가이드 세율 테이블 추가"
+    },
+    {
+      "date": "2026.04.17",
       "category": "전체",
       "title": "fix: NextStep 전체 계산기 RPFull 하단 고정",
       "desc": "fix: NextStep 전체 계산기 RPFull 하단 고정"
@@ -1460,12 +1466,6 @@
       "category": "세금",
       "title": "fix: 증여세 취득세 안내 및 이동 링크 추가",
       "desc": "fix: 증여세 취득세 안내 및 이동 링크 추가"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "feat: 회원혜택 배너 레이아웃 개선 (제목+버튼 상단행, 카드 4열 하단행, 버튼 우측정렬)",
-      "desc": "feat: 회원혜택 배너 레이아웃 개선 (제목+버튼 상단행, 카드 4열 하단행, 버튼 우측정렬)"
     }
   ],
   "rates": {
