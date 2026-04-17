@@ -1337,7 +1337,7 @@ function RPFull({title,total,sub,items,isExample=false,deadline,deadlineLink,dea
   const isSub=(l)=>l.startsWith("  ")||l.startsWith("└")||l.startsWith("│");
   const alertAccent=alertType==="danger"?"#FFC400":alertType==="success"?"#57D9A3":alertType==="warning"?"#FFE380":"#fff";
   return(<>
-  <div style={{background:"linear-gradient(315deg, #0747A6 0%, #0052CC 50%, #0065FF 100%)",borderRadius:20,padding:"28px 24px",color:"#fff",position:isMo?"relative":"sticky",top:isMo?0:90,alignSelf:"start",boxShadow:"0 8px 28px rgba(7,71,166,.28)",width:"100%",minWidth:isMo?"auto":320,boxSizing:"border-box"}}>
+  <div style={{background:"linear-gradient(315deg, #0747A6 0%, #0052CC 50%, #0065FF 100%)",borderRadius:20,padding:"28px 24px",color:"#fff",position:isMo?"relative":"sticky",top:isMo?0:90,alignSelf:"start",boxShadow:"0 8px 28px rgba(7,71,166,.28)",width:"100%",minWidth:isMo?"auto":320,boxSizing:"border-box",zIndex:0}}>
     {hasMiss&&<div style={{background:"rgba(255,255,255,0.95)",border:"1px solid #E5E7EB",borderRadius:10,padding:"14px 16px",marginBottom:16,color:"#374151",fontSize:13,lineHeight:1.6}}>
       <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:6}}><span style={{fontSize:16}}>📝</span><strong style={{color:"#0747A6",fontSize:13}}>필수 항목을 입력하면 자동으로 계산됩니다</strong></div>
       <ul style={{margin:"6px 0 0 20px",padding:0,color:"#6B7280",fontSize:12}}>{miss.map((m,i)=>(<li key={i} style={{marginTop:2}}>{m}</li>))}</ul>
@@ -3324,7 +3324,7 @@ function NextStep({calcId,onNav,isMo=false}){
   const links=(INTERNAL_LINKS[calcId]||[]).map(l=>({id:l.id,label:l.label}));
   if(links.length===0){const rl=(RELATED[calcId]||[]).map(id=>{const it=CL.find(c=>c.id===id);return it?{id,label:it.l+" 계산하기"}:null;}).filter(Boolean);if(rl.length===0)return null;links.push(...rl);}
   return(
-    <div className="lc-nextstep" style={{marginTop:16,background:"#fff",border:"1px solid #dfe1e6",borderRadius:14,padding:"20px 22px"}}>
+    <div className="lc-nextstep" style={{marginTop:16,background:"#fff",border:"1px solid #dfe1e6",borderRadius:14,padding:"20px 22px",position:"relative",zIndex:1}}>
       <h3 style={{fontSize:11,fontWeight:700,color:"#6b778c",letterSpacing:.5,textTransform:"uppercase",margin:"0 0 12px"}}>함께 계산하면 좋은</h3>
       <div style={{display:"flex",flexDirection:"column",gap:6}}>
         {links.map(l=>{const it=CL.find(c=>c.id===l.id);if(!it)return null;return(
