@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.17",
       "category": "전체",
+      "title": "fix: 전체 계산기 RPFull/RP 버튼 정리 + ±10% onAdjustPrice",
+      "desc": "fix: 전체 계산기 RPFull/RP 버튼 정리 + ±10% onAdjustPrice"
+    },
+    {
+      "date": "2026.04.17",
+      "category": "전체",
       "title": "fix: NextStep RP패널 아래 고정 (2열 그���드 정렬)",
       "desc": "fix: NextStep RP패널 아래 고정 (2열 그���드 정렬)"
     },
@@ -1460,12 +1466,6 @@
       "category": "전체",
       "title": "fix: 어드민 JWT 로그인 플로우 수정 (credentials 제거, unicode 수정)",
       "desc": "fix: 어드민 JWT 로그인 플로우 수정 (credentials 제거, unicode 수정)"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "feat: Google 로그인 버튼 블루 컬러 적용",
-      "desc": "feat: Google 로그인 버튼 블루 컬러 적용"
     }
   ],
   "rates": {
