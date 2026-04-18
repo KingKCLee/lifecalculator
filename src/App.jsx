@@ -1453,7 +1453,6 @@ function RPFull({title,total,sub,items,isExample=false,deadline,deadlineLink,dea
     </div>}
     <div style={{marginTop:10,fontSize:10,opacity:.5,lineHeight:1.5,textAlign:"center"}}>본 계산은 2026년 세법 기준 참고용이며 법적 효력이 없습니다. (v2026.04.06)</div>
   </div>
-  {nextStep&&<div style={{marginTop:12}}>{nextStep}</div>}
   </>);
 }
 
@@ -7021,7 +7020,7 @@ body.lc-embed main{padding-top:0!important}
           <div className="calc-container" style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:isMo?16:32,marginBottom:24,boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
             {isMo?(<MobileCalcWrapper><Comp key={calc+"_"+sessionKey} isMo={true} onNav={navigateCalc}/></MobileCalcWrapper>):(<div><Comp key={calc+"_"+sessionKey} isMo={false} onNav={navigateCalc}/></div>)}
           </div>
-          {!isMo&&["auction2","auctiondiv","auctionloan","bldvat","bond2","datediff","estincome","goodlord","imputedrent","jeonseins","legalinherit","luckyday","progressive","reconyear","refinance","remodel2","rentincrease","stamp2","realprice"].includes(calc)&&<NextStep calcId={calc} onNav={navigateCalc} isMo={false}/>}
+          {!isMo&&<NextStep calcId={calc} onNav={navigateCalc} isMo={false}/>}
           
           
           {adSlots?.rp_bottom?.enabled&&!isMo&&!noAds&&<div style={{marginBottom:16}} dangerouslySetInnerHTML={{__html:adSlots.rp_bottom.code||""}}/>}
