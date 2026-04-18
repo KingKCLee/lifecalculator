@@ -777,7 +777,7 @@ function Slider({label,value,onChange,min,max,step}){
       <label style={{...lblSt(isMo),marginBottom:0,flex:"1 1 auto",minWidth:0}}>{label}</label>
       <div style={{display:"flex",alignItems:"center",gap:6}}>
         <input type="text" value={displayVal} onChange={handleText} placeholder="직접 입력"
-          style={{width:120,textAlign:"right",padding:"6px 10px",border:`1.5px solid ${P.bd}`,borderRadius:8,fontSize:16,fontWeight:700,color:P.tx,background:P.lt,outline:"none",fontFamily:"inherit"}}
+          style={{width:isMo?"100%":160,maxWidth:"100%",textAlign:"right",padding:isMo?"12px 14px":"8px 12px",border:`1.5px solid ${P.bd}`,borderRadius:8,fontSize:isMo?16:15,fontWeight:700,color:P.tx,background:P.lt,outline:"none",fontFamily:"inherit",boxSizing:"border-box",height:isMo?48:44}}
           onFocus={e=>e.target.style.borderColor=P.pri} onBlur={e=>e.target.style.borderColor=P.bd}/>
         <span style={{fontSize:13,color:P.mt,fontWeight:500}}>만원</span>
       </div>
@@ -1953,10 +1953,10 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
       </div>}
       {/* 취득가액 — 인라인 레이아웃 (PC width:480, 모바일 100%) */}
       <div style={{marginBottom:isMo?8:12}}>
-        <div style={isMo?{display:"flex",alignItems:"stretch",flexDirection:"column",gap:6,marginBottom:4}:{display:"grid",gridTemplateColumns:"1fr 520px",alignItems:"center",gap:8,marginBottom:4}}>
+        <div style={isMo?{display:"flex",alignItems:"stretch",flexDirection:"column",gap:6,marginBottom:4}:{display:"flex",flexDirection:"column",gap:4,marginBottom:4}}>
           <label style={{fontSize:isMo?13:14,fontWeight:600,color:"#0a1628",lineHeight:1.6,wordBreak:"keep-all"}}>{acqType==="sale"?"취득가액 (실거래가)":acqType==="gift"||acqType==="inherit"?"취득가액 (실거래가)":acqType==="newbuild"?"건축 원가":"취득가액"}</label>
           <div style={{display:"flex",alignItems:"center",gap:6,width:isMo?"100%":"auto",justifyContent:"flex-end"}}>
-            <input type="text" value={price?Number(String(price).replace(/,/g,"")).toLocaleString("ko-KR"):""} onChange={e=>{const raw=e.target.value.replace(/,/g,"");if(raw===""||/^\d+$/.test(raw)){sP(raw);setAutoPriceFlag(false);}}} placeholder="예: 12500" style={{width:isMo?"100%":480,maxWidth:"100%",textAlign:"right",padding:isMo?"12px 14px":"8px 12px",border:_hasErrors?"1.5px solid #3b82f6":"1.5px solid #dfe1e6",borderRadius:8,fontSize:isMo?16:15,fontWeight:700,color:P.tx,background:P.lt,outline:"none",fontFamily:"inherit",minHeight:isMo?48:undefined,boxShadow:_hasErrors?"0 0 0 3px rgba(59,130,246,0.1)":"none"}}/>
+            <input type="text" value={price?Number(String(price).replace(/,/g,"")).toLocaleString("ko-KR"):""} onChange={e=>{const raw=e.target.value.replace(/,/g,"");if(raw===""||/^\d+$/.test(raw)){sP(raw);setAutoPriceFlag(false);}}} placeholder="예: 12500" style={{width:"100%",maxWidth:"100%",textAlign:"right",padding:isMo?"12px 44px 12px 14px":"10px 44px 10px 14px",border:_hasErrors?"1.5px solid #3b82f6":"1.5px solid #dfe1e6",borderRadius:10,fontSize:isMo?16:15,fontWeight:700,color:P.tx,background:P.lt,outline:"none",fontFamily:"inherit",boxSizing:"border-box",height:isMo?48:44,boxShadow:_hasErrors?"0 0 0 3px rgba(59,130,246,0.1)":"none"}}/>
             <span style={{fontSize:13,color:P.mt,fontWeight:500}}>만원</span>
           </div>
         </div>
@@ -1965,10 +1965,10 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
       {isMo&&<hr style={{border:"none",borderTop:"1px solid #E5E7EB",margin:"8px 0"}}/>}
       {/* 2026.04.14 시가표준액 인라인 레이아웃 */}
       <div style={{marginBottom:isMo?8:12}}>
-        <div style={isMo?{display:"flex",alignItems:"stretch",flexDirection:"column",gap:6,marginBottom:4}:{display:"grid",gridTemplateColumns:"1fr 520px",alignItems:"center",gap:8,marginBottom:4}}>
+        <div style={isMo?{display:"flex",alignItems:"stretch",flexDirection:"column",gap:6,marginBottom:4}:{display:"flex",flexDirection:"column",gap:4,marginBottom:4}}>
           <label style={{fontSize:isMo?13:14,fontWeight:600,color:"#0a1628",lineHeight:1.6,wordBreak:"keep-all"}}>시가표준액 (공시가격) <TipModal title="시가표준액 (공시가격)"><p>미입력 시 취득가액을 시가표준액으로 간주합니다.</p><ul style={{paddingLeft:20}}><li>취득가액보다 시가표준액이 크면 시가표준액이 과세표준</li><li>시가표준액 1억 미만이면 다주택 중과 제외</li><li>조정대상지역 증여 시 시가표준액 3억 초과하면 12% 중과</li></ul><p style={{marginTop:10}}>공시가격은 부동산공시가격알리미(realtyprice.kr)에서 조회하실 수 있습니다. <a href="https://www.realtyprice.kr" target="_blank" rel="noopener noreferrer" style={{color:"#0747A6",fontWeight:700,textDecoration:"none"}}>바로가기 →</a></p></TipModal></label>
           <div style={{display:"flex",alignItems:"center",gap:6,width:isMo?"100%":"auto",justifyContent:"flex-end"}}>
-            <input type="text" value={stdPrice?Number(String(stdPrice).replace(/,/g,"")).toLocaleString("ko-KR"):""} onChange={e=>{const raw=e.target.value.replace(/,/g,"");if(raw===""||/^\d+$/.test(raw)){setStdPrice(raw);setAutoStdFlag(false);}}} placeholder="미입력 시 취득가 사용" style={{width:isMo?"100%":480,maxWidth:"100%",textAlign:"right",padding:isMo?"12px 14px":"8px 12px",border:"1.5px solid #dfe1e6",borderRadius:8,fontSize:isMo?16:15,fontWeight:700,color:P.tx,background:P.lt,outline:"none",fontFamily:"inherit",minHeight:isMo?48:undefined}}/>
+            <input type="text" value={stdPrice?Number(String(stdPrice).replace(/,/g,"")).toLocaleString("ko-KR"):""} onChange={e=>{const raw=e.target.value.replace(/,/g,"");if(raw===""||/^\d+$/.test(raw)){setStdPrice(raw);setAutoStdFlag(false);}}} placeholder="미입력 시 취득가 사용" style={{width:"100%",maxWidth:"100%",textAlign:"right",padding:isMo?"12px 44px 12px 14px":"10px 44px 10px 14px",border:"1.5px solid #dfe1e6",borderRadius:10,fontSize:isMo?16:15,fontWeight:700,color:P.tx,background:P.lt,outline:"none",fontFamily:"inherit",boxSizing:"border-box",height:isMo?48:44}}/>
             <span style={{fontSize:13,color:P.mt,fontWeight:500}}>만원</span>
           </div>
         </div>
@@ -2216,8 +2216,8 @@ function CalcTrans({isMo=false,onNav=()=>{}}){
       _tips.push("📌 다주택 중과 유예 기간 (2022.5.10~2026.5.9) 내 양도 시 기본세율이 적용됩니다. 유예 종료 전 양도 전략 검토 필요.");
     }
   }
-  const _inlineInputStyle={width:isMo?"100%":200,maxWidth:"100%",textAlign:"right",padding:"8px 12px",border:"1.5px solid #dfe1e6",borderRadius:8,fontSize:15,fontWeight:700,color:P.tx,background:P.lt,outline:"none",fontFamily:"inherit"};
-  const _inlineRow=(label,valueJsx,sufx)=>(<div style={{marginBottom:12}}><div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8,marginBottom:4,flexWrap:"wrap"}}><label style={{fontSize:isMo?13:14,fontWeight:600,color:"#0a1628",lineHeight:1.6,wordBreak:"keep-all"}}>{label}</label><div style={{display:"flex",alignItems:"center",gap:6}}>{valueJsx}{sufx&&<span style={{fontSize:13,color:P.mt,fontWeight:500}}>{sufx}</span>}</div></div></div>);
+  const _inlineInputStyle={width:"100%",maxWidth:"100%",textAlign:"right",padding:isMo?"12px 44px 12px 14px":"10px 44px 10px 14px",border:"1.5px solid #dfe1e6",borderRadius:10,fontSize:isMo?16:15,fontWeight:700,color:P.tx,background:P.lt,outline:"none",fontFamily:"inherit",boxSizing:"border-box",height:isMo?48:44};
+  const _inlineRow=(label,valueJsx,sufx)=>(<div style={{marginBottom:isMo?8:16,width:"100%"}}><label style={lblSt(isMo)}>{label}</label><div style={{position:"relative",width:"100%"}}>{valueJsx}{sufx&&<span style={{position:"absolute",right:14,top:"50%",transform:"translateY(-50%)",fontSize:12,color:P.mt,pointerEvents:"none"}}>{sufx}</span>}</div></div>);
   const _moneyInput=(val,set,ph)=>(<input type="text" value={val?Number(String(val).replace(/,/g,"")).toLocaleString("ko-KR"):""} onChange={e=>{const raw=e.target.value.replace(/,/g,"");if(raw===""||/^\d+$/.test(raw))set(raw);}} placeholder={ph||"예: 50000"} style={_inlineInputStyle}/>);
   const _dateInput=(val,set,ph)=>(<input type="text" value={val} onChange={e=>{const raw=e.target.value.replace(/[^0-9]/g,"");if(raw.length<=8)set(raw);}} placeholder={ph||"20200101"} style={_inlineInputStyle}/>);
   const _numInput=(val,set,ph)=>(<input type="text" value={val} onChange={e=>set(e.target.value)} placeholder={ph||""} style={_inlineInputStyle}/>);
