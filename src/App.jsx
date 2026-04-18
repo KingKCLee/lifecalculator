@@ -2336,8 +2336,8 @@ function CalcCompre({isMo=false,onNav=()=>{}}){
   let ct=0,rateLabel="";
   const C1=[[3e8,.005],[6e8,.007],[12e8,.01],[25e8,.013],[50e8,.015],[94e8,.020],[Infinity,.027]];
   const CX=[[3e8,.005],[6e8,.007],[12e8,.010],[25e8,.020],[50e8,.030],[94e8,.040],[Infinity,.050]];
-  if(isCorp){ct=Math.round(pTx(tb,n<=2?C1:CX));rateLabel=n<=2?"법인 일반 누진세율":"법인 3주택+ 중과 누진세율";}
-  else{ct=Math.round(pTx(tb,n<=2?C1:CX));rateLabel=n<=2?"일반 누진세율":"3주택+ 중과 누진세율";}
+  if(isCorp){ct=Math.round(pTx(tb,CX));rateLabel="법인 종부세율 (0.5~5.0%)";}
+  else{ct=Math.round(pTx(tb,n<=2?C1:CX));rateLabel=n<=2?"일반 누진세율 (0.5~2.7%)":"3주택+ 중과 누진세율 (0.5~5.0%)";}
   const ageV=parseInt(age),holdV=parseInt(hold);let ageCredit=0,holdCredit=0;
   if(!isCorp&&n===1){if(ageV>=70)ageCredit=.40;else if(ageV>=65)ageCredit=.30;else if(ageV>=60)ageCredit=.20;if(holdV>=15)holdCredit=.50;else if(holdV>=10)holdCredit=.40;else if(holdV>=5)holdCredit=.20;}
   const combinedCredit=Math.min(ageCredit+holdCredit,.8);const creditAmount=Math.round(ct*combinedCredit);
