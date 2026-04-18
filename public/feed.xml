@@ -5,8 +5,15 @@
     <link>https://xn--989a00a691bdfa717h.com/</link>
     <description>취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 등 39가지 무료 계산기. 매일 자동 업데이트.</description>
     <language>ko</language>
-    <lastBuildDate>Sat, 18 Apr 2026 18:45:34 +0900</lastBuildDate>
+    <lastBuildDate>Sat, 18 Apr 2026 18:54:19 +0900</lastBuildDate>
     <atom:link href="https://xn--989a00a691bdfa717h.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+    <title>fix: 전체 계산기 법령 정밀 감사 - 종부세 법인 세율 오류 수정</title>
+    <link>https://xn--989a00a691bdfa717h.com/</link>
+    <description>fix: 전체 계산기 법령 정밀 감사 - 종부세 법인 세율 오류 수정</description>
+    <pubDate>Sat, 18 Apr 2026 18:54:19 +0900</pubDate>
+    <guid>https://xn--989a00a691bdfa717h.com/#update-202604180954</guid>
+  </item>
     <item>
     <title>fix: 취득세 합계에서 인지세 제거 — 취득세+교육세+농특세만 합산</title>
     <link>https://xn--989a00a691bdfa717h.com/</link>
