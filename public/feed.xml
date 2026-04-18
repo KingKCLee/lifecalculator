@@ -5,8 +5,15 @@
     <link>https://xn--989a00a691bdfa717h.com/</link>
     <description>취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 등 39가지 무료 계산기. 매일 자동 업데이트.</description>
     <language>ko</language>
-    <lastBuildDate>Sat, 18 Apr 2026 22:30:44 +0900</lastBuildDate>
+    <lastBuildDate>Sat, 18 Apr 2026 22:40:18 +0900</lastBuildDate>
     <atom:link href="https://xn--989a00a691bdfa717h.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+    <title>fix: section3 여백 통일 + 전체접기 버튼 간격 조정</title>
+    <link>https://xn--989a00a691bdfa717h.com/</link>
+    <description>fix: section3 여백 통일 + 전체접기 버튼 간격 조정</description>
+    <pubDate>Sat, 18 Apr 2026 22:40:18 +0900</pubDate>
+    <guid>https://xn--989a00a691bdfa717h.com/#update-202604181340</guid>
+  </item>
     <item>
     <title>fix: section3 세율표 내부 여백 추가 - 3번 박스와 그룹 카드 분리</title>
     <link>https://xn--989a00a691bdfa717h.com/</link>

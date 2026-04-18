@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.18",
       "category": "전체",
+      "title": "fix: section3 여백 통일 + 전체접기 버튼 간격 조정",
+      "desc": "fix: section3 여백 통일 + 전체접기 버튼 간격 조정"
+    },
+    {
+      "date": "2026.04.18",
+      "category": "전체",
       "title": "fix: section3 세율표 내부 여백 추가 - 3번 박스와 그룹 카드 분리",
       "desc": "fix: section3 세율표 내부 여백 추가 - 3번 박스와 그룹 카드 분리"
     },
@@ -1461,12 +1467,6 @@
       "category": "전체",
       "title": "feat: PHASE2 - 네이버 키워드 통계 + GSC API 연동 + 키워드 탭 + stats 확장",
       "desc": "feat: PHASE2 - 네이버 키워드 통계 + GSC API 연동 + 키워드 탭 + stats 확장"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "feat: 전체 62개 완벽가이드 GuideCard JSX 컴포넌트 통일",
-      "desc": "feat: 전체 62개 완벽가이드 GuideCard JSX 컴포넌트 통일"
     }
   ],
   "rates": {
