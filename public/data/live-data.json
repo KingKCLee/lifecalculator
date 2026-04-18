@@ -1168,6 +1168,12 @@
   "updateLog": [
     {
       "date": "2026.04.18",
+      "category": "부동산",
+      "title": "feat: 용적률·건폐율 계산기 용도지역별 기준표 추가 (국토계획법 §84·§85)",
+      "desc": "feat: 용적률·건폐율 계산기 용도지역별 기준표 추가 (국토계획법 §84·§85)"
+    },
+    {
+      "date": "2026.04.18",
       "category": "전체",
       "title": "fix: 세율표 GuideCard section3 내부 통합 - 별도 컴포넌트 제거",
       "desc": "fix: 세율표 GuideCard section3 내부 통합 - 별도 컴포넌트 제거"
@@ -1461,12 +1467,6 @@
       "category": "전체",
       "title": "fix: 완벽가이드 외곽박스 추가",
       "desc": "fix: 완벽가이드 외곽박스 추가"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "fix: AcqGuide 렌더링 디버그 로그 추가",
-      "desc": "fix: AcqGuide 렌더링 디버그 로그 추가"
     }
   ],
   "rates": {
