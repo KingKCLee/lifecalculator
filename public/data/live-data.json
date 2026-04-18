@@ -1168,6 +1168,12 @@
   "updateLog": [
     {
       "date": "2026.04.18",
+      "category": "세금",
+      "title": "fix: 취득세 입력창 flex:1+minWidth:0 추가 — 단위레이블 옆 너비 일관성 수정",
+      "desc": "fix: 취득세 입력창 flex:1+minWidth:0 추가 — 단위레이블 옆 너비 일관성 수정"
+    },
+    {
+      "date": "2026.04.18",
       "category": "전체",
       "title": "fix: Slider 직접입력 너비 200px→240px 확대",
       "desc": "fix: Slider 직접입력 너비 200px→240px 확대"
@@ -1461,12 +1467,6 @@
       "category": "전체",
       "title": "feat: 부동산 유형별 실거래가/공시가격 전체 연동 (오피스텔/빌라/단독/상가/토지)",
       "desc": "feat: 부동산 유형별 실거래가/공시가격 전체 연동 (오피스텔/빌라/단독/상가/토지)"
-    },
-    {
-      "date": "2026.04.17",
-      "category": "세금",
-      "title": "fix: 취득세 2열 grid 레이아웃 복구",
-      "desc": "fix: 취득세 2열 grid 레이아웃 복구"
     }
   ],
   "rates": {
