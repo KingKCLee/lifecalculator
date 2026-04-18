@@ -6683,17 +6683,13 @@ body.lc-embed main{padding-top:0!important}
             );})}
             <div onMouseEnter={megaOpen} onMouseLeave={megaClose} style={{position:"relative"}}>
               <button type="button" onMouseDown={(e)=>e.preventDefault()} onMouseEnter={()=>{setShowInfoMenu(true);setClickedCat("info");}} onClick={(e)=>{e.preventDefault();e.stopPropagation();const next=!showInfoMenu;setShowInfoMenu(next);setClickedCat(next?"info":null);}} style={{padding:"0 16px",border:"none",borderRadius:0,background:showInfoMenu?"#ffffff":"transparent",color:showInfoMenu?"#3b82f6":(page==="info"?"#0747A6":"#6B7280"),fontSize:16,fontWeight:page==="info"?700:600,cursor:"pointer",fontFamily:"inherit",borderBottom:showInfoMenu?"none":(page==="info"?"3px solid #0747A6":"3px solid transparent"),transition:"transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.15s, background .15s, box-shadow .15s",height:64,display:"inline-flex",alignItems:"center",gap:6,transform:showInfoMenu?"translateY(-4px)":"translateY(0)",transformOrigin:"center center",willChange:"transform",position:"relative",zIndex:showInfoMenu?1001:"auto",boxShadow:showInfoMenu?"0 1px 0 0 #ffffff":"none",outline:"none"}}><span style={{display:"inline-flex"}}>{TAB_ICONS.info}</span>정보센터</button>
-              {showInfoMenu&&<div onMouseEnter={()=>{if(clickedCat==="info")setClickedCat(null);}} style={{position:"absolute",top:"100%",right:0,marginTop:-1,width:420,background:"#fff",border:"1px solid #E5E7EB",borderTop:"none",borderRadius:"0 0 12px 12px",boxShadow:"0 8px 24px rgba(0,0,0,0.12)",zIndex:1000,padding:16}}>
-                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
-                  {INFO_MENU_COLS[0].items.map(item=>(
-                    <a key={item.href} href={item.href} onClick={megaClickClose} style={{display:"flex",alignItems:"flex-start",gap:10,padding:"12px 14px",borderRadius:10,textDecoration:"none",background:"#F8FAFF",border:"1px solid #E6F0FF",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.background="#EEF4FF";e.currentTarget.style.borderColor="#0052CC";}} onMouseLeave={e=>{e.currentTarget.style.background="#F8FAFF";e.currentTarget.style.borderColor="#E6F0FF";}}>
-                      <span style={{fontSize:22,flexShrink:0}}>{item.icon||""}</span>
-                      <div style={{minWidth:0}}>
-                        <div style={{fontSize:14,fontWeight:600,color:"#172B4D",marginBottom:2}}>{item.title}</div>
-                        <div style={{fontSize:12,color:"#6B778C",lineHeight:1.4}}>{item.desc}</div>
-                      </div>
-                    </a>
-                  ))}
+              {showInfoMenu&&<div onMouseEnter={()=>{if(clickedCat==="info")setClickedCat(null);}} style={{position:"absolute",top:"100%",left:0,marginTop:-1,zIndex:1000}}>
+                <div style={{background:"#fff",borderRadius:"0 0 8px 8px",border:"1px solid #E5E7EB",borderTop:"none",boxShadow:"0 8px 24px rgba(0,0,0,0.12)",padding:"8px 0",minWidth:220}}>
+                  <div style={{fontSize:12,color:clickedCat==="info"?"#0141f9":"#6B7280",padding:"8px 16px 4px",borderBottom:"1px solid #F3F4F6",animation:"blink 1.5s ease-in-out infinite",fontWeight:clickedCat==="info"?700:400,transition:"color .15s"}}>아래 항목을 선택하세요</div>
+                  {INFO_MENU_COLS[0].items.map(item=>(<div key={item.href} onClick={()=>{window.location.href=item.href;setShowInfoMenu(false);setClickedCat(null);}} style={{padding:"10px 16px",fontSize:14,cursor:"pointer",color:"#0a1628",display:"flex",alignItems:"center",gap:8}} onMouseEnter={e=>{e.currentTarget.style.background="#F0F4FF"}} onMouseLeave={e=>{e.currentTarget.style.background="transparent"}}>
+                    <span style={{display:"inline-flex",color:"#0747A6"}}>{INFO_ICONS[item.k]}</span>
+                    <span>{item.title}</span>
+                  </div>))}
                 </div>
               </div>}
             </div>
