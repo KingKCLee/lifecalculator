@@ -12,7 +12,7 @@ function Section({ num, title, bgColor, textColor, headerBg, isMo, children }) {
   );
 }
 
-export default function GuideCard({ section1, section2, section3, section4, section5, isMo }) {
+export default function GuideCard({ section1, section2, section3, section4, section5, isMo, hideSection3 }) {
   return (
     <div style={{ width: "100%", marginTop: 32, marginBottom: 48, background: "#fff", border: "1px solid #e5e7eb", borderRadius: 16, overflow: "hidden", padding: isMo ? 16 : 24, display: "flex", flexDirection: "column", gap: 16 }}>
 
@@ -31,7 +31,7 @@ export default function GuideCard({ section1, section2, section3, section4, sect
         <p style={{ fontSize: isMo ? 14 : 16, color: "#374151", lineHeight: 1.8, margin: 0 }} dangerouslySetInnerHTML={{ __html: section2 || "" }} />
       </Section>
 
-      <Section num={3} title="2026년 핵심 세율과 계산법" bgColor="#FAEEDA" textColor="#633806" isMo={isMo}>
+      {!hideSection3 && <Section num={3} title="2026년 핵심 세율과 계산법" bgColor="#FAEEDA" textColor="#633806" isMo={isMo}>
         {(() => {
           const isExtended = section3 && !Array.isArray(section3) && (section3.table || section3.tables || section3.badges);
           const tables = isExtended ? (section3.tables || (section3.table ? [section3.table] : [])) : [];
@@ -80,9 +80,9 @@ export default function GuideCard({ section1, section2, section3, section4, sect
             </div>
           );
         })()}
-      </Section>
+      </Section>}
 
-      <Section num={4} title="계산기 200% 활용법" bgColor="#EEEDFE" textColor="#3C3489" isMo={isMo}>
+      <Section num={hideSection3 ? 3 : 4} title="계산기 200% 활용법" bgColor="#EEEDFE" textColor="#3C3489" isMo={isMo}>
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           {(section4 || []).map((r, i) => (
             <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
@@ -93,7 +93,7 @@ export default function GuideCard({ section1, section2, section3, section4, sect
         </div>
       </Section>
 
-      <Section num={5} title="놓치면 손해보는 것들" bgColor="#FCEBEB" textColor="#791F1F" headerBg="#fff8f8" isMo={isMo}>
+      <Section num={hideSection3 ? 4 : 5} title="놓치면 손해보는 것들" bgColor="#FCEBEB" textColor="#791F1F" headerBg="#fff8f8" isMo={isMo}>
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           {(section5 || []).map((r, i) => (
             <div key={i} style={{ padding: "14px 18px", background: "#f9fafb", borderRadius: 8, borderLeft: "3px solid " + (r.border || "#E24B4A") }}>
