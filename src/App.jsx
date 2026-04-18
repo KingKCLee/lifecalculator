@@ -2006,12 +2006,12 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
     <div style={{marginTop:isMo?0:24}}></div>
     </div>
     {/* 2026.04.14 고도화: 납부기한 취득유형별 분기 (상속 6개월 / 증여 3개월 / 그 외 60일). 기존: deadline="신고기한: 잔금일 또는 등기일 중 빠른 날부터 60일 이내" */}
-    <div>{_hasErrors&&<div style={{padding:"10px 14px",background:"#eff6ff",border:"1px solid #bfdbfe",borderRadius:8,fontSize:13,color:"#1e40af",fontWeight:600,marginBottom:12}}>필수 항목을 모두 입력해주세요</div>}<RPFull miss={tW(price)>0?null:MI.acquisition} itemFilter={["취득세","지방교육세","농어촌특별세","합계"]} title="취득세 계산기" total={total} sub={"취득세율 "+fP(r*100)+" 적용"}
+    <div>{_hasErrors&&<div style={{padding:"10px 14px",background:"#eff6ff",border:"1px solid #bfdbfe",borderRadius:8,fontSize:13,color:"#1e40af",fontWeight:600,marginBottom:12}}>필수 항목을 모두 입력해주세요</div>}<RPFull miss={tW(price)>0?null:MI.acquisition} itemFilter={["취득세","지방교육세","농어촌특별세","합계"]} title="취득세 계산기" total={total} sub={"취득세율 "+fP(r*100)+(pW>6e8&&pW<=9e8&&isHouse&&acqType==="sale"&&!lowVal&&!corporation?" (6~9억 누진산출세율 · 지방세법 §11①8호)":"")}
       deadline={acqType==="inherit"?"신고기한: 상속개시일이 속하는 달의 말일부터 6개월 이내 (지방세법 §20)":acqType==="gift"?"신고기한: 취득일이 속하는 달의 말일부터 3개월 이내 (지방세법 §20)":"신고기한: 잔금일 또는 등기일 중 빠른 날부터 60일 이내 (지방세법 §20)"}
       deadlineLink="https://wetax.go.kr" deadlineLinkLabel="위택스 신고 →"
-      alertMsg={!stdPrice?"시가표준액 미입력 시 정확도가 낮아질 수 있습니다":firstDed>0?"생애최초 감면 "+fW(firstDed)+" 적용됨":conArea&&n>=2&&!heavyTaxExclude&&!lowVal&&!tempTwo?"조정대상지역 "+n+"주택 중과세율 "+fP(r*100)+" 적용":null}
-      alertType={!stdPrice?"warning":firstDed>0?"success":"danger"}
-      items={[{l:"취득세액 ("+fP(r*100)+")",v:fW(ac)},{l:"지방교육세 ("+fP((isHeavy?0.4:r*100*0.1))+")",v:fW(ed)},{l:"농어촌특별세"+(fm>0?" ("+fP(farmRate*100)+")":""),v:fm>0?fW(fm):"없음 (85㎡↓)"},{l:"합계 납부세액",v:fW(total)}]} onAdjustPrice={(pct)=>sP(prev=>{const n=Math.round(Number(String(prev).replace(/,/g,""))*(1+pct/100));return String(n>0?n:prev);})}/>
+      alertMsg={!stdPrice?"시가표준액 미입력 시 정확도가 낮아질 수 있습니다":firstDed>0?"생애최초 감면 "+fW(firstDed)+" 적용됨 (지방세특례제한법 §36의3)":lowVal?"공시가격 1억 이하 → 다주택 중과 제외 자동 적용":conArea&&n>=2&&!heavyTaxExclude&&!lowVal&&!tempTwo?"조정대상지역 "+n+"주택 중과세율 "+fP(r*100)+" 적용":null}
+      alertType={!stdPrice?"warning":firstDed>0?"success":lowVal?"success":"danger"}
+      items={[{l:"취득세액 ("+fP(r*100)+")",v:fW(ac),note:pW>6e8&&pW<=9e8&&isHouse&&acqType==="sale"&&!lowVal&&!corporation?"누진산출: ("+fP(pW/1e8)+"억×2/3-3)%":"지방세법 §11"},{l:"지방교육세 ("+fP(eduRate*100)+")",v:fW(ed),note:isHeavy?"중과 0.4% 고정 (§151)":"취득세×10% (§151)"},{l:"농어촌특별세"+(fm>0?" ("+fP(farmRate*100)+")":""),v:fm>0?fW(fm):"없음",note:fm>0?(isBig?"85㎡↑ 농특세법 §5":"비주택 0.2%"):"85㎡↓ 주택 면제"},{l:"합계 납부세액",v:fW(total)}]} onAdjustPrice={(pct)=>sP(prev=>{const n=Math.round(Number(String(prev).replace(/,/g,""))*(1+pct/100));return String(n>0?n:prev);})}/>
     
     <NextStep calcId="acquisition" onNav={onNav} isMo={isMo}/></div>
   </div>);
