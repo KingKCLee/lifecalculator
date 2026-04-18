@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.18",
       "category": "대출",
+      "title": "fix: DTI 흰화면 + RTI RPFull 수정",
+      "desc": "fix: DTI 흰화면 + RTI RPFull 수정"
+    },
+    {
+      "date": "2026.04.18",
+      "category": "대출",
       "title": "fix: DSR/DTI 커스텀카드 → RPFull 교체 (결과 항상 표시)",
       "desc": "fix: DSR/DTI 커스텀카드 → RPFull 교체 (결과 항상 표시)"
     },
@@ -1461,12 +1467,6 @@
       "category": "부동산",
       "title": "feat: RateTable 19개 + 구조별 내용연수/리모델링 참고표 추가",
       "desc": "feat: RateTable 19개 + 구조별 내용연수/리모델링 참고표 추가"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "feat: 전체 계산기 NextStep/RateTable/RP패널 100% 완성",
-      "desc": "feat: 전체 계산기 NextStep/RateTable/RP패널 100% 완성"
     }
   ],
   "rates": {
