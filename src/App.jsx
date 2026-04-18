@@ -721,22 +721,11 @@ const INFO_ICONS={
 
 /* ── 정보센터 메뉴 & 세법 변경 타임라인 ── */
 const INFO_MENU_COLS=[
-  {title:"최신 정보",items:[
-    {k:"news",title:"실시간 뉴스",desc:"부동산·세금 뉴스",href:"/news"},
-    {k:"policy",title:"부동산 정책",desc:"정부 발표 정책",href:"/policy"},
-    {k:"history",title:"세법 개정 히스토리",desc:"연도별 변경사항",href:"/learn/tax-history"}
-  ]},
-  {title:"학습·가이드",items:[
-    {k:"reports",title:"AI 분석 보고서",desc:"PRO 인사이트 9편",href:"/reports"},
-    {k:"guide",title:"전문가 가이드",desc:"세무사 추천 가이드",href:"/guide"},
-    {k:"law",title:"규정·법령",desc:"관련 법령 원문",href:"/law"},
-    {k:"saving",title:"절세 전략",desc:"세금 절감 방법",href:"/learn/tax-saving"},
-    {k:"howto",title:"계산기 사용법",desc:"초보자 튜토리얼",href:"/learn/calculator-guide"}
-  ]},
-  {title:"커뮤니티",items:[
-    {k:"community",title:"Q&A 게시판",desc:"궁금한 점 질문",href:"/community"},
-    {k:"terms",title:"부동산 용어사전",desc:"전문 용어 검색",href:"/terms"},
-    {k:"market",title:"시장 데이터",desc:"실거래가·시세",href:"/market"}
+  {title:"",items:[
+    {k:"news",title:"뉴스·정책",desc:"부동산·세금 최신 뉴스와 정책",href:"/news",icon:"📰"},
+    {k:"guide",title:"전문가 가이드",desc:"절세 전략·법령·사용법",href:"/guide",icon:"📚"},
+    {k:"reports",title:"AI 분석 보고서",desc:"PRO 인사이트 9편",href:"/reports",icon:"📊"},
+    {k:"community",title:"Q&A · 용어사전",desc:"질문답변 · 부동산 용어",href:"/community",icon:"💬"},
   ]}
 ];
 const TAX_CHANGES=[
@@ -6694,22 +6683,16 @@ body.lc-embed main{padding-top:0!important}
             );})}
             <div onMouseEnter={megaOpen} onMouseLeave={megaClose} style={{position:"relative"}}>
               <button type="button" onMouseDown={(e)=>e.preventDefault()} onMouseEnter={()=>{setShowInfoMenu(true);setClickedCat("info");}} onClick={(e)=>{e.preventDefault();e.stopPropagation();const next=!showInfoMenu;setShowInfoMenu(next);setClickedCat(next?"info":null);}} style={{padding:"0 16px",border:"none",borderRadius:0,background:showInfoMenu?"#ffffff":"transparent",color:showInfoMenu?"#3b82f6":(page==="info"?"#0747A6":"#6B7280"),fontSize:16,fontWeight:page==="info"?700:600,cursor:"pointer",fontFamily:"inherit",borderBottom:showInfoMenu?"none":(page==="info"?"3px solid #0747A6":"3px solid transparent"),transition:"transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.15s, background .15s, box-shadow .15s",height:64,display:"inline-flex",alignItems:"center",gap:6,transform:showInfoMenu?"translateY(-4px)":"translateY(0)",transformOrigin:"center center",willChange:"transform",position:"relative",zIndex:showInfoMenu?1001:"auto",boxShadow:showInfoMenu?"0 1px 0 0 #ffffff":"none",outline:"none"}}><span style={{display:"inline-flex"}}>{TAB_ICONS.info}</span>정보센터</button>
-              {showInfoMenu&&<div onMouseEnter={()=>{if(clickedCat==="info")setClickedCat(null);}} style={{position:"absolute",top:"100%",right:0,marginTop:-1,width:720,background:"#fff",border:"1px solid #E5E7EB",borderTop:"none",borderRadius:"0 0 12px 12px",boxShadow:"0 8px 24px rgba(0,0,0,0.12)",zIndex:1000,padding:24}}>
-                <div style={{fontSize:12,color:clickedCat==="info"?"#0141f9":"#6B7280",padding:"0 0 8px",marginBottom:12,borderBottom:"1px solid #F3F4F6",animation:"blink 1.5s ease-in-out infinite",fontWeight:clickedCat==="info"?700:400,transition:"color .15s"}}>아래 계산기 종류를 선택하세요</div>
-                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:16}}>
-                  {INFO_MENU_COLS.map(col=>(
-                    <div key={col.title}>
-                      <div style={{fontSize:11,fontWeight:700,color:"#6B7280",marginBottom:8,textTransform:"uppercase",letterSpacing:1}}>{col.title}</div>
-                      {col.items.map(item=>(
-                        <a key={item.href} href={item.href} onClick={megaClickClose} style={{display:"flex",alignItems:"flex-start",gap:10,padding:"8px 12px",borderRadius:8,textDecoration:"none",color:"#374151",background:"#fff"}} onMouseEnter={e=>e.currentTarget.style.background="#F0F4FF"} onMouseLeave={e=>e.currentTarget.style.background="#fff"}>
-                          <span style={{display:"inline-flex",flexShrink:0,color:"#0747A6",marginTop:2}}>{INFO_ICONS[item.k]}</span>
-                          <div style={{minWidth:0}}>
-                            <div style={{fontSize:13,fontWeight:700,color:"#0a1628"}}>{item.title}</div>
-                            <div style={{fontSize:11,color:"#6B7280",marginTop:2}}>{item.desc}</div>
-                          </div>
-                        </a>
-                      ))}
-                    </div>
+              {showInfoMenu&&<div onMouseEnter={()=>{if(clickedCat==="info")setClickedCat(null);}} style={{position:"absolute",top:"100%",right:0,marginTop:-1,width:420,background:"#fff",border:"1px solid #E5E7EB",borderTop:"none",borderRadius:"0 0 12px 12px",boxShadow:"0 8px 24px rgba(0,0,0,0.12)",zIndex:1000,padding:16}}>
+                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+                  {INFO_MENU_COLS[0].items.map(item=>(
+                    <a key={item.href} href={item.href} onClick={megaClickClose} style={{display:"flex",alignItems:"flex-start",gap:10,padding:"12px 14px",borderRadius:10,textDecoration:"none",background:"#F8FAFF",border:"1px solid #E6F0FF",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.background="#EEF4FF";e.currentTarget.style.borderColor="#0052CC";}} onMouseLeave={e=>{e.currentTarget.style.background="#F8FAFF";e.currentTarget.style.borderColor="#E6F0FF";}}>
+                      <span style={{fontSize:22,flexShrink:0}}>{item.icon||""}</span>
+                      <div style={{minWidth:0}}>
+                        <div style={{fontSize:14,fontWeight:600,color:"#172B4D",marginBottom:2}}>{item.title}</div>
+                        <div style={{fontSize:12,color:"#6B778C",lineHeight:1.4}}>{item.desc}</div>
+                      </div>
+                    </a>
                   ))}
                 </div>
               </div>}
@@ -7032,7 +7015,8 @@ body.lc-embed main{padding-top:0!important}
             </div>
           </div>)}
           {adSlots?.guide_bottom?.enabled&&!isMo&&!noAds&&<div style={{marginBottom:16}} dangerouslySetInnerHTML={{__html:adSlots.guide_bottom.code||""}}/>}
-          {/* 2026.04.15 sample-calc 기준 계산기 페이지 슬림화: PRO 분석 카드 3종 제거 */}
+          {/* 관련 AI 분석 보고서 링크 */}
+          {(()=>{const RM={acquisition:"01",transfer:"02",yearend:"03",dsr:"04",ltv:"04",loanmax:"04",gift:"05",inherit:"05",compre:"06",property:"06",holdtax:"06",rental:"07",mortgage:"08",rti:"08"};const rid=RM[calc];if(!rid)return null;const RT={["01"]:"2026 취득세 완벽 분석",["02"]:"양도소득세 절세 전략",["03"]:"연말정산 환급 극대화",["04"]:"DSR·LTV 대출 전략",["05"]:"증여·상속세 가이드",["06"]:"종합부동산세 가이드",["07"]:"임대소득세 가이드",["08"]:"스트레스DSR 대출 분석"};return(<a href={"/reports/"+rid} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:isMo?"12px 16px":"14px 20px",borderRadius:10,border:"1px solid #C7DCFF",background:"#F0F6FF",textDecoration:"none",marginTop:12}} onMouseEnter={e=>{e.currentTarget.style.background="#E0EDFF";e.currentTarget.style.borderColor="#0052CC";}} onMouseLeave={e=>{e.currentTarget.style.background="#F0F6FF";e.currentTarget.style.borderColor="#C7DCFF";}}><div style={{display:"flex",alignItems:"center",gap:10}}><span style={{fontSize:18}}>📊</span><div><div style={{fontSize:13,fontWeight:600,color:"#0052CC"}}>AI 분석 보고서</div><div style={{fontSize:12,color:"#42526E",marginTop:1}}>{RT[rid]}</div></div></div><span style={{fontSize:12,color:"#0052CC",fontWeight:600}}>보기 →</span></a>);})()}
         </div>
 
       </div>)}
