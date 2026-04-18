@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.18",
       "category": "대출",
+      "title": "fix: RPFull total 문자열/숫자 분기 처리 - DTI/RTI/DSR 단위 표시 수정",
+      "desc": "fix: RPFull total 문자열/숫자 분기 처리 - DTI/RTI/DSR 단위 표시 수정"
+    },
+    {
+      "date": "2026.04.18",
+      "category": "대출",
       "title": "fix: 전수검증 - DTI/DSR/RTI total 문자열→숫자 수정",
       "desc": "fix: 전수검증 - DTI/DSR/RTI total 문자열→숫자 수정"
     },
@@ -1461,12 +1467,6 @@
       "category": "전체",
       "title": "fix: 어드민 별도 로그인 제거 홈페이지 로그인으로 통합",
       "desc": "fix: 어드민 별도 로그인 제거 홈페이지 로그인으로 통합"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "fix: 세율표 1열/nextstep 2열 JSX 구조 직접 수정",
-      "desc": "fix: 세율표 1열/nextstep 2열 JSX 구조 직접 수정"
     }
   ],
   "rates": {
