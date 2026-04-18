@@ -33,41 +33,48 @@ export default function GuideCard({ section1, section2, section3, section4, sect
 
       <Section num={3} title="2026년 핵심 세율과 계산법" bgColor="#FAEEDA" textColor="#633806" isMo={isMo}>
         {(() => {
-          const isExtended = section3 && !Array.isArray(section3) && (section3.table || section3.badges);
-          const tbl = isExtended ? section3.table : null;
+          const isExtended = section3 && !Array.isArray(section3) && (section3.table || section3.tables || section3.badges);
+          const tables = isExtended ? (section3.tables || (section3.table ? [section3.table] : [])) : [];
           const badges = isExtended ? (section3.badges || []) : (section3 || []);
+          const thSt = { padding: "8px 12px", textAlign: "center", color: "#0C447C", fontWeight: 600, border: "1px solid #B5D4F4", fontSize: 13, whiteSpace: "nowrap" };
+          const tdSt = (j) => ({ padding: "8px 12px", border: "1px solid #e5e7eb", fontSize: 13, color: j === 0 ? "#0a1628" : "#374151", fontWeight: j === 0 ? 600 : 400, textAlign: j === 0 ? "left" : "center", whiteSpace: "nowrap" });
           return (
-            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-              {tbl && (
-                <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
-                  <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13, minWidth: 480 }}>
-                    <thead>
-                      <tr style={{ background: "#E6F1FB" }}>
-                        {(tbl.headers || []).map((h, i) => (
-                          <th key={i} style={{ padding: "8px 12px", textAlign: i === 0 ? "left" : "center", color: "#0C447C", fontWeight: 600, border: "1px solid #B5D4F4", fontSize: 13, whiteSpace: "nowrap" }}>{h}</th>
+            <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+              {tables.map((tbl, ti) => (
+                <div key={ti}>
+                  {tbl.subtitle && <div style={{ fontSize: isMo ? 14 : 15, fontWeight: 700, color: "#0a1628", marginBottom: 8 }}>{tbl.subtitle}</div>}
+                  <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
+                    <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13, minWidth: 480 }}>
+                      <thead><tr style={{ background: "#E6F1FB" }}>
+                        {(tbl.headers || []).map((h, i) => <th key={i} style={{ ...thSt, textAlign: i === 0 ? "left" : "center" }}>{h}</th>)}
+                      </tr></thead>
+                      <tbody>
+                        {(tbl.rows || []).map((row, i) => (
+                          <tr key={i} style={{ background: i % 2 === 0 ? "#fff" : "#f8fafc" }}>
+                            {row.map((cell, j) => <td key={j} style={tdSt(j)}>{cell}</td>)}
+                          </tr>
                         ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {(tbl.rows || []).map((row, i) => (
-                        <tr key={i} style={{ background: i % 2 === 0 ? "#fff" : "#f8fafc" }}>
-                          {row.map((cell, j) => (
-                            <td key={j} style={{ padding: "8px 12px", border: "1px solid #e5e7eb", fontSize: 13, color: j === 0 ? "#0a1628" : "#374151", fontWeight: j === 0 ? 600 : 400, textAlign: j === 0 ? "left" : "center", whiteSpace: "nowrap" }}>{cell}</td>
-                          ))}
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </tbody>
+                    </table>
+                  </div>
+                  {tbl.note && <div style={{ fontSize: 12, color: "#6b778c", marginTop: 6, lineHeight: 1.6 }}>{tbl.note}</div>}
+                  {tbl.law && <div style={{ fontSize: 12, color: "#6b778c", marginTop: 4, display: "flex", flexWrap: "wrap", gap: 4, alignItems: "center" }}>
+                    <span>근거:</span>
+                    {tbl.law.map((l, li) => <a key={li} href={l.url} target="_blank" rel="noopener noreferrer" style={{ color: "#0141f9", textDecoration: "underline", fontSize: 12 }}>{l.text}</a>)}
+                  </div>}
                 </div>
-              )}
+              ))}
               {badges.length > 0 && (
                 <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                  {badges.map((r, i) => (
-                    <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-                      <span style={{ fontSize: isMo ? 12 : 14, fontWeight: 600, color: r.color || "#185FA5", background: r.bg || "#E6F1FB", padding: "4px 12px", borderRadius: 4, flexShrink: 0, marginTop: 2, whiteSpace: "nowrap" }}>{r.badge}</span>
-                      <span style={{ fontSize: isMo ? 14 : 16, color: "#374151", lineHeight: 1.8 }}>{r.text}</span>
-                    </div>
-                  ))}
+                  {badges.map((r, i) => {
+                    if (typeof r === "string") return <div key={i} style={{ fontSize: isMo ? 13 : 14, color: "#374151", lineHeight: 1.8, paddingLeft: 12, borderLeft: "3px solid #FAEEDA" }}>{r}</div>;
+                    return (
+                      <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+                        <span style={{ fontSize: isMo ? 12 : 14, fontWeight: 600, color: r.color || "#185FA5", background: r.bg || "#E6F1FB", padding: "4px 12px", borderRadius: 4, flexShrink: 0, marginTop: 2, whiteSpace: "nowrap" }}>{r.badge}</span>
+                        <span style={{ fontSize: isMo ? 14 : 16, color: "#374151", lineHeight: 1.8 }}>{r.text}</span>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>
