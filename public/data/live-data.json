@@ -1168,6 +1168,12 @@
   "updateLog": [
     {
       "date": "2026.04.18",
+      "category": "전체",
+      "title": "fix: section3 세율표 내부 여백 추가 - 3번 박스와 그룹 카드 분리",
+      "desc": "fix: section3 세율표 내부 여백 추가 - 3번 박스와 그룹 카드 분리"
+    },
+    {
+      "date": "2026.04.18",
       "category": "부동산",
       "title": "feat: 평수변환·용적률 계산기 참조표 추가 - 단위환산/면적용어/평형참고/용도지역",
       "desc": "feat: 평수변환·용적률 계산기 참조표 추가 - 단위환산/면적용어/평형참고/용도지역"
@@ -1461,12 +1467,6 @@
       "category": "전체",
       "title": "feat: 전체 62개 완벽가이드 GuideCard JSX 컴포넌트 통일",
       "desc": "feat: 전체 62개 완벽가이드 GuideCard JSX 컴포넌트 통일"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "fix: 완벽가이드 하단 여�� 추가 (marginBottom:64)",
-      "desc": "fix: 완벽가이드 하단 여�� 추가 (marginBottom:64)"
     }
   ],
   "rates": {
