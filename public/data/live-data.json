@@ -1167,6 +1167,12 @@
   },
   "updateLog": [
     {
+      "date": "2026.04.18",
+      "category": "전체",
+      "title": "feat: 전체 계산기 마스터 템플릿 통일",
+      "desc": "feat: 전체 계산기 마스터 템플릿 통일"
+    },
+    {
       "date": "2026.04.17",
       "category": "세금",
       "title": "정책 만료 D-22: transferSurchargeEnd",
@@ -1461,18 +1467,6 @@
       "category": "전체",
       "title": "feat: 전체 계산기 필수요소 일괄 추가 - Expert Guide 30개 신규",
       "desc": "feat: 전체 계산기 필수요소 일괄 추가 - Expert Guide 30개 신규"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "fix: 건물부가세 공시가격 안분 근거 표시 + 매매가 직접입력",
-      "desc": "fix: 건물부가세 공시가격 안분 근거 표시 + 매매가 직접입력"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "feat: 개별공시지가 API 토지비율 정확 계산 (Worker landPrice + CalcBldVat onApplyInfo)",
-      "desc": "feat: 개별공시지가 API 토지비율 정확 계산 (Worker landPrice + CalcBldVat onApplyInfo)"
     }
   ],
   "rates": {
