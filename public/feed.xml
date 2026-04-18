@@ -5,8 +5,15 @@
     <link>https://xn--989a00a691bdfa717h.com/</link>
     <description>취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 등 39가지 무료 계산기. 매일 자동 업데이트.</description>
     <language>ko</language>
-    <lastBuildDate>Sat, 18 Apr 2026 23:13:56 +0900</lastBuildDate>
+    <lastBuildDate>Sat, 18 Apr 2026 23:23:52 +0900</lastBuildDate>
     <atom:link href="https://xn--989a00a691bdfa717h.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+    <title>fix: 인라인 계산기 NextStep 너비 수정 — 우측 결과 패널 열 너비로 제한</title>
+    <link>https://xn--989a00a691bdfa717h.com/</link>
+    <description>fix: 인라인 계산기 NextStep 너비 수정 — 우측 결과 패널 열 너비로 제한</description>
+    <pubDate>Sat, 18 Apr 2026 23:23:52 +0900</pubDate>
+    <guid>https://xn--989a00a691bdfa717h.com/#update-202604181423</guid>
+  </item>
     <item>
     <title>fix: 인라인 계산기 NextStep을 RPFull 밖으로 이동 — 전체 너비 정상 표시</title>
     <link>https://xn--989a00a691bdfa717h.com/</link>
