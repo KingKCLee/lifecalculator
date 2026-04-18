@@ -1167,6 +1167,12 @@
   },
   "updateLog": [
     {
+      "date": "2026.04.19",
+      "category": "세금",
+      "title": "feat: 정보센터 4개 페이지 헤더 통일 - 취득세 계산기와 동일한 Breadcrumb+H1+부제목 디자인",
+      "desc": "feat: 정보센터 4개 페이지 헤더 통일 - 취득세 계산기와 동일한 Breadcrumb+H1+부제목 디자인"
+    },
+    {
       "date": "2026.04.18",
       "category": "세금",
       "title": "정책 만료 D-21: transferSurchargeEnd",
@@ -1461,19 +1467,6 @@
       "category": "전체",
       "title": "feat: 정보센터 부동산 시장동향 대시보드",
       "desc": "feat: 정보센터 부동산 시장동향 대시보드"
-    },
-    {
-      "date": "2026.04.17",
-      "category": "전체",
-      "title": "fix: 상가 집합건물 여부 선택 + 단독주택/토지 동호 숨김",
-      "desc": "fix: 상가 집합건물 여부 선택 + 단독주택/토지 동호 숨김"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "세금",
-      "title": "정책 만료 D-23: transferSurchargeEnd",
-      "desc": "2026-05-10 만료 예정. 관련 계산기에 자동 반영됩니다.",
-      "urgent": true
     }
   ],
   "rates": {
