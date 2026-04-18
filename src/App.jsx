@@ -1872,10 +1872,9 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
     farmRate=0.002;
   }
   const fm=Math.round(pW*farmRate);
-  let st=0;if(pW>30e8)st=500000;else if(pW>10e8)st=350000;else if(pW>1e8)st=150000;
   const firstDedCap=populationDecline?3000000:2000000;
   const firstDed=acqType==="sale"&&firstOfLife&&n===1&&isFirstHomeBenefit&&pW<=12e8?Math.min(ac,firstDedCap):0;
-  const total=ac+ed+fm+st-firstDed;
+  const total=ac+ed+fm-firstDed;
   const eduRate=isHeavy?0.004:r*0.1;
   const resultItems=[];
   resultItems.push({l:"과세표준",v:fW(pW),note:stdPrice?"취득가액":"시가표준액=취득가액"});
@@ -1885,8 +1884,7 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
   resultItems.push({l:"지방교육세율",v:(eduRate*100).toFixed(3)+"%",note:isHeavy?"중과 0.4% 고정":"취득세의 10%"});
   resultItems.push({l:"지방교육세",v:fW(ed)});
   if(fm>0){resultItems.push({l:"농어촌특별세율",v:(farmRate*100).toFixed(1)+"%",note:isBig?"85㎡ 초과 주택":"주택외 0.2%"});resultItems.push({l:"농어촌특별세",v:fW(fm)});}
-  resultItems.push({l:"인지세",v:fW(st),note:"거래금액 구간별"});
-  resultItems.push({l:"취득세 합계",v:fW(total),note:"취득세+교육세"+(fm>0?"+농특세":"")+"+인지세"+(firstDed>0?"-감면":"")});
+  resultItems.push({l:"취득세 합계",v:fW(total),note:"취득세+교육세"+(fm>0?"+농특세":"")+(firstDed>0?"-감면":"")});
   let basisText="";
   if(!stdPrice)basisText+="시가표준액을 입력하지 않아 취득가액을 시가표준액으로 간주합니다.\n";
   if(acqType==="sale"&&isHouse&&pW>6e8&&pW<=9e8&&!lowVal&&!corporation){basisText+="(지방세법 제11조 1항8호) 6억~9억 구간 취득세율(%) = 거래금액(억) × 2 / 3 - 3\n= "+(pW/1e8).toFixed(1)+" × 2 / 3 - 3 = "+(r*100).toFixed(2)+"%\n";}
@@ -2013,7 +2011,7 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
       deadlineLink="https://wetax.go.kr" deadlineLinkLabel="위택스 신고 →"
       alertMsg={!stdPrice?"시가표준액 미입력 시 정확도가 낮아질 수 있습니다":firstDed>0?"생애최초 감면 "+fW(firstDed)+" 적용됨":conArea&&n>=2&&!heavyTaxExclude&&!lowVal&&!tempTwo?"조정대상지역 "+n+"주택 중과세율 "+fP(r*100)+" 적용":null}
       alertType={!stdPrice?"warning":firstDed>0?"success":"danger"}
-      items={[{l:"취득세액 ("+fP(r*100)+")",v:fW(ac)},{l:"지방교육세 ("+fP((isHeavy?0.4:r*100*0.1))+")",v:fW(ed)},{l:"농어촌특별세"+(fm>0?" (0.2%)":""),v:fm>0?fW(fm):"없음"},{l:"인지세",v:st>0?fW(st):"없음",note:"거래금액 구간별"},{l:"합계 납부세액",v:fW(total)}]} onAdjustPrice={(pct)=>sP(prev=>{const n=Math.round(Number(String(prev).replace(/,/g,""))*(1+pct/100));return String(n>0?n:prev);})}/>
+      items={[{l:"취득세액 ("+fP(r*100)+")",v:fW(ac)},{l:"지방교육세 ("+fP((isHeavy?0.4:r*100*0.1))+")",v:fW(ed)},{l:"농어촌특별세"+(fm>0?" ("+fP(farmRate*100)+")":""),v:fm>0?fW(fm):"없음 (85㎡↓)"},{l:"합계 납부세액",v:fW(total)}]} onAdjustPrice={(pct)=>sP(prev=>{const n=Math.round(Number(String(prev).replace(/,/g,""))*(1+pct/100));return String(n>0?n:prev);})}/>
     
     <NextStep calcId="acquisition" onNav={onNav} isMo={isMo}/></div>
   </div>);
