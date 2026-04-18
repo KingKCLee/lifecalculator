@@ -777,7 +777,7 @@ function Slider({label,value,onChange,min,max,step}){
       <label style={{...lblSt(isMo),marginBottom:0,flex:"1 1 auto",minWidth:0}}>{label}</label>
       <div style={{display:"flex",alignItems:"center",gap:6}}>
         <input type="text" value={displayVal} onChange={handleText} placeholder="직접 입력"
-          style={{width:isMo?"100%":160,maxWidth:"100%",textAlign:"right",padding:isMo?"12px 14px":"8px 12px",border:`1.5px solid ${P.bd}`,borderRadius:8,fontSize:isMo?16:15,fontWeight:700,color:P.tx,background:P.lt,outline:"none",fontFamily:"inherit",boxSizing:"border-box",height:isMo?48:44}}
+          style={{width:isMo?"100%":200,maxWidth:"100%",textAlign:"right",padding:isMo?"12px 14px":"10px 14px",border:`1.5px solid ${P.bd}`,borderRadius:10,fontSize:isMo?16:15,fontWeight:700,color:P.tx,background:P.lt,outline:"none",fontFamily:"inherit",boxSizing:"border-box",height:isMo?48:44}}
           onFocus={e=>e.target.style.borderColor=P.pri} onBlur={e=>e.target.style.borderColor=P.bd}/>
         <span style={{fontSize:13,color:P.mt,fontWeight:500}}>만원</span>
       </div>
