@@ -213,8 +213,8 @@ function calcComm(price, type = '매매', propType = '주택') {
 function calcNetSalary(연봉, 부양가족 = 1) {
   const monthly = 연봉 / 12;
   const npn = Math.min(monthly, 637e4) * 0.045;
-  const hi = monthly * 0.03545;
-  const ltc = hi * 0.1295;
+  const hi = monthly * 0.03595;
+  const ltc = hi * 0.1314;
   const ei = monthly * 0.009;
   const ins = npn + hi + ltc + ei;
 
@@ -408,7 +408,7 @@ test('중개보수', 'B-008', '전세 20억 (0.6%=1200만)', calcComm(20e8, '전
 console.log('\n── 연봉실수령액 ──');
 const s1 = calcNetSalary(5000e4, 1);
 test('연봉', 'A-001', '연봉5000만 국민연금', s1.국민연금, Math.round(5000e4 / 12 * 0.045), 100);
-test('연봉', 'A-002', '연봉5000만 건강보험', s1.건강보험, Math.round(5000e4 / 12 * 0.03545), 100);
+test('연봉', 'A-002', '연봉5000만 건강보험', s1.건강보험, Math.round(5000e4 / 12 * 0.03595), 100);
 test('연봉', 'A-003', '연봉5000만 월실수령 범위', s1.월실수령 >= 340e4 && s1.월실수령 <= 360e4 ? 1 : 0, 1);
 
 const s2 = calcNetSalary(3000e4, 1);
