@@ -1168,6 +1168,12 @@
   "updateLog": [
     {
       "date": "2026.04.18",
+      "category": "전체",
+      "title": "feat: 홈페이지 리포트슬라이드/빠른접근 섹션 개선",
+      "desc": "feat: 홈페이지 리포트슬라이드/빠른접근 섹션 개선"
+    },
+    {
+      "date": "2026.04.18",
       "category": "세금",
       "title": "feat: Report05/06/07 생성 (증여상속/종부세/임대소득)",
       "desc": "feat: Report05/06/07 생성 (증여상속/종부세/임대소득)"
@@ -1461,12 +1467,6 @@
       "category": "전체",
       "title": "fix: 전체 계산기 nextstep Expert Guide 아래/세율표 1열 위치 통일",
       "desc": "fix: 전체 계산기 nextstep Expert Guide 아래/세율표 1열 위치 통일"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "fix: 어드민 로그인 수정 (state TTL 600초, 디버그 에러 상세화, 프론트 에러 표시 개선)",
-      "desc": "fix: 어드민 로그인 수정 (state TTL 600초, 디버그 에러 상세화, 프론트 에러 표시 개선)"
     }
   ],
   "rates": {
