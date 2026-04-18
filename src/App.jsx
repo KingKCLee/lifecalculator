@@ -403,6 +403,7 @@ function usePathRoute(){
 
 const fmt=n=>(!n||isNaN(n)||!isFinite(n))?"0":Math.round(n).toLocaleString("ko-KR");
 const fW=n=>"₩"+fmt(n);
+function toKoreanUnit(v){const n=parseInt(String(v).replace(/,/g,''),10);if(!n||isNaN(n)||n<=0)return '';const eok=Math.floor(n/10000),man=n%10000;if(eok===0)return man.toLocaleString()+'만원';if(man===0)return eok.toLocaleString()+'억원';return eok.toLocaleString()+'억 '+man.toLocaleString()+'만원';}
 const fP=n=>(isNaN(n)?"0":n.toFixed(2))+"%";
 const tW=v=>(parseFloat(String(v).replace(/,/g,""))||0)*10000;
 const pN=v=>parseFloat(String(v).replace(/,/g,""))||0;
@@ -1956,7 +1957,7 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
           <div style={{display:"flex",alignItems:"center",gap:6,width:isMo?"100%":"auto",justifyContent:"flex-end"}}>
             <input type="text" value={price?Number(String(price).replace(/,/g,"")).toLocaleString("ko-KR"):""} onChange={e=>{const raw=e.target.value.replace(/,/g,"");if(raw===""||/^\d+$/.test(raw)){sP(raw);setAutoPriceFlag(false);}}} placeholder="예: 12500" style={{width:"100%",maxWidth:"100%",textAlign:"right",padding:isMo?"12px 44px 12px 14px":"10px 44px 10px 14px",border:_hasErrors?"1.5px solid #3b82f6":"1.5px solid #dfe1e6",borderRadius:10,fontSize:isMo?16:15,fontWeight:700,color:P.tx,background:P.lt,outline:"none",fontFamily:"inherit",boxSizing:"border-box",height:isMo?48:44,boxShadow:_hasErrors?"0 0 0 3px rgba(59,130,246,0.1)":"none"}}/>
             <span style={{fontSize:13,color:P.mt,fontWeight:500}}>만원</span>
-          </div>
+          </div>{price&&toKoreanUnit(price)&&<div style={{fontSize:11,color:"#0141f9",marginTop:3,fontWeight:500}}>= {toKoreanUnit(price)}</div>}
         </div>
         {autoPriceFlag&&<div style={{fontSize:11,color:"#60a5fa",fontWeight:600,marginTop:4,lineHeight:1.5}}>📍 주소조회로 자동입력. 공시가격보다 낮으면 공시가격이 과세표준이 됩니다.</div>}
       </div>
@@ -1968,7 +1969,7 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
           <div style={{display:"flex",alignItems:"center",gap:6,width:isMo?"100%":"auto",justifyContent:"flex-end"}}>
             <input type="text" value={stdPrice?Number(String(stdPrice).replace(/,/g,"")).toLocaleString("ko-KR"):""} onChange={e=>{const raw=e.target.value.replace(/,/g,"");if(raw===""||/^\d+$/.test(raw)){setStdPrice(raw);setAutoStdFlag(false);}}} placeholder="미입력 시 취득가 사용" style={{width:"100%",maxWidth:"100%",textAlign:"right",padding:isMo?"12px 44px 12px 14px":"10px 44px 10px 14px",border:"1.5px solid #dfe1e6",borderRadius:10,fontSize:isMo?16:15,fontWeight:700,color:P.tx,background:P.lt,outline:"none",fontFamily:"inherit",boxSizing:"border-box",height:isMo?48:44}}/>
             <span style={{fontSize:13,color:P.mt,fontWeight:500}}>만원</span>
-          </div>
+          </div>{stdPrice&&toKoreanUnit(stdPrice)&&<div style={{fontSize:11,color:"#0141f9",marginTop:3,fontWeight:500}}>= {toKoreanUnit(stdPrice)}</div>}
         </div>
         {autoStdFlag&&<div style={{fontSize:11,color:"#60a5fa",fontWeight:600,marginTop:4,marginBottom:2,lineHeight:1.5}}>📍 주소조회로 자동입력. 실거래가보다 높으면 이 금액이 과세표준이 됩니다.</div>}
         <div style={{fontSize:11,color:P.mt,lineHeight:1.6,wordBreak:"keep-all"}}>{acqType==="gift"||acqType==="inherit"?"취득가액이 없으므로 시가표준액 기준으로 계산합니다":acqType==="newbuild"?"시가표준액을 과세표준으로 계산합니다":"취득가액보다 시가표준액이 높으면 시가표준액이 과세표준이 됩니다"}</div>
@@ -2184,14 +2185,14 @@ function CalcTrans({isMo=false,onNav=()=>{}}){
     items.push({l:"(-) 필요경비",v:fW(adjCost)});
     items.push({l:"= 양도차익",v:fW(gain),note:mixedNote||""});
     if(exemptNote)items.push({l:"과세대상 양도차익",v:fW(taxableGain),note:exemptNote});
-    if(ltcRate>0)items.push({l:"(-) 장기보유특별공제",v:fW(ltcAmount),note:(ltcRate*100).toFixed(0)+"%"});
+    if(ltcRate>0)items.push({l:"(-) 장기보유특별공제",v:fW(ltcAmount),note:(ltcRate*100).toFixed(0)+"% (소득세법 §95)"});
     items.push({l:"= 양도소득금액",v:fW(incomeAmount)});
     if(basicDed>0)items.push({l:"(-) 기본공제",v:fW(basicDed)});
     items.push({l:"= 과세표준",v:fW(taxBase)});
-    items.push({l:"세율",v:appliedRate});
+    items.push({l:"세율",v:appliedRate,note:"소득세법 §104"});
     if(surcharge>0)items.push({l:"중과/추가과세",v:fW(surcharge),note:surchargeNote});
-    items.push({l:"양도소득세",v:fW(tax)});
-    items.push({l:"지방소득세 (10%)",v:fW(localTax)});
+    items.push({l:"양도소득세",v:fW(tax),note:"소득세법 §104"});
+    items.push({l:"지방소득세 (10%)",v:fW(localTax),note:"양도세×10% (지방세법 §103)"});
     items.push({l:"총 납부세액",v:fW(totalTax)});
     setResult({items,basis,totalTax,own,conArea});
   }
@@ -2346,7 +2347,7 @@ function CalcCompre({isMo=false,onNav=()=>{}}){
   let cappedApplied=false;
   if(!isCorp&&prev>0){const capRate=n<=2?1.5:3.0;const capped=Math.round(prev*capRate);if(finalCt>capped){finalCt=capped;cappedApplied=true;}}
   const fm=Math.round(finalCt*.2);const total=finalCt+fm;
-  const rpItems=[{l:"공시가격 합계",v:fW(pp),note:"물건 "+nRaw+"건"},{l:"공제금액",v:d>0?fW(d):"없음"},{l:"과세표준 (공정가액 60%)",v:fW(tb)},{l:"종부세 산출세액",v:fW(ct)}];
+  const rpItems=[{l:"공시가격 합계",v:fW(pp),note:"물건 "+nRaw+"건"},{l:"공제금액",v:d>0?fW(d):"없음"},{l:"과세표준 (공정가액 60%)",v:fW(tb),note:"종부세법 시행령"},{l:"종부세 산출세액",v:fW(ct),note:"종부세법 §9"}];
   if(combinedCredit>0){
     rpItems.push({l:"  고령자 공제 ("+Math.round(ageCredit*100)+"%)",v:"-"+fW(Math.round(ct*ageCredit))});
     rpItems.push({l:"  장기보유 공제 ("+Math.round(holdCredit*100)+"%)",v:"-"+fW(Math.round(ct*holdCredit))});
@@ -2354,7 +2355,7 @@ function CalcCompre({isMo=false,onNav=()=>{}}){
   }
   if(cappedApplied)rpItems.push({l:"세부담상한 적용",v:"전년 "+(n<=2?"150%":"300%")});
   rpItems.push({l:"종부세 (공제후)",v:fW(finalCt)});
-  rpItems.push({l:"농어촌특별세 (20%)",v:fW(fm)});
+  rpItems.push({l:"농어촌특별세 (20%)",v:fW(fm),note:"종부세×20% (농특세법 §5)"});
   const _tips = [];
   if (!isDefault && total > 0) {
     if (!isCorp && n === 1 && ageV < 60 && holdV < 5) {
@@ -2451,11 +2452,11 @@ function CalcProp({isMo=false,onNav=()=>{}}){
   let capApplied=false;
   if(prev>0){const capped=Math.round(prev*capRate);if(total>capped){total=capped;capApplied=true;}}
   const half=Math.round(total/2);
-  const rpItems=[{l:"공시가격",v:fW(pp)},{l:"과세표준",v:fW(tb),note:"공정시장가액비율 "+(fr*100).toFixed(0)+"%"},{l:"재산세 본세",v:fW(tx)}];
+  const rpItems=[{l:"공시가격",v:fW(pp)},{l:"과세표준",v:fW(tb),note:"공정시장가액비율 "+(fr*100).toFixed(0)+"% (지방세법 시행령 §109)"},{l:"재산세 본세",v:fW(tx),note:"지방세법 §111"}];
   if(pt==="house")rpItems.push({l:"도시지역분 (0.14%)",v:fW(ci)});
   rpItems.push({l:"지방교육세 (20%)",v:fW(ed)});
   if(rt>0)rpItems.push({l:"지역자원시설세",v:fW(rt),note:"건축물 소재지 적용"});
-  if(capApplied)rpItems.push({l:"세부담 상한 적용",v:fW(total),note:"전년 대비 "+(capRate*100-100).toFixed(0)+"%↑ 한도"});
+  if(capApplied)rpItems.push({l:"세부담 상한 적용",v:fW(total),note:"전년 대비 "+(capRate*100-100).toFixed(0)+"%↑ 한도 (지방세법 §122)"});
   if(pt==="house"){rpItems.push({l:"7월 납부 (건물+주택½)",v:fW(half)});rpItems.push({l:"9월 납부 (토지+주택½)",v:fW(total-half)});}
   else if(pt==="land")rpItems.push({l:"9월 일괄 납부",v:fW(total)});
   else rpItems.push({l:"7월 일괄 납부",v:fW(total)});
@@ -2509,7 +2510,7 @@ return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:
       deadlineLink="https://hometax.go.kr" deadlineLinkLabel="홈택스 신고 →"
       alertMsg={finalTax===0?"공제 한도 이내: 납부세액 없음":skip!=="no"?"세대생략 할증 "+(skip==="minor"?40:30)+"% 적용됨":null}
       alertType={finalTax===0?"success":"warning"}
-      total={finalTax} sub={"공제 "+fW(d)+" 적용"} items={[{l:"증여재산가액",v:fW(g)}].concat(burden==="yes"&&debtW>0?[{l:"채무 인수분 (양도세 대상)",v:"-"+fW(debtW)},{l:"증여세 과세 증여액",v:fW(giftPortion)}]:[]).concat(priorW>0?[{l:"10년 내 기증여 합산",v:fW(priorW)}]:[]).concat([{l:"증여재산 공제",v:"-"+fW(d)},{l:"합산 과세표준",v:fW(tb)},{l:"합산 산출세액",v:fW(fullTax)}]).concat(skipRate>0?[{l:"세대생략 할증 ("+(skipRate*100)+"%)",v:"+"+fW(surcharge)}]:[]).concat(priorW>0&&priorTax>0?[{l:"기납부 증여세 차감",v:"-"+fW(priorTax)}]:[]).concat([{l:"신고세액공제 (3%)",v:"-"+fW(Math.round(thisTax*0.03)),note:"기한 내 신고 시"},{l:"이번 납부 증여세",v:fW(finalTax)}]).concat(burden==="yes"&&debtW>0?[{l:"채무인수분 추정 양도세",v:"약 "+fW(Math.round(debtW*0.22)),note:"참고용·실제는 세무사 확인"}]:[])} nextStep={<NextStep calcId="gift" onNav={onNav} isMo={isMo}/>}/><div style={{marginTop:12,padding:"14px 16px",background:"#FFF8E1",border:"1px solid #FFE082",borderRadius:10,fontSize:13,color:"#92400E",lineHeight:1.6}}>※ 증여 시 취득세가 별도 부과됩니다. (일반 3.5%, 조정대상지역 다주택자 12%)<div style={{marginTop:8}}><button onClick={()=>onNav("tax","acquisition")} style={{padding:"8px 16px",background:"#fff",border:"1px solid #dfe1e6",borderRadius:8,fontSize:12,fontWeight:700,color:"#0747A6",cursor:"pointer",fontFamily:"inherit"}}>취득세 계산하기 →</button></div></div></div></div>);}
+      total={finalTax} sub={"공제 "+fW(d)+" 적용"} items={[{l:"증여재산가액",v:fW(g)}].concat(burden==="yes"&&debtW>0?[{l:"채무 인수분 (양도세 대상)",v:"-"+fW(debtW)},{l:"증여세 과세 증여액",v:fW(giftPortion)}]:[]).concat(priorW>0?[{l:"10년 내 기증여 합산",v:fW(priorW)}]:[]).concat([{l:"증여재산 공제",v:"-"+fW(d),note:"상증세법 §53"},{l:"합산 과세표준",v:fW(tb)},{l:"합산 산출세액",v:fW(fullTax),note:"상증세법 §56"}]).concat(skipRate>0?[{l:"세대생략 할증 ("+(skipRate*100)+"%)",v:"+"+fW(surcharge)}]:[]).concat(priorW>0&&priorTax>0?[{l:"기납부 증여세 차감",v:"-"+fW(priorTax)}]:[]).concat([{l:"신고세액공제 (3%)",v:"-"+fW(Math.round(thisTax*0.03)),note:"상증세법 §69"},{l:"이번 납부 증여세",v:fW(finalTax)}]).concat(burden==="yes"&&debtW>0?[{l:"채무인수분 추정 양도세",v:"약 "+fW(Math.round(debtW*0.22)),note:"참고용·실제는 세무사 확인"}]:[])} nextStep={<NextStep calcId="gift" onNav={onNav} isMo={isMo}/>}/><div style={{marginTop:12,padding:"14px 16px",background:"#FFF8E1",border:"1px solid #FFE082",borderRadius:10,fontSize:13,color:"#92400E",lineHeight:1.6}}>※ 증여 시 취득세가 별도 부과됩니다. (일반 3.5%, 조정대상지역 다주택자 12%)<div style={{marginTop:8}}><button onClick={()=>onNav("tax","acquisition")} style={{padding:"8px 16px",background:"#fff",border:"1px solid #dfe1e6",borderRadius:8,fontSize:12,fontWeight:700,color:"#0747A6",cursor:"pointer",fontFamily:"inherit"}}>취득세 계산하기 →</button></div></div></div></div>);}
 
 function CalcInherit({isMo=false,onNav=()=>{}}){const[ta,sTa]=useState("");const[finAsset,sFA]=useState("");const[db,sDb]=useState("");const[fn,sFn]=useState("");const[hasSpouse,sHS]=useState("yes");const[children,sCh]=useState("2");const[cohabit,sCohab]=useState("");const[farm,sFarm]=useState("");const[priorGift,sPG]=useState("");const[onTime,sOT]=useState("yes");const[showInheritLookup,setShowInheritLookup]=useState(false);const[autoInheritFill,setAutoInheritFill]=useState(false);const t=tW(ta),finW=tW(finAsset),d=tW(db),f=Math.min(tW(fn),15000000),priorW=tW(priorGift),cohabW=tW(cohabit),farmW=tW(farm);const gross=t+priorW;const netEstate=gross-d-f;const childN=parseInt(children)||0;const basicDed=2e8;const personalDed=childN*5e7;const basicPlusPersonal=basicDed+personalDed;const lumpSum=5e8;const mainDed=Math.max(basicPlusPersonal,lumpSum);let spouseDed=0;if(hasSpouse==="yes"){const spouseShare=netEstate>0?netEstate*1.5/(1.5+childN):0;spouseDed=Math.min(Math.max(spouseShare,5e8),30e8);}let financialDed=0;if(finW>0){if(finW<=2e7)financialDed=finW;else if(finW<=1e8)financialDed=2e7;else financialDed=Math.min(Math.round(finW*0.20),2e8);}const cohabDed=cohabW>0?Math.min(cohabW,6e8):0;const farmDed=farmW>0?Math.min(farmW,15e8):0;const totalDed=mainDed+spouseDed+financialDed+cohabDed+farmDed;const tb=Math.max(0,netEstate-totalDed);const tx=pTx(tb,GB);const rebate=onTime==="yes"?0.03:0;const finalTax=Math.round(tx*(1-rebate));return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}><div>
     {!isMo&&<div style={{marginBottom:10}}><button type="button" onClick={()=>setShowInheritLookup(true)} style={{width:"100%",padding:"12px 16px",background:"linear-gradient(135deg,#eff6ff,#dbeafe)",border:"1.5px solid #bfdbfe",borderRadius:10,fontSize:13,fontWeight:700,color:"#1e40af",cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>📍 주소로 시가·공시가격 자동조회</button></div>}{showInheritLookup&&<AddressModal calcType="gift" onClose={()=>setShowInheritLookup(false)} onApplyPrice={v=>{sTa(String(Math.round(v/10000)));setAutoInheritFill(true);}} onApplyStd={v=>{if(!tW(ta))sTa(String(Math.round(v/10000)));setAutoInheritFill(true);}}/>}<Inp label="총 상속재산가액" value={ta} onChange={v=>{sTa(v);setAutoInheritFill(false);}} suffix="만원" placeholder="예: 200000" error={!ta||ta==="0"}/>{autoInheritFill&&ta&&<div style={{fontSize:11,color:"#4285F4",marginTop:-8,marginBottom:8,fontWeight:500}}>📍 실거래가(시가) 자동입력. 시가 없으면 공시가격으로 수정하세요.</div>}
@@ -2535,7 +2536,7 @@ function CalcInherit({isMo=false,onNav=()=>{}}){const[ta,sTa]=useState("");const
       deadlineLink="https://hometax.go.kr" deadlineLinkLabel="홈택스 신고 →"
       alertMsg={t<=0?null:tb<=0?"공제 한도 이내: 납부세액 없음":tx>1e9?"10억 초과 고액 상속: 세무사 상담 권장":null}
       alertType={tb<=0?"success":"warning"}
-      total={finalTax} sub={"상속공제 "+fW(totalDed)} items={[{l:"총 상속재산",v:fW(t)}].concat(priorW>0?[{l:"10년 내 사전증여",v:"+"+fW(priorW)}]:[]).concat([{l:"채무 차감",v:"-"+fW(d)},{l:"장례비 차감",v:"-"+fW(f)},{l:"과세가액",v:fW(netEstate)}]).concat(basicPlusPersonal>lumpSum?[{l:"기초공제 2억 + 인적공제",v:"-"+fW(basicPlusPersonal),note:"자녀"+childN+"명 × 5천만"}]:[{l:"일괄공제 (5억)",v:"-"+fW(lumpSum),note:"기초+인적 합계보다 유리"}]).concat(hasSpouse==="yes"?[{l:"배우자 법정상속분 ("+fP(1.5/(1.5+childN)*100)+")",v:fW(Math.round(netEstate*1.5/(1.5+childN)))},{l:"배우자 상속공제 (실제 적용)",v:"-"+fW(spouseDed),note:"최소5억~최대30억"}]:[]).concat(financialDed>0?[{l:"금융재산 상속공제",v:"-"+fW(financialDed),note:finW<=2e7?"전액":finW<=1e8?"2천만 한도":"20% (최대 2억)"}]:[]).concat(cohabDed>0?[{l:"동거주택공제",v:"-"+fW(cohabDed)}]:[]).concat(farmDed>0?[{l:"영농상속공제",v:"-"+fW(farmDed)}]:[]).concat([{l:"공제 합계",v:"-"+fW(totalDed)},{l:"과세표준 (상속재산-공제)",v:fW(tb)},{l:"산출세액",v:fW(tx)}]).concat(rebate>0?[{l:"신고세액공제 (3%)",v:"-"+fW(Math.round(tx*0.03))}]:[]).concat([{l:"납부 상속세",v:fW(finalTax)}]).concat(tx>2e7?[{l:"※ 연부연납 가능",v:"최대 5년 분납",note:"부동산 비중↑ 시 10년"}]:[])} nextStep={<NextStep calcId="inherit" onNav={onNav} isMo={isMo}/>}/></div></div>);}
+      total={finalTax} sub={"상속공제 "+fW(totalDed)} items={[{l:"총 상속재산",v:fW(t)}].concat(priorW>0?[{l:"10년 내 사전증여",v:"+"+fW(priorW)}]:[]).concat([{l:"채무 차감",v:"-"+fW(d)},{l:"장례비 차감",v:"-"+fW(f)},{l:"과세가액",v:fW(netEstate)}]).concat(basicPlusPersonal>lumpSum?[{l:"기초공제 2억 + 인적공제",v:"-"+fW(basicPlusPersonal),note:"자녀"+childN+"명 × 5천만"}]:[{l:"일괄공제 (5억)",v:"-"+fW(lumpSum),note:"상증세법 §21"}]).concat(hasSpouse==="yes"?[{l:"배우자 법정상속분 ("+fP(1.5/(1.5+childN)*100)+")",v:fW(Math.round(netEstate*1.5/(1.5+childN)))},{l:"배우자 상속공제 (실제 적용)",v:"-"+fW(spouseDed),note:"5~30억 (상증세법 §19)"}]:[]).concat(financialDed>0?[{l:"금융재산 상속공제",v:"-"+fW(financialDed),note:finW<=2e7?"전액":finW<=1e8?"2천만 한도":"20% (최대 2억)"}]:[]).concat(cohabDed>0?[{l:"동거주택공제",v:"-"+fW(cohabDed)}]:[]).concat(farmDed>0?[{l:"영농상속공제",v:"-"+fW(farmDed)}]:[]).concat([{l:"공제 합계",v:"-"+fW(totalDed)},{l:"과세표준 (상속재산-공제)",v:fW(tb)},{l:"산출세액",v:fW(tx),note:"상증세법 §56"}]).concat(rebate>0?[{l:"신고세액공제 (3%)",v:"-"+fW(Math.round(tx*0.03)),note:"상증세법 §69"}]:[]).concat([{l:"납부 상속세",v:fW(finalTax)}]).concat(tx>2e7?[{l:"※ 연부연납 가능",v:"최대 5년 분납",note:"부동산 비중↑ 시 10년"}]:[])} nextStep={<NextStep calcId="inherit" onNav={onNav} isMo={isMo}/>}/></div></div>);}
 
 function CalcMort({isMo=false,onNav=()=>{}}){const[pr,sPr]=useState("");const[rt,sRt]=useState("");const[isDefault,setIsDefault]=useState(true);const markModified=()=>setIsDefault(false);const[yr,sYr]=useState("30");const[gr,sGr]=useState("0");const[mt,sMt]=useState("equal");const[ppFee,sPP]=useState("");const[ppYear,sPY]=useState("0");const[showSchedule,setShowSchedule]=useState(false);
   const PP=tW(pr),r=pN(rt)/100/12,n=parseInt(yr)*12,gm=parseInt(gr)*12,rm=n-gm;
@@ -2595,12 +2596,12 @@ function CalcDSR({isMo=false,onNav=()=>{}}){const[inc,sInc]=useState("");const[n
         {l:"신규 월 상환액",v:fW(nm)},
         {l:"기존 대출 월 상환액",v:fW(epW)},
         {l:"연간 총 원리금",v:fW(tot)},
-        {l:"스트레스 가산",v:stressRate>0?"+"+fP(stressRate*100)+"p":"없음 (고정)"},
+        {l:"스트레스 가산",v:stressRate>0?"+"+fP(stressRate*100)+"p":"없음 (고정)",note:stressRate>0?"+1.5%p (2024.9~)":""},
         {l:"실제 적용 금리",v:fP(adjRate*100)},
         {l:"연령별 최대 만기",v:maxTerm+"년",note:parseInt(ny)>maxTerm?"초과→"+maxTerm+"년 적용":""},
         {l:"DSR",v:fP(dsr),note:st},
-        {l:"은행 40% 기준 최대대출",v:fW(dsrLimitAmt40)},
-        {l:"비은행 50% 기준 최대대출",v:fW(dsrLimitAmt50)},
+        {l:"은행 40% 기준 최대대출",v:fW(dsrLimitAmt40),note:"금융위 고시"},
+        {l:"비은행 50% 기준 최대대출",v:fW(dsrLimitAmt50),note:"금융위 고시"},
       ]:[]}
     />
   </div></div>);}
@@ -2648,7 +2649,7 @@ function CalcComm({isMo=false,onNav=()=>{}}){
       alertType="info"
       total={total}
       sub={amtDesc+" 기준 · 요율 "+fP(r*100)+(vat>0?" · VAT "+(vatIncl?"포함":"별도"):"")}
-      items={[{l:"거래금액",v:fW(amt),note:tx==="rent"?"보증금+월세×"+(amt<5e7?"70":"100"):""},{l:"적용 요율",v:fP(r*100),note:useCustom?"직접 입력":rateLabel},{l:"중개보수",v:fW(fee)}].concat(mf&&amt*r>mf?[{l:"상한 적용",v:fW(mf)}]:[]).concat(ty!=="res"?[{l:"부가세 (10%)",v:fW(vat),note:vatIncl?"합계 포함":"별도"}]:[{l:"부가세",v:"해당없음 (개인거래 면세)"}]).concat([{l:"합계 (보수"+(vat>0&&vatIncl?"+VAT":"")+")  ",v:fW(total)}])}/>
+      items={[{l:"거래금액",v:fW(amt),note:tx==="rent"?"보증금+월세×"+(amt<5e7?"70":"100"):""},{l:"적용 요율",v:fP(r*100),note:useCustom?"직접 입력":(rateLabel+" (공인중개사법 시행규칙 §20)")},{l:"중개보수",v:fW(fee)}].concat(mf&&amt*r>mf?[{l:"상한 적용",v:fW(mf)}]:[]).concat(ty!=="res"?[{l:"부가세 (10%)",v:fW(vat),note:vatIncl?"합계 포함":"별도"}]:[{l:"부가세",v:"해당없음 (개인거래 면세)"}]).concat([{l:"합계 (보수"+(vat>0&&vatIncl?"+VAT":"")+")  ",v:fW(total)}])}/>
     <div style={{fontSize:12,color:"#64748b",padding:"12px 16px",lineHeight:1.7,marginTop:12}}>
       ※ 상한요율 이내에서 중개의뢰인과 협의하여 결정 가능<br/>
       ※ 오피스텔: 전용 85㎡ 이하 + 전용입식부엌·욕실 구비 시 저요율 적용<br/>
@@ -3028,7 +3029,7 @@ function CalcReg({isMo=false,onNav=()=>{}}){const[tx,sTx]=useState("sale");const
       deadlineLink="https://iros.go.kr" deadlineLinkLabel="인터넷등기소 →"
       alertMsg={pW>=10e8?"고가 부동산: 법무사 선임 권장":loanW>0?"설정등기(근저당) 비용 별도 포함됨":null}
       alertType="info"
-      total={total} sub={"총 "+fW(total)+" (취득세 포함)"} items={[{l:"부동산 가액",v:fW(pW)},{l:"▼ 취득세 합계",v:fW(acqTotal),note:"세금 파트"},{l:"  취득세 ("+(acqR*100).toFixed(1)+"%)",v:fW(acqTax)},{l:"  지방교육세",v:fW(acqEdu)}].concat(acqFarm>0?[{l:"  농어촌특별세",v:fW(acqFarm)}]:[]).concat([{l:"▼ 채권할인료",v:fW(bondCost),note:"할인율 4.5% 적용"},{l:"  매입률 "+fP(bondRate*100),v:"매입액 "+fW(bondAmt)},{l:"  실부담 (매입액×4.5%)",v:fW(bondCost)},{l:"인지세",v:fW(stamp),note:"거래금액 구간별"},{l:"법원수수료",v:fW(court)},{l:"▼ 법무사 보수 합계",v:fW(legalTotal),note:"VAT·경비 포함"},{l:"  기본 보수",v:fW(legal)},{l:"  VAT (10%)",v:fW(legalVat)},{l:"  교통비·서류",v:fW(80000)}]).concat(loanW>0?[{l:"▼ 설정등기 (근저당)",v:fW(mortTotal),note:"채권최고액 = 대출×120%"},{l:"  등록면허세 (0.2%)",v:fW(mortReg)},{l:"  지방교육세",v:fW(mortEdu)}]:[]).concat([{l:"※ 매수가 대비 총비용",v:pW>0?fP(total/pW*100):"0%",note:"세금+등기+법무사"}])} nextStep={<NextStep calcId="registration" onNav={onNav} isMo={isMo}/>}/></div></div>);}
+      total={total} sub={"총 "+fW(total)+" (취득세 포함)"} items={[{l:"부동산 가액",v:fW(pW)},{l:"▼ 취득세 합계",v:fW(acqTotal),note:"세금 파트"},{l:"  취득세 ("+(acqR*100).toFixed(1)+"%)",v:fW(acqTax),note:"지방세법 §11"},{l:"  지방교육세",v:fW(acqEdu)}].concat(acqFarm>0?[{l:"  농어촌특별세",v:fW(acqFarm)}]:[]).concat([{l:"▼ 채권할인료",v:fW(bondCost),note:"할인율 4.5% 적용"},{l:"  매입률 "+fP(bondRate*100),v:"매입액 "+fW(bondAmt)},{l:"  실부담 (매입액×4.5%)",v:fW(bondCost)},{l:"인지세",v:fW(stamp),note:"인지세법 §3"},{l:"법원수수료",v:fW(court)},{l:"▼ 법무사 보수 합계",v:fW(legalTotal),note:"VAT·경비 포함"},{l:"  기본 보수",v:fW(legal)},{l:"  VAT (10%)",v:fW(legalVat)},{l:"  교통비·서류",v:fW(80000)}]).concat(loanW>0?[{l:"▼ 설정등기 (근저당)",v:fW(mortTotal),note:"채권최고액 = 대출×120%"},{l:"  등록면허세 (0.2%)",v:fW(mortReg),note:"지방세법 §28"},{l:"  지방교육세",v:fW(mortEdu)}]:[]).concat([{l:"※ 매수가 대비 총비용",v:pW>0?fP(total/pW*100):"0%",note:"세금+등기+법무사"}])} nextStep={<NextStep calcId="registration" onNav={onNav} isMo={isMo}/>}/></div></div>);}
 
 /* 법무사수수료 */
 function CalcLegal({isMo=false,onNav=()=>{}}){const[tx,sTx]=useState("sale");const[p,sP]=useState("");const pW=tW(p);
@@ -3043,7 +3044,7 @@ function CalcLegal({isMo=false,onNav=()=>{}}){const[tx,sTx]=useState("sale");con
       deadlineLink="https://iros.go.kr" deadlineLinkLabel="인터넷등기소 →"
       alertMsg={tx==="mortgage"?"설정등기: 대출금액 기준 산정":tx==="gift"||tx==="inherit"?"증여·상속: 매매 대비 약 80% 수준":pW>=10e8?"고가 부동산: 보수는 협의 권장":null}
       alertType="info"
-      total={total} sub="보수 + VAT + 부대비용" items={[{l:"업무 유형",v:tx==="sale"?"소유권이전(매매)":tx==="gift"?"소유권이전(증여)":tx==="inherit"?"소유권이전(상속)":tx==="mortgage"?"근저당 설정등기":"말소등기"},{l:"기본 보수",v:fW(bf),note:"법무사협회 기준"},{l:"교통비·일당",v:fW(travel)},{l:"서류발급비",v:fW(doc)},{l:"부가가치세 (10%)",v:fW(vat),note:"기본 보수 기준"},{l:"총 합계 (보수+경비+VAT)",v:fW(total)}]} nextStep={<NextStep calcId="legal" onNav={onNav} isMo={isMo}/>}/></div></div>);}
+      total={total} sub="보수 + VAT + 부대비용" items={[{l:"업무 유형",v:tx==="sale"?"소유권이전(매매)":tx==="gift"?"소유권이전(증여)":tx==="inherit"?"소유권이전(상속)":tx==="mortgage"?"근저당 설정등기":"말소등기"},{l:"기본 보수",v:fW(bf),note:"대한법무사협회 보수 기준"},{l:"교통비·일당",v:fW(travel)},{l:"서류발급비",v:fW(doc)},{l:"부가가치세 (10%)",v:fW(vat),note:"기본 보수 기준"},{l:"총 합계 (보수+경비+VAT)",v:fW(total)}]} nextStep={<NextStep calcId="legal" onNav={onNav} isMo={isMo}/>}/></div></div>);}
 
 /* 임대수익률 */
 function CalcYield({isMo=false,onNav=()=>{}}){const[pp,sPP]=useState("");const[dp,sDp]=useState("");const[rn,sRn]=useState("");const[ex,sEx]=useState("");const[ln,sLn]=useState("");const[lr,sLr]=useState("");const[isDefault,setIsDefault]=useState(true);const markModified=()=>setIsDefault(false);const[showLookup,setShowLookup]=useState(false);const[autoYieldFill,setAutoYieldFill]=useState(false);const ppW=tW(pp),dpW=tW(dp),rnW=tW(rn),exW=tW(ex),lnW=tW(ln),lrV=pN(lr)/100;const aR=rnW*12,aI=lnW*lrV,aE=exW*12,ni=aR-aE-aI,inv=ppW-dpW-lnW;const gr=ppW>0?aR/ppW*100:0,nt=inv>0?ni/inv*100:0;
@@ -3059,7 +3060,7 @@ return(<>{showLookup&&<AddressModal onClose={()=>setShowLookup(false)} onApplyPr
       deadline="※ 세전 수익률 기준 / 양도세·종합소득세 등 별도 고려 필요"
       alertMsg={ni<=0?"순수익 마이너스: 대출이자+경비 초과":inv<=0?"자기자본 없음: 레버리지 투자":nt>=10?"우수한 순수익률":nt<3?"기대 수익률 낮음":null}
       alertType={ni<=0?"danger":nt>=10?"success":"warning"}
-      total={ni} sub={"자기자본 "+fW(inv)+" 기준"} items={[{l:"매입가",v:fW(ppW)},{l:"자기자본 투입",v:fW(inv),note:"매입가-보증금-대출"},{l:"연간 임대수입",v:fW(aR)},{l:"연간 관리비·경비",v:"-"+fW(aE)},{l:"연간 대출이자",v:"-"+fW(aI)},{l:"연간 순수익",v:fW(ni)},{l:"총수익률 (Gross)",v:fP(gr),note:"연임대료/매입가"},{l:"순수익률 (Net)",v:fP(nt),note:"순수익/자기자본"},{l:"자기자본수익률 (ROE)",v:inv>0?fP(ni/inv*100):"N/A"},{l:"손익분기점 (원금 회수)",v:ni>0?Math.ceil(inv/ni)+"년":"N/A",note:"순수익 기준"}]} consultFunnel={inv>0&&nt<3?{label:<><IconChart c="#fff" nextStep={<NextStep calcId="yield" onNav={onNav} isMo={isMo}/>}/> 수익성 개선 전략 상담</>,color:"#FF8B00",subtitle:"순수익률 3% 미만 — 임대료 인상·대환대출·리모델링으로 수익률 개선 전략"}:null}/></div></>);}
+      total={ni} sub={"자기자본 "+fW(inv)+" 기준"} items={[{l:"매입가",v:fW(ppW)},{l:"자기자본 투입",v:fW(inv),note:"매입가-보증금-대출"},{l:"연간 임대수입",v:fW(aR)},{l:"연간 관리비·경비",v:"-"+fW(aE)},{l:"연간 대출이자",v:"-"+fW(aI)},{l:"연간 순수익",v:fW(ni)},{l:"총수익률 (Gross)",v:fP(gr),note:"연임대료/매입가"},{l:"순수익률 (Net)",v:fP(nt),note:"(연임대-연비용)÷투자금×100"},{l:"자기자본수익률 (ROE)",v:inv>0?fP(ni/inv*100):"N/A"},{l:"손익분기점 (원금 회수)",v:ni>0?Math.ceil(inv/ni)+"년":"N/A",note:"순수익 기준"}]} consultFunnel={inv>0&&nt<3?{label:<><IconChart c="#fff" nextStep={<NextStep calcId="yield" onNav={onNav} isMo={isMo}/>}/> 수익성 개선 전략 상담</>,color:"#FF8B00",subtitle:"순수익률 3% 미만 — 임대료 인상·대환대출·리모델링으로 수익률 개선 전략"}:null}/></div></>);}
 
 /* 평수변환 */
 function CalcArea({isMo=false,onNav=()=>{}}){const[dir,sDir]=useState("s2p");const[v,sV]=useState("");const val=pN(v),py=3.305785,res=dir==="s2p"?val/py:val*py;const sizes=[{p:18,s:59},{p:24,s:79},{p:25,s:84},{p:32,s:106},{p:34,s:112},{p:43,s:142},{p:50,s:165}];return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}><div><Tog label="변환 방향" value={dir} onChange={sDir} options={[{value:"s2p",label:"㎡ → 평"},{value:"p2s",label:"평 → ㎡"}]}/><Inp label={"면적 ("+(dir==="s2p"?"㎡":"평")+")"} value={v} onChange={sV} placeholder="숫자 입력"/>{val>0&&<div style={{background:"linear-gradient(315deg, #0747A6 0%, #0052CC 50%, #0065FF 100%)",color:"#fff",borderRadius:20,padding:"28px 24px",textAlign:"center",marginTop:8,boxShadow:"0 8px 28px rgba(7,71,166,.28)"}}><div style={{fontSize:11,letterSpacing:1.5,opacity:.8,marginBottom:8,textTransform:"uppercase",fontWeight:700}}>평수 변환 결과</div><div style={{fontSize:14,opacity:.88}}>{val} {dir==="s2p"?"㎡":"평"} =</div><div style={{fontSize:38,fontWeight:800,color:"#FFC400",marginTop:4,fontVariantNumeric:"tabular-nums"}}>{res.toFixed(2)} {dir==="s2p"?"평":"㎡"}</div></div>}</div><div><h4 style={{fontSize:14,fontWeight:700,color:P.tx,margin:"0 0 12px"}}>주요 아파트 평형 참고</h4><div style={{background:P.card,borderRadius:12,border:`1px solid ${P.bd}`,overflow:"hidden"}}>{sizes.map((s,i)=>(<div key={s.p} style={{display:"flex",justifyContent:"space-between",padding:"10px 16px",borderBottom:i<sizes.length-1?`1px solid ${P.lt}`:"none",fontSize:14}}><span style={{fontWeight:700,color:P.pri}}>{s.p}평형</span><span style={{color:P.mt}}>전용 {s.s}㎡</span></div>))}</div><div style={{marginTop:12,padding:"12px 16px",background:P.lt,borderRadius:10,fontSize:12,color:P.mt,lineHeight:1.6}}>※ 1평 = 3.305785㎡ (정확히 400/121)<br/>※ 전용면적 기준이며, 공급면적은 주거공용 포함</div></div></div>);}
@@ -3093,7 +3094,7 @@ function CalcLoanMax({isMo=false,onNav=()=>{}}){
       deadline="※ 실제 대출 심사 시 신용점수·직장·부양가족 등 추가 평가"
       alertMsg={parseInt(yr)>maxTerm?"연령대 최대 만기 "+maxTerm+"년 초과: "+maxTerm+"년으로 조정 적용":stressRate>0?"스트레스 DSR +"+fP(stressRate*100)+"p 가산 적용":null}
       alertType={parseInt(yr)>maxTerm?"warning":"info"}
-      total={Math.max(0,maxLoan)} sub={"제한 요인: "+limitReason} items={[{l:"연 소득",v:fW(ai)},{l:"실제 적용 금리",v:fP(adjRate*100),note:stressRate>0?"스트레스 +"+fP(stressRate*100)+"p":"가산 없음"},{l:"적용 대출 기간",v:adjYear+"년",note:parseInt(yr)>maxTerm?"연령 최대 "+maxTerm+"년":""},{l:"DSR 기준 대출가능액",v:fW(Math.max(0,dsrLoan))}].concat(pW>0?[{l:"LTV 70% 기준",v:fW(ltvLoan)}]:[]).concat(region==="metro"&&pW>0?[{l:"수도권 주담대 한도",v:metroCap===Infinity?"제한없음":fW(metroCap)}]:[]).concat([{l:"최대 대출가능액",v:fW(Math.max(0,maxLoan)),note:limitReason+" 적용"},{l:"적용 DSR",v:fP(actualDsr)}])} nextStep={<NextStep calcId="loanmax" onNav={onNav} isMo={isMo}/>}/></div></div>);}
+      total={Math.max(0,maxLoan)} sub={"제한 요인: "+limitReason} items={[{l:"연 소득",v:fW(ai)},{l:"실제 적용 금리",v:fP(adjRate*100),note:stressRate>0?"스트레스 +"+fP(stressRate*100)+"p":"가산 없음"},{l:"적용 대출 기간",v:adjYear+"년",note:parseInt(yr)>maxTerm?"연령 최대 "+maxTerm+"년":""},{l:"DSR 기준 대출가능액",v:fW(Math.max(0,dsrLoan)),note:"금융위 고시"}].concat(pW>0?[{l:"LTV 70% 기준",v:fW(ltvLoan),note:"금융위 고시"}]:[]).concat(region==="metro"&&pW>0?[{l:"수도권 주담대 한도",v:metroCap===Infinity?"제한없음":fW(metroCap)}]:[]).concat([{l:"최대 대출가능액",v:fW(Math.max(0,maxLoan)),note:limitReason+" 적용"},{l:"적용 DSR",v:fP(actualDsr)}])} nextStep={<NextStep calcId="loanmax" onNav={onNav} isMo={isMo}/>}/></div></div>);}
 
 /* 보유세 통합 */
 function CalcHoldTax({isMo=false,onNav=()=>{}}){const[h,sH]=useState("1");const[p,sP]=useState("");const[isDefault,setIsDefault]=useState(true);const markModified=()=>setIsDefault(false);const[showHoldLookup,setShowHoldLookup]=useState(false);const[selectedHoldInfo,setSelectedHoldInfo]=useState(null);const[autoHoldFill,setAutoHoldFill]=useState(false);const pW=tW(p);const n=parseInt(h);const ptBase=pW*0.6;const PTB=[[6e7,.001],[1.5e8,.0015],[3e8,.0025],[Infinity,.004]];const ptTax=pTx(ptBase,PTB);const ptCity=Math.round(ptBase*0.0014);const ptEdu=Math.round(ptTax*0.2);const ptTotal=ptTax+ptCity+ptEdu;const cDed=n===1?12e8:9e8;const cBase=Math.max(0,(pW-cDed)*0.6);const CTB=[[3e8,.005],[6e8,.007],[12e8,.01],[25e8,.013],[50e8,.015],[94e8,.020],[Infinity,.027]];const cTax=pTx(cBase,CTB);const cFarm=Math.round(cTax*0.2);const cTotal=cTax+cFarm;const grand=ptTotal+cTotal;return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}><div><Radio label="주택 수" value={h} onChange={sH} options={[{value:"1",label:"1주택"},{value:"2",label:"2주택"},{value:"3",label:"3주택 이상"}]}/><div style={{fontSize:13,color:"#374151",fontWeight:600,marginBottom:4,display:"flex",alignItems:"center",gap:6}}>공시가격 <TipModal title=""><p>매년 6.1 기준. realtyprice.kr에서 확인. 재산세: 공시가×60%</p></TipModal></div>{!isMo&&<div style={{marginBottom:10}}><button type="button" onClick={()=>setShowHoldLookup(true)} style={{width:"100%",padding:"12px 16px",background:"linear-gradient(135deg,#eff6ff,#dbeafe)",border:"1.5px solid #bfdbfe",borderRadius:10,fontSize:13,fontWeight:700,color:"#1e40af",cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>📍 주소로 공시가격 자동조회</button></div>}{showHoldLookup&&<AddressModal calcType="holding" onClose={()=>setShowHoldLookup(false)} onApplyStd={v=>{sP(String(Math.round(v/10000)));markModified();setAutoHoldFill(true);}} onApplyInfo={info=>setSelectedHoldInfo(info)}/>}{selectedHoldInfo&&!isMo&&<div style={{background:"#eff6ff",border:"1px solid #bfdbfe",borderRadius:10,padding:"10px 14px",marginBottom:8,display:"flex",alignItems:"center",justifyContent:"space-between",gap:8}}>
@@ -3104,7 +3105,7 @@ function CalcHoldTax({isMo=false,onNav=()=>{}}){const[h,sH]=useState("1");const[
       deadlineLink="https://hometax.go.kr" deadlineLinkLabel="홈택스 →"
       alertMsg={cTotal>0?"종부세 과세 대상 (공시가 "+(cDed/1e8)+"억 초과)":n>=3?"3주택 이상: 중과세율 적용 대상":null}
       alertType={cTotal>0?"warning":"info"}
-      total={grand} sub={"공시가 "+fW(pW)+" 기준 / 재산세+종부세"} items={[{l:"▼ 재산세 (7·9월 납부)",v:fW(ptTotal),note:"지방세"},{l:"  과세표준 (공정가 60%)",v:fW(ptBase)},{l:"  재산세 본세",v:fW(ptTax)},{l:"  도시지역분 (0.14%)",v:fW(ptCity)},{l:"  지방교육세 (20%)",v:fW(ptEdu)},{l:"▼ 종합부동산세 (12월 납부)",v:fW(cTotal),note:"국세"},{l:"  공제금액",v:fW(cDed)},{l:"  과세표준 (공정가 60%)",v:fW(cBase)},{l:"  종부세",v:fW(cTax)},{l:"  농어촌특별세 (20%)",v:fW(cFarm)},{l:"연간 보유세 총합",v:fW(grand),note:"재산세+종부세"}]} nextStep={<NextStep calcId="loanmax" onNav={onNav} isMo={isMo}/>}/></div></div>);}
+      total={grand} sub={"공시가 "+fW(pW)+" 기준 / 재산세+종부세"} items={[{l:"▼ 재산세 (7·9월 납부)",v:fW(ptTotal),note:"지방세법 §111"},{l:"  과세표준 (공정가 60%)",v:fW(ptBase),note:"지방세법 시행령 §109"},{l:"  재산세 본세",v:fW(ptTax)},{l:"  도시지역분 (0.14%)",v:fW(ptCity)},{l:"  지방교육세 (20%)",v:fW(ptEdu)},{l:"▼ 종합부동산세 (12월 납부)",v:fW(cTotal),note:"종부세법 §9"},{l:"  공제금액",v:fW(cDed)},{l:"  과세표준 (공정가 60%)",v:fW(cBase)},{l:"  종부세",v:fW(cTax)},{l:"  농어촌특별세 (20%)",v:fW(cFarm),note:"종부세×20% (농특세법 §5)"},{l:"연간 보유세 총합",v:fW(grand),note:"재산세+종부세"}]} nextStep={<NextStep calcId="loanmax" onNav={onNav} isMo={isMo}/>}/></div></div>);}
 
 /* 인지세 */
 function CalcStamp({isMo=false,onNav=()=>{}}){
@@ -3117,7 +3118,7 @@ function CalcStamp({isMo=false,onNav=()=>{}}){
       deadline="※ 계약서 작성 시점에 납부 / 전자수입인지(e-revenuestamp.or.kr)"
       alertMsg={stamp===0?"1억 이하: 인지세 비과세":electronic?"전자문서 70% 할인 적용됨":null}
       alertType={stamp===0?"success":"info"}
-      total={stamp} sub={stamp===0?"비과세 구간":"매도·매수인 각 50% 부담"} items={[{l:"거래금액",v:fW(pW)},{l:"기본 인지세액",v:fW(baseStamp)}].concat(electronic?[{l:"전자문서 할인 (70%)",v:"-"+fW(baseStamp-stamp)}]:[]).concat([{l:"납부 인지세",v:fW(stamp)},{l:"매도인 부담",v:fW(half)},{l:"매수인 부담",v:fW(half)}])} nextStep={<NextStep calcId="stamp" onNav={onNav} isMo={isMo}/>}/></div>);}
+      total={stamp} sub={stamp===0?"비과세 구간":"매도·매수인 각 50% 부담"} items={[{l:"거래금액",v:fW(pW)},{l:"기본 인지세액",v:fW(baseStamp),note:"인지세법 §3"}].concat(electronic?[{l:"전자문서 할인 (70%)",v:"-"+fW(baseStamp-stamp)}]:[]).concat([{l:"납부 인지세",v:fW(stamp)},{l:"매도인 부담",v:fW(half)},{l:"매수인 부담",v:fW(half)}])} nextStep={<NextStep calcId="stamp" onNav={onNav} isMo={isMo}/>}/></div>);}
 
 /* 국민주택채권 할인료 */
 function CalcBond({isMo=false,onNav=()=>{}}){
@@ -3132,7 +3133,7 @@ function CalcBond({isMo=false,onNav=()=>{}}){
       deadline="등기 시 채권 매입 의무 / 증권사·은행에서 당일 매도 가능"
       alertMsg={discountRate>0.05?"할인율 5% 초과: 이례적, 시세 확인 필요":bondRate>=0.05?"최고 매입률 5% 구간":null}
       alertType="info"
-      total={discountCost} sub={"매입률 "+fP(bondRate*100)+" · 할인율 "+fP(discountRate*100)} items={[{l:"매매가격",v:fW(pW)},{l:"적용 지역·용도",v:(area==="seoul"?"서울":area==="metro"?"광역시":"기타")+" / "+(use==="house"?"주택":"상가")},{l:"채권매입률",v:fP(bondRate*100)},{l:"채권매입액",v:fW(bondAmt),note:"매매가×매입률"},{l:"할인율 (시세)",v:fP(discountRate*100)},{l:"실제 부담 할인비용",v:fW(discountCost),note:"매입액×할인율"}]} nextStep={<NextStep calcId="bond" onNav={onNav} isMo={isMo}/>}/></div>);}
+      total={discountCost} sub={"매입률 "+fP(bondRate*100)+" · 할인율 "+fP(discountRate*100)} items={[{l:"매매가격",v:fW(pW)},{l:"적용 지역·용도",v:(area==="seoul"?"서울":area==="metro"?"광역시":"기타")+" / "+(use==="house"?"주택":"상가")},{l:"채권매입률",v:fP(bondRate*100),note:"주택도시기금법"},{l:"채권매입액",v:fW(bondAmt),note:"매매가×매입률"},{l:"할인율 (시세)",v:fP(discountRate*100)},{l:"실제 부담 할인비용",v:fW(discountCost),note:"매입액×할인율"}]} nextStep={<NextStep calcId="bond" onNav={onNav} isMo={isMo}/>}/></div>);}
 
 /* 예적금이자 */
 function CalcDeposit({isMo=false,onNav=()=>{}}){const[amt,sAmt]=useState("");const[rt,sRt]=useState("");const[isDefault,setIsDefault]=useState(true);const markModified=()=>setIsDefault(false);const[mon,sMon]=useState("12");const[ty,sTy]=useState("saving");const[tax,sTax]=useState("normal");const amtW=tW(amt),r=pN(rt)/100,m=parseInt(mon);const taxRate=tax==="normal"?0.154:tax==="preferential"?0.095:0;let interest=0;if(ty==="saving"){interest=amtW*r*m/12;}else{interest=amtW*r*m*(m+1)/24;}const taxAmt=Math.round(interest*taxRate);const afterTax=interest-taxAmt;const total=(ty==="saving"?amtW:amtW*m)+afterTax;return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}><div><Inp label={ty==="saving"?"예금 원금":"월 납입액"} value={amt} onChange={sAmt} suffix="만원" placeholder="예: 1000" error={!amt||amt==="0"}/><Inp label="연이율" value={rt} onChange={sRt} suffix="%" placeholder="예: 3.5" error={!rt||rt==="0"} note="한국은행 기준금리: 3.00% (2026.02.27 동결)"/><Sel label="기간" value={mon} onChange={sMon} options={[3,6,12,18,24,36].map(m=>({value:String(m),label:m+"개월"}))}/><Tog label="상품 유형" value={ty} onChange={sTy} options={[{value:"saving",label:"예금 (거치식)"},{value:"installment",label:"적금 (적립식)"}]}/><div style={{fontSize:13,color:"#374151",fontWeight:600,marginBottom:4,display:"flex",alignItems:"center",gap:6}}>세금 유형 <TipModal title=""><p>일반 15.4% / 세금우대 9.5% / 비과세(ISA 등). 금융소득 2천만↑ 종합과세.</p></TipModal></div><Tog label="" value={tax} onChange={sTax} options={[{value:"normal",label:"일반 (15.4%)"},{value:"preferential",label:"세금우대 (9.5%)"},{value:"exempt",label:"비과세"}]}/>
@@ -3151,7 +3152,7 @@ function CalcRental({isMo=false,onNav=()=>{}}){const[h,sH]=useState("2");const[r
       deadlineLink="https://hometax.go.kr" deadlineLinkLabel="홈택스 →"
       alertMsg={riW*10000>20000000?"연 2천만 초과: 종합과세 의무":sepTax<=compTax?"분리과세가 유리 ("+fW(compTax-sepTax)+" 절감)":"종합과세가 유리 ("+fW(sepTax-compTax)+" 절감)"}
       alertType={riW*10000>20000000?"warning":"success"}
-      total={mode==="sep"?sepTax:compTax} sub={"유리한 방식: "+better} items={[{l:"연간 임대수입",v:fW(riW)},{l:"필요경비 ("+pN(er)+"%)",v:"-"+fW(Math.round(riW*erV))},{l:"기본공제",v:"-"+fW(bdW)},{l:"분리과세 과세표준",v:fW(sepBase)},{l:"분리과세액 (14%)",v:fW(sepTax),note:sepTax<=compTax?"✓ 유리":""},{l:"종합과세 참고액",v:fW(compTax),note:compTax<sepTax?"✓ 유리":""},{l:"세액 차이",v:fW(Math.abs(sepTax-compTax))},{l:"유리한 방식",v:better}]} nextStep={<NextStep calcId="rental" onNav={onNav} isMo={isMo}/>}/></div></div>);}
+      total={mode==="sep"?sepTax:compTax} sub={"유리한 방식: "+better} items={[{l:"연간 임대수입",v:fW(riW)},{l:"필요경비 ("+pN(er)+"%)",v:"-"+fW(Math.round(riW*erV)),note:"등록 60% / 미등록 50%"},{l:"기본공제",v:"-"+fW(bdW)},{l:"분리과세 과세표준",v:fW(sepBase)},{l:"분리과세액 (14%)",v:fW(sepTax),note:(sepTax<=compTax?"✓ 유리 · ":"")+"소득세법 §64의2"},{l:"종합과세 참고액",v:fW(compTax),note:compTax<sepTax?"✓ 유리":""},{l:"세액 차이",v:fW(Math.abs(sepTax-compTax))},{l:"유리한 방식",v:better}]} nextStep={<NextStep calcId="rental" onNav={onNav} isMo={isMo}/>}/></div></div>);}
 
 /* 감정평가수수료 */
 function CalcAppraisal({isMo=false,onNav=()=>{}}){
@@ -3224,7 +3225,7 @@ function CalcIncTax({isMo=false,onNav=()=>{}}){const[incType,sIT]=useState("sala
       deadlineLink="https://hometax.go.kr" deadlineLinkLabel="홈택스 신고 →"
       alertMsg={incType==="freelance"&&toPay<0?"환급 예상: "+fW(Math.abs(toPay))+" 환급":incType==="biz"&&bizType==="simple"?"단순경비율 적용 중 (수입 2,400만↓ 서비스업 등 가능)":grossW>=5e8?"고소득: 종합소득세 38% 이상 구간":null}
       alertType={incType==="freelance"&&toPay<0?"success":"info"}
-      total={Math.max(0,toPay)} sub={incType==="salary"?"근로소득 기준 간이세액":incType==="freelance"?"기납부 3.3% 차감 후":"사업소득 기준"} items={[{l:incType==="salary"?"총급여":"총수입금액",v:fW(grossW)},{l:incType==="salary"?"근로소득공제":"필요경비",v:fW(grossW-taxableIncome),note:incType==="biz"&&bizType==="simple"?"단순경비율 "+bizRate+"%":""},{l:"소득금액",v:fW(taxableIncome)},{l:"기본공제 (본인+가족 "+(1+spouseN+parentsN+childrenN)+"명)",v:"-"+fW(basicDed)}].concat(seniorN>0?[{l:"경로우대공제 ("+seniorN+"명)",v:"-"+fW(seniorDed)}]:[]).concat(disabledN>0?[{l:"장애인공제 ("+disabledN+"명)",v:"-"+fW(disabledDed)}]:[]).concat([{l:"인적공제 합계",v:"-"+fW(personalDed)},{l:"과세표준",v:fW(finalTaxable)},{l:"산출세액",v:fW(tax)},{l:"세액공제 (표준+자녀)",v:"-"+fW(stdDed+childCredit)},{l:"소득세",v:fW(finalTax)},{l:"지방소득세 (10%)",v:fW(finalTax*.1)}]).concat(incType==="freelance"?[{l:"기납부세액 (3.3%)",v:"-"+fW(prepaid),note:"원천징수액"},{l:toPay>=0?"추가 납부":"환급 예상",v:fW(Math.abs(toPay)),note:toPay<0?"✓ 환급":""}]:[{l:"합계 (소득세+지방세)",v:fW(totalTax)}])} nextStep={<NextStep calcId="inctax" onNav={onNav} isMo={isMo}/>}/><RequiredGuide items={[{label:"월 급여 또는 평균임금",filled:false},{label:"근속기간 (1년 이상)",filled:false}]}/></div></div>);}
+      total={Math.max(0,toPay)} sub={incType==="salary"?"근로소득 기준 간이세액":incType==="freelance"?"기납부 3.3% 차감 후":"사업소득 기준"} items={[{l:incType==="salary"?"총급여":"총수입금액",v:fW(grossW)},{l:incType==="salary"?"근로소득공제":"필요경비",v:fW(grossW-taxableIncome),note:incType==="biz"&&bizType==="simple"?"단순경비율 "+bizRate+"%":""},{l:"소득금액",v:fW(taxableIncome)},{l:"기본공제 (본인+가족 "+(1+spouseN+parentsN+childrenN)+"명)",v:"-"+fW(basicDed)}].concat(seniorN>0?[{l:"경로우대공제 ("+seniorN+"명)",v:"-"+fW(seniorDed)}]:[]).concat(disabledN>0?[{l:"장애인공제 ("+disabledN+"명)",v:"-"+fW(disabledDed)}]:[]).concat([{l:"인적공제 합계",v:"-"+fW(personalDed)},{l:"과세표준",v:fW(finalTaxable)},{l:"산출세액",v:fW(tax),note:"소득세법 §55"},{l:"세액공제 (표준+자녀)",v:"-"+fW(stdDed+childCredit)},{l:"소득세",v:fW(finalTax)},{l:"지방소득세 (10%)",v:fW(finalTax*.1)}]).concat(incType==="freelance"?[{l:"기납부세액 (3.3%)",v:"-"+fW(prepaid),note:"원천징수액"},{l:toPay>=0?"추가 납부":"환급 예상",v:fW(Math.abs(toPay)),note:toPay<0?"✓ 환급":""}]:[{l:"합계 (소득세+지방세)",v:fW(totalTax)}])} nextStep={<NextStep calcId="inctax" onNav={onNav} isMo={isMo}/>}/><RequiredGuide items={[{label:"월 급여 또는 평균임금",filled:false},{label:"근속기간 (1년 이상)",filled:false}]}/></div></div>);}
 
 /* 연말정산 */
 function CalcYearEnd({isMo=false,onNav=()=>{}}){const[salary,sSal]=useState("");const[card,sCard]=useState("");const[medical,sMed]=useState("");const[edu,sEdu]=useState("");const[donate,sDon]=useState("");const[insurance,sIns]=useState("");const[pension,sPen]=useState("");const[monthlyRent,sMR]=useState("");
@@ -3273,7 +3274,7 @@ function CalcYearEnd({isMo=false,onNav=()=>{}}){const[salary,sSal]=useState("");
       deadlineLink="https://hometax.go.kr" deadlineLinkLabel="홈택스 연말정산 →"
       alertMsg={refund>=0?"환급 예상 "+fW(Math.abs(refund)):"추가 납부 "+fW(Math.abs(refund))}
       alertType={refund>=0?"success":"warning"}
-      total={Math.abs(refund)} sub={refund>=0?"돌려받는 금액":"더 내야 할 금액"} items={[{l:"총급여",v:fW(salW)},{l:"근로소득공제",v:"-"+fW(workDed)},{l:"기본공제 (본인+가족 "+(1+spouseN+parentsN+childN)+"명)",v:"-"+fW(basicDed)}].concat(seniorN>0?[{l:"경로우대공제 ("+seniorN+"명)",v:"-"+fW(seniorDed)}]:[]).concat(disabledN>0?[{l:"장애인공제 ("+disabledN+"명)",v:"-"+fW(disabledDed)}]:[]).concat([{l:"인적공제 합계",v:"-"+fW(personalDed)},{l:"4대보험료 공제",v:"-"+fW(socialDed),note:"국민연금+건강+고용"},{l:"신용카드 소득공제",v:"-"+fW(cardDed),note:"총급여 25% 초과분"},{l:"과세표준",v:fW(taxableIncome)},{l:"산출세액",v:fW(tax)},{l:"  연금저축 공제",v:"-"+fW(Math.round(penCredit))},{l:"  의료비 공제",v:"-"+fW(Math.round(medCredit))},{l:"  교육비 공제",v:"-"+fW(Math.round(eduCredit))},{l:"  기부금 공제",v:"-"+fW(Math.round(donCredit))},{l:"  자녀 세액공제",v:"-"+fW(childCredit)}]).concat(rentCredit>0?[{l:"  월세 세액공제",v:"-"+fW(rentCredit)}]:[]).concat([{l:"세액공제 합계",v:"-"+fW(totalCredit)},{l:"결정세액",v:fW(finalTax)},{l:"지방소득세 (10%)",v:fW(localTax)},{l:"기납부세액 (추정)",v:fW(prepaid)},{l:refund>=0?"예상 환급":"추가 납부",v:fW(Math.abs(refund)),note:refund>=0?"✓ 환급":"추가 납부"}])} nextStep={<NextStep calcId="yearend" onNav={onNav} isMo={isMo}/>}/><RequiredGuide items={[{label:"연간 총급여액",filled:false}]}/></div></div>);}
+      total={Math.abs(refund)} sub={refund>=0?"돌려받는 금액":"더 내야 할 금액"} items={[{l:"총급여",v:fW(salW)},{l:"근로소득공제",v:"-"+fW(workDed),note:"소득세법 §47"},{l:"기본공제 (본인+가족 "+(1+spouseN+parentsN+childN)+"명)",v:"-"+fW(basicDed)}].concat(seniorN>0?[{l:"경로우대공제 ("+seniorN+"명)",v:"-"+fW(seniorDed)}]:[]).concat(disabledN>0?[{l:"장애인공제 ("+disabledN+"명)",v:"-"+fW(disabledDed)}]:[]).concat([{l:"인적공제 합계",v:"-"+fW(personalDed)},{l:"4대보험료 공제",v:"-"+fW(socialDed),note:"국민연금+건강+고용"},{l:"신용카드 소득공제",v:"-"+fW(cardDed),note:"조특법 §126의2"},{l:"과세표준",v:fW(taxableIncome)},{l:"산출세액",v:fW(tax),note:"소득세법 §55"},{l:"  연금저축 공제",v:"-"+fW(Math.round(penCredit))},{l:"  의료비 공제",v:"-"+fW(Math.round(medCredit))},{l:"  교육비 공제",v:"-"+fW(Math.round(eduCredit))},{l:"  기부금 공제",v:"-"+fW(Math.round(donCredit))},{l:"  자녀 세액공제",v:"-"+fW(childCredit)}]).concat(rentCredit>0?[{l:"  월세 세액공제",v:"-"+fW(rentCredit)}]:[]).concat([{l:"세액공제 합계",v:"-"+fW(totalCredit)},{l:"결정세액",v:fW(finalTax)},{l:"지방소득세 (10%)",v:fW(localTax)},{l:"기납부세액 (추정)",v:fW(prepaid)},{l:refund>=0?"예상 환급":"추가 납부",v:fW(Math.abs(refund)),note:refund>=0?"✓ 환급":"추가 납부"}])} nextStep={<NextStep calcId="yearend" onNav={onNav} isMo={isMo}/>}/><RequiredGuide items={[{label:"연간 총급여액",filled:false}]}/></div></div>);}
 
 /* 연봉 실수령액 */
 function CalcNetSalary({isMo=false,onNav=()=>{}}){const[salary,sSal]=useState("");const[family,sFamily]=useState("1");const[child,sChild]=useState("0");const[nonTax,sNT]=useState("");

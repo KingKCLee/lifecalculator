@@ -39,6 +39,8 @@ export function useIsMobile(){
   return isMo;
 }
 
+function toKoreanUnit(v){const n=parseInt(String(v).replace(/,/g,''),10);if(!n||isNaN(n)||n<=0)return '';const eok=Math.floor(n/10000),man=n%10000;if(eok===0)return man.toLocaleString()+'만원';if(man===0)return eok.toLocaleString()+'억원';return eok.toLocaleString()+'억 '+man.toLocaleString()+'만원';}
+
 export function Inp({label, value, onChange, suffix, placeholder, note, inputMode, error}){
   const [focused, setFocused] = useState(false);
   const isMo = useIsMobile();
@@ -49,6 +51,7 @@ export function Inp({label, value, onChange, suffix, placeholder, note, inputMod
     else onChange(e.target.value);
   };
   const resolvedInputMode = inputMode || (suffix==="만원" ? "numeric" : suffix==="%" ? "decimal" : undefined);
+  const koreanHint = suffix==="만원" && value ? toKoreanUnit(value) : '';
   return(<div style={{marginBottom:isMo?14:16}}>
     <label style={{display:"block",fontSize:12,fontWeight:600,color:"#6b778c",marginBottom:6,textTransform:"uppercase",letterSpacing:.5}}>{label}</label>
     <div style={{position:"relative"}}>
@@ -59,7 +62,8 @@ export function Inp({label, value, onChange, suffix, placeholder, note, inputMod
         onBlur={e=>{setFocused(false);e.target.style.borderColor=error?"#3b82f6":P.bd;}}/>
       {suffix&&<span style={{position:"absolute",right:14,top:"50%",transform:"translateY(-50%)",fontSize:12,color:P.mt,pointerEvents:"none"}}>{suffix}</span>}
     </div>
-    {error&&<p style={{fontSize:11,color:"#1e40af",marginTop:3,marginBottom:0,fontWeight:600}}>필수 입력 항목입니다</p>}
+    {koreanHint&&<p style={{fontSize:11,color:"#0141f9",marginTop:3,marginBottom:0,fontWeight:500}}>= {koreanHint}</p>}
+    {error&&!koreanHint&&<p style={{fontSize:11,color:"#1e40af",marginTop:3,marginBottom:0,fontWeight:600}}>필수 입력 항목입니다</p>}
     {!error&&note&&<p style={{fontSize:11,color:P.mt,marginTop:3,marginBottom:0,lineHeight:1.6}}>{note}</p>}
   </div>);
 }
