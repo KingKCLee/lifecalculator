@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.18",
       "category": "전체",
+      "title": "fix: Slider 직접입력 너비 200px→240px 확대",
+      "desc": "fix: Slider 직접입력 너비 200px→240px 확대"
+    },
+    {
+      "date": "2026.04.18",
+      "category": "전체",
       "title": "fix: 인라인 계산기 NextStep 너비 수정 — 우측 결과 패널 열 너비로 제한",
       "desc": "fix: 인라인 계산기 NextStep 너비 수정 — 우측 결과 패널 열 너비로 제한"
     },
@@ -1461,12 +1467,6 @@
       "category": "세금",
       "title": "fix: 취득세 2열 grid 레이아웃 복구",
       "desc": "fix: 취득세 2열 grid 레이아웃 복구"
-    },
-    {
-      "date": "2026.04.17",
-      "category": "세금",
-      "title": "fix: 취득세 NextStep 2열 고정 + 전체 세율표 + Expert Guide 완벽가이드 통합",
-      "desc": "fix: 취득세 NextStep 2열 고정 + 전체 세율표 + Expert Guide 완벽가이드 통합"
     }
   ],
   "rates": {

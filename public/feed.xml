@@ -5,8 +5,15 @@
     <link>https://xn--989a00a691bdfa717h.com/</link>
     <description>취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 등 39가지 무료 계산기. 매일 자동 업데이트.</description>
     <language>ko</language>
-    <lastBuildDate>Sat, 18 Apr 2026 23:23:52 +0900</lastBuildDate>
+    <lastBuildDate>Sat, 18 Apr 2026 23:29:51 +0900</lastBuildDate>
     <atom:link href="https://xn--989a00a691bdfa717h.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+    <title>fix: Slider 직접입력 너비 200px→240px 확대</title>
+    <link>https://xn--989a00a691bdfa717h.com/</link>
+    <description>fix: Slider 직접입력 너비 200px→240px 확대</description>
+    <pubDate>Sat, 18 Apr 2026 23:29:51 +0900</pubDate>
+    <guid>https://xn--989a00a691bdfa717h.com/#update-202604181429</guid>
+  </item>
     <item>
     <title>fix: 인라인 계산기 NextStep 너비 수정 — 우측 결과 패널 열 너비로 제한</title>
     <link>https://xn--989a00a691bdfa717h.com/</link>
