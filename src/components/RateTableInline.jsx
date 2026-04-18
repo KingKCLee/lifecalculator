@@ -39,7 +39,7 @@ export default function RateTableInline({ groups }) {
     <div style={{ padding: '4px 0' }}>
 
       {/* 전체 접기/펼치기 버튼 */}
-      <div style={{ display:'flex', justifyContent:'flex-end', marginBottom:10 }}>
+      <div style={{ display:'flex', justifyContent:'flex-end', marginBottom:8 }}>
         <button
           onClick={() =>
             setOpenMap(Object.fromEntries(groups.map((_, i) => [i, !allOpen])))
