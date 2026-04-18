@@ -17,13 +17,17 @@ function DonutChart({ data, size = 160 }) {
 
 const MENU = [
   { id: "dashboard", label: "대시보드", icon: "D" },
+  { id: "traffic", label: "트래픽 분석", icon: "T" },
+  { id: "members", label: "회원 관리", icon: "U" },
+  { id: "calcs", label: "계산기 분석", icon: "C" },
+  { id: "consult", label: "상담 관리", icon: "Q" },
+  { id: "newsletter", label: "뉴스레터", icon: "E" },
+  { id: "revenue", label: "수익", icon: "$" },
+  { id: "keywords", label: "검색 키워드", icon: "K" },
+  { id: "system", label: "시스템", icon: "S" },
   { id: "law", label: "법령 모니터링", icon: "L" },
   { id: "ads", label: "광고 관리", icon: "A" },
   { id: "notice", label: "공지사항", icon: "N" },
-  { id: "consult", label: "상담 신청", icon: "C" },
-  { id: "newsletter", label: "뉴스레터", icon: "E" },
-  { id: "members", label: "회원 관리", icon: "U" },
-  { id: "keywords", label: "검색 키워드", icon: "K" },
   { id: "logs", label: "실행 로그", icon: "G" },
 ];
 
@@ -81,14 +85,18 @@ export default function AdminDashboard({ token, session, onLogout }) {
       {loading && <div style={{ textAlign: "center", padding: 60, color: "#6b778c" }}>{"\uB370\uC774\uD130 \uB85C\uB4DC \uC911..."}</div>}
       {err && <div style={{ padding: "14px 18px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10, color: "#dc2626", fontSize: 13, marginBottom: 20 }}>{err}</div>}
       {tab === "dashboard" && stats && <DashContent stats={stats} cardSt={cardSt} secSt={secSt} />}
+      {tab === "traffic" && <TrafficTab authFetch={authFetch} />}
+      {tab === "calcs" && <CalcStatsTab authFetch={authFetch} />}
+      {tab === "revenue" && <RevenueTab authFetch={authFetch} />}
+      {tab === "system" && <SystemTab authFetch={authFetch} />}
       {tab === "law" && <LawTab authFetch={authFetch} />}
       {tab === "ads" && <AdsTab authFetch={authFetch} />}
       {tab === "notice" && <NoticeTab authFetch={authFetch} />}
       {tab === "consult" && <ConsultTab authFetch={authFetch} />}
       {tab === "newsletter" && <NewsletterTab authFetch={authFetch} />}
-        {tab === "members" && <MembersTab authFetch={authFetch} />}
-        {tab === "keywords" && <KeywordsTab authFetch={authFetch} stats={stats} />}
-        {tab === "logs" && <LogsTab authFetch={authFetch} />}
+      {tab === "members" && <MembersTab authFetch={authFetch} />}
+      {tab === "keywords" && <KeywordsTab authFetch={authFetch} stats={stats} />}
+      {tab === "logs" && <LogsTab authFetch={authFetch} />}
     </main>
   </div>);
 }
@@ -639,5 +647,211 @@ function LogsTab({ authFetch }) {
           </table>
         </div>)}
     </div>
+  </div>);
+}
+
+/* ═══ 트래픽 분석 탭 ═══ */
+function TrafficTab({ authFetch }) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [range, setRange] = useState("7");
+  const load = async () => {
+    setLoading(true);
+    const end = new Date().toISOString().slice(0, 10);
+    const start = new Date(Date.now() - parseInt(range) * 86400000).toISOString().slice(0, 10);
+    try { const r = await authFetch(`/api/admin/traffic?start=${start}&end=${end}`); const j = await r.json(); if (j.ok) setData(j); } catch {} finally { setLoading(false); }
+  };
+  useEffect(() => { load(); }, [range]);
+  const secSt = { background: "#fff", borderRadius: 14, padding: "24px 28px", border: "1px solid #E5E7EB", marginBottom: 24 };
+  const thSt = { padding: "10px 12px", textAlign: "left", fontSize: 12, fontWeight: 700, color: "#6b7280", borderBottom: "2px solid #e5e7eb" };
+  const tdSt = { padding: "8px 12px", fontSize: 13, color: "#374151", borderBottom: "1px solid #f3f4f6" };
+  if (loading) return <div style={{ textAlign: "center", padding: 60, color: "#6b778c" }}>로드 중...</div>;
+  if (!data) return <div style={{ padding: 40, color: "#6b778c" }}>데이터 없음</div>;
+  return (<div>
+    <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
+      {[{ v: "1", l: "오늘" }, { v: "7", l: "7일" }, { v: "30", l: "30일" }, { v: "90", l: "90일" }].map(p => (
+        <button key={p.v} onClick={() => setRange(p.v)} style={{ padding: "8px 16px", background: range === p.v ? "#0141f9" : "#fff", color: range === p.v ? "#fff" : "#374151", border: "1px solid " + (range === p.v ? "#0141f9" : "#d1d5db"), borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>{p.l}</button>
+      ))}
+    </div>
+    <div style={{ display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 24 }}>
+      {[{ l: "총 방문수", v: fNum(data.total) }, { l: "채널 수", v: (data.bySource || []).length }, { l: "상위 키워드", v: (data.byKeyword || []).length + "개" }].map((c, i) => (
+        <div key={i} style={{ background: "#fff", borderRadius: 14, padding: "20px 24px", border: "1px solid #E5E7EB", flex: "1 1 180px" }}>
+          <div style={{ fontSize: 12, color: "#6b778c", marginBottom: 6 }}>{c.l}</div>
+          <div style={{ fontSize: 24, fontWeight: 800, color: "#0a1628" }}>{c.v}</div>
+        </div>
+      ))}
+    </div>
+    <div style={secSt}>
+      <h3 style={{ fontSize: 15, fontWeight: 700, color: "#0a1628", margin: "0 0 16px" }}>채널별 유입</h3>
+      <table style={{ width: "100%", borderCollapse: "collapse" }}><thead><tr><th style={thSt}>소스</th><th style={{ ...thSt, textAlign: "right" }}>방문수</th></tr></thead>
+        <tbody>{(data.bySource || []).map((r, i) => (<tr key={i}><td style={tdSt}>{r.source}</td><td style={{ ...tdSt, textAlign: "right", fontWeight: 600 }}>{fNum(r.cnt)}</td></tr>))}</tbody></table>
+    </div>
+    {(data.byKeyword || []).length > 0 && <div style={secSt}>
+      <h3 style={{ fontSize: 15, fontWeight: 700, color: "#0a1628", margin: "0 0 16px" }}>상위 키워드 TOP20</h3>
+      <table style={{ width: "100%", borderCollapse: "collapse" }}><thead><tr><th style={thSt}>#</th><th style={thSt}>키워드</th><th style={{ ...thSt, textAlign: "right" }}>횟수</th></tr></thead>
+        <tbody>{(data.byKeyword || []).map((r, i) => (<tr key={i}><td style={tdSt}>{i + 1}</td><td style={tdSt}>{r.keyword}</td><td style={{ ...tdSt, textAlign: "right", fontWeight: 600 }}>{fNum(r.cnt)}</td></tr>))}</tbody></table>
+    </div>}
+    {(data.byRegion || []).length > 0 && <div style={secSt}>
+      <h3 style={{ fontSize: 15, fontWeight: 700, color: "#0a1628", margin: "0 0 16px" }}>지역별 방문</h3>
+      <table style={{ width: "100%", borderCollapse: "collapse" }}><thead><tr><th style={thSt}>지역</th><th style={{ ...thSt, textAlign: "right" }}>방문수</th></tr></thead>
+        <tbody>{(data.byRegion || []).map((r, i) => (<tr key={i}><td style={tdSt}>{r.region || "unknown"}</td><td style={{ ...tdSt, textAlign: "right", fontWeight: 600 }}>{fNum(r.cnt)}</td></tr>))}</tbody></table>
+    </div>}
+    <div style={secSt}>
+      <h3 style={{ fontSize: 15, fontWeight: 700, color: "#0a1628", margin: "0 0 16px" }}>상세 로그 (최근 {(data.logs || []).length}건)</h3>
+      <div style={{ overflowX: "auto" }}>
+        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}><thead><tr><th style={thSt}>시간</th><th style={thSt}>페이지</th><th style={thSt}>소스</th><th style={thSt}>키워드</th><th style={thSt}>지역</th><th style={thSt}>기기</th></tr></thead>
+          <tbody>{(data.logs || []).map((r, i) => (<tr key={i}><td style={tdSt}>{(r.ts || "").slice(5, 16)}</td><td style={{ ...tdSt, maxWidth: 200, overflow: "hidden", textOverflow: "ellipsis" }}>{r.page}</td><td style={tdSt}>{r.source}</td><td style={tdSt}>{r.keyword || "-"}</td><td style={tdSt}>{r.region || "-"}</td><td style={tdSt}>{r.device}</td></tr>))}</tbody></table>
+      </div>
+    </div>
+  </div>);
+}
+
+/* ═══ 계산기 분석 탭 ═══ */
+function CalcStatsTab({ authFetch }) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [days, setDays] = useState("30");
+  const load = async () => {
+    setLoading(true);
+    try { const r = await authFetch(`/api/admin/calc-stats?days=${days}`); const j = await r.json(); if (j.ok) setData(j); } catch {} finally { setLoading(false); }
+  };
+  useEffect(() => { load(); }, [days]);
+  const secSt = { background: "#fff", borderRadius: 14, padding: "24px 28px", border: "1px solid #E5E7EB", marginBottom: 24 };
+  const thSt = { padding: "10px 12px", textAlign: "left", fontSize: 12, fontWeight: 700, color: "#6b7280", borderBottom: "2px solid #e5e7eb" };
+  const tdSt = { padding: "8px 12px", fontSize: 13, color: "#374151", borderBottom: "1px solid #f3f4f6" };
+  if (loading) return <div style={{ textAlign: "center", padding: 60, color: "#6b778c" }}>로드 중...</div>;
+  if (!data) return <div style={{ padding: 40, color: "#6b778c" }}>데이터 없음</div>;
+  const maxCnt = Math.max(...(data.topCalcs || []).map(r => r.cnt), 1);
+  return (<div>
+    <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
+      {[{ v: "7", l: "7일" }, { v: "30", l: "30일" }, { v: "90", l: "90일" }].map(p => (
+        <button key={p.v} onClick={() => setDays(p.v)} style={{ padding: "8px 16px", background: days === p.v ? "#0141f9" : "#fff", color: days === p.v ? "#fff" : "#374151", border: "1px solid " + (days === p.v ? "#0141f9" : "#d1d5db"), borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>{p.l}</button>
+      ))}
+    </div>
+    <div style={{ background: "#fff", borderRadius: 14, padding: "20px 24px", border: "1px solid #E5E7EB", marginBottom: 24 }}>
+      <div style={{ fontSize: 12, color: "#6b778c", marginBottom: 6 }}>기간 내 총 계산 횟수</div>
+      <div style={{ fontSize: 32, fontWeight: 800, color: "#0a1628" }}>{fNum(data.total)}</div>
+    </div>
+    <div style={secSt}>
+      <h3 style={{ fontSize: 15, fontWeight: 700, color: "#0a1628", margin: "0 0 16px" }}>계산기별 사용 TOP20</h3>
+      {(data.topCalcs || []).map((r, i) => (
+        <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
+          <span style={{ width: 24, fontSize: 12, fontWeight: 700, color: i < 3 ? "#0141f9" : "#6b778c", textAlign: "right" }}>{i + 1}</span>
+          <div style={{ flex: 1 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, marginBottom: 4 }}><span style={{ fontWeight: 600 }}>{r.calc_name || r.calc_id}</span><span style={{ color: "#6b778c" }}>{fNum(r.cnt)}</span></div>
+            <div style={{ height: 8, background: "#f1f5f9", borderRadius: 4, overflow: "hidden" }}><div style={{ height: "100%", background: i < 3 ? "#0141f9" : "#93c5fd", borderRadius: 4, width: (r.cnt / maxCnt * 100) + "%", transition: "width .3s" }} /></div>
+          </div>
+        </div>
+      ))}
+    </div>
+    <div style={secSt}>
+      <h3 style={{ fontSize: 15, fontWeight: 700, color: "#0a1628", margin: "0 0 16px" }}>시간대별 사용 패턴</h3>
+      <div style={{ display: "flex", alignItems: "flex-end", gap: 2, height: 120 }}>
+        {(() => { const maxH = Math.max(...(data.hourly || []).map(r => r.cnt), 1); return Array.from({ length: 24 }, (_, h) => { const r = (data.hourly || []).find(x => x.hour === h); const cnt = r?.cnt || 0; return (<div key={h} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
+          <div style={{ width: "100%", background: cnt > 0 ? "#0141f9" : "#e5e7eb", borderRadius: "3px 3px 0 0", height: Math.max(2, cnt / maxH * 100) + "px", transition: "height .3s" }} />
+          <span style={{ fontSize: 9, color: "#94a3b8" }}>{h}</span>
+        </div>); }); })()}
+      </div>
+    </div>
+    {(data.daily || []).length > 0 && <div style={secSt}>
+      <h3 style={{ fontSize: 15, fontWeight: 700, color: "#0a1628", margin: "0 0 16px" }}>일별 추이</h3>
+      <table style={{ width: "100%", borderCollapse: "collapse" }}><thead><tr><th style={thSt}>날짜</th><th style={{ ...thSt, textAlign: "right" }}>횟수</th></tr></thead>
+        <tbody>{(data.daily || []).slice(-14).map((r, i) => (<tr key={i}><td style={tdSt}>{r.dt}</td><td style={{ ...tdSt, textAlign: "right", fontWeight: 600 }}>{fNum(r.cnt)}</td></tr>))}</tbody></table>
+    </div>}
+  </div>);
+}
+
+/* ═══ 수익 탭 ═══ */
+function RevenueTab({ authFetch }) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [form, setForm] = useState({ date: new Date().toISOString().slice(0, 10), type: "adsense", amount: "", detail: "" });
+  const [saving, setSaving] = useState(false);
+  const [msg, setMsg] = useState("");
+  const load = async () => { setLoading(true); try { const r = await authFetch("/api/admin/revenue"); const j = await r.json(); if (j.ok) setData(j); } catch {} finally { setLoading(false); } };
+  useEffect(() => { load(); }, []);
+  const submit = async () => {
+    if (!form.amount) return;
+    setSaving(true); setMsg("");
+    try { const r = await authFetch("/api/admin/revenue", { method: "POST", body: JSON.stringify({ ...form, amount: parseFloat(form.amount) }) }); const j = await r.json(); setMsg(j.ok ? "저장 완료" : j.error); if (j.ok) { setForm({ ...form, amount: "", detail: "" }); load(); } } catch { setMsg("오류 발생"); } finally { setSaving(false); }
+  };
+  const secSt = { background: "#fff", borderRadius: 14, padding: "24px 28px", border: "1px solid #E5E7EB", marginBottom: 24 };
+  const inpSt = { width: "100%", padding: "10px 14px", border: "1.5px solid #d1d5db", borderRadius: 8, fontSize: 14, fontFamily: "inherit", boxSizing: "border-box" };
+  if (loading) return <div style={{ textAlign: "center", padding: 60, color: "#6b778c" }}>로드 중...</div>;
+  return (<div>
+    <div style={{ display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 24 }}>
+      {[{ l: "이번 달", v: fNum(Math.round(data?.monthTotal || 0)) + "원" }, { l: "누적 합계", v: fNum(Math.round(data?.total || 0)) + "원" }].map((c, i) => (
+        <div key={i} style={{ background: "#fff", borderRadius: 14, padding: "20px 24px", border: "1px solid #E5E7EB", flex: "1 1 200px" }}>
+          <div style={{ fontSize: 12, color: "#6b778c", marginBottom: 6 }}>{c.l}</div>
+          <div style={{ fontSize: 24, fontWeight: 800, color: "#0a1628" }}>{c.v}</div>
+        </div>
+      ))}
+    </div>
+    <div style={secSt}>
+      <h3 style={{ fontSize: 15, fontWeight: 700, color: "#0a1628", margin: "0 0 16px" }}>수익 입력</h3>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr auto", gap: 12, alignItems: "end" }}>
+        <div><label style={{ fontSize: 12, fontWeight: 600, color: "#6b778c", display: "block", marginBottom: 4 }}>날짜</label><input type="date" value={form.date} onChange={e => setForm({ ...form, date: e.target.value })} style={inpSt} /></div>
+        <div><label style={{ fontSize: 12, fontWeight: 600, color: "#6b778c", display: "block", marginBottom: 4 }}>유형</label><select value={form.type} onChange={e => setForm({ ...form, type: e.target.value })} style={inpSt}><option value="adsense">AdSense</option><option value="subscription">구독</option><option value="manual">기타</option></select></div>
+        <div><label style={{ fontSize: 12, fontWeight: 600, color: "#6b778c", display: "block", marginBottom: 4 }}>금액 (원)</label><input type="number" value={form.amount} onChange={e => setForm({ ...form, amount: e.target.value })} placeholder="0" style={inpSt} /></div>
+        <div><label style={{ fontSize: 12, fontWeight: 600, color: "#6b778c", display: "block", marginBottom: 4 }}>메모</label><input type="text" value={form.detail} onChange={e => setForm({ ...form, detail: e.target.value })} placeholder="상세" style={inpSt} /></div>
+        <button onClick={submit} disabled={saving} style={{ padding: "10px 20px", background: "#0141f9", color: "#fff", border: "none", borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", height: 44 }}>저장</button>
+      </div>
+      {msg && <div style={{ fontSize: 13, color: msg === "저장 완료" ? "#059669" : "#dc2626", marginTop: 8 }}>{msg}</div>}
+    </div>
+    {(data?.logs || []).length > 0 && <div style={secSt}>
+      <h3 style={{ fontSize: 15, fontWeight: 700, color: "#0a1628", margin: "0 0 16px" }}>수익 내역</h3>
+      <table style={{ width: "100%", borderCollapse: "collapse" }}><thead><tr>
+        <th style={{ padding: "10px 12px", textAlign: "left", fontSize: 12, fontWeight: 700, color: "#6b7280", borderBottom: "2px solid #e5e7eb" }}>날짜</th>
+        <th style={{ padding: "10px 12px", textAlign: "left", fontSize: 12, fontWeight: 700, color: "#6b7280", borderBottom: "2px solid #e5e7eb" }}>유형</th>
+        <th style={{ padding: "10px 12px", textAlign: "right", fontSize: 12, fontWeight: 700, color: "#6b7280", borderBottom: "2px solid #e5e7eb" }}>금액</th>
+        <th style={{ padding: "10px 12px", textAlign: "left", fontSize: 12, fontWeight: 700, color: "#6b7280", borderBottom: "2px solid #e5e7eb" }}>메모</th>
+      </tr></thead><tbody>{(data.logs || []).map((r, i) => (<tr key={i} style={{ borderBottom: "1px solid #f3f4f6" }}>
+        <td style={{ padding: "8px 12px", fontSize: 13 }}>{r.date}</td>
+        <td style={{ padding: "8px 12px", fontSize: 13 }}>{r.type}</td>
+        <td style={{ padding: "8px 12px", fontSize: 13, textAlign: "right", fontWeight: 600 }}>{fNum(Math.round(r.amount))}원</td>
+        <td style={{ padding: "8px 12px", fontSize: 13, color: "#6b778c" }}>{r.detail || "-"}</td>
+      </tr>))}</tbody></table>
+    </div>}
+  </div>);
+}
+
+/* ═══ 시스템 탭 ═══ */
+function SystemTab({ authFetch }) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const load = async () => { setLoading(true); try { const r = await authFetch("/api/admin/system"); const j = await r.json(); if (j.ok) setData(j); } catch {} finally { setLoading(false); } };
+  useEffect(() => { load(); }, []);
+  const secSt = { background: "#fff", borderRadius: 14, padding: "24px 28px", border: "1px solid #E5E7EB", marginBottom: 24 };
+  if (loading) return <div style={{ textAlign: "center", padding: 60, color: "#6b778c" }}>로드 중...</div>;
+  if (!data) return <div style={{ padding: 40, color: "#6b778c" }}>데이터 없음</div>;
+  return (<div>
+    <div style={secSt}>
+      <h3 style={{ fontSize: 15, fontWeight: 700, color: "#0a1628", margin: "0 0 16px" }}>D1 테이블 현황</h3>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 12 }}>
+        {Object.entries(data.tableCounts || {}).map(([name, cnt]) => (
+          <div key={name} style={{ padding: "14px 16px", background: cnt < 0 ? "#fef2f2" : "#f9fafb", borderRadius: 10, border: "1px solid " + (cnt < 0 ? "#fecaca" : "#e5e7eb") }}>
+            <div style={{ fontSize: 11, color: "#6b778c", fontWeight: 600, marginBottom: 4 }}>{name}</div>
+            <div style={{ fontSize: 20, fontWeight: 800, color: cnt < 0 ? "#dc2626" : "#0a1628" }}>{cnt < 0 ? "오류" : fNum(cnt)}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+    {(data.errors || []).length > 0 && <div style={secSt}>
+      <h3 style={{ fontSize: 15, fontWeight: 700, color: "#0a1628", margin: "0 0 16px" }}>최근 에러 로그</h3>
+      <div style={{ overflowX: "auto" }}>
+        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}><thead><tr>
+          <th style={{ padding: "8px 10px", textAlign: "left", fontWeight: 700, color: "#6b7280", borderBottom: "2px solid #e5e7eb" }}>시간</th>
+          <th style={{ padding: "8px 10px", textAlign: "left", fontWeight: 700, color: "#6b7280", borderBottom: "2px solid #e5e7eb" }}>레벨</th>
+          <th style={{ padding: "8px 10px", textAlign: "left", fontWeight: 700, color: "#6b7280", borderBottom: "2px solid #e5e7eb" }}>라우트</th>
+          <th style={{ padding: "8px 10px", textAlign: "left", fontWeight: 700, color: "#6b7280", borderBottom: "2px solid #e5e7eb" }}>메시지</th>
+        </tr></thead><tbody>{(data.errors || []).map((e, i) => (<tr key={i} style={{ borderBottom: "1px solid #f3f4f6" }}>
+          <td style={{ padding: "6px 10px", whiteSpace: "nowrap" }}>{(e.ts || "").slice(0, 19)}</td>
+          <td style={{ padding: "6px 10px" }}><span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 700, color: "#fff", background: e.level === "error" ? "#dc2626" : e.level === "warn" ? "#f59e0b" : "#6b778c" }}>{e.level}</span></td>
+          <td style={{ padding: "6px 10px" }}>{e.route || "-"}</td>
+          <td style={{ padding: "6px 10px", maxWidth: 400, overflow: "hidden", textOverflow: "ellipsis" }}>{e.message}</td>
+        </tr>))}</tbody></table>
+      </div>
+    </div>}
+    {(data.errors || []).length === 0 && <div style={{ ...secSt, textAlign: "center", color: "#059669" }}>에러 없음</div>}
   </div>);
 }
