@@ -78,7 +78,7 @@ export default function GuideCard({ section1, section2, section3, section4, sect
 
       <Section num={3} title="2026년 핵심 세율과 계산법" bgColor="#FAEEDA" textColor="#633806" isMo={isMo}>
         {rateGroups ? (
-          <div style={{ margin: isMo ? "0 -18px" : "0 -24px" }}>
+          <div style={{ margin: isMo ? "12px 0 8px 0" : "16px 0 12px 0" }}>
             <RateTableInline groups={rateGroups} />
           </div>
         ) : (
