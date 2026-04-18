@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.18",
       "category": "전체",
+      "title": "test: Puppeteer prerender 테스트",
+      "desc": "test: Puppeteer prerender 테스트"
+    },
+    {
+      "date": "2026.04.18",
+      "category": "전체",
       "title": "feat: 쿠키정책 페이지 추가 - 애드센스 승인 준비",
       "desc": "feat: 쿠키정책 페이지 추가 - 애드센스 승인 준비"
     },
@@ -1461,12 +1467,6 @@
       "category": "전체",
       "title": "fix: 어드민 lc_token으로 verify 통합",
       "desc": "fix: 어드민 lc_token으로 verify 통합"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "세금",
-      "title": "fix: 취득세 함께계산하면좋은 2열 Expert Guide 아래로 추가",
-      "desc": "fix: 취득세 함께계산하면좋은 2열 Expert Guide 아래로 추가"
     }
   ],
   "rates": {
