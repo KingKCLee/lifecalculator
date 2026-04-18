@@ -7020,7 +7020,7 @@ body.lc-embed main{padding-top:0!important}
           <div className="calc-container" style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:isMo?16:32,marginBottom:24,boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
             {isMo?(<MobileCalcWrapper><Comp key={calc+"_"+sessionKey} isMo={true} onNav={navigateCalc}/></MobileCalcWrapper>):(<div><Comp key={calc+"_"+sessionKey} isMo={false} onNav={navigateCalc}/></div>)}
           </div>
-          {!isMo&&<NextStep calcId={calc} onNav={navigateCalc} isMo={false}/>}
+          {!isMo&&<div style={{display:"grid",gridTemplateColumns:"3fr 2fr",gap:28}}><div/><NextStep calcId={calc} onNav={navigateCalc} isMo={false}/></div>}
           
           
           {adSlots?.rp_bottom?.enabled&&!isMo&&!noAds&&<div style={{marginBottom:16}} dangerouslySetInnerHTML={{__html:adSlots.rp_bottom.code||""}}/>}
