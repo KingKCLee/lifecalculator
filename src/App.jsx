@@ -41,7 +41,6 @@ import AddressModal from './components/AddressModal';
 import SEO_CONTENT from './data/seoContent';
 import GuideCard from './components/GuideCard';
 import { GUIDE_DATA } from './data/guideData';
-import TaxRateAccordion from './components/TaxRateAccordion';
 import { RATE_GROUPS } from './data/rateTableGroups';
 import Breadcrumb from './components/Breadcrumb';
 // 2026.04.16 계산기 트래킹 훅
@@ -7027,10 +7026,8 @@ body.lc-embed main{padding-top:0!important}
           
           {adSlots?.rp_bottom?.enabled&&!isMo&&!noAds&&<div style={{marginBottom:16}} dangerouslySetInnerHTML={{__html:adSlots.rp_bottom.code||""}}/>}
 
-          {/* 아코디언 세율표 */}
-          {RATE_GROUPS[calc]&&<TaxRateAccordion groups={RATE_GROUPS[calc]} isMo={isMo}/>}
-          {/* 완벽가이드: GUIDE_DATA가 있으면 GuideCard, 없으면 SEO_CONTENT fallback */}
-          {GUIDE_DATA[calc]?(<GuideCard {...GUIDE_DATA[calc]} isMo={isMo} hideSection3={!!RATE_GROUPS[calc]}/>):(SEO_CONTENT[calc]&&<div className="guide-section" style={{padding:isMo?"24px 0":"40px 0 72px",marginBottom:0}}>
+          {/* 완벽가이드: GUIDE_DATA가 있으면 GuideCard (rateGroups 전달), 없으면 SEO_CONTENT fallback */}
+          {GUIDE_DATA[calc]?(<GuideCard {...GUIDE_DATA[calc]} isMo={isMo} rateGroups={RATE_GROUPS[calc]||null}/>):(SEO_CONTENT[calc]&&<div className="guide-section" style={{padding:isMo?"24px 0":"40px 0 72px",marginBottom:0}}>
             <div className="guide-card" style={{background:"#fff",border:"1px solid #dfe1e6",borderRadius:18,padding:isMo?"28px 20px":"40px 44px",boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
               <div className="seo" dangerouslySetInnerHTML={{__html:SEO_CONTENT[calc]}} style={{fontSize:15,color:"#374151",lineHeight:1.8}}/>
             </div>
