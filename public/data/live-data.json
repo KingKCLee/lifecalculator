@@ -1168,6 +1168,12 @@
   "updateLog": [
     {
       "date": "2026.04.18",
+      "category": "세금",
+      "title": "fix: 전체 계산기 법령 전수검증 - 2026년 4대보험 요율 인상 반영 + 오피스텔 취득세 수정",
+      "desc": "fix: 전체 계산기 법령 전수검증 - 2026년 4대보험 요율 인상 반영 + 오피스텔 취득세 수정"
+    },
+    {
+      "date": "2026.04.18",
       "category": "전체",
       "title": "fix: section3 여백 통일 + 전체접기 버튼 간격 조정",
       "desc": "fix: section3 여백 통일 + 전체접기 버튼 간격 조정"
@@ -1461,12 +1467,6 @@
       "category": "전체",
       "title": "fix: 동호 입력 영문 허용",
       "desc": "fix: 동호 입력 영문 허용"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "feat: PHASE2 - 네이버 키워드 통계 + GSC API 연동 + 키워드 탭 + stats 확장",
-      "desc": "feat: PHASE2 - 네이버 키워드 통계 + GSC API 연동 + 키워드 탭 + stats 확장"
     }
   ],
   "rates": {
