@@ -1168,6 +1168,12 @@
   "updateLog": [
     {
       "date": "2026.04.18",
+      "category": "전체",
+      "title": "fix: 인라인 계산기 NextStep을 RPFull 밖으로 이동 — 전체 너비 정상 표시",
+      "desc": "fix: 인라인 계산기 NextStep을 RPFull 밖으로 이동 — 전체 너비 정상 표시"
+    },
+    {
+      "date": "2026.04.18",
       "category": "세금",
       "title": "feat: UI여백/평수변환참조표/양도세배너/오피스텔세율 일괄 반영",
       "desc": "feat: UI여백/평수변환참조표/양도세배너/오피스텔세율 일괄 반영"
@@ -1461,12 +1467,6 @@
       "category": "대출",
       "title": "fix: JSX > 이스케이프 + dsr 중복키 제거 + _redirects 정적파일 예외",
       "desc": "fix: JSX > 이스케이프 + dsr 중복키 제거 + _redirects 정적파일 예외"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "fix: canonical 태그 동적 추가",
-      "desc": "fix: canonical 태그 동적 추가"
     }
   ],
   "rates": {
