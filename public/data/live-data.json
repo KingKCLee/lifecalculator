@@ -1168,6 +1168,12 @@
   "updateLog": [
     {
       "date": "2026.04.18",
+      "category": "전체",
+      "title": "feat: 쿠키정책 페이지 추가 - 애드센스 승인 준비",
+      "desc": "feat: 쿠키정책 페이지 추가 - 애드센스 승인 준비"
+    },
+    {
+      "date": "2026.04.18",
       "category": "대출",
       "title": "fix: DTI 페이지 React #31 객체 렌더 에러 수정",
       "desc": "fix: DTI 페이지 React #31 객체 렌더 에러 수정"
@@ -1461,12 +1467,6 @@
       "category": "세금",
       "title": "fix: 취득세 함께계산하면좋은 2열 Expert Guide 아래로 추가",
       "desc": "fix: 취득세 함께계산하면좋은 2열 Expert Guide 아래로 추가"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "Revert \"fix: 어드민 별도 로그인 제거 홈페이지 로그인으로 통합\"",
-      "desc": "Revert \"fix: 어드민 별도 로그인 제거 홈페이지 로그인으로 통합\""
     }
   ],
   "rates": {
