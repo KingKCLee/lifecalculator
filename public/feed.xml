@@ -5,8 +5,15 @@
     <link>https://xn--989a00a691bdfa717h.com/</link>
     <description>취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 등 39가지 무료 계산기. 매일 자동 업데이트.</description>
     <language>ko</language>
-    <lastBuildDate>Sat, 18 Apr 2026 14:14:24 +0900</lastBuildDate>
+    <lastBuildDate>Sat, 18 Apr 2026 14:21:24 +0900</lastBuildDate>
     <atom:link href="https://xn--989a00a691bdfa717h.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+    <title>fix: DTI 페이지 React #31 객체 렌더 에러 수정</title>
+    <link>https://xn--989a00a691bdfa717h.com/</link>
+    <description>fix: DTI 페이지 React #31 객체 렌더 에러 수정</description>
+    <pubDate>Sat, 18 Apr 2026 14:21:24 +0900</pubDate>
+    <guid>https://xn--989a00a691bdfa717h.com/#update-202604180521</guid>
+  </item>
     <item>
     <title>fix: RPFull total 문자열/숫자 분기 처리 - DTI/RTI/DSR 단위 표시 수정</title>
     <link>https://xn--989a00a691bdfa717h.com/</link>
