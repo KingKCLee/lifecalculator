@@ -1261,7 +1261,7 @@ function RP({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlin
     {alertMsg&&<div style={{background:"rgba(255,255,255,0.15)",borderRadius:10,padding:"10px 14px",marginBottom:14,fontSize:12,display:"flex",gap:8,alignItems:"flex-start",lineHeight:1.5,color:alertAccent}}><span style={{flexShrink:0,fontWeight:800}}>{alertType==="danger"?"⚠":alertType==="success"?"✓":alertType==="warning"?"!":"ℹ"}</span><span>{alertMsg}</span></div>}
     <div style={{marginBottom:16}}>
       <div style={{fontSize:11,fontWeight:700,letterSpacing:1.5,textTransform:"uppercase",opacity:.7,marginBottom:6}}>{title}</div>
-      <div style={{fontSize:isMo?32:38,fontWeight:800,lineHeight:1.1,fontVariantNumeric:"tabular-nums"}}>{fW(total)}</div>
+      <div style={{fontSize:isMo?32:38,fontWeight:800,lineHeight:1.1,fontVariantNumeric:"tabular-nums"}}>{typeof total==="number"?fW(total):total}</div>
       {sub&&<div style={{fontSize:12,opacity:.72,marginTop:6}}>{sub}</div>}
     </div>
     <div style={{borderTop:"1px solid rgba(255,255,255,.22)",paddingTop:4}}>
@@ -1346,7 +1346,7 @@ function RPFull({title,total,sub,items,isExample=false,deadline,deadlineLink,dea
     {/* [2] 타이틀 + 대형 금액 + 부제 */}
     <div style={{marginBottom:16}}>
       <div style={{fontSize:11,fontWeight:700,letterSpacing:1.5,textTransform:"uppercase",opacity:.7,marginBottom:6}}>{title}</div>
-      <div style={{fontSize:isMo?32:38,fontWeight:800,lineHeight:1.1,fontVariantNumeric:"tabular-nums"}}>{fW(total)}</div>
+      <div style={{fontSize:isMo?32:38,fontWeight:800,lineHeight:1.1,fontVariantNumeric:"tabular-nums"}}>{typeof total==="number"?fW(total):total}</div>
       {sub&&<div style={{fontSize:12,opacity:.72,marginTop:6}}>{sub}</div>}
     </div>
     {/* [3] 상세 내역 */}
@@ -2544,7 +2544,7 @@ function CalcDSR({isMo=false,onNav=()=>{}}){const[inc,sInc]=useState("");const[n
   return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}><div><Inp label="연 소득" value={inc} onChange={sInc} suffix="만원" placeholder="예: 5000" error={!inc||inc==="0"}/><Inp label="신규 대출금액" value={nl} onChange={sNl} suffix="만원" placeholder="예: 30000" error={!nl||nl==="0"}/><Inp label="신규 대출 금리" value={nr} onChange={sNr} suffix="%" placeholder="예: 3.5" error={!nr||nr==="0"}/>{!isMo&&<BaseRateHint/>}<Tog label={<>대출 유형 <TipModal title="스트레스 DSR"><p>스트레스 DSR: 변동금리 +1.5%p, 혼합형 +0.75%p 가산금리 추가. 고정금리는 가산 없음.</p></TipModal></>} value={loanType} onChange={sLT} options={[{value:"fixed",label:"고정"},{value:"mixed",label:"혼합(+0.75p)"},{value:"variable",label:"변동(+1.5p)"}]}/><Sel label="대출 기간" value={ny} onChange={sNy} options={[5,10,15,20,25,30,35,40].map(y=>({value:String(y),label:y+"년"}))}/><Sel label="차주 연령대" value={age} onChange={sAge} options={[{value:"20",label:"20대"},{value:"30",label:"30대"},{value:"40",label:"40대"},{value:"50",label:"50대"},{value:"60",label:"60대"}]}/><Inp label="기존 대출 월 상환액 합계" value={ep} onChange={sEp} suffix="만원" placeholder="없으면 0"/></div><div>
     <RPFull miss={(ai>0&&nlW>0)?null:["연 소득을 입력해주세요","신규 대출금액을 입력해주세요","대출 금리를 입력해주세요"]}
       title="DSR (총부채원리금상환비율)"
-      total={ai>0?Math.round(dsr*100):0}
+      total={ai>0?fP(dsr):"0%"}
       sub={ai>0?(fP(dsr)+" · "+st+" · 스트레스DSR "+(stressRate>0?"+"+fP(stressRate*100)+"p":"미적용")):"필수 항목을 입력해주세요"}
       deadline="은행 주담대 심사 통상 3~7영업일 · 2026년 스트레스 DSR 기준"
       alertMsg={ai>0?(dsr>40?"DSR "+fP(dsr)+" — 한도 초과: 대출 승인 어려울 수 있습니다":dsr>30?"DSR "+fP(dsr)+" — 30% 초과: 추가 대출 시 주의":"DSR "+fP(dsr)+" — 규제 기준 이내"):null}
