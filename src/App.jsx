@@ -2544,7 +2544,7 @@ function CalcDSR({isMo=false,onNav=()=>{}}){const[inc,sInc]=useState("");const[n
   return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}><div><Inp label="연 소득" value={inc} onChange={sInc} suffix="만원" placeholder="예: 5000" error={!inc||inc==="0"}/><Inp label="신규 대출금액" value={nl} onChange={sNl} suffix="만원" placeholder="예: 30000" error={!nl||nl==="0"}/><Inp label="신규 대출 금리" value={nr} onChange={sNr} suffix="%" placeholder="예: 3.5" error={!nr||nr==="0"}/>{!isMo&&<BaseRateHint/>}<Tog label={<>대출 유형 <TipModal title="스트레스 DSR"><p>스트레스 DSR: 변동금리 +1.5%p, 혼합형 +0.75%p 가산금리 추가. 고정금리는 가산 없음.</p></TipModal></>} value={loanType} onChange={sLT} options={[{value:"fixed",label:"고정"},{value:"mixed",label:"혼합(+0.75p)"},{value:"variable",label:"변동(+1.5p)"}]}/><Sel label="대출 기간" value={ny} onChange={sNy} options={[5,10,15,20,25,30,35,40].map(y=>({value:String(y),label:y+"년"}))}/><Sel label="차주 연령대" value={age} onChange={sAge} options={[{value:"20",label:"20대"},{value:"30",label:"30대"},{value:"40",label:"40대"},{value:"50",label:"50대"},{value:"60",label:"60대"}]}/><Inp label="기존 대출 월 상환액 합계" value={ep} onChange={sEp} suffix="만원" placeholder="없으면 0"/></div><div>
     <RPFull miss={(ai>0&&nlW>0)?null:["연 소득을 입력해주세요","신규 대출금액을 입력해주세요","대출 금리를 입력해주세요"]}
       title="DSR (총부채원리금상환비율)"
-      total={ai>0?Math.round(dsr*100):0}
+      total={ai>0?fP(dsr):"0%"}
       sub={ai>0?(fP(dsr)+" · "+st+" · 스트레스DSR "+(stressRate>0?"+"+fP(stressRate*100)+"p":"미적용")):"필수 항목을 입력해주세요"}
       deadline="은행 주담대 심사 통상 3~7영업일 · 2026년 스트레스 DSR 기준"
       alertMsg={ai>0?(dsr>40?"DSR "+fP(dsr)+" — 한도 초과: 대출 승인 어려울 수 있습니다":dsr>30?"DSR "+fP(dsr)+" — 30% 초과: 추가 대출 시 주의":"DSR "+fP(dsr)+" — 규제 기준 이내"):null}
@@ -2742,7 +2742,7 @@ function MobileCalcWrapper({children}){
 function CalcDTI({isMo=false,onNav=()=>{}}){const[inc,sInc]=useState("");const[la,sLa]=useState("");const[lr,sLr]=useState("");const[ly,sLy]=useState("30");const[ei,sEi]=useState("");const[existPrincipal,setExistPrincipal]=useState("");const ai=tW(inc),laW=tW(la),lrV=pN(lr)/100/12,lN=parseInt(ly)*12,eiW=tW(ei);const existPrinW=tW(existPrincipal);let na=0;if(laW>0&&lrV>0&&lN>0)na=laW*lrV*Math.pow(1+lrV,lN)/(Math.pow(1+lrV,lN)-1)*12;const tot=na+eiW*12,dti=ai>0?tot/ai*100:0;const newDTI=ai>0?(na+eiW*12+existPrinW*12)/ai*100:0;let st="양호",sc="#00875A";if(dti>60){st="한도 초과";sc="#DE350B";}else if(dti>50){st="주의";sc="#FF8B00";}return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}><div><Inp label="연 소득" value={inc} onChange={sInc} suffix="만원" placeholder="예: 5000" error={!inc||inc==="0"}/><Inp label="신규 대출금액" value={la} onChange={sLa} suffix="만원" placeholder="예: 30000" error={!la||la==="0"}/><Inp label="대출 금리" value={lr} onChange={sLr} suffix="%" placeholder="예: 3.5" error={!lr||lr==="0"}/>{!isMo&&<BaseRateHint/>}<Sel label="대출 기간" value={ly} onChange={sLy} options={[5,10,15,20,25,30,35,40].map(y=>({value:String(y),label:y+"년"}))}/><div style={{fontSize:12,color:"#6b778c",marginBottom:6,marginLeft:2,display:"flex",alignItems:"center",gap:4,flexWrap:"nowrap"}}>DTI vs DSR <TipModal title="DTI와 DSR의 차이"><p><b>DTI:</b> 신규 원리금 + 기존 이자만 포함</p><p><b>DSR:</b> 모든 대출 원금+이자 포함 (더 엄격)</p></TipModal></div><Inp label="기존 대출 월이자 합계" value={ei} onChange={sEi} suffix="만원" placeholder="없으면 0" note="DTI는 기존 대출의 이자만 포함 (원금 미포함)"/><Inp label="기존 대출 월 원금상환액 (신DTI용)" value={existPrincipal} onChange={setExistPrincipal} suffix="만원" placeholder="없으면 0" note="신DTI 계산 시 기존 대출 원금도 포함"/></div><div>
     <RPFull miss={(ai>0&&laW>0)?null:["연 소득을 입력해주세요","신규 대출금액을 입력해주세요","대출 금리를 입력해주세요"]}
       title="DTI (총부채상환비율)"
-      total={ai>0?Math.round(dti*100):0}
+      total={ai>0?fP(dti):"0%"}
       sub={ai>0?("DTI "+fP(dti)+" · "+st+" · 규제기준 투기과열40% 조정50% 비규제60%"):"필수 항목을 입력해주세요"}
       deadline="DTI는 신규 원리금+기존 이자만 반영. DSR은 모든 원리금 포함 (더 엄격)"
       alertMsg={ai>0?(dti>60?"DTI "+fP(dti)+" — 한도 초과: 대출 승인 어려울 수 있습니다":dti>50?"DTI "+fP(dti)+" — 조정지역 50% 기준 초과":dti>40?"DTI "+fP(dti)+" — 투기과열지구 40% 기준 초과":"DTI "+fP(dti)+" — 규제 기준 이내"):null}
@@ -2829,7 +2829,7 @@ function CalcRti({isMo=false,onNav=()=>{}}){
   </div><div>
     <RPFull miss={(rentW>0&&loanW>0)?null:MI.rti||["연간 임대소득을 입력해주세요","대출금액을 입력해주세요","금리를 입력해주세요"]}
       title="RTI (임대업이자상환비율)"
-      total={annualInterest>0?Math.round(rti*100):0}
+      total={annualInterest>0?rti.toFixed(2)+"배":"0배"}
       sub={annualInterest>0?(rti.toFixed(2)+"배 · "+(propType==="res"?"주거용 1.25배":"비주거용 1.5배")+" 기준 · "+(pass?"통과":"미달")):"필수 항목을 입력해주세요"}
       deadline="2018.3.26 여신심사 가이드라인 시행. 임대사업자 주담대 심사 필수 항목"
       alertMsg={annualInterest>0?(pass?"RTI "+rti.toFixed(2)+"배 — 대출 기준 충족":"RTI "+rti.toFixed(2)+"배 — 기준 미달. 기준 충족 최대대출: "+fW(gapLoan)):null}
