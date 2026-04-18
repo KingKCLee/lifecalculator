@@ -75,9 +75,10 @@ export default function AdminPage({ subPage }) {
           <div style={{ fontSize: 24, fontWeight: 800, color: "#0a1628", marginBottom: 4 }}>생활계산기.com</div>
           <div style={{ fontSize: 14, color: "#6b778c", marginBottom: 24 }}>관리자 전용</div>
           <div style={{ padding: "14px 18px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10, color: "#dc2626", fontSize: 13, marginBottom: 20, fontWeight: 600, lineHeight: 1.6 }}>
-            접근 권한이 없습니다.<br />홈페이지에서 관리자 이메일로 먼저 로그인해주세요.
+            관리자 전용 페이지입니다.<br />관리자 Google 계정으로 로그인해주세요.
           </div>
-          <a href="/" style={{ display: "block", padding: "14px 24px", background: "#0141f9", color: "#fff", borderRadius: 10, fontSize: 15, fontWeight: 700, textDecoration: "none" }}>홈으로 이동하여 로그인</a>
+          <a href={API + "/api/admin/google-auth"} style={{ display: "block", padding: "14px 24px", background: "#0141f9", color: "#fff", borderRadius: 10, fontSize: 15, fontWeight: 700, textDecoration: "none", marginBottom: 10 }}>Google 관리자 로그인</a>
+          <a href="/" style={{ display: "block", padding: "14px 24px", background: "#f3f4f6", color: "#374151", borderRadius: 10, fontSize: 14, fontWeight: 600, textDecoration: "none" }}>홈으로 이동</a>
         </div>
       </div>
     );
