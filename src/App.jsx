@@ -4768,16 +4768,34 @@ function LegalPage({type,onBack}){
 }
 
 /* 2026.04.15 SPA 라우트 통합: News/Community/Policy/Market/HtmlAdapter */
-function InfoPageHeader({tab,navigateHome}){
-  const META={news:{l:"실시간 뉴스",t:"부동산·세금 실시간 뉴스",s:"국토부·기재부·금융위 최신 뉴스를 한곳에서"},policy:{l:"정책 브리핑",t:"정책 브리핑",s:"부동산·세금·금융 최신 정책 요약"},market:{l:"시장동향",t:"부동산 시장동향",s:"아파트 매매·전세 가격지수 및 거래현황"},terms:{l:"용어사전",t:"부동산 용어사전",s:"부동산·세금·대출 핵심 용어 완벽 정리"},community:{l:"Q&A 게시판",t:"Q&A 게시판",s:"부동산·세금 관련 질문과 답변"},guide:{l:"절세 가이드",t:"절세 가이드",s:"취득·보유·매도 단계별 절세 전략"},reports:{l:"AI 분석 보고서",t:"AI 분석 보고서",s:"PRO 인사이트"}};
-  const m=META[tab]||{l:tab,t:tab,s:""};
-  return(<div style={{marginBottom:32}}>
-    <div style={{fontSize:13,color:"#6b7280",marginBottom:12,display:"flex",gap:6,alignItems:"center"}}>
-      <span onClick={navigateHome} style={{cursor:"pointer",color:"#6b7280"}}>홈</span><span style={{color:"#d1d5db"}}>›</span><span style={{color:"#0a1628",fontWeight:500}}>{m.l}</span>
+function InfoPageHeader({tab,navigateHome,isMo=false}){
+  const META={
+    news:{l:"실시간 뉴스",cat:"정보센터",t:"부동산·세금 실시간 뉴스",s:"국토부·기재부·금융위 최신 정책·세법 뉴스를 한 곳에서 확인하세요"},
+    policy:{l:"정책 브리핑",cat:"정보센터",t:"정책 브리핑",s:"부동산·세금·금융 최신 정책을 요약 정리합니다"},
+    market:{l:"시장동향",cat:"정보센터",t:"부동산 시장동향",s:"아파트 매매·전세 가격지수 및 거래 현황"},
+    terms:{l:"용어사전",cat:"정보센터",t:"부동산 용어사전",s:"부동산·세금·대출 핵심 용어를 한 곳에서 완벽 정리"},
+    community:{l:"커뮤니티 게시판",cat:"정보센터",t:"커뮤니티 게시판",s:"부동산·세금·대출·시장 이슈를 자유롭게 이야기하세요"},
+    guide:{l:"절세 가이드",cat:"정보센터",t:"부동산 세금·대출 완벽 가이드",s:"취득·보유·매도 전 단계 — 실수요자와 투자자가 알아야 할 핵심 지식"},
+    reports:{l:"AI 분석 보고서",cat:"정보센터",t:"2026년 세법·금융 심층 분석 보고서",s:"AI가 분석한 9편의 심층 보고서. 절세 시나리오·대출 설계·시장 전망"}
+  };
+  const m=META[tab]||{l:tab,cat:"정보센터",t:tab,s:""};
+  return(
+    <div style={{marginBottom:32}}>
+      <nav aria-label="breadcrumb" style={{fontSize:13,color:"#505f79",paddingTop:24,marginBottom:12,display:"flex",alignItems:"center",gap:8}}>
+        <span onClick={navigateHome} style={{cursor:"pointer",color:"#505f79"}} onMouseEnter={e=>e.currentTarget.style.color="#0747A6"} onMouseLeave={e=>e.currentTarget.style.color="#505f79"}>홈</span>
+        <span style={{color:"#d1d5db"}}>›</span>
+        <span style={{color:"#505f79"}}>{m.cat}</span>
+        <span style={{color:"#d1d5db"}}>›</span>
+        <span style={{color:"#0a1628",fontWeight:600}}>{m.l}</span>
+      </nav>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end",gap:20,flexWrap:"wrap"}}>
+        <div style={{flex:"1 1 auto",minWidth:0}}>
+          <h1 style={{fontSize:isMo?22:44,fontWeight:700,color:"#0a1628",margin:"0 0 8px",letterSpacing:isMo?"-1px":"-1.2px",lineHeight:1.15}}>{m.t}</h1>
+          <div style={{fontSize:15,color:"#505f79",margin:0,lineHeight:1.6}}>{m.s}</div>
+        </div>
+      </div>
     </div>
-    <h1 style={{fontSize:28,fontWeight:800,color:"#0a1628",margin:"0 0 8px",lineHeight:1.3}}>{m.t}</h1>
-    <p style={{fontSize:15,color:"#6b7280",margin:0,lineHeight:1.6}}>{m.s}</p>
-  </div>);
+  );
 }
 
 function SpaBackBtn({navigateHome}){return(<button onClick={navigateHome} style={{display:"flex",alignItems:"center",gap:8,background:"none",border:"none",color:"#0747A6",fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit",marginBottom:16,padding:0}}>← 홈</button>);}
@@ -4793,7 +4811,7 @@ function NewsPage({isMo,navigateHome}){
   },[cat,tick]);
   const cats=[{k:"all",l:"전체"},{k:"policy",l:"정책"},{k:"tax",l:"세금"},{k:"loan",l:"대출"},{k:"market",l:"시장"}];
   return(<div style={{maxWidth:1000,margin:"0 auto",padding:isMo?"24px 16px":"40px 24px",minHeight:"60vh"}}>
-      <InfoPageHeader tab="news" navigateHome={navigateHome}/>
+      <InfoPageHeader tab="news" navigateHome={navigateHome} isMo={isMo}/>
     
     <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:8,flexWrap:"wrap",gap:8}}>
       
@@ -4822,7 +4840,7 @@ function CommunityPage({isMo,navigateHome,effectiveUser,setAuthMode,setShowAuth}
   const handlePin=async(id,e)=>{e.preventDefault();e.stopPropagation();try{const r=await fetch(LC_REALESTATE_WORKER+"/api/posts/"+id+"/pin",{method:"PATCH",headers:{Authorization:"Bearer "+lcToken}});const j=await r.json().catch(()=>({}));if(r.ok){alert("고정 처리 완료");}else{alert(j.error||"고정 실패");}}catch{alert("네트워크 오류");}};
   return(<div style={{maxWidth:1000,margin:"0 auto",padding:isMo?"24px 16px":"40px 24px",minHeight:"60vh"}}>
     <InfoPageHeader tab="community" navigateHome={navigateHome}/>
-    <div style={{fontSize:13,color:"#6b7280",marginBottom:8}}><span onClick={navigateHome} style={{cursor:"pointer",color:"#6b7280"}} onMouseEnter={e=>e.currentTarget.style.color="#0747A6"} onMouseLeave={e=>e.currentTarget.style.color="#6b7280"}>홈</span><span style={{margin:"0 6px",color:"#d1d5db"}}>›</span><span style={{color:"#0a1628",fontWeight:500}}>Q&A 게시판</span></div>
+    <InfoPageHeader tab="community" navigateHome={navigateHome} isMo={isMo}/>
     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20,flexWrap:"wrap",gap:8}}>
       <div><h1 style={{fontSize:isMo?22:28,fontWeight:800,color:"#0a1628",margin:"0 0 6px"}}>Q&A 게시판</h1><p style={{fontSize:15,color:"#6b7280",margin:0}}>세금·대출·부동산 궁금한 점을 질문하세요</p></div>
       <a href={effectiveUser?"/community/write.html":"#"} onClick={e=>{if(!effectiveUser){e.preventDefault();setAuthMode?.("login");setShowAuth?.(true);}}} style={{background:"#0747A6",color:"#fff",borderRadius:8,padding:"8px 16px",fontSize:13,fontWeight:700,textDecoration:"none",fontFamily:"inherit",cursor:"pointer"}}>글쓰기</a>
@@ -5543,7 +5561,7 @@ function VerificationPage({isMo,navigateHome}){return(<div style={{maxWidth:820,
 </div>);}
 
 function GuidePage({isMo,navigateHome}){return(<div style={{maxWidth:860,margin:"0 auto",padding:isMo?"24px 16px":"40px 24px",minHeight:"60vh"}}>
-  <div style={{fontSize:13,color:"#6b7280",marginBottom:8}}><span onClick={navigateHome} style={{cursor:"pointer",color:"#6b7280"}} onMouseEnter={e=>e.currentTarget.style.color="#0747A6"} onMouseLeave={e=>e.currentTarget.style.color="#6b7280"}>홈</span><span style={{margin:"0 6px",color:"#d1d5db"}}>›</span><span style={{color:"#0a1628",fontWeight:500}}>절세 가이드</span></div>
+  <InfoPageHeader tab="guide" navigateHome={navigateHome} isMo={isMo}/>
   <h1 style={{fontSize:isMo?24:28,fontWeight:800,color:"#0a1628",margin:"0 0 6px"}}>절세 가이드</h1>
   <p style={{fontSize:15,color:"#6b7280",margin:"0 0 24px"}}>취득·보유·매도 단계별 절세 전략</p>
   <_SH tag="2026 최신" title="부동산 세금·대출 완벽 가이드" desc="취득·보유·양도 전 단계 — 실수요자와 투자자가 알아야 할 핵심 지식을 주제별로 정리했습니다."/>

@@ -171,20 +171,20 @@ export default function ReportIndex({navigateHome, isMo}){
   return (
     <div style={{background:PALETTE.bg,minHeight:"100vh"}}>
       <div style={{maxWidth:1000,margin:"0 auto",padding:isMo?"24px 16px 64px":"48px 24px 72px"}}>
-        <nav style={{fontSize:13,color:PALETTE.textMt,marginBottom:16,display:"flex",alignItems:"center",gap:8}}>
-          <span onClick={()=>navigateHome&&navigateHome()} style={{cursor:"pointer",color:PALETTE.textMt}}>홈</span>
+        <nav aria-label="breadcrumb" style={{fontSize:13,color:"#505f79",paddingTop:24,marginBottom:12,display:"flex",alignItems:"center",gap:8}}>
+          <span onClick={()=>navigateHome&&navigateHome()} style={{cursor:"pointer",color:"#505f79"}} onMouseEnter={e=>e.currentTarget.style.color="#0747A6"} onMouseLeave={e=>e.currentTarget.style.color="#505f79"}>홈</span>
           <span style={{color:"#d1d5db"}}>›</span>
-          <span style={{color:PALETTE.navy,fontWeight:600}}>AI 분석 보고서</span>
+          <span style={{color:"#505f79"}}>정보센터</span>
+          <span style={{color:"#d1d5db"}}>›</span>
+          <span style={{color:"#0a1628",fontWeight:600}}>AI 분석 보고서</span>
         </nav>
-
-        <div style={{background:"linear-gradient(135deg,#0f1f3d 0%,#1e3a8a 50%,#3b82f6 100%)",borderRadius:16,padding:isMo?"36px 24px":"52px 44px",color:"#fff",marginBottom:28}}>
-          <div style={{display:"inline-block",padding:"6px 14px",background:"rgba(255,255,255,.18)",borderRadius:20,fontSize:11,fontWeight:700,letterSpacing:".5px",marginBottom:14}}>✨ AI PRO INSIGHTS</div>
-          <h1 style={{fontSize:isMo?26:36,fontWeight:800,margin:"0 0 14px",letterSpacing:"-0.8px",lineHeight:1.25}}>2026년 세법·금융 심층 분석 보고서</h1>
-          <p style={{fontSize:isMo?14:16,margin:0,opacity:.92,lineHeight:1.65,maxWidth:720}}>AI 가 2026년 최신 세법·금융 규제를 분석하여 작성한 9편의 심층 보고서. 절세 시나리오, 대출 설계, 상속·증여 비교, 시장 전망까지 실무자가 바로 활용할 수 있는 내용으로 구성했습니다.</p>
-          <div style={{marginTop:20,display:"flex",gap:10,flexWrap:"wrap",fontSize:12,opacity:.88}}>
-            <span>📊 총 9편</span>
-            <span>🔍 2026 세법 기준</span>
-            <span>💡 실전 시나리오 중심</span>
+        <div style={{marginBottom:32}}>
+          <h1 style={{fontSize:isMo?22:44,fontWeight:700,color:"#0a1628",margin:"0 0 8px",letterSpacing:isMo?"-1px":"-1.2px",lineHeight:1.15}}>2026년 세법·금융 심층 분석 보고서</h1>
+          <div style={{fontSize:15,color:"#505f79",margin:0,lineHeight:1.6}}>AI가 분석한 9편의 심층 보고서. 절세 시나리오, 대출 설계, 상속·증여 비교, 시장 전망까지 실무자가 바로 활용할 수 있는 내용으로 구성했습니다.</div>
+          <div style={{marginTop:12,display:"flex",gap:8,flexWrap:"wrap"}}>
+            <span style={{display:"inline-flex",alignItems:"center",gap:4,padding:"4px 12px",background:"#f4f5f7",borderRadius:20,fontSize:12,color:"#505f79",fontWeight:600}}>📊 총 9편</span>
+            <span style={{display:"inline-flex",alignItems:"center",gap:4,padding:"4px 12px",background:"#f4f5f7",borderRadius:20,fontSize:12,color:"#505f79",fontWeight:600}}>🔍 2026 세법 기준</span>
+            <span style={{display:"inline-flex",alignItems:"center",gap:4,padding:"4px 12px",background:"#f4f5f7",borderRadius:20,fontSize:12,color:"#505f79",fontWeight:600}}>💡 실전 시나리오 중심</span>
           </div>
         </div>
 
