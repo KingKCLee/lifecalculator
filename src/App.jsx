@@ -42,6 +42,7 @@ import SEO_CONTENT from './data/seoContent';
 import GuideCard from './components/GuideCard';
 import { GUIDE_DATA } from './data/guideData';
 import { RATE_GROUPS } from './data/rateTableGroups';
+import { getCurrentSeason } from './utils/seasonCalc';
 import Breadcrumb from './components/Breadcrumb';
 // 2026.04.16 계산기 트래킹 훅
 import { useTrack, usePageTrack, trackSignup } from './hooks/useTrack';
@@ -6829,32 +6830,31 @@ body.lc-embed main{padding-top:0!important}
         </div>
       </div>}
 
-      {/* 빠른접근 TOP 8 (PC) */}
-      {!isMo&&<div style={{background:"#fff",padding:"0 32px 72px"}}>
+      {/* 빠른접근 시즌별 자동추천 (PC) */}
+      {!isMo&&(()=>{const{season:_ss,calcs:_sc,banner:_sb}=getCurrentSeason();const _catColors={tax:{bg:"#eff6ff",fg:"#2563eb"},loan:{bg:"#fff7ed",fg:"#c2410c"},cost:{bg:"#fefce8",fg:"#a16207"},life:{bg:"#f1f5f9",fg:"#334155"},realestate:{bg:"#faf5ff",fg:"#7e22ce"},pro:{bg:"#f0fdf4",fg:"#15803d"}};return(
+      <div style={{background:"#fff",padding:"0 32px 72px"}}>
         <div style={{maxWidth:1200,margin:"0 auto"}}>
-          <div style={{marginBottom:28}}>
-            <div style={{fontSize:12,fontWeight:800,color:"#3b82f6",letterSpacing:1.5,textTransform:"uppercase",marginBottom:6}}>Quick Access</div>
-            <h2 style={{fontSize:32,fontWeight:800,color:"#0a1628",letterSpacing:-.8,margin:0}}>자주 찾는 계산기</h2>
+          {_sb&&<div style={{background:_sb.color,borderRadius:12,padding:"14px 24px",marginBottom:20,display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:8}}>
+            <div><div style={{fontSize:15,fontWeight:700,color:"#fff"}}>{_sb.text}</div><div style={{fontSize:12,color:"rgba(255,255,255,0.85)",marginTop:2}}>{_sb.sub}</div></div>
+            {_ss&&<span style={{fontSize:11,color:"rgba(255,255,255,0.7)",whiteSpace:"nowrap"}}>{_ss.desc}</span>}
+          </div>}
+          <div style={{marginBottom:28,display:"flex",alignItems:"center",gap:12}}>
+            <div><div style={{fontSize:12,fontWeight:800,color:"#3b82f6",letterSpacing:1.5,textTransform:"uppercase",marginBottom:6}}>Quick Access</div>
+            <h2 style={{fontSize:32,fontWeight:800,color:"#0a1628",letterSpacing:-.8,margin:0}}>자주 찾는 계산기</h2></div>
+            {_ss&&<span style={{fontSize:11,background:_sb?.color||"#0052CC",color:"#fff",padding:"3px 10px",borderRadius:99,fontWeight:600,marginTop:20}}>{_ss.label}</span>}
           </div>
           <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:14}}>
-            {[
-              {id:"acquisition",cat:"tax",label:"취득세",desc:"매매·증여·상속 취득세 즉시 계산",bg:"#eff6ff",fg:"#2563eb"},
-              {id:"transfer",cat:"tax",label:"양도소득세",desc:"장특공·비과세 자동 판정",bg:"#f0fdf4",fg:"#15803d"},
-              {id:"dsr",cat:"loan",label:"DSR",desc:"스트레스DSR 반영 대출한도",bg:"#fff7ed",fg:"#c2410c"},
-              {id:"commission",cat:"cost",label:"중개수수료",desc:"매매·전세·월세 복비 계산",bg:"#fefce8",fg:"#a16207"},
-              {id:"netsalary",cat:"life",label:"연봉 실수령액",desc:"4대보험·소득세 공제 후 월급",bg:"#eff6ff",fg:"#2563eb"},
-              {id:"compre",cat:"tax",label:"종합부동산세",desc:"1주택 12억 공제·고령자 감면",bg:"#f0fdf4",fg:"#15803d"},
-              {id:"yield",cat:"realestate",label:"임대수익률",desc:"월세·전세 투자수익률 분석",bg:"#faf5ff",fg:"#7e22ce"},
-              {id:"retire",cat:"life",label:"퇴직금",desc:"근속연수별 퇴직금 정산",bg:"#f1f5f9",fg:"#334155"},
-            ].map(q=>(<div key={q.id} onClick={()=>navigateCalc(q.cat,q.id)} style={{background:q.bg,border:"1px solid transparent",borderRadius:12,padding:"20px 18px",cursor:"pointer",transition:"all .2s"}}
-              onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 8px 20px rgba(0,0,0,.06)";}}
-              onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";}}>
-              <div style={{fontSize:16,fontWeight:800,color:q.fg,marginBottom:4}}>{q.label}</div>
-              <div style={{fontSize:12,color:"#505f79",lineHeight:1.5}}>{q.desc}</div>
-            </div>))}
+            {_sc.map(cid=>{const it=CL.find(c=>c.id===cid);if(!it)return null;const cc=_catColors[it.c]||_catColors.life;const pm=PAGE_META[cid];return(
+              <div key={cid} onClick={()=>navigateCalc(it.c,cid)} style={{background:cc.bg,border:"1px solid transparent",borderRadius:12,padding:"20px 18px",cursor:"pointer",transition:"all .2s"}}
+                onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 8px 20px rgba(0,0,0,.06)";}}
+                onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";}}>
+                <div style={{fontSize:16,fontWeight:800,color:cc.fg,marginBottom:4}}>{it.l}</div>
+                <div style={{fontSize:12,color:"#505f79",lineHeight:1.5}}>{pm?.desc?.split('.')[0]||""}</div>
+              </div>);
+            })}
           </div>
         </div>
-      </div>}
+      </div>);})()}
 
       {/* 회원 혜택 배너 (비회원 전용, PC) */}
       {!isMo&&!effectiveUser&&<div style={{padding:"0 32px 0"}}><div style={{maxWidth:1200,margin:"0 auto",background:"linear-gradient(135deg,#0747A6 0%,#0052CC 50%,#0065FF 100%)",borderRadius:16,padding:"36px 40px",color:"#fff",position:"relative",overflow:"hidden"}}>
