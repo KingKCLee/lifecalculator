@@ -1168,6 +1168,12 @@
   "updateLog": [
     {
       "date": "2026.04.18",
+      "category": "전체",
+      "title": "fix: 관리자 로그인 흐름 개선",
+      "desc": "fix: 관리자 로그인 흐름 개선"
+    },
+    {
+      "date": "2026.04.18",
       "category": "세금",
       "title": "fix: 2026 법령 정밀 검증 + SEO 키워드 + 양도세 중과 유예 알림",
       "desc": "fix: 2026 법령 정밀 검증 + SEO 키워드 + 양도세 중과 유예 알림"
@@ -1461,12 +1467,6 @@
       "category": "세금",
       "title": "fix: 취득세 nextstep 2열 JSX 구조 직접 이동",
       "desc": "fix: 취득세 nextstep 2열 JSX 구조 직접 이동"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "fix: 중복된 함께계산하면좋은 박스 제거",
-      "desc": "fix: 중복된 함께계산하면좋은 박스 제거"
     }
   ],
   "rates": {
