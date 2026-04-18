@@ -6748,6 +6748,33 @@ body.lc-embed main{padding-top:0!important}
         </div>
       </div>}
 
+      {/* 빠른접근 TOP 8 (PC) */}
+      {!isMo&&<div style={{background:"#fff",padding:"0 32px 72px"}}>
+        <div style={{maxWidth:1200,margin:"0 auto"}}>
+          <div style={{marginBottom:28}}>
+            <div style={{fontSize:12,fontWeight:800,color:"#3b82f6",letterSpacing:1.5,textTransform:"uppercase",marginBottom:6}}>Quick Access</div>
+            <h2 style={{fontSize:32,fontWeight:800,color:"#0a1628",letterSpacing:-.8,margin:0}}>자주 찾는 계산기</h2>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:14}}>
+            {[
+              {id:"acquisition",cat:"tax",label:"취득세",desc:"매매·증여·상속 취득세 즉시 계산",bg:"#eff6ff",fg:"#2563eb"},
+              {id:"transfer",cat:"tax",label:"양도소득세",desc:"장특공·비과세 자동 판정",bg:"#f0fdf4",fg:"#15803d"},
+              {id:"dsr",cat:"loan",label:"DSR",desc:"스트레스DSR 반영 대출한도",bg:"#fff7ed",fg:"#c2410c"},
+              {id:"commission",cat:"cost",label:"중개수수료",desc:"매매·전세·월세 복비 계산",bg:"#fefce8",fg:"#a16207"},
+              {id:"netsalary",cat:"life",label:"연봉 실수령액",desc:"4대보험·소득세 공제 후 월급",bg:"#eff6ff",fg:"#2563eb"},
+              {id:"compre",cat:"tax",label:"종합부동산세",desc:"1주택 12억 공제·고령자 감면",bg:"#f0fdf4",fg:"#15803d"},
+              {id:"yield",cat:"realestate",label:"임대수익률",desc:"월세·전세 투자수익률 분석",bg:"#faf5ff",fg:"#7e22ce"},
+              {id:"retire",cat:"life",label:"퇴직금",desc:"근속연수별 퇴직금 정산",bg:"#f1f5f9",fg:"#334155"},
+            ].map(q=>(<div key={q.id} onClick={()=>navigateCalc(q.cat,q.id)} style={{background:q.bg,border:"1px solid transparent",borderRadius:12,padding:"20px 18px",cursor:"pointer",transition:"all .2s"}}
+              onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 8px 20px rgba(0,0,0,.06)";}}
+              onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";}}>
+              <div style={{fontSize:16,fontWeight:800,color:q.fg,marginBottom:4}}>{q.label}</div>
+              <div style={{fontSize:12,color:"#505f79",lineHeight:1.5}}>{q.desc}</div>
+            </div>))}
+          </div>
+        </div>
+      </div>}
+
       {/* 회원 혜택 배너 (비회원 전용, PC) */}
       {!isMo&&!effectiveUser&&<div style={{padding:"0 32px 0"}}><div style={{maxWidth:1200,margin:"0 auto",background:"linear-gradient(135deg,#0747A6 0%,#0052CC 50%,#0065FF 100%)",borderRadius:16,padding:"36px 40px",color:"#fff",position:"relative",overflow:"hidden"}}>
         <div style={{position:"absolute",top:-40,right:-40,width:200,height:200,borderRadius:"50%",background:"rgba(255,255,255,0.06)"}}/>
@@ -6772,36 +6799,38 @@ body.lc-embed main{padding-top:0!important}
         </div>
       </div></div>}
 
-      {/* 2026.04.15 sample-home AI 인사이트 + 뉴스 2컬럼 (PC) */}
-      {!isMo&&<div style={{background:"#f8f9fc",padding:"72px 32px"}}>
-        <div style={{maxWidth:1200,margin:"0 auto",display:"grid",gridTemplateColumns:"1.3fr 1fr",gap:24}}>
-          <div style={{background:"linear-gradient(135deg,#0a1628 0%,#1e3a5f 100%)",borderRadius:16,padding:"44px 40px",color:"#fff",position:"relative",overflow:"hidden"}}>
-            <div style={{position:"absolute",top:-80,right:-80,width:260,height:260,borderRadius:"50%",background:"radial-gradient(circle,rgba(59,130,246,0.25) 0%,transparent 70%)",pointerEvents:"none"}}/>
-            <span style={{display:"inline-flex",alignItems:"center",gap:6,padding:"6px 14px",background:"rgba(59,130,246,0.2)",border:"1px solid rgba(59,130,246,0.5)",borderRadius:20,fontSize:11,fontWeight:800,color:"#93c5fd",letterSpacing:1,textTransform:"uppercase",marginBottom:20,position:"relative"}}>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2M20 14h2M15 13v2M9 13v2"/></svg>
-              AI PRO 인사이트
-            </span>
-            <h3 style={{fontSize:28,fontWeight:800,lineHeight:1.22,margin:"0 0 16px",letterSpacing:-.6,position:"relative"}}>AI 분석: 2026년 취득세<br/>완벽 가이드</h3>
-            <p style={{fontSize:14,color:"#93c5fd",lineHeight:1.75,margin:"0 0 28px",maxWidth:460,position:"relative"}}>Claude AI가 2026년 개정 세법과 실제 거래 시나리오를 분석해 주택 가격·면적·주택수 조합별 최적 절세 전략을 제시합니다.</p>
-            <button onClick={()=>{setPage("reports:index");history.pushState(null,"","/reports");window.scrollTo(0,0);}} style={{background:"rgba(255,255,255,0.1)",border:"1px solid rgba(255,255,255,0.2)",color:"#fff",padding:"10px 20px",borderRadius:8,fontSize:14,fontWeight:700,cursor:"pointer",position:"relative",display:"inline-flex",alignItems:"center",gap:8,fontFamily:"inherit"}}>전체 보고서 보기 →</button>
+      {/* AI 인사이트 리포트 슬라이드 (PC+모바일) */}
+      <div style={{background:"#f8f9fc",padding:isMo?"24px 16px":"72px 32px"}}>
+        <div style={{maxWidth:1200,margin:"0 auto"}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:isMo?16:32}}>
+            <div>
+              <div style={{fontSize:12,fontWeight:800,color:"#3b82f6",letterSpacing:1.5,textTransform:"uppercase",marginBottom:6}}>AI Insights</div>
+              <h2 style={{fontSize:isMo?20:32,fontWeight:800,color:"#0a1628",letterSpacing:-.8,margin:0}}>AI 분석 보고서</h2>
+            </div>
+            <a onClick={()=>{setPage("reports:index");history.pushState(null,"","/reports");window.scrollTo(0,0);}} style={{fontSize:14,fontWeight:700,color:"#0a1628",cursor:"pointer"}}>전체 보기 →</a>
           </div>
-          <div style={{background:"#fff",border:"1px solid #e8eaf0",borderRadius:16,padding:"28px 24px"}}>
-            <h3 style={{fontSize:17,fontWeight:800,color:"#0a1628",margin:"0 0 18px",display:"flex",alignItems:"center",gap:8}}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/></svg>
-              최신 부동산·세금 뉴스
-            </h3>
+          <div style={{display:"flex",gap:16,overflowX:"auto",paddingBottom:12,WebkitOverflowScrolling:"touch",scrollSnapType:"x mandatory"}}>
             {[
-              {cat:"HOUSING",title:"수도권 주담대 한도 15억 이하 6억 유지",meta:"국토부 · 4시간 전"},
-              {cat:"POLICY",title:"2026.5.9 양도세 다주택 중과 유예 종료 임박",meta:"국세청 · 1일 전"},
-              {cat:"ECONOMICS",title:"한국은행 기준금리 3.00% 동결, 금통위 만장일치",meta:"한국은행 · 2일 전"},
-            ].map((n,i,arr)=>(<div key={i} style={{padding:"14px 0",borderBottom:i<arr.length-1?"1px solid #dfe1e6":"none"}}>
-              <span style={{display:"inline-block",fontSize:10,fontWeight:800,color:"#3b82f6",background:"#eff6ff",padding:"3px 10px",borderRadius:10,marginBottom:6}}>{n.cat}</span>
-              <div style={{fontSize:14,color:"#172B4D",fontWeight:600,lineHeight:1.55}}>{n.title}</div>
-              <div style={{fontSize:11,color:"#505f79",marginTop:4}}>{n.meta}</div>
+              {slug:"01",icon:"🏠",title:"2026 취득세 완벽 가이드",sub:"주택수·가격별 세율 자동 판정",color:"#eff6ff",fg:"#2563eb"},
+              {slug:"02",icon:"📊",title:"양도소득세 절세 전략",sub:"장특공·비과세·중과유예 총정리",color:"#f0fdf4",fg:"#15803d"},
+              {slug:"03",icon:"💰",title:"DSR·대출한도 완벽 분석",sub:"스트레스DSR 3단계 반영",color:"#fff7ed",fg:"#c2410c"},
+              {slug:"04",icon:"🧾",title:"연말정산 환급 극대화",sub:"인적공제·신용카드·의료비 전략",color:"#fefce8",fg:"#a16207"},
+              {slug:"05",icon:"🎁",title:"증여·상속 절세 전략",sub:"10년 합산·분할증여·배우자공제",color:"#fdf2f8",fg:"#be185d"},
+              {slug:"06",icon:"🏢",title:"종합부동산세 절감 가이드",sub:"합산배제·고령자·장기보유 공제",color:"#f0fdfa",fg:"#0f766e"},
+              {slug:"07",icon:"🏘️",title:"임대소득 세금 최적화",sub:"분리과세 vs 종합과세 비교",color:"#faf5ff",fg:"#7e22ce"},
+              {slug:"08",icon:"⚖️",title:"부동산 비용 총정리",sub:"중개·등기·인지세·채권 한번에",color:"#f1f5f9",fg:"#334155"},
+              {slug:"09",icon:"📈",title:"투자수익 분석 리포트",sub:"임대수익률·GAP투자·경매 수익",color:"#fff1f2",fg:"#be123c"},
+            ].map(r=>(<div key={r.slug} onClick={()=>{setPage("reports:"+r.slug);history.pushState(null,"","/reports/"+r.slug);window.scrollTo(0,0);}} style={{flex:"0 0 auto",width:isMo?220:260,background:"#fff",border:"1px solid #dfe1e6",borderRadius:14,padding:isMo?"18px 16px":"22px 22px",cursor:"pointer",scrollSnapAlign:"start",transition:"all .2s"}}
+              onMouseEnter={e=>{e.currentTarget.style.borderColor="#3b82f6";e.currentTarget.style.transform="translateY(-3px)";e.currentTarget.style.boxShadow="0 12px 28px rgba(10,22,40,0.08)";}}
+              onMouseLeave={e=>{e.currentTarget.style.borderColor="#dfe1e6";e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";}}>
+              <div style={{width:40,height:40,borderRadius:10,background:r.color,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,marginBottom:12}}>{r.icon}</div>
+              <div style={{fontSize:14,fontWeight:700,color:"#172B4D",marginBottom:4,lineHeight:1.4}}>{r.title}</div>
+              <div style={{fontSize:12,color:"#505f79",lineHeight:1.5}}>{r.sub}</div>
+              <div style={{marginTop:12,fontSize:12,fontWeight:700,color:r.fg}}>읽어보기 →</div>
             </div>))}
           </div>
         </div>
-      </div>}
+      </div>
 
       {/* 2026.04.16 sample-home 1:1 매칭 — PC에서 최근 히스토리/AdSlot 숨김 */}
       {isMo&&isLoggedIn&&calcHistory.length>0&&<div className="recent-calc" style={{maxWidth:1200,margin:"0 auto",padding:"12px 16px"}}>
