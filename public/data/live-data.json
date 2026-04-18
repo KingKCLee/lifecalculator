@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.18",
       "category": "전체",
+      "title": "fix: 세율표 GuideCard section3 내부 통합 - 별도 컴포넌트 제거",
+      "desc": "fix: 세율표 GuideCard section3 내부 통합 - 별도 컴포넌트 제거"
+    },
+    {
+      "date": "2026.04.18",
+      "category": "전체",
       "title": "feat: 아코디언 세율표 57개 계산기 완성",
       "desc": "feat: 아코디언 세율표 57개 계산기 완성"
     },
@@ -1461,12 +1467,6 @@
       "category": "전체",
       "title": "fix: AcqGuide 렌더링 디버그 로그 추가",
       "desc": "fix: AcqGuide 렌더링 디버그 로그 추가"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "feat: 회원 D1 전체 컬럼 + 어드민 회원 관리",
-      "desc": "feat: 회원 D1 전체 컬럼 + 어드민 회원 관리"
     }
   ],
   "rates": {
