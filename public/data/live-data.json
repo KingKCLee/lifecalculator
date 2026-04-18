@@ -1168,6 +1168,12 @@
   "updateLog": [
     {
       "date": "2026.04.18",
+      "category": "세금",
+      "title": "fix: 취득세 RPFull 인지세 항목 누락 수정",
+      "desc": "fix: 취득세 RPFull 인지세 항목 누락 수정"
+    },
+    {
+      "date": "2026.04.18",
       "category": "전체",
       "title": "fix: 입력란 너비 일관성 통일 + 어드민 adsense 401 수정",
       "desc": "fix: 입력란 너비 일관성 통일 + 어드민 adsense 401 수정"
@@ -1461,12 +1467,6 @@
       "category": "전체",
       "title": "fix: 완벽가이드 좌우 정렬 2열그리드와 일치",
       "desc": "fix: 완벽가이드 좌우 정렬 2열그리드와 일치"
-    },
-    {
-      "date": "2026.04.16",
-      "category": "전체",
-      "title": "fix: 완벽가이드 글자크기 대폭 키우기",
-      "desc": "fix: 완벽가이드 글자크기 대폭 키우기"
     }
   ],
   "rates": {
