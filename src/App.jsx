@@ -2013,7 +2013,7 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
       deadlineLink="https://wetax.go.kr" deadlineLinkLabel="위택스 신고 →"
       alertMsg={!stdPrice?"시가표준액 미입력 시 정확도가 낮아질 수 있습니다":firstDed>0?"생애최초 감면 "+fW(firstDed)+" 적용됨":conArea&&n>=2&&!heavyTaxExclude&&!lowVal&&!tempTwo?"조정대상지역 "+n+"주택 중과세율 "+fP(r*100)+" 적용":null}
       alertType={!stdPrice?"warning":firstDed>0?"success":"danger"}
-      items={[{l:"취득세액 ("+fP(r*100)+")",v:fW(ac)},{l:"지방교육세 ("+fP((isHeavy?0.4:r*100*0.1))+")",v:fW(ed)},{l:"농어촌특별세"+(fm>0?" (0.2%)":""),v:fm>0?fW(fm):"없음"},{l:"합계 납부세액",v:fW(total)}]} onAdjustPrice={(pct)=>sP(prev=>{const n=Math.round(Number(String(prev).replace(/,/g,""))*(1+pct/100));return String(n>0?n:prev);})}/>
+      items={[{l:"취득세액 ("+fP(r*100)+")",v:fW(ac)},{l:"지방교육세 ("+fP((isHeavy?0.4:r*100*0.1))+")",v:fW(ed)},{l:"농어촌특별세"+(fm>0?" (0.2%)":""),v:fm>0?fW(fm):"없음"},{l:"인지세",v:st>0?fW(st):"없음",note:"거래금액 구간별"},{l:"합계 납부세액",v:fW(total)}]} onAdjustPrice={(pct)=>sP(prev=>{const n=Math.round(Number(String(prev).replace(/,/g,""))*(1+pct/100));return String(n>0?n:prev);})}/>
     
     <NextStep calcId="acquisition" onNav={onNav} isMo={isMo}/></div>
   </div>);
