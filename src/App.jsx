@@ -3905,6 +3905,45 @@ contact:{title:"문의하기",body:<div>
 <div style={LS.ib}><p style={{margin:"4px 0"}}>• 이메일: noble.kclee@gmail.com</p><p style={{margin:"4px 0"}}>• 운영자: 이광철</p><p style={{margin:"4px 0"}}>• 응답 시간: 영업일 기준 1~2일 이내</p></div>
 <h3 style={LS.h}>문의 유형</h3><p>• 계산 결과 오류 신고 — 계산기명, 입력값, 예상 결과를 함께 알려주시면 빠르게 수정합니다.</p><p>• 기능 건의 — 추가되었으면 하는 계산기나 기능을 제안해 주세요.</p><p>• 제휴/협력 문의 — 사업 제휴, API 연동, 광고 등 문의를 환영합니다.</p><p>• 개인정보 관련 — 열람, 정정, 삭제 요청은 이메일로 접수해 주시면 지체 없이 처리합니다.</p>
 <h3 style={LS.h}>사업자 정보</h3><div style={LS.ib}><p style={{margin:"4px 0"}}>• 상호: 더블유부동산</p><p style={{margin:"4px 0"}}>• 대표자: 이광철</p><p style={{margin:"4px 0"}}>• 사업자등록번호: 589-24-01721</p><p style={{margin:"4px 0"}}>• 통신판매업 신고번호: 제2025-인천부평-0992호</p><p style={{margin:"4px 0"}}>• 이메일: noble.kclee@gmail.com</p></div>
+</div>},
+cookie:{title:"쿠키 정책",body:<div>
+<p>생활계산기.com(이하 "서비스")은 사용자 경험 향상과 서비스 개선을 위해 쿠키를 사용합니다. 본 쿠키 정책은 서비스에서 사용하는 쿠키의 종류와 목적, 관리 방법을 안내합니다.</p>
+<h3 style={LS.h}>제1조 (쿠키란?)</h3>
+<p>쿠키는 웹사이트 방문 시 브라우저에 저장되는 작은 텍스트 파일입니다. 로그인 상태 유지, 사용자 설정 기억, 방문 통계 수집 등에 사용됩니다.</p>
+<h3 style={LS.h}>제2조 (사용하는 쿠키 종류)</h3>
+<p><strong>① 필수 쿠키</strong></p>
+<p>로그인 세션 유지(lc_token), 사용자 설정 저장(lc_email, lc_name) 등 서비스 정상 작동에 필수적인 쿠키입니다. 이 쿠키를 비활성화하면 로그인, 계산 결과 저장 등 핵심 기능이 제한됩니다.</p>
+<p><strong>② 분석 쿠키 (Google Analytics)</strong></p>
+<p>• 목적: 방문자 수, 페이지 조회수, 이용 패턴 등 익명화된 통계 데이터 수집</p>
+<p>• 쿠키명: _ga, _ga_*, _gid</p>
+<p>• 보유 기간: 최대 2년</p>
+<p>• 수집 데이터: 방문 페이지, 체류 시간, 유입 경로 (모두 익명화)</p>
+<p>• 측정 ID: G-58SYV64E1C</p>
+<p><strong>③ 광고 쿠키 (Google AdSense)</strong></p>
+<p>• 목적: 사용자 관심사에 맞는 맞춤 광고 제공</p>
+<p>• 게시자 ID: ca-pub-8857637137858335</p>
+<p>• 수집 정보: 쿠키 기반 관심사 정보 (익명화)</p>
+<p>• Google의 광고 개인정보 설정: <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer">adssettings.google.com</a></p>
+<p>• Google 광고 정책: <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener noreferrer">policies.google.com/technologies/ads</a></p>
+<h3 style={LS.h}>제3조 (쿠키 관리 방법)</h3>
+<p>브라우저 설정에서 쿠키를 비활성화하거나 삭제할 수 있습니다.</p>
+<p>• Chrome: 설정 &gt; 개인정보 및 보안 &gt; 쿠키 및 기타 사이트 데이터</p>
+<p>• Safari: 환경설정 &gt; 개인 정보 보호 &gt; 쿠키 및 웹사이트 데이터 관리</p>
+<p>• Firefox: 설정 &gt; 개인 정보 및 보안 &gt; 쿠키와 사이트 데이터</p>
+<p>• Edge: 설정 &gt; 쿠키 및 사이트 권한 &gt; 쿠키 및 사이트 데이터 관리</p>
+<p>필수 쿠키를 거부하면 로그인 유지, 계산 결과 저장 등 일부 기능에 제한이 있을 수 있습니다.</p>
+<h3 style={LS.h}>제4조 (제3자 쿠키)</h3>
+<p>본 서비스는 Google Analytics(분석) 및 Google AdSense(광고)를 사용하며, 이들 서비스가 제3자 쿠키를 설정할 수 있습니다.</p>
+<p>• <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google 개인정보처리방침</a></p>
+<p>• <a href="https://policies.google.com/technologies/cookies" target="_blank" rel="noopener noreferrer">Google 쿠키 사용 방식</a></p>
+<h3 style={LS.h}>제5조 (정책 변경)</h3>
+<p>본 쿠키 정책은 법령·정책 변경 시 사전 공지 후 개정됩니다. 시행일: 2026년 4월 18일</p>
+<h3 style={LS.h}>제6조 (문의)</h3>
+<div style={LS.ib}>
+<p style={{margin:"4px 0"}}>• 개인정보보호책임자: 이광철</p>
+<p style={{margin:"4px 0"}}>• 이메일: noble.kclee@gmail.com</p>
+<p style={{margin:"4px 0"}}>• 상호: 더블유부동산 (사업자등록번호 589-24-01721)</p>
+</div>
 </div>}
 };
 
@@ -6403,7 +6442,7 @@ export default function App(){
     if(hash.startsWith("reports/")){const slug=hash.replace("reports/","");if(REPORTS_MAP[slug]){setPage("reports:"+slug);return;}setPage("reports:index");return;}
     if(hash.startsWith("learn/")){const slug=hash.replace("learn/","");if(LEARN_MAP[slug]){setPage("learn:"+slug);return;}setPage("html:/"+hash+".html");return;}
     if(hash.startsWith("law/")){const slug=hash.replace("law/","");if(LAW_MAP[slug]){setPage("law:"+slug);return;}setPage("html:/"+hash+".html");return;}
-    if(["privacy","contact","disclaimer","resource"].includes(hash)){setPage("legal_"+hash);}
+    if(["privacy","contact","disclaimer","resource","cookie"].includes(hash)){setPage("legal_"+hash);}
     else if(hash&&SLUG_REVERSE[hash]){const cId=SLUG_REVERSE[hash];const it=CL.find(c=>c.id===cId);if(it){setCat(it.c);setCalc(cId);setPage("calc");fetch(LC_REALESTATE_WORKER+"/api/admin/track",{method:"POST",headers:{"Content-Type":"application/json; charset=utf-8"},body:JSON.stringify({calcId:cId,calcName:it.l,referrer:document.referrer})}).catch(()=>{});}}
     else if(!hash){setPage("home");}
     else{setPage("404");}
@@ -7033,7 +7072,7 @@ body.lc-embed main{padding-top:0!important}
       </div>
       <div style={{maxWidth:1200,margin:"48px auto 0",paddingTop:24,borderTop:"1px solid rgba(255,255,255,0.1)",display:"flex",justifyContent:"space-between",gap:20,flexWrap:"wrap",fontSize:12}}>
         <div style={{color:"rgba(255,255,255,0.3)",maxWidth:720,lineHeight:1.6}}>상호 더블유부동산 · 대표 이광철 · 사업자등록번호 589-24-01721 · 통신판매업신고 제2025-인천부평-0992호 · 주소 인천광역시 부평구 · 이메일 noble.kclee@gmail.com · 개인정보보호책임자 이광철</div>
-        <div style={{color:"rgba(255,255,255,0.65)"}}>© {new Date().getFullYear()} 생활계산기.com · <span onClick={()=>navigateLegal("privacy")} style={{cursor:"pointer"}}>개인정보처리방침</span> · <span onClick={()=>navigateLegal("disclaimer")} style={{cursor:"pointer"}}>이용약관</span></div>
+        <div style={{color:"rgba(255,255,255,0.65)"}}>© {new Date().getFullYear()} 생활계산기.com · <span onClick={()=>navigateLegal("privacy")} style={{cursor:"pointer"}}>개인정보처리방침</span> · <span onClick={()=>navigateLegal("disclaimer")} style={{cursor:"pointer"}}>이용약관</span> · <span onClick={()=>navigateLegal("cookie")} style={{cursor:"pointer"}}>쿠키 정책</span></div>
       </div>
     </footer>):(<footer style={{background:"#F9FAFB",borderTop:"1px solid #E5E7EB",padding:"48px 24px",position:"relative",width:"100vw",marginLeft:"calc(50% - 50vw)",boxSizing:"border-box",textAlign:"center"}}>
       <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:12}}>
@@ -7044,7 +7083,7 @@ body.lc-embed main{padding-top:0!important}
         <div style={{fontSize:13,color:"#6B7280",lineHeight:1.6,maxWidth:640}}>생활 속 세금·대출·비용·부동산 종합 계산 플랫폼</div>
         <div style={{fontSize:12,color:"#6B7280",lineHeight:1.6,maxWidth:640}}>본 계산기는 참고용이며, 실제 세금·수수료는 세무사 또는 관할 기관에 반드시 확인하시기 바랍니다.</div>
         <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:20,flexWrap:"wrap",marginTop:12}}>
-          {[{l:"회사 소개",k:"about"},{l:"문의하기",k:"contact"},{l:"개인정보처리방침",k:"privacy"},{l:"면책조항",k:"disclaimer"}].map(item=><span key={item.k} onClick={()=>{if(item.k==="about"){setPage("about");history.pushState(null,"","/about");window.scrollTo(0,0);}else if(item.k==="contact"){setPage("contact");history.pushState(null,"","/contact");window.scrollTo(0,0);}else{navigateLegal(item.k);}}} style={{fontSize:13,color:"#6B7280",cursor:"pointer"}}>{item.l}</span>)}
+          {[{l:"회사 소개",k:"about"},{l:"문의하기",k:"contact"},{l:"개인정보처리방침",k:"privacy"},{l:"면책조항",k:"disclaimer"},{l:"쿠키 정책",k:"cookie"}].map(item=><span key={item.k} onClick={()=>{if(item.k==="about"){setPage("about");history.pushState(null,"","/about");window.scrollTo(0,0);}else if(item.k==="contact"){setPage("contact");history.pushState(null,"","/contact");window.scrollTo(0,0);}else{navigateLegal(item.k);}}} style={{fontSize:13,color:"#6B7280",cursor:"pointer"}}>{item.l}</span>)}
         </div>
         <div style={{fontSize:11,color:"#6B7280",marginTop:20,borderTop:"1px solid #E5E7EB",paddingTop:20,width:"100%",maxWidth:900}}>
           © {new Date().getFullYear()} 생활계산기.com. All rights reserved. | 세법 검증: {UPDATE_LOG[0]?.date}
