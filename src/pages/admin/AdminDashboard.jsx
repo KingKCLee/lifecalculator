@@ -32,6 +32,7 @@ const MENU = [
 ];
 
 export default function AdminDashboard({ token, session, onLogout }) {
+  useEffect(()=>{const m=document.createElement('meta');m.name='robots';m.content='noindex, nofollow, noarchive';document.head.appendChild(m);return()=>m.remove();},[]);
   const initTab = (() => { const p = new URLSearchParams(window.location.search); return p.get("tab") || "dashboard"; })();
   const [tab, setTab] = useState(initTab);
   const [stats, setStats] = useState(null);

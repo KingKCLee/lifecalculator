@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 const API = "https://lc-realestate-worker.noble-kclee.workers.dev";
 
 export default function AdminLogin({ error }) {
+  useEffect(()=>{const m=document.createElement('meta');m.name='robots';m.content='noindex, nofollow, noarchive';document.head.appendChild(m);return()=>m.remove();},[]);
   return (
     <div style={{ minHeight: "100vh", background: "#0a1628", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Pretendard',-apple-system,sans-serif" }}>
       <div style={{ background: "#fff", borderRadius: 20, padding: "44px 40px", width: 400, maxWidth: "90vw", boxShadow: "0 20px 60px rgba(0,0,0,.3)", textAlign: "center" }}>
