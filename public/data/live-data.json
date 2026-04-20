@@ -1,5 +1,5 @@
 {
-  "lastUpdate": "2026.04.19",
+  "lastUpdate": "2026.04.20",
   "baseRate": 3,
   "baseRateDate": "2026-02-27",
   "convertRate": 5,
@@ -1163,9 +1163,16 @@
         }
       }
     ],
-    "usdkrw": 1471.97
+    "usdkrw": 1470.69
   },
   "updateLog": [
+    {
+      "date": "2026.04.20",
+      "category": "세금",
+      "title": "정책 만료 D-19: transferSurchargeEnd",
+      "desc": "2026-05-10 만료 예정. 관련 계산기에 자동 반영됩니다.",
+      "urgent": true
+    },
     {
       "date": "2026.04.20",
       "category": "전체",
