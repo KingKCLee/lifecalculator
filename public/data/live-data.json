@@ -1169,6 +1169,12 @@
     {
       "date": "2026.04.20",
       "category": "전체",
+      "title": "fix(adsense): AdminLogin/AdminDashboard noindex 추가 — A-4-2 완전 통과",
+      "desc": "fix(adsense): AdminLogin/AdminDashboard noindex 추가 — A-4-2 완전 통과"
+    },
+    {
+      "date": "2026.04.20",
+      "category": "전체",
       "title": "fix(adsense): robots.txt git conflict 해결 + ads.txt + 404 noindex + admin noindex",
       "desc": "fix(adsense): robots.txt git conflict 해결 + ads.txt + 404 noindex + admin noindex"
     },
@@ -1462,12 +1468,6 @@
       "category": "전체",
       "title": "fix: 전체 계산기 RPFull/RP 버튼 정리 + ±10% onAdjustPrice",
       "desc": "fix: 전체 계산기 RPFull/RP 버튼 정리 + ±10% onAdjustPrice"
-    },
-    {
-      "date": "2026.04.17",
-      "category": "전체",
-      "title": "fix: NextStep RP패널 아래 고정 (2열 그���드 정렬)",
-      "desc": "fix: NextStep RP패널 아래 고정 (2열 그���드 정렬)"
     }
   ],
   "rates": {
