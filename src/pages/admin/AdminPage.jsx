@@ -5,6 +5,7 @@ import AdminDashboard from "./AdminDashboard";
 const API = "https://lc-realestate-worker.noble-kclee.workers.dev";
 
 export default function AdminPage({ subPage }) {
+  useEffect(()=>{const m=document.createElement('meta');m.name='robots';m.content='noindex, nofollow, noarchive';document.head.appendChild(m);return()=>m.remove();},[]);
   const [session, setSession] = useState(null);
   const [checking, setChecking] = useState(true);
   const [error, setError] = useState(null);

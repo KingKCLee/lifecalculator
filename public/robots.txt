@@ -1,38 +1,43 @@
+# robots.txt for xn--989a00a691bdfa717h.com
+# Last updated: 2026-04-20
+# RFC 9309 compliant
+
 User-agent: *
 Allow: /
-<<<<<<< Updated upstream
-Allow: /about
-Allow: /contact
-=======
->>>>>>> Stashed changes
-Allow: /terms/
-Allow: /learn/
-Allow: /law/
-Allow: /market/
-Allow: /guide/
-Allow: /community/
-Allow: /news/
-Allow: /consult/
-<<<<<<< Updated upstream
-Allow: /privacy
-Allow: /disclaimer
-Allow: /reports
-=======
->>>>>>> Stashed changes
-Disallow: /payment/
-Disallow: /api/
 Disallow: /admin/
+Disallow: /admin
 Disallow: /auth/
+Disallow: /auth
+Disallow: /api/
+Disallow: /payment/
+Disallow: /*/callback
 Disallow: /*?embed=y$
-
-# 크롤러 부하 제한
 Crawl-delay: 1
 
-# 이미지 크롤링 허용
+User-agent: Googlebot
+Allow: /
+Disallow: /admin/
+Disallow: /auth/
+Disallow: /api/
+
+User-agent: AdsBot-Google
+Allow: /
+Disallow: /admin/
+Disallow: /auth/
+Disallow: /api/
+
+User-agent: AdsBot-Google-Mobile
+Allow: /
+Disallow: /admin/
+Disallow: /auth/
+Disallow: /api/
+
+User-agent: Mediapartners-Google
+Allow: /
+
 User-agent: Googlebot-Image
 Allow: /
 
-# AI 크롤러
 User-agent: GPTBot
 Allow: /
 
