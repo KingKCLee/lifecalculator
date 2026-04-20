@@ -1167,6 +1167,12 @@
   },
   "updateLog": [
     {
+      "date": "2026.04.20",
+      "category": "전체",
+      "title": "fix(adsense): robots.txt git conflict 해결 + ads.txt + 404 noindex + admin noindex",
+      "desc": "fix(adsense): robots.txt git conflict 해결 + ads.txt + 404 noindex + admin noindex"
+    },
+    {
       "date": "2026.04.19",
       "category": "세금",
       "title": "정책 만료 D-20: transferSurchargeEnd",
@@ -1462,18 +1468,6 @@
       "category": "전체",
       "title": "fix: NextStep RP패널 아래 고정 (2열 그���드 정렬)",
       "desc": "fix: NextStep RP패널 아래 고정 (2열 그���드 정렬)"
-    },
-    {
-      "date": "2026.04.17",
-      "category": "전체",
-      "title": "fix: 시장동향 페이지 raw JSON → 대시보드 UI 교체",
-      "desc": "fix: 시장동향 페이지 raw JSON → 대시보드 UI 교체"
-    },
-    {
-      "date": "2026.04.17",
-      "category": "전체",
-      "title": "feat: 정보센터 부동산 시장동향 대시보드",
-      "desc": "feat: 정보센터 부동산 시장동향 대시보드"
     }
   ],
   "rates": {
