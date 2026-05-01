@@ -1167,6 +1167,12 @@
   },
   "updateLog": [
     {
+      "date": "2026.05.02",
+      "category": "전체",
+      "title": "feat: 투자타이밍계산기 추가 - 코스톨라니 달걀 모델",
+      "desc": "feat: 투자타이밍계산기 추가 - 코스톨라니 달걀 모델"
+    },
+    {
       "date": "2026.05.01",
       "category": "세금",
       "title": "정책 만료 D-8: transferSurchargeEnd",
@@ -1473,85 +1479,6 @@
       "category": "전체",
       "title": "feat: 전체 계산기 마스터 템플릿 통일",
       "desc": "feat: 전체 계산기 마스터 템플릿 통일"
-    },
-    {
-      "date": "2026.04.17",
-      "category": "세금",
-      "title": "정책 만료 D-22: transferSurchargeEnd",
-      "desc": "2026-05-10 만료 예정. 관련 계산기에 자동 반영됩니다.",
-      "urgent": true
-    },
-    {
-      "date": "2026.04.17",
-      "category": "전체",
-      "title": "feat: 정보센터 전체 탭 공통 헤더 컴포넌트 적용",
-      "desc": "feat: 정보센터 전체 탭 공통 헤더 컴포넌트 적용"
-    },
-    {
-      "date": "2026.04.17",
-      "category": "전체",
-      "title": "fix: 정보센터 nav 밑줄 제거 + 다른 메뉴와 동일 스타일",
-      "desc": "fix: 정보센터 nav 밑줄 제거 + 다른 메뉴와 동일 스타일"
-    },
-    {
-      "date": "2026.04.17",
-      "category": "전체",
-      "title": "fix: 정보센터 전체 포맷 통일 + 한글 깨짐 수정",
-      "desc": "fix: 정보센터 전체 포맷 통일 + 한글 깨짐 수정"
-    },
-    {
-      "date": "2026.04.17",
-      "category": "전체",
-      "title": "fix: 상담신청 상세보기 모달 구현 + 상태 변경",
-      "desc": "fix: 상담신청 상세보기 모달 구현 + 상태 변경"
-    },
-    {
-      "date": "2026.04.17",
-      "category": "전체",
-      "title": "feat: 정보센터 하위메뉴 계산기 페이지와 동일 포맷 적용",
-      "desc": "feat: 정보센터 하위메뉴 계산기 페이지와 동일 포맷 적용"
-    },
-    {
-      "date": "2026.04.17",
-      "category": "대출",
-      "title": "fix: 대출이자 계산기 결과 패널 항상 표시",
-      "desc": "fix: 대출이자 계산기 결과 패널 항상 표시"
-    },
-    {
-      "date": "2026.04.17",
-      "category": "전체",
-      "title": "fix: guideData.js 깨진 문자 39개 수정",
-      "desc": "fix: guideData.js 깨진 문자 39개 수정"
-    },
-    {
-      "date": "2026.04.17",
-      "category": "전체",
-      "title": "fix: NextStep z-index RPFull보다 높게 설정",
-      "desc": "fix: NextStep z-index RPFull보다 높게 설정"
-    },
-    {
-      "date": "2026.04.17",
-      "category": "전체",
-      "title": "feat: guideData.js 62개 전체 section3 세율표/요율표 테이블 완성",
-      "desc": "feat: guideData.js 62개 전체 section3 세율표/요율표 테이블 완성"
-    },
-    {
-      "date": "2026.04.17",
-      "category": "세금",
-      "title": "feat: guideData 핵심 세금 4개 완벽가이드 세율 테이블 추가",
-      "desc": "feat: guideData 핵심 세금 4개 완벽가이드 세율 테이블 추가"
-    },
-    {
-      "date": "2026.04.17",
-      "category": "전체",
-      "title": "fix: NextStep 전체 계산기 RPFull 하단 고정",
-      "desc": "fix: NextStep 전체 계산기 RPFull 하단 고정"
-    },
-    {
-      "date": "2026.04.17",
-      "category": "전체",
-      "title": "fix: 전체 계산기 RPFull/RP 버튼 정리 + ±10% onAdjustPrice",
-      "desc": "fix: 전체 계산기 RPFull/RP 버튼 정리 + ±10% onAdjustPrice"
     }
   ],
   "rates": {
