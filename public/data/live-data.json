@@ -1,5 +1,5 @@
 {
-  "lastUpdate": "2026.05.09",
+  "lastUpdate": "2026.05.10",
   "baseRate": 3,
   "baseRateDate": "2026-02-27",
   "convertRate": 5,
@@ -1163,7 +1163,7 @@
         }
       }
     ],
-    "usdkrw": 1461.8
+    "usdkrw": 1461.56
   },
   "updateLog": [
     {
