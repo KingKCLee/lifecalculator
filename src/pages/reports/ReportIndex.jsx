@@ -140,7 +140,7 @@ export function ReportLayout({id, title, tag, date, toc, children, relatedCalcId
         </div>
       </div>
 
-      <style>{`
+      <style dangerouslySetInnerHTML={{__html:`
         .rpt h2{font-size:22px;font-weight:800;color:#0f1f3d;margin:32px 0 14px;padding-bottom:10px;border-bottom:1px solid #e5e7eb;letter-spacing:-0.3px}
         .rpt h2:first-child{margin-top:0}
         .rpt h3{font-size:16px;font-weight:700;color:#1f2937;margin:22px 0 8px}
@@ -161,7 +161,7 @@ export function ReportLayout({id, title, tag, date, toc, children, relatedCalcId
         .rpt .summary .label{font-size:11px;font-weight:700;color:#1e40af;letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px}
         .rpt .summary h3{margin-top:0}
         .rpt section{padding-top:8px;margin-bottom:24px;scroll-margin-top:20px}
-      `}</style>
+      `}}/>
     </div>
   );
 }

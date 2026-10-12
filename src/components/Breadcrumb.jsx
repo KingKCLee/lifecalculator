@@ -57,8 +57,12 @@ const PAGE_CATEGORY_MAP = {
   verification: '검증 가이드',
 };
 
-export default function Breadcrumb({ pageName, category, navigateHome, isMo }) {
-  const [path, setPath] = useState('');
+/* 일반 클릭은 화면 전환(새로고침 없음), 새 탭·길게 누르기는 브라우저 기본 동작 */
+const go = (fn) => (e) => { if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return; if (fn) { e.preventDefault(); fn(); } };
+
+export default function Breadcrumb({ pageName, category, categoryHref, onCategory, navigateHome, isMo }) {
+  /* 2026.10 첫 렌더부터 주소를 읽는다 (사전 렌더 문서에도 경로 표시가 들어가도록) */
+  const [path, setPath] = useState(() => { try { return typeof window !== 'undefined' ? decodeURIComponent(window.location.pathname.replace(/^\//, '')) : ''; } catch { return ''; } });
 
   useEffect(() => {
     const update = () => setPath(decodeURIComponent(window.location.pathname.replace(/^\//, '')));
@@ -109,8 +113,8 @@ export default function Breadcrumb({ pageName, category, navigateHome, isMo }) {
   if (isMo) {
     return (
       <nav aria-label="breadcrumb" style={{ fontSize: 12, color: '#505f79', padding: '12px 0 4px', display: 'flex', alignItems: 'center', gap: 6, overflow: 'hidden', whiteSpace: 'nowrap' }}>
-        <span onClick={navigateHome} style={{ cursor: 'pointer', color: '#0747A6', fontWeight: 600, flexShrink: 0 }}>홈</span>
-        {cat && <><span style={{ color: '#d1d5db' }}>›</span><span style={{ color: '#505f79', flexShrink: 0 }}>{cat}</span></>}
+        <a href="/" onClick={go(navigateHome)} style={{ cursor: 'pointer', color: '#0747A6', fontWeight: 600, flexShrink: 0, textDecoration: 'none' }}>홈</a>
+        {cat && <><span style={{ color: '#d1d5db' }}>›</span>{categoryHref ? <a href={categoryHref} onClick={go(onCategory)} style={{ color: '#0747A6', flexShrink: 0, textDecoration: 'none' }}>{cat}</a> : <span style={{ color: '#505f79', flexShrink: 0 }}>{cat}</span>}</>}
         <span style={{ color: '#d1d5db' }}>›</span>
         <span style={{ color: '#0a1628', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis' }}>{name}</span>
       </nav>
@@ -119,12 +123,16 @@ export default function Breadcrumb({ pageName, category, navigateHome, isMo }) {
 
   return (
     <nav aria-label="breadcrumb" style={{ fontSize: 13, color: '#505f79', paddingTop: 24, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
-      <span onClick={navigateHome} style={{ cursor: 'pointer', color: '#505f79' }}
+      <a href="/" onClick={go(navigateHome)} style={{ cursor: 'pointer', color: '#505f79', textDecoration: 'none' }}
         onMouseEnter={e => e.currentTarget.style.color = '#0747A6'}
-        onMouseLeave={e => e.currentTarget.style.color = '#505f79'}>홈</span>
+        onMouseLeave={e => e.currentTarget.style.color = '#505f79'}>홈</a>
       {cat && <>
         <span style={{ color: '#d1d5db' }}>›</span>
-        <span style={{ color: '#505f79' }}>{cat}</span>
+        {categoryHref
+          ? <a href={categoryHref} onClick={go(onCategory)} style={{ color: '#505f79', textDecoration: 'none' }}
+              onMouseEnter={e => e.currentTarget.style.color = '#0747A6'}
+              onMouseLeave={e => e.currentTarget.style.color = '#505f79'}>{cat}</a>
+          : <span style={{ color: '#505f79' }}>{cat}</span>}
       </>}
       <span style={{ color: '#d1d5db' }}>›</span>
       <span style={{ color: '#0a1628', fontWeight: 600 }}>{name}</span>

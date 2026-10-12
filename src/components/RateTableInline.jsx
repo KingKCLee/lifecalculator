@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 
 /* ── 색상 상수 ── */
 const C = {
@@ -29,7 +29,25 @@ function rateColor(val) {
   return '#065F46'
 }
 
-export default function RateTableInline({ groups }) {
+/* 묶음 모양 통일 (2026.10 수리)
+ * 세율표 묶음에는 두 가지 모양이 있다: ① {title, headers, rows} ② {title, tables:[{subtitle, headers, rows}]}.
+ * ②를 그대로 그리려다 화면 전체가 꺼지는 사고가 있었다(양도소득세 PC 화면 흰 화면).
+ * → ②는 소제목별 표 1개짜리 묶음들로 펼치고, 머리글·행이 없는 묶음은 건너뛴다. */
+export function normalizeRateGroups(groups) {
+  const out = []
+  for (const g of groups || []) {
+    if (!g) continue
+    if (Array.isArray(g.tables)) {
+      g.tables.forEach((t) => {
+        if (t && Array.isArray(t.headers) && Array.isArray(t.rows)) out.push({ ...t, title: t.subtitle ? `${g.title} · ${t.subtitle}` : g.title, badge: t.badge || g.badge })
+      })
+    } else if (Array.isArray(g.headers) && Array.isArray(g.rows)) out.push(g)
+  }
+  return out
+}
+
+export default function RateTableInline({ groups: rawGroups }) {
+  const groups = useMemo(() => normalizeRateGroups(rawGroups), [rawGroups])
   const [openMap, setOpenMap] = useState(
     () => Object.fromEntries(groups.map((_, i) => [i, true]))
   )

@@ -249,3 +249,12 @@ LTV: 무주택 70%, 생애최초 비규제 80%
 - **통신판매업:** 제2025-인천부평-0992호
 - **완료:** 카카오 Local API, 네이버 Static Map, SEO 98점, sitemap/robots/feed
 - **대기 중:** Kakao Maps API 심사 (카카오 비즈니스 심사 중)
+
+---
+
+## 2026.10 검색 노출 구조 (필수 준수)
+- **제목·설명·대표주소의 원천은 `src/data/siteMeta.js` 한 곳.** App.jsx·index.html에 따로 적지 말 것.
+- `npm run build` = vite build → `scripts/build-static.mjs`(주소별 문서 85개 찍기 + sitemap 생성) → `scripts/check-static.mjs`(배포 전 검사). 검사 실패 시 배포되지 않는다.
+- sitemap은 빌드가 만든다(`public/sitemap.xml`·auto-sitemap 자동화는 폐기).
+- 화면 이동은 `<A href=... onGo=...>`(진짜 링크)로. `div onClick` 이동 금지 — 검색엔진이 못 따라간다.
+- `<style>{\`...\`}</style>` 금지 → `<style dangerouslySetInnerHTML={{__html:\`...\`}}/>` (서버 문서에서 규칙이 깨짐).

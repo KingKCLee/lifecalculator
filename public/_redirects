@@ -2,4 +2,3 @@
 /robots.txt /robots.txt 200
 /feed.xml /feed.xml 200
 /data/* /data/:splat 200
-/* /index.html 200
