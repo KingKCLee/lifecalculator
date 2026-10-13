@@ -1167,6 +1167,12 @@
   },
   "updateLog": [
     {
+      "date": "2026.10.13",
+      "category": "전체",
+      "title": "fix(data): 2026년 최저임금 10,320원(+2.9%) 반영 · 근거 없는 홍보 문구 교체",
+      "desc": "fix(data): 2026년 최저임금 10,320원(+2.9%) 반영 · 근거 없는 홍보 문구 교체"
+    },
+    {
       "date": "2026.05.08",
       "category": "세금",
       "title": "정책 만료 D-1: transferSurchargeEnd",
@@ -1480,54 +1486,6 @@
       "category": "대출",
       "title": "fix: DTI 페이지 React #31 객체 렌더 에러 수정",
       "desc": "fix: DTI 페이지 React #31 객체 렌더 에러 수정"
-    },
-    {
-      "date": "2026.04.18",
-      "category": "대출",
-      "title": "fix: RPFull total 문자열/숫자 분기 처리 - DTI/RTI/DSR 단위 표시 수정",
-      "desc": "fix: RPFull total 문자열/숫자 분기 처리 - DTI/RTI/DSR 단위 표시 수정"
-    },
-    {
-      "date": "2026.04.18",
-      "category": "대출",
-      "title": "fix: 전수검증 - DTI/DSR/RTI total 문자열→숫자 수정",
-      "desc": "fix: 전수검증 - DTI/DSR/RTI total 문자열→숫자 수정"
-    },
-    {
-      "date": "2026.04.18",
-      "category": "전체",
-      "title": "feat: 홈페이지 리포트슬라이드/빠른접근 섹션 개선",
-      "desc": "feat: 홈페이지 리포트슬라이드/빠른접근 섹션 개선"
-    },
-    {
-      "date": "2026.04.18",
-      "category": "세금",
-      "title": "feat: Report05/06/07 생성 (증여상속/종부세/임대소득)",
-      "desc": "feat: Report05/06/07 생성 (증여상속/종부세/임대소득)"
-    },
-    {
-      "date": "2026.04.18",
-      "category": "대출",
-      "title": "fix: 대출계산기 결과패널 표시 수정 (DSR/DTI/RTI 비율값 렌더링)",
-      "desc": "fix: 대출계산기 결과패널 표시 수정 (DSR/DTI/RTI 비율값 렌더링)"
-    },
-    {
-      "date": "2026.04.18",
-      "category": "대출",
-      "title": "fix: DTI 흰화면 + RTI RPFull 수정",
-      "desc": "fix: DTI 흰화면 + RTI RPFull 수정"
-    },
-    {
-      "date": "2026.04.18",
-      "category": "대출",
-      "title": "fix: DSR/DTI 커스텀카드 → RPFull 교체 (결과 항상 표시)",
-      "desc": "fix: DSR/DTI 커스텀카드 → RPFull 교체 (결과 항상 표시)"
-    },
-    {
-      "date": "2026.04.18",
-      "category": "전체",
-      "title": "feat: 전체 계산기 마스터 템플릿 통일",
-      "desc": "feat: 전체 계산기 마스터 템플릿 통일"
     }
   ],
   "rates": {
