@@ -1,6 +1,6 @@
 // build: 2026.04.06.001
 // v2026.04.06
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, Component, createContext, useContext } from "react";
 import { createPortal } from "react-dom";
 // 2026.04.15 AI PRO 인사이트 보고서 9편
 import ReportIndex, {REPORTS_META, REPORTS_BY_CALC} from './pages/reports/ReportIndex';
@@ -46,6 +46,8 @@ import { GUIDE_DATA } from './data/guideData';
 import { RATE_GROUPS } from './data/rateTableGroups';
 import { getCurrentSeason } from './utils/seasonCalc';
 import Breadcrumb from './components/Breadcrumb';
+// 2026.10 주소·검색용 정보 단일 원천
+import { createSite, applyHead } from './data/siteMeta';
 // 2026.04.16 계산기 트래킹 훅
 import { useTrack, usePageTrack, trackSignup } from './hooks/useTrack';
 
@@ -104,7 +106,7 @@ function useIsMobile(bp=768){
 }
 
 const SLUGS={acquisition:"취득세계산기",transfer:"양도소득세계산기",inctax:"종합소득세계산기",yearend:"연말정산계산기",compre:"종부세계산기",property:"재산세계산기",gift:"증여세계산기",inherit:"상속세계산기",holdtax:"보유세계산기",rental:"임대소득세계산기",mortgage:"대출이자계산기",dsr:"DSR계산기",dti:"DTI계산기",ltv:"LTV계산기",loanmax:"대출가능액계산기",rti:"RTI계산기",commission:"중개수수료계산기",registration:"등기비용계산기",legal:"법무사수수료계산기",stamp:"인지세계산기",bond:"채권할인료계산기",appraisal:"감정평가수수료계산기",netsalary:"연봉실수령액",insurance4:"4대보험료계산기",pension:"국민연금수령액",cartax:"자동차세계산기",deposit:"예적금이자계산기",convert:"전월세전환계산기",yield:"임대수익률계산기",joint:"공동명의계산기",area:"평수변환계산기",far:"용적률건폐율계산기",auction:"경매비용계산기",remodel:"리모델링수익계산기",bldvalue:"건물잔존가치계산기",totalcost:"총비용시뮬레이터",compare:"세금비교분석",invest:"투자수익분석",retire:"퇴직금계산기",unemploy:"실업급여계산기",minwage:"최저임금계산기",auction2:"경매적정입찰가",auctiondiv:"경매배당분석",auctionloan:"경락잔금대출",bldvat:"건물부가세계산기",bond2:"국민주택채권매입",datediff:"날짜계산기",estincome:"임대추정소득",goodlord:"착한임대인공제",imputedrent:"간주임대료계산기",jeonseins:"전세보증금보험료",legalinherit:"법정상속분계산기",luckyday:"손없는날달력",progressive:"누진세계산기",reconyear:"재건축연한계산기",refinance:"대환대출비교",remodel2:"리모델링ROI",rentincrease:"임대료인상률",stamp2:"인지세전자계약",realprice:"실거래가조회",subscription:"청약가점계산기",netsale:"매도실수령액계산기",terms:"부동산용어사전",investTiming:"투자타이밍계산기"};
-const SLUG_REVERSE=Object.fromEntries(Object.entries(SLUGS).map(([k,v])=>[decodeURIComponent(v),k]));SLUG_REVERSE["중개보수계산기"]="commission";SLUG_REVERSE["연봉실수령액계산기"]="netsalary";SLUG_REVERSE["종합부동산세계산기"]="compre";
+const SLUG_REVERSE=Object.fromEntries(Object.entries(SLUGS).map(([k,v])=>[decodeURIComponent(v),k]));/* 예전 주소(별칭) → 계산기. 대표주소는 SLUGS 쪽 주소로 모인다 */const ALIAS_SLUGS={"중개보수계산기":"commission","연봉실수령액계산기":"netsalary","종합부동산세계산기":"compre"};Object.assign(SLUG_REVERSE,ALIAS_SLUGS);
 
 const CALC_SUBTITLE={
   acquisition:"2026년 취득세율 자동 적용 · 중과/감면 자동 판정",
@@ -145,7 +147,7 @@ const CALC_SUBTITLE={
   cartax:"배기량별 세율 + 차령 감면 자동 적용",
   retire:"평균임금 × 근속연수 · 퇴직소득세 자동 계산",
   unemploy:"피보험기간/연령 기반 지급기간 자동 산정",
-  minwage:"2026년 시급 10,030원 · 월급/연봉 자동 환산",
+  minwage:"2026년 시급 10,320원 · 월급/연봉 자동 환산",
   deposit:"단리/복리 이자 + 이자소득세 자동 계산",
   convert:"전월세전환율 자동 적용 · 법정 상한 기준",
   datediff:"보유기간/신고기한/계약기간 자동 계산",
@@ -212,7 +214,7 @@ compare:{title:"매매 vs 증여 vs 상속 세금 비교 | 생활계산기",desc
 invest:{title:"부동산 투자수익 분석기 | 생활계산기",desc:"매수→보유→매도 전체 투자 수익률(IRR) 분석. 보유세, 대출이자, 양도세 반영. PRO 분석."},
 retire:{title:"퇴직금 계산기 - 예상 퇴직금 계산 | 생활계산기",desc:"근속연수별 퇴직금 자동 계산. 최근 3개월 평균임금 기준. 퇴직소득세 추정. 2026년 최신."},
 unemploy:{title:"실업급여 계산기 - 예상 수급액 확인 | 생활계산기",desc:"실업급여 일액·수급기간·총수령액 자동 계산. 퇴직 전 평균임금의 60%. 2026년 최저임금 기준 하한액 반영."},
-minwage:{title:"최저임금 계산기 2026 - 시급 월급 연봉 환산 | 생활계산기",desc:"2026년 최저임금 시급 10,030원 기준. 시급→월급→연봉 자동 환산. 주휴수당 포함 실수령액 계산."},
+minwage:{title:"최저임금 계산기 2026 - 시급 월급 연봉 환산 | 생활계산기",desc:"2026년 최저임금 시급 10,320원 기준. 시급→월급→연봉 자동 환산. 주휴수당 포함 실수령액 계산."},
 auction2:{title:"경매 적정입찰가 계산기 - 낙찰률 추정 | 생활계산기",desc:"부동산 경매 적정 입찰가 추정기. 감정가·지역·용도별 낙찰률 통계 반영. 과열 경쟁 방지 기준선 제시."},
 auctiondiv:{title:"경매 배당 분석 계산기 - 근저당 우선순위 | 생활계산기",desc:"경매 낙찰 후 배당표 간이 계산. 집행비용, 최우선변제, 근저당·임차인 우선순위별 배당액 시뮬레이션."},
 rti:{title:"RTI 계산기 - 임대수익 대비 이자상환 | 생활계산기",desc:"부동산 임대업 RTI(Rent To Interest) 계산. 연간 임대수입 대비 대출이자 비율. 은행 1.5배·비은행 1.25배 기준."},
@@ -264,7 +266,7 @@ pension:"국민연금,국민연금수령액,국민연금계산기,예상연금�
 cartax:"자동차세,자동차세계산기,자동차세연납,배기량세금,전기차자동차세,차령할인,자동차세납부,2026자동차세",
 retire:"퇴직금,퇴직금계산기,퇴직금계산,퇴직소득세,근속연수퇴직금,평균임금퇴직금,퇴직금정산,2026퇴직금",
 unemploy:"실업급여,실업급여계산기,실업급여수급액,구직급여,실업급여기간,실업급여조건,고용보험실업급여,2026실업급여",
-minwage:"최저임금,최저임금계산기,2026최저임금,시급계산,월급계산,주휴수당,최저시급,10030원",
+minwage:"최저임금,최저임금계산기,2026최저임금,시급계산,월급계산,주휴수당,최저시급,10320원",
 deposit:"예적금이자,예금이자계산기,적금이자계산기,세후이자,이자소득세,복리계산,단리계산,예금금리비교",
 convert:"전월세전환,전월세전환계산기,전세월세전환,전환율계산,법정전환율,보증금월세전환",
 yield:"임대수익률,임대수익률계산기,부동산수익률,월세수익률,전세수익률,투자수익률,순수익률,총수익률",
@@ -376,7 +378,7 @@ totalcost:`<h2>매수 총비용 시뮬레이터 가이드</h2><h3>숨겨진 비�
 compare:`<h2>매매 vs 증여 vs 상속 세금 비교</h2><h3>매매</h3><p>양도차익에 양도소득세 6~45%. 1주택 2년 보유 시 12억까지 비과세.</p><h3>증여</h3><p>증여세 10~50% + 취득세 3.5%(조정 12%). 10년 합산 과세.</p><h3>상속</h3><p>상속세 10~50%, 기초+일괄공제 10억(배우자 있으면 추가). 취득세 2.96%. 신고기한 6개월.</p>`,
 invest:`<h2>부동산 투자수익 분석 가이드</h2><h3>IRR(내부수익률)</h3><p>매수→보유→매도 전체 현금흐름의 연평균 수익률. 단순 수익률보다 시간가치 반영.</p><h3>포함 비용</h3><p>취득세, 보유세, 대출이자, 관리비, 매도 중개보수, 양도세. 모두 차감한 세후 수익이 실질 수익.</p><h3>레버리지 효과</h3><p>대출 비중이 높을수록 자기자본 수익률 증가하나 위험도 증가.</p>`,
 retire:`<h2>퇴직금 완벽 가이드</h2><h3>퇴직금 산정</h3><p>퇴직금 = 1일 평균임금 × 30일 × (근속일수 ÷ 365). 1년 이상 근무 시 지급 자격. 평균임금은 퇴직 직전 3개월 임금 총액 ÷ 총일수.</p><h3>평균임금 vs 통상임금</h3><p>상여금·성과급 포함 여부에 따라 달라지며, 평균임금이 더 유리한 경우가 많습니다.</p><h3>퇴직소득세</h3><p>분류과세로 일반 소득세와 합산하지 않음. 퇴직소득공제(40%) + 연분연승법 적용으로 세부담 경감.</p>`,
-minwage:`<h2>2026년 최저임금 완벽 가이드</h2><h3>최저임금이란?</h3><p>국가가 임금의 최저 수준을 정하여 사용자에게 이 수준 이상의 임금을 지급하도록 강제하는 제도입니다.</p><h3>2026년 최저임금</h3><p>시급 10,030원 (전년 대비 +1.7%). 월 환산(주 40시간, 월 209시간 기준) 2,096,270원.</p><h3>주휴수당</h3><p>주 15시간 이상 근무 시 1일 유급휴가(주휴수당) 지급. 주 5일 8시간 근무 시 8시간분 추가.</p><h3>위반 시 처벌</h3><p>최저임금 미만 지급 시 3년 이하 징역 또는 2천만원 이하 벌금.</p>`,
+minwage:`<h2>2026년 최저임금 완벽 가이드</h2><h3>최저임금이란?</h3><p>국가가 임금의 최저 수준을 정하여 사용자에게 이 수준 이상의 임금을 지급하도록 강제하는 제도입니다.</p><h3>2026년 최저임금</h3><p>시급 10,320원 (전년 대비 +2.9%). 월 환산(주 40시간, 월 209시간 기준) 2,156,880원.</p><h3>주휴수당</h3><p>주 15시간 이상 근무 시 1일 유급휴가(주휴수당) 지급. 주 5일 8시간 근무 시 8시간분 추가.</p><h3>위반 시 처벌</h3><p>최저임금 미만 지급 시 3년 이하 징역 또는 2천만원 이하 벌금.</p>`,
 unemploy:`<h2>실업급여 완벽 가이드</h2><h3>수급 자격</h3><p>고용보험 180일 이상 가입 + 비자발적 퇴직이 원칙. 자발적 퇴직은 원칙적 불가하나, 임금체불·중대질병 등 정당 사유 시 예외.</p><h3>수급액</h3><p>1일 = 퇴직 전 평균임금의 60%. 상한 66,000원/일, 하한 최저임금의 80%.</p><h3>수급 기간</h3><p>연령·가입기간에 따라 120~270일. 50세 미만 1~3년 가입 120일, 10년 이상 210일. 50세 이상 10년 이상 270일.</p>`,
 inherit:`<h2>상속세 완벽 가이드</h2><h3>이런 분들께 필요해요</h3><p>부모님의 재산 규모를 파악하고 상속세를 미리 계산하고 싶은 분, 배우자공제·일괄공제 등 어떤 공제가 적용되는지 확인하려는 분, 사전증여와 상속 중 어떤 방법이 유리한지 비교하려는 분.</p><h3>이 계산기로 해결되는 것</h3><p>상속재산 총액에서 채무·공과금을 차감하고, 기초공제(2억)+인적공제 또는 일괄공제(5억) 중 큰 금액, 배우자공제(5~30억), 금융재산공제를 자동 적용합니다. 과세표준에 10~50% 누진세율을 적용하고 신고세액공제(3%)까지 반영한 최종 납부세액을 산출합니다.</p><h3>계산 방법과 세율</h3><p>상속세율은 1억 이하 10%, 5억 이하 20%, 10억 이하 30%, 30억 이하 40%, 30억 초과 50%입니다. 배우자공제는 법정상속분 범위 내에서 5~30억원까지 적용됩니다. 기초공제(2억)+인적공제 합산이 5억 미만이면 일괄공제 5억원을 선택할 수 있습니다.</p><h3>이 계산기 200% 활용법</h3><p>배우자 유무에 따른 공제액 차이를 비교해보세요(배우자 있으면 최소 10억원 공제). 상속인 수와 자녀 인적공제(1인당 5천만원)를 정확히 입력하면 과세표준이 크게 달라집니다. 사전증여(10년 내 합산)가 유리한 구간도 확인할 수 있습니다.</p><h3>놓치면 손해보는 것들</h3><p>신고기한은 사망일이 속하는 달의 말일부터 6개월입니다. 기한 내 신고 시 3% 세액공제를 받습니다. 사망 전 10년 내 상속인에게, 5년 내 비상속인에게 증여한 재산은 상속재산에 합산됩니다. 배우자 상속공제를 최대로 받으려면 실제 배우자가 상속받는 금액이 법정상속분 이내여야 합니다.</p>`,
 bldvat:`<h2>건물 부가세 완벽 가이드</h2><h3>건물분 부가가치세란?</h3><p>부동산 매매 시 건물 부분에 대해 부과되는 부가가치세(10%)입니다. 매매가를 토지가와 건물가로 안분하여 건물가액에 대해서만 과세합니다. 매도인이 일반과세자인 경우 세금계산서 발급이 필요합니다.</p><h3>면세 대상</h3><p>전용면적 85㎡ 이하 국민주택규모 주택은 부가세가 면제됩니다. 토지 자체도 부가세 면세입니다. 따라서 주택(85㎡ 이하) 거래에서는 건물분 부가세가 발생하지 않습니다.</p><h3>계산 방법</h3><p>건물분 부가세 = (매매가 - 토지가) ÷ 1.1 × 0.1. 토지가 비율은 공시지가 기준으로 산정하며, 감정평가를 통해 정확한 안분이 가능합니다. 상가·오피스텔(업무용) 거래 시 반드시 확인이 필요합니다.</p>`,
@@ -736,10 +738,10 @@ const INFO_ICONS={
 /* ── 정보센터 메뉴 & 세법 변경 타임라인 ── */
 const INFO_MENU_COLS=[
   {title:"",items:[
-    {k:"news",title:"뉴스·정책",desc:"부동산·세금 최신 뉴스와 정책",href:"/news",icon:"📰"},
-    {k:"guide",title:"전문가 가이드",desc:"절세 전략·법령·사용법",href:"/guide",icon:"📚"},
+    {k:"news",title:"뉴스·정책",desc:"부동산·세금 최신 뉴스와 정책",href:"/news/",icon:"📰"},
+    {k:"guide",title:"전문가 가이드",desc:"절세 전략·법령·사용법",href:"/guide/",icon:"📚"},
     {k:"reports",title:"AI 분석 보고서",desc:"PRO 인사이트 9편",href:"/reports",icon:"📊"},
-    {k:"community",title:"Q&A · 용어사전",desc:"질문답변 · 부동산 용어",href:"/community",icon:"💬"},
+    {k:"community",title:"Q&A · 용어사전",desc:"질문답변 · 부동산 용어",href:"/community/",icon:"💬"},
   ]}
 ];
 const TAX_CHANGES=[
@@ -766,6 +768,18 @@ const CL=[
   {id:"totalcost",l:"총비용 시뮬레이터",c:"pro"},{id:"compare",l:"세금비교 분석",c:"pro"},{id:"invest",l:"투자수익 분석",c:"pro"},
   {id:"investTiming",l:"투자 타이밍",c:"realestate"},
 ];
+
+/* 2026.10 주소·검색용 정보 단일 원천 — 제목·설명·대표주소·사전 렌더 목록이 모두 여기서 나온다 */
+const SITE=createSite({SLUGS,ALIAS_SLUGS,PAGE_META,CALC_KEYWORDS,CL,CATS,REPORTS_META});
+/* 2026.10 이동은 진짜 링크(<a href>)로 표현한다.
+ * - 검색엔진은 <a href>만 따라간다(이전에는 홈 화면에 링크가 0개였다).
+ * - 손님은 새 탭으로 열기·길게 눌러 복사가 된다.
+ * - 일반 클릭은 onGo가 처리해 새로고침 없이 화면만 바뀐다. */
+const calcHref=(id)=>SITE.calcHref(id);
+const isPlainClick=e=>!(e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey);
+function A({href,onGo,style,children,...rest}){
+  return(<a href={href} onClick={e=>{if(!isPlainClick(e))return;if(onGo){e.preventDefault();onGo(e);}}} style={{textDecoration:"none",color:"inherit",...style}} {...rest}>{children}</a>);
+}
 
 /* ── UI 컴포넌트 ── */
 /* ── 콤마 포맷 헬퍼 ── */
@@ -2758,11 +2772,14 @@ function TipModal({title,children}){
 function SidePanel(){return null;}
 function MobileCalcWrapper({children}){
   return(<div style={{padding:"12px 12px",maxWidth:"100vw",overflowX:"hidden"}}>
-    <style>{`
+    <style dangerouslySetInnerHTML={{__html:`
       .mobile-calc-wrap *{box-sizing:border-box!important}
-      .mobile-calc-wrap>div{display:flex!important;flex-direction:column!important;gap:12px!important;max-width:100%!important}
-      .mobile-calc-wrap>div>div{display:contents!important}
-      .mobile-calc-wrap .lc-nextstep{order:3!important;width:100%!important;max-width:100%!important;margin-top:4px!important}
+      /* 2026.10: 이전의 '세로 flex + display:contents' 규칙은 입력 묶음을 내용 폭으로 쪼그라뜨리고 구분선(hr)을 폭 0으로 만들었다.
+         → 계산기 뿌리를 한 줄짜리 격자로 고정하고, 안쪽 묶음은 원래 배치 그대로 화면 폭을 채우게 한다. */
+      .mobile-calc-wrap>div{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:16px!important;max-width:100%!important;min-width:0!important}
+      .mobile-calc-wrap>div>div{min-width:0!important;max-width:100%!important}
+      .mobile-calc-wrap hr{width:100%!important;border:none!important;border-top:1px solid #E5E7EB!important;margin:14px 0!important}
+      .mobile-calc-wrap .lc-nextstep{width:100%!important;max-width:100%!important;margin-top:16px!important}
       
       
       
@@ -2780,7 +2797,7 @@ function MobileCalcWrapper({children}){
       .mobile-calc-wrap svg[width]{max-width:100%!important}
       .mobile-calc-wrap .donut-chart,.mobile-calc-wrap .pie-chart,.mobile-calc-wrap [class*="chart"]{max-width:220px!important;max-height:220px!important;margin:0 auto!important}
       .mobile-calc-wrap .mb16,.mobile-calc-wrap [style*="marginBottom:16"]{margin-bottom:12px!important}
-    `}</style>
+    `}}/>
     <div className="mobile-calc-wrap">{children}</div>
   </div>);
 }
@@ -3363,7 +3380,7 @@ function CalcRetire({isMo=false,onNav=()=>{}}){const[monthly,sM]=useState("");co
 /* 실업급여 */
 function CalcUnemploy({isMo=false,onNav=()=>{}}){const[age,sAge]=useState("30");const[years,sY]=useState("3");const[daily,sD]=useState("");
   const dailyW=parseInt(String(daily).replace(/,/g,""))||0;const ageV=parseInt(age),yV=parseInt(years);
-  const minWage2026=10030,minDaily=Math.round(minWage2026*8*0.8),maxDaily=66000;// 2026년 최저시급 10,030원 (고용노동부 고시)
+  const minWage2026=10320,minDaily=Math.round(minWage2026*8*0.8),maxDaily=66000;// 2026년 최저시급 10,320원 (고용노동부 고시)
   const calcDaily=dailyW>0?Math.min(Math.max(Math.round(dailyW*0.6),minDaily),maxDaily):0;
   let duration=120;if(ageV<50){if(yV>=10)duration=210;else if(yV>=5)duration=180;else if(yV>=3)duration=150;else if(yV>=1)duration=120;}else{if(yV>=10)duration=270;else if(yV>=5)duration=240;else if(yV>=3)duration=210;else if(yV>=1)duration=180;}
   const totalAmount=calcDaily*duration,monthlyAmount=Math.round(calcDaily*30);
@@ -3432,24 +3449,29 @@ function CalcInsurance4({isMo=false,onNav=()=>{}}){const[type,sType]=useState("w
     </div>
   </div><RequiredGuide items={[{label:"월 급여 (세전)",filled:false}]}/></div>);}
 
-function NextStep({calcId,onNav,isMo=false}){
+/* 2026.10 '함께 계산하면 좋은 계산기'는 화면 틀(host)이 한 번만 그린다.
+ * 이전에는 계산기 안쪽과 화면 틀이 각각 그려 같은 묶음이 두 번 보였다. 틀 안에 있는 계산기 쪽 것은 자동으로 생략된다. */
+const NextStepHostCtx=createContext(false);
+function NextStep({calcId,onNav,isMo=false,host=false,row=false}){
+  const hosted=useContext(NextStepHostCtx);
+  if(hosted&&!host)return null;
   const links=(INTERNAL_LINKS[calcId]||[]).map(l=>({id:l.id,label:l.label}));
   if(links.length===0){const rl=(RELATED[calcId]||[]).map(id=>{const it=CL.find(c=>c.id===id);return it?{id,label:it.l+" 계산하기"}:null;}).filter(Boolean);if(rl.length===0)return null;links.push(...rl);}
   return(
-    <div className="lc-nextstep" style={{marginTop:16,background:"#fff",border:"1px solid #dfe1e6",borderRadius:14,padding:"20px 22px",position:"relative",zIndex:1}}>
-      <h3 style={{fontSize:11,fontWeight:700,color:"#6b778c",letterSpacing:.5,textTransform:"uppercase",margin:"0 0 12px"}}>함께 계산하면 좋은</h3>
-      <div style={{display:"flex",flexDirection:"column",gap:6}}>
+    <nav className="lc-nextstep" aria-label="함께 계산하면 좋은 계산기" style={{marginTop:16,background:"#fff",border:"1px solid #dfe1e6",borderRadius:14,padding:isMo?"18px 16px":"20px 22px",position:"relative",zIndex:1}}>
+      <h3 style={{fontSize:isMo?14:13,fontWeight:700,color:"#505f79",margin:"0 0 12px"}}>함께 계산하면 좋은 계산기</h3>
+      <div style={row?{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))",gap:8}:{display:"flex",flexDirection:"column",gap:6}}>
         {links.map(l=>{const it=CL.find(c=>c.id===l.id);if(!it)return null;return(
-          <button key={l.id} onClick={()=>onNav(it.c,l.id)} style={{padding:"10px 14px",background:"#fff",border:"1px solid #dfe1e6",borderRadius:10,fontSize:13,color:"#172B4D",cursor:"pointer",fontWeight:500,fontFamily:"inherit",textAlign:"left",display:"flex",justifyContent:"space-between",alignItems:"center",transition:"all .15s"}}
+          <A key={l.id} href={calcHref(l.id)} onGo={()=>onNav(it.c,l.id)} style={{padding:"10px 14px",minHeight:44,boxSizing:"border-box",background:"#fff",border:"1px solid #dfe1e6",borderRadius:10,fontSize:isMo?14:13,color:"#172B4D",cursor:"pointer",fontWeight:500,fontFamily:"inherit",textAlign:"left",display:"flex",justifyContent:"space-between",alignItems:"center",gap:8,transition:"all .15s"}}
             onMouseEnter={e=>{e.currentTarget.style.background="#deebff";e.currentTarget.style.borderColor="#0747A6";e.currentTarget.style.color="#0747A6"}}
-            onMouseLeave={e=>{e.currentTarget.style.background="#fff";e.currentTarget.style.borderColor="#dfe1e6";e.currentTarget.style.color="#172B4D"}}><span>{l.label}</span><span style={{color:"#0747A6",fontWeight:700}}>→</span></button>
+            onMouseLeave={e=>{e.currentTarget.style.background="#fff";e.currentTarget.style.borderColor="#dfe1e6";e.currentTarget.style.color="#172B4D"}}><span>{l.label}</span><span style={{color:"#0747A6",fontWeight:700}}>→</span></A>
         );})}
       </div>
-    </div>
+    </nav>
   );
 }
 function CalcMinWage({isMo=false,onNav=()=>{}}){
-  const MIN_HOURLY=10030;
+  const MIN_HOURLY=10320;
   const[hours,setH]=useState("");const[days,setD]=useState("");const[customH,setCH]=useState("");
   const h=parseFloat(hours)||0,d=parseFloat(days)||0,w=4.345;
   const hourly=parseFloat(customH)||MIN_HOURLY;
@@ -3459,7 +3481,7 @@ function CalcMinWage({isMo=false,onNav=()=>{}}){
   return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}>
     <div>
       
-      <div style={{padding:"12px 16px",background:"#E6F1FB",borderRadius:10,marginBottom:16,fontSize:13,color:"#0747A6",fontWeight:600}}>2026년 최저임금: <strong>시급 {MIN_HOURLY.toLocaleString()}원</strong> <span style={{fontWeight:400,fontSize:11,color:"#6b778c"}}>(+1.7% / 매년 1월 자동 업데이트)</span></div>
+      <div style={{padding:"12px 16px",background:"#E6F1FB",borderRadius:10,marginBottom:16,fontSize:13,color:"#0747A6",fontWeight:600}}>2026년 최저임금: <strong>시급 {MIN_HOURLY.toLocaleString()}원</strong> <span style={{fontWeight:400,fontSize:11,color:"#6b778c"}}>(+2.9% / 매년 1월 자동 업데이트)</span></div>
       <Inp label="하루 근무시간" value={hours} onChange={setH} suffix="시간" placeholder="예: 8"/>
       <Inp label="주 근무일수" value={days} onChange={setD} suffix="일" placeholder="예: 5"/>
       <Inp label="직접 입력 시급 (선택)" value={customH} onChange={setCH} suffix="원" placeholder={"미입력 시 최저임금 "+MIN_HOURLY.toLocaleString()+"원 적용"}/>
@@ -3468,10 +3490,10 @@ function CalcMinWage({isMo=false,onNav=()=>{}}){
       {!hasPay&&<div style={{padding:"10px 14px",background:"#f4f5f7",borderRadius:10,fontSize:12,color:"#6b778c",marginTop:8}}>ℹ️ 주 15시간 미만 → 주휴수당 미적용</div>}
     </div>
     <div><RPFull miss={parseFloat(weeklyH)>0?null:MI.minwage} title="예상 급여"
-      deadline="※ 2026년 최저임금 시급 10,030원 (+1.7%) / 주 15시간↑ 주휴수당 의무"
+      deadline="※ 2026년 최저임금 시급 10,320원 (+2.9%) / 주 15시간↑ 주휴수당 의무"
       alertMsg={isVio?"최저임금 위반: 시급 "+MIN_HOURLY+"원 미달":hasPay?"주휴수당 포함 주 "+payH.toFixed(1)+"시간 가산":"주 15시간 미만: 주휴수당 미적용"}
       alertType={isVio?"danger":hasPay?"success":"info"}
-      total={monthly} sub={"시급 "+hourly.toLocaleString()+"원 기준"} items={[{l:"시급",v:hourly.toLocaleString()+"원",note:"2026년 10,030원"},{l:"일급 ("+h+"시간)",v:daily.toLocaleString()+"원"},{l:"주 근무시간",v:weeklyH+"시간"},{l:"주휴수당",v:hasPay?payH.toFixed(1)+"시간/주":"미적용"},{l:"주급 (주휴"+(hasPay?"포함":"미포함")+")",v:Math.round(hourly*totalWH).toLocaleString()+"원"},{l:"월급 (월 "+w+"주)",v:fW(monthly)},{l:"연봉 (월급×12)",v:fW(yearly)},{l:"월급 (주휴 미포함)",v:fW(Math.round(hourly*weeklyH*w)),note:"비교용"}]} nextStep={<NextStep calcId="minwage" onNav={onNav} isMo={isMo}/>}/>
+      total={monthly} sub={"시급 "+hourly.toLocaleString()+"원 기준"} items={[{l:"시급",v:hourly.toLocaleString()+"원",note:"2026년 10,320원"},{l:"일급 ("+h+"시간)",v:daily.toLocaleString()+"원"},{l:"주 근무시간",v:weeklyH+"시간"},{l:"주휴수당",v:hasPay?payH.toFixed(1)+"시간/주":"미적용"},{l:"주급 (주휴"+(hasPay?"포함":"미포함")+")",v:Math.round(hourly*totalWH).toLocaleString()+"원"},{l:"월급 (월 "+w+"주)",v:fW(monthly)},{l:"연봉 (월급×12)",v:fW(yearly)},{l:"월급 (주휴 미포함)",v:fW(Math.round(hourly*weeklyH*w)),note:"비교용"}]} nextStep={<NextStep calcId="minwage" onNav={onNav} isMo={isMo}/>}/>
     
     
     </div>
@@ -4175,7 +4197,7 @@ function HomeSections({isMo, effectiveUser, navigateCalc, setAuthMode, setShowAu
   }));
 
   return(<div style={{maxWidth:1200,margin:"0 auto",padding:isMo?"24px 16px 0":"32px 24px"}}>
-    <style>{`@keyframes lcpulse{0%,100%{background-position:200% 0}50%{background-position:-200% 0}}`}</style>
+    <style dangerouslySetInnerHTML={{__html:`@keyframes lcpulse{0%,100%{background-position:200% 0}50%{background-position:-200% 0}}`}}/>
 
     {/* 섹션 1·2 — 뉴스·정책 (2열) */}
     <div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?0:20}}>
@@ -5141,7 +5163,7 @@ function LearnCalculatorGuide(){const _grid=(arr)=>(<div style={{display:"grid",
     {_grid([["중개보수","/중개보수계산기"],["등기비용","/등기비용계산기"],["법무사수수료","/법무사수수료계산기"],["인지세","/인지세계산기"],["채권할인료","/채권할인료계산기"],["감정평가수수료","/감정평가수수료계산기"]])}</_SS>
   <_SS><_SH2>생활 계산기</_SH2>
     {_grid([["연봉 실수령액","/연봉실수령액계산기"],["4대보험","/4대보험계산기"],["국민연금","/국민연금계산기"],["자동차세","/자동차세계산기"],["퇴직금","/퇴직금계산기"],["실업급여","/실업급여계산기"],["최저임금","/최저임금계산기"],["예적금이자","/예적금이자계산기"],["전월세전환","/전월세전환계산기"]])}
-    <_SCL><b>2026년 주요 지표</b> 최저임금 10,030원 · 전월세전환율 5.0% · 기준금리 3.0%</_SCL></_SS>
+    <_SCL><b>2026년 주요 지표</b> 최저임금 10,320원 · 전월세전환율 5.0% · 기준금리 3.0%</_SCL></_SS>
   <_SS><_SH2>부동산 계산기</_SH2>
     {_grid([["임대수익률","/임대수익률계산기"],["공동명의","/공동명의계산기"],["평수변환","/평수변환계산기"],["용적률·건폐율","/용적률계산기"],["경매비용","/경매비용계산기"],["리모델링 수익","/리모델링수익계산기"],["건물 잔존가치","/건물잔존가치계산기"]])}</_SS>
   <_SS><_SH2>PRO 분석</_SH2>
@@ -5182,7 +5204,7 @@ function LearnTaxHistory(){return(<>
     <ul style={_SW.ul}><li style={_SW.li}>수도권 주담대 한도 신설 (15억↓ 6억, 25억↓ 4억, 25억↑ 2억)</li><li style={_SW.li}>스트레스 DSR 2단계 전면 확대 (변동 +1.5%p)</li><li style={_SW.li}>생애최초 취득세 감면 연장 (2028.12.31까지)</li><li style={_SW.li}>기준금리 3.0%로 인하</li></ul>
     <_SBtn href="/LTV계산기">LTV</_SBtn><_SBtn href="/대출가능액계산기">대출가능액</_SBtn></_SS>
   <_SS><_SH2>2026 — 양도세 중과 복원 임박</_SH2><p style={_SW.p}>2026년은 한시 유예되었던 양도세 다주택 중과가 복원을 앞둔 해입니다.</p>
-    <ul style={_SW.ul}><li style={_SW.li}>기준금리 3.0% 유지 (2026.2.27 금통위)</li><li style={_SW.li}>최저임금 10,030원 (+1.7%)</li><li style={_SW.li}>전월세전환율 5.0% (기준금리+2%p)</li><li style={_SW.li}>DSR 은행 40%·비은행 50% 유지</li></ul>
+    <ul style={_SW.ul}><li style={_SW.li}>기준금리 3.0% 유지 (2026.2.27 금통위)</li><li style={_SW.li}>최저임금 10,320원 (+2.9%)</li><li style={_SW.li}>전월세전환율 5.0% (기준금리+2%p)</li><li style={_SW.li}>DSR 은행 40%·비은행 50% 유지</li></ul>
     <_SCL type="warn"><b>2026.5.9 만료 예정</b> 다주택자 양도세 중과 한시 유예 종료. 이후 2주택 +20%p, 3주택 +30%p 중과 복원</_SCL></_SS>
   <_SS><_SH2>향후 예정 개정사항</_SH2>
     <ul style={_SW.ul}><li style={_SW.li}><b>2026.5.9</b> — 다주택자 양도세 중과 유예 만료</li><li style={_SW.li}><b>2026 하반기</b> — 스트레스 DSR 3단계 시행 검토 (변동 +2.0%p)</li><li style={_SW.li}><b>2027</b> — 공시가격 현실화 로드맵 재검토 예정</li><li style={_SW.li}><b>2028.12.31</b> — 생애최초 취득세 감면 일몰</li><li style={_SW.li}><b>상시 검토</b> — 증여세 세율·공제 구조 개편 논의 중</li></ul></_SS>
@@ -5403,7 +5425,7 @@ function AboutPage({isMo,navigateHome}){return(<div style={{maxWidth:820,margin:
     <h3 style={_SW.h3}>검증 프로세스 (5단계)</h3>
     <ol style={_SW.ul}><li style={_SW.li}><b>자동 모니터링 (매일 01:00 KST)</b> — Cloudflare Worker로 12개 기관 크롤링</li><li style={_SW.li}><b>AI 1차 분석</b> — Claude 모델이 변경사항 영향도 평가</li><li style={_SW.li}><b>운영자 수동 검수</b> — 원문 법령·공식 사례 대조</li><li style={_SW.li}><b>계산 로직 업데이트</b> — staging 환경 회귀 테스트</li><li style={_SW.li}><b>배포 및 이력 공개</b> — Cloudflare Pages 자동 배포 + RSS 피드</li></ol></_SS>
   <_SS><_SH2>세법 반영 기준일</_SH2>
-    <_SCL type="ok"><b>현재 반영 기준: 2026년 4월 14일</b><br/>취득세·양도세·종부세·DSR 스트레스 3단계·2026년 최저임금 10,030원 등 최신 개정 사항이 모두 반영된 상태입니다.</_SCL>
+    <_SCL type="ok"><b>현재 반영 기준: 2026년 4월 14일</b><br/>취득세·양도세·종부세·DSR 스트레스 3단계·2026년 최저임금 10,320원 등 최신 개정 사항이 모두 반영된 상태입니다.</_SCL>
     <p style={_SW.p}>주요 반영 내용:</p>
     <ul style={_SW.ul}><li style={_SW.li}>양도세 다주택 중과 유예 (2026.5.9까지)</li><li style={_SW.li}>생애최초 취득세 감면 최대 200만원 (2028.12.31까지)</li><li style={_SW.li}>수도권 주담대 한도 규제 (15억↓ 6억 / 25억↓ 4억 / 25억↑ 2억)</li><li style={_SW.li}>스트레스 DSR (변동 +1.5%p, 혼합 +0.75%p)</li><li style={_SW.li}>한국은행 기준금리 3.0% (2026.2.27 결정)</li></ul></_SS>
   <_SS><_SH2>면책조항</_SH2>
@@ -5463,7 +5485,6 @@ function PricingPage({isMo,navigateHome}){
 
 
 function NotFoundPage({isMo,navigateHome}){
-  useEffect(()=>{document.querySelectorAll('meta[name="robots"]').forEach(el=>el.remove());const m=document.createElement('meta');m.name='robots';m.content='noindex, nofollow';document.head.appendChild(m);document.title='페이지를 찾을 수 없습니다 | 생활계산기.com';return()=>{document.querySelectorAll('meta[name="robots"]').forEach(el=>el.remove());};},[]);
   return(<div style={{minHeight:'60vh',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'40px 20px',textAlign:'center'}}>
     <h1 style={{fontSize:72,fontWeight:800,color:'#E4E7EB',margin:0,lineHeight:1}}>404</h1>
     <h2 style={{fontSize:24,fontWeight:700,margin:'16px 0 8px',color:'#191F28'}}>페이지를 찾을 수 없습니다</h2>
@@ -5579,12 +5600,14 @@ function GuidePage({isMo,navigateHome}){return(<div style={{maxWidth:860,margin:
     <ol style={_SW.ul}><li style={_SW.li}><b>본문 읽기</b> — 각 가이드는 2026년 최신 세법과 금융 규제를 반영해 작성되었습니다.</li><li style={_SW.li}><b>계산기로 시뮬레이션</b> — 가이드 하단의 <a href="/" style={{color:"#0747A6"}}>60개+ 계산기</a>로 본인 상황에 맞는 수치를 확인하세요.</li><li style={_SW.li}><b>상담 신청</b> — 복잡한 사안은 전문가와 논의할 수 있습니다.</li><li style={_SW.li}><b>검증 가이드 참고</b> — 실제 세금 신고 전에는 <a href="/verification" style={{color:"#0747A6"}}>검증 가이드</a>로 홈택스·위택스 공식 자료와 대조하세요.</li></ol>
     <_SCL><b>💡 가이드 신뢰 기준</b> 모든 내용은 <a href="/about" style={{color:"#0747A6"}}>생활계산기 검수 기준</a>을 따라 국세청·행안부·금융위 등 1차 출처에서 수집됩니다.</_SCL></_SS>
 </div>);}
-function CookieBanner({onPrivacy}){
-  const[show,setShow]=useState(typeof window!=="undefined"&&!localStorage.getItem('cookie_consent'));
+function CookieBanner({onPrivacy,isMo=false}){
+  const[show,setShow]=useState(false);
+  useEffect(()=>{try{if(!localStorage.getItem('cookie_consent'))setShow(true);}catch{}},[]);
   if(!show)return null;
-  return(<div style={{position:"fixed",bottom:0,left:0,right:0,background:"#172B4D",color:"#fff",padding:"16px 24px",zIndex:99999,display:"flex",justifyContent:"center",alignItems:"center",gap:16,flexWrap:"wrap"}}>
-    <p style={{fontSize:13,margin:0,maxWidth:600,lineHeight:1.5}}>생활계산기.com은 서비스 개선을 위해 쿠키를 사용합니다. 계속 이용하시면 쿠키 사용에 동의하는 것으로 간주됩니다. <span onClick={onPrivacy} style={{color:"#57D9A3",cursor:"pointer",marginLeft:4,textDecoration:"underline"}}>개인정보처리방침</span></p>
-    <button onClick={()=>{localStorage.setItem('cookie_consent','true');setShow(false);}} style={{background:"#0747A6",color:"#fff",border:"none",borderRadius:6,padding:"8px 24px",fontSize:13,fontWeight:700,cursor:"pointer",flexShrink:0,fontFamily:"inherit"}}>동의합니다</button>
+  /* 2026.10 모바일: 화면의 16%를 덮어 입력칸을 가리던 2단 배너 → 낮은 한 줄 띠 */
+  return(<div className="cookie-banner" role="region" aria-label="쿠키 안내" style={{position:"fixed",bottom:0,left:0,right:0,background:"#172B4D",color:"#fff",padding:isMo?"8px 12px calc(8px + env(safe-area-inset-bottom))":"16px 24px",zIndex:99999,display:"flex",justifyContent:"center",alignItems:"center",gap:isMo?10:16,flexWrap:isMo?"nowrap":"wrap"}}>
+    <p style={{fontSize:isMo?12:13,margin:0,maxWidth:600,lineHeight:isMo?1.45:1.5,flex:isMo?"1 1 auto":undefined,minWidth:0,wordBreak:"keep-all"}}>{isMo?"서비스 개선을 위해 쿠키를 사용합니다. 계속 이용하시면 동의로 간주됩니다.":"생활계산기.com은 서비스 개선을 위해 쿠키를 사용합니다. 계속 이용하시면 쿠키 사용에 동의하는 것으로 간주됩니다."} <a href="/privacy" onClick={e=>{if(onPrivacy){e.preventDefault();onPrivacy();}}} style={{color:"#57D9A3",cursor:"pointer",marginLeft:4,textDecoration:"underline",whiteSpace:"nowrap"}}>개인정보처리방침</a></p>
+    <button onClick={()=>{try{localStorage.setItem('cookie_consent','true');}catch{}setShow(false);}} style={{background:"#0747A6",color:"#fff",border:"none",borderRadius:8,padding:isMo?"0 16px":"8px 24px",minHeight:isMo?44:undefined,fontSize:13,fontWeight:700,cursor:"pointer",flexShrink:0,fontFamily:"inherit",whiteSpace:"nowrap"}}>{isMo?"동의":"동의합니다"}</button>
   </div>);
 }
 
@@ -5660,7 +5683,7 @@ function IndicatorTicker({liveData,onNav}){
   return(<div style={{background:"#0d1117",overflow:"hidden",height:30,display:"flex",alignItems:"center",position:"relative",zIndex:10}}>
     {news.length>0&&<div style={{background:"#0747A6",padding:"0 10px",height:"100%",display:"flex",alignItems:"center",flexShrink:0,fontSize:11,fontWeight:700,color:"white",letterSpacing:.5}}>LIVE</div>}
     <div style={{display:"flex",gap:32,animation:`ticker ${speed}s linear infinite`,whiteSpace:"nowrap",paddingLeft:16}}>{[...allEls,...allEls]}</div>
-    <style>{`@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}`}</style>
+    <style dangerouslySetInnerHTML={{__html:`@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}`}}/>
   </div>);
 }
 
@@ -6169,7 +6192,7 @@ function LeftNav({isMo,navOpen,setNavOpen,navContent,setNavContent,effectiveUser
         })}
         {/* 2026.04.15 calc 기반 동적: 관련 법령 + 함께 사용하면 좋은 계산기 */}
         <div key={"nav-"+calc} style={{animation:"lcNavFade .2s ease"}}>
-          <style>{`@keyframes lcNavFade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}`}</style>
+          <style dangerouslySetInnerHTML={{__html:`@keyframes lcNavFade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}`}}/>
           {navData.law&&navData.law.text&&(
             <div style={{padding:"12px 18px",borderTop:"1px solid #F1F5F9"}}>
               <div style={{fontSize:11,fontWeight:700,color:"#6B7280",letterSpacing:.5,marginBottom:6,textTransform:"uppercase"}}>관련 법령</div>
@@ -6190,6 +6213,74 @@ function LeftNav({isMo,navOpen,setNavOpen,navContent,setNavContent,effectiveUser
   </>);
 }
 
+/* 2026.10 모든 화면 바닥에 전체 계산기로 가는 진짜 링크를 둔다 (홈 제외 — 홈은 본문에 전체 목록이 있다).
+ * 어느 계산기에서든 다른 계산기로 바로 갈 수 있고, 검색엔진도 모든 계산기를 서로 연결된 것으로 본다. */
+function FooterDirectory({isMo,onNav}){
+  if(isMo)return(<nav aria-label="전체 계산기" style={{width:"100%",maxWidth:640,margin:"0 auto 8px",textAlign:"left"}}>
+    <div style={{fontSize:13,fontWeight:800,color:"#172B4D",margin:"0 0 8px"}}>전체 계산기</div>
+    {CATS.map(c=>{const list=CL.filter(x=>x.c===c.id);return(
+      <details key={c.id} style={{borderTop:"1px solid #E5E7EB"}}>
+        <summary style={{display:"flex",alignItems:"center",justifyContent:"space-between",minHeight:48,fontSize:14,fontWeight:600,color:"#172B4D",cursor:"pointer",listStyle:"none"}}><span>{c.l} 계산기</span><span style={{fontSize:12,color:"#6B7280",fontWeight:500}}>{list.length}개 ▾</span></summary>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(2,minmax(0,1fr))",gap:"0 12px",padding:"0 0 10px"}}>
+          {list.map(x=>(<A key={x.id} href={calcHref(x.id)} onGo={()=>onNav(c.id,x.id)} style={{display:"flex",alignItems:"center",minHeight:44,fontSize:14,color:"#374151",wordBreak:"keep-all"}}>{x.l}</A>))}
+        </div>
+      </details>);})}
+  </nav>);
+  return(<nav aria-label="전체 계산기" style={{maxWidth:1200,margin:"0 auto 40px",paddingBottom:36,borderBottom:"1px solid rgba(255,255,255,0.1)",display:"grid",gridTemplateColumns:"repeat(6,minmax(0,1fr))",gap:24}}>
+    {CATS.map(c=>(<div key={c.id}>
+      <div style={{fontSize:13,fontWeight:800,color:"#fff",margin:"0 0 12px"}}>{c.l} 계산기</div>
+      <ul style={{listStyle:"none",padding:0,margin:0}}>
+        {CL.filter(x=>x.c===c.id).map(x=>(<li key={x.id}><A href={calcHref(x.id)} onGo={()=>onNav(c.id,x.id)} style={{display:"block",fontSize:13,color:"rgba(255,255,255,0.65)",padding:"4px 0",transition:"color .15s"}} onMouseEnter={e=>e.currentTarget.style.color="#60a5fa"} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.65)"}>{x.l}</A></li>))}
+      </ul>
+    </div>))}
+  </nav>);
+}
+
+/* 2026.10 화면 일부에서 오류가 나도 사이트 전체가 흰 화면이 되지 않게 막는 울타리.
+ * (양도소득세 PC 화면이 세율표 부품 오류 하나로 통째로 꺼졌던 사고의 재발 방지)
+ * 빌드 단계(scripts/build-static.mjs)는 이 울타리와 무관하게 오류를 그대로 실패로 처리한다 → 배포 자체가 막힌다. */
+class PageErrorBoundary extends Component{
+  constructor(props){super(props);this.state={err:null};}
+  static getDerivedStateFromError(err){return{err};}
+  componentDidCatch(err,info){try{console.error("[화면 오류]",err,info&&info.componentStack);}catch{}}
+  componentDidUpdate(prev){if(prev.resetKey!==this.props.resetKey&&this.state.err)this.setState({err:null});}
+  render(){
+    if(!this.state.err)return this.props.children;
+    return(<div role="alert" style={{minHeight:"50vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"48px 20px",textAlign:"center"}}>
+      <h1 style={{fontSize:22,fontWeight:800,color:"#172B4D",margin:"0 0 8px"}}>화면을 표시하는 중 문제가 생겼습니다</h1>
+      <p style={{fontSize:14,color:"#505f79",lineHeight:1.7,margin:"0 0 20px",maxWidth:420,wordBreak:"keep-all"}}>불편을 드려 죄송합니다. 새로고침하면 대부분 해결됩니다. 계속되면 문의하기로 알려 주세요.</p>
+      <div style={{display:"flex",gap:8,flexWrap:"wrap",justifyContent:"center"}}>
+        <button onClick={()=>{try{window.location.reload();}catch{}}} style={{padding:"12px 24px",minHeight:44,background:"#0747A6",color:"#fff",border:"none",borderRadius:10,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>새로고침</button>
+        <a href="/" style={{padding:"12px 24px",minHeight:44,background:"#fff",color:"#172B4D",border:"1px solid #dfe1e6",borderRadius:10,fontSize:14,fontWeight:600,textDecoration:"none",display:"inline-flex",alignItems:"center"}}>홈으로</a>
+        <a href="/contact" style={{padding:"12px 24px",minHeight:44,background:"#fff",color:"#172B4D",border:"1px solid #dfe1e6",borderRadius:10,fontSize:14,fontWeight:600,textDecoration:"none",display:"inline-flex",alignItems:"center"}}>문의하기</a>
+      </div>
+    </div>);
+  }
+}
+
+/* 2026.10 주소 → 화면 판정 (순수 함수).
+ * 첫 렌더, 빌드 때의 사전 렌더, 주소 변경이 모두 이 함수 하나를 쓴다 → 계산기 주소로 들어와도 홈이 먼저 깜빡이지 않는다.
+ * 반환 null = 판정 불가(기존 화면 유지). 로그인 콜백 주소는 이 함수가 아니라 App 안의 effect가 처리한다. */
+function resolveRoute(hash){
+  if(!hash)return{page:"home"};
+  const simple={mypage:"mypage",info:"info",news:"news",community:"community",policy:"policy",market:"market",about:"about",contact:"contact",guide:"guide",pricing:"pricing",verification:"verification",admin:"admin","admin/callback":"admin/callback",terms:"terms",reports:"reports:index","경제상황판":"economic","부동산용어사전":"terms"};
+  if(Object.prototype.hasOwnProperty.call(simple,hash))return{page:simple[hash]};
+  if(hash.startsWith("terms/"))return{page:"html:/"+hash+".html"};
+  if(hash.startsWith("reports/")){const slug=hash.replace("reports/","");return{page:REPORTS_MAP[slug]?"reports:"+slug:"reports:index"};}
+  if(hash.startsWith("learn/")){const slug=hash.replace("learn/","");return{page:LEARN_MAP[slug]?"learn:"+slug:"html:/"+hash+".html"};}
+  if(hash.startsWith("law/")){const slug=hash.replace("law/","");return{page:LAW_MAP[slug]?"law:"+slug:"html:/"+hash+".html"};}
+  if(["privacy","contact","disclaimer","resource","cookie"].includes(hash))return{page:"legal_"+hash};
+  if(SLUG_REVERSE[hash]){const cId=SLUG_REVERSE[hash];const it=CL.find(c=>c.id===cId);return it?{page:"calc",cat:it.c,calc:cId}:null;}
+  return{page:"404"};
+}
+function initialRoute(){
+  try{
+    const p=typeof window!=="undefined"?decodeURIComponent(window.location.pathname.replace(/^\//,"")):"";
+    if(/^auth\//.test(p))return{page:"home"};
+    return resolveRoute(p)||{page:"home"};
+  }catch{return{page:"home"};}
+}
+
 /* ═══ 메인 앱 ═══ */
 export default function App(){
   const isMo=useIsMobile();
@@ -6202,9 +6293,10 @@ export default function App(){
   useEffect(()=>{
     setAuthLoading(false);
   },[]);
-  const[page,setPage]=useState("home");
+  const[route0]=useState(initialRoute);
+  const[page,setPage]=useState(route0.page);
   const[heroIdx,setHeroIdx]=useState(0);const[heroVisible,setHeroVisible]=useState(true);
-  const[cat,setCat]=useState("tax");const[calc,setCalc]=useState("acquisition");const[eduTab,setEduTab]=useState("rates");
+  const[cat,setCat]=useState(route0.cat||"tax");const[calc,setCalc]=useState(route0.calc||"acquisition");const[eduTab,setEduTab]=useState("rates");
   const[search,setSearch]=useState("");
   const[modal,setModal]=useState(null);
   const tabScrollRef=useRef(null);
@@ -6281,6 +6373,7 @@ export default function App(){
   const filtered=CL.filter(c=>c.c===cat);
   const navigateCalc=(catId,calcId)=>{setCat(catId);setCalc(calcId);setPage("calc");setSessionKey(k=>k+1);const slug=SLUGS[calcId]||calcId;history.pushState(null,"","/"+encodeURIComponent(slug));window.scrollTo(0,0);const info=CL.find(c=>c.id===calcId);if(info){saveHistory(calcId,info.l,1);fetch(LC_REALESTATE_WORKER+"/api/admin/track",{method:"POST",headers:{"Content-Type":"application/json; charset=utf-8"},body:JSON.stringify({calcId,calcName:info.l,referrer:document.referrer})}).catch(()=>{});}};
   const navigateHome=()=>{setPage("home");history.pushState(null,"","/");window.scrollTo(0,0);};
+  const goHomeSection=(id)=>{setPage("home");history.pushState(null,"","/#"+id);setTimeout(()=>{const el=document.getElementById(id)||document.getElementById("allCalcs");if(el)el.scrollIntoView({behavior:"smooth"});else window.scrollTo(0,0);},80);};
   const navigateInfo=()=>{setPage("info");history.pushState(null,"","/info");window.scrollTo(0,0);setShowInfoMenu(false);};
   const navigateLegal=(type)=>{setPage("legal_"+type);history.pushState(null,"","/"+type);window.scrollTo(0,0);};
   const navigateMyPage=()=>{setPage("mypage");history.pushState(null,"","/mypage");window.scrollTo(0,0);};
@@ -6446,8 +6539,6 @@ export default function App(){
   useEffect(()=>{const t=setInterval(()=>{setHeroVisible(false);setTimeout(()=>{setHeroIdx(i=>(i+1)%4);setHeroVisible(true);},500);},4000);return()=>clearInterval(t);},[]);
   const hash=usePathRoute();
   useEffect(()=>{
-    if(hash==="mypage"){setPage("mypage");return;}
-    if(hash==="info"){setPage("info");return;}
     if(hash==="auth/callback"){
       const params=new URLSearchParams(window.location.search);
       const code=params.get("code"),state=params.get("state"),err=params.get("error");
@@ -6471,33 +6562,17 @@ export default function App(){
       window.history.replaceState(null,"","/");setPage("home");
       return;
     }
-    if(hash==="news"){setPage("news");return;}
-    if(hash==="community"){setPage("community");return;}
-    if(hash==="policy"){setPage("policy");return;}
-    if(hash==="market"){setPage("market");return;}
-    if(hash==="about"){setPage("about");return;}
-    if(hash==="contact"){setPage("contact");return;}
-    if(hash==="guide"){setPage("guide");return;}
-    if(hash==="pricing"){setPage("pricing");return;}
-    if(hash==="verification"){setPage("verification");return;}
-    if(hash==="admin"){setPage("admin");return;}
-    if(hash==="admin/callback"){setPage("admin/callback");return;}
-    if(hash==="terms"){setPage("terms");return;}
-    if(hash.startsWith("terms/")){setPage("html:/"+hash+".html");return;}
-    if(hash==="reports"){setPage("reports:index");return;}
-    if(hash==="경제상황판"){setPage("economic");return;}
-    if(hash.startsWith("reports/")){const slug=hash.replace("reports/","");if(REPORTS_MAP[slug]){setPage("reports:"+slug);return;}setPage("reports:index");return;}
-    if(hash.startsWith("learn/")){const slug=hash.replace("learn/","");if(LEARN_MAP[slug]){setPage("learn:"+slug);return;}setPage("html:/"+hash+".html");return;}
-    if(hash.startsWith("law/")){const slug=hash.replace("law/","");if(LAW_MAP[slug]){setPage("law:"+slug);return;}setPage("html:/"+hash+".html");return;}
-    if(["privacy","contact","disclaimer","resource","cookie"].includes(hash)){setPage("legal_"+hash);}
-    else if(hash&&SLUG_REVERSE[hash]){const cId=SLUG_REVERSE[hash];const it=CL.find(c=>c.id===cId);if(it){setCat(it.c);setCalc(cId);setPage("calc");fetch(LC_REALESTATE_WORKER+"/api/admin/track",{method:"POST",headers:{"Content-Type":"application/json; charset=utf-8"},body:JSON.stringify({calcId:cId,calcName:it.l,referrer:document.referrer})}).catch(()=>{});}}
-    else if(!hash){setPage("home");}
-    else{setPage("404");}
+    const r=resolveRoute(hash);
+    if(!r)return;
+    if(r.page==="calc"){const it=CL.find(c=>c.id===r.calc);setCat(r.cat);setCalc(r.calc);setPage("calc");if(it)fetch(LC_REALESTATE_WORKER+"/api/admin/track",{method:"POST",headers:{"Content-Type":"application/json; charset=utf-8"},body:JSON.stringify({calcId:r.calc,calcName:it.l,referrer:document.referrer})}).catch(()=>{});}
+    else setPage(r.page);
   },[hash]);
   useEffect(()=>{
     const h=(e)=>{
+      if(e.defaultPrevented)return;
       const a=e.target.closest&&e.target.closest("a");
       if(!a)return;
+      if(a.hasAttribute("data-hard"))return;
       const href=a.getAttribute("href");
       if(!href||!href.startsWith("/"))return;
       if(a.target==="_blank")return;
@@ -6514,7 +6589,9 @@ export default function App(){
     document.addEventListener("click",h);
     return()=>document.removeEventListener("click",h);
   },[]);
-  useEffect(()=>{if(page==="economic")return;if(page==="calc"&&calc&&PAGE_META[calc]){const m=PAGE_META[calc];document.title=m.title;document.querySelector('meta[name="description"]')?.setAttribute('content',m.desc);document.querySelector('meta[property="og:title"]')?.setAttribute('content',m.title);document.querySelector('meta[property="og:description"]')?.setAttribute('content',m.desc);if(CALC_KEYWORDS[calc]){let kw=document.querySelector('meta[name="keywords"]');if(!kw){kw=document.createElement('meta');kw.name='keywords';document.head.appendChild(kw);}kw.setAttribute('content',CALC_KEYWORDS[calc]);}}else{document.title="생활계산기 - 세금 연말정산 연봉 부동산 종합계산기";document.querySelector('meta[name="description"]')?.setAttribute('content',"취득세 양도세 종합소득세 연말정산 연봉실수령액 DSR 중개보수 4대보험 국민연금 자동차세 등 62가지 무료 계산기. 2026 최신 세법 반영.");}let ld=document.getElementById('dynamic-jsonld');if(!ld){ld=document.createElement('script');ld.id='dynamic-jsonld';ld.type='application/ld+json';document.head.appendChild(ld);}if(page==="calc"&&calc&&PAGE_META[calc]){ld.textContent=JSON.stringify({"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":PAGE_META[calc].title.split(' | ')[0],"description":PAGE_META[calc].desc,"url":"https://xn--989a00a691bdfa717h.com/"+encodeURIComponent(SLUGS[calc]),"applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"홈","item":"https://xn--989a00a691bdfa717h.com/"},{"@type":"ListItem","position":2,"name":CATS.find(c=>c.id===cat)?.l||"","item":"https://xn--989a00a691bdfa717h.com/"},{"@type":"ListItem","position":3,"name":CL.find(c=>c.id===calc)?.l||"","item":"https://xn--989a00a691bdfa717h.com/"+encodeURIComponent(SLUGS[calc])}]}]});}else{ld.textContent='';};let cn=document.querySelector('link[rel="canonical"]');if(!cn){cn=document.createElement('link');cn.rel='canonical';document.head.appendChild(cn);}cn.href='https://xn--989a00a691bdfa717h.com'+window.location.pathname;},[page,calc]);
+  /* 2026.10 화면이 바뀔 때 <head>(제목·설명·대표주소·구조화 데이터)를 단일 원천 SITE.metaForPath 값으로 갱신.
+     서버가 보내는 문서의 <head>도 같은 함수로 만들므로 두 값이 어긋날 수 없다. */
+  useEffect(()=>{applyHead(SITE.metaForPath(window.location.pathname));},[page,calc]);
   const Comp=CM[calc]||(()=><Placeholder l={CL.find(c=>c.id===calc)?.l||calc}/>);
   const catInfo=CATS.find(c=>c.id===cat);
   const searchResults=search.trim()?CL.filter(c=>(c.l+"|"+(DESC[c.id]||"")).includes(search.trim())):[];
@@ -6526,11 +6603,11 @@ export default function App(){
 
   /* ═══ 2026.04.16 STEP 2: 공지사항 배너 연동 ═══ */
   const[noticeBanner,setNoticeBanner]=useState(null);
-  const[noticeDismissed,setNoticeDismissed]=useState(()=>sessionStorage.getItem("lc_notice_dismissed")==="1");
+  const[noticeDismissed,setNoticeDismissed]=useState(()=>{try{return sessionStorage.getItem("lc_notice_dismissed")==="1";}catch{return false;}});
   useEffect(()=>{
     fetch(LC_REALESTATE_WORKER+"/api/admin/notice").then(r=>r.json()).then(j=>{if(j&&j.enabled)setNoticeBanner(j);}).catch(()=>{});
   },[]);
-  const dismissNotice=()=>{setNoticeDismissed(true);sessionStorage.setItem("lc_notice_dismissed","1");};
+  const dismissNotice=()=>{setNoticeDismissed(true);try{sessionStorage.setItem("lc_notice_dismissed","1");}catch{}};
 
   /* ═══ 2026.04.16 STEP 3: AdSense 광고 슬롯 연동 ═══ */
   const ADSENSE_APPROVED = false; // 승인 후 true로 변경
@@ -6547,10 +6624,10 @@ export default function App(){
       <button onClick={dismissNotice} aria-label="닫기" style={{background:"none",border:"none",color:t.c,fontSize:18,cursor:"pointer",flexShrink:0,padding:"0 4px",fontFamily:"inherit"}}>✕</button>
     </div>);})()}
     <SidePanel/>
-    {isMo&&<button onClick={()=>setNavOpen(true)} aria-label="메뉴 열기" style={{position:"fixed",top:10,left:10,zIndex:9997,width:40,height:40,background:"#0a1628",color:"#fff",border:"none",borderRadius:10,cursor:"pointer",fontSize:20,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 8px rgba(0,0,0,.2)"}}>☰</button>}
+    {/* 2026.10 모바일 좌상단 검은 메뉴 버튼 제거 — 홈에서는 눌러도 반응이 없었고 로고를 가렸다. 가이드·자료 서랍은 오른쪽 메뉴 안의 항목으로 연다. */}
     {/* 모바일/홈에서는 LeftNav 숨김 — 모바일은 drawer로 별도 렌더 */}
     {page!=="home"&&isMo&&<LeftNav isMo={isMo} navOpen={navOpen} setNavOpen={setNavOpen} navContent={navContent} setNavContent={setNavContent} effectiveUser={effectiveUser} setAuthMode={setAuthMode} setShowAuth={setShowAuth} navigateMyPage={navigateMyPage} calc={calc}/>}
-    <style>{`
+    <style dangerouslySetInnerHTML={{__html:`
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;overflow-x:hidden}
 body{-webkit-tap-highlight-color:transparent;font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow-x:hidden;position:relative;width:100%;background:#F5F6F8;color:#1A1A2E;font-size:14px;line-height:1.7}
 img,svg,table,pre{max-width:100%}
@@ -6584,6 +6661,8 @@ button:active{transform:scale(0.98)}
 @media(max-width:1023px){.calc-grid{grid-template-columns:1fr!important}.edu-sidebar{display:none!important}.insights-grid{grid-template-columns:1fr 1fr!important}}
 @media(max-width:768px){.calc-container>div{grid-template-columns:1fr!important;gap:16px!important}.calc-container>div>div[style*="grid-template-columns"]{grid-template-columns:1fr!important;gap:10px!important}.calc-container h3{font-size:16px!important}}
 .req-mark{color:#3b82f6;margin-left:2px;font-weight:700}
+summary::-webkit-details-marker{display:none}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid #2563eb;outline-offset:2px;border-radius:4px}
 .calc-hr{border:none;border-top:1px solid #E5E7EB;margin:16px 0}
 /* 2026.04.16 CalcAcq spec: 본문 max-width 1200 + padding 0 24 (PC) */
 @media(min-width:769px){.calc-grid.page-layout{max-width:1200px!important;margin:0 auto!important;padding:0 24px!important;width:100%!important;box-sizing:border-box!important}}
@@ -6635,26 +6714,31 @@ body.lc-embed nav,body.lc-embed footer,body.lc-embed .cookie-banner,body.lc-embe
 body.lc-embed .calc-grid{grid-template-columns:1fr!important;padding:12px!important;max-width:100%!important}
 body.lc-embed main{padding-top:0!important}
 @media(max-width:768px){.hide-mo{display:none!important}}
-`}</style>
+`}}/>
 
     {/* 상단 네비게이션 - 풀폭 고정 */}
     <nav style={{background:"#FFFFFF",borderBottom:"1px solid #E5E7EB",position:"fixed",top:0,left:0,right:0,width:"100%",zIndex:1000}}>
       {isMo?(<>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"0 16px",height:52}}>
-          <div onClick={()=>{navigateHome();setSearch("");setMobileMenu(false);}} style={{display:"flex",alignItems:"center",gap:8,cursor:"pointer"}}>
+          <A href="/" onGo={()=>{navigateHome();setSearch("");setMobileMenu(false);}} aria-label="생활계산기 홈으로" style={{display:"flex",alignItems:"center",gap:8,cursor:"pointer",minHeight:44}}>
             <LogoSVG size={28}/>
-            <span style={{fontSize:15,fontWeight:800,color:P.pri}}>생활계산기.com</span>
-          </div>
+            <span style={{fontSize:16,fontWeight:800,color:P.pri}}>생활계산기.com</span>
+          </A>
           <div style={{display:"flex",alignItems:"center",gap:8}}>
-            {effectiveUser?(<span onClick={navigateMyPage} style={{fontSize:12,fontWeight:600,color:P.pri,cursor:"pointer"}}>{effectiveUser.user_metadata?.full_name?.split(" ")[0]||effectiveUser.email?.split("@")[0]}</span>):(<button onClick={()=>{setAuthMode("signup");setShowAuth(true);}} style={{fontSize:12,fontWeight:700,color:"#fff",background:P.pri,border:"none",borderRadius:8,padding:"6px 12px",cursor:"pointer",fontFamily:"inherit"}}>무료 가입</button>)}
-            <button aria-label="메뉴" onClick={()=>setMobileMenu(!mobileMenu)} style={{background:"none",border:"none",fontSize:22,cursor:"pointer",color:"#172B4D",padding:8,lineHeight:1,minWidth:40,minHeight:40}}>{mobileMenu?"✕":"☰"}</button>
+            {effectiveUser?(<span onClick={navigateMyPage} style={{fontSize:12,fontWeight:600,color:P.pri,cursor:"pointer"}}>{effectiveUser.user_metadata?.full_name?.split(" ")[0]||effectiveUser.email?.split("@")[0]}</span>):(<button onClick={()=>{setAuthMode("signup");setShowAuth(true);}} style={{fontSize:13,fontWeight:700,color:"#fff",background:P.pri,border:"none",borderRadius:8,padding:"0 14px",minHeight:40,cursor:"pointer",fontFamily:"inherit"}}>무료 가입</button>)}
+            <button aria-label={mobileMenu?"메뉴 닫기":"전체 메뉴 열기"} aria-expanded={mobileMenu} onClick={()=>setMobileMenu(!mobileMenu)} style={{background:"none",border:"none",fontSize:22,cursor:"pointer",color:"#172B4D",padding:8,lineHeight:1,minWidth:44,minHeight:44}}>{mobileMenu?"✕":"☰"}</button>
           </div>
         </div>
         {mobileMenu&&<div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.5)",zIndex:9999}} onClick={()=>{setMobileMenu(false);setMenuExpand(null);}}>
           <div onClick={e=>e.stopPropagation()} style={{position:"fixed",top:0,right:0,width:"80%",maxWidth:320,height:"100vh",background:"#fff",overflowY:"auto",boxShadow:"-4px 0 20px rgba(0,0,0,0.15)",padding:"16px 0"}}>
-            <div style={{display:"flex",justifyContent:"flex-end",padding:"8px 16px"}}>
-              <button onClick={()=>{setMobileMenu(false);setMenuExpand(null);}} style={{background:"none",border:"none",fontSize:24,cursor:"pointer",color:"#505f79"}}>✕</button>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"4px 8px 4px 20px"}}>
+              <span style={{fontSize:13,fontWeight:700,color:"#6b778c"}}>전체 메뉴</span>
+              <button aria-label="메뉴 닫기" onClick={()=>{setMobileMenu(false);setMenuExpand(null);}} style={{background:"none",border:"none",fontSize:24,cursor:"pointer",color:"#505f79",minWidth:44,minHeight:44}}>✕</button>
             </div>
+            {page!=="home"&&<button onClick={()=>{setMobileMenu(false);setMenuExpand(null);setNavOpen(true);}} style={{width:"calc(100% - 32px)",margin:"4px 16px 10px",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"14px 16px",minHeight:48,background:"#EFF6FF",border:"1px solid #BFDBFE",borderRadius:10,cursor:"pointer",fontFamily:"inherit"}}>
+              <span style={{fontSize:15,fontWeight:700,color:"#0747A6"}}>이 계산기 가이드·자료</span>
+              <span style={{fontSize:13,color:"#0747A6"}}>열기 →</span>
+            </button>}
             {CATS.map(c=>{const items=CL.filter(cl=>cl.c===c.id);const isExpanded=menuExpand===c.id;return(
               <div key={c.id}>
                 <button onClick={()=>setMenuExpand(isExpanded?null:c.id)} style={{width:"100%",display:"flex",justifyContent:"space-between",alignItems:"center",padding:"16px 20px",background:isExpanded?"#f0f4ff":"transparent",border:"none",borderBottom:"1px solid #f4f5f7",cursor:"pointer",fontFamily:"inherit"}}>
@@ -6663,13 +6747,21 @@ body.lc-embed main{padding-top:0!important}
                 </button>
                 {isExpanded&&<div style={{background:"#f8f9fc"}}>
                   {items.map(item=>(
-                    <button key={item.id} onClick={()=>{navigateCalc(c.id,item.id);setMobileMenu(false);setMenuExpand(null);}} style={{width:"100%",display:"flex",alignItems:"center",padding:"14px 20px 14px 36px",background:"transparent",border:"none",borderBottom:"1px solid #eee",cursor:"pointer",fontFamily:"inherit"}}>
-                      <span style={{fontSize:15,color:calc===item.id?"#0747A6":"#505f79",fontWeight:calc===item.id?700:400}}>{item.l}</span>
-                    </button>
+                    <A key={item.id} href={calcHref(item.id)} onGo={()=>{navigateCalc(c.id,item.id);setMobileMenu(false);setMenuExpand(null);}} style={{width:"100%",display:"flex",alignItems:"center",padding:"14px 20px 14px 36px",minHeight:48,background:"transparent",borderBottom:"1px solid #eee",cursor:"pointer",fontFamily:"inherit"}}>
+                      <span style={{fontSize:15,color:calc===item.id&&page==="calc"?"#0747A6":"#505f79",fontWeight:calc===item.id&&page==="calc"?700:400}}>{item.l}</span>
+                    </A>
                   ))}
                 </div>}
               </div>
             );})}
+            <div style={{padding:"14px 20px 6px",borderTop:"1px solid #e8eaed",marginTop:8}}>
+              <div style={{fontSize:12,fontWeight:700,color:"#6b778c",marginBottom:6}}>정보센터</div>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"0 12px"}}>
+                {[{l:"정보센터 홈",h:"/info"},{l:"AI 분석 보고서",h:"/reports"},{l:"부동산 용어사전",h:"/terms/",hard:true},{l:"학습센터",h:"/learn/",hard:true},{l:"정책 브리핑",h:"/policy/",hard:true},{l:"세금·대출 가이드",h:"/guide/",hard:true}].map(it=>(
+                  <a key={it.h} href={it.h} {...(it.hard?{"data-hard":"1"}:{})} onClick={()=>{setMobileMenu(false);setMenuExpand(null);}} style={{display:"flex",alignItems:"center",minHeight:44,fontSize:14,color:"#172B4D",textDecoration:"none"}}>{it.l}</a>
+                ))}
+              </div>
+            </div>
             <div style={{padding:"20px",borderTop:"1px solid #e8eaed",marginTop:8}}>
               {effectiveUser?(<><div style={{padding:"12px 16px",background:"#f4f5f7",borderRadius:10,marginBottom:8,fontSize:14,color:"#172B4D",fontWeight:600}}>{effectiveUser.user_metadata?.full_name||effectiveUser.email?.split("@")[0]} 님</div><button onClick={()=>{navigateMyPage();setMobileMenu(false);}} style={{width:"100%",padding:14,background:"#0747A6",color:"#fff",border:"none",borderRadius:10,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit",marginBottom:8}}>마이페이지</button><button onClick={()=>{handleLogout();setMobileMenu(false);}} style={{width:"100%",padding:"14px",background:"#f4f5f7",color:"#505f79",border:"none",borderRadius:10,fontSize:15,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>로그아웃</button></>):(<><button onClick={()=>{setAuthMode("signup");setShowAuth(true);setMobileMenu(false);}} style={{width:"100%",padding:"14px",background:"#0747A6",color:"#fff",border:"none",borderRadius:10,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>무료 가입</button><button onClick={()=>{setAuthMode("login");setShowAuth(true);setMobileMenu(false);}} style={{width:"100%",padding:"14px",background:"transparent",color:"#505f79",border:"none",borderRadius:10,fontSize:14,fontWeight:500,cursor:"pointer",fontFamily:"inherit",marginTop:8}}>로그인</button></>)}
             </div>
@@ -6677,10 +6769,10 @@ body.lc-embed main{padding-top:0!important}
         </div>}
       </>):(
         <div style={{display:"flex",alignItems:"center",height:64,padding:"0 24px",gap:16,position:"relative"}}>
-          <div onClick={()=>{navigateHome();setSearch("");}} style={{display:"flex",alignItems:"center",gap:10,cursor:"pointer",flexShrink:0}}>
+          <A href="/" onGo={()=>{navigateHome();setSearch("");}} aria-label="생활계산기 홈으로" style={{display:"flex",alignItems:"center",gap:10,cursor:"pointer",flexShrink:0}}>
             <LogoSVG size={40}/>
             <span style={{fontSize:24,fontWeight:800,color:"#0a1628",letterSpacing:-.3,marginLeft:4}}>생활계산기.com</span>
-          </div>
+          </A>
           <div style={{position:"absolute",left:"50%",top:0,bottom:0,transform:"translateX(-50%)",display:"flex",alignItems:"center",gap:4}}>
             {CATS.map(c=>{const items=CL.filter(cl=>cl.c===c.id);const active=cat===c.id&&page!=="home";const hot=hoverCat===c.id;const clicked=clickedCat===c.id;return(
               <div key={c.id} onMouseEnter={()=>setHoverCat(c.id)} onMouseLeave={()=>{setHoverCat(null);setClickedCat(prev=>prev===c.id?null:prev);}} style={{position:"relative"}}>
@@ -6688,10 +6780,10 @@ body.lc-embed main{padding-top:0!important}
                 {hot&&<div style={{position:"absolute",top:"100%",left:0,paddingTop:0,zIndex:1000,marginTop:-1}}>
                   <div onMouseEnter={()=>setClickedCat(null)} style={{background:"#fff",borderRadius:"0 0 8px 8px",border:"1px solid #E5E7EB",borderTop:"none",boxShadow:"0 8px 24px rgba(0,0,0,0.12)",padding:"8px 0",minWidth:220}}>
                     <div style={{fontSize:12,color:clicked?"#0141f9":"#6B7280",padding:"8px 16px 4px",borderBottom:"1px solid #F3F4F6",animation:"blink 1.5s ease-in-out infinite",fontWeight:clicked?700:400,transition:"color .15s"}}>아래 계산기 종류를 선택하세요</div>
-                    {items.map(item=>(<div key={item.id} onClick={()=>{navigateCalc(c.id,item.id);setHoverCat(null);setClickedCat(null);}} style={{padding:"10px 16px",fontSize:14,cursor:"pointer",fontWeight:calc===item.id?700:400,color:"#0a1628",display:"flex",alignItems:"center",gap:8}} onMouseEnter={e=>{e.currentTarget.style.background="#F0F4FF"}} onMouseLeave={e=>{e.currentTarget.style.background="transparent"}}>
+                    {items.map(item=>(<A key={item.id} href={calcHref(item.id)} onGo={()=>{navigateCalc(c.id,item.id);setHoverCat(null);setClickedCat(null);}} style={{padding:"10px 16px",fontSize:14,cursor:"pointer",fontWeight:calc===item.id?700:400,color:"#0a1628",display:"flex",alignItems:"center",gap:8}} onMouseEnter={e=>{e.currentTarget.style.background="#F0F4FF"}} onMouseLeave={e=>{e.currentTarget.style.background="transparent"}}>
                       {CALC_ICONS[item.id]&&<span style={{display:"inline-flex",color:"#0747A6"}}>{CALC_ICONS[item.id]}</span>}
                       <span>{item.l}</span>
-                    </div>))}
+                    </A>))}
                   </div>
                 </div>}
               </div>
@@ -6701,10 +6793,10 @@ body.lc-embed main{padding-top:0!important}
               {showInfoMenu&&<div onMouseEnter={()=>{if(clickedCat==="info")setClickedCat(null);}} style={{position:"absolute",top:"100%",left:0,marginTop:-1,zIndex:1000}}>
                 <div style={{background:"#fff",borderRadius:"0 0 8px 8px",border:"1px solid #E5E7EB",borderTop:"none",boxShadow:"0 8px 24px rgba(0,0,0,0.12)",padding:"8px 0",minWidth:220}}>
                   <div style={{fontSize:12,color:clickedCat==="info"?"#0141f9":"#6B7280",padding:"8px 16px 4px",borderBottom:"1px solid #F3F4F6",animation:"blink 1.5s ease-in-out infinite",fontWeight:clickedCat==="info"?700:400,transition:"color .15s"}}>아래 항목을 선택하세요</div>
-                  {INFO_MENU_COLS[0].items.map(item=>(<div key={item.href} onClick={()=>{window.location.href=item.href;setShowInfoMenu(false);setClickedCat(null);}} style={{padding:"10px 16px",fontSize:14,cursor:"pointer",color:"#0a1628",display:"flex",alignItems:"center",gap:8}} onMouseEnter={e=>{e.currentTarget.style.background="#F0F4FF"}} onMouseLeave={e=>{e.currentTarget.style.background="transparent"}}>
+                  {INFO_MENU_COLS[0].items.map(item=>(<a key={item.href} href={item.href} data-hard="1" onClick={()=>{setShowInfoMenu(false);setClickedCat(null);}} style={{padding:"10px 16px",fontSize:14,cursor:"pointer",color:"#0a1628",display:"flex",alignItems:"center",gap:8,textDecoration:"none"}} onMouseEnter={e=>{e.currentTarget.style.background="#F0F4FF"}} onMouseLeave={e=>{e.currentTarget.style.background="transparent"}}>
                     <span style={{display:"inline-flex",color:"#0747A6"}}>{INFO_ICONS[item.k]}</span>
                     <span>{item.title}</span>
-                  </div>))}
+                  </a>))}
                 </div>
               </div>}
             </div>
@@ -6723,6 +6815,7 @@ body.lc-embed main{padding-top:0!important}
     <div style={{display:"flex",alignItems:"flex-start"}}>
     {/* 2026.04.15 PC LeftNav (좌측 Expert Guide 사이드바) 제거 — 모바일 드로어는 L5602에 유지 */}
     <main style={{flex:"1 1 auto",minWidth:0,width:"100%",background:(!isMo&&page!=="home")?"#f8f9fc":undefined}}>
+    <PageErrorBoundary resetKey={page+"|"+calc}>
     {page==="mypage"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><MyPage user={effectiveUser} lcToken={lcToken} lcEmail={lcEmail} onLcLogout={()=>{try{localStorage.removeItem('lc_token');localStorage.removeItem('lc_email');}catch{}setLcToken("");setLcEmail("");}} onBack={navigateHome} onLogout={handleLogout}/></div>):page==="economic"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><EconomicDashboard isMo={isMo} navigateHome={navigateHome} navigateCalc={navigateCalc}/></div>):page==="info"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><InfoHub isMo={isMo} navigateHome={navigateHome}/></div>):page==="news"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><NewsPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="community"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><CommunityPage isMo={isMo} navigateHome={navigateHome} effectiveUser={effectiveUser} setAuthMode={setAuthMode} setShowAuth={setShowAuth}/></div>):page==="policy"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><PolicyPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="market"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><MarketPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="terms"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><TermsHubPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="about"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><AboutPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="contact"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><ContactPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="guide"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><GuidePage isMo={isMo} navigateHome={navigateHome}/></div>):page==="pricing"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><PricingPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="verification"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><VerificationPage isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("reports:")?(<div style={{background:"#f8f9fb",minHeight:"100vh"}}><ReportsPage slug={page.replace("reports:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("learn:")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LearnPage slug={page.replace("learn:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("law:")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LawPage slug={page.replace("law:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("html:")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><HtmlAdapterPage url={page.replace("html:","")} isMo={isMo} navigateHome={navigateHome}/></div>):page&&page.startsWith("legal_")?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><LegalPage type={page.replace("legal_","")} onBack={navigateHome}/></div>):page==="admin"?(<AdminPage/>):page==="admin/callback"?(<AdminPage subPage="callback"/>):page==="404"?(<div style={{background:"#f8f9fc",minHeight:"100vh"}}><NotFoundPage isMo={isMo} navigateHome={navigateHome}/></div>):page==="home"?(<>
       {/* 2026.04.16 sample-home 1:1 매칭 — 즐겨찾기 섹션 PC 숨김 (모바일만 유지) */}
       {isMo&&favorites.length>0&&<div style={{maxWidth:1200,margin:"0 auto",padding:"16px 16px 0",background:"#f8f9fc"}}>
@@ -6744,8 +6837,10 @@ body.lc-embed main{padding-top:0!important}
         </div>
       </div>}
       {isMo?(<>
-        {/* 모바일: 검색창 즉시 노출 */}
-        <div style={{padding:"16px 16px 8px",background:"#f8f9fc"}}>
+        {/* 모바일: 제목·소개 + 검색창 (2026.10 — 모바일 홈에 제목(H1)이 없던 것 보완) */}
+        <div style={{padding:"20px 16px 8px",background:"#f8f9fc"}}>
+          <h1 style={{fontSize:24,fontWeight:800,color:"#0a1628",lineHeight:1.3,letterSpacing:-.6,margin:"0 0 8px",wordBreak:"keep-all"}}>복잡한 세법·대출 규제,<br/><span style={{color:"#2563eb"}}>10초 만에</span> 완벽 계산</h1>
+          <p style={{fontSize:14,color:"#505f79",lineHeight:1.6,margin:"0 0 14px",wordBreak:"keep-all"}}>취득세·양도세·DSR·연말정산까지<br/>{CL.length}가지 계산기를 2026년 최신 세법으로 무료 제공합니다</p>
           <CalcSearchBar onSelect={navigateCalc} isMo={true} calcList={CL.map(c=>({id:c.id,name:c.l,keywords:c.l+" "+(DESC[c.id]||""),cat:c.c}))}/>
         </div>
         {/* 모바일: 인기 계산기 2x4 설명포함 */}
@@ -6753,25 +6848,41 @@ body.lc-embed main{padding-top:0!important}
           <div style={{fontSize:16,fontWeight:800,color:"#172B4D",marginBottom:12}}>인기 계산기</div>
           <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:10}}>
             {[{id:"acquisition",name:"취득세",desc:"매매·증여·상속 시 취득세",cat:"tax",bg:"#EBF4FF"},{id:"transfer",name:"양도소득세",desc:"부동산 매도 시 양도차익 세금",cat:"tax",bg:"#EBF4FF"},{id:"netsalary",name:"연봉 실수령액",desc:"세금·4대보험 공제 후 월급",cat:"life",bg:"#E6FFFA"},{id:"dsr",name:"DSR",desc:"소득 대비 총 대출가능액",cat:"loan",bg:"#F0FFF4"},{id:"yearend",name:"연말정산",desc:"직장인 환급액 미리 확인",cat:"tax",bg:"#EBF4FF"},{id:"commission",name:"중개수수료",desc:"매매·전세·월세 복비 계산",cat:"cost",bg:"#FFFBEB"},{id:"inctax",name:"종합소득세",desc:"프리랜서·사업자 소득세",cat:"tax",bg:"#EBF4FF"},{id:"pension",name:"국민연금",desc:"예상 월 수령액 계산",cat:"life",bg:"#E6FFFA"}].map(item=>(
-              <button key={item.id} onClick={()=>navigateCalc(item.cat,item.id)} style={{background:item.bg,border:"1px solid #e2e8f0",borderRadius:12,padding:"16px 12px",textAlign:"center",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:4,fontFamily:"inherit"}}>
+              <A key={item.id} href={calcHref(item.id)} onGo={()=>navigateCalc(item.cat,item.id)} style={{background:item.bg,border:"1px solid #e2e8f0",borderRadius:12,padding:"16px 12px",textAlign:"center",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:4,fontFamily:"inherit",minHeight:76}}>
                 <span style={{fontSize:16,fontWeight:800,color:"#172B4D"}}>{item.name}</span>
                 <span style={{fontSize:12,color:"#505f79",lineHeight:1.4,wordBreak:"keep-all"}}>{item.desc}</span>
-              </button>
+              </A>
             ))}
           </div>
-          <button onClick={()=>{document.getElementById("allCalcs")?.scrollIntoView({behavior:"smooth"})}} style={{width:"100%",marginTop:10,padding:"14px",background:"#fff",border:"1px solid #dfe1e6",borderRadius:10,fontSize:14,fontWeight:700,color:"#505f79",cursor:"pointer",fontFamily:"inherit"}}>전체 62가지 계산기 보기</button>
+          <a href="#allCalcs" onClick={e=>{e.preventDefault();document.getElementById("allCalcs")?.scrollIntoView({behavior:"smooth"});}} style={{width:"100%",marginTop:10,padding:"14px",minHeight:48,background:"#fff",border:"1px solid #dfe1e6",borderRadius:10,fontSize:14,fontWeight:700,color:"#172B4D",cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",textDecoration:"none",boxSizing:"border-box"}}>전체 {CL.length}가지 계산기 보기 ↓</a>
+        </div>
+        {/* 모바일: 전체 계산기 목록 (2026.10 — 이전에는 모바일 홈에서 8개만 보였고 '전체 보기' 버튼은 갈 곳이 없었다) */}
+        <div id="allCalcs" style={{padding:"20px 16px 8px",background:"#fff",borderTop:"1px solid #eef0f4",scrollMarginTop:60}}>
+          <h2 style={{fontSize:20,fontWeight:800,color:"#0a1628",letterSpacing:-.5,margin:"0 0 4px"}}>전체 계산기</h2>
+          <p style={{fontSize:13,color:"#505f79",margin:"0 0 12px"}}>분류별로 찾는 {CL.length}가지 계산기</p>
+          <div className="hscroll" style={{display:"flex",gap:8,overflowX:"auto",margin:"0 -16px",padding:"0 16px 10px"}}>
+            {CATS.map(c=>(<a key={c.id} href={"#cat-"+c.id} onClick={e=>{e.preventDefault();document.getElementById("cat-"+c.id)?.scrollIntoView({behavior:"smooth"});}} style={{flex:"0 0 auto",display:"inline-flex",alignItems:"center",minHeight:40,padding:"0 16px",border:"1px solid #dfe1e6",borderRadius:20,background:"#fff",fontSize:14,fontWeight:600,color:"#172B4D",textDecoration:"none",whiteSpace:"nowrap"}}>{c.l}</a>))}
+          </div>
+          {CATS.map(c=>{const list=CL.filter(cl=>cl.c===c.id);return(
+            <section key={c.id} id={"cat-"+c.id} style={{margin:"6px 0 18px",scrollMarginTop:60}}>
+              <h3 style={{fontSize:15,fontWeight:800,color:"#0a1628",margin:"0 0 8px",display:"flex",alignItems:"center",gap:8}}>{c.l} 계산기<span style={{fontSize:12,fontWeight:700,color:"#2563eb",background:"#eff6ff",padding:"2px 8px",borderRadius:10}}>{list.length}</span></h3>
+              <div style={{display:"grid",gridTemplateColumns:"repeat(2,minmax(0,1fr))",gap:8}}>
+                {list.map(cl=>(<A key={cl.id} href={calcHref(cl.id)} onGo={()=>navigateCalc(c.id,cl.id)} style={{display:"flex",alignItems:"center",minHeight:46,padding:"8px 12px",background:"#f8f9fc",border:"1px solid #e5e8ee",borderRadius:10,fontSize:14,fontWeight:500,color:"#172B4D",lineHeight:1.3,wordBreak:"keep-all"}}>{cl.l}</A>))}
+              </div>
+            </section>
+          );})}
         </div>
       </>):(
       <div style={{background:"linear-gradient(180deg,#eff6ff 0%,#f8f9fc 100%)",borderBottom:"1px solid #dfe1e6",padding:"80px 32px 72px"}}>
         <div style={{maxWidth:880,margin:"0 auto",textAlign:"center"}}>
           <span style={{display:"inline-flex",alignItems:"center",gap:8,background:"#fff",padding:"7px 16px",border:"1px solid #dbeafe",borderRadius:20,fontSize:13,fontWeight:700,color:"#3b82f6",marginBottom:24,boxShadow:"0 2px 8px rgba(59,130,246,0.08)"}}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
-            대한민국 NO.1 세금·부동산·재테크 계산기
+            2026년 최신 세법 반영 · 무료 계산기
           </span>
           <h1 style={{fontSize:52,fontWeight:800,color:"#0a1628",lineHeight:1.18,letterSpacing:-1.5,margin:"0 0 20px"}}>복잡한 세법·대출 규제,<br/><span style={{color:"#3b82f6"}}>10초 만에</span> 완벽 계산</h1>
-          {(()=>{const _ht=[{l1:"취득세·양도세·DSR·연말정산까지",l2:"62가지 계산기를 2026년 최신 세법으로 무료 제공합니다"},{l1:"아파트 살 때 세금이 얼마인지 몰라 불안하셨나요?",l2:"주소만 입력하면 실거래가·공시가격이 자동으로 계산됩니다"},{l1:"DSR·LTV·대출한도, 내가 얼마나 빌릴 수 있을까요?",l2:"복잡한 대출 규제를 10초 만에 정확하게 계산해드립니다"},{l1:"임대수익률·투자수익·절세 전략까지",l2:"재테크 의사결정을 숫자로 명확하게 확인하세요"}];return(<><div style={{opacity:heroVisible?1:0,transition:"opacity 0.5s ease",minHeight:56,margin:"0 0 24px"}}><p style={{fontSize:17,color:"#505f79",margin:"0 0 6px",lineHeight:1.7}}>{_ht[heroIdx].l1}</p><p style={{fontSize:17,color:"#505f79",margin:0,lineHeight:1.7}}>{_ht[heroIdx].l2}</p></div><div style={{display:"flex",justifyContent:"center",gap:6,marginBottom:24}}>{_ht.map((_,i)=>(<div key={i} onClick={()=>{setHeroIdx(i);setHeroVisible(true);}} style={{width:i===heroIdx?20:6,height:6,borderRadius:3,background:i===heroIdx?"#3b82f6":"#c1c7cd",transition:"all 0.3s",cursor:"pointer"}}/>))}</div></>);})()}
+          {(()=>{const _ht=[{l1:"취득세·양도세·DSR·연말정산까지",l2:CL.length+"가지 계산기를 2026년 최신 세법으로 무료 제공합니다"},{l1:"아파트 살 때 세금이 얼마인지 몰라 불안하셨나요?",l2:"주소만 입력하면 실거래가·공시가격이 자동으로 계산됩니다"},{l1:"DSR·LTV·대출한도, 내가 얼마나 빌릴 수 있을까요?",l2:"복잡한 대출 규제를 10초 만에 정확하게 계산해드립니다"},{l1:"임대수익률·투자수익·절세 전략까지",l2:"재테크 의사결정을 숫자로 명확하게 확인하세요"}];return(<><div style={{opacity:heroVisible?1:0,transition:"opacity 0.5s ease",minHeight:56,margin:"0 0 24px"}}><p style={{fontSize:17,color:"#505f79",margin:"0 0 6px",lineHeight:1.7}}>{_ht[heroIdx].l1}</p><p style={{fontSize:17,color:"#505f79",margin:0,lineHeight:1.7}}>{_ht[heroIdx].l2}</p></div><div style={{display:"flex",justifyContent:"center",gap:6,marginBottom:24}}>{_ht.map((_,i)=>(<div key={i} onClick={()=>{setHeroIdx(i);setHeroVisible(true);}} style={{width:i===heroIdx?20:6,height:6,borderRadius:3,background:i===heroIdx?"#3b82f6":"#c1c7cd",transition:"all 0.3s",cursor:"pointer"}}/>))}</div></>);})()}
           {/* 2026.04.15 sample-home 검색바 (precise spec) */}
-          <style>{`.lc-hero-search input::placeholder{color:#9ca3af}.lc-hero-search-btn:hover{background:#0747A6!important}`}</style>
+          <style dangerouslySetInnerHTML={{__html:`.lc-hero-search input::placeholder{color:#9ca3af}.lc-hero-search-btn:hover{background:#0747A6!important}`}}/>
           <form className="lc-hero-search" onSubmit={e=>{e.preventDefault();const q=(e.target.q.value||"").trim();if(!q){navigateCalc("tax","acquisition");return;}const hit=CL.find(c=>c.l.includes(q)||q.includes(c.l))||CL.find(c=>(DESC[c.id]||"").includes(q));if(hit)navigateCalc(hit.c,hit.id);else window.location.href="/terms/search.html?q="+encodeURIComponent(q);}} style={{display:"flex",alignItems:"center",background:"#fff",border:"1.5px solid #dfe1e6",borderRadius:14,padding:8,boxShadow:"0 4px 16px rgba(10,22,40,0.06)",maxWidth:680,margin:"0 auto"}}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginLeft:14,marginRight:0,flexShrink:0}}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input name="q" type="text" placeholder="어떤 계산이 필요하세요? (예: 취득세, DSR, 양도세)" style={{flex:1,border:"none",outline:"none",padding:"14px 16px",fontSize:16,background:"transparent",color:"#172B4D",fontFamily:"inherit",minWidth:0}}/>
@@ -6779,7 +6890,7 @@ body.lc-embed main{padding-top:0!important}
           </form>
           <div style={{display:"flex",flexWrap:"wrap",gap:8,justifyContent:"center",marginTop:22}}>
             <span style={{fontSize:13,color:"#505f79",alignSelf:"center",marginRight:4}}>인기 검색:</span>
-            {["취득세","대출이자","연말정산","양도소득세","실수령액","DSR","증여세"].map(tag=>{const info=CL.find(c=>c.l.includes(tag)||tag.includes(c.l));return(<button key={tag} onClick={()=>info&&navigateCalc(info.c,info.id)} style={{padding:"7px 13px",background:"#fff",border:"1px solid #dfe1e6",borderRadius:20,fontSize:13,color:"#374151",cursor:"pointer",fontFamily:"inherit",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.borderColor="#3b82f6";e.currentTarget.style.color="#3b82f6"}} onMouseLeave={e=>{e.currentTarget.style.borderColor="#dfe1e6";e.currentTarget.style.color="#374151"}}>{tag}</button>);})}
+            {["취득세","대출이자","연말정산","양도소득세","실수령액","DSR","증여세"].map(tag=>{const info=CL.find(c=>c.l.includes(tag)||tag.includes(c.l));if(!info)return null;return(<A key={tag} href={calcHref(info.id)} onGo={()=>navigateCalc(info.c,info.id)} style={{padding:"7px 13px",background:"#fff",border:"1px solid #dfe1e6",borderRadius:20,fontSize:13,color:"#374151",cursor:"pointer",fontFamily:"inherit",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.borderColor="#3b82f6";e.currentTarget.style.color="#3b82f6"}} onMouseLeave={e=>{e.currentTarget.style.borderColor="#dfe1e6";e.currentTarget.style.color="#374151"}}>{tag}</A>);})}
           </div>
         </div>
       </div>
@@ -6793,7 +6904,7 @@ body.lc-embed main{padding-top:0!important}
               <div style={{fontSize:12,fontWeight:800,color:"#3b82f6",letterSpacing:1.5,textTransform:"uppercase",marginBottom:6}}>Trending Tools</div>
               <h2 style={{fontSize:32,fontWeight:800,color:"#0a1628",letterSpacing:-.8,margin:0}}>인기 계산기</h2>
             </div>
-            <a onClick={()=>{document.getElementById("allCalcs")?.scrollIntoView({behavior:"smooth"})}} style={{fontSize:14,fontWeight:700,color:"#0a1628",cursor:"pointer"}}>전체 62개 보기 →</a>
+            <a href="#allCalcs" onClick={e=>{e.preventDefault();document.getElementById("allCalcs")?.scrollIntoView({behavior:"smooth"});}} style={{fontSize:14,fontWeight:700,color:"#0a1628",cursor:"pointer",textDecoration:"none"}}>전체 {CL.length}개 보기 →</a>
           </div>
           <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:16}}>
             {[
@@ -6812,13 +6923,13 @@ body.lc-embed main{padding-top:0!important}
             ].map(p=>{
               const info=CL.find(c=>c.id===p.id);
               if(!info)return null;
-              return(<div key={p.id} onClick={()=>goCalc(p.id)} style={{background:"#fff",border:"1px solid #dfe1e6",borderRadius:14,padding:"24px 22px",cursor:"pointer",transition:"all .2s"}}
+              return(<A key={p.id} href={calcHref(p.id)} onGo={()=>goCalc(p.id)} style={{display:"block",background:"#fff",border:"1px solid #dfe1e6",borderRadius:14,padding:"24px 22px",cursor:"pointer",transition:"all .2s"}}
                 onMouseEnter={e=>{e.currentTarget.style.borderColor="#3b82f6";e.currentTarget.style.transform="translateY(-3px)";e.currentTarget.style.boxShadow="0 12px 28px rgba(10,22,40,0.08)";}}
                 onMouseLeave={e=>{e.currentTarget.style.borderColor="#dfe1e6";e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";}}>
                 <div style={{width:44,height:44,borderRadius:11,background:p.color,color:p.fg,display:"flex",alignItems:"center",justifyContent:"center",marginBottom:14}}>{p.svg}</div>
                 <h3 style={{fontSize:15,fontWeight:700,color:"#172B4D",margin:"0 0 4px"}}>{info.l}</h3>
                 <p style={{fontSize:12,color:"#505f79",margin:0,lineHeight:1.55}}>{p.desc}</p>
-              </div>);
+              </A>);
             })}
           </div>
         </div>
@@ -6839,12 +6950,12 @@ body.lc-embed main{padding-top:0!important}
           </div>
           <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:14}}>
             {_sc.map(cid=>{const it=CL.find(c=>c.id===cid);if(!it)return null;const cc=_catColors[it.c]||_catColors.life;const pm=PAGE_META[cid];return(
-              <div key={cid} onClick={()=>navigateCalc(it.c,cid)} style={{background:cc.bg,border:"1px solid transparent",borderRadius:12,padding:"20px 18px",cursor:"pointer",transition:"all .2s"}}
+              <A key={cid} href={calcHref(cid)} onGo={()=>navigateCalc(it.c,cid)} style={{display:"block",background:cc.bg,border:"1px solid transparent",borderRadius:12,padding:"20px 18px",cursor:"pointer",transition:"all .2s"}}
                 onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 8px 20px rgba(0,0,0,.06)";}}
                 onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";}}>
                 <div style={{fontSize:16,fontWeight:800,color:cc.fg,marginBottom:4}}>{it.l}</div>
                 <div style={{fontSize:12,color:"#505f79",lineHeight:1.5}}>{pm?.desc?.split('.')[0]||""}</div>
-              </div>);
+              </A>);
             })}
           </div>
         </div>
@@ -6882,7 +6993,7 @@ body.lc-embed main{padding-top:0!important}
               <div style={{fontSize:12,fontWeight:800,color:"#3b82f6",letterSpacing:1.5,textTransform:"uppercase",marginBottom:6}}>AI Insights</div>
               <h2 style={{fontSize:isMo?20:32,fontWeight:800,color:"#0a1628",letterSpacing:-.8,margin:0}}>AI 분석 보고서</h2>
             </div>
-            <a onClick={()=>{setPage("reports:index");history.pushState(null,"","/reports");window.scrollTo(0,0);}} style={{fontSize:14,fontWeight:700,color:"#0a1628",cursor:"pointer"}}>전체 보기 →</a>
+            <A href="/reports" onGo={()=>{setPage("reports:index");history.pushState(null,"","/reports");window.scrollTo(0,0);}} style={{fontSize:14,fontWeight:700,color:"#0a1628",cursor:"pointer",minHeight:isMo?44:undefined,display:"inline-flex",alignItems:"center"}}>전체 보기 →</A>
           </div>
           <div style={{display:"flex",gap:16,overflowX:"auto",paddingBottom:12,WebkitOverflowScrolling:"touch",scrollSnapType:"x mandatory"}}>
             {[
@@ -6895,14 +7006,14 @@ body.lc-embed main{padding-top:0!important}
               {slug:"07",icon:"🏘️",title:"임대소득 세금 최적화",sub:"분리과세 vs 종합과세 비교",color:"#faf5ff",fg:"#7e22ce"},
               {slug:"08",icon:"⚖️",title:"부동산 비용 총정리",sub:"중개·등기·인지세·채권 한번에",color:"#f1f5f9",fg:"#334155"},
               {slug:"09",icon:"📈",title:"투자수익 분석 리포트",sub:"임대수익률·GAP투자·경매 수익",color:"#fff1f2",fg:"#be123c"},
-            ].map(r=>(<div key={r.slug} onClick={()=>{setPage("reports:"+r.slug);history.pushState(null,"","/reports/"+r.slug);window.scrollTo(0,0);}} style={{flex:"0 0 auto",width:isMo?220:260,background:"#fff",border:"1px solid #dfe1e6",borderRadius:14,padding:isMo?"18px 16px":"22px 22px",cursor:"pointer",scrollSnapAlign:"start",transition:"all .2s"}}
+            ].map(r=>(<A key={r.slug} href={"/reports/"+r.slug} onGo={()=>{setPage("reports:"+r.slug);history.pushState(null,"","/reports/"+r.slug);window.scrollTo(0,0);}} style={{display:"block",flex:"0 0 auto",width:isMo?220:260,background:"#fff",border:"1px solid #dfe1e6",borderRadius:14,padding:isMo?"18px 16px":"22px 22px",cursor:"pointer",scrollSnapAlign:"start",transition:"all .2s"}}
               onMouseEnter={e=>{e.currentTarget.style.borderColor="#3b82f6";e.currentTarget.style.transform="translateY(-3px)";e.currentTarget.style.boxShadow="0 12px 28px rgba(10,22,40,0.08)";}}
               onMouseLeave={e=>{e.currentTarget.style.borderColor="#dfe1e6";e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";}}>
               <div style={{width:40,height:40,borderRadius:10,background:r.color,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,marginBottom:12}}>{r.icon}</div>
               <div style={{fontSize:14,fontWeight:700,color:"#172B4D",marginBottom:4,lineHeight:1.4}}>{r.title}</div>
               <div style={{fontSize:12,color:"#505f79",lineHeight:1.5}}>{r.sub}</div>
               <div style={{marginTop:12,fontSize:12,fontWeight:700,color:r.fg}}>읽어보기 →</div>
-            </div>))}
+            </A>))}
           </div>
         </div>
       </div>
@@ -6923,37 +7034,37 @@ body.lc-embed main{padding-top:0!important}
       {/* 2026.04.15 sample-home 통계 배너 (PC) */}
       {!isMo&&<div style={{background:"#0a1628",padding:"56px 32px"}}>
         <div style={{maxWidth:1200,margin:"0 auto",display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:24,textAlign:"center",color:"#fff"}}>
-          {[{num:"62",lbl:"가지 전문 계산기"},{num:"200만+",lbl:"월간 사용자"},{num:"2026",lbl:"최신 세법 반영"},{num:"98.2%",lbl:"홈택스 대비 정확도"}].map((s,i)=>(<div key={i}>
+          {[{num:String(CL.length),lbl:"가지 전문 계산기"},{num:"2026",lbl:"최신 세법 반영"},{num:"300+",lbl:"부동산 용어 해설"},{num:"0원",lbl:"모든 계산기 무료"}].map((s,i)=>(<div key={i}>
             <div style={{fontSize:40,fontWeight:800,color:"#3b82f6",letterSpacing:-1,lineHeight:1}}>{s.num}</div>
             <div style={{fontSize:13,opacity:0.8,marginTop:8,fontWeight:500}}>{s.lbl}</div>
           </div>))}
         </div>
       </div>}
       {/* 2026.04.15 sample-home 디렉토리 5열 (PC) */}
-      {!isMo&&<div style={{background:"#fff",padding:"72px 32px"}}>
+      {!isMo&&<div id="allCalcs" style={{background:"#fff",padding:"72px 32px",scrollMarginTop:64}}>
         <div style={{maxWidth:1200,margin:"0 auto"}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:32}}>
             <div>
               <div style={{fontSize:12,fontWeight:800,color:"#3b82f6",letterSpacing:1.5,textTransform:"uppercase",marginBottom:6}}>Full Directory</div>
               <h2 style={{fontSize:32,fontWeight:800,color:"#0a1628",letterSpacing:-.8,margin:0}}>전체 계산기</h2>
             </div>
-            <p style={{margin:0,color:"#505f79",fontSize:14}}>카테고리별로 쉽게 찾는 62가지 계산기</p>
+            <p style={{margin:0,color:"#505f79",fontSize:14}}>카테고리별로 쉽게 찾는 {CL.length}가지 계산기</p>
           </div>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:16}}>
-            {CATS.filter(c=>c.id!=="pro").map(cat=>{
+          <div style={{display:"grid",gridTemplateColumns:"repeat(6,minmax(0,1fr))",gap:14}}>
+            {CATS.map(cat=>{
               const catCalcs=CL.filter(cl=>cl.c===cat.id);
-              const subMap={tax:"취득·양도·종합소득",loan:"DSR·LTV 규제",cost:"중개·등기·법무",life:"월급·보험·일상",realestate:"투자·임대·경매"};
-              return(<div key={cat.id} style={{background:"#fff",border:"1px solid #dfe1e6",borderRadius:14,padding:"20px 18px"}}>
+              const subMap={tax:"취득·양도·종합소득",loan:"DSR·LTV 규제",cost:"중개·등기·법무",life:"월급·보험·일상",realestate:"투자·임대·경매",pro:"종합 시뮬레이션"};
+              return(<div key={cat.id} id={"cat-"+cat.id} style={{background:"#fff",border:"1px solid #dfe1e6",borderRadius:14,padding:"20px 18px",scrollMarginTop:88}}>
                 <h3 style={{fontSize:13,fontWeight:800,color:"#0a1628",margin:"0 0 4px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
                   {cat.l}
                   <span style={{fontSize:10,fontWeight:700,color:"#3b82f6",background:"#eff6ff",padding:"3px 8px",borderRadius:10}}>{catCalcs.length}</span>
                 </h3>
                 <p style={{fontSize:10,color:"#505f79",margin:"0 0 12px",paddingBottom:10,borderBottom:"1px solid #dfe1e6"}}>{subMap[cat.id]||""}</p>
                 <ul style={{listStyle:"none",padding:0,margin:0}}>
-                  {catCalcs.map(cl=>(<li key={cl.id} onClick={()=>navigateCalc(cat.id,cl.id)} style={{padding:"6px 0",fontSize:12,color:"#374151",display:"flex",justifyContent:"space-between",cursor:"pointer",transition:"color .15s"}} onMouseEnter={e=>e.currentTarget.style.color="#3b82f6"} onMouseLeave={e=>e.currentTarget.style.color="#374151"}>
+                  {catCalcs.map(cl=>(<li key={cl.id}><A href={calcHref(cl.id)} onGo={()=>navigateCalc(cat.id,cl.id)} style={{padding:"6px 0",fontSize:13,color:"#374151",display:"flex",justifyContent:"space-between",gap:6,cursor:"pointer",transition:"color .15s"}} onMouseEnter={e=>e.currentTarget.style.color="#3b82f6"} onMouseLeave={e=>e.currentTarget.style.color="#374151"}>
                     {cl.l}
                     <span style={{color:"#cbd5e1",fontSize:10}}>→</span>
-                  </li>))}
+                  </A></li>))}
                 </ul>
               </div>);
             })}
@@ -6964,25 +7075,26 @@ body.lc-embed main{padding-top:0!important}
     </>):(
     <>
       {isMo?(<div style={{padding:"8px 0",background:"#fff"}}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 16px"}}>
-          <div style={{display:"flex",alignItems:"center",gap:8,minWidth:0,flexShrink:1}}>
-            <h1 style={{fontSize:isMo?24:32,fontWeight:800,color:P.tx,margin:0,letterSpacing:-1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{CL.find(c=>c.id===calc)?.l||catInfo?.l+" 계산기"}</h1>
-            <button onClick={()=>toggleFavorite(calc)} aria-label={favorites.includes(calc)?"즐겨찾기 해제":"즐겨찾기 추가"} style={{background:"none",border:"none",cursor:"pointer",padding:2,lineHeight:1,flexShrink:0,fontFamily:"inherit",display:"inline-flex",alignItems:"center"}}>{favorites.includes(calc)?<IconStar c="#F59E0B"/>:<IconStar c="#c1c7cd"/>}</button>
+        <div style={{padding:"4px 16px 8px"}}>
+          <nav aria-label="현재 위치" style={{fontSize:12,color:P.mt,display:"flex",alignItems:"center",gap:6}}>
+            <A href="/" onGo={navigateHome} style={{color:"#0747A6",fontWeight:600,display:"inline-flex",alignItems:"center",minHeight:36}}>홈</A>
+            <span style={{color:"#c1c7cd"}}>›</span>
+            <A href={"/#cat-"+cat} onGo={()=>goHomeSection("cat-"+cat)} style={{color:"#0747A6",fontWeight:600,display:"inline-flex",alignItems:"center",minHeight:36}}>{catInfo?.l} 계산기</A>
+          </nav>
+          <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:8}}>
+            <h1 style={{fontSize:24,fontWeight:800,color:P.tx,margin:"2px 0 0",letterSpacing:-.8,lineHeight:1.3,wordBreak:"keep-all"}}>{SITE.calcName(calc)||(catInfo?.l+" 계산기")}</h1>
+            <button onClick={()=>toggleFavorite(calc)} aria-label={favorites.includes(calc)?"즐겨찾기 해제":"즐겨찾기 추가"} style={{background:"none",border:"none",cursor:"pointer",padding:0,lineHeight:1,flexShrink:0,fontFamily:"inherit",display:"inline-flex",alignItems:"center",justifyContent:"center",minWidth:44,minHeight:44,marginRight:-10}}>{favorites.includes(calc)?<IconStar c="#F59E0B"/>:<IconStar c="#c1c7cd"/>}</button>
           </div>
-          <div style={{fontSize:11,color:P.mt,textAlign:"right",lineHeight:1.6,flexShrink:0}}>
-            <span onClick={navigateHome} style={{cursor:"pointer",color:"#0747A6"}}>홈</span>
-            <span> › </span>
-            <span onClick={()=>{const first=CL.find(c=>c.c===cat);if(first)navigateCalc(cat,first.id);}} style={{cursor:"pointer",color:"#0747A6"}}>{catInfo?.l}</span>
-          </div>
+          <p style={{fontSize:13,color:"#505f79",margin:"2px 0 0",lineHeight:1.5,wordBreak:"keep-all"}}>{CALC_SUBTITLE[calc]||"2026년 최신 세법 기반 정밀 계산"}</p>
         </div>
         <div style={{position:"relative",padding:"0 16px 8px"}}>
           
-          <div ref={tabScrollRef} onScroll={e=>checkTabScroll(e.currentTarget)} className="sub-tabs" style={{display:"flex",gap:6,flexWrap:"nowrap",overflowX:"auto",padding:"4px 24px",scrollbarWidth:"none",msOverflowStyle:"none",WebkitOverflowScrolling:"touch"}}>
-            {[...filtered.filter(c=>c.id===calc),...filtered.filter(c=>c.id!==calc)].map(c=>(<button key={c.id} onClick={()=>navigateCalc(cat,c.id)} style={{padding:"7px 14px",border:calc===c.id?"none":"1px solid #E5E7EB",borderRadius:20,background:calc===c.id?"#0a1628":"#fff",color:calc===c.id?"#fff":"#6B7280",fontSize:12,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0}}>{c.l}</button>))}
-          </div>
+          <nav aria-label={catInfo?.l+" 계산기 목록"} ref={tabScrollRef} onScroll={e=>checkTabScroll(e.currentTarget)} className="sub-tabs" style={{display:"flex",gap:6,flexWrap:"nowrap",overflowX:"auto",padding:"4px 0",scrollbarWidth:"none",msOverflowStyle:"none",WebkitOverflowScrolling:"touch"}}>
+            {[...filtered.filter(c=>c.id===calc),...filtered.filter(c=>c.id!==calc)].map(c=>(<A key={c.id} href={calcHref(c.id)} onGo={()=>navigateCalc(cat,c.id)} aria-current={calc===c.id?"page":undefined} style={{display:"inline-flex",alignItems:"center",minHeight:40,padding:"0 14px",border:calc===c.id?"1px solid #0a1628":"1px solid #E5E7EB",borderRadius:20,background:calc===c.id?"#0a1628":"#fff",color:calc===c.id?"#fff":"#505f79",fontSize:13,fontWeight:calc===c.id?700:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0}}>{c.l}</A>))}
+          </nav>
           {tabScroll.right&&<div style={{position:"absolute",right:16,top:0,bottom:8,width:32,background:"linear-gradient(to left, #fff 50%, transparent)",zIndex:2,pointerEvents:"none",display:"flex",alignItems:"center",justifyContent:"flex-end"}}><span style={{fontSize:16,color:"#0747A6",fontWeight:700,lineHeight:1}}>›</span></div>}
         </div>
-        <MobileCalcWrapper><Comp key={calc+"_"+sessionKey} isMo={true} onNav={navigateCalc}/><NextStep calcId={calc} onNav={navigateCalc} isMo={true}/></MobileCalcWrapper>
+        <MobileCalcWrapper><NextStepHostCtx.Provider value={true}><Comp key={calc+"_"+sessionKey} isMo={true} onNav={navigateCalc}/></NextStepHostCtx.Provider><NextStep host calcId={calc} onNav={navigateCalc} isMo={true}/></MobileCalcWrapper>
         <div style={{padding:"0 12px 24px"}}>
           {SEO_CONTENT[calc]&&<div style={{padding:"20px 16px",background:"#fff",borderRadius:12,border:"1px solid #dfe1e6",marginBottom:12}}><div className="seo" dangerouslySetInnerHTML={{__html:SEO_CONTENT[calc]}} style={{fontSize:14,color:"#172B4D",lineHeight:1.8}}/></div>}
           <EduContent calc={calc} eduTab={eduTab}/>
@@ -6992,7 +7104,7 @@ body.lc-embed main{padding-top:0!important}
         {/* 좌측: 헤더 + 서브탭 + 계산기 + PRO */}
         <div>
           {navContent&&<NavContentPanel navContent={navContent} setNavContent={setNavContent} calc={calc} effectiveUser={effectiveUser} lcToken={lcToken} setAuthMode={setAuthMode} setShowAuth={setShowAuth}/>}
-          <Breadcrumb pageName={(CL.find(c=>c.id===calc)?.l||"")+" 계산기"} category={catInfo?.l+" 계산기"} navigateHome={navigateHome} isMo={isMo}/>
+          <Breadcrumb pageName={SITE.calcName(calc)} category={catInfo?.l+" 계산기"} categoryHref={"/#cat-"+cat} onCategory={()=>goHomeSection("cat-"+cat)} navigateHome={navigateHome} isMo={isMo}/>
           {/* 2026.04.16 sample-calc 기준: 서브탭 바 제거 (PC) — 모바일은 유지 */}
           {isMo&&<div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:16,marginBottom:14}}>
             <div className="sub-tabs" style={{flex:"1 1 auto",minWidth:0,display:"flex",gap:6,flexWrap:"nowrap",overflowX:"auto",WebkitOverflowScrolling:"touch",paddingBottom:6,scrollbarWidth:"none",msOverflowStyle:"none",whiteSpace:"nowrap"}}>
@@ -7002,7 +7114,7 @@ body.lc-embed main{padding-top:0!important}
           {/* 2026.04.16 sample-calc .page-head .head-row — h1 + 부제 2행 + 우측 액션 */}
           <div style={{marginBottom:24,display:"flex",justifyContent:"space-between",alignItems:"flex-end",gap:20,flexWrap:"wrap"}}>
             <div style={{flex:"1 1 auto",minWidth:0}}>
-              <h1 style={{fontSize:isMo?22:44,fontWeight:700,color:"#0a1628",margin:"0 0 8px",letterSpacing:isMo?"-1px":"-1.2px",lineHeight:1.15}}>{(CL.find(c=>c.id===calc)?.l||catInfo?.l)+" 계산기"}</h1>
+              <h1 style={{fontSize:isMo?22:44,fontWeight:700,color:"#0a1628",margin:"0 0 8px",letterSpacing:isMo?"-1px":"-1.2px",lineHeight:1.15}}>{SITE.calcName(calc)||(catInfo?.l+" 계산기")}</h1>
               <div style={{fontSize:15,color:"#505f79",margin:0}}>{CALC_SUBTITLE[calc]||"2026년 최신 세법 기반 정밀 계산"}</div>
             </div>
             <div style={{display:"flex",gap:10,flexShrink:0}}>
@@ -7012,9 +7124,9 @@ body.lc-embed main{padding-top:0!important}
           </div>
           {adSlots?.header?.enabled&&!isMo&&!noAds&&<div style={{marginBottom:16}} dangerouslySetInnerHTML={{__html:adSlots.header.code||""}}/>}
           <div className="calc-container" style={{background:"#fff",borderRadius:16,border:`1px solid ${P.bd}`,padding:isMo?16:32,marginBottom:24,boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
-            {isMo?(<MobileCalcWrapper><Comp key={calc+"_"+sessionKey} isMo={true} onNav={navigateCalc}/></MobileCalcWrapper>):(<div><Comp key={calc+"_"+sessionKey} isMo={false} onNav={navigateCalc}/></div>)}
+            <NextStepHostCtx.Provider value={true}>{isMo?(<MobileCalcWrapper><Comp key={calc+"_"+sessionKey} isMo={true} onNav={navigateCalc}/></MobileCalcWrapper>):(<div><Comp key={calc+"_"+sessionKey} isMo={false} onNav={navigateCalc}/></div>)}</NextStepHostCtx.Provider>
           </div>
-          {!isMo&&<div style={{display:"grid",gridTemplateColumns:"3fr 2fr",gap:28}}><div/><NextStep calcId={calc} onNav={navigateCalc} isMo={false}/></div>}
+          <NextStep host row={!isMo} calcId={calc} onNav={navigateCalc} isMo={isMo}/>
           
           
           {adSlots?.rp_bottom?.enabled&&!isMo&&!noAds&&<div style={{marginBottom:16}} dangerouslySetInnerHTML={{__html:adSlots.rp_bottom.code||""}}/>}
@@ -7026,6 +7138,13 @@ body.lc-embed main{padding-top:0!important}
             </div>
           </div>)}
           {adSlots?.guide_bottom?.enabled&&!isMo&&!noAds&&<div style={{marginBottom:16}} dangerouslySetInnerHTML={{__html:adSlots.guide_bottom.code||""}}/>}
+          {/* 2026.10 같은 분류의 다른 계산기 (PC에는 분류 탭이 없어 옆 계산기로 가는 길이 없었다) */}
+          {!isMo&&filtered.length>1&&<nav aria-label={catInfo?.l+" 계산기 목록"} style={{marginTop:16,background:"#fff",border:"1px solid #dfe1e6",borderRadius:14,padding:"20px 22px"}}>
+            <h3 style={{fontSize:13,fontWeight:700,color:"#505f79",margin:"0 0 12px"}}>다른 {catInfo?.l} 계산기</h3>
+            <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
+              {filtered.filter(c=>c.id!==calc).map(c=>(<A key={c.id} href={calcHref(c.id)} onGo={()=>navigateCalc(cat,c.id)} style={{display:"inline-flex",alignItems:"center",padding:"8px 14px",border:"1px solid #dfe1e6",borderRadius:20,background:"#fff",color:"#172B4D",fontSize:13,fontWeight:500,cursor:"pointer",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.borderColor="#0747A6";e.currentTarget.style.color="#0747A6"}} onMouseLeave={e=>{e.currentTarget.style.borderColor="#dfe1e6";e.currentTarget.style.color="#172B4D"}}>{c.l}</A>))}
+            </div>
+          </nav>}
           {/* 관련 AI 분석 보고서 링크 */}
           {(()=>{const RM={acquisition:"01",transfer:"02",yearend:"03",dsr:"04",ltv:"04",loanmax:"04",gift:"05",inherit:"05",compre:"06",property:"06",holdtax:"06",rental:"07",mortgage:"08",rti:"08"};const rid=RM[calc];if(!rid)return null;const RT={["01"]:"2026 취득세 완벽 분석",["02"]:"양도소득세 절세 전략",["03"]:"연말정산 환급 극대화",["04"]:"DSR·LTV 대출 전략",["05"]:"증여·상속세 가이드",["06"]:"종합부동산세 가이드",["07"]:"임대소득세 가이드",["08"]:"스트레스DSR 대출 분석"};return(<a href={"/reports/"+rid} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:isMo?"12px 16px":"14px 20px",borderRadius:10,border:"1px solid #C7DCFF",background:"#F0F6FF",textDecoration:"none",marginTop:12}} onMouseEnter={e=>{e.currentTarget.style.background="#E0EDFF";e.currentTarget.style.borderColor="#0052CC";}} onMouseLeave={e=>{e.currentTarget.style.background="#F0F6FF";e.currentTarget.style.borderColor="#C7DCFF";}}><div style={{display:"flex",alignItems:"center",gap:10}}><span style={{fontSize:18}}>📊</span><div><div style={{fontSize:13,fontWeight:600,color:"#0052CC"}}>AI 분석 보고서</div><div style={{fontSize:12,color:"#42526E",marginTop:1}}>{RT[rid]}</div></div></div><span style={{fontSize:12,color:"#0052CC",fontWeight:600}}>보기 →</span></a>);})()}
         </div>
@@ -7034,6 +7153,7 @@ body.lc-embed main{padding-top:0!important}
 
       {/* 2026.04.15 sample-calc 기준 계산기 페이지 슬림화: "오늘의 부동산 정보" 블록 전체 제거 (나에게 해당되는 정책·실시간 부동산 뉴스·최근 세법 변경사항·유용한 계산 팁) */}
     </>)}
+    </PageErrorBoundary>
 
     {/* 업데이트 내역 (사용자 노출 제외) */}
     <div style={{display:"none",maxWidth:1200,margin:"0 auto",padding:"48px 24px"}}>
@@ -7070,31 +7190,33 @@ body.lc-embed main{padding-top:0!important}
     </main>
     </div>
     {/* 2026.04.15 푸터: PC는 sample-home 다크 네이비 5열 / 모바일은 기존 레이아웃 유지 */}
-    {!isMo?(<footer style={{background:"#0a1628",color:"#fff",padding:"64px 32px 32px",position:"relative",width:"100vw",marginLeft:"calc(50% - 50vw)",boxSizing:"border-box"}}>
+    {!isMo?(<footer style={{background:"#0a1628",color:"#fff",padding:"64px 32px 32px",position:"relative",width:"100%",boxSizing:"border-box"}}>
+      {page!=="home"&&<FooterDirectory isMo={false} onNav={navigateCalc}/>}
       <div style={{maxWidth:1200,margin:"0 auto",display:"grid",gridTemplateColumns:"1.3fr 1fr 1fr 1fr 1.4fr",gap:40}}>
         <div>
           <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:14}}>
             <LogoSVG size={36}/>
             <span style={{fontSize:24,fontWeight:800,color:"#fff",letterSpacing:-.3}}>생활계산기<span style={{color:"#60a5fa"}}>.com</span></span>
           </div>
-          <p style={{fontSize:13,opacity:0.7,lineHeight:1.7,margin:"0 0 16px",maxWidth:260}}>대한민국 NO.1 세금·부동산·재테크 계산기 플랫폼. 2026년 최신 세법을 반영한 62가지 전문 계산기를 무료로 제공합니다.</p>
+          <p style={{fontSize:13,opacity:0.7,lineHeight:1.7,margin:"0 0 16px",maxWidth:260}}>세금·부동산·재테크 계산기 플랫폼. 2026년 최신 세법을 반영한 {CL.length}가지 전문 계산기를 무료로 제공합니다.</p>
         </div>
         <div>
           <h4 style={{fontSize:13,fontWeight:800,color:"#fff",margin:"0 0 16px"}}>서비스</h4>
           <ul style={{listStyle:"none",padding:0,margin:0}}>
-            {[{l:"전체 계산기",fn:()=>document.getElementById("allCalcs")?.scrollIntoView({behavior:"smooth"})},{l:"AI 인사이트",fn:()=>{setPage("reports:index");history.pushState(null,"","/reports");window.scrollTo(0,0);}},{l:"PRO 분석",fn:()=>navigateCalc("pro","totalcost")},{l:"API",fn:()=>{}}].map((it,i)=>(<li key={i} onClick={it.fn} style={{fontSize:13,color:"rgba(255,255,255,0.65)",padding:"6px 0",cursor:"pointer",transition:"color .15s"}} onMouseEnter={e=>e.currentTarget.style.color="#3b82f6"} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.65)"}>{it.l}</li>))}
+            {[{l:"전체 계산기",h:"/#allCalcs",fn:()=>goHomeSection("allCalcs")},{l:"AI 분석 보고서",h:"/reports",fn:()=>{setPage("reports:index");history.pushState(null,"","/reports");window.scrollTo(0,0);}},{l:"PRO 분석",h:calcHref("totalcost"),fn:()=>navigateCalc("pro","totalcost")}].map((it,i)=>(<li key={i}><A href={it.h} onGo={it.fn} style={{display:"block",fontSize:13,color:"rgba(255,255,255,0.65)",padding:"6px 0",cursor:"pointer",transition:"color .15s"}} onMouseEnter={e=>e.currentTarget.style.color="#60a5fa"} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.65)"}>{it.l}</A></li>))}
           </ul>
         </div>
         <div>
           <h4 style={{fontSize:13,fontWeight:800,color:"#fff",margin:"0 0 16px"}}>정보센터</h4>
           <ul style={{listStyle:"none",padding:0,margin:0}}>
-            {[{l:"실시간 뉴스",href:"/news"},{l:"정책 브리핑",href:"/policy"},{l:"절세 가이드",href:"/learn/tax-saving"},{l:"용어사전",href:"/terms"}].map((it,i)=>(<li key={i} onClick={()=>{window.location.href=it.href}} style={{fontSize:13,color:"rgba(255,255,255,0.65)",padding:"6px 0",cursor:"pointer",transition:"color .15s"}} onMouseEnter={e=>e.currentTarget.style.color="#3b82f6"} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.65)"}>{it.l}</li>))}
+            {[{l:"정보센터 홈",href:"/info"},{l:"실시간 뉴스",href:"/news/",hard:true},{l:"정책 브리핑",href:"/policy/",hard:true},{l:"절세 가이드",href:"/learn/tax-saving",hard:true},{l:"용어사전",href:"/terms/",hard:true}].map((it,i)=>(<li key={i}><a href={it.href} {...(it.hard?{"data-hard":"1"}:{})} style={{display:"block",fontSize:13,color:"rgba(255,255,255,0.65)",padding:"6px 0",cursor:"pointer",transition:"color .15s",textDecoration:"none"}} onMouseEnter={e=>e.currentTarget.style.color="#60a5fa"} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.65)"}>{it.l}</a></li>))}
           </ul>
         </div>
         <div>
           <h4 style={{fontSize:13,fontWeight:800,color:"#fff",margin:"0 0 16px"}}>고객지원</h4>
           <ul style={{listStyle:"none",padding:0,margin:0}}>
-            {[{l:"회사 소개",k:"about"},{l:"문의하기",k:"contact"},{l:"공지사항",k:"notice"},{l:"이용약관",k:"terms"}].map((it,i)=>(<li key={i} onClick={()=>{if(it.k==="about"){setPage("about");history.pushState(null,"","/about");window.scrollTo(0,0);}else if(it.k==="contact"){setPage("contact");history.pushState(null,"","/contact");window.scrollTo(0,0);}else{navigateLegal(it.k==="terms"?"privacy":"disclaimer");}}} style={{fontSize:13,color:"rgba(255,255,255,0.65)",padding:"6px 0",cursor:"pointer",transition:"color .15s"}} onMouseEnter={e=>e.currentTarget.style.color="#3b82f6"} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.65)"}>{it.l}</li>))}
+            {/* 2026.10 이름과 도착지가 달랐던 항목 정리: '공지사항'→면책조항, '이용약관'→개인정보처리방침으로 열리고 있었다. 실제 도착지 이름으로 표기 */}
+            {[{l:"회사 소개",h:"/about/",fn:()=>{setPage("about");history.pushState(null,"","/about");window.scrollTo(0,0);}},{l:"문의하기",h:"/contact",fn:()=>{setPage("contact");history.pushState(null,"","/contact");window.scrollTo(0,0);}},{l:"개인정보처리방침",h:"/privacy",fn:()=>navigateLegal("privacy")},{l:"면책조항",h:"/disclaimer",fn:()=>navigateLegal("disclaimer")}].map((it,i)=>(<li key={i}><A href={it.h} onGo={it.fn} style={{display:"block",fontSize:13,color:"rgba(255,255,255,0.65)",padding:"6px 0",cursor:"pointer",transition:"color .15s"}} onMouseEnter={e=>e.currentTarget.style.color="#60a5fa"} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.65)"}>{it.l}</A></li>))}
           </ul>
         </div>
         <div>
@@ -7107,25 +7229,26 @@ body.lc-embed main{padding-top:0!important}
         </div>
       </div>
       <div style={{maxWidth:1200,margin:"48px auto 0",paddingTop:24,borderTop:"1px solid rgba(255,255,255,0.1)",display:"flex",justifyContent:"space-between",gap:20,flexWrap:"wrap",fontSize:12}}>
-        <div style={{color:"rgba(255,255,255,0.3)",maxWidth:720,lineHeight:1.6}}>상호 더블유부동산 · 대표 이광철 · 사업자등록번호 589-24-01721 · 통신판매업신고 제2025-인천부평-0992호 · 주소 인천광역시 부평구 · 이메일 noble.kclee@gmail.com · 개인정보보호책임자 이광철</div>
-        <div style={{color:"rgba(255,255,255,0.65)"}}>© {new Date().getFullYear()} 생활계산기.com · <span onClick={()=>navigateLegal("privacy")} style={{cursor:"pointer"}}>개인정보처리방침</span> · <span onClick={()=>navigateLegal("disclaimer")} style={{cursor:"pointer"}}>이용약관</span> · <span onClick={()=>navigateLegal("cookie")} style={{cursor:"pointer"}}>쿠키 정책</span></div>
+        <div style={{color:"rgba(255,255,255,0.6)",maxWidth:720,lineHeight:1.6}}>상호 더블유부동산 · 대표 이광철 · 사업자등록번호 589-24-01721 · 통신판매업신고 제2025-인천부평-0992호 · 주소 인천광역시 부평구 · 이메일 noble.kclee@gmail.com · 개인정보보호책임자 이광철</div>
+        <div style={{color:"rgba(255,255,255,0.65)"}}>© {new Date().getFullYear()} 생활계산기.com · <A href="/privacy" onGo={()=>navigateLegal("privacy")} style={{cursor:"pointer"}}>개인정보처리방침</A> · <A href="/disclaimer" onGo={()=>navigateLegal("disclaimer")} style={{cursor:"pointer"}}>면책조항</A> · <A href="/cookie" onGo={()=>navigateLegal("cookie")} style={{cursor:"pointer"}}>쿠키 정책</A></div>
       </div>
-    </footer>):(<footer style={{background:"#F9FAFB",borderTop:"1px solid #E5E7EB",padding:"48px 24px",position:"relative",width:"100vw",marginLeft:"calc(50% - 50vw)",boxSizing:"border-box",textAlign:"center"}}>
-      <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:12}}>
+    </footer>):(<footer style={{background:"#F9FAFB",borderTop:"1px solid #E5E7EB",padding:"32px 20px 40px",position:"relative",width:"100%",boxSizing:"border-box",textAlign:"center"}}>
+      {page!=="home"&&<FooterDirectory isMo={true} onNav={navigateCalc}/>}
+      <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:12,borderTop:page!=="home"?"1px solid #E5E7EB":"none",paddingTop:page!=="home"?24:0}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10}}>
           <LogoSVG size={40}/>
           <span style={{fontSize:20,fontWeight:800,color:"#0747A6",letterSpacing:-.3}}>생활계산기.com</span>
         </div>
         <div style={{fontSize:13,color:"#6B7280",lineHeight:1.6,maxWidth:640}}>생활 속 세금·대출·비용·부동산 종합 계산 플랫폼</div>
         <div style={{fontSize:12,color:"#6B7280",lineHeight:1.6,maxWidth:640}}>본 계산기는 참고용이며, 실제 세금·수수료는 세무사 또는 관할 기관에 반드시 확인하시기 바랍니다.</div>
-        <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:20,flexWrap:"wrap",marginTop:12}}>
-          {[{l:"회사 소개",k:"about"},{l:"문의하기",k:"contact"},{l:"개인정보처리방침",k:"privacy"},{l:"면책조항",k:"disclaimer"},{l:"쿠키 정책",k:"cookie"}].map(item=><span key={item.k} onClick={()=>{if(item.k==="about"){setPage("about");history.pushState(null,"","/about");window.scrollTo(0,0);}else if(item.k==="contact"){setPage("contact");history.pushState(null,"","/contact");window.scrollTo(0,0);}else{navigateLegal(item.k);}}} style={{fontSize:13,color:"#6B7280",cursor:"pointer"}}>{item.l}</span>)}
+        <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"0 18px",flexWrap:"wrap",marginTop:8}}>
+          {[{l:"정보센터",k:"info",h:"/info"},{l:"회사 소개",k:"about",h:"/about/"},{l:"문의하기",k:"contact",h:"/contact"},{l:"개인정보처리방침",k:"privacy",h:"/privacy"},{l:"면책조항",k:"disclaimer",h:"/disclaimer"},{l:"쿠키 정책",k:"cookie",h:"/cookie"}].map(item=><A key={item.k} href={item.h} onGo={()=>{if(item.k==="info"){navigateInfo();}else if(item.k==="about"){setPage("about");history.pushState(null,"","/about");window.scrollTo(0,0);}else if(item.k==="contact"){setPage("contact");history.pushState(null,"","/contact");window.scrollTo(0,0);}else{navigateLegal(item.k);}}} style={{fontSize:13,color:"#505f79",cursor:"pointer",display:"inline-flex",alignItems:"center",minHeight:44}}>{item.l}</A>)}
         </div>
-        <div style={{fontSize:11,color:"#6B7280",marginTop:20,borderTop:"1px solid #E5E7EB",paddingTop:20,width:"100%",maxWidth:900}}>
+        <div style={{fontSize:12,color:"#6B7280",marginTop:12,borderTop:"1px solid #E5E7EB",paddingTop:16,width:"100%",maxWidth:900}}>
           © {new Date().getFullYear()} 생활계산기.com. All rights reserved. | 세법 검증: {UPDATE_LOG[0]?.date}
         </div>
-        <div style={{fontSize:10,color:"#C0C0C0",lineHeight:1.6,marginTop:6,maxWidth:900}}>
-          상호: 더블유부동산 | 대표: 이광철 | 사업자등록번호: 589-24-01721 | 통신판매업 신고번호: 제2025-인천부평-0992호 | 이메일: noble.kclee@gmail.com
+        <div style={{fontSize:12,color:"#6B7280",lineHeight:1.7,marginTop:2,maxWidth:900,wordBreak:"keep-all"}}>
+          상호: 더블유부동산 | 대표: 이광철 | 사업자등록번호: 589-24-01721<br/>통신판매업 신고번호: 제2025-인천부평-0992호 | 주소: 인천광역시 부평구<br/>이메일: noble.kclee@gmail.com
         </div>
       </div>
     </footer>)}
@@ -7138,7 +7261,7 @@ body.lc-embed main{padding-top:0!important}
         <button onClick={()=>setAiModal(null)} aria-label="닫기" style={{position:"absolute",top:12,right:12,background:"none",border:"none",fontSize:20,cursor:"pointer",color:"#6b778c"}}>✕</button>
         <div style={{fontSize:18,fontWeight:800,color:"#172B4D",marginBottom:4,display:"flex",alignItems:"center",gap:6}}><Ico.ai size={20}/>AI 해설</div>
         <div style={{fontSize:12,color:"#6b778c",marginBottom:16}}>{aiModal.title}</div>
-        {aiModal.gate==="login"?<div style={{padding:"12px 0"}}><div style={{fontSize:14,color:"#172B4D",lineHeight:1.7,marginBottom:16}}>로그인하면 월 <strong style={{color:"#0747A6"}}>3회 무료</strong>로 AI 해설을 이용할 수 있어요.</div><div style={{fontSize:12,color:"#6b778c",lineHeight:1.6,marginBottom:20,background:"#f4f5f7",borderRadius:8,padding:"10px 12px"}}>PRO 플랜 가입 시 무제한 · 중개사/전문가 전용 혜택 제공</div><div style={{display:"flex",gap:8}}><button onClick={()=>{setAiModal(null);setAuthMode("login");setShowAuth(true);}} style={{flex:"1 1 auto",padding:"12px 16px",background:"#0747A6",color:"#fff",border:"none",borderRadius:10,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>로그인하기</button><button onClick={()=>setAiModal(null)} style={{padding:"12px 16px",background:"#fff",color:"#505f79",border:"1px solid #dfe1e6",borderRadius:10,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>닫기</button></div></div>:aiModal.gate==="limit"?<div style={{padding:"12px 0"}}><div style={{fontSize:14,color:"#172B4D",lineHeight:1.7,marginBottom:12}}>이번 달 무료 횟수(<strong style={{color:"#BF2600"}}>3회</strong>)를 모두 사용했어요.</div><div style={{fontSize:13,color:"#172B4D",lineHeight:1.7,marginBottom:20,background:"#FFFAE6",borderRadius:8,padding:"12px 14px",border:"1px solid #FFE380"}}><strong>PRO 플랜</strong>으로 업그레이드하면 <strong style={{color:"#0747A6"}}>무제한</strong> 사용 가능합니다.</div><div style={{display:"flex",gap:8}}><button onClick={()=>{setAiModal(null);window.dispatchEvent(new CustomEvent('lc-consult',{detail:{title:"PRO 플랜 업그레이드",total:0}}));}} style={{flex:"1 1 auto",padding:"12px 16px",background:"#FF8B00",color:"#fff",border:"none",borderRadius:10,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>PRO 업그레이드</button><button onClick={()=>setAiModal(null)} style={{padding:"12px 16px",background:"#fff",color:"#505f79",border:"1px solid #dfe1e6",borderRadius:10,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>닫기</button></div></div>:aiModal.loading?<div style={{padding:"40px 0",textAlign:"center",color:"#6b778c"}}><div style={{display:"inline-block",width:32,height:32,border:"3px solid #dfe1e6",borderTop:"3px solid #0747A6",borderRadius:"50%",animation:"lcspin 0.8s linear infinite"}}/><style>{`@keyframes lcspin{to{transform:rotate(360deg)}}`}</style><div style={{marginTop:12,fontSize:13}}>Claude가 결과를 분석 중...</div></div>:aiModal.error?<div style={{padding:"16px",background:"#FFEBE6",border:"1px solid #FFBDAD",borderRadius:10,color:"#BF2600",fontSize:13,lineHeight:1.6}}>{aiModal.error}</div>:<><div style={{fontSize:14,color:"#172B4D",lineHeight:1.8,whiteSpace:"pre-line",marginBottom:16}}>{aiModal.content}</div>{aiModal.tips&&aiModal.tips.length>0&&<div style={{background:"#f8f9fc",borderRadius:10,padding:16}}><div style={{fontSize:12,fontWeight:700,color:"#0747A6",marginBottom:8,display:"flex",alignItems:"center",gap:6}}><IconBulb/> 절세 팁</div>{aiModal.tips.map((tip,i)=>(<div key={i} style={{fontSize:13,color:"#172B4D",lineHeight:1.7,marginBottom:6,paddingLeft:12,position:"relative"}}><span style={{position:"absolute",left:0}}>•</span>{tip}</div>))}</div>}</>}
+        {aiModal.gate==="login"?<div style={{padding:"12px 0"}}><div style={{fontSize:14,color:"#172B4D",lineHeight:1.7,marginBottom:16}}>로그인하면 월 <strong style={{color:"#0747A6"}}>3회 무료</strong>로 AI 해설을 이용할 수 있어요.</div><div style={{fontSize:12,color:"#6b778c",lineHeight:1.6,marginBottom:20,background:"#f4f5f7",borderRadius:8,padding:"10px 12px"}}>PRO 플랜 가입 시 무제한 · 중개사/전문가 전용 혜택 제공</div><div style={{display:"flex",gap:8}}><button onClick={()=>{setAiModal(null);setAuthMode("login");setShowAuth(true);}} style={{flex:"1 1 auto",padding:"12px 16px",background:"#0747A6",color:"#fff",border:"none",borderRadius:10,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>로그인하기</button><button onClick={()=>setAiModal(null)} style={{padding:"12px 16px",background:"#fff",color:"#505f79",border:"1px solid #dfe1e6",borderRadius:10,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>닫기</button></div></div>:aiModal.gate==="limit"?<div style={{padding:"12px 0"}}><div style={{fontSize:14,color:"#172B4D",lineHeight:1.7,marginBottom:12}}>이번 달 무료 횟수(<strong style={{color:"#BF2600"}}>3회</strong>)를 모두 사용했어요.</div><div style={{fontSize:13,color:"#172B4D",lineHeight:1.7,marginBottom:20,background:"#FFFAE6",borderRadius:8,padding:"12px 14px",border:"1px solid #FFE380"}}><strong>PRO 플랜</strong>으로 업그레이드하면 <strong style={{color:"#0747A6"}}>무제한</strong> 사용 가능합니다.</div><div style={{display:"flex",gap:8}}><button onClick={()=>{setAiModal(null);window.dispatchEvent(new CustomEvent('lc-consult',{detail:{title:"PRO 플랜 업그레이드",total:0}}));}} style={{flex:"1 1 auto",padding:"12px 16px",background:"#FF8B00",color:"#fff",border:"none",borderRadius:10,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>PRO 업그레이드</button><button onClick={()=>setAiModal(null)} style={{padding:"12px 16px",background:"#fff",color:"#505f79",border:"1px solid #dfe1e6",borderRadius:10,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>닫기</button></div></div>:aiModal.loading?<div style={{padding:"40px 0",textAlign:"center",color:"#6b778c"}}><div style={{display:"inline-block",width:32,height:32,border:"3px solid #dfe1e6",borderTop:"3px solid #0747A6",borderRadius:"50%",animation:"lcspin 0.8s linear infinite"}}/><style dangerouslySetInnerHTML={{__html:`@keyframes lcspin{to{transform:rotate(360deg)}}`}}/><div style={{marginTop:12,fontSize:13}}>Claude가 결과를 분석 중...</div></div>:aiModal.error?<div style={{padding:"16px",background:"#FFEBE6",border:"1px solid #FFBDAD",borderRadius:10,color:"#BF2600",fontSize:13,lineHeight:1.6}}>{aiModal.error}</div>:<><div style={{fontSize:14,color:"#172B4D",lineHeight:1.8,whiteSpace:"pre-line",marginBottom:16}}>{aiModal.content}</div>{aiModal.tips&&aiModal.tips.length>0&&<div style={{background:"#f8f9fc",borderRadius:10,padding:16}}><div style={{fontSize:12,fontWeight:700,color:"#0747A6",marginBottom:8,display:"flex",alignItems:"center",gap:6}}><IconBulb/> 절세 팁</div>{aiModal.tips.map((tip,i)=>(<div key={i} style={{fontSize:13,color:"#172B4D",lineHeight:1.7,marginBottom:6,paddingLeft:12,position:"relative"}}><span style={{position:"absolute",left:0}}>•</span>{tip}</div>))}</div>}</>}
       </div>
     </div>}
     {/* 2026.04.14 중개사 브랜드 PDF 모달 */}
@@ -7164,6 +7287,9 @@ body.lc-embed main{padding-top:0!important}
       </div>
     </div>}
     <ScrollTop/>
-    <CookieBanner onPrivacy={()=>setModal("privacy")}/>
+    <CookieBanner isMo={isMo} onPrivacy={()=>setModal("privacy")}/>
   </div>);
 }
+
+/* 2026.10 빌드 스크립트(scripts/build-static.mjs)가 주소 목록·검색용 정보를 읽는 통로 */
+App.SITE=SITE;

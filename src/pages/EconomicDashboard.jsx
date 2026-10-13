@@ -121,37 +121,7 @@ export default function EconomicDashboard({ isMo = false, navigateHome, navigate
       .finally(() => setLoading(false));
   }, []);
 
-  useEffect(() => {
-    document.title = "경제상황판 - 한국 경제 지표 한눈에 | 생활계산기";
-    const setMeta = (sel, attr, content) => {
-      let el = document.querySelector(sel);
-      if (!el) { el = document.createElement("meta"); if (attr === "name") el.setAttribute("name", sel.match(/name="([^"]+)"/)[1]); else el.setAttribute("property", sel.match(/property="([^"]+)"/)[1]); document.head.appendChild(el); }
-      el.setAttribute("content", content);
-    };
-    const desc = "거시·미시 13개 지표 자동 + 해석 가이드. 한미 금리차·KOSPI·KB지수·코스톨라니 위치 자동 판정. 교육 자료, 투자권유 아님.";
-    document.querySelector('meta[name="description"]')?.setAttribute("content", desc);
-    document.querySelector('meta[property="og:title"]')?.setAttribute("content", "경제상황판 - 한국 경제 지표 한눈에 | 생활계산기");
-    document.querySelector('meta[property="og:description"]')?.setAttribute("content", desc);
-    let kw = document.querySelector('meta[name="keywords"]');
-    if (!kw) { kw = document.createElement("meta"); kw.name = "keywords"; document.head.appendChild(kw); }
-    kw.setAttribute("content", "경제상황판,경제지표,기준금리,KOSPI,환율,CPI,한미금리차,코스톨라니,자산배분,경제대시보드,투자교육,거시지표,미시지표,KB지수,미분양,청약경쟁률,전세가율");
-    let ld = document.getElementById("dynamic-jsonld");
-    if (!ld) { ld = document.createElement("script"); ld.id = "dynamic-jsonld"; ld.type = "application/ld+json"; document.head.appendChild(ld); }
-    ld.textContent = JSON.stringify({
-      "@context": "https://schema.org",
-      "@graph": [
-        { "@type": "WebApplication", "name": "경제상황판", "description": desc, "url": "https://xn--989a00a691bdfa717h.com/경제상황판", "applicationCategory": "FinanceApplication", "operatingSystem": "Web", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" } },
-        { "@type": "Dataset", "name": "한국 경제 거시·미시 지표 13종", "description": "한국 기준금리, CPI, 환율, KOSPI, 국고채 10년, M2, GDP, 미국 기준금리, KB 주택가격지수, 미분양, 청약경쟁률, 전세가율, 매매거래량", "creator": { "@type": "Organization", "name": "생활계산기" }, "license": "교육·정보 제공 목적" },
-        { "@type": "BreadcrumbList", "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "홈", "item": "https://xn--989a00a691bdfa717h.com/" },
-          { "@type": "ListItem", "position": 2, "name": "경제상황판", "item": "https://xn--989a00a691bdfa717h.com/경제상황판" }
-        ]}
-      ]
-    });
-    let cn = document.querySelector('link[rel="canonical"]');
-    if (!cn) { cn = document.createElement("link"); cn.rel = "canonical"; document.head.appendChild(cn); }
-    cn.href = "https://xn--989a00a691bdfa717h.com" + window.location.pathname;
-  }, []);
+  /* 2026.10 제목·설명·대표주소·구조화 데이터는 src/data/siteMeta.js(단일 원천)에서 관리 */
 
   const macro = data?.macro || {};
   const micro = data?.micro || {};
@@ -297,7 +267,7 @@ export default function EconomicDashboard({ isMo = false, navigateHome, navigate
         </div>
       </section>
 
-      <style>{`@keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}`}</style>
+      <style dangerouslySetInnerHTML={{__html:`@keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}`}}/>
     </div>
   );
 }

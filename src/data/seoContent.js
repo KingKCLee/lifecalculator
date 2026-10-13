@@ -752,7 +752,7 @@ minwage: `<div style="display:flex;flex-direction:column;gap:16px;">
 <span style="font-size:18px;font-weight:500;color:#172B4D;">2026년 핵심 기준</span>
 </div>
 <div style="padding:20px 28px;display:flex;flex-direction:column;gap:8px;">
-<div style="font-size:16px;color:#505f79;line-height:1.9;"><p><b>최저임금:</b> 시급 10,030원 (전년 대비 +1.7%). <b>월 환산:</b> 주 40시간 기준 월 209시간 = 2,096,270원. <b>주휴수당:</b> 주 15시간↑ 근무 시 1일분 유급휴가 지급. <b>위반 시:</b> 3년 이하 징역 또는 2천만원 이하 벌금.</p></div>
+<div style="font-size:16px;color:#505f79;line-height:1.9;"><p><b>최저임금:</b> 시급 10,320원 (전년 대비 +2.9%). <b>월 환산:</b> 주 40시간 기준 월 209시간 = 2,156,880원. <b>주휴수당:</b> 주 15시간↑ 근무 시 1일분 유급휴가 지급. <b>위반 시:</b> 3년 이하 징역 또는 2천만원 이하 벌금.</p></div>
 </div>
 </div>
 <div style="background:#fff;border:0.5px solid #dfe1e6;border-radius:12px;overflow:hidden;">
