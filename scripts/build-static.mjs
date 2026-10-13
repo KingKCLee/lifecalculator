@@ -77,6 +77,8 @@ if (template.split(ROOT_MARK).length !== 2) fail('index.html 의 <div id="root">
 
 /* PC 화면은 문서에 데이터(JSON)로 동봉하고, 넓은 화면에서만 아래 스크립트가 첫 칠 전에 바꿔 끼운다.
    (본문에는 모바일 화면 1벌만 들어가므로 검색엔진이 보는 내용이 중복되지 않는다) */
+/* 2026.10 실제 도메인의 Cloudflare '이메일 주소 숨김'이 미리 찍은 화면 속 이메일 글자를 바꿔 놓으면
+ * 앱이 화면을 이어받지 못하고(React #425) 전부 다시 그린다(모바일 109개 전부 실측). email_off 구간은 Cloudflare가 건드리지 않는다. */
 const SWAP = `<script>(function(){var r=document.getElementById('root');try{if(window.innerWidth>768){var s=document.getElementById('lc-ssr-pc');if(s){r.innerHTML=JSON.parse(s.textContent);}}}catch(e){}r.setAttribute('data-ssr','ready');})();</script>`
 
 function draw(pathname, width) {
@@ -87,7 +89,7 @@ function compose(meta, moHtml, pcHtml) {
   let html = template.replace(SEO_RE, () => `<!--SEO:START-->\n    ${headTags(meta)}\n    <!--SEO:END-->`)
   const body = moHtml == null
     ? '<div id="root"></div>'
-    : `<div id="root" data-ssr="mo">${moHtml}</div>\n    <script type="application/json" id="lc-ssr-pc">${JSON.stringify(pcHtml).replace(/</g, '\\u003c')}</script>\n    ${SWAP}`
+    : `<div id="root" data-ssr="mo"><!--email_off-->${moHtml}<!--/email_off--></div>\n    <script type="application/json" id="lc-ssr-pc">${JSON.stringify(pcHtml).replace(/</g, '\\u003c')}</script>\n    ${SWAP}`
   html = html.replace(ROOT_MARK, () => body)
   return html
 }
