@@ -37,6 +37,8 @@ import CalcBrandPDF from './calcs/CalcBrandPDF';
 import AdminPage from './pages/admin/AdminPage';
 import EconomicDashboard from './pages/EconomicDashboard';
 import CalcRealPrice from './calcs/CalcRealPrice';
+import CalcSurveyFee from './calcs/CalcSurveyFee';
+import {} from './calcs/CalcAppraisalMethods';
 import CalcJeonseWolse from './calcs/CalcJeonseWolse';
 import CalcRentAdjust from './calcs/CalcRentAdjust';
 import CalcLateInterest from './calcs/CalcLateInterest';
@@ -122,7 +124,7 @@ function useIsMobile(bp=768){
   return m;
 }
 
-const SLUGS={acquisition:"취득세계산기",transfer:"양도소득세계산기",inctax:"종합소득세계산기",yearend:"연말정산계산기",compre:"종부세계산기",property:"재산세계산기",gift:"증여세계산기",inherit:"상속세계산기",holdtax:"보유세계산기",rental:"임대소득세계산기",mortgage:"대출이자계산기",dsr:"DSR계산기",dti:"DTI계산기",ltv:"LTV계산기",loanmax:"대출가능액계산기",rti:"RTI계산기",commission:"중개수수료계산기",registration:"등기비용계산기",legal:"법무사수수료계산기",stamp:"인지세계산기",bond:"채권할인료계산기",appraisal:"감정평가수수료계산기",netsalary:"연봉실수령액",insurance4:"4대보험료계산기",pension:"국민연금수령액",cartax:"자동차세계산기",deposit:"예적금이자계산기",convert:"전월세전환계산기",yield:"임대수익률계산기",joint:"공동명의계산기",area:"평수변환계산기",far:"용적률건폐율계산기",auction:"경매비용계산기",remodel:"리모델링수익계산기",bldvalue:"건물잔존가치계산기",totalcost:"총비용시뮬레이터",compare:"세금비교분석",invest:"투자수익분석",retire:"퇴직금계산기",unemploy:"실업급여계산기",minwage:"최저임금계산기",auction2:"경매적정입찰가",auctiondiv:"경매배당분석",auctionloan:"경락잔금대출",bldvat:"건물부가세계산기",bond2:"국민주택채권매입",datediff:"날짜계산기",estincome:"임대추정소득",goodlord:"착한임대인공제",imputedrent:"간주임대료계산기",jeonseins:"전세보증금보험료",legalinherit:"법정상속분계산기",luckyday:"손없는날달력",progressive:"누진세계산기",reconyear:"재건축연한계산기",refinance:"대환대출비교",remodel2:"리모델링ROI",rentincrease:"임대료인상률",stamp2:"인지세전자계약",realprice:"실거래가조회",subscription:"청약가점계산기",netsale:"매도실수령액계산기",jeonsewolse:"전세월세비교계산기",rentadjust:"월세보증금조정계산기",lateinterest:"연체이자계산기",noc:"환산임대료계산기",eviction:"명도비용계산기",buyprice:"적정매수가계산기",landshare:"대지지분계산기",unitprice:"평당가격계산기",length:"길이환산계산기",minbid:"경매최저가계산기",prepay:"중도상환수수료계산기",futureincome:"장래소득계산기",resourcetax:"지역자원시설세계산기",corptransfer:"법인양도세계산기",bldstdprice:"건물기준시가계산기",costapproach:"원가법계산기",salescomp:"거래사례비교법계산기",landprice:"공시지가기준법계산기",incomecap:"수익환원법계산기",dcf:"DCF계산기",rentcomp:"임대사례비교법계산기",summation:"적산법계산기",incomeanalysis:"수익분석법계산기",lunar:"음력변환계산기",terms:"부동산용어사전",investTiming:"투자타이밍계산기"};
+const SLUGS={acquisition:"취득세계산기",transfer:"양도소득세계산기",inctax:"종합소득세계산기",yearend:"연말정산계산기",compre:"종부세계산기",property:"재산세계산기",gift:"증여세계산기",inherit:"상속세계산기",holdtax:"보유세계산기",rental:"임대소득세계산기",mortgage:"대출이자계산기",dsr:"DSR계산기",dti:"DTI계산기",ltv:"LTV계산기",loanmax:"대출가능액계산기",rti:"RTI계산기",commission:"중개수수료계산기",registration:"등기비용계산기",legal:"법무사수수료계산기",stamp:"인지세계산기",bond:"채권할인료계산기",appraisal:"감정평가수수료계산기",netsalary:"연봉실수령액",insurance4:"4대보험료계산기",pension:"국민연금수령액",cartax:"자동차세계산기",deposit:"예적금이자계산기",convert:"전월세전환계산기",yield:"임대수익률계산기",joint:"공동명의계산기",area:"평수변환계산기",far:"용적률건폐율계산기",auction:"경매비용계산기",remodel:"리모델링수익계산기",bldvalue:"건물잔존가치계산기",totalcost:"총비용시뮬레이터",compare:"세금비교분석",invest:"투자수익분석",retire:"퇴직금계산기",unemploy:"실업급여계산기",minwage:"최저임금계산기",auction2:"경매적정입찰가",auctiondiv:"경매배당분석",auctionloan:"경락잔금대출",bldvat:"건물부가세계산기",bond2:"국민주택채권매입",datediff:"날짜계산기",estincome:"임대추정소득",goodlord:"착한임대인공제",imputedrent:"간주임대료계산기",jeonseins:"전세보증금보험료",legalinherit:"법정상속분계산기",luckyday:"손없는날달력",progressive:"누진세계산기",reconyear:"재건축연한계산기",refinance:"대환대출비교",remodel2:"리모델링ROI",rentincrease:"임대료인상률",stamp2:"인지세전자계약",realprice:"실거래가조회",subscription:"청약가점계산기",netsale:"매도실수령액계산기",surveyfee:"지적측량수수료계산기",jeonsewolse:"전세월세비교계산기",rentadjust:"월세보증금조정계산기",lateinterest:"연체이자계산기",noc:"환산임대료계산기",eviction:"명도비용계산기",buyprice:"적정매수가계산기",landshare:"대지지분계산기",unitprice:"평당가격계산기",length:"길이환산계산기",minbid:"경매최저가계산기",prepay:"중도상환수수료계산기",futureincome:"장래소득계산기",resourcetax:"지역자원시설세계산기",corptransfer:"법인양도세계산기",bldstdprice:"건물기준시가계산기",costapproach:"원가법계산기",salescomp:"거래사례비교법계산기",landprice:"공시지가기준법계산기",incomecap:"수익환원법계산기",dcf:"DCF계산기",rentcomp:"임대사례비교법계산기",summation:"적산법계산기",incomeanalysis:"수익분석법계산기",lunar:"음력변환계산기",terms:"부동산용어사전",investTiming:"투자타이밍계산기"};
 const SLUG_REVERSE=Object.fromEntries(Object.entries(SLUGS).map(([k,v])=>[decodeURIComponent(v),k]));/* 예전 주소(별칭) → 계산기. 대표주소는 SLUGS 쪽 주소로 모인다 */const ALIAS_SLUGS={"중개보수계산기":"commission","연봉실수령액계산기":"netsalary","종합부동산세계산기":"compre"};Object.assign(SLUG_REVERSE,ALIAS_SLUGS);
 
 const CALC_SUBTITLE={
@@ -185,6 +187,7 @@ const CALC_SUBTITLE={
   auction2:"시세 대비 적정 입찰가 · 수익 시뮬레이션",
   auctiondiv:"배당순위별 배분액 자동 계산 · 권리분석 기준",
   netsale:"양도세/중개보수 공제 후 실수령액 자동 계산",
+  surveyfee:"2026 국토교통부 고시 단가 · 경계복원·분할·현황측량",
   jeonsewolse:"대출이자·기회비용 포함 연간 주거비 비교 · 손익분기 전환율",
   rentadjust:"보증금 올리면 월세 얼마 내려가나 · 법정 전환율 5.0%",
   lateinterest:"밀린 월세·임대료 지연손해금 · 민사 5%·상사 6%·소송 12%",
@@ -278,6 +281,7 @@ stamp2:{title:"인지세 계산기 (전자계약) - 50% 감면 | 생활계산기
 realprice:{title:"실거래가 조회 - 국토부 호갱노노 네이버 | 생활계산기",desc:"부동산 실거래가 통합 조회. 국토부 실거래가 공개시스템, 호갱노노, 네이버 부동산, 직방 딥링크 제공. 매매·전세 시세 확인."},
 subscription:{title:"청약가점 계산기 2026 - 무주택기간 부양가족 통장 | 생활계산기",desc:"아파트 청약 가점제 84점 자동 계산. 무주택기간 32점 + 부양가족 35점 + 청약통장 17점. 당첨 가능 단지 수준 안내."},
 netsale:{title:"매도 실수령액 계산기 - 양도세·중개수수료 차감 | 생활계산기",desc:"부동산 매도 시 실수령액 자동 계산. 매도가 - 양도소득세 - 중개수수료 - 기타비용. 자동 추정 또는 직접 입력."},
+surveyfee:{title:"지적측량수수료 계산기 - 2026 경계복원·분할측량 비용 | 생활계산기",desc:"2026년 지적측량수수료 고시(국토교통부 고시 제2025-896호) 단가로 경계복원·분할·지적현황·신규등록 등 측량 비용을 계산. 부가세 포함."},
 jeonsewolse:{title:"전세 vs 월세 비교 계산기 - 연간 주거비·손익분기 전환율 | 생활계산기",desc:"전세와 월세 중 어느 쪽이 유리한지 계산. 전세대출 이자, 보증금 기회비용, 월세를 합친 연간 주거비와 손익분기 전환율을 바로 비교합니다."},
 rentadjust:{title:"월세보증금 조정 계산기 - 보증금 증액·감액 시 월세 변화 | 생활계산기",desc:"보증금을 올리거나 내릴 때 바뀌는 월세를 전월세 전환율로 계산. 주택 법정 전환율 상한(기준금리+2%p) 기준."},
 lateinterest:{title:"연체 임대료 이자 계산기 - 월세 지연손해금 일할 계산 | 생활계산기",desc:"밀린 월세·임대료·대금의 연체 이자(지연손해금)를 일수로 계산. 민법 5%, 상법 6%, 소송촉진법 12%, 약정 이율 선택."},
@@ -342,6 +346,7 @@ auction2:"경매입찰가,경매적정입찰가,경매낙찰률,감정가대비,
 refinance:"대환대출,대환대출계산기,갈아타기대출,대출비교,중도상환수수료,손익분기점",
 subscription:"청약가점,청약가점계산기,청약점수,무주택기간,부양가족,청약통장,아파트청약,2026청약",
 netsale:"매도실수령액,매도실수령액계산기,부동산매도수익,매도비용,양도세차감,중개수수료차감",
+surveyfee:"지적측량수수료,경계복원측량비용,분할측량비용,지적현황측량,측량비계산,LX측량수수료",
 jeonsewolse:"전세월세비교,전세vs월세,전세월세계산기,전세대출이자,손익분기전환율,주거비비교",
 rentadjust:"월세보증금조정,보증금올리면월세,보증금감액,월세조정,전월세전환율",
 lateinterest:"연체이자계산기,지연손해금계산,월세연체이자,임대료연체,법정이율,소송촉진법12%",
@@ -812,6 +817,7 @@ const CALC_ICONS={
   investTiming:IC(<><ellipse cx="12" cy="12" rx="7" ry="9"/><line x1="5" y1="12" x2="19" y2="12"/><line x1="12" y1="3" x2="12" y2="21"/></>),
   realprice:IC(<><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></>),
   netsale:IC(<><circle cx="12" cy="12" r="9"/><path d="M9 12h6M12 9v6M15 12l2-2M15 12l2 2"/></>),
+  surveyfee:IC(<><path d="M4 20h16"/><path d="M6 20V9l6-5 6 5v11"/><path d="M10 14h4"/></>),
   jeonsewolse:IC(<><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></>),
   rentadjust:IC(<><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></>),
   lateinterest:IC(<><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></>),
@@ -885,6 +891,7 @@ const CL=[
   {id:"auction2",l:"경매 적정입찰가",c:"realestate"},{id:"auctiondiv",l:"경매 배당 분석",c:"realestate"},{id:"reconyear",l:"재건축 연한",c:"realestate"},{id:"remodel2",l:"리모델링 ROI",c:"realestate"},{id:"rentincrease",l:"임대료 5% 상한",c:"realestate"},{id:"realprice",l:"실거래가 조회",c:"realestate"},{id:"netsale",l:"매도 실수령액",c:"realestate"},
   {id:"totalcost",l:"총비용 시뮬레이터",c:"pro"},{id:"compare",l:"세금비교 분석",c:"pro"},{id:"invest",l:"투자수익 분석",c:"pro"},
   {id:"investTiming",l:"투자 타이밍",c:"realestate"},
+  {id:"surveyfee",l:"지적측량수수료",c:"cost"},
   {id:"jeonsewolse",l:"전세 vs 월세 비교",c:"realestate"},{id:"rentadjust",l:"월세보증금 조정",c:"realestate"},{id:"lateinterest",l:"연체 임대료 이자",c:"life"},{id:"noc",l:"환산임대료",c:"realestate"},{id:"eviction",l:"명도비용",c:"realestate"},{id:"buyprice",l:"적정 매수가",c:"realestate"},{id:"landshare",l:"대지지분",c:"realestate"},{id:"unitprice",l:"평당 가격",c:"realestate"},{id:"length",l:"길이 환산",c:"life"},{id:"minbid",l:"경매 최저가·입찰보증금",c:"realestate"},{id:"prepay",l:"중도상환수수료",c:"loan"},{id:"futureincome",l:"장래소득",c:"loan"},{id:"resourcetax",l:"지역자원시설세",c:"tax"},{id:"corptransfer",l:"법인 양도세",c:"tax"},{id:"bldstdprice",l:"건물 기준시가",c:"tax"},{id:"costapproach",l:"원가법",c:"realestate"},{id:"salescomp",l:"거래사례비교법",c:"realestate"},{id:"landprice",l:"공시지가기준법",c:"realestate"},{id:"incomecap",l:"수익환원법",c:"realestate"},{id:"dcf",l:"DCF 수익환원법",c:"realestate"},{id:"rentcomp",l:"임대사례비교법",c:"realestate"},{id:"summation",l:"적산법",c:"realestate"},{id:"incomeanalysis",l:"수익분석법",c:"realestate"},{id:"lunar",l:"음력 변환",c:"life"},
 ];
 
@@ -1269,6 +1276,7 @@ const MI={
   auction2:["감정가를 입력해주세요"],
   auctiondiv:["낙찰가를 입력해주세요"],
   netsale:["매도가격을 입력해주세요"],
+  surveyfee:["개별공시지가를 입력해주세요"],
   jeonsewolse:["전세보증금을 입력해주세요", "월세를 입력해주세요"],
   rentadjust:["현재 월세를 입력해주세요", "바꿀 보증금을 입력해주세요"],
   lateinterest:["연체 금액을 입력해주세요", "연체 시작일을 입력해주세요"],
@@ -3644,7 +3652,7 @@ function CalcMinWage({isMo=false,onNav=()=>{}}){
     </div>
   </div>);
 }
-const CM={auction2:CalcAuction2,auctiondiv:CalcAuctionDiv,auctionloan:CalcAuctionLoan,bldvat:CalcBldVat,bond2:CalcBond2,datediff:CalcDateDiff,estincome:CalcEstIncome,goodlord:CalcGoodLandlord,imputedrent:CalcImputedRent,jeonseins:CalcJeonseInsurance,legalinherit:CalcLegalInherit,luckyday:CalcLuckyDay,progressive:CalcProgressive,reconyear:CalcReconYear,refinance:CalcRefinance,remodel2:CalcRemodel2,rentincrease:CalcRentIncrease,stamp2:CalcStampNew,realprice:CalcRealPrice,subscription:CalcSubscription,netsale:CalcNetSale,terms:CalcTerms,investTiming:CalcInvestTiming,acquisition:CalcAcq,transfer:CalcTrans,compre:CalcCompre,property:CalcProp,gift:CalcGift,inherit:CalcInherit,mortgage:CalcMort,dsr:CalcDSR,dti:CalcDTI,ltv:CalcLTV,rti:CalcRti,commission:CalcComm,registration:CalcReg,legal:CalcLegal,yield:CalcYield,area:CalcArea,convert:CalcConvert,joint:CalcJoint,totalcost:CalcTotalCost,compare:CalcCompare,invest:CalcInvest,loanmax:CalcLoanMax,holdtax:CalcHoldTax,stamp:CalcStamp,bond:CalcBond,deposit:CalcDeposit,far:CalcFAR,rental:CalcRental,inctax:CalcIncTax,yearend:CalcYearEnd,netsalary:CalcNetSalary,cartax:CalcCarTax,insurance4:CalcInsurance4,pension:CalcPension,retire:CalcRetire,unemploy:CalcUnemploy,minwage:CalcMinWage,appraisal:CalcAppraisal,auction:CalcAuction,remodel:CalcRemodel,bldvalue:CalcBldValue,jeonsewolse:CalcJeonseWolse,rentadjust:CalcRentAdjust,lateinterest:CalcLateInterest,noc:CalcNoc,eviction:CalcEviction,buyprice:CalcBuyPrice,landshare:CalcLandShare,unitprice:CalcUnitPrice,length:CalcLength,minbid:CalcMinBid,prepay:CalcPrepay,futureincome:CalcFutureIncome,resourcetax:CalcResourceTax,corptransfer:CalcCorpTransfer,bldstdprice:CalcBldStdPrice,costapproach:CalcCostApproach,salescomp:CalcSalesComparison,landprice:CalcLandPrice,incomecap:CalcIncomeCap,dcf:CalcDcf,rentcomp:CalcRentComparison,summation:CalcSummation,incomeanalysis:CalcIncomeAnalysis,lunar:CalcLunar};
+const CM={auction2:CalcAuction2,auctiondiv:CalcAuctionDiv,auctionloan:CalcAuctionLoan,bldvat:CalcBldVat,bond2:CalcBond2,datediff:CalcDateDiff,estincome:CalcEstIncome,goodlord:CalcGoodLandlord,imputedrent:CalcImputedRent,jeonseins:CalcJeonseInsurance,legalinherit:CalcLegalInherit,luckyday:CalcLuckyDay,progressive:CalcProgressive,reconyear:CalcReconYear,refinance:CalcRefinance,remodel2:CalcRemodel2,rentincrease:CalcRentIncrease,stamp2:CalcStampNew,realprice:CalcRealPrice,subscription:CalcSubscription,netsale:CalcNetSale,terms:CalcTerms,investTiming:CalcInvestTiming,acquisition:CalcAcq,transfer:CalcTrans,compre:CalcCompre,property:CalcProp,gift:CalcGift,inherit:CalcInherit,mortgage:CalcMort,dsr:CalcDSR,dti:CalcDTI,ltv:CalcLTV,rti:CalcRti,commission:CalcComm,registration:CalcReg,legal:CalcLegal,yield:CalcYield,area:CalcArea,convert:CalcConvert,joint:CalcJoint,totalcost:CalcTotalCost,compare:CalcCompare,invest:CalcInvest,loanmax:CalcLoanMax,holdtax:CalcHoldTax,stamp:CalcStamp,bond:CalcBond,deposit:CalcDeposit,far:CalcFAR,rental:CalcRental,inctax:CalcIncTax,yearend:CalcYearEnd,netsalary:CalcNetSalary,cartax:CalcCarTax,insurance4:CalcInsurance4,pension:CalcPension,retire:CalcRetire,unemploy:CalcUnemploy,minwage:CalcMinWage,appraisal:CalcAppraisal,auction:CalcAuction,remodel:CalcRemodel,bldvalue:CalcBldValue,surveyfee:CalcSurveyFee,jeonsewolse:CalcJeonseWolse,rentadjust:CalcRentAdjust,lateinterest:CalcLateInterest,noc:CalcNoc,eviction:CalcEviction,buyprice:CalcBuyPrice,landshare:CalcLandShare,unitprice:CalcUnitPrice,length:CalcLength,minbid:CalcMinBid,prepay:CalcPrepay,futureincome:CalcFutureIncome,resourcetax:CalcResourceTax,corptransfer:CalcCorpTransfer,bldstdprice:CalcBldStdPrice,costapproach:CalcCostApproach,salescomp:CalcSalesComparison,landprice:CalcLandPrice,incomecap:CalcIncomeCap,dcf:CalcDcf,rentcomp:CalcRentComparison,summation:CalcSummation,incomeanalysis:CalcIncomeAnalysis,lunar:CalcLunar};
 
 
 /* ── 관련 계산기 매핑 ── */
@@ -3707,6 +3715,7 @@ const RELATED={
   rentincrease:["convert","yield","rental"],
   realprice:["transfer","acquisition","netsale"],
   netsale:["transfer","commission","compare"],
+  surveyfee:["registration", "legal", "landshare"],
   jeonsewolse:["convert", "rentadjust", "mortgage"],
   rentadjust:["convert", "rentincrease", "jeonsewolse"],
   lateinterest:["rentincrease", "convert", "eviction"],
@@ -4760,6 +4769,7 @@ function CalcGrid({navigateCalc,isMo}){
     rentincrease:<svg {..._IS}><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>,
     realprice:<svg {..._IS}><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>,
     netsale:<svg {..._IS}><circle cx="12" cy="12" r="9"/><path d="M9 9l3 3 3-3M9 13h6M11 13v5M13 13v5"/></svg>,
+    surveyfee:<svg {..._IS}><path d="M4 20h16"/><path d="M6 20V9l6-5 6 5v11"/><path d="M10 14h4"/></svg>,
     jeonsewolse:<svg {..._IS}><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>,
     rentadjust:<svg {..._IS}><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>,
     lateinterest:<svg {..._IS}><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>,
@@ -6232,6 +6242,7 @@ const CALC_NAV_CONTENT={
   rentincrease:{items:[{title:"5% 상한제란?",open:true,body:"계약갱신청구권 행사 시 임대료 인상폭 5% 제한."},{title:"전월세 전환",body:"보증금↔월세 전환 시에도 5% 상한+법정전환율(기준금리+2%) 제한."},{title:"적용 범위",body:"갱신청구권 1회 한정. 갱신 계약 존속기간 2년."},{title:"거절 사유",body:"임대인 실거주, 재건축, 2기 연속 차임 연체 등 법정 사유."},{title:"분쟁 해결",body:"주택임대차분쟁조정위원회 신청. 확정일자 증빙 필수."}],related:["convert","yield","jeonseins"]},
   realprice:{items:[{title:"실거래가 조회란?",open:true,body:"국토부 실거래가 공개시스템에서 전국 매매·전세·월세 내역 조회."},{title:"조회 방법",body:"주소(법정동)+거래유형+기간 입력. 계약일·금액·면적·층 확인."},{title:"활용",body:"취득세·양도세 계산 시 실거래가 기준 정확한 세액 산출."},{title:"출처",body:"국토교통부 실거래가 공개시스템, 네이버 부동산, 호갱노노 등."},{title:"주의사항",body:"실거래 신고 후 30일 이내 공개. 최신 거래는 미반영 가능."}],related:["transfer","acquisition","netsale"]},
   netsale:{items:[{title:"매도 실수령액이란?",open:true,body:"매도가에서 양도세·중개수수료·기타비용 차감 후 실수령액."},{title:"차감 항목",body:"양도소득세, 지방소득세(양도세10%), 중개수수료(0.4~0.9%), 말소등기."},{title:"비과세 요건",body:"1세대1주택 2년보유(조정지역 2년거주)+12억이하 → 양도세 면제."},{title:"계산 순서",body:"매도가→양도차익→장특공제→기본공제250만→세율→세액→실수령액."},{title:"절세",body:"장기보유특별공제 극대화. 필요경비(인테리어비 등) 영수증 보관."}],related:["transfer","compare","commission","totalcost"]},
+  surveyfee:{items:[{title:"근거는?",open:true,body:"2026년 지적측량수수료 고시(국토교통부 고시 제2025-896호, 2026.1.1 시행). 부가세 별도."},{title:"공시지가가 왜 필요?",body:"분할·경계복원·지적현황·도시계획선명시측량은 개별공시지가 구간별 단가를 씀."},{title:"시·구 지역은?",body:"이 4개 종목 표는 군 지역 기준이며 시·구 지역은 지역 계수가 더해짐. 정확한 금액은 LX 간편수수료 계산에서 확인."}],related:["registration", "legal", "landshare", "far"]},
   jeonsewolse:{items:[{title:"전세와 월세 비교 기준은?",open:true,body:"전세: 대출이자+자기자금 기회비용. 월세: 월세×12+보증금 기회비용. 둘 중 연간 부담이 작은 쪽이 유리."},{title:"손익분기 전환율이란?",body:"월세×12 ÷ (전세보증금−월세보증금). 전세대출 금리가 이보다 낮으면 대체로 전세가 유리."},{title:"기회비용은 왜 넣나요?",body:"보증금으로 묶인 내 돈을 예금에 넣었다면 받았을 이자도 실제 비용이기 때문."},{title:"주의할 점",body:"전세는 보증금 반환 위험(전세사기)이 있어 전세보증보험 가입비도 함께 고려."}],related:["convert", "rentadjust", "mortgage", "jeonseins"]},
   rentadjust:{items:[{title:"계산 방법은?",open:true,body:"월세 변동 = 보증금 변동액 × 전환율 ÷ 12. 보증금을 올리면 월세가 그만큼 내려갑니다."},{title:"법정 전환율은?",body:"주택은 기준금리+2%p(현재 5.0%)가 상한(주택임대차보호법 시행령 §9)."},{title:"갱신 시 인상 제한",body:"계약갱신청구권 행사 시 환산 기준 5% 이내로만 인상 가능."}],related:["convert", "rentincrease", "jeonsewolse", "commission"]},
   lateinterest:{items:[{title:"법정이율은?",open:true,body:"민사 연 5%(민법 §379), 상사 연 6%(상법 §54). 약정이 있으면 약정 이율 우선."},{title:"소송하면?",body:"소장 송달 다음날부터 연 12%(소송촉진 등에 관한 특례법)."},{title:"계산 방법",body:"연체 금액 × 연이율 × 연체 일수 ÷ 365."}],related:["rentincrease", "convert", "eviction", "datediff"]},
