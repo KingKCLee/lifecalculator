@@ -258,3 +258,5 @@ LTV: 무주택 70%, 생애최초 비규제 80%
 - sitemap은 빌드가 만든다(`public/sitemap.xml`·auto-sitemap 자동화는 폐기).
 - 화면 이동은 `<A href=... onGo=...>`(진짜 링크)로. `div onClick` 이동 금지 — 검색엔진이 못 따라간다.
 - `<style>{\`...\`}</style>` 금지 → `<style dangerouslySetInnerHTML={{__html:\`...\`}}/>` (서버 문서에서 규칙이 깨짐).
+- **'오늘' 날짜는 `useToday()`/`useTodayStr()`(src/calcs/_shared.jsx)로만.** 렌더 중 `new Date()`로 기본값·문구를 만들면 미리 찍은 화면(빌드한 날)과 손님 화면이 달라 이어받기(hydrate)가 깨진다. PR 전 `FAKE_NOW=<미래 시각> node scripts/check-hydrate.cjs <주소> scripts/hydrate-paths.json` 으로 확인.
+- 미리 찍은 모바일 화면은 `<!--email_off-->`로 감싼다(Cloudflare 이메일 숨김이 글자를 바꿔 이어받기 실패). check-static이 막는다.

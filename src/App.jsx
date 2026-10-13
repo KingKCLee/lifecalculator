@@ -38,6 +38,7 @@ import AdminPage from './pages/admin/AdminPage';
 import EconomicDashboard from './pages/EconomicDashboard';
 import CalcRealPrice from './calcs/CalcRealPrice';
 import CalcSurveyFee from './calcs/CalcSurveyFee';
+import {useTodayStr} from './calcs/_shared';
 import {} from './calcs/CalcAppraisalMethods';
 import CalcJeonseWolse from './calcs/CalcJeonseWolse';
 import CalcRentAdjust from './calcs/CalcRentAdjust';
@@ -2210,7 +2211,8 @@ function CalcTrans({isMo=false,onNav=()=>{}}){
   const[sellAmt,setSellAmt]=useState("");
   const[costTotal,setCostTotal]=useState("");
   const[buyDate,setBuyDate]=useState("");
-  const[sellDate,setSellDate]=useState(()=>{const d=new Date();return d.getFullYear()+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0");});
+  /* 2026.10 양도일 기본값(오늘)은 앱이 뜬 뒤 채운다 — 미리 찍은 화면의 빌드 날짜가 입력칸에 남는 것 방지 */
+  const _todayS=useTodayStr();const[sellDate,setSellDate]=useState("");useEffect(()=>{if(_todayS)setSellDate(v=>v||_todayS);},[_todayS]);
   const[inheritBuyDate,setInheritBuyDate]=useState("");
   const[approveDate,setApproveDate]=useState("");const[showTransBuyLookup,setShowTransBuyLookup]=useState(false);const[showTransSellLookup,setShowTransSellLookup]=useState(false);
   const[unionPrice,setUnionPrice]=useState("");
@@ -6569,6 +6571,8 @@ export default function App(){
   // 2026.04.15 page 변경 시 항상 sessionKey 증가 → 계산기 완전 초기화
   useEffect(()=>{setSessionKey(k=>k+1);},[page]);
   const[liveData,setLiveData]=useState(null);
+  /* 2026.10 '오늘'은 앱이 뜬 뒤 정한다(미리 찍은 화면과 날짜가 다르면 이어받기 실패) */
+  const[today,setToday]=useState(null);useEffect(()=>{setToday(new Date());},[]);
   // 2026-04-14 좌측 네비 패널 (Expert Guide / Learning Center / Market Data / 지난 계산 내역)
   const[sidePanel,setSidePanel]=useState(null);
   // 2026.04.14 좌측 네비 클릭 시 메인 영역에 표시할 컨텐츠 ({menu,sub})
@@ -7166,7 +7170,7 @@ body.lc-embed main{padding-top:0!important}
       </div>}
 
       {/* 빠른접근 시즌별 자동추천 (PC) */}
-      {!isMo&&(()=>{const{season:_ss,calcs:_sc,banner:_sb}=getCurrentSeason();const _catColors={tax:{bg:"#eff6ff",fg:"#2563eb"},loan:{bg:"#fff7ed",fg:"#c2410c"},cost:{bg:"#fefce8",fg:"#a16207"},life:{bg:"#f1f5f9",fg:"#334155"},realestate:{bg:"#faf5ff",fg:"#7e22ce"},pro:{bg:"#f0fdf4",fg:"#15803d"}};return(
+      {!isMo&&(()=>{const{season:_ss,calcs:_sc,banner:_sb}=getCurrentSeason(today);const _catColors={tax:{bg:"#eff6ff",fg:"#2563eb"},loan:{bg:"#fff7ed",fg:"#c2410c"},cost:{bg:"#fefce8",fg:"#a16207"},life:{bg:"#f1f5f9",fg:"#334155"},realestate:{bg:"#faf5ff",fg:"#7e22ce"},pro:{bg:"#f0fdf4",fg:"#15803d"}};return(
       <div style={{background:"#fff",padding:"0 32px 72px"}}>
         <div style={{maxWidth:1200,margin:"0 auto"}}>
           {_sb&&<div style={{background:_sb.color,borderRadius:12,padding:"14px 24px",marginBottom:20,display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:8}}>
@@ -7460,7 +7464,7 @@ body.lc-embed main{padding-top:0!important}
       </div>
       <div style={{maxWidth:1200,margin:"48px auto 0",paddingTop:24,borderTop:"1px solid rgba(255,255,255,0.1)",display:"flex",justifyContent:"space-between",gap:20,flexWrap:"wrap",fontSize:12}}>
         <div style={{color:"rgba(255,255,255,0.6)",maxWidth:720,lineHeight:1.6}}>상호 더블유부동산 · 대표 이광철 · 사업자등록번호 589-24-01721 · 통신판매업신고 제2025-인천부평-0992호 · 주소 인천광역시 부평구 · 이메일 noble.kclee@gmail.com · 개인정보보호책임자 이광철</div>
-        <div style={{color:"rgba(255,255,255,0.65)"}}>© {new Date().getFullYear()} 생활계산기.com · <A href="/privacy" onGo={()=>navigateLegal("privacy")} style={{cursor:"pointer"}}>개인정보처리방침</A> · <A href="/disclaimer" onGo={()=>navigateLegal("disclaimer")} style={{cursor:"pointer"}}>면책조항</A> · <A href="/cookie" onGo={()=>navigateLegal("cookie")} style={{cursor:"pointer"}}>쿠키 정책</A></div>
+        <div style={{color:"rgba(255,255,255,0.65)"}}>© <span suppressHydrationWarning>{new Date().getFullYear()}</span> 생활계산기.com · <A href="/privacy" onGo={()=>navigateLegal("privacy")} style={{cursor:"pointer"}}>개인정보처리방침</A> · <A href="/disclaimer" onGo={()=>navigateLegal("disclaimer")} style={{cursor:"pointer"}}>면책조항</A> · <A href="/cookie" onGo={()=>navigateLegal("cookie")} style={{cursor:"pointer"}}>쿠키 정책</A></div>
       </div>
     </footer>):(<footer style={{background:"#F9FAFB",borderTop:"1px solid #E5E7EB",padding:"32px 20px 40px",position:"relative",width:"100%",boxSizing:"border-box",textAlign:"center"}}>
       {page!=="home"&&<FooterDirectory isMo={true} onNav={navigateCalc}/>}
@@ -7475,7 +7479,7 @@ body.lc-embed main{padding-top:0!important}
           {[{l:"정보센터",k:"info",h:"/info"},{l:"회사 소개",k:"about",h:"/about/"},{l:"문의하기",k:"contact",h:"/contact"},{l:"개인정보처리방침",k:"privacy",h:"/privacy"},{l:"면책조항",k:"disclaimer",h:"/disclaimer"},{l:"쿠키 정책",k:"cookie",h:"/cookie"}].map(item=><A key={item.k} href={item.h} onGo={()=>{if(item.k==="info"){navigateInfo();}else if(item.k==="about"){setPage("about");history.pushState(null,"","/about");window.scrollTo(0,0);}else if(item.k==="contact"){setPage("contact");history.pushState(null,"","/contact");window.scrollTo(0,0);}else{navigateLegal(item.k);}}} style={{fontSize:13,color:"#505f79",cursor:"pointer",display:"inline-flex",alignItems:"center",minHeight:44}}>{item.l}</A>)}
         </div>
         <div style={{fontSize:12,color:"#6B7280",marginTop:12,borderTop:"1px solid #E5E7EB",paddingTop:16,width:"100%",maxWidth:900}}>
-          © {new Date().getFullYear()} 생활계산기.com. All rights reserved. | 세법 검증: {UPDATE_LOG[0]?.date}
+          © <span suppressHydrationWarning>{new Date().getFullYear()}</span> 생활계산기.com. All rights reserved. | 세법 검증: {UPDATE_LOG[0]?.date}
         </div>
         <div style={{fontSize:12,color:"#6B7280",lineHeight:1.7,marginTop:2,maxWidth:900,wordBreak:"keep-all"}}>
           상호: 더블유부동산 | 대표: 이광철 | 사업자등록번호: 589-24-01721<br/>통신판매업 신고번호: 제2025-인천부평-0992호 | 주소: 인천광역시 부평구<br/>이메일: noble.kclee@gmail.com

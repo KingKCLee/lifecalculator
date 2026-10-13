@@ -1,5 +1,5 @@
-import React, {useState, useMemo} from 'react';
-import {P, Sel, Tog, CalcShell} from './_shared';
+import React, {useState, useMemo, useEffect} from 'react';
+import {P, Sel, Tog, CalcShell, useToday} from './_shared';
 
 // 손없는 날 달력 (음력 기반)
 // 전통적으로 "손"(귀신)이 없는 날은 음력 끝자리 9, 0일.
@@ -41,9 +41,11 @@ function buildMonthGrid(year, month){
 }
 
 export default function CalcLuckyDay({isMo=false, onNav=()=>{}}){
-  const today = new Date();
-  const [year, setYear] = useState(String(today.getFullYear()));
-  const [month, setMonth] = useState(String(today.getMonth()+1));
+  const today = useToday();
+  const [year, setYear] = useState("");
+  const [month, setMonth] = useState("");
+  // 이번 달은 앱이 뜬 뒤 정한다(미리 찍은 화면의 달과 손님이 보는 달이 다를 수 있음)
+  useEffect(()=>{ if(today){ setYear(v=>v||String(today.getFullYear())); setMonth(v=>v||String(today.getMonth()+1)); } },[today]);
   const [mode, setMode] = useState("lucky");
 
   const y = parseInt(year);
@@ -54,7 +56,8 @@ export default function CalcLuckyDay({isMo=false, onNav=()=>{}}){
   const fmtDate = c => y+"."+String(m).padStart(2,"0")+"."+String(c.day).padStart(2,"0")+" ("+WEEKDAYS[c.weekday]+")";
 
   const years = [];
-  for(let yy=today.getFullYear()-1; yy<=today.getFullYear()+3; yy++) years.push({value:String(yy), label:yy+"년"});
+  const baseY = today ? today.getFullYear() : (y||0);
+  if(baseY) for(let yy=baseY-1; yy<=baseY+3; yy++) years.push({value:String(yy), label:yy+"년"});
   const months = [];
   for(let mm=1; mm<=12; mm++) months.push({value:String(mm), label:mm+"월"});
 
@@ -72,7 +75,7 @@ export default function CalcLuckyDay({isMo=false, onNav=()=>{}}){
 
     <div style={{marginTop:16, background:"#fff", borderRadius:16, border:"1px solid "+P.bd, padding:isMo?12:20}}>
       <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:12}}>
-        <div style={{fontSize:16, fontWeight:700, color:P.tx}}>{y}년 {m}월</div>
+        <div style={{fontSize:16, fontWeight:700, color:P.tx}}>{y&&m?y+"년 "+m+"월":"이번 달 달력"}</div>
         <div style={{fontSize:11, color:P.mt}}>음력 9·19·29일 기준</div>
       </div>
       <div style={{display:"grid", gridTemplateColumns:"repeat(7, 1fr)", gap:4, marginBottom:6}}>

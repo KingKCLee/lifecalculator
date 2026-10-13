@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {tW, pN, fW, Inp, Tog, RP, CalcShell} from "./_shared";
+import React, {useState, useEffect} from 'react';
+import {tW, pN, fW, Inp, Tog, RP, CalcShell, useTodayStr} from "./_shared";
 
 // 연체 임대료 이자 (지연손해금) (2026.10 신설)
 // 약정 이율이 없으면 법정이율: 민법 §379 연 5%, 상법 §54 연 6%
@@ -9,7 +9,9 @@ const toDate = s => (s&&s.length===8)?new Date(+s.slice(0,4), +s.slice(4,6)-1, +
 export default function CalcLateInterest({isMo=false}){
   const [amt, setAmt] = useState("");
   const [from, setFrom] = useState("");
-  const [to, setTo] = useState(todayStr);
+  const todayS = useTodayStr();
+  const [to, setTo] = useState("");
+  useEffect(()=>{ if(todayS) setTo(v=>v||todayS); },[todayS]); // 오늘은 앱이 뜬 뒤 채움
   const [kind, setKind] = useState("civil");
   const [custom, setCustom] = useState("");
   const rate = kind==="civil"?0.05:kind==="commerce"?0.06:kind==="suit"?0.12:pN(custom)/100;
