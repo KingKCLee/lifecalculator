@@ -50,6 +50,14 @@ for (const g of gen) {
     titles.set(title, g.path)
   }
 }
+/* ⑥ 2026.10 미리 찍은 화면을 앱이 버리고 다시 그리면 '가장 큰 글자' 시각이 앱 로딩 뒤로 밀린다(실측 양도세 LCP 6.7초).
+ *    → 앱은 미리 찍은 화면을 이어받아야 하고(hydrateRoot), 쿠키 배너는 처음부터 문서에 있어야 한다. */
+{
+  const mainSrc = fs.readFileSync(path.join(ROOT, 'src', 'main.jsx'), 'utf8')
+  if (!/hydrateRoot\(/.test(mainSrc)) bad('src/main.jsx: 미리 찍은 화면을 이어받지 않음(hydrateRoot 없음)')
+  const home = path.join(DIST, 'index.html')
+  if (fs.existsSync(home) && !/class="cookie-banner"/.test(fs.readFileSync(home, 'utf8'))) bad('index.html: 쿠키 배너가 미리 찍은 화면에 없음(앱 로딩 뒤 튀어나와 LCP 지연)')
+}
 const nf = path.join(DIST, '404.html')
 if (!fs.existsSync(nf) || !/noindex/.test(fs.readFileSync(nf, 'utf8'))) bad('404.html 없음 또는 noindex 아님')
 
