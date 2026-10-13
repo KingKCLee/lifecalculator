@@ -1169,6 +1169,12 @@
     {
       "date": "2026.10.13",
       "category": "전체",
+      "title": "perf: 미리 찍은 화면을 이어받기(hydrate) + 쿠키 배너 선렌더 — 계산기 LCP 6.7초→1.1초(로컬 실측)",
+      "desc": "perf: 미리 찍은 화면을 이어받기(hydrate) + 쿠키 배너 선렌더 — 계산기 LCP 6.7초→1.1초(로컬 실측)"
+    },
+    {
+      "date": "2026.10.13",
+      "category": "전체",
       "title": "feat: 부동산계산기.com 대비 없던 계산기 24종 추가 (63→87개)",
       "desc": "feat: 부동산계산기.com 대비 없던 계산기 24종 추가 (63→87개)"
     },
@@ -1480,12 +1486,6 @@
       "category": "세금",
       "title": "fix: 2026 법령 정밀 검증 + SEO 키워드 + 양도세 중과 유예 알림",
       "desc": "fix: 2026 법령 정밀 검증 + SEO 키워드 + 양도세 중과 유예 알림"
-    },
-    {
-      "date": "2026.04.18",
-      "category": "전체",
-      "title": "test: Puppeteer prerender 테스트",
-      "desc": "test: Puppeteer prerender 테스트"
     }
   ],
   "rates": {
