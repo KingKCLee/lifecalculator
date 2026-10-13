@@ -60,7 +60,7 @@ transfer: `<div style="display:flex;flex-direction:column;gap:16px;">
 <span style="font-size:18px;font-weight:500;color:#172B4D;">이런 분들께 필요해요</span>
 </div>
 <div style="padding:20px 28px;display:flex;flex-direction:column;gap:8px;">
-<div style="display:flex;align-items:flex-start;gap:10px;"><div style="width:6px;height:6px;border-radius:50%;background:#378ADD;margin-top:7px;flex-shrink:0;"></div><span style="font-size:16px;color:#505f79;line-height:1.9;">아파트·주택을 팔려는데 <b>양도세가 얼마나 나올지</b> 미리 알고 싶은 분</span></div><div style="display:flex;align-items:flex-start;gap:10px;"><div style="width:6px;height:6px;border-radius:50%;background:#378ADD;margin-top:7px;flex-shrink:0;"></div><span style="font-size:16px;color:#505f79;line-height:1.9;"><b>1주택 비과세 요건</b>(2년 보유·거주)을 충족하는지 확인하고 싶은 분</span></div><div style="display:flex;align-items:flex-start;gap:10px;"><div style="width:6px;height:6px;border-radius:50%;background:#378ADD;margin-top:7px;flex-shrink:0;"></div><span style="font-size:16px;color:#505f79;line-height:1.9;">다주택자로서 <b>중과 유예 기간(2026.5.9까지)</b> 내 매도 시점을 고민하는 분</span></div><div style="display:flex;align-items:flex-start;gap:10px;"><div style="width:6px;height:6px;border-radius:50%;background:#378ADD;margin-top:7px;flex-shrink:0;"></div><span style="font-size:16px;color:#505f79;line-height:1.9;">양도 후 <b>예정신고 방법과 기한</b>을 모르는 분</span></div>
+<div style="display:flex;align-items:flex-start;gap:10px;"><div style="width:6px;height:6px;border-radius:50%;background:#378ADD;margin-top:7px;flex-shrink:0;"></div><span style="font-size:16px;color:#505f79;line-height:1.9;">아파트·주택을 팔려는데 <b>양도세가 얼마나 나올지</b> 미리 알고 싶은 분</span></div><div style="display:flex;align-items:flex-start;gap:10px;"><div style="width:6px;height:6px;border-radius:50%;background:#378ADD;margin-top:7px;flex-shrink:0;"></div><span style="font-size:16px;color:#505f79;line-height:1.9;"><b>1주택 비과세 요건</b>(2년 보유·거주)을 충족하는지 확인하고 싶은 분</span></div><div style="display:flex;align-items:flex-start;gap:10px;"><div style="width:6px;height:6px;border-radius:50%;background:#378ADD;margin-top:7px;flex-shrink:0;"></div><span style="font-size:16px;color:#505f79;line-height:1.9;">조정대상지역 다주택자로서 <b>중과(2026.5.10~ 재시행)</b> 적용 여부를 확인하려는 분</span></div><div style="display:flex;align-items:flex-start;gap:10px;"><div style="width:6px;height:6px;border-radius:50%;background:#378ADD;margin-top:7px;flex-shrink:0;"></div><span style="font-size:16px;color:#505f79;line-height:1.9;">양도 후 <b>예정신고 방법과 기한</b>을 모르는 분</span></div>
 </div>
 </div>
 <div style="background:#fff;border:0.5px solid #dfe1e6;border-radius:12px;overflow:hidden;">
@@ -96,7 +96,7 @@ transfer: `<div style="display:flex;flex-direction:column;gap:16px;">
 <span style="font-size:18px;font-weight:500;color:#172B4D;">놓치면 손해보는 것들</span>
 </div>
 <div style="padding:20px 28px;display:flex;flex-direction:column;gap:8px;">
-<div style="padding:10px 14px;background:#f8f9fc;border-radius:8px;border-left:3px solid #E24B4A;"><span style="font-size:14px;font-weight:500;color:#A32D2D;">예정신고 기한:</span><p style="font-size:15px;color:#505f79;margin:2px 0 0;line-height:1.8;">양도일(잔금일) 속한 달 말일부터 2개월 이내. 미신고 시 무신고가산세 20%</p></div><div style="padding:10px 14px;background:#f8f9fc;border-radius:8px;border-left:3px solid #E24B4A;"><span style="font-size:14px;font-weight:500;color:#A32D2D;">다주택 중과 유예:</span><p style="font-size:15px;color:#505f79;margin:2px 0 0;line-height:1.8;">2026.5.9까지 한시 유예. 이후 2주택 +20%p, 3주택 +30%p 중과 재적용</p></div><div style="padding:10px 14px;background:#f8f9fc;border-radius:8px;border-left:3px solid #E24B4A;"><span style="font-size:14px;font-weight:500;color:#A32D2D;">필요경비 증빙:</span><p style="font-size:15px;color:#505f79;margin:2px 0 0;line-height:1.8;">취득세·중개수수료·인테리어비 영수증 미보관 시 공제 불가. 수백만원 차이</p></div><div style="padding:10px 14px;background:#f8f9fc;border-radius:8px;border-left:3px solid #E24B4A;"><span style="font-size:14px;font-weight:500;color:#A32D2D;">1주택 비과세 실수:</span><p style="font-size:15px;color:#505f79;margin:2px 0 0;line-height:1.8;">일시적 2주택 3년 내 미처분 시 비과세 소멸</p></div>
+<div style="padding:10px 14px;background:#f8f9fc;border-radius:8px;border-left:3px solid #E24B4A;"><span style="font-size:14px;font-weight:500;color:#A32D2D;">예정신고 기한:</span><p style="font-size:15px;color:#505f79;margin:2px 0 0;line-height:1.8;">양도일(잔금일) 속한 달 말일부터 2개월 이내. 미신고 시 무신고가산세 20%</p></div><div style="padding:10px 14px;background:#f8f9fc;border-radius:8px;border-left:3px solid #E24B4A;"><span style="font-size:14px;font-weight:500;color:#A32D2D;">다주택 중과 재시행:</span><p style="font-size:15px;color:#505f79;margin:2px 0 0;line-height:1.8;">2026.5.9로 유예 종료, 5.10 양도분부터 2주택 +20%p, 3주택 +30%p 중과. 5.9 이전 계약분은 4~6개월 내 잔금 시 경과조치</p></div><div style="padding:10px 14px;background:#f8f9fc;border-radius:8px;border-left:3px solid #E24B4A;"><span style="font-size:14px;font-weight:500;color:#A32D2D;">필요경비 증빙:</span><p style="font-size:15px;color:#505f79;margin:2px 0 0;line-height:1.8;">취득세·중개수수료·인테리어비 영수증 미보관 시 공제 불가. 수백만원 차이</p></div><div style="padding:10px 14px;background:#f8f9fc;border-radius:8px;border-left:3px solid #E24B4A;"><span style="font-size:14px;font-weight:500;color:#A32D2D;">1주택 비과세 실수:</span><p style="font-size:15px;color:#505f79;margin:2px 0 0;line-height:1.8;">일시적 2주택 3년 내 미처분 시 비과세 소멸</p></div>
 </div>
 </div>
 </div>`,
@@ -512,7 +512,7 @@ netsalary: `<div style="display:flex;flex-direction:column;gap:16px;">
 <span style="font-size:18px;font-weight:500;color:#172B4D;">2026년 핵심 세율과 계산법</span>
 </div>
 <div style="padding:20px 28px;display:flex;flex-direction:column;gap:8px;">
-<div style="font-size:16px;color:#505f79;line-height:1.9;"><p><b>국민연금:</b> 4.5%(상한 월 637만). <b>건강보험:</b> 3.545%. <b>장기요양:</b> 건보료×12.95%. <b>고용보험:</b> 0.9%. 합계 약 9.7%. <b>소득세:</b> 간이세액표 기준 원천징수. 연봉 5,000만원 → 월 실수령 약 340~360만원.</p></div>
+<div style="font-size:16px;color:#505f79;line-height:1.9;"><p><b>국민연금:</b> 4.75%(상한 월 659만, 2026.7~). <b>건강보험:</b> 3.595%. <b>장기요양:</b> 건보료×13.14%. <b>고용보험:</b> 0.9%. 합계 약 9.7%. <b>소득세:</b> 간이세액표 기준 원천징수. 연봉 5,000만원 → 월 실수령 약 340~360만원.</p></div>
 </div>
 </div>
 <div style="background:#fff;border:0.5px solid #dfe1e6;border-radius:12px;overflow:hidden;">
@@ -560,7 +560,7 @@ insurance4: `<div style="display:flex;flex-direction:column;gap:16px;">
 <span style="font-size:18px;font-weight:500;color:#172B4D;">2026년 핵심 요율</span>
 </div>
 <div style="padding:20px 28px;display:flex;flex-direction:column;gap:8px;">
-<div style="font-size:16px;color:#505f79;line-height:1.9;"><p><b>국민연금:</b> 근로자 4.5% + 사업주 4.5% = 총 9%. 상한 월 637만원. <b>건강보험:</b> 근로자 3.545% + 사업주 3.545%. <b>장기요양:</b> 건보료 × 12.95%. <b>고용보험:</b> 근로자 0.9% + 사업주 0.9~1.65%(업종별). <b>산재보험:</b> 사업주 전액(업종별 0.6~18.6%).</p></div>
+<div style="font-size:16px;color:#505f79;line-height:1.9;"><p><b>국민연금:</b> 근로자 4.75% + 사업주 4.75% = 총 9.5%. 상한 월 659만원(2026.7~). <b>건강보험:</b> 근로자 3.595% + 사업주 3.595%. <b>장기요양:</b> 건보료 × 13.14%. <b>고용보험:</b> 근로자 0.9% + 사업주 0.9~1.65%(업종별). <b>산재보험:</b> 사업주 전액(업종별 0.6~18.6%).</p></div>
 </div>
 </div>
 <div style="background:#fff;border:0.5px solid #dfe1e6;border-radius:12px;overflow:hidden;">
@@ -578,7 +578,7 @@ insurance4: `<div style="display:flex;flex-direction:column;gap:16px;">
 <span style="font-size:18px;font-weight:500;color:#172B4D;">놓치면 손해보는 것들</span>
 </div>
 <div style="padding:20px 28px;display:flex;flex-direction:column;gap:8px;">
-<div style="padding:10px 14px;background:#f8f9fc;border-radius:8px;border-left:3px solid #E24B4A;"><span style="font-size:14px;font-weight:500;color:#A32D2D;">국민연금 상한:</span><p style="font-size:15px;color:#505f79;margin:2px 0 0;line-height:1.8;">월 637만원 초과 급여도 637만원까지만 보험료 부과</p></div><div style="padding:10px 14px;background:#f8f9fc;border-radius:8px;border-left:3px solid #E24B4A;"><span style="font-size:14px;font-weight:500;color:#A32D2D;">퇴직 후 건보료:</span><p style="font-size:15px;color:#505f79;margin:2px 0 0;line-height:1.8;">직장→지역 전환 시 재산·자동차까지 반영되어 보험료 급등 가능</p></div><div style="padding:10px 14px;background:#f8f9fc;border-radius:8px;border-left:3px solid #E24B4A;"><span style="font-size:14px;font-weight:500;color:#A32D2D;">두루누리 사업:</span><p style="font-size:15px;color:#505f79;margin:2px 0 0;line-height:1.8;">10인 미만 사업장, 월 270만원 미만 근로자는 보험료 80% 지원</p></div>
+<div style="padding:10px 14px;background:#f8f9fc;border-radius:8px;border-left:3px solid #E24B4A;"><span style="font-size:14px;font-weight:500;color:#A32D2D;">국민연금 상한:</span><p style="font-size:15px;color:#505f79;margin:2px 0 0;line-height:1.8;">월 659만원(2026.7~) 초과 급여도 659만원까지만 보험료 부과</p></div><div style="padding:10px 14px;background:#f8f9fc;border-radius:8px;border-left:3px solid #E24B4A;"><span style="font-size:14px;font-weight:500;color:#A32D2D;">퇴직 후 건보료:</span><p style="font-size:15px;color:#505f79;margin:2px 0 0;line-height:1.8;">직장→지역 전환 시 재산·자동차까지 반영되어 보험료 급등 가능</p></div><div style="padding:10px 14px;background:#f8f9fc;border-radius:8px;border-left:3px solid #E24B4A;"><span style="font-size:14px;font-weight:500;color:#A32D2D;">두루누리 사업:</span><p style="font-size:15px;color:#505f79;margin:2px 0 0;line-height:1.8;">10인 미만 사업장, 월 270만원 미만 근로자는 보험료 80% 지원</p></div>
 </div>
 </div>
 </div>`,
@@ -608,7 +608,7 @@ pension: `<div style="display:flex;flex-direction:column;gap:16px;">
 <span style="font-size:18px;font-weight:500;color:#172B4D;">2026년 핵심 기준</span>
 </div>
 <div style="padding:20px 28px;display:flex;flex-direction:column;gap:8px;">
-<div style="font-size:16px;color:#505f79;line-height:1.9;"><p><b>보험료율:</b> 9%(근로자 4.5% + 사업주 4.5%). <b>기준소득월액:</b> 상한 637만원, 하한 37만원. <b>수급개시:</b> 65세(1969년생 이후). <b>소득대체율:</b> 40%. <b>조기수령:</b> 60세부터 가능, 연 6% 감액(최대 30%). <b>연기수령:</b> 연 7.2% 가산(최대 36%).</p></div>
+<div style="font-size:16px;color:#505f79;line-height:1.9;"><p><b>보험료율:</b> 9.5%(근로자 4.75% + 사업주 4.75%, 2026년부터 매년 0.5%p씩 13%까지). <b>기준소득월액:</b> 상한 659만원, 하한 41만원(2026.7~). <b>수급개시:</b> 65세(1969년생 이후). <b>소득대체율:</b> 40%. <b>조기수령:</b> 60세부터 가능, 연 6% 감액(최대 30%). <b>연기수령:</b> 연 7.2% 가산(최대 36%).</p></div>
 </div>
 </div>
 <div style="background:#fff;border:0.5px solid #dfe1e6;border-radius:12px;overflow:hidden;">

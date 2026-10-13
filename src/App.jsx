@@ -110,7 +110,7 @@ const SLUG_REVERSE=Object.fromEntries(Object.entries(SLUGS).map(([k,v])=>[decode
 
 const CALC_SUBTITLE={
   acquisition:"2026년 취득세율 자동 적용 · 중과/감면 자동 판정",
-  transfer:"비과세·장특공·중과유예 자동 계산 · 2026년 세법 기준",
+  transfer:"비과세·장특공·다주택 중과 자동 계산 · 2026년 세법 기준",
   compre:"공시가격 기반 · 1주택/다주택 자동 구분 계산",
   property:"재산세 + 도시지역분 자동 계산 · 2026년 기준",
   gift:"증여재산공제 자동 적용 · 10년 합산 자동 계산",
@@ -342,10 +342,10 @@ const _SEO_CONTENT_MOVED = true; // eslint-disable-line
 void(_SEO_CONTENT_MOVED);
 /*
 acquisition:`<h2>2026년 취득세 완벽 가이드</h2><h3>이런 분들께 필요해요</h3><p>아파트·주택을 매매 계약한 분, 부모님으로부터 부동산을 증여받을 예정인 분, 상속으로 부동산을 취득하게 된 분, 신축 건물을 완공한 건축주. 취득세는 부동산 거래 시 가장 먼저 내는 세금이라 잔금 전에 반드시 확인해야 합니다.</p><h3>이 계산기로 해결되는 것</h3><p>매매·증여·상속·원시취득별 취득세율을 자동 적용하고, 지방교육세·농어촌특별세·인지세까지 한 번에 계산합니다. 조정대상지역 여부, 주택 수, 전용면적에 따른 중과세율과 생애최초 감면까지 모두 반영합니다. 시가표준액(공시가격)이 취득가보다 높을 경우 자동으로 과세표준을 전환합니다.</p><h3>계산 방법과 세율</h3><p>2026년 기준 1주택자는 6억 이하 1%, 6~9억 구간 1~3% 비례세율, 9억 초과 3%가 적용됩니다. 조정대상지역 2주택 8%, 3주택 이상·법인 12% 중과됩니다. 여기에 지방교육세(취득세의 10%), 농어촌특별세(전용 85㎡ 초과 시 0.2%), 인지세(거래금액별 1~35만원)가 추가됩니다. 과세표준은 실거래가와 시가표준액 중 높은 금액입니다.</p><h3>이 계산기 200% 활용법</h3><p>주소 검색 버튼으로 실거래가와 공시가격을 자동으로 불러오세요. 두 금액 중 높은 쪽이 과세표준으로 자동 설정됩니다. 특수조건 칩(조정대상, 생애최초, 일시적 2주택 등)을 마우스 오버하면 각 조건의 세율 변화를 즉시 확인할 수 있습니다. 시나리오를 바꿔가며 비교해보세요.</p><h3>놓치면 손해보는 것들</h3><p>신고기한은 잔금일 또는 등기일 중 빠른 날로부터 60일(상속은 6개월, 증여는 3개월)입니다. 기한 내 미신고 시 20% 무신고가산세가 부과됩니다. 생애최초 감면(최대 200만원, 2028년까지)은 신청하지 않으면 자동 적용되지 않습니다. 일시적 2주택자는 3년 내 종전주택 처분 조건을 꼭 확인하세요.</p>`,
-transfer:`<h2>양도소득세 완벽 가이드</h2><h3>이런 분들께 필요해요</h3><p>아파트·주택 매도를 앞둔 분, 다주택자로 중과 유예 기간 내 매도를 검토 중인 분, 1주택 비과세 요건을 확인하고 싶은 분, 상가·토지 매도 시 세후 실수령액이 궁금한 분. 양도세는 매도 결정 전 반드시 시뮬레이션해야 할 세금입니다.</p><h3>이 계산기로 해결되는 것</h3><p>양도차익(양도가-취득가-필요경비)을 산출하고 장기보유특별공제, 기본공제 250만원을 적용한 과세표준에 6~45% 누진세율을 자동 계산합니다. 1주택 비과세 판정, 12억 초과분 과세, 다주택 중과(유예 여부 포함), 지방소득세 10%까지 한 번에 보여줍니다.</p><h3>계산 방법과 세율</h3><p>과세표준 1,400만원 이하 6%부터 10억 초과 45%까지 8단계 누진세율이 적용됩니다. 1주택 2년 이상 보유(조정지역은 2년 거주 포함) 시 12억원까지 비과세입니다. 장기보유특별공제는 1주택 보유 연 4%+거주 연 4% 최대 80%, 다주택은 연 2% 최대 30%입니다. 다주택 중과(+20~30%p)는 2026.5.9까지 유예 중입니다.</p><h3>이 계산기 200% 활용법</h3><p>취득가·양도가를 입력하고 보유기간을 조절하면서 장기보유공제 효과를 비교해보세요. 다주택자는 중과 유예 기간 내 매도 시뮬레이션과 유예 후 시뮬레이션을 나란히 비교할 수 있습니다. 필요경비(취득세, 중개보수, 인테리어비)를 빠짐없이 입력하면 과세표준이 낮아집니다.</p><h3>놓치면 손해보는 것들</h3><p>예정신고 기한은 양도일이 속하는 달의 말일부터 2개월입니다. 무신고 시 20% 가산세에 납부지연가산세까지 추가됩니다. 필요경비 영수증을 분실하면 공제를 받을 수 없으므로 취득 시점부터 보관하세요. 1주택 비과세는 전입신고 기준 거주 요건을 충족해야 합니다.</p>`,
+transfer:`<h2>양도소득세 완벽 가이드</h2><h3>이런 분들께 필요해요</h3><p>아파트·주택 매도를 앞둔 분, 조정대상지역 다주택자로 중과(2026.5.10~ 재시행) 적용 여부를 확인하려는 분, 1주택 비과세 요건을 확인하고 싶은 분, 상가·토지 매도 시 세후 실수령액이 궁금한 분. 양도세는 매도 결정 전 반드시 시뮬레이션해야 할 세금입니다.</p><h3>이 계산기로 해결되는 것</h3><p>양도차익(양도가-취득가-필요경비)을 산출하고 장기보유특별공제, 기본공제 250만원을 적용한 과세표준에 6~45% 누진세율을 자동 계산합니다. 1주택 비과세 판정, 12억 초과분 과세, 다주택 중과(5.9 이전 계약 경과조치 포함), 지방소득세 10%까지 한 번에 보여줍니다.</p><h3>계산 방법과 세율</h3><p>과세표준 1,400만원 이하 6%부터 10억 초과 45%까지 8단계 누진세율이 적용됩니다. 1주택 2년 이상 보유(조정지역은 2년 거주 포함) 시 12억원까지 비과세입니다. 장기보유특별공제는 1주택 보유 연 4%+거주 연 4% 최대 80%, 다주택은 연 2% 최대 30%입니다. 다주택 중과(+20~30%p)는 유예가 끝나 2026.5.10 양도분부터 다시 적용됩니다.</p><h3>이 계산기 200% 활용법</h3><p>취득가·양도가를 입력하고 보유기간을 조절하면서 장기보유공제 효과를 비교해보세요. 다주택자는 양도일과 '5.9 이전 계약' 경과조치 여부에 따라 중과 적용 전후 세액을 비교할 수 있습니다. 필요경비(취득세, 중개보수, 인테리어비)를 빠짐없이 입력하면 과세표준이 낮아집니다.</p><h3>놓치면 손해보는 것들</h3><p>예정신고 기한은 양도일이 속하는 달의 말일부터 2개월입니다. 무신고 시 20% 가산세에 납부지연가산세까지 추가됩니다. 필요경비 영수증을 분실하면 공제를 받을 수 없으므로 취득 시점부터 보관하세요. 1주택 비과세는 전입신고 기준 거주 요건을 충족해야 합니다.</p>`,
 inctax:`<h2>종합소득세 완벽 가이드</h2><h3>이런 분들께 필요해요</h3><p>프리랜서·개인사업자로 5월 신고를 앞둔 분, 3.3% 원천징수 후 실제 세금과 환급액이 궁금한 분, 근로소득 외 부업·임대·금융소득이 있어 합산 과세가 걱정되는 분.</p><h3>이 계산기로 해결되는 것</h3><p>근로·사업·이자·배당·연금·기타소득을 합산하고, 단순경비율/기준경비율 자동 적용 후 인적공제·세액공제를 반영한 산출세액을 계산합니다. 기납부세액(원천징수분 3.3% 등)을 차감하여 추가 납부 또는 환급 예상액을 보여줍니다.</p><h3>계산 방법과 세율</h3><p>8단계 누진세율: 1,400만 이하 6%, 5천만 이하 15%, 8,800만 이하 24%, 1.5억 이하 35%, 3억 이하 38%, 5억 이하 40%, 10억 이하 42%, 10억 초과 45%. 지방소득세 10% 별도입니다. 프리랜서는 업종별 단순경비율(60~90%)을 적용하면 과세소득이 크게 줄어듭니다.</p><h3>이 계산기 200% 활용법</h3><p>소득 유형(근로/사업/기타)을 선택하고 연간 수입을 입력하세요. 단순경비율과 기준경비율을 전환하면서 유리한 쪽을 비교할 수 있습니다. 금융소득이 2천만원을 넘는 경우 합산 과세 시뮬레이션도 가능합니다.</p><h3>놓치면 손해보는 것들</h3><p>신고기한은 매년 5월 1~31일(성실신고확인 대상자는 6월 30일)입니다. 프리랜서 3.3% 원천징수는 대부분 환급 대상이므로 반드시 신고하세요. 단순경비율 적용 대상인데 기준경비율로 신고하면 세금이 더 나올 수 있습니다. 국민연금·건강보험료도 소득공제되므로 누락하지 마세요.</p>`,
 yearend:`<h2>연말정산 완벽 가이드</h2><h3>이런 분들께 필요해요</h3><p>직장인으로 13월의 월급(환급)을 극대화하고 싶은 분, 올해 공제 항목을 어떻게 채울지 전략을 세우려는 분, 맞벌이 부부 중 누가 어떤 공제를 받는 게 유리한지 비교하려는 분.</p><h3>이 계산기로 해결되는 것</h3><p>총급여를 입력하면 근로소득공제를 자동 적용하고, 신용카드·의료비·교육비·연금저축·보험료·기부금 등 주요 공제 항목별 한도와 세액공제율을 반영하여 예상 환급액(또는 추가 납부액)을 산출합니다.</p><h3>계산 방법과 세율</h3><p>신용카드 소득공제는 총급여 25% 초과 사용분의 15%(신용카드)~30%(체크카드·현금영수증), 한도 300만원입니다. 의료비 세액공제는 총급여 3% 초과분의 15%(난임시술 20%), 교육비 15%, 연금저축·IRP 12~15%(합산 700만 한도), 보장성보험 12%(100만 한도)입니다. 기부금은 1천만원 이하 15%, 초과분 30%입니다.</p><h3>이 계산기 200% 활용법</h3><p>12월 말까지 연금저축 400만원 납입을 최우선으로 챙기세요(최대 60만원 환급). 홈택스 연말정산 미리보기(1월 중순 오픈)로 예상 환급액을 확인하고 부족한 공제를 채울 수 있습니다. 맞벌이 부부는 의료비를 총급여 낮은 쪽이, 카드는 25% 이미 초과한 쪽이 받는 게 유리합니다.</p><h3>놓치면 손해보는 것들</h3><p>현금영수증 미등록 지출은 공제 대상에서 빠집니다. 월세 세액공제(총급여 8천만 이하, 15~17%)는 임대차계약서+이체 내역이 필요합니다. 중소기업 청년 소득세 감면(90%, 5년)은 입사 시 신청해야 합니다. 부양가족 기본공제는 연 소득 100만원(근로소득만 있으면 총급여 500만원) 이하 요건을 확인하세요.</p>`,
-netsalary:`<h2>연봉 실수령액 완벽 가이드</h2><h3>실수령액 계산 방법</h3><p>세전 연봉에서 4대보험료와 소득세·지방소득세를 공제한 금액이 실수령액입니다. 연봉 5,000만원 기준 월 실수령액은 약 340~360만원입니다.</p><h3>2026년 4대보험 요율</h3><p><strong>국민연금:</strong> 월 보수의 4.75% (사업주 4.75% 별도, 총 9.5%). 기준소득월액 상한 637만원.</p><p><strong>건강보험:</strong> 월 보수의 3.595% (사업주 3.595% 별도, 총 7.19%).</p><p><strong>장기요양보험:</strong> 건강보험료의 12.95%.</p><p><strong>고용보험:</strong> 월 보수의 0.9% (실업급여). 사업주는 추가로 고용안정·직업능력개발 부담.</p><p><strong>산재보험:</strong> 사업주 전액 부담(업종별 0.6~18.6%). 근로자 부담 없음.</p><h3>비과세 항목 활용</h3><p>식대(월 20만원), 자가운전보조금(월 20만원), 자녀보육수당(월 20만원)은 비과세 소득으로 처리되어 4대보험과 소득세 대상에서 제외됩니다. 최대한 비과세 항목으로 설정하면 실수령액이 증가합니다.</p><h3>연봉별 실수령액 참고</h3><p>연봉 3,000만원: 월 약 225만원 / 5,000만원: 월 약 350만원 / 7,000만원: 월 약 480만원 / 1억원: 월 약 680만원. 부양가족 수, 비과세 항목에 따라 달라집니다.</p>`,
+netsalary:`<h2>연봉 실수령액 완벽 가이드</h2><h3>실수령액 계산 방법</h3><p>세전 연봉에서 4대보험료와 소득세·지방소득세를 공제한 금액이 실수령액입니다. 연봉 5,000만원 기준 월 실수령액은 약 340~360만원입니다.</p><h3>2026년 4대보험 요율</h3><p><strong>국민연금:</strong> 월 보수의 4.75% (사업주 4.75% 별도, 총 9.5%). 기준소득월액 상한 659만원(2026.7~).</p><p><strong>건강보험:</strong> 월 보수의 3.595% (사업주 3.595% 별도, 총 7.19%).</p><p><strong>장기요양보험:</strong> 건강보험료의 13.14%.</p><p><strong>고용보험:</strong> 월 보수의 0.9% (실업급여). 사업주는 추가로 고용안정·직업능력개발 부담.</p><p><strong>산재보험:</strong> 사업주 전액 부담(업종별 0.6~18.6%). 근로자 부담 없음.</p><h3>비과세 항목 활용</h3><p>식대(월 20만원), 자가운전보조금(월 20만원), 자녀보육수당(월 20만원)은 비과세 소득으로 처리되어 4대보험과 소득세 대상에서 제외됩니다. 최대한 비과세 항목으로 설정하면 실수령액이 증가합니다.</p><h3>연봉별 실수령액 참고</h3><p>연봉 3,000만원: 월 약 225만원 / 5,000만원: 월 약 350만원 / 7,000만원: 월 약 480만원 / 1억원: 월 약 680만원. 부양가족 수, 비과세 항목에 따라 달라집니다.</p>`,
 dsr:`<h2>DSR 완벽 가이드</h2><h3>이런 분들께 필요해요</h3><p>주택담보대출을 신청하기 전 대출 가능 금액을 확인하려는 분, 기존 신용대출·카드론이 있어 추가 대출 여력이 궁금한 분, 변동금리와 고정금리 중 어떤 것이 DSR에 유리한지 비교하려는 분.</p><h3>이 계산기로 해결되는 것</h3><p>연소득, 신규 대출금액·금리·기간, 기존 대출 월상환액을 입력하면 DSR 비율을 즉시 산출합니다. 스트레스 DSR(변동 +1.5%p, 혼합 +0.75%p)을 자동 반영하고, 은행권(40%) 및 비은행권(50%) 기준 최대 대출 가능액을 역산하여 보여줍니다.</p><h3>계산 방법과 기준</h3><p>DSR = (모든 대출의 연간 원리금 상환액) / 연소득 x 100. 은행권 40%, 비은행 50% 이내여야 대출이 승인됩니다. 2025년부터 스트레스 DSR 3단계가 시행되어 변동금리는 +1.5%p, 혼합형은 +0.75%p 가산금리를 반영합니다. 고정금리는 가산 없습니다.</p><h3>이 계산기 200% 활용법</h3><p>대출 유형(고정/혼합/변동)을 전환하면서 스트레스 가산 차이를 직접 비교하세요. 대출 기간을 30년에서 40년으로 늘리면 월 상환액이 줄어 DSR이 낮아지고 한도가 올라갑니다. 기존 신용대출·카드론을 먼저 상환하면 DSR이 크게 개선되므로, 상환 전후 시뮬레이션을 해보세요.</p><h3>놓치면 손해보는 것들</h3><p>신용대출, 학자금대출, 자동차할부, 카드론 모두 DSR에 포함됩니다. 대출 신청 전 기존 소액 대출을 정리하면 한도가 크게 올라갑니다. 고정금리를 선택하면 스트레스 가산이 없어 같은 소득으로 더 많은 대출이 가능합니다. 연소득 증빙 시 성과급·상여금을 포함하면 소득을 높일 수 있습니다.</p>`,
 commission:`<h2>중개수수료(복비) 완벽 가이드</h2><h3>중개보수 법정 요율</h3><p>공인중개사법 시행규칙에 따라 거래금액 구간별로 상한요율이 정해져 있습니다. 실제 수수료는 이보다 낮게 협의 가능합니다.</p><h3>주택 매매 요율</h3><p>5천만원 이하: 0.6% (한도 25만원) / 2억 이하: 0.5% (한도 80만원) / 9억 이하: 0.4% / 12억 이하: 0.5% / 15억 이하: 0.6% / 15억 초과: 0.7%.</p><h3>주택 전세·월세 요율</h3><p>5천만원 이하: 0.5% (한도 20만원) / 1억 이하: 0.4% (한도 30만원) / 6억 이하: 0.3% / 12억 이하: 0.4% / 15억 이하: 0.5% / 15억 초과: 0.6%.</p><h3>월세 거래금액 산정</h3><p>월세 거래의 거래금액은 '보증금 + (월세 × 100)'으로 계산합니다. 단, 이 금액이 보증금보다 작으면 보증금 기준으로 합니다. 예: 보증금 1억 + 월세 50만원 → 거래금액 1.5억, 요율 0.3%, 보수 45만원.</p><h3>상가·오피스텔</h3><p>상가·토지·오피스텔은 매매·전세·월세 모두 0.9% 이내에서 중개사와 협의합니다.</p><h3>부가가치세</h3><p>중개보수에 부가세 10%가 별도 부과됩니다(간이과세자 4%). 거래 전 중개사 과세 유형을 확인하세요.</p>`,
 gift:`<h2>증여세 완벽 가이드</h2><h3>이런 분들께 필요해요</h3><p>자녀에게 부동산·현금을 물려주려는 부모님, 배우자 간 자산 이전을 계획하는 부부, 결혼·출산을 앞두고 부모님으로부터 자금을 지원받을 자녀. 증여세는 사전에 계획하면 수천만원을 아낄 수 있습니다.</p><h3>이 계산기로 해결되는 것</h3><p>증여재산 가액에서 증여공제를 차감한 과세표준에 10~50% 누진세율을 자동 적용합니다. 배우자·성년자녀·미성년자녀별 공제한도와 혼인·출산 추가공제(1억)를 반영하고, 신고기한 내 3% 세액공제까지 계산합니다. 10년 내 기증여 합산 기능도 포함됩니다.</p><h3>계산 방법과 세율</h3><p>증여세율은 1억 이하 10%, 5억 이하 20%, 10억 이하 30%, 30억 이하 40%, 30억 초과 50%입니다. 증여공제는 10년 합산 기준으로 배우자 6억, 성년자녀 5천만, 미성년자녀 2천만원입니다. 2024년부터 혼인·출산 시 직계존속 증여 1억원 추가공제가 신설되었습니다.</p><h3>이 계산기 200% 활용법</h3><p>10년 단위 분할 증여 시나리오를 입력하여 총 세부담을 비교하세요. 부동산 증여 시 취득세 3.5%(조정지역 다주택 12%)가 별도 부과되므로 양도와 비교 계산이 필요합니다. 세금비교분석 계산기와 함께 사용하면 매매·증여·상속 중 가장 유리한 방법을 찾을 수 있습니다.</p><h3>놓치면 손해보는 것들</h3><p>신고기한은 증여일이 속하는 달의 말일부터 3개월입니다. 기한 내 자진신고 시 산출세액의 3%를 추가 공제받습니다. 10년 내 동일인 증여는 합산 과세되므로 시기 분산이 중요합니다. 부담부증여(채무 승계)는 양도세와 증여세가 동시에 발생할 수 있으니 반드시 사전에 시뮬레이션하세요.</p>`,
@@ -364,7 +364,7 @@ legal:`<h2>법무사수수료 가이드</h2><h3>기본 보수표</h3><p>대한�
 stamp:`<h2>인지세 가이드</h2><h3>부동산 인지세</h3><p>거래금액 1억 이하 비과세, 1억~10억 15만원, 10억~30억 35만원, 30억 초과 50만원. 매도인·매수인 각 50% 부담.</p><h3>전자수입인지</h3><p>인터넷으로 구매·출력 가능.</p>`,
 bond:`<h2>채권할인료 가이드</h2><h3>국민주택채권</h3><p>부동산 등기 시 의무 매입. 매입률 1~5%(지역·가액별). 즉시 매도 시 할인비용(약 4~5%)만 실제 부담.</p><h3>지역별 매입률</h3><p>서울: 6억 초과 5%, 1.6~6억 4%, 1.6억 이하 3%. 기타 지역은 낮음.</p>`,
 appraisal:`<h2>감정평가수수료 가이드</h2><h3>감정평가가 필요한 경우</h3><p>경매 응찰, 담보대출 심사, 상속·증여세 신고, 재건축 관리처분, 소송 등.</p><h3>수수료 기준</h3><p>감정평가사 보수표에 따라 가액별 산정. 부가세 10% 별도.</p>`,
-insurance4:`<h2>4대보험 완벽 가이드</h2><h3>2026년 직장가입자 요율</h3><p>국민연금 4.75%(상한 월 637만원), 건강보험 3.595%, 장기요양 건보료의 13.14%, 고용보험 0.9%. 사업주 부담분 별도.</p><h3>산재보험</h3><p>사업주 전액 부담(업종별 0.6~18.6%), 근로자 부담 없음.</p><h3>비과세 활용</h3><p>식대·자가운전보조금(각 월 20만원) 비과세로 처리하면 보험료 기준이 낮아져 실수령액 증가.</p>`,
+insurance4:`<h2>4대보험 완벽 가이드</h2><h3>2026년 직장가입자 요율</h3><p>국민연금 4.75%(상한 월 659만원, 2026.7~), 건강보험 3.595%, 장기요양 건보료의 13.14%, 고용보험 0.9%. 사업주 부담분 별도.</p><h3>산재보험</h3><p>사업주 전액 부담(업종별 0.6~18.6%), 근로자 부담 없음.</p><h3>비과세 활용</h3><p>식대·자가운전보조금(각 월 20만원) 비과세로 처리하면 보험료 기준이 낮아져 실수령액 증가.</p>`,
 deposit:`<h2>예적금 이자 가이드</h2><h3>단리 vs 복리</h3><p>단리: 원금에만 이자. 복리: 이자에도 이자가 붙음. 장기일수록 복리 유리.</p><h3>72의 법칙</h3><p>원금 2배가 되는 기간 = 72÷연이율. 예: 연 3% → 24년.</p><h3>세금</h3><p>이자소득세 15.4%(소득세 14%+지방세 1.4%). 세금우대 9.5%, 비과세 상품 활용 가능.</p>`,
 convert:`<h2>전월세 전환 가이드</h2><h3>법정 전환율 상한</h3><p>기준금리 + 2%가 법정 상한. 2026년 기준 약 5.0%. 이를 초과하면 주택임대차보호법 위반.</p><h3>전환 공식</h3><p>전세→월세: 월세 = 보증금 × 전환율 ÷ 12. 월세→전세: 보증금 + 월세×12÷전환율.</p>`,
 yield:`<h2>임대수익률 가이드</h2><h3>총수익률(Gross)</h3><p>연 임대수입 ÷ 매입가 × 100. 세금·경비 미포함.</p><h3>순수익률(Net)</h3><p>(연 임대수입 - 관리비 - 대출이자 - 세금) ÷ 자기자본 × 100. 실질 수익률.</p><h3>기대 수익률</h3><p>일반적으로 순수익률 4~6%를 목표. 레버리지(대출) 활용 시 자기자본 수익률 상승 가능.</p>`,
@@ -497,10 +497,10 @@ acquisition:{q:"취득세란 무엇인가요?",a:"부동산을 매매·상속·�
   {icon:<IconBank/>,title:"신고 방법",body:"• 온라인: 위택스(wetax.go.kr) → 신고/납부 → 취득세\n• 방문: 부동산 소재지 관할 시·군·구청 세무과\n• 법무사 대행: 등기 시 법무사가 대신 신고·납부 가능"},
   {icon:<IconWarn/>,title:"주의사항",body:"• 조정대상지역 여부에 따라 세율이 크게 달라짐 (8%↔1~3%)\n• 증여 취득세는 2023년부터 공시가격이 아닌 시가인정액 기준\n• 법인 취득은 주택 수 관계없이 12% 고정"}
 ]},
-transfer:{q:"양도소득세는 어떻게 계산되나요?",a:"부동산을 팔아 생긴 차익(양도가액-취득가액-필요경비-기본공제250만)에 6~45% 누진세율을 적용합니다. 1세대 1주택자가 2년 이상 보유(조정지역은 거주 포함) 시 비과세되나, 양도가 12억 초과분은 과세됩니다. 취득 당시 조정대상지역이었다면 2년 실거주 요건이 추가됩니다. 장기보유특별공제는 보유 연 4%+거주 연 4%(최대 80%)이며, 다주택 중과는 2026.5.9까지 유예 중입니다.",
+transfer:{q:"양도소득세는 어떻게 계산되나요?",a:"부동산을 팔아 생긴 차익(양도가액-취득가액-필요경비-기본공제250만)에 6~45% 누진세율을 적용합니다. 1세대 1주택자가 2년 이상 보유(조정지역은 거주 포함) 시 비과세되나, 양도가 12억 초과분은 과세됩니다. 취득 당시 조정대상지역이었다면 2년 실거주 요건이 추가됩니다. 장기보유특별공제는 보유 연 4%+거주 연 4%(최대 80%)이며, 다주택 중과는 유예가 끝나 2026.5.10 양도분부터 +20~30%p가 적용됩니다.",
   rates:[["1,400만↓","6%","누진공제 0"],["~5,000만","15%","126만"],["~8,800만","24%","576만"],["~1.5억","35%","1,544만"],["~3억","38%","1,994만"],["~5억","40%","2,594만"],["~10억","42%","3,594만"],["10억↑","45%","6,594만"]],rh:["과세표준","세율","누진공제"],faqList:[
   {icon:<IconQ/>,title:"양도소득세란?",body:"부동산을 팔아 생긴 차익(양도차익)에 부과되는 국세입니다."},
-  {icon:<IconBulb/>,title:"절세 팁",body:"• 1세대1주택 2년 보유+거주 시 12억까지 비과세\n• 장기보유특별공제: 1주택 최대 80% (보유40%+거주40%)\n• 필요경비(취득세, 중개보수, 인테리어 등) 영수증 보관 필수\n• 부부 공동명의로 양도차익 분산 시 누진세율 절감\n• 중과유예 기간(~2026.5.9) 활용하여 다주택 정리 검토"},
+  {icon:<IconBulb/>,title:"절세 팁",body:"• 1세대1주택 2년 보유+거주 시 12억까지 비과세\n• 장기보유특별공제: 1주택 최대 80% (보유40%+거주40%)\n• 필요경비(취득세, 중개보수, 인테리어 등) 영수증 보관 필수\n• 부부 공동명의로 양도차익 분산 시 누진세율 절감\n• 2026.5.9 이전 계약분은 4~6개월 내 잔금 시 중과 배제(경과조치) 확인"},
   {icon:<IconCal/>,title:"신고 기한 및 방법",body:"• 양도일(잔금일)이 속한 달의 말일부터 2개월 이내\n• 예정신고(거래 건별) + 확정신고(다음해 5월 종소세)\n• 신고: 홈택스(hometax.go.kr) → 양도소득세 신고\n• 미신고 시 무신고가산세 20% + 납부불성실가산세"},
   {icon:<IconWarn/>,title:"주의사항",body:"• 1주택 비과세 기준 12억 (구 9억 아님, 2021년 개정)\n• 분양권도 주택 수에 포함 (2021년~)\n• 비사업용 토지는 기본세율 + 10%p 추가\n• 미등기 양도는 70% 단일세율"}
 ]},
@@ -603,7 +603,7 @@ inctax:{q:"종합소득세란?",a:"개인이 1년간 얻은 모든 소득(근로
   {icon:<IconCal/>,title:"신고 기한 및 방법",body:"• 매년 5월 1일~31일 (성실신고확인 대상은 6월 30일)\n• 신고: 홈택스 → 종합소득세 신고\n• 중간예납: 11월 (직전년도 세액의 1/2)"},
   {icon:<IconWarn/>,title:"주의사항",body:"• 금융소득 2,000만원 초과 시 종합과세\n• 주택임대소득 2,000만원 이하도 분리과세 또는 종합과세 선택\n• 프리랜서 3.3% 원천징수 ≠ 최종 세액 (5월 정산 필수)"}
 ]},
-pension:{q:"국민연금 수령 조건은?",a:"최소 10년(120개월) 이상 납입해야 수령 자격이 됩니다. 정상 수령 나이는 65세이며, 60세부터 조기수령(연 6% 감액)하거나 70세까지 연기수령(연 7.2% 가산)할 수 있습니다. 2025년 기준 소득대체율은 40%이며, 기준소득월액 상한은 637만원입니다.",
+pension:{q:"국민연금 수령 조건은?",a:"최소 10년(120개월) 이상 납입해야 수령 자격이 됩니다. 정상 수령 나이는 65세이며, 60세부터 조기수령(연 6% 감액)하거나 70세까지 연기수령(연 7.2% 가산)할 수 있습니다. 소득대체율은 2026년 이후 가입기간분부터 43%(이 계산기는 보수적으로 40% 적용)이며, 기준소득월액 상한은 659만원(2026.7~)입니다.",
   rates:[["60세","조기 -30%"],["61세","-24%"],["62세","-18%"],["63세","-12%"],["64세","-6%"],["65세","정상 수령"],["66~70세","연기 +7.2%/년"]],rh:["수령 시작","감액/가산"],faqList:[
   {icon:<IconQ/>,title:"국민연금이란?",body:"가입기간과 평균소득에 따라 노후 수령액이 결정되는 공적연금입니다."},
   {icon:<IconBulb/>,title:"수령액 늘리기 팁",body:"• 추납(추후납부): 미납기간 보험료를 나중에 납부하여 가입기간 늘리기 가능\n• 임의가입·임의계속가입 활용\n• 70세까지 연기연금 신청으로 최대 36% 가산\n• 기준소득 상한(637만)까지 납부"},
@@ -617,7 +617,7 @@ cartax:{q:"자동차세 계산법은?",a:"배기량(cc) 기준으로 과세됩�
   {icon:<IconCal/>,title:"납부 기한",body:"• 6월(1기분), 12월(2기분) 납부\n• 1월·3월·6월·9월 연납 가능"},
   {icon:<IconWarn/>,title:"주의사항",body:"• 6월 1일·12월 1일 기준 보유자에게 과세\n• 연도 중간 명의변경 시 일할 계산"}
 ]},
-insurance4:{q:"4대보험 요율은?",a:"2025년 기준 직장인 부담률은 국민연금 4.75%, 건강보험 3.595%, 장기요양 건보의 13.14%, 고용보험 0.9%입니다. 산재보험은 사업주 전액 부담입니다. 국민연금 기준소득월액 상한은 637만원입니다.",
+insurance4:{q:"4대보험 요율은?",a:"2026년 기준 직장인 부담률은 국민연금 4.75%, 건강보험 3.595%, 장기요양 건보의 13.14%, 고용보험 0.9%입니다. 산재보험은 사업주 전액 부담입니다. 국민연금 기준소득월액 상한은 659만원(2026.7~2027.6)입니다.",
   rates:[["국민연금","4.75%","4.75%","9.5%"],["건강보험","3.595%","3.595%","7.19%"],["장기요양","건보×13.14%","건보×13.14%","건보×13.14%"],["고용보험","0.9%","0.9%","1.8%"],["산재보험","없음","업종별","업종별"]],rh:["구분","근로자","사업주","합계"],faqList:[
   {icon:<IconQ/>,title:"4대보험이란?",body:"2026년 4대보험 요율이 인상됐습니다. 국민연금 9%→9.5%, 건강보험 7.09%→7.19%."},
   {icon:<IconBulb/>,title:"절감 팁",body:"• 비과세 급여(식대 등) 제외 후 보수월액 기준 산정\n• 비과세 항목 활용으로 보험료 기준 낮추기"},
@@ -748,7 +748,7 @@ const TAX_CHANGES=[
   {date:"2026.04",title:"취득세 중과 완화안 입법 예고"},
   {date:"2026.03",title:"종부세 공정시장가액 60% 유지"},
   {date:"2026.02",title:"스트레스 DSR 3단계 전면 시행"},
-  {date:"2026.01",title:"양도세 다주택 중과 유예 5.9까지"},
+  {date:"2026.05",title:"양도세 다주택 중과 5.10부터 재시행"},
   {date:"2025.12",title:"생애최초 감면 12억 유지"}
 ];
 
@@ -1094,7 +1094,7 @@ function shareKakao(title,total,sub,items){const currentUrl=typeof window!=="und
 function getConsultFunnel(calcId,total){
   if(!calcId||!total||total<=0)return null;
   if(calcId==="acquisition"&&total>=3e7)return{label:<><IconBulb c="#fff"/> 절세 전략 상담받기</>,color:"#FF8B00",subtitle:"취득세 3천만 이상 — 전문가 상담으로 생애최초·중과배제 포인트 확인"};
-  if(calcId==="transfer"&&total>=1e8)return{label:<><IconBank c="#fff"/> 세무사 무료 상담</>,color:"#0747A6",subtitle:"양도세 1억 이상 — 장특공·중과유예·비과세 전략으로 수백만원 절감 가능"};
+  if(calcId==="transfer"&&total>=1e8)return{label:<><IconBank c="#fff"/> 세무사 무료 상담</>,color:"#0747A6",subtitle:"양도세 1억 이상 — 장특공·비과세·공동명의 전략으로 수백만원 절감 가능"};
   if(calcId==="transfer"&&total>=3e7)return{label:<><IconChart c="#fff"/> 양도세 절세 상담</>,color:"#0747A6",subtitle:"양도세 부담이 큽니다. 필요경비·기본공제 최적화 상담"};
   if((calcId==="property"||calcId==="compre"||calcId==="holdtax")&&total>=5e6)return{label:<><IconMoney c="#fff"/> 보유세 절감 전략 상담</>,color:"#FF8B00",subtitle:"보유세 500만 이상 — 합산배제·세부담상한·고령자공제 전략 안내"};
   if(calcId==="gift"&&total>=5e7)return{label:<><IconStar/> 증여 타이밍 상담</>,color:"#6554C0",subtitle:"증여세 5천만 이상 — 10년 합산·분할증여 전략 상담"};
@@ -1179,7 +1179,7 @@ function AIGuide({items,title}){
   const itemText=(items||[]).map(it=>String(it.l||"")+" "+String(it.v||"")).join(" ");
   const has=(kw)=>itemText.includes(kw);const titleStr=String(title||"");
   const tipSave=has("감면")||has("공제")?"결과에 감면/공제 항목이 포함되어 있습니다. 생애최초·장기보유·1세대1주택 등 추가 감면 요건을 확인하면 세액을 더 낮출 수 있습니다.":titleStr.includes("양도")?"1세대1주택 비과세(2년 거주), 장기보유특별공제(최대 80%), 필요경비 영수증 정리로 양도차익을 낮추세요.":titleStr.includes("취득")?"생애최초 감면(12억↓ 최대 200만원, 2028.12.31까지), 신혼부부 감면, 출산·양육 가구 특례를 확인하세요.":titleStr.includes("대출")||titleStr.includes("DSR")||titleStr.includes("LTV")?"스트레스 DSR은 고정금리 선택 시 +0.75%p, 혼합형은 +1.5%p로 적용됩니다. 고정금리로 한도를 더 받을 수 있는지 비교해보세요.":"동일 조건을 다른 계산기로도 돌려보면 숨어있는 절세 포인트가 보입니다.";
-  const tipWarn=has("중과")||has("다주택")?"다주택 중과 구간에 해당합니다. 2026.5.9까지 유예이므로 양도 시점에 따라 세액이 크게 달라집니다.":titleStr.includes("종부세")||titleStr.includes("재산세")?"6월 1일 기준 보유자가 과세 대상입니다. 잔금일·등기일을 6월 1일 전후로 조정하면 그 해 세금이 달라질 수 있습니다.":titleStr.includes("상속")||titleStr.includes("증여")?"10년 합산과세(배우자 6억·성년 5천만원 등) 공제 한도를 반드시 확인하고, 가족 간 거래는 시가 산정 근거를 남겨두세요.":"계산 결과는 2026년 현행 기준 참고용이며, 실제 신고 전 관할 지자체·세무사 확인을 권장합니다.";
+  const tipWarn=has("중과")||has("다주택")?"다주택 중과 구간에 해당합니다. 2026.5.10 양도분부터 중과가 다시 적용되며, 5.9 이전 계약분은 경과조치 대상인지 확인하세요.":titleStr.includes("종부세")||titleStr.includes("재산세")?"6월 1일 기준 보유자가 과세 대상입니다. 잔금일·등기일을 6월 1일 전후로 조정하면 그 해 세금이 달라질 수 있습니다.":titleStr.includes("상속")||titleStr.includes("증여")?"10년 합산과세(배우자 6억·성년 5천만원 등) 공제 한도를 반드시 확인하고, 가족 간 거래는 시가 산정 근거를 남겨두세요.":"계산 결과는 2026년 현행 기준 참고용이며, 실제 신고 전 관할 지자체·세무사 확인을 권장합니다.";
   const tipNext=titleStr.includes("취득")?"등기비용·중개보수 계산기로 총 구입 비용을 확인하세요.":titleStr.includes("양도")?"보유세 통합 계산기로 매년 부담을 함께 검토하세요.":titleStr.includes("대출")||titleStr.includes("DSR")||titleStr.includes("LTV")?"총비용 시뮬레이터로 원리금+세금+관리비 전체를 시뮬레이션해보세요.":titleStr.includes("연봉")||titleStr.includes("실수령")?"4대보험료·퇴직금 계산기로 근로소득 전반을 확인하세요.":"관련 계산기로 같은 시나리오를 다각도로 점검해보세요.";
   const CARDS=[{icon:"💡",title:"지금 당장 할 수 있는 절세 방법",body:tipSave},{icon:"⚠",title:"주의해야 할 사항",body:tipWarn},{icon:"📊",title:"다음에 확인해볼 계산기",body:tipNext}];
   if(gs.blocked){return(
@@ -1538,9 +1538,9 @@ function matchPolicyTags(text,tags){
 /* 2026.04.14 LiveNewsCards — lc-auth-worker /news RSS 실시간 뉴스 (실패시 정적 폴백) */
 function LiveNewsCards({filterTags}={}){
   const FALLBACK=[
-    {title:"양도세 다주택 중과 유예",description:"2026.5.9까지 조정대상 2·3주택 중과 유예. 양도 시점 기준 자동 반영.",link:"#",pubDate:"2026"},
+    {title:"양도세 다주택 중과 재시행",description:"2026.5.10 양도분부터 조정대상 2주택 +20%p, 3주택 +30%p. 5.9 이전 계약분 경과조치 반영.",link:"#",pubDate:"2026.05"},
     {title:"수도권 주담대 한도 축소",description:"15억↓ 6억, 25억↓ 4억, 25억↑ 2억. LTV/DSR 계산기 반영 완료.",link:"#",pubDate:"2026"},
-    {title:"기준금리 3.0% 유지",description:"2026.2.27 금통위 동결. 스트레스 DSR 변동 +1.5%p.",link:"#",pubDate:"2026.02"},
+    {title:"기준금리 3.0%",description:"2026.8.27 금통위 0.25%p 인상(7·8월 연속). 스트레스 DSR 변동 +1.5%p.",link:"#",pubDate:"2026.08"},
   ];
   const[items,setItems]=useState(FALLBACK);
   useEffect(()=>{
@@ -2054,6 +2054,7 @@ function CalcTrans({isMo=false,onNav=()=>{}}){
   const[is1HouseExempt,setIs1HouseExempt]=useState(false);
   const[isHeavy2,setIsHeavy2]=useState(false);
   const[isHeavy3,setIsHeavy3]=useState(false);
+  const[preContract,setPreContract]=useState(false); // 2026.10 양도세 중과 경과조치: 2026.5.9까지 계약·계약금 지급, 4~6개월 내 잔금·등기
   const[buyAmt,setBuyAmt]=useState("");
   const[sellAmt,setSellAmt]=useState("");
   const[costTotal,setCostTotal]=useState("");
@@ -2087,7 +2088,7 @@ function CalcTrans({isMo=false,onNav=()=>{}}){
   const showMixedHouse=assetType==="house";
   const holdText=(()=>{if(buyDate.length<8||sellDate.length<8)return null;const bd=new Date(buyDate.slice(0,4)+"-"+buyDate.slice(4,6)+"-"+buyDate.slice(6,8));const sd=new Date(sellDate.slice(0,4)+"-"+sellDate.slice(4,6)+"-"+sellDate.slice(6,8));const hd=Math.floor((sd-bd)/86400000);if(isNaN(hd)||hd<0)return null;const hy=Math.floor(hd/365);const hm=Math.floor((hd%365)/30);return"보유기간: "+hy+"년 "+hm+"개월";})();
   const sellNumRender=parseInt(sellDate)||0;
-  const inMoratoriumRender=sellNumRender>=20220510&&sellNumRender<=20260509;
+  const inMoratoriumRender=(sellNumRender>=20220510&&sellNumRender<=20260509)||(preContract&&sellNumRender>=20260510&&sellNumRender<=20261109);
   // 2026.04.15 1세대1주택 비과세 자동판정 + 미충족 사유 힌트
   const[autoExempt,setAutoExempt]=useState(false);
   const[exemptHint,setExemptHint]=useState("");
@@ -2102,7 +2103,7 @@ function CalcTrans({isMo=false,onNav=()=>{}}){
     if(conArea&&liveY<2){setIs1HouseExempt(false);setAutoExempt(false);setExemptHint("📌 조정지역 거주기간 2년을 채우면 1세대1주택 비과세가 적용됩니다");return;}
     setIs1HouseExempt(true);setAutoExempt(true);setExemptHint(sellW>12e8?"✅ 1세대1주택 12억 초과 — 12억 초과분만 과세 (자동 적용)":"✅ 1세대1주택 12억 이하 — 전액 비과세 (자동 적용)");
   },[assetType,own,buyDate,sellDate,sellAmt,conArea,liveYear]);
-  useEffect(()=>{if(tW(buyAmt)&&tW(sellAmt)&&buyDate.length>=8&&sellDate.length>=8)calculate();else setResult(null);},[assetType,own,baseDeduct,jointOwn,jointRate,conArea,realLive,liveYear,rentBiz,longRentEx,unregistered,inherited,nonBizLand,is1HouseExempt,isHeavy2,isHeavy3,buyAmt,sellAmt,costTotal,buyDate,sellDate,inheritBuyDate,sangSaeng,mixedHouse,houseArea,shopArea,useManualGain,manualGain]);
+  useEffect(()=>{if(tW(buyAmt)&&tW(sellAmt)&&buyDate.length>=8&&sellDate.length>=8)calculate();else setResult(null);},[assetType,own,baseDeduct,jointOwn,jointRate,conArea,realLive,liveYear,rentBiz,longRentEx,unregistered,inherited,nonBizLand,is1HouseExempt,isHeavy2,isHeavy3,preContract,buyAmt,sellAmt,costTotal,buyDate,sellDate,inheritBuyDate,sangSaeng,mixedHouse,houseArea,shopArea,useManualGain,manualGain]);
   function calculate(){
     const buy=tW(buyAmt);const sell=tW(sellAmt);const expenses=tW(costTotal);
     if(!buy||!sell||!buyDate||!sellDate||buyDate.length<8||sellDate.length<8)return;
@@ -2132,7 +2133,7 @@ function CalcTrans({isMo=false,onNav=()=>{}}){
     }
     let taxableGain=gain;let exemptNote="";
     const sellNum=parseInt(sellDate);
-    const inMoratorium=sellNum>=20220510&&sellNum<=20260509;
+    const inMoratorium=(sellNum>=20220510&&sellNum<=20260509)||(preContract&&sellNum>=20260510&&sellNum<=20261109);
     if(is1HouseExempt&&own==="one"&&assetType==="house"){
       if(adjSell<=12e8){setResult({items:[{l:"양도가액",v:fW(adjSell)},{l:"취득가액",v:fW(adjBuy)},{l:"필요경비",v:fW(adjCost)},{l:"양도차익",v:fW(gain)},{l:"판정",v:"전액 비과세",note:"1세대1주택 12억 이하"}],basis:"1세대 1주택 비과세 요건 충족. 양도가액 12억원 이하이므로 전액 비과세.\n보유기간: "+holdFloor+"년"+(realLive?", 거주기간: "+liveYrs+"년":"")});return;}
       taxableGain=Math.round(gain*(adjSell-12e8)/adjSell);
@@ -2193,7 +2194,7 @@ function CalcTrans({isMo=false,onNav=()=>{}}){
     if(unregistered)basis+="[주의]미등기양도: 70% 단일세율 적용, 장특공제 배제\n";
     if(taxHoldYears<1&&(assetType==="house"||assetType==="right"))basis+="[주의]1년 미만 보유: 70% 단일세율\n";
     else if(taxHoldYears<2&&assetType==="house")basis+="[주의]2년 미만 보유: 60% 단일세율\n";
-    if(inMoratorium&&(own==="two"||own==="more")&&conArea)basis+="ℹ️ 다주택 중과 유예 기간 (2022.5.10~2026.5.9). 기본세율 적용 중.\n";
+    if(inMoratorium&&(own==="two"||own==="more")&&conArea)basis+=(sellNum>20260509?"ℹ️ 2026.5.9 이전 계약 경과조치 적용 — 중과 배제, 기본세율 적용.\n":"ℹ️ 다주택 중과 유예 기간 (2022.5.10~2026.5.9) 양도분. 기본세율 적용.\n");
     if(!inMoratorium&&(isHeavy2||isHeavy3))basis+="[주의]다주택 중과 적용: "+surchargeNote+"\n";
     if(nonBizLand)basis+="[주의]비사업용토지 추가과세 +10%p\n";
     if(inherited)basis+="ℹ️ 상속받은 자산: 세율 보유기간은 피상속인 취득일부터, 장특공은 상속개시일부터 기산\n";
@@ -2231,7 +2232,7 @@ function CalcTrans({isMo=false,onNav=()=>{}}){
       else if (hy < 1) _tips.push("📌 보유 1년 미만 70% 단기세율 적용 중입니다. 1년 경과 시 60%, 2년 경과 시 기본세율로 전환됩니다.");
     }
     if ((own === "two" || own === "more") && conArea) {
-      _tips.push("📌 다주택 중과 유예 기간 (2022.5.10~2026.5.9) 내 양도 시 기본세율이 적용됩니다. 유예 종료 전 양도 전략 검토 필요.");
+      _tips.push("📌 다주택 중과는 2026.5.10 양도분부터 다시 적용됩니다. 5.9까지 계약·계약금 지급 후 4개월(강남3구·용산) 또는 6개월(2025.10.16 신규 조정지역) 내 잔금·등기하면 중과가 배제됩니다. 해당하면 '5.9 이전 계약' 항목을 선택하세요.");
     }
   }
   const _inlineInputStyle={width:"100%",maxWidth:"100%",textAlign:"right",padding:isMo?"12px 44px 12px 14px":"10px 44px 10px 14px",border:"1.5px solid #dfe1e6",borderRadius:10,fontSize:isMo?16:15,fontWeight:700,color:P.tx,background:P.lt,outline:"none",fontFamily:"inherit",boxSizing:"border-box",height:isMo?48:44};
@@ -2267,7 +2268,7 @@ function CalcTrans({isMo=false,onNav=()=>{}}){
         <div style={{fontSize:11,fontWeight:600,color:"#6b778c",letterSpacing:.5,textTransform:"uppercase",marginBottom:8}}>특수 조건 <span style={{fontWeight:400,color:"#aaa",fontSize:10}}>{isMo?"항목을 누르면 적용됩니다":"마우스를 올리면 설명이 나타납니다"}</span></div>
         <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
           {[
-            {show:showConArea,val:conArea,set:setConArea,lbl:"조정대상지역",desc:"양도 시점 조정대상지역은 다주택 중과 대상. 2022.5.10~2026.5.9 양도분은 중과 유예."},
+            {show:showConArea,val:conArea,set:setConArea,lbl:"조정대상지역",desc:"양도 시점 조정대상지역 다주택은 2026.5.10 양도분부터 중과(+20~30%p). 2022.5.10~2026.5.9 양도분은 유예."},
             {show:showRealLive,val:realLive,set:setRealLive,lbl:"2년 거주",desc:"조정지역 주택은 2년 보유+2년 거주해야 1세대1주택 비과세. 비조정은 2년 보유만."},
             {show:showRentBiz,val:rentBiz,set:(v)=>{setRentBiz(v);if(!v)setLongRentEx(false)},lbl:"임대사업자",desc:"등록요건·임대기간·임대료 조건 모두 만족한 경우 체크. 소득세법상 혜택 적용."},
             {show:showLongRent,val:longRentEx,set:setLongRentEx,lbl:"장기임대특례",desc:"장기임대 조세특례 적용 대상."},
@@ -2278,6 +2279,7 @@ function CalcTrans({isMo=false,onNav=()=>{}}){
             {show:showSangSaeng,val:sangSaeng,set:setSangSaeng,lbl:"상생임대주택",desc:"임대료 5% 이내 인상 계약. 조정지역 거주 2년 요건 면제. 장특 보유공제만 적용."},
             {show:showMixedHouse,val:mixedHouse,set:setMixedHouse,lbl:"겸용주택",desc:"주택분·상가분 면적 비율 분리 과세. 주택분만 1세대1주택 혜택 적용."},
             {show:showHeavy2,val:isHeavy2,set:setIsHeavy2,lbl:"조정 중과 2주택",desc:"조정대상 2주택 중과 적용."},
+            {show:(showHeavy2||showHeavy3)&&parseInt(sellDate)>20260509,val:preContract,set:setPreContract,lbl:"5.9 이전 계약",desc:"2026.5.9까지 매매계약·계약금 지급 후 계약일부터 4개월(강남3구·용산) 또는 6개월(2025.10.16 신규 조정지역) 내 잔금·등기하면 중과 배제(경과조치). 토지거래허가구역은 5.9까지 허가 신청분 포함."},
             {show:showHeavy3,val:isHeavy3,set:setIsHeavy3,lbl:"조정 중과 3주택",desc:"조정대상 3주택 이상 중과 적용."}
           ].filter(c=>c.show).map(c=>(
             <button key={c.lbl} onClick={()=>c.set(!c.val)} title={c.desc} style={{padding:"6px 12px",borderRadius:20,fontSize:12,fontWeight:c.val?700:500,cursor:"pointer",fontFamily:"inherit",transition:"all .15s",border:c.val?"none":"1.5px solid #dfe1e6",background:c.val?"#DEEBFF":"#fff",color:c.val?"#0C447C":"#505f79"}}>{c.val&&"✓ "}{c.lbl}</button>
@@ -2320,7 +2322,7 @@ function CalcTrans({isMo=false,onNav=()=>{}}){
           total={result.totalTax}
           sub={"양도차익 기준 / "+((result.own==="two"||result.own==="more")?(result.conArea?"조정지역 다주택":"비조정 다주택"):"1주택")}
           items={result.items.map(it=>({l:it.l,v:it.v,note:it.note}))}
-          alertMsg={inMoratoriumRender&&(result.own==="two"||result.own==="more")&&result.conArea?"다주택 중과 한시배제 (~2026.5.9): 기본세율 적용 중":null}
+          alertMsg={inMoratoriumRender&&(result.own==="two"||result.own==="more")&&result.conArea?(sellNumRender>20260509?"5.9 이전 계약 경과조치: 다주택 중과 배제, 기본세율 적용":"다주택 중과 유예 기간(~2026.5.9) 양도분: 기본세율 적용"):null}
           alertType="info"
         />
         {exemptHint&&<div style={{marginTop:10,padding:"10px 14px",background:autoExempt?"#E3FCEF":"#FFF8E1",border:autoExempt?"1px solid #57D9A3":"1px solid #FFE082",borderRadius:10,fontSize:12,color:autoExempt?"#006644":"#F57F17",lineHeight:1.6,fontWeight:600}}>{exemptHint}</div>}
@@ -2329,7 +2331,7 @@ function CalcTrans({isMo=false,onNav=()=>{}}){
         <div style={{marginTop:12,padding:"10px 14px",background:"#f8f9fc",border:"1px solid #dfe1e6",borderRadius:8,fontSize:12,color:"#505f79",lineHeight:1.6,display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:8}}><span style={{display:"inline-flex",alignItems:"center",gap:4}}><IconCal/> 신고기한: 양도일이 속한 달 말일로부터 2개월 이내</span><a href="https://hometax.go.kr" target="_blank" rel="noopener noreferrer" style={{color:"#0747A6",fontWeight:700,textDecoration:"none"}}>홈택스 신고 →</a></div>
         {(result.totalTax>=1e8||((result.own==="two"||result.own==="more")&&result.conArea))&&<button onClick={()=>window.dispatchEvent(new CustomEvent('lc-consult',{detail:{title:"양도소득세",total:result.totalTax}}))} style={{display:"block",width:"100%",marginTop:12,padding:"14px 16px",background:result.totalTax>=1e8?"#0747A6":"#FF8B00",color:"#fff",border:"none",borderRadius:12,fontSize:14,fontWeight:800,cursor:"pointer",fontFamily:"inherit",boxShadow:"0 4px 12px rgba(0,0,0,.15)",textAlign:"left",lineHeight:1.5}}>
           <div style={{fontSize:15,fontWeight:800,marginBottom:2}}>{result.totalTax>=1e8?<><IconBank c="#fff"/> 세무사 무료 상담 →</>:<><IconChart c="#fff"/> 다주택 절세 전략 보기 →</>}</div>
-          <div style={{fontSize:11,fontWeight:500,opacity:.92}}>{result.totalTax>=1e8?"양도세 1억 이상 — 장특공·중과유예·비과세 전략으로 수백만원 절감 가능":"다주택 조정대상지역 — 중과 유예·비과세·분할양도 전략 상담"}</div>
+          <div style={{fontSize:11,fontWeight:500,opacity:.92}}>{result.totalTax>=1e8?"양도세 1억 이상 — 장특공·비과세·공동명의 전략으로 수백만원 절감 가능":"다주택 조정대상지역 — 중과 경과조치·비과세·분할양도 전략 상담"}</div>
         </button>}
       </div>:<div><RPFull miss={MI.transfer} title="양도소득세" total={0} isExample={true} items={[]} nextStep={<NextStep calcId="transfer" onNav={onNav} isMo={isMo}/>}/></div>}
       
@@ -3258,7 +3260,7 @@ function CalcYearEnd({isMo=false,onNav=()=>{}}){const[salary,sSal]=useState("");
   const spouseN=Math.min(parseInt(spouse)||0,1),parentsN=parseInt(parents)||0,childN=parseInt(children)||0,seniorN=parseInt(senior)||0,disabledN=parseInt(disabled)||0;
   let workDed=0;if(salW<=5e6)workDed=salW*.7;else if(salW<=15e6)workDed=3500000+(salW-5e6)*.4;else if(salW<=45e6)workDed=7500000+(salW-15e6)*.15;else if(salW<=1e8)workDed=12000000+(salW-45e6)*.05;else workDed=14750000+(salW-1e8)*.02;
   const basicDed=(1+spouseN+parentsN+childN)*1500000,seniorDed=seniorN*1000000,disabledDed=disabledN*2000000,personalDed=basicDed+seniorDed+disabledDed;
-  const npn=salW*.045,hi=salW*.03595,ei=salW*.009,socialDed=npn+hi+ei;
+  const npn=salW*.0475,hi=salW*.03595,ei=salW*.009,socialDed=npn+hi+ei;
   // 카드공제 한도: 총급여 7천↓300만, 1.2억↓250만, 1.2억↑200만 (소득세법 제126조의2)
   const cardLimit=salW<=7e7?3000000:salW<=1.2e8?2500000:2000000;
   const cardThreshold=salW*.25,cardDed=Math.min(Math.max(0,(cardW-cardThreshold)*.15),cardLimit);
@@ -3301,7 +3303,7 @@ function CalcYearEnd({isMo=false,onNav=()=>{}}){const[salary,sSal]=useState("");
 /* 연봉 실수령액 */
 function CalcNetSalary({isMo=false,onNav=()=>{}}){const[salary,sSal]=useState("");const[family,sFamily]=useState("1");const[child,sChild]=useState("0");const[nonTax,sNT]=useState("");
   const salW=tW(salary),nonTaxW=tW(nonTax)*12,familyN=parseInt(family),childN=parseInt(child),taxableSal=Math.max(0,salW-nonTaxW);
-  const monthlySal=taxableSal/12;const npn=Math.min(monthlySal,6370000)*.045,hi=monthlySal*.03595,ltc=hi*.1314,ei=monthlySal*.009;const monthlyIns=npn+hi+ltc+ei;const totalIns=monthlyIns*12;
+  const monthlySal=taxableSal/12;const npn=Math.min(monthlySal,6590000)*.0475,hi=monthlySal*.03595,ltc=hi*.1314,ei=monthlySal*.009;const monthlyIns=npn+hi+ltc+ei;const totalIns=monthlyIns*12;
   let workDed=0;if(taxableSal<=5e6)workDed=taxableSal*.7;else if(taxableSal<=15e6)workDed=3500000+(taxableSal-5e6)*.4;else if(taxableSal<=45e6)workDed=7500000+(taxableSal-15e6)*.15;else if(taxableSal<=1e8)workDed=12000000+(taxableSal-45e6)*.05;else workDed=14750000+(taxableSal-1e8)*.02;
   const personalDed=1500000*familyN+1500000*childN;const taxableIncome=Math.max(0,taxableSal-workDed-personalDed-totalIns);const tax=pTx(taxableIncome,IB);const localTax=tax*.1;
   const monthlyGross=salW/12,monthlyTax=(tax+localTax)/12,monthlyNet=monthlyGross-monthlyIns-monthlyTax;
@@ -3326,25 +3328,25 @@ function CalcNetSalary({isMo=false,onNav=()=>{}}){const[salary,sSal]=useState(""
     </div>
     <div style={{background:P.card,borderRadius:16,padding:20,border:"1px solid "+P.bd}}>
       <div style={{fontSize:13,fontWeight:600,color:P.mt,marginBottom:12}}>월급 구성 상세</div>
-      {[["월급여 (세전)",monthlyGross,"+","#0747A6"],["국민연금 (4.5%)",npn,"-","#DE350B"],["건강보험 (3.595%)",hi,"-","#DE350B"],["장기요양 (13.14%)",ltc,"-","#DE350B"],["고용보험 (0.9%)",ei,"-","#DE350B"],["소득세 (간이)",tax/12,"-","#FF8B00"],["지방소득세 (10%)",localTax/12,"-","#FF8B00"]].map(([l,v,s,c],i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:"1px solid "+P.lt,fontSize:13}}><span style={{color:i===0?P.tx:P.mt}}>{l}</span><span style={{fontWeight:600,color:c}}>{s}{fW(Math.round(v))}</span></div>))}
+      {[["월급여 (세전)",monthlyGross,"+","#0747A6"],["국민연금 (4.75%)",npn,"-","#DE350B"],["건강보험 (3.595%)",hi,"-","#DE350B"],["장기요양 (13.14%)",ltc,"-","#DE350B"],["고용보험 (0.9%)",ei,"-","#DE350B"],["소득세 (간이)",tax/12,"-","#FF8B00"],["지방소득세 (10%)",localTax/12,"-","#FF8B00"]].map(([l,v,s,c],i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:"1px solid "+P.lt,fontSize:13}}><span style={{color:i===0?P.tx:P.mt}}>{l}</span><span style={{fontWeight:600,color:c}}>{s}{fW(Math.round(v))}</span></div>))}
       <div style={{display:"flex",justifyContent:"space-between",padding:"12px 0 0",fontSize:15,fontWeight:700}}><span style={{color:P.tx}}>월 실수령액</span><span style={{color:"#0747A6"}}>{fW(Math.round(monthlyNet))}</span></div>
       <div style={{display:"flex",justifyContent:"space-between",padding:"6px 0 0",fontSize:12,color:P.mt}}><span>실효세율</span><span style={{fontWeight:600}}>{fP((1-monthlyNet/monthlyGross)*100)}</span></div>
     </div>
     <div style={{background:P.card,borderRadius:16,padding:16,border:"1px solid "+P.bd,marginTop:12}}>
       <div style={{fontSize:13,fontWeight:600,color:P.mt,marginBottom:10}}>연봉 구간별 월 실수령액 비교</div>
-      {[3000,4000,5000,6000,7000,8000,10000].map(salManwon=>{const sy=salManwon*10000;const taxS=Math.max(0,sy-240*10000);const mS=taxS/12;const iP=Math.min(mS,6370000)*.045+mS*.03595+mS*.03595*.1314+mS*.009;let wD=0;if(taxS<=5e6)wD=taxS*.7;else if(taxS<=15e6)wD=3500000+(taxS-5e6)*.4;else if(taxS<=45e6)wD=7500000+(taxS-15e6)*.15;else if(taxS<=1e8)wD=12000000+(taxS-45e6)*.05;else wD=14750000+(taxS-1e8)*.02;const pD=1500000*familyN+1500000*childN;const tI=Math.max(0,taxS-wD-pD-iP*12);const t=pTx(tI,IB);const mT=(t+t*.1)/12;const mN=sy/12-iP-mT;return(<div key={salManwon} style={{display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:"1px solid "+P.lt,fontSize:13}}><span style={{color:P.mt}}>{salManwon<10000?salManwon+"만":(salManwon/10000)+"억"}</span><span style={{fontWeight:600}}>{fW(Math.round(mN))}/월</span></div>);})}
+      {[3000,4000,5000,6000,7000,8000,10000].map(salManwon=>{const sy=salManwon*10000;const taxS=Math.max(0,sy-240*10000);const mS=taxS/12;const iP=Math.min(mS,6590000)*.0475+mS*.03595+mS*.03595*.1314+mS*.009;let wD=0;if(taxS<=5e6)wD=taxS*.7;else if(taxS<=15e6)wD=3500000+(taxS-5e6)*.4;else if(taxS<=45e6)wD=7500000+(taxS-15e6)*.15;else if(taxS<=1e8)wD=12000000+(taxS-45e6)*.05;else wD=14750000+(taxS-1e8)*.02;const pD=1500000*familyN+1500000*childN;const tI=Math.max(0,taxS-wD-pD-iP*12);const t=pTx(tI,IB);const mT=(t+t*.1)/12;const mN=sy/12-iP-mT;return(<div key={salManwon} style={{display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:"1px solid "+P.lt,fontSize:13}}><span style={{color:P.mt}}>{salManwon<10000?salManwon+"만":(salManwon/10000)+"억"}</span><span style={{fontWeight:600}}>{fW(Math.round(mN))}/월</span></div>);})}
     </div>
   </div></div></div>);}
 
 /* 국민연금 수령액 */
 function CalcPension({isMo=false,onNav=()=>{}}){const[age,sAge]=useState("35");const[salary,sSal]=useState("");const[paidYears,sPY]=useState("0");const[retireAge,sRA]=useState("65");
   const ageVal=parseInt(age),salW=tW(salary)*10000,paidY=parseInt(paidYears),retireA=parseInt(retireAge),remainYears=Math.max(0,retireA-ageVal),totalYears=paidY+remainYears;
-  const baseSal=Math.min(Math.max(salW,400000),6370000),avgA=2830000,B=baseSal,replaceRate=.40;
+  const baseSal=Math.min(Math.max(salW,410000),6590000),avgA=2830000,B=baseSal,replaceRate=.40;
   let monthlyPension=0;if(totalYears>=10)monthlyPension=Math.round((avgA+B)*replaceRate*(Math.min(totalYears,40)/40));
   const earlyYears=Math.max(0,65-retireA),earlyDiscount=Math.min(earlyYears*.06,.30),earlyPension=Math.round(monthlyPension*(1-earlyDiscount));
   const lateYears=Math.max(0,retireA-65),lateBonus=Math.min(lateYears*.072,.36),latePension=Math.round(monthlyPension*(1+lateBonus));
   const actualPension=retireA<65?earlyPension:retireA>65?latePension:monthlyPension;
-  const monthlyPayment=Math.round(baseSal*.045),totalPaid=monthlyPayment*(paidY+remainYears)*12,expectLife=83,receiveYears=Math.max(0,expectLife-retireA),totalReceive=actualPension*12*receiveYears;
+  const monthlyPayment=Math.round(baseSal*.0475),totalPaid=monthlyPayment*(paidY+remainYears)*12,expectLife=83,receiveYears=Math.max(0,expectLife-retireA),totalReceive=actualPension*12*receiveYears;
   return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}><div>
     <div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"1fr 1fr",gap:isMo?8:12}}><Sel label="현재 나이" value={age} onChange={sAge} options={Array.from({length:45},(_,i)=>({value:String(i+20),label:(i+20)+"세"}))}/><Sel label="수령 시작 나이" value={retireAge} onChange={sRA} options={[{value:"60",label:"60세 (조기 -30%)"},{value:"62",label:"62세 (-18%)"},{value:"65",label:"65세 (정상)"},{value:"67",label:"67세 (+14.4%)"},{value:"70",label:"70세 (+36%)"}]}/></div>
     <Inp label="현재 월 급여 (세전)" value={salary} onChange={sSal} suffix="만원" placeholder="예: 350" error={!salary||salary==="0"}/>
@@ -3426,15 +3428,15 @@ function CalcCarTax({isMo=false,onNav=()=>{}}){const[carType,sCT]=useState("norm
 /* 4대보험료 */
 function CalcInsurance4({isMo=false,onNav=()=>{}}){const[type,sType]=useState("worker");const[salary,sSal]=useState("");const[bonus,sBonus]=useState("");
   const salW=tW(salary),bonusW=tW(bonus),annualSal=salW*12+bonusW,monthlySal=annualSal/12;
-  const npnCap=6370000,npnBase=Math.min(monthlySal,npnCap),npn=Math.round(npnBase*.045),hi=Math.round(monthlySal*.03595),ltc=Math.round(hi*.1314),ei=Math.round(monthlySal*.009),workerTotal=npn+hi+ltc+ei;
+  const npnCap=6590000,npnBase=Math.min(monthlySal,npnCap),npn=Math.round(npnBase*.0475),hi=Math.round(monthlySal*.03595),ltc=Math.round(hi*.1314),ei=Math.round(monthlySal*.009),workerTotal=npn+hi+ltc+ei;
   const empNpn=npn,empHi=hi,empLtc=ltc,empEi=Math.round(monthlySal*.009),empSan=Math.round(monthlySal*.007),empTotal=empNpn+empHi+empLtc+empEi+empSan;
-  const selfHi=Math.round(monthlySal*.03595),selfNpn=Math.round(Math.min(monthlySal,npnCap)*.09),selfTotal=selfHi+Math.round(selfHi*.1314)+selfNpn;
+  const selfHi=Math.round(monthlySal*.03595),selfNpn=Math.round(Math.min(monthlySal,npnCap)*.095),selfTotal=selfHi+Math.round(selfHi*.1314)+selfNpn;
   const isWorker=type==="worker",total=isWorker?workerTotal:selfTotal;
   return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}><div>
     <Tog label="가입 유형" value={type} onChange={sType} options={[{value:"worker",label:"직장인"},{value:"self",label:"개인사업자"},{value:"freelance",label:"프리랜서"}]}/>
     <Inp label="월 급여 (세전)" value={salary} onChange={sSal} suffix="만원" placeholder="예: 350" error={!salary||salary==="0"}/>
     {isWorker&&<Inp label="연간 상여금" value={bonus} onChange={sBonus} suffix="만원" placeholder="없으면 0"/>}
-    <div style={{padding:"12px 16px",background:P.lt,borderRadius:10,fontSize:12,color:"#6b778c",lineHeight:1.6,marginTop:8}}>※ 2025년 기준 / 국민연금 상한 637만원{isWorker?" / 산재보험은 사업주 전액 부담":" / 지역가입자 전액 본인 부담"}</div>
+    <div style={{padding:"12px 16px",background:P.lt,borderRadius:10,fontSize:12,color:"#6b778c",lineHeight:1.6,marginTop:8}}>※ 2026년 기준 / 국민연금 상한 659만원(2026.7~){isWorker?" / 산재보험은 사업주 전액 부담":" / 지역가입자 전액 본인 부담"}</div>
   </div><div>
     <div style={{background:"linear-gradient(315deg, #0747A6 0%, #0052CC 50%, #0065FF 100%)",borderRadius:20,padding:"28px 24px",color:"#fff",textAlign:"center",marginBottom:16,boxShadow:"0 8px 28px rgba(7,71,166,.28)"}}>
       <div style={{fontSize:11,letterSpacing:1.5,opacity:.7,marginBottom:8}}>{isWorker?"근로자 월 부담액":"월 보험료 합계"}</div>
@@ -3579,7 +3581,7 @@ const TIPS={
   transfer:[
     {title:"1세대 1주택 비과세 요건",body:"2년 보유(조정지역은 거주 포함) + 양도가 12억 이하 시 비과세. 12억 초과분만 과세."},
     {title:"장기보유특별공제 극대화",body:"보유 연4%+거주 연4%, 최대 80%. 10년↑ 보유·거주 시 양도차익 80% 공제."},
-    {title:"다주택 중과 유예 활용",body:"2026.5.9까지 중과 유예. 이 기간 내 매도 시 기본세율(6~45%)만 적용."},
+    {title:"5.9 이전 계약 경과조치 확인",body:"2026.5.9까지 계약·계약금 지급 후 4개월(강남3구·용산)/6개월(신규 조정지역) 내 잔금·등기 시 중과 배제, 기본세율(6~45%) 적용."},
     {title:"필요경비 꼼꼼히 챙기기",body:"취득세·중개비·인테리어 등 경비 인정 시 양도차익 감소. 영수증 보관 필수."},
   ],
   compre:[
@@ -3658,7 +3660,7 @@ const GLOSSARY={
   yearend:[{term:"소득공제",def:"과세표준을 줄여주는 공제. 신용카드·인적공제 등."},{term:"세액공제",def:"산출세액에서 직접 차감. 연금저축·의료비·교육비 등."},{term:"결정세액",def:"산출세액에서 세액공제를 뺀 최종 납부 세금."}],
   pension:[{term:"A값",def:"전체 국민연금 가입자의 3년간 평균소득월액. 2025년 약 283만원."},{term:"B값",def:"본인의 가입기간 평균 기준소득월액."},{term:"소득대체율",def:"퇴직 전 소득 대비 연금 수령 비율. 2025년 40%."},{term:"추후납부",def:"미납 기간의 보험료를 소급 납부하여 가입기간을 늘리는 제도."}],
   cartax:[{term:"배기량",def:"엔진의 실린더 총 용적(cc). 자동차세 계산의 기준."},{term:"차령 할인",def:"차량 연식 3년부터 매년 5%씩 최대 50%까지 자동차세 경감."},{term:"연납 할인",def:"1월에 1년치 자동차세를 일시 납부하면 약 5% 할인."}],
-  insurance4:[{term:"기준소득월액",def:"국민연금 보험료 산정 기준. 상한 637만원, 하한 40만원 (2025년)."},{term:"보수월액",def:"건강보험료 산정 기준. 월 급여+상여금÷12."},{term:"산재보험",def:"업무상 재해 보상 보험. 사업주 전액 부담, 근로자 부담 없음."}],
+  insurance4:[{term:"기준소득월액",def:"국민연금 보험료 산정 기준. 상한 659만원, 하한 41만원 (2026.7~2027.6)."},{term:"보수월액",def:"건강보험료 산정 기준. 월 급여+상여금÷12."},{term:"산재보험",def:"업무상 재해 보상 보험. 사업주 전액 부담, 근로자 부담 없음."}],
   netsalary:[{term:"4대보험",def:"국민연금·건강보험·고용보험·산재보험. 근로자는 3개(산재 제외) 부담."},{term:"비과세소득",def:"세금이 부과되지 않는 소득. 식대·자가운전보조 등."},{term:"간이세액표",def:"월급에서 원천징수할 소득세를 정한 국세청 기준표."}],
   inctax:[{term:"종합소득",def:"이자·배당·사업·근로·연금·기타소득을 합산한 소득. 매년 5월 확정신고."},{term:"단순경비율",def:"소규모 사업자에게 적용되는 간편 경비 인정 비율. 업종마다 다름."},{term:"기준경비율",def:"일정 수입 이상 사업자에게 적용. 주요경비는 증빙, 나머지는 기준경비율로 인정."},{term:"원천징수",def:"소득을 지급할 때 세금을 미리 떼고 지급하는 제도. 프리랜서 3.3%."}],
   rental:[{term:"분리과세",def:"다른 소득과 합산하지 않고 14% 단일세율 적용"},{term:"종합과세",def:"다른 소득과 합산하여 6~45% 누진세율 적용"},{term:"필요경비율",def:"임대소득에서 경비로 인정하는 비율 (분리과세 50%)"}],
@@ -3698,7 +3700,7 @@ const CALC_TERMS={
 /* ── 규정 타임라인 (계산기별) ── */
 const REGS={
   acquisition:[{y:"2026",t:"취득세 중과 완화 시행 예정"},{y:"2025",t:"생애최초 감면 2028까지 연장"},{y:"2025",t:"중과 완화안 발표 (2주택 폐지, 3주택 절반)"},{y:"2023",t:"시가인정액 제도 도입"},{y:"2020",t:"다주택 중과 강화 (2주택 8%, 3주택 12%)"}],
-  transfer:[{y:"2026",t:"양도세 중과 유예 만료 (5.9)"},{y:"2025",t:"유예 2026.5.9 연장, 장특공제 90% 추진"},{y:"2022",t:"중과 한시 유예 시작"},{y:"2021",t:"다주택 중과 시행"}],
+  transfer:[{y:"2026",t:"양도세 중과 유예 종료, 5.10부터 중과 재시행 (5.9 이전 계약 경과조치)"},{y:"2025",t:"유예 2026.5.9 연장, 장특공제 90% 추진"},{y:"2022",t:"중과 한시 유예 시작"},{y:"2021",t:"다주택 중과 시행"}],
   compre:[{y:"2026",t:"공정시장가액비율 인상 논의"},{y:"2025",t:"1주택 세율 완화 추진"},{y:"2023",t:"가액비율 60% 유지"},{y:"2021",t:"세율 대폭 인상"}],
   property:[{y:"2023",t:"1주택 특례세율 적용"},{y:"2021",t:"가액비율 60% 적용"}],
   gift:[{y:"2026",t:"2주택까지 증여 중과 폐지 추진"},{y:"2025",t:"증여 취득세 12%→6% 완화 추진"},{y:"2020",t:"조정지역 증여 취득세 12%"}],
@@ -3712,10 +3714,10 @@ const REGS={
   stamp:[{y:"2023",t:"전자수입인지 의무화"},{y:"2007",t:"인지세 구간 개정"}],
   bond:[{y:"2024",t:"채권할인율 시장금리 연동 변동"},{y:"2023",t:"매입률 조정"}],
   yearend:[{y:"2025",t:"신용카드 소득공제 한도 확대 추진"},{y:"2024",t:"연금저축 세액공제 한도 유지 (400만원)"}],
-  pension:[{y:"2025",t:"국민연금 개혁안 논의 (보험료율 인상·소득대체율 조정)"},{y:"2025",t:"기준소득월액 상한 637만원"},{y:"2023",t:"수령 연령 65세 확정 (1969년생 이후)"}],
+  pension:[{y:"2025",t:"국민연금 개혁안 논의 (보험료율 인상·소득대체율 조정)"},{y:"2026",t:"보험료율 9.5%, 기준소득월액 상한 659만원(7월~)"},{y:"2023",t:"수령 연령 65세 확정 (1969년생 이후)"}],
   cartax:[{y:"2025",t:"1월 연납 할인율 약 5%로 축소"},{y:"2024",t:"전기차 자동차세 10만원 정액 유지"}],
-  insurance4:[{y:"2025",t:"건강보험료율 7.19%, 장기요양 13.14%"},{y:"2025",t:"국민연금 기준소득월액 상한 637만원"}],
-  netsalary:[{y:"2025",t:"건강보험료율 3.595% 유지"},{y:"2025",t:"국민연금 기준소득 상한 637만원"}],
+  insurance4:[{y:"2026",t:"건강보험료율 7.19%, 장기요양 13.14%, 국민연금 9.5%"},{y:"2026",t:"국민연금 기준소득월액 상한 659만원(7월~)"}],
+  netsalary:[{y:"2026",t:"건강보험 근로자 3.595%, 국민연금 근로자 4.75%"},{y:"2026",t:"국민연금 기준소득 상한 659만원(7월~)"}],
   inctax:[{y:"2025",t:"프리랜서 원천징수 간소화, 모바일 신고 확대"},{y:"2024",t:"종합소득세 과세표준 구간 조정 (하위 구간 확대)"}],
   rental:[{y:"2025",t:"임대소득 과세 강화 논의"},{y:"2019",t:"2천만원 이하 분리과세 시행"}],
   appraisal:[{y:"2022",t:"감정평가 보수표 개정"}],
@@ -5068,7 +5070,7 @@ function LearnTaxBasics(){return(<>
     <_SBtn href="/취득세계산기">취득세 계산기</_SBtn><_SBtn href="/등기비용계산기">등기비용 계산기</_SBtn></_SS>
   <_SS><_SH2>2. 양도소득세</_SH2><p style={_SW.p}>부동산을 팔아 양도차익이 발생할 때 부과되는 국세입니다. 보유기간·주택수·조정지역 여부에 따라 세율과 중과 여부가 결정되며, 양도일이 속하는 달의 말일부터 2개월 이내 예정신고합니다.</p><h3 style={_SW.h3}>2026년 양도세율표 (기본세율)</h3>
     <_ST head={["과세표준","세율","누진공제"]} rows={[["1,400만원 이하","6%","-"],["5,000만원 이하","15%","126만원"],["8,800만원 이하","24%","576만원"],["1.5억 이하","35%","1,544만원"],["3억 이하","38%","1,994만원"],["5억 이하","40%","2,594만원"],["10억 이하","42%","3,594만원"],["10억 초과","45%","6,594만원"]]}/>
-    <_SCL><b>다주택 중과 유예</b> 2026.5.9까지 한시적 유예. 이후 2주택 +20%p, 3주택 +30%p 중과 복원 예정</_SCL>
+    <_SCL><b>다주택 중과 재시행</b> 2026.5.9 유예 종료. 5.10 양도분부터 2주택 +20%p, 3주택 +30%p 중과·장특공제 배제</_SCL>
     <_SBtn href="/양도소득세계산기">양도소득세 계산기</_SBtn></_SS>
   <_SS><_SH2>3. 종합부동산세</_SH2><p style={_SW.p}>인별 전국 합산 공시가격이 기준금액을 초과할 때 부과되는 국세입니다. 1주택자는 12억, 다주택자는 9억까지 기본공제됩니다. 매년 12월 1~15일 납부합니다.</p>
     <_ST head={["과세표준","일반","법인"]} rows={[["3억 이하","0.5%","2.7%"],["6억 이하","0.7%","2.7%"],["12억 이하","1.0%","2.7%"],["25억 이하","1.3%","5.0%"],["50억 이하","1.5%","5.0%"],["94억 이하","2.0%","5.0%"],["94억 초과","2.7%","5.0%"]]}/>
@@ -5203,11 +5205,11 @@ function LearnTaxHistory(){return(<>
   <_SS><_SH2>2025 — 수도권 주담대 한도 도입</_SH2><p style={_SW.p}>수도권 집값 안정화를 위해 주택가격 구간별 대출한도가 신설됐습니다.</p>
     <ul style={_SW.ul}><li style={_SW.li}>수도권 주담대 한도 신설 (15억↓ 6억, 25억↓ 4억, 25억↑ 2억)</li><li style={_SW.li}>스트레스 DSR 2단계 전면 확대 (변동 +1.5%p)</li><li style={_SW.li}>생애최초 취득세 감면 연장 (2028.12.31까지)</li><li style={_SW.li}>기준금리 3.0%로 인하</li></ul>
     <_SBtn href="/LTV계산기">LTV</_SBtn><_SBtn href="/대출가능액계산기">대출가능액</_SBtn></_SS>
-  <_SS><_SH2>2026 — 양도세 중과 복원 임박</_SH2><p style={_SW.p}>2026년은 한시 유예되었던 양도세 다주택 중과가 복원을 앞둔 해입니다.</p>
-    <ul style={_SW.ul}><li style={_SW.li}>기준금리 3.0% 유지 (2026.2.27 금통위)</li><li style={_SW.li}>최저임금 10,320원 (+2.9%)</li><li style={_SW.li}>전월세전환율 5.0% (기준금리+2%p)</li><li style={_SW.li}>DSR 은행 40%·비은행 50% 유지</li></ul>
-    <_SCL type="warn"><b>2026.5.9 만료 예정</b> 다주택자 양도세 중과 한시 유예 종료. 이후 2주택 +20%p, 3주택 +30%p 중과 복원</_SCL></_SS>
+  <_SS><_SH2>2026 — 양도세 중과 재시행</_SH2><p style={_SW.p}>2026년 5월 10일 양도분부터 한시 유예되었던 양도세 다주택 중과가 다시 적용됐습니다.</p>
+    <ul style={_SW.ul}><li style={_SW.li}>기준금리 3.0% (2026.8.27 금통위 인상)</li><li style={_SW.li}>최저임금 10,320원 (+2.9%)</li><li style={_SW.li}>전월세전환율 5.0% (기준금리+2%p)</li><li style={_SW.li}>DSR 은행 40%·비은행 50% 유지</li></ul>
+    <_SCL type="warn"><b>2026.5.9 유예 종료</b> 5.10 양도분부터 2주택 +20%p, 3주택 +30%p 중과. 5.9까지 계약분은 4~6개월 내 잔금 시 경과조치로 배제</_SCL></_SS>
   <_SS><_SH2>향후 예정 개정사항</_SH2>
-    <ul style={_SW.ul}><li style={_SW.li}><b>2026.5.9</b> — 다주택자 양도세 중과 유예 만료</li><li style={_SW.li}><b>2026 하반기</b> — 스트레스 DSR 3단계 시행 검토 (변동 +2.0%p)</li><li style={_SW.li}><b>2027</b> — 공시가격 현실화 로드맵 재검토 예정</li><li style={_SW.li}><b>2028.12.31</b> — 생애최초 취득세 감면 일몰</li><li style={_SW.li}><b>상시 검토</b> — 증여세 세율·공제 구조 개편 논의 중</li></ul></_SS>
+    <ul style={_SW.ul}><li style={_SW.li}><b>2026.5.10</b> — 다주택자 양도세 중과 재시행</li><li style={_SW.li}><b>2026 하반기</b> — 스트레스 DSR 3단계 시행 검토 (변동 +2.0%p)</li><li style={_SW.li}><b>2027</b> — 공시가격 현실화 로드맵 재검토 예정</li><li style={_SW.li}><b>2028.12.31</b> — 생애최초 취득세 감면 일몰</li><li style={_SW.li}><b>상시 검토</b> — 증여세 세율·공제 구조 개편 논의 중</li></ul></_SS>
 </>);}
 
 /* 2026.04.15 AI PRO 인사이트 보고서 라우팅 */
@@ -5273,7 +5275,7 @@ function LawTransferTax(){return(<>
     <ul style={_SW.ul}><li style={_SW.li}>보유 1년 미만: 70%</li><li style={_SW.li}>보유 1~2년: 60%</li><li style={_SW.li}>분양권 1년 미만: 70% / 1년 이상: 60%</li></ul></_SS>
   <_SS><_SH2>제104조의3 — 다주택 중과</_SH2>
     <_LawArticle label="소득세법 제104조의3">조정대상지역 내 주택을 양도하는 경우: 2주택자 기본세율 +20%p, 3주택자 이상 기본세율 +30%p. 또한 장기보유특별공제를 적용하지 아니한다.</_LawArticle>
-    <_SCL type="warn"><b>⚠ 한시 유예 (2026.5.9까지)</b> 현재 다주택 중과는 2026년 5월 9일까지 한시 유예 중입니다. 유예 기간 내 양도 시 기본세율만 적용되며 장특공도 적용됩니다.</_SCL></_SS>
+    <_SCL type="warn"><b>⚠ 유예 종료 (2026.5.10~ 중과)</b> 다주택 중과 한시 유예는 2026년 5월 9일로 끝났고, 5월 10일 양도분부터 다시 적용됩니다. 5.9까지 계약·계약금 지급 후 4~6개월 내 잔금·등기한 경우는 경과조치로 중과가 배제됩니다. 유예 기간 내 양도 시 기본세율만 적용되며 장특공도 적용됩니다.</_SCL></_SS>
   <_SS><_SH2>신고·납부 기한</_SH2>
     <_LawArticle label="소득세법 제105조 (양도소득과세표준 예정신고)">양도일이 속하는 달의 말일부터 2개월 이내에 예정신고·납부해야 한다.</_LawArticle>
     <ul style={_SW.ul}><li style={_SW.li}><b>예정신고</b>: 양도일 속한 달 말일부터 2개월</li><li style={_SW.li}><b>확정신고</b>: 다음해 5월 1~31일</li><li style={_SW.li}>무신고가산세 20% + 납부지연가산세</li></ul>
@@ -5427,7 +5429,7 @@ function AboutPage({isMo,navigateHome}){return(<div style={{maxWidth:820,margin:
   <_SS><_SH2>세법 반영 기준일</_SH2>
     <_SCL type="ok"><b>현재 반영 기준: 2026년 4월 14일</b><br/>취득세·양도세·종부세·DSR 스트레스 3단계·2026년 최저임금 10,320원 등 최신 개정 사항이 모두 반영된 상태입니다.</_SCL>
     <p style={_SW.p}>주요 반영 내용:</p>
-    <ul style={_SW.ul}><li style={_SW.li}>양도세 다주택 중과 유예 (2026.5.9까지)</li><li style={_SW.li}>생애최초 취득세 감면 최대 200만원 (2028.12.31까지)</li><li style={_SW.li}>수도권 주담대 한도 규제 (15억↓ 6억 / 25억↓ 4억 / 25억↑ 2억)</li><li style={_SW.li}>스트레스 DSR (변동 +1.5%p, 혼합 +0.75%p)</li><li style={_SW.li}>한국은행 기준금리 3.0% (2026.2.27 결정)</li></ul></_SS>
+    <ul style={_SW.ul}><li style={_SW.li}>양도세 다주택 중과 재시행 (2026.5.10 양도분부터)</li><li style={_SW.li}>생애최초 취득세 감면 최대 200만원 (2028.12.31까지)</li><li style={_SW.li}>수도권 주담대 한도 규제 (15억↓ 6억 / 25억↓ 4억 / 25억↑ 2억)</li><li style={_SW.li}>스트레스 DSR (변동 +1.5%p, 혼합 +0.75%p)</li><li style={_SW.li}>한국은행 기준금리 3.0% (2026.2.27 결정)</li></ul></_SS>
   <_SS><_SH2>면책조항</_SH2>
     <_SCL type="warn"><b>중요 — 이 사이트의 계산 결과는 법적 효력이 없으며 참고용입니다.</b></_SCL>
     <ul style={_SW.ul}><li style={_SW.li}>본 사이트가 제공하는 모든 계산 결과는 <b>일반적인 사례를 전제한 추정치</b>이며, 실제 납부액과 다를 수 있습니다.</li><li style={_SW.li}>특수한 요건(감면·중과·비과세·공동명의 등)은 개인별 상황에 따라 결과가 달라지므로 세무사·공인중개사와 상담하십시오.</li><li style={_SW.li}>법령 개정 시차로 최신 규정이 반영되지 않았을 가능성이 있습니다.</li><li style={_SW.li}>계산 결과에 따른 손실에 대해 운영자는 책임을 지지 않습니다.</li><li style={_SW.li}>실제 세금 신고는 <b>국세청 홈택스 모의계산기</b>, 실제 대출 한도는 <b>금융기관 공식 상담</b>을 권장합니다.</li></ul>
@@ -5584,7 +5586,7 @@ function GuidePage({isMo,navigateHome}){return(<div style={{maxWidth:860,margin:
   <_SH tag="2026 최신" title="부동산 세금·대출 완벽 가이드" desc="취득·보유·양도 전 단계 — 실수요자와 투자자가 알아야 할 핵심 지식을 주제별로 정리했습니다."/>
   <_SS><_SH2>주제별 가이드</_SH2>
     <div style={{display:"grid",gap:14}}>
-      {[{tag:"💰 절세 전략",title:"2026 부동산 절세 전략 완벽 가이드",desc:"취득세·양도세·보유세 단계별 절세 방법. 공동명의·일시적2주택·장기보유특별공제 활용.",preview:"📌 1세대1주택 비과세 12억 + 장특공 80%(보유 40+거주 40) 조합으로 양도차익 5억까지 합법적 전액 비과세 가능. 일시적 2주택은 종전주택 3년 내 처분 시 신규주택도 비과세 적용.",calcs:[["취득세","/취득세계산기"],["양도세","/양도소득세계산기"],["세금 비교","/세금비교분석"]],more:"/learn/tax-saving"},{tag:"🏘️ 다주택자",title:"다주택자 세금 완벽 가이드 2026",desc:"종부세·재산세 부담 계산, 양도세 중과유예, 매도·증여·임대 전략 비교.",preview:"📌 양도세 다주택 중과 2026.5.9까지 유예. 조정지역 2주택 +20%p, 3주택 +30%p 가산세율은 유예 종료 후 부활. 유예 기간 내 정리 vs 임대등록 vs 증여 시나리오를 세후 수익으로 비교 필수.",calcs:[["종부세","/종합부동산세계산기"],["양도세","/양도소득세계산기"],["증여세","/증여세계산기"],["세금 비교","/세금비교분석"]],more:"/learn/tax-saving"},{tag:"🏠 첫 집 구매",title:"생애최초 주택구입 완벽 가이드",desc:"취득세 감면 200만원, LTV 80% 완화, 디딤돌·보금자리 대출, 총비용 체크리스트.",preview:"📌 12억 이하 주택 생애최초 구입 시 취득세 최대 200만원 감면 (2028.12.31까지 연장). LTV 80% 우대 + 디딤돌(2.5~3.5%)·보금자리(4%)·청년전용 대출 활용 시 자기자본 부담 최소화.",calcs:[["취득세","/취득세계산기"],["LTV·한도","/LTV계산기"],["총비용","/총비용시뮬레이터"],["등기비용","/등기비용계산기"]],more:"/learn/loan-guide"}].map((g,i)=>(<div key={i} style={{background:"#fff",border:"1.5px solid #dfe1e6",borderRadius:14,padding:"24px 28px"}}>
+      {[{tag:"💰 절세 전략",title:"2026 부동산 절세 전략 완벽 가이드",desc:"취득세·양도세·보유세 단계별 절세 방법. 공동명의·일시적2주택·장기보유특별공제 활용.",preview:"📌 1세대1주택 비과세 12억 + 장특공 80%(보유 40+거주 40) 조합으로 양도차익 5억까지 합법적 전액 비과세 가능. 일시적 2주택은 종전주택 3년 내 처분 시 신규주택도 비과세 적용.",calcs:[["취득세","/취득세계산기"],["양도세","/양도소득세계산기"],["세금 비교","/세금비교분석"]],more:"/learn/tax-saving"},{tag:"🏘️ 다주택자",title:"다주택자 세금 완벽 가이드 2026",desc:"종부세·재산세 부담 계산, 양도세 중과, 매도·증여·임대 전략 비교.",preview:"📌 양도세 다주택 중과 2026.5.10부터 재시행. 조정지역 2주택 +20%p, 3주택 +30%p 가산세율 적용. 매도 vs 임대등록 vs 증여 시나리오를 세후 수익으로 비교 필수.",calcs:[["종부세","/종합부동산세계산기"],["양도세","/양도소득세계산기"],["증여세","/증여세계산기"],["세금 비교","/세금비교분석"]],more:"/learn/tax-saving"},{tag:"🏠 첫 집 구매",title:"생애최초 주택구입 완벽 가이드",desc:"취득세 감면 200만원, LTV 80% 완화, 디딤돌·보금자리 대출, 총비용 체크리스트.",preview:"📌 12억 이하 주택 생애최초 구입 시 취득세 최대 200만원 감면 (2028.12.31까지 연장). LTV 80% 우대 + 디딤돌(2.5~3.5%)·보금자리(4%)·청년전용 대출 활용 시 자기자본 부담 최소화.",calcs:[["취득세","/취득세계산기"],["LTV·한도","/LTV계산기"],["총비용","/총비용시뮬레이터"],["등기비용","/등기비용계산기"]],more:"/learn/loan-guide"}].map((g,i)=>(<div key={i} style={{background:"#fff",border:"1.5px solid #dfe1e6",borderRadius:14,padding:"24px 28px"}}>
         <span style={{display:"inline-block",background:"#e6f0ff",color:"#0747A6",fontSize:11,fontWeight:700,padding:"4px 12px",borderRadius:12,marginBottom:10}}>{g.tag}</span>
         <h3 style={{fontSize:19,margin:"4px 0 10px",color:"#172B4D",fontWeight:800,letterSpacing:-0.3}}>{g.title}</h3>
         <p style={{color:"#505f79",fontSize:14,margin:"0 0 8px",lineHeight:1.7}}>{g.desc}</p>
@@ -5997,7 +5999,7 @@ function NavContentPanel({navContent,setNavContent,calc,effectiveUser,lcToken,se
 // 2026.04.15 계산기별 동적 네비 콘텐츠 (Expert Guide + 관련 법령 + 관련 계산기)
 const CALC_NAV_CONTENT={
   acquisition:{items:[{title:"취득세란?",open:true,body:"부동산을 매매·증여·상속 등으로 취득할 때 납부하는 지방세. 주택은 1~12% 차등 적용."},{title:"절세 팁",body:"생애최초 200만원 감면, 일시적2주택 1주택세율, 시가표준액 1억이하 중과제외."},{title:"신고 기한",body:"취득일로부터 60일 이내 신고·납부. 상속은 6개월, 증여는 3개월."},{title:"신고 방법",body:"위택스(wetax.go.kr) 온라인 신고 또는 관할 시·군·구청 방문."},{title:"주의사항",body:"과세표준은 실거래가. 시가표준액이 높으면 시가표준액 적용. 법인은 무조건 12%."}],law:{text:"지방세법 제10조~제16조",url:"/law/acquisition-tax"},related:["registration","commission","ltv","totalcost","bond"]},
-  transfer:{items:[{title:"양도소득세란?",open:true,body:"부동산 매도 시 양도차익에 부과. 6~45% 누진세율 + 지방소득세 10%."},{title:"비과세 요건",body:"1주택 2년보유(조정지역 2년거주) + 양도가 12억이하 → 전액비과세."},{title:"장기보유특별공제",body:"1주택: 보유연4%+거주연4% 최대80%. 다주택: 보유연2% 최대30%."},{title:"중과세율",body:"2주택+20%p, 3주택+30%p. 단, 2026.5.9까지 중과유예."},{title:"신고 방법",body:"양도일 속한 달 말일로부터 2개월 이내. 홈택스 온라인 신고."}],law:{text:"소득세법 제89조~제104조",url:"/law/transfer-tax"},related:["acquisition","netsale","compare","invest","totalcost"]},
+  transfer:{items:[{title:"양도소득세란?",open:true,body:"부동산 매도 시 양도차익에 부과. 6~45% 누진세율 + 지방소득세 10%."},{title:"비과세 요건",body:"1주택 2년보유(조정지역 2년거주) + 양도가 12억이하 → 전액비과세."},{title:"장기보유특별공제",body:"1주택: 보유연4%+거주연4% 최대80%. 다주택: 보유연2% 최대30%."},{title:"중과세율",body:"조정지역 2주택+20%p, 3주택+30%p. 2026.5.10 양도분부터 재시행(5.9 이전 계약 경과조치 있음)."},{title:"신고 방법",body:"양도일 속한 달 말일로부터 2개월 이내. 홈택스 온라인 신고."}],law:{text:"소득세법 제89조~제104조",url:"/law/transfer-tax"},related:["acquisition","netsale","compare","invest","totalcost"]},
   compre:{items:[{title:"종부세란?",open:true,body:"매년 6월1일 기준 주택 공시가격 합산이 공제액 초과 시 부과."},{title:"과세기준일",body:"6월 1일 기준. 이 날 소유자에게 부과. 매도 시 6.1 이전 잔금 필수."},{title:"공제방법",body:"1주택 12억, 다주택 9억 공제. 공정시장가액비율 60% 적용."},{title:"절세전략",body:"공동명의 전환 시 각 9억 공제(총18억). 6.1 이전 매도로 과세 회피."},{title:"납부방법",body:"매년 12월1일~15일 납부. 분납 가능(500만원 초과 시)."}],law:{text:"종합부동산세법",url:"/law/comprehensive-tax"},related:["property","holdtax","joint","transfer"]},
   property:{items:[{title:"재산세란?",open:true,body:"매년 6월1일 기준 부동산 소유자에게 부과하는 지방세."},{title:"과세기준",body:"주택: 공시가격×60% 과세표준. 토지/건물 별도 계산."},{title:"세율표",body:"주택 0.1~0.4%, 토지 0.2~0.5%, 건물 0.25%. 1주택 특례세율 적용."},{title:"납부방법",body:"7월(건물·주택절반)·9월(토지·주택절반) 분납. 위택스 납부."}],law:{text:"지방세법 제105조~제122조",url:""},related:["compre","holdtax","acquisition"]},
   gift:{items:[{title:"증여세란?",open:true,body:"타인에게 무상으로 재산을 이전할 때 수증자가 납부하는 세금."},{title:"증여재산공제",body:"배우자6억, 직계존속5천만(미성년2천만), 직계비속5천만, 기타친족1천만. 10년 합산."},{title:"10년 합산과세",body:"같은 증여자로부터 10년 내 받은 증여 모두 합산하여 과세."},{title:"절세전략",body:"10년 주기로 공제 한도 내 분할증여. 배우자 6억까지 비과세 활용."},{title:"신고방법",body:"증여받은 날로부터 3개월 이내. 홈택스 신고."}],law:{text:"상증세법 제53조~제58조",url:""},related:["inherit","acquisition","compare","legalinherit"]},
@@ -6012,7 +6014,7 @@ const CALC_NAV_CONTENT={
   commission:{items:[{title:"중개보수란?",open:true,body:"부동산 거래 시 공인중개사에게 지급하는 보수. 법정 상한요율 존재."},{title:"요율표",body:"매매 5천↓0.6%/5천~2억 0.5%/2~9억 0.4%/9~12억 0.5%/12~15억 0.6%/15억↑ 0.7%."},{title:"협의방법",body:"상한요율 이내 협의 가능. 영수증 반드시 수령."},{title:"주의사항",body:"이중계약 금지. 매도/매수인 각각 지급. VAT 별도."}],law:{text:"공인중개사법 시행규칙 제20조",url:"/law/brokerage"},related:["acquisition","registration","totalcost"]},
   convert:{items:[{title:"전월세전환이란?",open:true,body:"전세 ↔ 월세 전환 시 적용 비율. 법정 상한 기준금리+2%=5.0%."},{title:"전환율계산",body:"월세=(전세금-보증금)×전환율÷12."},{title:"2026년기준율",body:"기준금리 3.0% + 2%p = 5.0% 법정 상한."},{title:"세입자권리",body:"초과 요구 시 거부 가능. 주임법 §7의2."}],law:{text:"주택임대차보호법 §7의2",url:"/law/rental-protection"},related:["yield","rentincrease","jeonseins"]},
   netsalary:{items:[{title:"실수령액이란?",open:true,body:"연봉에서 4대보험료와 소득세·지방소득세를 공제한 후 실제 수령하는 금액."},{title:"4대보험 공제",body:"국민연금 4.5%, 건강보험 3.595%(장기요양 13.14%), 고용보험 0.9%."},{title:"소득세 계산",body:"근로소득간이세액표 기준 원천징수. 부양가족 수에 따라 차등."},{title:"비과세 항목",body:"식대 20만원, 차량유지비 20만원 등 비과세 항목은 공제 전 차감."},{title:"연봉협상 팁",body:"실수령액 기준으로 비교해야 정확. 퇴직금 별도/포함 여부 확인 필수."}],related:["insurance4","yearend","inctax","retire"]},
-  insurance4:{items:[{title:"4대보험이란?",open:true,body:"국민연금·건강보험·고용보험·산재보험. 근로자와 사업주가 분담."},{title:"2026년 요율",body:"국민연금 9%(근로자4.5%), 건강보험 7.19%(근로자3.595%), 장기요양 13.14%, 고용보험 1.8%(근로자0.9%)."},{title:"산재보험",body:"전액 사업주 부담. 업종별 0.6~18.6% 차등."},{title:"정산",body:"건강보험은 다음해 4월 정산. 국민연금은 매년 7월 기준소득월액 변경."},{title:"프리랜서",body:"지역가입자로 전환. 국민연금·건강보험 전액 본인 부담."}],related:["netsalary","yearend","pension"]},
+  insurance4:{items:[{title:"4대보험이란?",open:true,body:"국민연금·건강보험·고용보험·산재보험. 근로자와 사업주가 분담."},{title:"2026년 요율",body:"국민연금 9.5%(근로자4.75%), 건강보험 7.19%(근로자3.595%), 장기요양 13.14%, 고용보험 1.8%(근로자0.9%)."},{title:"산재보험",body:"전액 사업주 부담. 업종별 0.6~18.6% 차등."},{title:"정산",body:"건강보험은 다음해 4월 정산. 국민연금은 매년 7월 기준소득월액 변경."},{title:"프리랜서",body:"지역가입자로 전환. 국민연금·건강보험 전액 본인 부담."}],related:["netsalary","yearend","pension"]},
   pension:{items:[{title:"국민연금이란?",open:true,body:"18~59세 의무 가입. 최소 10년 납입 시 만 65세부터 평생 수령."},{title:"수령액 산정",body:"평균소득월액×소득대체율(40%)×가입기간 보정. A값(전체가입자평균)과 B값(본인소득) 합산."},{title:"조기수령",body:"60세부터 가능. 연 6%씩 감액. 60세 수령 시 정상 대비 30% 감소."},{title:"연기수령",body:"66~70세로 연기 시 연 7.2%씩 가산. 70세 수령 시 36% 증가."},{title:"추납제도",body:"미납기간에 대해 추후 납부 가능. 수령액 증가에 효과적."}],related:["retire","netsalary","insurance4"]},
   dti:{items:[{title:"DTI란?",open:true,body:"총부채상환비율. 연소득 대비 신규 주담대 원리금+기존 대출 이자 비율."},{title:"지역별 한도",body:"투기과열지구 40%, 조정대상지역 50%, 비규제지역 60%."},{title:"DSR과 차이",body:"DTI는 기존대출 '이자만' 반영. DSR은 원리금 전부 반영. DSR이 더 엄격."},{title:"적용 예외",body:"서민·실수요자 우대, 생애최초 주택 구입 등 예외 존재."}],related:["dsr","ltv","loanmax","mortgage"]},
   rti:{items:[{title:"RTI란?",open:true,body:"Rent To Interest, 연간 임대수입÷연간 대출이자. 임대업 대출 심사 핵심 지표."},{title:"기준 비율",body:"은행 1.5배 이상, 비은행 1.25배 이상 충족해야 대출 가능."},{title:"활용",body:"상가·오피스텔 투자 시 대출 가능 여부를 사전 확인."},{title:"개선 방법",body:"임대료 인상, 공실 해소, 대출 일부 상환으로 RTI 개선."}],related:["yield","mortgage","loanmax","dsr"]},
@@ -6099,7 +6101,7 @@ function LeftNav({isMo,navOpen,setNavOpen,navContent,setNavContent,effectiveUser
       {id:"history",l:"세법 개정 히스토리",body:"2025: 생애최초 감면 연장 / 2024: 종부세 일반 0.5~2.7% / 2023: 양도세 중과 한시 유예 / 2022: 다주택 중과 강화"}
     ]},
     {id:"market",l:"Market Data",icon:(c)=>SV(c,<><path d="M3 20h18"/><path d="M6 16V8"/><path d="M12 16V4"/><path d="M18 16v-6"/></>),sub:[
-      {id:"baserate",l:"기준금리 (한국은행)",body:"한국은행 기준금리 3.0% (2026.2.27 동결). 스트레스 DSR 변동 +1.5%p, 혼합 +0.75%p"},
+      {id:"baserate",l:"기준금리 (한국은행)",body:"한국은행 기준금리 3.0% (2026.8.27 인상). 스트레스 DSR 변동 +1.5%p, 혼합 +0.75%p"},
       {id:"kospi",l:"코스피/코스닥",body:"코스피 2,650 (▲0.3%) / 코스닥 850 (▲0.5%) — 정적 폴백 데이터"},
       {id:"seoulapt",l:"서울 아파트 평균 거래가",body:"서울 강남 평균 12.5억 / 송파 9.8억 / 마포 8.5억 (2025년 기준)"},
       {id:"trend",l:"전국 실거래가 동향",body:"전국 매매 거래량 월평균 5.2만건. 수도권 가격 보합세, 지방 일부 상승."},
@@ -6998,7 +7000,7 @@ body.lc-embed main{padding-top:0!important}
           <div style={{display:"flex",gap:16,overflowX:"auto",paddingBottom:12,WebkitOverflowScrolling:"touch",scrollSnapType:"x mandatory"}}>
             {[
               {slug:"01",icon:"🏠",title:"2026 취득세 완벽 가이드",sub:"주택수·가격별 세율 자동 판정",color:"#eff6ff",fg:"#2563eb"},
-              {slug:"02",icon:"📊",title:"양도소득세 절세 전략",sub:"장특공·비과세·중과유예 총정리",color:"#f0fdf4",fg:"#15803d"},
+              {slug:"02",icon:"📊",title:"양도소득세 절세 전략",sub:"장특공·비과세·다주택 중과 총정리",color:"#f0fdf4",fg:"#15803d"},
               {slug:"03",icon:"💰",title:"DSR·대출한도 완벽 분석",sub:"스트레스DSR 3단계 반영",color:"#fff7ed",fg:"#c2410c"},
               {slug:"04",icon:"🧾",title:"연말정산 환급 극대화",sub:"인적공제·신용카드·의료비 전략",color:"#fefce8",fg:"#a16207"},
               {slug:"05",icon:"🎁",title:"증여·상속 절세 전략",sub:"10년 합산·분할증여·배우자공제",color:"#fdf2f8",fg:"#be185d"},

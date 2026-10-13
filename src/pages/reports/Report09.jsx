@@ -30,6 +30,10 @@ export default function Report09({navigateHome, isMo}){
           본 보고서는 <b>현재 시점(2026.04.15) 데이터와 정책 방향을 기반으로 한 전망</b>입니다. 실제 시장은 경제 상황·정책 변경·외부 충격에 따라 예상과 크게 다를 수 있습니다. 투자·매매·처분 결정 시 본 보고서에만 의존하지 마시고 반드시 복수 전문가 상담을 받으시기 바랍니다.
         </div>
 
+        <div className="hl" style={{marginBottom:16}}>
+          <b>2026.10 업데이트</b> 유예 연장 없이 2026년 5월 10일 양도분부터 다주택 중과가 재시행됐습니다(시나리오 A 확정). 5.9까지 계약·계약금 지급 후 계약일부터 4개월(강남3구·용산)·6개월(2025.10.16 신규 조정지역) 내 잔금·등기한 경우는 경과조치로 중과가 배제됩니다. 아래 본문은 2026.04.15 시점의 전망입니다.
+        </div>
+
         <div className="summary">
           <div className="label">Executive Summary</div>
           <h3 style={{fontSize:16,fontWeight:800,color:"#0f1f3d",margin:"0 0 8px"}}>5월 9일 = 매물 증가·가격 조정·규제가 맞물리는 변곡점</h3>
