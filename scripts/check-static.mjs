@@ -39,6 +39,7 @@ for (const g of gen) {
   if (!title || title !== g.title) bad(`${g.path}: 제목 불일치 (${title})`)
   if (!root || root.length < 2000) { bad(`${g.path}: 미리 찍은 화면이 비었거나 너무 짧음(${root ? root.length : 0}자)`); continue }
   if (!/<h1[\s>]/.test(root)) bad(`${g.path}: 화면에 제목(H1) 없음`)
+  if (!root.startsWith('<!--email_off-->') || !root.endsWith('<!--/email_off-->')) bad(`${g.path}: 미리 찍은 화면이 email_off 로 감싸지지 않음(실제 도메인에서 이어받기 실패)`)
   if (/문제가 생겼습니다/.test(root)) bad(`${g.path}: 화면 오류 울타리가 찍힘(그리기 오류)`)
   const links = (root.match(/<a [^>]*href="\//g) || []).length
   if (g.indexable) {
