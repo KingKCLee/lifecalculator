@@ -29,7 +29,8 @@ const MOBILE_W = 390
 const PC_W = 1440
 
 const fail = (msg) => { console.error('\n[build-static] 실패: ' + msg + '\n'); process.exit(1) }
-const read = (f) => fs.readFileSync(f, 'utf8')
+/* 윈도 PC(git autocrlf)에서는 파일이 CRLF로 풀린다 → 읽는 즉시 LF로 통일해 표식 찾기가 환경과 무관하게 동작 */
+const read = (f) => fs.readFileSync(f, 'utf8').replace(/\r\n/g, '\n')
 const write = (f, s) => { fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, s) }
 
 if (!fs.existsSync(path.join(DIST, 'index.html'))) fail('dist/index.html 이 없습니다. 먼저 vite build 가 돌아야 합니다.')
@@ -102,7 +103,7 @@ for (const r of routes) {
   const file = outFile(r.path)
   if (r.path !== '/' && fs.existsSync(file)) fail(`${r.path} → ${path.relative(ROOT, file)} 가 이미 있습니다(public/ 의 정적 파일과 충돌). 주소를 확인하세요.`)
   write(file, html)
-  manifest.push({ path: r.path, file: path.relative(DIST, file), kind: r.meta.kind, indexable: !!r.meta.indexable, title: r.meta.title, description: r.meta.description, canonical: r.meta.canonical, bytes: Buffer.byteLength(html), moBytes: Buffer.byteLength(mo), pcBytes: Buffer.byteLength(pc) })
+  manifest.push({ path: r.path, file: path.relative(DIST, file).split(path.sep).join('/'), kind: r.meta.kind, indexable: !!r.meta.indexable, title: r.meta.title, description: r.meta.description, canonical: r.meta.canonical, bytes: Buffer.byteLength(html), moBytes: Buffer.byteLength(mo), pcBytes: Buffer.byteLength(pc) })
 }
 
 /* 없는 주소 → 404.html (Cloudflare Pages: 최상위 404.html 이 있으면 없는 주소에 404 상태코드로 이 문서를 보낸다) */

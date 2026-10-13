@@ -23,6 +23,9 @@ const man = JSON.parse(fs.readFileSync(MAN, 'utf8'))
 const gen = man.generated || []
 if (gen.length < 60) bad(`찍어낸 문서가 ${gen.length}개뿐입니다(60개 이상이어야 함).`)
 
+/* 윈도 PC에서 경로가 'reports\\01.html'로 기록되면 같은 문서가 사이트맵에 두 번 오른다(2026.10 사무실 PC 실측) */
+for (const g of gen) if (/\\/.test(g.file)) bad(`${g.path}: 장부 경로에 역슬래시 ${g.file}`)
+
 const titles = new Map()
 for (const g of gen) {
   const f = path.join(DIST, g.file)
