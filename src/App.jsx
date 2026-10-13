@@ -147,7 +147,7 @@ const CALC_SUBTITLE={
   cartax:"배기량별 세율 + 차령 감면 자동 적용",
   retire:"평균임금 × 근속연수 · 퇴직소득세 자동 계산",
   unemploy:"피보험기간/연령 기반 지급기간 자동 산정",
-  minwage:"2026년 시급 10,030원 · 월급/연봉 자동 환산",
+  minwage:"2026년 시급 10,320원 · 월급/연봉 자동 환산",
   deposit:"단리/복리 이자 + 이자소득세 자동 계산",
   convert:"전월세전환율 자동 적용 · 법정 상한 기준",
   datediff:"보유기간/신고기한/계약기간 자동 계산",
@@ -214,7 +214,7 @@ compare:{title:"매매 vs 증여 vs 상속 세금 비교 | 생활계산기",desc
 invest:{title:"부동산 투자수익 분석기 | 생활계산기",desc:"매수→보유→매도 전체 투자 수익률(IRR) 분석. 보유세, 대출이자, 양도세 반영. PRO 분석."},
 retire:{title:"퇴직금 계산기 - 예상 퇴직금 계산 | 생활계산기",desc:"근속연수별 퇴직금 자동 계산. 최근 3개월 평균임금 기준. 퇴직소득세 추정. 2026년 최신."},
 unemploy:{title:"실업급여 계산기 - 예상 수급액 확인 | 생활계산기",desc:"실업급여 일액·수급기간·총수령액 자동 계산. 퇴직 전 평균임금의 60%. 2026년 최저임금 기준 하한액 반영."},
-minwage:{title:"최저임금 계산기 2026 - 시급 월급 연봉 환산 | 생활계산기",desc:"2026년 최저임금 시급 10,030원 기준. 시급→월급→연봉 자동 환산. 주휴수당 포함 실수령액 계산."},
+minwage:{title:"최저임금 계산기 2026 - 시급 월급 연봉 환산 | 생활계산기",desc:"2026년 최저임금 시급 10,320원 기준. 시급→월급→연봉 자동 환산. 주휴수당 포함 실수령액 계산."},
 auction2:{title:"경매 적정입찰가 계산기 - 낙찰률 추정 | 생활계산기",desc:"부동산 경매 적정 입찰가 추정기. 감정가·지역·용도별 낙찰률 통계 반영. 과열 경쟁 방지 기준선 제시."},
 auctiondiv:{title:"경매 배당 분석 계산기 - 근저당 우선순위 | 생활계산기",desc:"경매 낙찰 후 배당표 간이 계산. 집행비용, 최우선변제, 근저당·임차인 우선순위별 배당액 시뮬레이션."},
 rti:{title:"RTI 계산기 - 임대수익 대비 이자상환 | 생활계산기",desc:"부동산 임대업 RTI(Rent To Interest) 계산. 연간 임대수입 대비 대출이자 비율. 은행 1.5배·비은행 1.25배 기준."},
@@ -266,7 +266,7 @@ pension:"국민연금,국민연금수령액,국민연금계산기,예상연금�
 cartax:"자동차세,자동차세계산기,자동차세연납,배기량세금,전기차자동차세,차령할인,자동차세납부,2026자동차세",
 retire:"퇴직금,퇴직금계산기,퇴직금계산,퇴직소득세,근속연수퇴직금,평균임금퇴직금,퇴직금정산,2026퇴직금",
 unemploy:"실업급여,실업급여계산기,실업급여수급액,구직급여,실업급여기간,실업급여조건,고용보험실업급여,2026실업급여",
-minwage:"최저임금,최저임금계산기,2026최저임금,시급계산,월급계산,주휴수당,최저시급,10030원",
+minwage:"최저임금,최저임금계산기,2026최저임금,시급계산,월급계산,주휴수당,최저시급,10320원",
 deposit:"예적금이자,예금이자계산기,적금이자계산기,세후이자,이자소득세,복리계산,단리계산,예금금리비교",
 convert:"전월세전환,전월세전환계산기,전세월세전환,전환율계산,법정전환율,보증금월세전환",
 yield:"임대수익률,임대수익률계산기,부동산수익률,월세수익률,전세수익률,투자수익률,순수익률,총수익률",
@@ -378,7 +378,7 @@ totalcost:`<h2>매수 총비용 시뮬레이터 가이드</h2><h3>숨겨진 비�
 compare:`<h2>매매 vs 증여 vs 상속 세금 비교</h2><h3>매매</h3><p>양도차익에 양도소득세 6~45%. 1주택 2년 보유 시 12억까지 비과세.</p><h3>증여</h3><p>증여세 10~50% + 취득세 3.5%(조정 12%). 10년 합산 과세.</p><h3>상속</h3><p>상속세 10~50%, 기초+일괄공제 10억(배우자 있으면 추가). 취득세 2.96%. 신고기한 6개월.</p>`,
 invest:`<h2>부동산 투자수익 분석 가이드</h2><h3>IRR(내부수익률)</h3><p>매수→보유→매도 전체 현금흐름의 연평균 수익률. 단순 수익률보다 시간가치 반영.</p><h3>포함 비용</h3><p>취득세, 보유세, 대출이자, 관리비, 매도 중개보수, 양도세. 모두 차감한 세후 수익이 실질 수익.</p><h3>레버리지 효과</h3><p>대출 비중이 높을수록 자기자본 수익률 증가하나 위험도 증가.</p>`,
 retire:`<h2>퇴직금 완벽 가이드</h2><h3>퇴직금 산정</h3><p>퇴직금 = 1일 평균임금 × 30일 × (근속일수 ÷ 365). 1년 이상 근무 시 지급 자격. 평균임금은 퇴직 직전 3개월 임금 총액 ÷ 총일수.</p><h3>평균임금 vs 통상임금</h3><p>상여금·성과급 포함 여부에 따라 달라지며, 평균임금이 더 유리한 경우가 많습니다.</p><h3>퇴직소득세</h3><p>분류과세로 일반 소득세와 합산하지 않음. 퇴직소득공제(40%) + 연분연승법 적용으로 세부담 경감.</p>`,
-minwage:`<h2>2026년 최저임금 완벽 가이드</h2><h3>최저임금이란?</h3><p>국가가 임금의 최저 수준을 정하여 사용자에게 이 수준 이상의 임금을 지급하도록 강제하는 제도입니다.</p><h3>2026년 최저임금</h3><p>시급 10,030원 (전년 대비 +1.7%). 월 환산(주 40시간, 월 209시간 기준) 2,096,270원.</p><h3>주휴수당</h3><p>주 15시간 이상 근무 시 1일 유급휴가(주휴수당) 지급. 주 5일 8시간 근무 시 8시간분 추가.</p><h3>위반 시 처벌</h3><p>최저임금 미만 지급 시 3년 이하 징역 또는 2천만원 이하 벌금.</p>`,
+minwage:`<h2>2026년 최저임금 완벽 가이드</h2><h3>최저임금이란?</h3><p>국가가 임금의 최저 수준을 정하여 사용자에게 이 수준 이상의 임금을 지급하도록 강제하는 제도입니다.</p><h3>2026년 최저임금</h3><p>시급 10,320원 (전년 대비 +2.9%). 월 환산(주 40시간, 월 209시간 기준) 2,156,880원.</p><h3>주휴수당</h3><p>주 15시간 이상 근무 시 1일 유급휴가(주휴수당) 지급. 주 5일 8시간 근무 시 8시간분 추가.</p><h3>위반 시 처벌</h3><p>최저임금 미만 지급 시 3년 이하 징역 또는 2천만원 이하 벌금.</p>`,
 unemploy:`<h2>실업급여 완벽 가이드</h2><h3>수급 자격</h3><p>고용보험 180일 이상 가입 + 비자발적 퇴직이 원칙. 자발적 퇴직은 원칙적 불가하나, 임금체불·중대질병 등 정당 사유 시 예외.</p><h3>수급액</h3><p>1일 = 퇴직 전 평균임금의 60%. 상한 66,000원/일, 하한 최저임금의 80%.</p><h3>수급 기간</h3><p>연령·가입기간에 따라 120~270일. 50세 미만 1~3년 가입 120일, 10년 이상 210일. 50세 이상 10년 이상 270일.</p>`,
 inherit:`<h2>상속세 완벽 가이드</h2><h3>이런 분들께 필요해요</h3><p>부모님의 재산 규모를 파악하고 상속세를 미리 계산하고 싶은 분, 배우자공제·일괄공제 등 어떤 공제가 적용되는지 확인하려는 분, 사전증여와 상속 중 어떤 방법이 유리한지 비교하려는 분.</p><h3>이 계산기로 해결되는 것</h3><p>상속재산 총액에서 채무·공과금을 차감하고, 기초공제(2억)+인적공제 또는 일괄공제(5억) 중 큰 금액, 배우자공제(5~30억), 금융재산공제를 자동 적용합니다. 과세표준에 10~50% 누진세율을 적용하고 신고세액공제(3%)까지 반영한 최종 납부세액을 산출합니다.</p><h3>계산 방법과 세율</h3><p>상속세율은 1억 이하 10%, 5억 이하 20%, 10억 이하 30%, 30억 이하 40%, 30억 초과 50%입니다. 배우자공제는 법정상속분 범위 내에서 5~30억원까지 적용됩니다. 기초공제(2억)+인적공제 합산이 5억 미만이면 일괄공제 5억원을 선택할 수 있습니다.</p><h3>이 계산기 200% 활용법</h3><p>배우자 유무에 따른 공제액 차이를 비교해보세요(배우자 있으면 최소 10억원 공제). 상속인 수와 자녀 인적공제(1인당 5천만원)를 정확히 입력하면 과세표준이 크게 달라집니다. 사전증여(10년 내 합산)가 유리한 구간도 확인할 수 있습니다.</p><h3>놓치면 손해보는 것들</h3><p>신고기한은 사망일이 속하는 달의 말일부터 6개월입니다. 기한 내 신고 시 3% 세액공제를 받습니다. 사망 전 10년 내 상속인에게, 5년 내 비상속인에게 증여한 재산은 상속재산에 합산됩니다. 배우자 상속공제를 최대로 받으려면 실제 배우자가 상속받는 금액이 법정상속분 이내여야 합니다.</p>`,
 bldvat:`<h2>건물 부가세 완벽 가이드</h2><h3>건물분 부가가치세란?</h3><p>부동산 매매 시 건물 부분에 대해 부과되는 부가가치세(10%)입니다. 매매가를 토지가와 건물가로 안분하여 건물가액에 대해서만 과세합니다. 매도인이 일반과세자인 경우 세금계산서 발급이 필요합니다.</p><h3>면세 대상</h3><p>전용면적 85㎡ 이하 국민주택규모 주택은 부가세가 면제됩니다. 토지 자체도 부가세 면세입니다. 따라서 주택(85㎡ 이하) 거래에서는 건물분 부가세가 발생하지 않습니다.</p><h3>계산 방법</h3><p>건물분 부가세 = (매매가 - 토지가) ÷ 1.1 × 0.1. 토지가 비율은 공시지가 기준으로 산정하며, 감정평가를 통해 정확한 안분이 가능합니다. 상가·오피스텔(업무용) 거래 시 반드시 확인이 필요합니다.</p>`,
@@ -3380,7 +3380,7 @@ function CalcRetire({isMo=false,onNav=()=>{}}){const[monthly,sM]=useState("");co
 /* 실업급여 */
 function CalcUnemploy({isMo=false,onNav=()=>{}}){const[age,sAge]=useState("30");const[years,sY]=useState("3");const[daily,sD]=useState("");
   const dailyW=parseInt(String(daily).replace(/,/g,""))||0;const ageV=parseInt(age),yV=parseInt(years);
-  const minWage2026=10030,minDaily=Math.round(minWage2026*8*0.8),maxDaily=66000;// 2026년 최저시급 10,030원 (고용노동부 고시)
+  const minWage2026=10320,minDaily=Math.round(minWage2026*8*0.8),maxDaily=66000;// 2026년 최저시급 10,320원 (고용노동부 고시)
   const calcDaily=dailyW>0?Math.min(Math.max(Math.round(dailyW*0.6),minDaily),maxDaily):0;
   let duration=120;if(ageV<50){if(yV>=10)duration=210;else if(yV>=5)duration=180;else if(yV>=3)duration=150;else if(yV>=1)duration=120;}else{if(yV>=10)duration=270;else if(yV>=5)duration=240;else if(yV>=3)duration=210;else if(yV>=1)duration=180;}
   const totalAmount=calcDaily*duration,monthlyAmount=Math.round(calcDaily*30);
@@ -3471,7 +3471,7 @@ function NextStep({calcId,onNav,isMo=false,host=false,row=false}){
   );
 }
 function CalcMinWage({isMo=false,onNav=()=>{}}){
-  const MIN_HOURLY=10030;
+  const MIN_HOURLY=10320;
   const[hours,setH]=useState("");const[days,setD]=useState("");const[customH,setCH]=useState("");
   const h=parseFloat(hours)||0,d=parseFloat(days)||0,w=4.345;
   const hourly=parseFloat(customH)||MIN_HOURLY;
@@ -3481,7 +3481,7 @@ function CalcMinWage({isMo=false,onNav=()=>{}}){
   return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}>
     <div>
       
-      <div style={{padding:"12px 16px",background:"#E6F1FB",borderRadius:10,marginBottom:16,fontSize:13,color:"#0747A6",fontWeight:600}}>2026년 최저임금: <strong>시급 {MIN_HOURLY.toLocaleString()}원</strong> <span style={{fontWeight:400,fontSize:11,color:"#6b778c"}}>(+1.7% / 매년 1월 자동 업데이트)</span></div>
+      <div style={{padding:"12px 16px",background:"#E6F1FB",borderRadius:10,marginBottom:16,fontSize:13,color:"#0747A6",fontWeight:600}}>2026년 최저임금: <strong>시급 {MIN_HOURLY.toLocaleString()}원</strong> <span style={{fontWeight:400,fontSize:11,color:"#6b778c"}}>(+2.9% / 매년 1월 자동 업데이트)</span></div>
       <Inp label="하루 근무시간" value={hours} onChange={setH} suffix="시간" placeholder="예: 8"/>
       <Inp label="주 근무일수" value={days} onChange={setD} suffix="일" placeholder="예: 5"/>
       <Inp label="직접 입력 시급 (선택)" value={customH} onChange={setCH} suffix="원" placeholder={"미입력 시 최저임금 "+MIN_HOURLY.toLocaleString()+"원 적용"}/>
@@ -3490,10 +3490,10 @@ function CalcMinWage({isMo=false,onNav=()=>{}}){
       {!hasPay&&<div style={{padding:"10px 14px",background:"#f4f5f7",borderRadius:10,fontSize:12,color:"#6b778c",marginTop:8}}>ℹ️ 주 15시간 미만 → 주휴수당 미적용</div>}
     </div>
     <div><RPFull miss={parseFloat(weeklyH)>0?null:MI.minwage} title="예상 급여"
-      deadline="※ 2026년 최저임금 시급 10,030원 (+1.7%) / 주 15시간↑ 주휴수당 의무"
+      deadline="※ 2026년 최저임금 시급 10,320원 (+2.9%) / 주 15시간↑ 주휴수당 의무"
       alertMsg={isVio?"최저임금 위반: 시급 "+MIN_HOURLY+"원 미달":hasPay?"주휴수당 포함 주 "+payH.toFixed(1)+"시간 가산":"주 15시간 미만: 주휴수당 미적용"}
       alertType={isVio?"danger":hasPay?"success":"info"}
-      total={monthly} sub={"시급 "+hourly.toLocaleString()+"원 기준"} items={[{l:"시급",v:hourly.toLocaleString()+"원",note:"2026년 10,030원"},{l:"일급 ("+h+"시간)",v:daily.toLocaleString()+"원"},{l:"주 근무시간",v:weeklyH+"시간"},{l:"주휴수당",v:hasPay?payH.toFixed(1)+"시간/주":"미적용"},{l:"주급 (주휴"+(hasPay?"포함":"미포함")+")",v:Math.round(hourly*totalWH).toLocaleString()+"원"},{l:"월급 (월 "+w+"주)",v:fW(monthly)},{l:"연봉 (월급×12)",v:fW(yearly)},{l:"월급 (주휴 미포함)",v:fW(Math.round(hourly*weeklyH*w)),note:"비교용"}]} nextStep={<NextStep calcId="minwage" onNav={onNav} isMo={isMo}/>}/>
+      total={monthly} sub={"시급 "+hourly.toLocaleString()+"원 기준"} items={[{l:"시급",v:hourly.toLocaleString()+"원",note:"2026년 10,320원"},{l:"일급 ("+h+"시간)",v:daily.toLocaleString()+"원"},{l:"주 근무시간",v:weeklyH+"시간"},{l:"주휴수당",v:hasPay?payH.toFixed(1)+"시간/주":"미적용"},{l:"주급 (주휴"+(hasPay?"포함":"미포함")+")",v:Math.round(hourly*totalWH).toLocaleString()+"원"},{l:"월급 (월 "+w+"주)",v:fW(monthly)},{l:"연봉 (월급×12)",v:fW(yearly)},{l:"월급 (주휴 미포함)",v:fW(Math.round(hourly*weeklyH*w)),note:"비교용"}]} nextStep={<NextStep calcId="minwage" onNav={onNav} isMo={isMo}/>}/>
     
     
     </div>
@@ -5163,7 +5163,7 @@ function LearnCalculatorGuide(){const _grid=(arr)=>(<div style={{display:"grid",
     {_grid([["중개보수","/중개보수계산기"],["등기비용","/등기비용계산기"],["법무사수수료","/법무사수수료계산기"],["인지세","/인지세계산기"],["채권할인료","/채권할인료계산기"],["감정평가수수료","/감정평가수수료계산기"]])}</_SS>
   <_SS><_SH2>생활 계산기</_SH2>
     {_grid([["연봉 실수령액","/연봉실수령액계산기"],["4대보험","/4대보험계산기"],["국민연금","/국민연금계산기"],["자동차세","/자동차세계산기"],["퇴직금","/퇴직금계산기"],["실업급여","/실업급여계산기"],["최저임금","/최저임금계산기"],["예적금이자","/예적금이자계산기"],["전월세전환","/전월세전환계산기"]])}
-    <_SCL><b>2026년 주요 지표</b> 최저임금 10,030원 · 전월세전환율 5.0% · 기준금리 3.0%</_SCL></_SS>
+    <_SCL><b>2026년 주요 지표</b> 최저임금 10,320원 · 전월세전환율 5.0% · 기준금리 3.0%</_SCL></_SS>
   <_SS><_SH2>부동산 계산기</_SH2>
     {_grid([["임대수익률","/임대수익률계산기"],["공동명의","/공동명의계산기"],["평수변환","/평수변환계산기"],["용적률·건폐율","/용적률계산기"],["경매비용","/경매비용계산기"],["리모델링 수익","/리모델링수익계산기"],["건물 잔존가치","/건물잔존가치계산기"]])}</_SS>
   <_SS><_SH2>PRO 분석</_SH2>
@@ -5204,7 +5204,7 @@ function LearnTaxHistory(){return(<>
     <ul style={_SW.ul}><li style={_SW.li}>수도권 주담대 한도 신설 (15억↓ 6억, 25억↓ 4억, 25억↑ 2억)</li><li style={_SW.li}>스트레스 DSR 2단계 전면 확대 (변동 +1.5%p)</li><li style={_SW.li}>생애최초 취득세 감면 연장 (2028.12.31까지)</li><li style={_SW.li}>기준금리 3.0%로 인하</li></ul>
     <_SBtn href="/LTV계산기">LTV</_SBtn><_SBtn href="/대출가능액계산기">대출가능액</_SBtn></_SS>
   <_SS><_SH2>2026 — 양도세 중과 복원 임박</_SH2><p style={_SW.p}>2026년은 한시 유예되었던 양도세 다주택 중과가 복원을 앞둔 해입니다.</p>
-    <ul style={_SW.ul}><li style={_SW.li}>기준금리 3.0% 유지 (2026.2.27 금통위)</li><li style={_SW.li}>최저임금 10,030원 (+1.7%)</li><li style={_SW.li}>전월세전환율 5.0% (기준금리+2%p)</li><li style={_SW.li}>DSR 은행 40%·비은행 50% 유지</li></ul>
+    <ul style={_SW.ul}><li style={_SW.li}>기준금리 3.0% 유지 (2026.2.27 금통위)</li><li style={_SW.li}>최저임금 10,320원 (+2.9%)</li><li style={_SW.li}>전월세전환율 5.0% (기준금리+2%p)</li><li style={_SW.li}>DSR 은행 40%·비은행 50% 유지</li></ul>
     <_SCL type="warn"><b>2026.5.9 만료 예정</b> 다주택자 양도세 중과 한시 유예 종료. 이후 2주택 +20%p, 3주택 +30%p 중과 복원</_SCL></_SS>
   <_SS><_SH2>향후 예정 개정사항</_SH2>
     <ul style={_SW.ul}><li style={_SW.li}><b>2026.5.9</b> — 다주택자 양도세 중과 유예 만료</li><li style={_SW.li}><b>2026 하반기</b> — 스트레스 DSR 3단계 시행 검토 (변동 +2.0%p)</li><li style={_SW.li}><b>2027</b> — 공시가격 현실화 로드맵 재검토 예정</li><li style={_SW.li}><b>2028.12.31</b> — 생애최초 취득세 감면 일몰</li><li style={_SW.li}><b>상시 검토</b> — 증여세 세율·공제 구조 개편 논의 중</li></ul></_SS>
@@ -5425,7 +5425,7 @@ function AboutPage({isMo,navigateHome}){return(<div style={{maxWidth:820,margin:
     <h3 style={_SW.h3}>검증 프로세스 (5단계)</h3>
     <ol style={_SW.ul}><li style={_SW.li}><b>자동 모니터링 (매일 01:00 KST)</b> — Cloudflare Worker로 12개 기관 크롤링</li><li style={_SW.li}><b>AI 1차 분석</b> — Claude 모델이 변경사항 영향도 평가</li><li style={_SW.li}><b>운영자 수동 검수</b> — 원문 법령·공식 사례 대조</li><li style={_SW.li}><b>계산 로직 업데이트</b> — staging 환경 회귀 테스트</li><li style={_SW.li}><b>배포 및 이력 공개</b> — Cloudflare Pages 자동 배포 + RSS 피드</li></ol></_SS>
   <_SS><_SH2>세법 반영 기준일</_SH2>
-    <_SCL type="ok"><b>현재 반영 기준: 2026년 4월 14일</b><br/>취득세·양도세·종부세·DSR 스트레스 3단계·2026년 최저임금 10,030원 등 최신 개정 사항이 모두 반영된 상태입니다.</_SCL>
+    <_SCL type="ok"><b>현재 반영 기준: 2026년 4월 14일</b><br/>취득세·양도세·종부세·DSR 스트레스 3단계·2026년 최저임금 10,320원 등 최신 개정 사항이 모두 반영된 상태입니다.</_SCL>
     <p style={_SW.p}>주요 반영 내용:</p>
     <ul style={_SW.ul}><li style={_SW.li}>양도세 다주택 중과 유예 (2026.5.9까지)</li><li style={_SW.li}>생애최초 취득세 감면 최대 200만원 (2028.12.31까지)</li><li style={_SW.li}>수도권 주담대 한도 규제 (15억↓ 6억 / 25억↓ 4억 / 25억↑ 2억)</li><li style={_SW.li}>스트레스 DSR (변동 +1.5%p, 혼합 +0.75%p)</li><li style={_SW.li}>한국은행 기준금리 3.0% (2026.2.27 결정)</li></ul></_SS>
   <_SS><_SH2>면책조항</_SH2>
@@ -6877,7 +6877,7 @@ body.lc-embed main{padding-top:0!important}
         <div style={{maxWidth:880,margin:"0 auto",textAlign:"center"}}>
           <span style={{display:"inline-flex",alignItems:"center",gap:8,background:"#fff",padding:"7px 16px",border:"1px solid #dbeafe",borderRadius:20,fontSize:13,fontWeight:700,color:"#3b82f6",marginBottom:24,boxShadow:"0 2px 8px rgba(59,130,246,0.08)"}}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
-            대한민국 NO.1 세금·부동산·재테크 계산기
+            2026년 최신 세법 반영 · 무료 계산기
           </span>
           <h1 style={{fontSize:52,fontWeight:800,color:"#0a1628",lineHeight:1.18,letterSpacing:-1.5,margin:"0 0 20px"}}>복잡한 세법·대출 규제,<br/><span style={{color:"#3b82f6"}}>10초 만에</span> 완벽 계산</h1>
           {(()=>{const _ht=[{l1:"취득세·양도세·DSR·연말정산까지",l2:CL.length+"가지 계산기를 2026년 최신 세법으로 무료 제공합니다"},{l1:"아파트 살 때 세금이 얼마인지 몰라 불안하셨나요?",l2:"주소만 입력하면 실거래가·공시가격이 자동으로 계산됩니다"},{l1:"DSR·LTV·대출한도, 내가 얼마나 빌릴 수 있을까요?",l2:"복잡한 대출 규제를 10초 만에 정확하게 계산해드립니다"},{l1:"임대수익률·투자수익·절세 전략까지",l2:"재테크 의사결정을 숫자로 명확하게 확인하세요"}];return(<><div style={{opacity:heroVisible?1:0,transition:"opacity 0.5s ease",minHeight:56,margin:"0 0 24px"}}><p style={{fontSize:17,color:"#505f79",margin:"0 0 6px",lineHeight:1.7}}>{_ht[heroIdx].l1}</p><p style={{fontSize:17,color:"#505f79",margin:0,lineHeight:1.7}}>{_ht[heroIdx].l2}</p></div><div style={{display:"flex",justifyContent:"center",gap:6,marginBottom:24}}>{_ht.map((_,i)=>(<div key={i} onClick={()=>{setHeroIdx(i);setHeroVisible(true);}} style={{width:i===heroIdx?20:6,height:6,borderRadius:3,background:i===heroIdx?"#3b82f6":"#c1c7cd",transition:"all 0.3s",cursor:"pointer"}}/>))}</div></>);})()}
@@ -7034,7 +7034,7 @@ body.lc-embed main{padding-top:0!important}
       {/* 2026.04.15 sample-home 통계 배너 (PC) */}
       {!isMo&&<div style={{background:"#0a1628",padding:"56px 32px"}}>
         <div style={{maxWidth:1200,margin:"0 auto",display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:24,textAlign:"center",color:"#fff"}}>
-          {[{num:String(CL.length),lbl:"가지 전문 계산기"},{num:"200만+",lbl:"월간 사용자"},{num:"2026",lbl:"최신 세법 반영"},{num:"98.2%",lbl:"홈택스 대비 정확도"}].map((s,i)=>(<div key={i}>
+          {[{num:String(CL.length),lbl:"가지 전문 계산기"},{num:"2026",lbl:"최신 세법 반영"},{num:"300+",lbl:"부동산 용어 해설"},{num:"0원",lbl:"모든 계산기 무료"}].map((s,i)=>(<div key={i}>
             <div style={{fontSize:40,fontWeight:800,color:"#3b82f6",letterSpacing:-1,lineHeight:1}}>{s.num}</div>
             <div style={{fontSize:13,opacity:0.8,marginTop:8,fontWeight:500}}>{s.lbl}</div>
           </div>))}
@@ -7198,7 +7198,7 @@ body.lc-embed main{padding-top:0!important}
             <LogoSVG size={36}/>
             <span style={{fontSize:24,fontWeight:800,color:"#fff",letterSpacing:-.3}}>생활계산기<span style={{color:"#60a5fa"}}>.com</span></span>
           </div>
-          <p style={{fontSize:13,opacity:0.7,lineHeight:1.7,margin:"0 0 16px",maxWidth:260}}>대한민국 NO.1 세금·부동산·재테크 계산기 플랫폼. 2026년 최신 세법을 반영한 {CL.length}가지 전문 계산기를 무료로 제공합니다.</p>
+          <p style={{fontSize:13,opacity:0.7,lineHeight:1.7,margin:"0 0 16px",maxWidth:260}}>세금·부동산·재테크 계산기 플랫폼. 2026년 최신 세법을 반영한 {CL.length}가지 전문 계산기를 무료로 제공합니다.</p>
         </div>
         <div>
           <h4 style={{fontSize:13,fontWeight:800,color:"#fff",margin:"0 0 16px"}}>서비스</h4>
