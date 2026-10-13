@@ -5794,8 +5794,10 @@ function GuidePage({isMo,navigateHome}){return(<div style={{maxWidth:860,margin:
     <_SCL><b>💡 가이드 신뢰 기준</b> 모든 내용은 <a href="/about" style={{color:"#0747A6"}}>생활계산기 검수 기준</a>을 따라 국세청·행안부·금융위 등 1차 출처에서 수집됩니다.</_SCL></_SS>
 </div>);}
 function CookieBanner({onPrivacy,isMo=false}){
-  const[show,setShow]=useState(false);
-  useEffect(()=>{try{if(!localStorage.getItem('cookie_consent'))setShow(true);}catch{}},[]);
+  /* 2026.10 미리 찍은 화면에 배너를 함께 넣고(처음 온 손님에게 첫 화면부터 보임), 이미 동의한 손님은 index.html 의
+   * 머리 스크립트가 html.lc-consented 를 붙여 CSS로 숨긴다 → 앱이 뜬 뒤 배너가 튀어나와 '가장 큰 글자' 시각을 늦추던 문제 제거 */
+  const[show,setShow]=useState(true);
+  useEffect(()=>{try{if(localStorage.getItem('cookie_consent'))setShow(false);}catch{}},[]);
   if(!show)return null;
   /* 2026.10 모바일: 화면의 16%를 덮어 입력칸을 가리던 2단 배너 → 낮은 한 줄 띠 */
   return(<div className="cookie-banner" role="region" aria-label="쿠키 안내" style={{position:"fixed",bottom:0,left:0,right:0,background:"#172B4D",color:"#fff",padding:isMo?"8px 12px calc(8px + env(safe-area-inset-bottom))":"16px 24px",zIndex:99999,display:"flex",justifyContent:"center",alignItems:"center",gap:isMo?10:16,flexWrap:isMo?"nowrap":"wrap"}}>

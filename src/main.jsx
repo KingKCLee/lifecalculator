@@ -30,11 +30,16 @@ function restorePreMount(snap) {
 
 const snap = rootEl.hasAttribute('data-ssr') ? capturePreMount() : null
 
-ReactDOM.createRoot(rootEl).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-)
+/* 2026.10 미리 찍힌 화면이 있으면 버리고 다시 그리지 않고 그대로 이어받는다(hydrate).
+ * 다시 그리면 화면 전체가 새로 만들어져 '가장 큰 글자가 뜬 시각(LCP)'이 앱 로딩 뒤로 밀린다. */
+const app = (<React.StrictMode><App /></React.StrictMode>)
+if (rootEl.hasAttribute('data-ssr') && rootEl.firstElementChild) {
+  ReactDOM.hydrateRoot(rootEl, app, {
+    onRecoverableError: (err) => { try { (window.__LC_HYDRATE_ERRS__ = window.__LC_HYDRATE_ERRS__ || []).push(String(err && err.message || err).slice(0, 200)) } catch { /* 무시 */ } },
+  })
+} else {
+  ReactDOM.createRoot(rootEl).render(app)
+}
 
 rootEl.removeAttribute('data-ssr')
 if (snap) requestAnimationFrame(() => requestAnimationFrame(() => restorePreMount(snap)))
