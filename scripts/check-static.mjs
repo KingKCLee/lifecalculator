@@ -59,6 +59,15 @@ for (const g of gen) {
   const home = path.join(DIST, 'index.html')
   if (fs.existsSync(home) && !/class="cookie-banner"/.test(fs.readFileSync(home, 'utf8'))) bad('index.html: 쿠키 배너가 미리 찍은 화면에 없음(앱 로딩 뒤 튀어나와 LCP 지연)')
 }
+/* ⑦ 2026.10 광고·통계 스크립트를 문서 머리에서 바로 부르면 화면 버벅임(TBT)의 약 75%가 생긴다(실측 0.77초→0.19초).
+ *    → 반드시 index.html 의 불러오기 장치(__lcLoad3p) 한 곳에서만, 화면이 뜬 뒤 부른다. 다른 곳에 <script src> 로 다시 넣으면 막는다. */
+for (const g of gen) {
+  const f = path.join(DIST, g.file)
+  if (!fs.existsSync(f)) continue
+  const h = fs.readFileSync(f, 'utf8').replace(/<!--[\s\S]*?-->/g, '')
+  if (/<script[^>]*\ssrc=["'][^"']*(googletagmanager|googlesyndication|fundingchoices)/i.test(h)) bad(`${g.path}: 광고·통계 스크립트를 문서에서 바로 부름(불러오기 장치 __lcLoad3p 로만)`)
+  if (!/window\.__lcLoad3p=go/.test(h)) bad(`${g.path}: 광고·통계 불러오기 장치(__lcLoad3p) 없음`)
+}
 const nf = path.join(DIST, '404.html')
 if (!fs.existsSync(nf) || !/noindex/.test(fs.readFileSync(nf, 'utf8'))) bad('404.html 없음 또는 noindex 아님')
 

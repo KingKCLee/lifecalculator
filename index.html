@@ -50,25 +50,28 @@
     button:not([disabled]):active{transform:scale(0.97) !important}
     </style>
     <script>try{if(localStorage.getItem('cookie_consent'))document.documentElement.classList.add('lc-consented')}catch(e){}</script>
-    <!-- Google AdSense (admin/auth 경로 제외) -->
+    <!-- 광고·통계 불러오기 (2026.10 한 곳에서만) — 화면이 다 뜬 뒤(또는 손님이 먼저 만지면 그때) 불러온다.
+         실측: 이 둘이 화면 버벅임(TBT)의 약 75%. 통계 기록 명령은 미리 줄 세워 두므로 불러오는 즉시 전송된다.
+         check-static 이 head 에 광고·통계 <script src> 가 다시 생기면 빌드를 막는다. -->
     <script>
+    window.dataLayer=window.dataLayer||[];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js',new Date());
+    gtag('config','G-58SYV64E1C');
     (function(){
-      var p=location.pathname+location.hash;
-      if(!/\/(admin|auth)\b/.test(p)){
-        var s=document.createElement('script');
-        s.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8857637137858335';
-        s.crossOrigin='anonymous';s.defer=true;
-        document.head.appendChild(s);
+      var DELAY=4000,done=false,ev=['pointerdown','keydown','touchstart','scroll'];
+      function add(src,co){var s=document.createElement('script');s.src=src;s.async=true;if(co)s.crossOrigin='anonymous';document.head.appendChild(s);}
+      function go(){
+        if(done)return;done=true;
+        ev.forEach(function(e){removeEventListener(e,go,{passive:true})});
+        add('https://www.googletagmanager.com/gtag/js?id=G-58SYV64E1C');
+        if(!/\/(admin|auth)\b/.test(location.pathname+location.hash))add('https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8857637137858335',1);
       }
+      window.__lcLoad3p=go;
+      ev.forEach(function(e){addEventListener(e,go,{passive:true})});
+      function later(){setTimeout(go,DELAY)}
+      if(document.readyState==='complete')later();else addEventListener('load',later);
     })();
-    </script>
-    <!-- Google Analytics 4 -->
-    <script defer src="https://www.googletagmanager.com/gtag/js?id=G-58SYV64E1C"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-58SYV64E1C');
     </script>
     <!-- Naver Analytics - 실제 ID로 교체 필요 -->
     <!--
@@ -121,15 +124,6 @@
     if(!wcs_add) var wcs_add={};
     wcs_add["wa"] = "여기에_네이버_분석_ID";
     if(window.wcs){ wcs.inflow("xn--989a00a691bdfa717h.com"); wcs_do(); }
-    </script>
-    -->
-    <!-- Google Analytics (GA4 측정 ID를 교체하세요)
-    <script defer src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-XXXXXXXXXX');
     </script>
     -->
   </head>
