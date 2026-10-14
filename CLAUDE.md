@@ -260,3 +260,5 @@ LTV: 무주택 70%, 생애최초 비규제 80%
 - `<style>{\`...\`}</style>` 금지 → `<style dangerouslySetInnerHTML={{__html:\`...\`}}/>` (서버 문서에서 규칙이 깨짐).
 - **'오늘' 날짜는 `useToday()`/`useTodayStr()`(src/calcs/_shared.jsx)로만.** 렌더 중 `new Date()`로 기본값·문구를 만들면 미리 찍은 화면(빌드한 날)과 손님 화면이 달라 이어받기(hydrate)가 깨진다. PR 전 `FAKE_NOW=<미래 시각> node scripts/check-hydrate.cjs <주소> scripts/hydrate-paths.json` 으로 확인.
 - 미리 찍은 모바일 화면은 `<!--email_off-->`로 감싼다(Cloudflare 이메일 숨김이 글자를 바꿔 이어받기 실패). check-static이 막는다.
+- **광고·통계 스크립트는 index.html의 불러오기 장치(`__lcLoad3p`) 한 곳에서만** 부른다(화면 뜬 뒤 4초 또는 첫 터치). `<script src>`로 직접 넣으면 check-static이 막는다.
+- **무거운 화면(계산기 파일·보고서·관리자·모달)은 `lazyPre('이름', () => import(...))`로 등록**(src/lazyPre.jsx). 빌드가 주소별 조각 이름을 `data-lc-mods`에 적고 main.jsx가 먼저 받은 뒤 이어받는다. 새 계산기 파일도 이 방식으로 등록.

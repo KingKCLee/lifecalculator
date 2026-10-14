@@ -34,7 +34,7 @@ for (const g of gen) {
   const title = (h.match(/<title>([^<]*)<\/title>/) || [])[1]
   const canon = (h.match(/<link rel="canonical" href="([^"]*)"/) || [])[1]
   const robots = (h.match(/<meta name="robots" content="([^"]*)"/) || [])[1] || ''
-  const root = (h.match(/<div id="root" data-ssr="mo">([\s\S]*?)<\/div>\s*<script type="application\/json" id="lc-ssr-pc">/) || [])[1]
+  const root = (h.match(/<div id="root" data-ssr="mo"(?: data-lc-mods="[^"]*")?>([\s\S]*?)<\/div>\s*<script type="application\/json" id="lc-ssr-pc">/) || [])[1]
   if ((h.match(/<title>/g) || []).length !== 1) bad(`${g.path}: <title> 개수 ${(h.match(/<title>/g) || []).length}`)
   if (!title || title !== g.title) bad(`${g.path}: 제목 불일치 (${title})`)
   if (!root || root.length < 2000) { bad(`${g.path}: 미리 찍은 화면이 비었거나 너무 짧음(${root ? root.length : 0}자)`); continue }
@@ -58,6 +58,34 @@ for (const g of gen) {
   if (!/hydrateRoot\(/.test(mainSrc)) bad('src/main.jsx: 미리 찍은 화면을 이어받지 않음(hydrateRoot 없음)')
   const home = path.join(DIST, 'index.html')
   if (fs.existsSync(home) && !/class="cookie-banner"/.test(fs.readFileSync(home, 'utf8'))) bad('index.html: 쿠키 배너가 미리 찍은 화면에 없음(앱 로딩 뒤 튀어나와 LCP 지연)')
+}
+/* ⑦ 2026.10 광고·통계 스크립트를 문서 머리에서 바로 부르면 화면 버벅임(TBT)의 약 75%가 생긴다(실측 0.77초→0.19초).
+ *    → 반드시 index.html 의 불러오기 장치(__lcLoad3p) 한 곳에서만, 화면이 뜬 뒤 부른다. 다른 곳에 <script src> 로 다시 넣으면 막는다. */
+for (const g of gen) {
+  const f = path.join(DIST, g.file)
+  if (!fs.existsSync(f)) continue
+  const h = fs.readFileSync(f, 'utf8').replace(/<!--[\s\S]*?-->/g, '')
+  if (/<script[^>]*\ssrc=["'][^"']*(googletagmanager|googlesyndication|fundingchoices)/i.test(h)) bad(`${g.path}: 광고·통계 스크립트를 문서에서 바로 부름(불러오기 장치 __lcLoad3p 로만)`)
+  if (!/window\.__lcLoad3p=go/.test(h)) bad(`${g.path}: 광고·통계 불러오기 장치(__lcLoad3p) 없음`)
+}
+/* ⑧ 2026.10 나눠 싣기(src/lazyPre.jsx): 화면에 나눠 실은 조각이 그려졌는데 문서에 그 이름(data-lc-mods)이 없으면
+ *    앱이 조각을 받기 전에 이어받다가 깨진다. 이름이 실제 등록된 조각인지도 본다. */
+{
+  const appSrc = fs.readFileSync(path.join(ROOT, 'src', 'App.jsx'), 'utf8')
+  const known = new Set([...appSrc.matchAll(/lazyPre\('([^']+)'/g)].map((m) => m[1]))
+  if (known.size < 10) bad(`App.jsx: 나눠 싣기 등록이 ${known.size}개뿐(장치가 빠졌는지 확인)`)
+  if (!/preloadNamed\(/.test(fs.readFileSync(path.join(ROOT, 'src', 'main.jsx'), 'utf8'))) bad('src/main.jsx: 조각을 먼저 받는 단계(preloadNamed) 없음')
+  for (const g of [...gen, { path: '/404', file: '404.html' }]) {
+    const f = path.join(DIST, g.file)
+    if (!fs.existsSync(f)) continue
+    const h = fs.readFileSync(f, 'utf8')
+    const open = h.match(/<div id="root" data-ssr="mo"([^>]*)>/)
+    if (!open) continue
+    const mods = ((open[1].match(/data-lc-mods="([^"]*)"/) || [])[1] || '').split(',').filter(Boolean)
+    const marks = (h.match(/<!--\$-->/g) || []).length
+    if (marks && !mods.length) bad(`${g.path}: 나눠 실은 조각이 화면에 있는데 data-lc-mods 없음`)
+    for (const m of mods) if (!known.has(m)) bad(`${g.path}: data-lc-mods 의 '${m}' 는 등록되지 않은 조각`)
+  }
 }
 const nf = path.join(DIST, '404.html')
 if (!fs.existsSync(nf) || !/noindex/.test(fs.readFileSync(nf, 'utf8'))) bad('404.html 없음 또는 noindex 아님')
