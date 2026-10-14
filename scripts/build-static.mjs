@@ -146,6 +146,11 @@ const finalUrlPath = (rel) => {
 }
 /* 검색에 내보내지 않을 정적 파일(시안·시험·인증·관리용) */
 const NOINDEX_STATIC = [/^sample-/, /^test-/, /^offline\.html$/, /^google-site-verification\.html$/, /^admin\//, /^community\/write\.html$/, /^terms\/search\.html$/]
+/* 2026.10 정적 페이지(가이드·법령·용어 등 public/ 의 HTML)에도 통계를 단다 — index.html 의 불러오기 장치를 그대로 복사(원천 한 곳).
+ * 광고는 대표님 결정 전까지 끈다(__LC_NO_ADS). 머리(</head>)가 없는 인증 파일 등은 건드리지 않는다. */
+const LOADER = (template.match(/<!--LC:3P:START-->[\s\S]*?<!--LC:3P:END-->/) || [])[0]
+if (!LOADER || !/window\.__lcLoad3p=go/.test(LOADER)) fail('index.html 의 <!--LC:3P:START--> ~ <!--LC:3P:END--> 불러오기 장치를 찾지 못했습니다.')
+let gaAdded = 0
 const staticPages = []
 let canonFixed = 0
 let noindexAdded = 0
@@ -172,8 +177,13 @@ for (const full of walk(DIST)) {
     const robots = (html.match(/<meta[^>]+name=["']robots["'][^>]*content=["']([^"']*)["']/i) || [])[1] || ''
     if (!/noindex/i.test(robots)) staticPages.push({ rel, url })
   }
+  if (/<\/head>/i.test(html) && !/window\.__lcLoad3p=go/.test(html)) {
+    html = html.replace(/<\/head>/i, () => `<script>window.__LC_NO_ADS=1</script>\n${LOADER}\n</head>`)
+    gaAdded++
+  }
   if (html !== before) fs.writeFileSync(full, html)
 }
+console.log(`[build-static]    정적 페이지 통계 장치 추가 ${gaAdded}건`)
 
 /* 용어사전 목록(/terms/): 지금까지는 용어 이름만 보여 주고 각 용어 페이지로 가는 링크가 하나도 없었다.
  * ① 스크립트가 돌기 전에도 링크가 문서에 있도록 미리 채우고 ② 스크립트가 그리는 목록의 용어 이름에도 링크를 건다.
