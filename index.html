@@ -21,7 +21,7 @@
         img,svg,table,canvas{max-width:100%!important}
         input,select{max-width:100%!important;font-size:16px!important;min-height:52px!important;height:auto!important;line-height:1.4!important;padding:14px 16px!important}
         select{overflow:visible!important;-webkit-appearance:none!important;appearance:none!important;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23505f79' d='M6 8L1 3h10z'/%3E%3C/svg%3E")!important;background-repeat:no-repeat!important;background-position:right 16px center!important;background-color:#fff!important;padding-right:40px!important}
-        input[type="range"]{min-height:auto!important;padding:0!important}
+        input[type="range"]{min-height:auto!important;padding:0!important;height:40px!important}
         input[type="checkbox"],input[type="radio"]{min-height:auto!important;padding:0!important}
         .hero-grid{display:flex!important;flex-direction:column!important;gap:24px!important}
         .popular-grid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:10px!important}
@@ -42,6 +42,13 @@
         .radio-grid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:6px!important}
         .radio-grid>div,.radio-grid button,.radio-grid label{min-height:48px!important;line-height:1.3!important;padding:10px 6px!important;overflow:visible!important;white-space:normal!important;word-break:keep-all!important;height:auto!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:13px!important;text-align:center!important}
         
+        /* 2026.10 손가락 기준(휴대폰): 누르는 칸 44px 이상 — 작게 그려지는 링크·버튼에 className="lc-tap" 을 붙인다 */
+        .lc-tap{min-height:44px!important;min-width:44px;display:inline-flex!important;align-items:center}
+        /* 길안내 줄은 글자 간격을 그대로 두고 누르는 범위만 좌우로 넓힌다("홈" 뒤가 벌어지지 않게) */
+        nav .lc-tap{min-width:0;position:relative}
+        nav .lc-tap::after{content:"";position:absolute;top:0;bottom:0;left:-16px;right:-16px}
+        /* 2026.10 글자 12px 미만 금지(휴대폰) — 코드에 박힌 9~11px 를 여기 한 곳에서 12px 로 올린다(실측 1,142개 전부 인라인). 서버가 그린 화면은 "font-size:10px"(띄어쓰기 없음), 앱이 그린 화면은 "font-size: 10px" — 둘 다 적는다 */
+        #root [style*="font-size:9px"],#root [style*="font-size: 9px"],#root [style*="font-size:9.5px"],#root [style*="font-size: 9.5px"],#root [style*="font-size:10px"],#root [style*="font-size: 10px"],#root [style*="font-size:10.5px"],#root [style*="font-size: 10.5px"],#root [style*="font-size:11px"],#root [style*="font-size: 11px"],#root [style*="font-size:11.5px"],#root [style*="font-size: 11.5px"]{font-size:12px!important}
         .econ-calendar{display:none!important}
         .recent-calc{display:none!important}
       }

@@ -262,3 +262,4 @@ LTV: 무주택 70%, 생애최초 비규제 80%
 - 미리 찍은 모바일 화면은 `<!--email_off-->`로 감싼다(Cloudflare 이메일 숨김이 글자를 바꿔 이어받기 실패). check-static이 막는다.
 - **광고·통계 스크립트는 index.html의 불러오기 장치(`__lcLoad3p`) 한 곳에서만** 부른다(화면 뜬 뒤 4초 또는 첫 터치). `<script src>`로 직접 넣으면 check-static이 막는다.
 - **무거운 화면(계산기 파일·보고서·관리자·모달)은 `lazyPre('이름', () => import(...))`로 등록**(src/lazyPre.jsx). 빌드가 주소별 조각 이름을 `data-lc-mods`에 적고 main.jsx가 먼저 받은 뒤 이어받는다. 새 계산기 파일도 이 방식으로 등록.
+- **휴대폰 글자 12px·누르는 칸 44px.** 9~11px 인라인 글자는 index.html 휴대폰 규칙이 12px로 올린다(클래스 CSS는 직접 12px 이상). 작게 그려지는 링크·버튼엔 `className="lc-tap"`. PR 전 `node scripts/check-ux.cjs <주소> scripts/hydrate-paths.json` 통과 필수(글자 0, 칸 60 이하).
