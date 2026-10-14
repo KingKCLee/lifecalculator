@@ -21,6 +21,8 @@ import react from '@vitejs/plugin-react'
 import fs from 'node:fs'
 import path from 'node:path'
 import { pathToFileURL, fileURLToPath } from 'node:url'
+/* 2026.10 미리 찍는 화면의 '오늘'을 한국 날짜로 (빌드 서버는 UTC라 아침 9시 전엔 어제 날짜가 찍힘) */
+process.env.TZ = 'Asia/Seoul'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const DIST = path.join(ROOT, 'dist')

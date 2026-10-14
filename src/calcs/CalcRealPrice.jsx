@@ -1,4 +1,5 @@
 import React, {useState, useEffect, useMemo, useCallback} from 'react';
+import {useToday} from './_shared';
 import {P, fW, CalcShell} from './_shared';
 
 const WORKER = 'https://lc-realestate-worker.noble-kclee.workers.dev/api/real-price';
@@ -20,8 +21,11 @@ export default function CalcRealPrice({isMo=false, onNav=()=>{}}){
   const [sido, setSido]       = useState('서울특별시');
   const [sigungu, setSigungu] = useState('강남구');
   const [dong, setDong]       = useState('');
-  const [year, setYear]       = useState(String(nowYM().y));
-  const [month, setMonth]     = useState(String(nowYM().m));
+  // 2026.10 이번 달은 앱이 뜬 뒤 정한다(미리 찍은 화면과 날짜가 달라 이어받기가 깨지는 것 방지)
+  const today = useToday();
+  const [year, setYear]       = useState('');
+  const [month, setMonth]     = useState('');
+  useEffect(()=>{ if(today){ setYear(v=>v||String(nowYM().y)); setMonth(v=>v||String(nowYM().m)); } },[today]);
   const [deals, setDeals]     = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError]     = useState('');
@@ -72,7 +76,7 @@ export default function CalcRealPrice({isMo=false, onNav=()=>{}}){
   },[lawdCd, year, month, dong]);
 
   // 시군구/연월 변경 시 자동 조회
-  useEffect(()=>{ if(lawd&&lawdCd) fetchDeals(); },[lawdCd, year, month]);
+  useEffect(()=>{ if(lawd&&lawdCd&&year&&month) fetchDeals(); },[lawdCd, year, month]);
   // 동 변경은 클라이언트 필터링만
   const displayDeals = useMemo(()=>{
     let list = dong ? deals.filter(d=>(d.dong||'').includes(dong.replace(/[0-9동]+$/,'').trim()||dong)) : deals;
@@ -94,9 +98,10 @@ export default function CalcRealPrice({isMo=false, onNav=()=>{}}){
 
   // 연도 목록 (현재년도 기준 3년)
   const yearList = useMemo(()=>{
-    const cur = new Date().getFullYear();
+    if(!today) return year?[+year,+year-1,+year-2]:[];
+    const cur = today.getFullYear();
     return [cur, cur-1, cur-2];
-  },[]);
+  },[today]);
   const monthList = [1,2,3,4,5,6,7,8,9,10,11,12];
 
   const selStyle = {padding:'8px 12px',border:'1.5px solid #dfe1e6',borderRadius:8,fontSize:13,background:'#fff',color:P.tx,outline:'none',fontFamily:'inherit',cursor:'pointer',height:38};

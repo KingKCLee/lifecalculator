@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {Inp, Tog, RP, CalcShell, MI} from "./_shared";
+import React, {useState, useEffect} from 'react';
+import {Inp, Tog, RP, CalcShell, MI, useToday} from "./_shared";
 
 // 날짜 간격 계산기 (부동산 계약·전입·보유기간 계산용)
 // 두 날짜 간 일수, 개월, 년수 및 D-day
@@ -20,10 +20,10 @@ function fmt(d){
 
 export default function CalcDateDiff({isMo=false, onNav=()=>{}}){
   const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState(()=>{
-    const t=new Date();
-    return t.getFullYear()+String(t.getMonth()+1).padStart(2,"0")+String(t.getDate()).padStart(2,"0");
-  });
+  const today = useToday();
+  const [endDate, setEndDate] = useState("");
+  // 오늘 날짜는 앱이 뜬 뒤 한 번만 채운다(손님이 먼저 적었으면 그대로 둔다)
+  useEffect(()=>{ if(today) setEndDate(v=>v||today.getFullYear()+String(today.getMonth()+1).padStart(2,"0")+String(today.getDate()).padStart(2,"0")); },[today]);
   const [mode, setMode] = useState("between");
   const s = parseDate(startDate);
   const e = parseDate(endDate);
@@ -39,8 +39,7 @@ export default function CalcDateDiff({isMo=false, onNav=()=>{}}){
     years = ys;
     months = ys*12 + mo;
   }
-  const today = new Date();
-  const dday = e ? Math.ceil((e-new Date(today.getFullYear(),today.getMonth(),today.getDate()))/(1000*60*60*24)) : 0;
+  const dday = e && today ? Math.ceil((e-new Date(today.getFullYear(),today.getMonth(),today.getDate()))/(1000*60*60*24)) : 0;
 
   return(<CalcShell title="날짜 계산기" isMo={isMo}>
     <Tog label="모드" value={mode} onChange={setMode} options={[{value:"between",label:"두 날짜 간격"},{value:"dday",label:"D-day 카운트"}]}/>

@@ -28,6 +28,21 @@ export const pTx = (base, brackets) => {
   return tax;
 };
 
+/* 2026.10 '오늘' 날짜는 앱이 뜬 뒤에만 정한다.
+ * 미리 찍은 화면(빌드한 날)과 손님이 보는 날이 다르면 화면 이어받기가 깨진다(실측: 날짜계산기, 하루 지나 #425).
+ * 처음 그릴 때는 null, 화면을 이어받은 직후 실제 오늘로 바뀐다. 오늘이 필요한 계산기는 이 훅 하나만 쓴다. */
+export function useToday(){
+  const [t, setT] = useState(null);
+  useEffect(() => { setT(new Date()); }, []);
+  return t;
+}
+
+/* 오늘 날짜를 YYYYMMDD 글자로. 앱이 뜨기 전에는 "" (입력칸 기본값용 — 미리 찍은 화면의 날짜가 그대로 남는 것 방지) */
+export function useTodayStr(){
+  const t = useToday();
+  return t ? t.getFullYear()+String(t.getMonth()+1).padStart(2,"0")+String(t.getDate()).padStart(2,"0") : "";
+}
+
 export function useIsMobile(){
   const [isMo, setIsMo] = useState(() => typeof window!=="undefined" && window.innerWidth<=768);
   useEffect(() => {

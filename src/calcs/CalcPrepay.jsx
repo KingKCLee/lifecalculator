@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {tW, pN, fW, Inp, RP, CalcShell} from "./_shared";
+import React, {useState, useEffect} from 'react';
+import {tW, pN, fW, Inp, RP, CalcShell, useTodayStr} from "./_shared";
 
 // 중도상환수수료 (2026.10 신설)
 // 수수료 = 상환금액 × 수수료율 × (면제기간 중 남은 일수 ÷ 면제기간 전체 일수) — 일반적인 잔존기간 비례 방식
@@ -10,7 +10,9 @@ export default function CalcPrepay({isMo=false}){
   const [amt, setAmt] = useState("");
   const [rate, setRate] = useState("");
   const [start, setStart] = useState("");
-  const [repay, setRepay] = useState(todayStr);
+  const todayS = useTodayStr();
+  const [repay, setRepay] = useState("");
+  useEffect(()=>{ if(todayS) setRepay(v=>v||todayS); },[todayS]); // 오늘은 앱이 뜬 뒤 채움
   const [yrs, setYrs] = useState("3");
   const A=tW(amt), r=pN(rate)/100, s=toDate(start), p=toDate(repay), Y=pN(yrs)||3;
   let total=0, remain=0, fee=0;

@@ -64,8 +64,9 @@ const SEASONS = [
 
 const DEFAULT_CALCS = ['acquisition', 'transfer', 'dsr', 'commission', 'netsalary', 'compre', 'yield', 'retire'];
 
-export function getCurrentSeason() {
-  const now = new Date();
+// 2026.10 now 를 받는다. 앱이 뜨기 전(null)에는 계절 없이 기본 목록 — 미리 찍은 화면과 날짜가 달라 이어받기가 깨지는 것 방지
+export function getCurrentSeason(now) {
+  if (!now) return { season: null, calcs: DEFAULT_CALCS, banner: null };
   const m = now.getMonth() + 1;
   const d = now.getDate();
   const y = now.getFullYear();
