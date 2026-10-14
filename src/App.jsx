@@ -1501,7 +1501,7 @@ function RP({title,total,sub,items,isExample=false,deadline,deadlineLink,deadlin
     {/* 2026.04.15 MiniChart 제거 */}
     {deadline&&<div style={{background:"rgba(255,255,255,0.10)",borderRadius:10,padding:"10px 14px",marginTop:14,fontSize:11,lineHeight:1.55,display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
       <span><IconCal c="#fff"/></span><span style={{opacity:.88,flex:"1 1 auto",minWidth:0}}>{deadline}</span>
-      {deadlineLink&&<a href={deadlineLink} target="_blank" rel="noopener noreferrer" style={{color:"#FFC400",fontWeight:700,textDecoration:"none"}}>{deadlineLinkLabel||"바로가기 →"}</a>}
+      {deadlineLink&&<a className="lc-tap" href={deadlineLink} target="_blank" rel="noopener noreferrer" style={{color:"#FFC400",fontWeight:700,textDecoration:"none"}}>{deadlineLinkLabel||"바로가기 →"}</a>}
     </div>}
     {/* Unified action buttons: PDF / 이미지 / CSV / 링크 */}
     <div className="result-actions" style={{display:"flex",flexWrap:"wrap",gap:6,marginTop:14}}>
@@ -1586,7 +1586,7 @@ function RPFull({title,total,sub,items,isExample=false,deadline,deadlineLink,dea
     {/* [4] 납부기한 (deadline) */}
     {deadline&&<div style={{background:"rgba(255,255,255,0.10)",borderRadius:10,padding:"10px 14px",marginTop:14,fontSize:11,lineHeight:1.55,display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
       <span><IconCal c="#fff"/></span><span style={{opacity:.88,flex:"1 1 auto",minWidth:0}}>{deadline}</span>
-      {deadlineLink&&<a href={deadlineLink} target="_blank" rel="noopener noreferrer" style={{color:"#FFC400",fontWeight:700,textDecoration:"none"}}>{deadlineLinkLabel||"바로가기 →"}</a>}
+      {deadlineLink&&<a className="lc-tap" href={deadlineLink} target="_blank" rel="noopener noreferrer" style={{color:"#FFC400",fontWeight:700,textDecoration:"none"}}>{deadlineLinkLabel||"바로가기 →"}</a>}
     </div>}
     {/* [5] 버튼: sample-calc 권장 구조 — PC 2행 그리드 (출력 4개 / AI·공유 3개), 모바일은 flex-wrap */}
     {(() => {
@@ -4615,7 +4615,7 @@ function InfoHub({isMo,navigateHome}){
           <h2 style={{fontSize:18,fontWeight:700,color:"#0a1628",margin:0}}>📰 실시간 뉴스</h2>
           <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
             {["all","policy","tax","loan","market"].map(c=>(
-              <button key={c} onClick={()=>setNewsCat(c)} style={{padding:"6px 12px",borderRadius:16,border:"none",background:newsCat===c?"#0747A6":"#F3F4F6",color:newsCat===c?"#fff":"#374151",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>
+              <button key={c} className="lc-tap" onClick={()=>setNewsCat(c)} style={{padding:"6px 12px",borderRadius:16,border:"none",background:newsCat===c?"#0747A6":"#F3F4F6",color:newsCat===c?"#fff":"#374151",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>
                 {({all:"전체",policy:"정책",tax:"세금",loan:"대출",market:"시장"})[c]}
               </button>
             ))}
@@ -4986,7 +4986,7 @@ function MyPage({user,lcToken,lcEmail,onBack,onLogout,onLcLogout}){
   },[tab,lcToken]);
   const tabs=[{id:"profile",label:"프로필"},{id:"history",label:"계산 기록"},{id:"favorites",label:"즐겨찾기"},{id:"saved",label:"저장된 계산"},{id:"notif",label:"알림 설정"}];
   return(<div style={{maxWidth:800,margin:"0 auto",padding:"40px 24px",minHeight:"80vh"}}>
-    <button onClick={onBack} style={{display:"flex",alignItems:"center",gap:8,background:"none",border:"none",color:"#0747A6",fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit",marginBottom:24,padding:0}}>← 홈으로</button>
+    <button className="lc-tap" onClick={onBack} style={{display:"flex",alignItems:"center",gap:8,background:"none",border:"none",color:"#0747A6",fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit",marginBottom:24,padding:0}}>← 홈으로</button>
     <div style={{display:"flex",alignItems:"center",gap:16,marginBottom:32}}>
       {user.user_metadata?.avatar_url?(<img src={user.user_metadata.avatar_url} style={{width:56,height:56,borderRadius:"50%",objectFit:"cover"}} alt=""/>):(<div style={{width:56,height:56,borderRadius:"50%",background:"#0747A6",display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,color:"#fff",fontWeight:700}}>{(user.user_metadata?.full_name||user.email||"U")[0].toUpperCase()}</div>)}
       <div><div style={{fontSize:20,fontWeight:800,color:"#172B4D"}}>{user.user_metadata?.full_name||"사용자"}</div><div style={{fontSize:13,color:"#6b778c"}}>{user.email}</div></div>
@@ -5010,7 +5010,7 @@ function MyPage({user,lcToken,lcEmail,onBack,onLogout,onLcLogout}){
 function LegalPage({type,onBack}){
   const data=LEGAL_CONTENT[type]||LEGAL_CONTENT["disclaimer"];
   return(<div style={{maxWidth:800,margin:"0 auto",padding:"40px 24px",minHeight:"60vh"}}>
-    <button onClick={onBack} style={{display:"flex",alignItems:"center",gap:8,background:"none",border:"none",color:"#0747A6",fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit",marginBottom:24,padding:0}}>← 홈으로 돌아가기</button>
+    <button className="lc-tap" onClick={onBack} style={{display:"flex",alignItems:"center",gap:8,background:"none",border:"none",color:"#0747A6",fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit",marginBottom:24,padding:0}}>← 홈으로 돌아가기</button>
     <h1 style={{fontSize:28,fontWeight:800,color:"#172B4D",marginBottom:8}}>{data.title}</h1>
     <p style={{fontSize:13,color:"#6b778c",marginBottom:32}}>최종 업데이트: 2026년 4월 6일 | 생활계산기.com</p>
     <div style={{background:"#fff",borderRadius:16,border:"1px solid #dfe1e6",padding:"32px 28px",fontSize:14,color:"#172B4D",lineHeight:1.9}}>{data.body}</div>
@@ -5049,7 +5049,7 @@ function InfoPageHeader({tab,navigateHome,isMo=false}){
   );
 }
 
-function SpaBackBtn({navigateHome}){return(<button onClick={navigateHome} style={{display:"flex",alignItems:"center",gap:8,background:"none",border:"none",color:"#0747A6",fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit",marginBottom:16,padding:0}}>← 홈</button>);}
+function SpaBackBtn({navigateHome}){return(<button className="lc-tap" onClick={navigateHome} style={{display:"flex",alignItems:"center",gap:8,background:"none",border:"none",color:"#0747A6",fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit",marginBottom:16,padding:0}}>← 홈</button>);}
 const _spaExtract=o=>Array.isArray(o)?o:(o?.items||o?.data||o?.news||o?.articles||o?.posts||o?.policies||[]);
 
 function NewsPage({isMo,navigateHome}){
@@ -7318,9 +7318,9 @@ body.lc-embed main{padding-top:0!important}
       {isMo?(<div style={{padding:"8px 0",background:"#fff"}}>
         <div style={{padding:"4px 16px 8px"}}>
           <nav aria-label="현재 위치" style={{fontSize:12,color:P.mt,display:"flex",alignItems:"center",gap:6}}>
-            <A href="/" onGo={navigateHome} style={{color:"#0747A6",fontWeight:600,display:"inline-flex",alignItems:"center",minHeight:36}}>홈</A>
+            <A className="lc-tap" href="/" onGo={navigateHome} style={{color:"#0747A6",fontWeight:600,display:"inline-flex",alignItems:"center",minHeight:36}}>홈</A>
             <span style={{color:"#c1c7cd"}}>›</span>
-            <A href={"/#cat-"+cat} onGo={()=>goHomeSection("cat-"+cat)} style={{color:"#0747A6",fontWeight:600,display:"inline-flex",alignItems:"center",minHeight:36}}>{catInfo?.l} 계산기</A>
+            <A className="lc-tap" href={"/#cat-"+cat} onGo={()=>goHomeSection("cat-"+cat)} style={{color:"#0747A6",fontWeight:600,display:"inline-flex",alignItems:"center",minHeight:36}}>{catInfo?.l} 계산기</A>
           </nav>
           <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:8}}>
             <h1 style={{fontSize:24,fontWeight:800,color:P.tx,margin:"2px 0 0",letterSpacing:-.8,lineHeight:1.3,wordBreak:"keep-all"}}>{SITE.calcName(calc)||(catInfo?.l+" 계산기")}</h1>

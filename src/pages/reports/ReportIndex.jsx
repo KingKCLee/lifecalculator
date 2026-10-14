@@ -88,7 +88,7 @@ export function ReportLayout({id, title, tag, date, toc, children, relatedCalcId
               <div style={{fontSize:11,fontWeight:700,color:PALETTE.textMt,marginBottom:8,letterSpacing:"0.5px",textTransform:"uppercase"}}>목차</div>
               <ol style={{margin:0,paddingLeft:20}}>
                 {toc.map((t,i)=>(<li key={i} style={{fontSize:13,marginBottom:5,lineHeight:1.6}}>
-                  <a href={"#"+t.id} style={{color:PALETTE.accent,textDecoration:"none"}}>{t.label}</a>
+                  <a className="lc-tap" href={"#"+t.id} style={{color:PALETTE.accent,textDecoration:"none"}}>{t.label}</a>
                 </li>))}
               </ol>
             </nav>
@@ -158,7 +158,7 @@ export function ReportLayout({id, title, tag, date, toc, children, relatedCalcId
         .rpt .hl.red{background:#fef2f2;border-left-color:#ef4444}
         .rpt .hl b{display:block;margin-bottom:4px;color:#0f1f3d}
         .rpt .summary{background:linear-gradient(135deg,#eff6ff 0%,#dbeafe 100%);border:1px solid #bfdbfe;border-radius:12px;padding:20px 24px;margin:0 0 24px}
-        .rpt .summary .label{font-size:11px;font-weight:700;color:#1e40af;letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px}
+        .rpt .summary .label{font-size:12px;font-weight:700;color:#1e40af;letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px}
         .rpt .summary h3{margin-top:0}
         .rpt section{padding-top:8px;margin-bottom:24px;scroll-margin-top:20px}
       `}}/>

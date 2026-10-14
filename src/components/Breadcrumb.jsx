@@ -113,8 +113,8 @@ export default function Breadcrumb({ pageName, category, categoryHref, onCategor
   if (isMo) {
     return (
       <nav aria-label="breadcrumb" style={{ fontSize: 12, color: '#505f79', padding: '12px 0 4px', display: 'flex', alignItems: 'center', gap: 6, overflow: 'hidden', whiteSpace: 'nowrap' }}>
-        <a href="/" onClick={go(navigateHome)} style={{ cursor: 'pointer', color: '#0747A6', fontWeight: 600, flexShrink: 0, textDecoration: 'none' }}>홈</a>
-        {cat && <><span style={{ color: '#d1d5db' }}>›</span>{categoryHref ? <a href={categoryHref} onClick={go(onCategory)} style={{ color: '#0747A6', flexShrink: 0, textDecoration: 'none' }}>{cat}</a> : <span style={{ color: '#505f79', flexShrink: 0 }}>{cat}</span>}</>}
+        <a className="lc-tap" href="/" onClick={go(navigateHome)} style={{ cursor: 'pointer', color: '#0747A6', fontWeight: 600, flexShrink: 0, textDecoration: 'none' }}>홈</a>
+        {cat && <><span style={{ color: '#d1d5db' }}>›</span>{categoryHref ? <a className="lc-tap" href={categoryHref} onClick={go(onCategory)} style={{ color: '#0747A6', flexShrink: 0, textDecoration: 'none' }}>{cat}</a> : <span style={{ color: '#505f79', flexShrink: 0 }}>{cat}</span>}</>}
         <span style={{ color: '#d1d5db' }}>›</span>
         <span style={{ color: '#0a1628', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis' }}>{name}</span>
       </nav>
