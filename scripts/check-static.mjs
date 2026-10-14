@@ -61,10 +61,14 @@ for (const g of gen) {
 }
 /* ⑦ 2026.10 광고·통계 스크립트를 문서 머리에서 바로 부르면 화면 버벅임(TBT)의 약 75%가 생긴다(실측 0.77초→0.19초).
  *    → 반드시 index.html 의 불러오기 장치(__lcLoad3p) 한 곳에서만, 화면이 뜬 뒤 부른다. 다른 곳에 <script src> 로 다시 넣으면 막는다. */
-for (const g of gen) {
-  const f = path.join(DIST, g.file)
-  if (!fs.existsSync(f)) continue
-  const h = fs.readFileSync(f, 'utf8').replace(/<!--[\s\S]*?-->/g, '')
+/*    2026.10 정적 페이지(public/ 의 HTML)도 같은 장치로 통계를 단다 — 머리(</head>)가 있는 모든 문서가 대상. */
+const allHtml = (function walk(dir, acc = []) { for (const n of fs.readdirSync(dir)) { const f = path.join(dir, n); if (fs.statSync(f).isDirectory()) { if (n !== 'assets') walk(f, acc) } else if (n.endsWith('.html')) acc.push(f) } return acc })(DIST)
+if (allHtml.length < 300) bad(`문서 ${allHtml.length}개뿐(정적 페이지 포함 300개 이상이어야 함)`)
+for (const f of allHtml) {
+  const g = { path: '/' + path.relative(DIST, f).split(path.sep).join('/') }
+  const raw = fs.readFileSync(f, 'utf8')
+  if (!/<\/head>/i.test(raw)) continue
+  const h = raw.replace(/<!--[\s\S]*?-->/g, '')
   if (/<script[^>]*\ssrc=["'][^"']*(googletagmanager|googlesyndication|fundingchoices)/i.test(h)) bad(`${g.path}: 광고·통계 스크립트를 문서에서 바로 부름(불러오기 장치 __lcLoad3p 로만)`)
   if (!/window\.__lcLoad3p=go/.test(h)) bad(`${g.path}: 광고·통계 불러오기 장치(__lcLoad3p) 없음`)
 }
