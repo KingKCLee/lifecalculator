@@ -3,7 +3,7 @@
 // 실측으로 잡은 결함: 날짜계산기(하루 지남), 홈 계절 배너(월 바뀜), 실거래가 조회(해 바뀜), 날짜 입력칸 기본값(빌드 날짜 잔존)
 const { chromium } = require('playwright'); const fs=require('fs');
 const [base, pathsFile] = process.argv.slice(2); const PATHS=JSON.parse(fs.readFileSync(pathsFile,'utf8'));
-const LOCAL=/localhost/.test(base);
+const LOCAL=/localhost|127\.0\.0\.1/.test(base); // 2026.10: 127.0.0.1 을 못 알아봐 전 페이지 '교체됨' 오판(프록시가 405)
 (async()=>{const opts={headless:true}; if(LOCAL) opts.args=['--proxy-server='+process.env.HTTPS_PROXY]; else opts.proxy={server:process.env.HTTPS_PROXY};
 const b=await chromium.launch(opts); const out={};
 for(const dev of [{k:'pc',vp:{width:1440,height:900},m:false},{k:'mo',vp:{width:390,height:844},m:true},{k:'tab',vp:{width:1024,height:800},m:false}]){

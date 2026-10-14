@@ -68,6 +68,8 @@ await build({
 const app = await import(pathToFileURL(path.join(SSR_OUT, 'entry-static.mjs')).href)
 const { SITE, headTags, render } = app
 if (!SITE || !headTags || !render) fail('entry-static 에서 SITE/headTags/render 를 찾지 못했습니다.')
+if (!app.preloadAll || !app.collectStart || !app.collectTake) fail('entry-static 에서 나눠 싣기 함수(preloadAll/collectStart/collectTake)를 찾지 못했습니다.')
+await app.preloadAll() // 나눠 실은 조각을 전부 받아 두어야 빌드 화면이 비지 않는다
 ORIGIN_HOST = new URL(app.ORIGIN).host
 
 /* ── 3. 주소별 문서 찍기 ────────────────────────────────────────────────────── */
@@ -87,11 +89,12 @@ function draw(pathname, width) {
   setEnv(pathname, width)
   try { return render() } catch (e) { fail(`${pathname} (폭 ${width}) 화면을 그리는 중 오류: ${e && e.stack ? e.stack.split('\n').slice(0, 5).join('\n') : e}`) }
 }
-function compose(meta, moHtml, pcHtml) {
+/* mods: 이 주소 화면에 쓰인 나눠 실은 조각 이름 — main.jsx 가 이것부터 받은 뒤 이어받는다(src/lazyPre.jsx) */
+function compose(meta, moHtml, pcHtml, mods = []) {
   let html = template.replace(SEO_RE, () => `<!--SEO:START-->\n    ${headTags(meta)}\n    <!--SEO:END-->`)
   const body = moHtml == null
     ? '<div id="root"></div>'
-    : `<div id="root" data-ssr="mo"><!--email_off-->${moHtml}<!--/email_off--></div>\n    <script type="application/json" id="lc-ssr-pc">${JSON.stringify(pcHtml).replace(/</g, '\\u003c')}</script>\n    ${SWAP}`
+    : `<div id="root" data-ssr="mo"${mods.length ? ` data-lc-mods="${mods.join(',')}"` : ''}><!--email_off-->${moHtml}<!--/email_off--></div>\n    <script type="application/json" id="lc-ssr-pc">${JSON.stringify(pcHtml).replace(/</g, '\\u003c')}</script>\n    ${SWAP}`
   html = html.replace(ROOT_MARK, () => body)
   return html
 }
@@ -101,9 +104,11 @@ console.log('[build-static] 2/5 주소별 화면을 그리는 중…')
 const routes = SITE.prerenderRoutes()
 const manifest = []
 for (const r of routes) {
+  app.collectStart()
   const mo = draw(r.path, MOBILE_W)
   const pc = draw(r.path, PC_W)
-  const html = compose(r.meta, mo, pc)
+  const mods = app.collectTake()
+  const html = compose(r.meta, mo, pc, mods)
   const file = outFile(r.path)
   if (r.path !== '/' && fs.existsSync(file)) fail(`${r.path} → ${path.relative(ROOT, file)} 가 이미 있습니다(public/ 의 정적 파일과 충돌). 주소를 확인하세요.`)
   write(file, html)
@@ -114,7 +119,9 @@ for (const r of routes) {
 {
   const p = '/__lc_not_found__'
   const meta = SITE.metaForPath(p)
-  write(path.join(DIST, '404.html'), compose(meta, draw(p, MOBILE_W), draw(p, PC_W)))
+  app.collectStart()
+  const mo = draw(p, MOBILE_W), pc = draw(p, PC_W)
+  write(path.join(DIST, '404.html'), compose(meta, mo, pc, app.collectTake()))
 }
 /* 로그인·콜백 등 앱 전용 주소 → 빈 뼈대(색인 제외). 앱이 뜬 뒤 스스로 처리한다. */
 const APP_ONLY = ['/mypage', '/auth/callback', '/auth/naver/callback', '/auth/kakao/callback', '/auth/naver/result', '/auth/kakao/result', '/admin/callback']
