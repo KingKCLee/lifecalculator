@@ -2580,7 +2580,7 @@ imputedrent: `<div style="display:flex;flex-direction:column;gap:16px;">
 <span style="font-size:18px;font-weight:500;color:#172B4D;">핵심 기준</span>
 </div>
 <div style="padding:20px 28px;display:flex;flex-direction:column;gap:8px;">
-<div style="font-size:16px;color:#505f79;line-height:1.9;"><p>간주임대료 = (보증금 합계 - 3억) × 60% × 정기예금이자율(약 3.5%). 소형주택(40㎡↓+기준시가 2억↓) 주택수 제외.</p></div>
+<div style="font-size:16px;color:#505f79;line-height:1.9;"><p>간주임대료 = (보증금 합계 - 3억) × 60% × 정기예금이자율(연 3.1%). 소형주택(40㎡↓+기준시가 2억↓) 주택수 제외.</p></div>
 </div>
 </div>
 <div style="background:#fff;border:0.5px solid #dfe1e6;border-radius:12px;overflow:hidden;">
