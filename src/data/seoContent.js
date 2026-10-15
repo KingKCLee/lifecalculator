@@ -165,7 +165,7 @@ property: `<div style="display:flex;flex-direction:column;gap:16px;">
 <span style="font-size:18px;font-weight:500;color:#172B4D;">이 계산기로 해결되는 것</span>
 </div>
 <div style="padding:20px 28px;display:flex;flex-direction:column;gap:8px;">
-<div style="font-size:16px;color:#505f79;line-height:1.9;"><p>공시가격과 부동산 유형을 입력하면 <b>재산세 본세, 도시지역분, 지방교육세, 지역자원시설세가 자동 합산</b>됩니다. 1주택 특례 공정시장가액비율(43~45%)과 세부담 상한(105~130%)도 자동 적용됩니다. 7월·9월 분납 금액도 분리 표시합니다.</p></div>
+<div style="font-size:16px;color:#505f79;line-height:1.9;"><p>공시가격과 부동산 유형을 입력하면 <b>재산세 본세, 도시지역분, 지방교육세, 지역자원시설세가 자동 합산</b>됩니다. 1주택 특례 공정시장가액비율(43~45%)과 특례세율, 과세표준상한(전년도+5%)도 자동 적용됩니다. 7월·9월 분납 금액도 분리 표시합니다.</p></div>
 </div>
 </div>
 <div style="background:#fff;border:0.5px solid #dfe1e6;border-radius:12px;overflow:hidden;">
@@ -174,7 +174,7 @@ property: `<div style="display:flex;flex-direction:column;gap:16px;">
 <span style="font-size:18px;font-weight:500;color:#172B4D;">2026년 핵심 세율과 계산법</span>
 </div>
 <div style="padding:20px 28px;display:flex;flex-direction:column;gap:8px;">
-<div style="font-size:16px;color:#505f79;line-height:1.9;"><p><b>과세표준</b> = 공시가격 × 공정시장가액비율(주택 60%, 1주택 특례 43~45%). <b>주택 세율:</b> 6천만↓ 0.1%, 1.5억↓ 0.15%, 3억↓ 0.25%, 3억↑ 0.4%. <b>도시지역분:</b> 과세표준 × 0.14%. <b>지방교육세:</b> 재산세 × 20%. <b>세부담 상한:</b> 공시가 3억↓ 105%, 6억↓ 110%, 6억↑ 130%.</p></div>
+<div style="font-size:16px;color:#505f79;line-height:1.9;"><p><b>과세표준</b> = 공시가격 × 공정시장가액비율(주택 60%, 1주택 특례 43~45%). <b>주택 세율:</b> 6천만↓ 0.1%, 1.5억↓ 0.15%, 3억↓ 0.25%, 3억↑ 0.4%. <b>도시지역분:</b> 과세표준 × 0.14%. <b>지방교육세:</b> 재산세 × 20%. <b>특례세율:</b> 9억 이하 1세대1주택 0.05~0.35%. <b>과세표준상한:</b> 전년도 과세표준 상당액+당해 과세표준×5%.</p></div>
 </div>
 </div>
 <div style="background:#fff;border:0.5px solid #dfe1e6;border-radius:12px;overflow:hidden;">
@@ -183,7 +183,7 @@ property: `<div style="display:flex;flex-direction:column;gap:16px;">
 <span style="font-size:18px;font-weight:500;color:#172B4D;">계산기 200% 활용법</span>
 </div>
 <div style="padding:20px 28px;display:flex;flex-direction:column;gap:8px;">
-<div style="font-size:16px;color:#505f79;line-height:1.9;"><p>📍 주소조회로 공시가격을 자동 입력하세요. '1세대 1주택 특례' 토글로 공정시장가액비율 차이를 비교해보세요. 전년도 재산세액을 입력하면 <b>세부담 상한이 자동 적용</b>되어 실제 납부세액을 정확히 확인할 수 있습니다.</p></div>
+<div style="font-size:16px;color:#505f79;line-height:1.9;"><p>📍 주소조회로 공시가격을 자동 입력하세요. '1세대 1주택 특례' 토글로 공정시장가액비율 차이를 비교해보세요. 전년도 공시가격을 입력하면 <b>과세표준상한(전년도 과세표준 상당액+5%)이 자동 적용</b>되어 실제 납부세액을 정확히 확인할 수 있습니다.</p></div>
 </div>
 </div>
 <div style="background:#fff;border:0.5px solid #dfe1e6;border-radius:12px;overflow:hidden;">
@@ -2580,7 +2580,7 @@ imputedrent: `<div style="display:flex;flex-direction:column;gap:16px;">
 <span style="font-size:18px;font-weight:500;color:#172B4D;">핵심 기준</span>
 </div>
 <div style="padding:20px 28px;display:flex;flex-direction:column;gap:8px;">
-<div style="font-size:16px;color:#505f79;line-height:1.9;"><p>간주임대료 = (보증금 합계 - 3억) × 60% × 정기예금이자율(약 3.5%). 소형주택(40㎡↓+기준시가 2억↓) 주택수 제외.</p></div>
+<div style="font-size:16px;color:#505f79;line-height:1.9;"><p>간주임대료 = (보증금 합계 - 3억) × 60% × 정기예금이자율(연 3.1%). 소형주택(40㎡↓+기준시가 2억↓) 주택수 제외.</p></div>
 </div>
 </div>
 <div style="background:#fff;border:0.5px solid #dfe1e6;border-radius:12px;overflow:hidden;">
@@ -2619,7 +2619,7 @@ jeonseins: `<div style="display:flex;flex-direction:column;gap:16px;">
 <span style="font-size:18px;font-weight:500;color:#172B4D;">핵심 기준</span>
 </div>
 <div style="padding:20px 28px;display:flex;flex-direction:column;gap:8px;">
-<div style="font-size:16px;color:#505f79;line-height:1.9;"><p>HUG: 연 0.115~0.154%. HF(한국주택금융공사): 연 0.02~0.04%. 아파트는 HF가 저렴, 다세대·오피스텔은 HUG.</p></div>
+<div style="font-size:16px;color:#505f79;line-height:1.9;"><p>HUG: 보증금 구간·주택유형·부채비율별 연 0.097~0.211%. HF(한국주택금융공사): 연 0.02~0.04%. 아파트는 HF가 저렴, 다세대·오피스텔은 HUG.</p></div>
 </div>
 </div>
 <div style="background:#fff;border:0.5px solid #dfe1e6;border-radius:12px;overflow:hidden;">
