@@ -75,6 +75,7 @@ import { getCurrentSeason } from './utils/seasonCalc';
 import { calcCommission } from './logic/commission.js';
 import { calcStamp } from './logic/stamp.js';
 import { calcAcquisition } from './logic/acquisition.js';
+import { calcRegistration } from './logic/registration.js';
 import Breadcrumb from './components/Breadcrumb';
 // 2026.10 주소·검색용 정보 단일 원천
 import { createSite, applyHead } from './data/siteMeta';
@@ -3113,19 +3114,13 @@ function CalcTerms({isMo=false,onNav=()=>{}}){
 
 /* 등기비용 */
 function CalcReg({isMo=false,onNav=()=>{}}){const[tx,sTx]=useState("sale");const[propType,sPT]=useState("house");const[p,sP]=useState("");const[loan,sLoan]=useState("");const pW=tW(p),loanW=tW(loan);const _regErr=!p||p==="0";
-  const acqR=tx==="sale"?0.01:tx==="gift"?0.035:0.028;const acqTax=Math.round(pW*acqR);const acqEdu=Math.round(acqTax*0.1);const acqFarm=acqR>=0.08?Math.round(pW*0.002):0;const acqTotal=acqTax+acqEdu+acqFarm;
-  let bondRate=0;if(propType==="house"){if(pW>6e8)bondRate=0.035;else if(pW>5.5e8)bondRate=0.021;else if(pW>2.2e8)bondRate=0.016;else if(pW>1.6e8)bondRate=0.015;else if(pW>5e7)bondRate=0.013;}else{if(pW>10e8)bondRate=0.035;else if(pW>5e8)bondRate=0.016;else if(pW>1e8)bondRate=0.014;else if(pW>5e7)bondRate=0.012;}const bondAmt=Math.round(pW*bondRate);const bondCost=Math.round(bondAmt*0.045);
-  let stamp=0;if(pW>30e8)stamp=500000;else if(pW>10e8)stamp=350000;else if(pW>1e8)stamp=150000;
-  const court=15000;
-  let legal=pW<=1e8?160000:pW<=3e8?220000:pW<=5e8?310000:pW<=1e9?420000:600000;const legalVat=Math.round(legal*0.1);const legalTotal=legal+legalVat+50000+30000;
-  const mortBond=loanW>0?loanW*1.2:0;const mortReg=Math.round(mortBond*0.002);const mortEdu=Math.round(mortReg*0.2);const mortTotal=mortReg+mortEdu;
-  const total=acqTotal+bondCost+stamp+court+legalTotal+mortTotal;
+  const{acqR,acqTax,acqEdu,acqFarm,acqTotal,bondRate,bondAmt,bondCost,stamp,court,legal,legalVat,legalTotal,mortTotal,mortReg,mortEdu,total}=calcRegistration({tx,propType,pW,loanW});
   return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}><div><Tog label="거래 유형" value={tx} onChange={sTx} options={[{value:"sale",label:"매매"},{value:"gift",label:"증여"},{value:"inherit",label:"상속"}]}/><Tog label="부동산 유형" value={propType} onChange={sPT} options={[{value:"house",label:"주택"},{value:"land",label:"토지·상가·건물"}]}/><Inp label="부동산 가액" value={p} onChange={sP} suffix="만원" placeholder="예: 90000" error={_regErr}/><Inp label="대출금액 (설정등기용)" value={loan} onChange={sLoan} suffix="만원" placeholder="없으면 0" note="채권최고액 = 대출액 × 120%"/></div><div><RPFull miss={pW>0?null:MI.registration} title="등기비용 통합"
       deadline="등기 신청: 잔금일로부터 60일 이내 (미이행 시 과태료)"
       deadlineLink="https://iros.go.kr" deadlineLinkLabel="인터넷등기소 →"
       alertMsg={pW>=10e8?"고가 부동산: 법무사 선임 권장":loanW>0?"설정등기(근저당) 비용 별도 포함됨":null}
       alertType="info"
-      total={total} sub={"총 "+fW(total)+" (취득세 포함)"} items={[{l:"부동산 가액",v:fW(pW)},{l:"▼ 취득세 합계",v:fW(acqTotal),note:"세금 파트"},{l:"  취득세 ("+(acqR*100).toFixed(1)+"%)",v:fW(acqTax),note:"지방세법 §11"},{l:"  지방교육세",v:fW(acqEdu)}].concat(acqFarm>0?[{l:"  농어촌특별세",v:fW(acqFarm)}]:[]).concat([{l:"▼ 채권할인료",v:fW(bondCost),note:"할인율 4.5% 적용"},{l:"  매입률 "+fP(bondRate*100),v:"매입액 "+fW(bondAmt)},{l:"  실부담 (매입액×4.5%)",v:fW(bondCost)},{l:"인지세",v:fW(stamp),note:"인지세법 §3"},{l:"법원수수료",v:fW(court)},{l:"▼ 법무사 보수 합계",v:fW(legalTotal),note:"VAT·경비 포함"},{l:"  기본 보수",v:fW(legal)},{l:"  VAT (10%)",v:fW(legalVat)},{l:"  교통비·서류",v:fW(80000)}]).concat(loanW>0?[{l:"▼ 설정등기 (근저당)",v:fW(mortTotal),note:"채권최고액 = 대출×120%"},{l:"  등록면허세 (0.2%)",v:fW(mortReg),note:"지방세법 §28"},{l:"  지방교육세",v:fW(mortEdu)}]:[]).concat([{l:"※ 매수가 대비 총비용",v:pW>0?fP(total/pW*100):"0%",note:"세금+등기+법무사"}])} nextStep={<NextStep calcId="registration" onNav={onNav} isMo={isMo}/>}/></div></div>);}
+      total={total} sub={"총 "+fW(total)+" (취득세 포함)"} items={[{l:"부동산 가액",v:fW(pW)},{l:"▼ 취득세 합계",v:fW(acqTotal),note:"세금 파트"},{l:"  취득세 ("+(acqR*100).toFixed(2).replace(/0$/,"")+"%)",v:fW(acqTax),note:"지방세법 §11"},{l:"  지방교육세",v:fW(acqEdu)}].concat(acqFarm>0?[{l:"  농어촌특별세",v:fW(acqFarm)}]:[]).concat([{l:"▼ 채권할인료",v:fW(bondCost),note:"할인율 4.5% 적용"},{l:"  매입률 "+fP(bondRate*100),v:"매입액 "+fW(bondAmt),note:propType==="house"?"서울·광역시 주택 기준":undefined},{l:"  실부담 (매입액×4.5%)",v:fW(bondCost)},{l:"인지세",v:fW(stamp),note:"인지세법 §3"},{l:"법원수수료",v:fW(court)},{l:"▼ 법무사 보수 합계",v:fW(legalTotal),note:"VAT·경비 포함"},{l:"  기본 보수",v:fW(legal)},{l:"  VAT (10%)",v:fW(legalVat)},{l:"  교통비·서류",v:fW(80000)}]).concat(loanW>0?[{l:"▼ 설정등기 (근저당)",v:fW(mortTotal),note:"채권최고액 = 대출×120%"},{l:"  등록면허세 (0.2%)",v:fW(mortReg),note:"지방세법 §28"},{l:"  지방교육세",v:fW(mortEdu)}]:[]).concat([{l:"※ 매수가 대비 총비용",v:pW>0?fP(total/pW*100):"0%",note:"세금+등기+법무사"}])} nextStep={<NextStep calcId="registration" onNav={onNav} isMo={isMo}/>}/></div></div>);}
 
 /* 법무사수수료 */
 function CalcLegal({isMo=false,onNav=()=>{}}){const[tx,sTx]=useState("sale");const[p,sP]=useState("");const pW=tW(p);
