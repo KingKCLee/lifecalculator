@@ -22,7 +22,9 @@ export function lazyPre(name, load, exportName = 'default') {
   if (REG.has(name)) throw new Error('lazyPre 이름 중복: ' + name)
   let mod = null
   let pending = null
-  const get = () => pending || (pending = load().then((m) => { mod = m[exportName]; if (!mod) throw new Error('lazyPre 내보내기 없음: ' + name); return mod }))
+  // 2026.10 실측: 드물게 조각 받기가 한 번 실패하면 이어받기 중 화면이 깜빡였다(#421, 336회 중 1회) → 실패 시 한 번 더 받는다.
+  const attempt = () => load().then((m) => { mod = m[exportName]; if (!mod) throw new Error('lazyPre 내보내기 없음: ' + name); return mod })
+  const get = () => pending || (pending = attempt().catch(() => attempt()).catch((e) => { pending = null; throw e }))
   function Inner(props) {
     if (!mod) throw get()
     if (rendered) rendered.add(name)

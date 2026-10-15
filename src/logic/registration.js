@@ -25,7 +25,7 @@ export function calcRegistration({tx,propType,pW,loanW}){
     bondAmt=Math.round(pW*bondRate);
   }
   const bondCost=Math.round(bondAmt*0.045);
-  const stamp=stampDutyBase(pW);
+  const stamp=stampDutyBase(pW,propType==="house"?"house":"other");
   const court=15000;
   const legal=pW<=1e8?160000:pW<=3e8?220000:pW<=5e8?310000:pW<=1e9?420000:600000;
   const legalVat=Math.round(legal*0.1);const legalTotal=legal+legalVat+50000+30000;
