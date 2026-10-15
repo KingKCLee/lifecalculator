@@ -1,20 +1,18 @@
 import React, {useState, useMemo, useEffect} from 'react';
 import {P, Sel, Tog, CalcShell, useToday} from './_shared';
+import {toLunar, LUCKY_LUNAR_DAYS} from '../logic/lunar.js';
 
 // 손없는 날 달력 (음력 기반)
 // 전통적으로 "손"(귀신)이 없는 날은 음력 끝자리 9, 0일.
 // 통용: 음력 9, 19, 29일. (사용자 지정)
 // 이사·개업·결혼 등 택일에 선호.
-// Intl.DateTimeFormat의 'chinese' 캘린더를 이용해 양력→음력 일자 변환.
+// 양력→음력 변환은 src/logic/lunar.js (Intl 'dangi' 한국 음력 + 한국표준시, 천문법 제5조·한국천문연구원 기준).
 
-const LUCKY_DAYS = [9, 19, 29];
+const LUCKY_DAYS = LUCKY_LUNAR_DAYS;
 const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];
 
-const lunarFmt = typeof Intl!=="undefined" ? new Intl.DateTimeFormat('en-u-ca-chinese', {day:'numeric'}) : null;
-
 function getLunarDay(date){
-  if(!lunarFmt) return 0;
-  try { return parseInt(lunarFmt.format(date)) || 0; }
+  try { const l = toLunar(date.getFullYear(), date.getMonth()+1, date.getDate()); return l ? l.d : 0; }
   catch(e){ return 0; }
 }
 
