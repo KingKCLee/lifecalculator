@@ -76,6 +76,7 @@ import { calcCommission } from './logic/commission.js';
 import { calcStamp } from './logic/stamp.js';
 import { calcAcquisition } from './logic/acquisition.js';
 import { calcRegistration } from './logic/registration.js';
+import { calcProperty } from './logic/property.js';
 import Breadcrumb from './components/Breadcrumb';
 // 2026.10 주소·검색용 정보 단일 원천
 import { createSite, applyHead } from './data/siteMeta';
@@ -458,7 +459,7 @@ gift:`<h2>증여세 완벽 가이드</h2><h3>이런 분들께 필요해요</h3><
 pension:`<h2>국민연금 수령액 완벽 가이드</h2><h3>수령 조건</h3><p>국민연금 최소 가입기간은 10년(120개월)입니다. 10년 미만이면 일시금으로 반환받고, 10년 이상이면 월 연금으로 수령합니다.</p><h3>수령 시작 연령</h3><p>1969년생 이후는 만 65세부터 정상 수령합니다. 60세부터 조기수령이 가능하지만 연 6%씩 감액되어 최대 30% 감액(60세 수령 시). 반대로 70세까지 연기하면 연 7.2%씩 가산되어 최대 36% 증액됩니다.</p><h3>기준소득월액 상한</h3><p>2026년 기준 국민연금 기준소득월액 상한은 637만원입니다. 월급이 637만원을 초과해도 637만원까지만 보험료가 부과되며, 연금액도 이를 기준으로 산정됩니다.</p><h3>연금액 산정 구조</h3><p>기본연금액 = 1.2 × (A + B) × 소득대체율 × (가입기간/40). A는 전체 가입자 평균소득월액(2026년 약 283만원), B는 본인 가입기간 평균 기준소득월액. 2026년 소득대체율은 40%입니다.</p><h3>연금액 높이는 방법</h3><p>1) 추후납부(추납)로 경력단절 기간 보험료 소급 납부 → 가입기간 증가 2) 임의가입·임의계속가입 활용 3) 연기연금 신청으로 최대 36% 가산 4) 기준소득 상한까지 납부.</p>`,
 cartax:`<h2>자동차세 완벽 가이드</h2><h3>자동차세 산정 기준</h3><p>자동차세는 배기량(cc) 기준으로 과세되는 지방세입니다. 매년 6월(1기분), 12월(2기분) 연 2회 납부하며, 지방교육세 30%가 별도 부과됩니다.</p><h3>2026년 승용차 세율</h3><p><strong>비영업용(자가용):</strong> 1,000cc 이하 cc당 80원, 1,001~1,600cc cc당 140원, 1,600cc 초과 cc당 200원.</p><p><strong>영업용:</strong> 1,600cc 이하 cc당 18원, 초과 cc당 19원.</p><p><strong>전기·수소차:</strong> 10만원 정액.</p><h3>차령 할인</h3><p>차량 등록 3년차부터 매년 5%씩 자동차세가 감액되며, 12년 이상 차량은 최대 50% 할인됩니다. 예: 5년차 15% 할인, 10년차 40% 할인.</p><h3>1월 연납 할인</h3><p>매년 1월 16~31일에 위택스(wetax.go.kr)에서 연납 신청하면 약 5% 할인됩니다. 1,000cc 2천만원대 차량 기준 연간 약 1만원 절약.</p><h3>대표 차량별 자동차세</h3><p>1,000cc 경차: 약 10만원 / 1,600cc 준중형: 약 29만원 / 2,000cc 중형: 약 52만원 / 3,000cc 대형: 약 78만원 (지방교육세 포함).</p>`,
 compre:`<h2>2026년 종합부동산세 완벽 가이드</h2><h3>이런 분들께 필요해요</h3><p>공시가격 합산 9억원(다주택) 또는 12억원(1주택)을 초과하는 부동산을 보유한 분, 부부 공동명의 1주택 특례(18억 공제)를 검토하는 분, 다주택 보유 중 6월 1일 전 매도 타이밍을 고민하는 분.</p><h3>이 계산기로 해결되는 것</h3><p>보유 주택의 공시가격을 입력하면 공제액 차감, 공정시장가액비율(60%) 적용, 0.5~2.7% 누진세율 산출, 농어촌특별세(20%) 추가까지 한 번에 계산합니다. 1주택자의 고령자·장기보유 세액공제(합산 최대 80%)도 자동 반영됩니다.</p><h3>계산 방법과 세율</h3><p>과세표준 = (공시가격 합계 - 공제액) x 60%. 세율은 3억 이하 0.5%, 6억 이하 0.7%, 12억 이하 1.0%, 25억 이하 1.3%, 50억 이하 1.5%, 94억 이하 2.0%, 94억 초과 2.7%입니다. 전년 대비 세부담 상한은 150%입니다. 농어촌특별세 20%가 별도 부과됩니다.</p><h3>이 계산기 200% 활용법</h3><p>부부 공동명의 1주택 특례(18억 공제)와 단독명의(12억+고령자·장기보유 공제)를 각각 시뮬레이션하여 유리한 쪽을 확인하세요. 공시가격은 부동산공시가격알리미(realtyprice.kr)에서 조회할 수 있습니다. 다주택자는 매도 1건으로 공제액 이하로 떨어지는지 확인해보세요.</p><h3>놓치면 손해보는 것들</h3><p>과세 기준일은 매년 6월 1일입니다. 5월 31일까지 잔금을 치르면 해당 연도 종부세 부담이 매수자에게 이전됩니다. 납부기한은 12월 1~15일이며 250만원 초과 시 6개월 분납(이자 없음)이 가능합니다. 부부 공동명의 특례는 매년 9~10월 홈택스에서 신청해야 합니다.</p>`,
-property:`<h2>재산세 완벽 가이드</h2><h3>이런 분들께 필요해요</h3><p>아파트·주택·상가·토지를 보유한 모든 분, 올해 재산세가 얼마나 나올지 미리 확인하고 싶은 분, 공시가격 상승으로 세금 부담이 걱정되는 분. 재산세는 부동산을 보유하기만 해도 매년 부과됩니다.</p><h3>이 계산기로 해결되는 것</h3><p>공시가격과 공정시장가액비율(60~70%)을 적용한 과세표준을 산출하고, 주택은 4단계 누진세율(0.1~0.4%), 상가·건축물은 0.25% 단일세율을 자동 적용합니다. 도시지역분(0.14%), 지방교육세(20%) 등 부가세도 함께 계산합니다.</p><h3>계산 방법과 세율</h3><p>주택 재산세는 과세표준 6천만원 이하 0.1%, 1.5억 이하 0.15%, 3억 이하 0.25%, 3억 초과 0.4%입니다. 공정시장가액비율은 주택 60%, 토지·건축물 70%입니다. 세부담 상한은 공시가격별 105~130%로 전년 대비 급격한 인상이 제한됩니다.</p><h3>이 계산기 200% 활용법</h3><p>공시가격은 부동산공시가격알리미에서 확인하세요. 7월분(건물)과 9월분(토지) 합산 연간 세액을 미리 확인하고 자금을 준비하세요. 여러 부동산을 보유한 경우 각각 입력하여 합산 보유세를 파악할 수 있습니다.</p><h3>놓치면 손해보는 것들</h3><p>과세 기준일은 6월 1일로 종부세와 동일합니다. 매도 시 5월 31일 이전 잔금 완료 여부에 따라 해당 연도 재산세 부담자가 달라집니다. 납부기한은 7월(건물분)·9월(토지분) 16~31일입니다. 재산세는 종부세 계산 시 기납부세액으로 차감되므로 이중과세되지 않습니다.</p>`,
+property:`<h2>재산세 완벽 가이드</h2><h3>이런 분들께 필요해요</h3><p>아파트·주택·상가·토지를 보유한 모든 분, 올해 재산세가 얼마나 나올지 미리 확인하고 싶은 분, 공시가격 상승으로 세금 부담이 걱정되는 분. 재산세는 부동산을 보유하기만 해도 매년 부과됩니다.</p><h3>이 계산기로 해결되는 것</h3><p>공시가격과 공정시장가액비율(60~70%)을 적용한 과세표준을 산출하고, 주택은 4단계 누진세율(0.1~0.4%), 상가·건축물은 0.25% 단일세율을 자동 적용합니다. 도시지역분(0.14%), 지방교육세(20%) 등 부가세도 함께 계산합니다.</p><h3>계산 방법과 세율</h3><p>주택 재산세는 과세표준 6천만원 이하 0.1%, 1.5억 이하 0.15%, 3억 이하 0.25%, 3억 초과 0.4%입니다. 공정시장가액비율은 주택 60%, 토지·건축물 70%입니다. 주택은 세부담상한 대신 과세표준상한(전년도 과세표준 상당액+5%)이 적용되어 전년 대비 급격한 인상이 제한됩니다. 시가표준액 9억 이하 1세대1주택은 특례세율(0.05~0.35%)이 적용됩니다.</p><h3>이 계산기 200% 활용법</h3><p>공시가격은 부동산공시가격알리미에서 확인하세요. 7월분(건물)과 9월분(토지) 합산 연간 세액을 미리 확인하고 자금을 준비하세요. 여러 부동산을 보유한 경우 각각 입력하여 합산 보유세를 파악할 수 있습니다.</p><h3>놓치면 손해보는 것들</h3><p>과세 기준일은 6월 1일로 종부세와 동일합니다. 매도 시 5월 31일 이전 잔금 완료 여부에 따라 해당 연도 재산세 부담자가 달라집니다. 납부기한은 7월(건물분)·9월(토지분) 16~31일입니다. 재산세는 종부세 계산 시 기납부세액으로 차감되므로 이중과세되지 않습니다.</p>`,
 holdtax:`<h2>보유세 통합 가이드</h2><h3>보유세란?</h3><p>부동산 보유자에게 매년 부과되는 세금의 총칭입니다. 재산세(지방세) + 종합부동산세(국세)로 구성됩니다.</p><h3>재산세와 종부세의 관계</h3><p>재산세는 모든 부동산에 부과되지만, 종부세는 공시가 공제액(1주택 12억, 다주택 9억)을 초과한 경우에만 추가 부과됩니다.</p><h3>절세 전략</h3><p>공동명의로 공제액 분산(2인 18억까지), 1주택 유지로 고령자·장기보유 공제(최대 80%) 활용, 6월 1일 이전 명의이전 고려.</p>`,
 rental:`<h2>주택임대소득세 완벽 가이드</h2><h3>이런 분들께 필요해요</h3><p>월세를 받는 2주택 이상 보유자, 전세보증금 합계 3억원을 초과하는 3주택 이상 보유자, 기준시가 12억 초과 1주택으로 월세를 받는 분, 임대사업자 등록 여부를 고민하는 분.</p><h3>이 계산기로 해결되는 것</h3><p>연 임대수입(월세+간주임대료)을 산출하고, 2천만원 이하는 분리과세(14%)와 종합과세 중 유리한 쪽을 비교합니다. 등록임대사업자와 미등록의 필요경비율(60% vs 50%)·기본공제(400만 vs 200만) 차이를 반영한 세액을 나란히 보여줍니다.</p><h3>계산 방법과 세율</h3><p>분리과세 세액 = (연 수입 - 필요경비 - 기본공제) x 14%입니다. 등록임대는 경비율 60%+공제 400만, 미등록은 50%+200만입니다. 2천만원 초과 시 다른 소득과 합산하여 6~45% 종합과세됩니다. 3주택 이상은 전세보증금 간주임대료(초과분x60%x정기예금이율)도 과세됩니다.</p><h3>이 계산기 200% 활용법</h3><p>월세 금액과 보증금을 입력하고, 등록/미등록 시나리오를 전환하면서 연간 세액 차이를 비교하세요. 3주택 이상이면 전세보증금 금액에 따른 간주임대료 추가 과세도 자동 계산됩니다. 다른 소득(근로·사업)이 있는 경우 종합과세 예상 세율도 확인하세요.</p><h3>놓치면 손해보는 것들</h3><p>임대소득이 있으면 매년 5월 종합소득세 확정신고 의무가 있습니다. 무신고 시 20% 가산세가 부과됩니다. 등록임대사업자는 10년 의무임대·5% 임대료 상한 등 사후관리를 준수해야 하며, 위반 시 감면세액+가산세가 전액 추징됩니다. 2주택까지는 전세보증금 간주임대료가 비과세입니다.</p>`,
 mortgage:`<h2>대출이자 완벽 가이드</h2><h3>상환방식 3가지</h3><p><strong>원리금균등:</strong> 매월 동일 금액 상환. 초기 이자 비중 높음.</p><p><strong>원금균등:</strong> 매월 동일 원금 + 감소하는 이자. 초기 부담 크지만 총이자 가장 적음.</p><p><strong>만기일시:</strong> 기간 중 이자만, 만기에 원금 일시 상환. 총이자 가장 많음.</p><h3>중도상환수수료</h3><p>대출 후 3년 이내 조기 상환 시 보통 1~1.5% 수수료 부과.</p>`,
@@ -625,7 +626,7 @@ compre:{q:"종합부동산세는 누가 내나요?",a:"매년 6.1 기준 보유 
 property:{q:"재산세는 얼마나 나오나요?",a:"매년 6.1 기준 부동산 보유자에게 부과되는 지방세입니다. 주택의 과세표준은 공시가격×60%이며, 세율 0.1~0.4%가 누진 적용됩니다. 도시지역분(과세표준의 0.14%)과 지방교육세(재산세의 20%)가 별도 부과됩니다. 7월 건물분+토지분 절반, 9월 나머지 절반을 나누어 납부합니다. 상가 건축물은 0.25% 단일세율입니다.",
   rates:[["6천만↓","0.1%"],["~1.5억","0.15%"],["~3억","0.25%"],["3억↑","0.4%"]],rh:["과세표준(주택)","세율"],faqList:[
   {icon:<IconQ/>,title:"재산세란?",body:"매년 6월 1일 기준 부동산 보유자에게 부과되는 지방세입니다."},
-  {icon:<IconBulb/>,title:"절세 팁",body:"• 1세대1주택 공정시장가액비율 특례 (43~45%, 2026년까지)\n• 9억 이하 1주택은 세부담상한 105%로 인상폭 제한\n• 공시가격 이의신청으로 과세표준 낮추기 가능"},
+  {icon:<IconBulb/>,title:"절세 팁",body:"• 1세대1주택 공정시장가액비율 특례 (43~45%, 2026년까지)\n• 9억 이하 1세대1주택은 특례세율(0.05~0.35%) 적용, 주택은 과세표준상한(전년도+5%)으로 인상폭 제한\n• 공시가격 이의신청으로 과세표준 낮추기 가능"},
   {icon:<IconCal/>,title:"납부 기한 및 방법",body:"• 7월: 건축물분 + 주택 1/2\n• 9월: 토지분 + 주택 나머지 1/2\n• 고지서 기반 납부 (별도 신고 불요)\n• 위택스 또는 은행 납부"},
   {icon:<IconWarn/>,title:"주의사항",body:"• 재산세와 종부세는 이중과세 조정 (종부세에서 재산세 차감)\n• 공동소유 시 지분별 각자 납부"}
 ]},
@@ -2539,37 +2540,13 @@ function CalcCompre({isMo=false,onNav=()=>{}}){
 function CalcProp({isMo=false,onNav=()=>{}}){
   const[pt,sPt]=useState("house");const[p,sP]=useState("");const[isDefault,setIsDefault]=useState(true);const markModified=()=>setIsDefault(false);const[one,sOne]=useState("no");const[prevTax,sPT]=useState("");const[showPropLookup,setShowPropLookup]=useState(false);const[selectedPropInfo,setSelectedPropInfo]=useState(null);const[autoPropFill,setAutoPropFill]=useState(false);
   const pp=tW(p);
-  let fr=0.70;
-  if(pt==="house"){
-    if(one==="yes"){
-      if(pp<=3e8)fr=0.43;
-      else if(pp<=6e8)fr=0.44;
-      else if(pp<=9e8)fr=0.45;
-      else fr=0.60;
-    }else{fr=0.60;}
-  }
-  const tb=pp*fr;
-  let tx=0;
-  if(pt==="house")tx=pTx(tb,[[6e7,.001],[1.5e8,.0015],[3e8,.0025],[Infinity,.004]]);
-  else if(pt==="land")tx=pTx(tb,[[5e7,.002],[1e8,.003],[Infinity,.005]]);
-  else tx=tb*.0025;
-  tx=Math.round(tx);
-  const ci=pt==="house"?Math.round(tb*.0014):0;
-  const ed=Math.round(tx*.2);
-  let rt=0;
-  if(pt==="house"){if(tb<=6e7)rt=Math.round(tb*.00004);else if(tb<=1.3e8)rt=2400+Math.round((tb-6e7)*.00005);else if(tb<=2.6e8)rt=5900+Math.round((tb-1.3e8)*.00006);else if(tb<=3.9e8)rt=13700+Math.round((tb-2.6e8)*.00008);else if(tb<=6.4e8)rt=24100+Math.round((tb-3.9e8)*.0001);else rt=49100+Math.round((tb-6.4e8)*.00012);}
-  const rawTotal=tx+ci+ed+rt;
-  let total=rawTotal;
-  const prev=tW(prevTax);
-  const capRate=pp<=3e8?1.05:pp<=6e8?1.10:1.30;
-  let capApplied=false;
-  if(prev>0){const capped=Math.round(prev*capRate);if(total>capped){total=capped;capApplied=true;}}
+  const{fr,tb,tx,ci,ed,rt,total,capApplied}=calcProperty({pt,pp,one,prevStdW:tW(prevTax)});
   const half=Math.round(total/2);
-  const rpItems=[{l:"공시가격",v:fW(pp)},{l:"과세표준",v:fW(tb),note:"공정시장가액비율 "+(fr*100).toFixed(0)+"% (지방세법 시행령 §109)"},{l:"재산세 본세",v:fW(tx),note:"지방세법 §111"}];
+  const rpItems=[{l:"공시가격",v:fW(pp)},{l:"과세표준",v:fW(tb),note:"공정시장가액비율 "+(fr*100).toFixed(0)+"% (지방세법 시행령 §109)"},{l:"재산세 본세",v:fW(tx),note:pt==="house"&&one==="yes"&&pp<=9e8?"지방세법 §111조의2 특례세율":"지방세법 §111"}];
   if(pt==="house")rpItems.push({l:"도시지역분 (0.14%)",v:fW(ci)});
   rpItems.push({l:"지방교육세 (20%)",v:fW(ed)});
   if(rt>0)rpItems.push({l:"지역자원시설세",v:fW(rt),note:"건축물 소재지 적용"});
-  if(capApplied)rpItems.push({l:"세부담 상한 적용",v:fW(total),note:"전년 대비 "+(capRate*100-100).toFixed(0)+"%↑ 한도 (지방세법 §122)"});
+  if(capApplied)rpItems.push({l:"과세표준상한 적용",v:fW(tb),note:"전년도 과세표준 상당액+5% 한도 (지방세법 §110③)"});
   if(pt==="house"){rpItems.push({l:"7월 납부 (건물+주택½)",v:fW(half)});rpItems.push({l:"9월 납부 (토지+주택½)",v:fW(total-half)});}
   else if(pt==="land")rpItems.push({l:"9월 일괄 납부",v:fW(total)});
   else rpItems.push({l:"7월 일괄 납부",v:fW(total)});
@@ -2577,10 +2554,10 @@ function CalcProp({isMo=false,onNav=()=>{}}){
   return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}><div><Tog label="부동산 유형" value={pt} onChange={sPt} options={[{value:"house",label:"주택"},{value:"land",label:"토지"},{value:"com",label:"건축물"}]}/><div style={{fontSize:13,color:"#374151",fontWeight:600,marginBottom:4,display:"flex",alignItems:"center",gap:6}}>공시가격 <TipModal title=""><p>매년 1월 1일 기준 공시가격. realtyprice.kr에서 확인. 공정시장가액비율(60%)을 곱한 금액이 과세표준.</p></TipModal></div>{!isMo&&<div style={{marginBottom:10}}><button type="button" onClick={()=>setShowPropLookup(true)} style={{width:"100%",padding:"12px 16px",background:"linear-gradient(135deg,#eff6ff,#dbeafe)",border:"1.5px solid #bfdbfe",borderRadius:10,fontSize:13,fontWeight:700,color:"#1e40af",cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>📍 주소로 공시가격 자동조회</button></div>}{showPropLookup&&<AddressModal calcType="holding" onClose={()=>setShowPropLookup(false)} onApplyStd={v=>{sP(String(Math.round(v/10000)));markModified();setAutoPropFill(true);}} onApplyInfo={info=>setSelectedPropInfo(info)}/>}{selectedPropInfo&&!isMo&&<div style={{background:"#eff6ff",border:"1px solid #bfdbfe",borderRadius:10,padding:"10px 14px",marginBottom:8,display:"flex",alignItems:"center",justifyContent:"space-between",gap:8}}>
         <div style={{minWidth:0}}><div style={{fontSize:13,fontWeight:700,color:"#1e40af"}}>{selectedPropInfo.aptName}{selectedPropInfo.dongNm?" "+selectedPropInfo.dongNm+"동":""}{selectedPropInfo.hoNm?" "+selectedPropInfo.hoNm+"호":""}</div><div style={{fontSize:11,color:"#3b82f6",marginTop:2}}>{selectedPropInfo.priceYear?"공시가격 "+selectedPropInfo.priceYear+"년 기준 자동입력":""}</div></div>
         <button onClick={()=>{setSelectedPropInfo(null);setShowPropLookup(true);}} style={{fontSize:12,color:"#0141f9",background:"none",border:"none",cursor:"pointer",fontWeight:700,fontFamily:"inherit",whiteSpace:"nowrap"}}>다시검색</button>
-      </div>}<Inp label="" value={p} onChange={v=>{sP(v);setAutoPropFill(false);}} suffix="만원" placeholder="예: 50000" error={!p||p==="0"}/>{autoPropFill&&p&&<div style={{fontSize:11,color:"#4285F4",marginTop:-8,marginBottom:8,fontWeight:500}}>📍 주소조회로 자동입력됨 · 직접 수정 가능</div>}{pt==="house"&&<Tog label="1세대 1주택 특례" value={one} onChange={sOne} options={[{value:"no",label:"일반 (60%)"},{value:"yes",label:"1세대1주택 (43~45%)"}]}/>}{pt==="house"&&one==="yes"&&pp>9e8&&<div style={{padding:"10px 14px",background:"#FFF8E1",border:"1px solid #FFE082",borderRadius:10,fontSize:12,color:"#F57F17",marginTop:8,lineHeight:1.6}}>공시가격 9억 초과 1주택자는 특례 공정시장가액비율 대상이 아니며 일반 60%가 적용됩니다.</div>}{pt==="house"&&<Inp label="전년도 재산세액 (선택)" value={prevTax} onChange={sPT} suffix="만원" placeholder="세부담상한 계산용" note="공시가 3억↓105% / 6억↓110% / 6억↑130%"/>}</div><div><RPFull miss={isDefault?MI.property:null} isExample={isDefault} title="재산세 총액"
+      </div>}<Inp label="" value={p} onChange={v=>{sP(v);setAutoPropFill(false);}} suffix="만원" placeholder="예: 50000" error={!p||p==="0"}/>{autoPropFill&&p&&<div style={{fontSize:11,color:"#4285F4",marginTop:-8,marginBottom:8,fontWeight:500}}>📍 주소조회로 자동입력됨 · 직접 수정 가능</div>}{pt==="house"&&<Tog label="1세대 1주택 특례" value={one} onChange={sOne} options={[{value:"no",label:"일반 (60%)"},{value:"yes",label:"1세대1주택 (43~45%)"}]}/>}{pt==="house"&&one==="yes"&&pp>9e8&&<div style={{padding:"10px 14px",background:"#FFF8E1",border:"1px solid #FFE082",borderRadius:10,fontSize:12,color:"#F57F17",marginTop:8,lineHeight:1.6}}>공시가격 9억 초과 1세대1주택은 2026년 성립분에 한해 공정시장가액비율 43~45%가 적용되고, 특례세율(9억 이하 한정)은 적용되지 않아 일반세율로 계산됩니다.</div>}{pt==="house"&&<Inp label="전년도 공시가격 (선택)" value={prevTax} onChange={sPT} suffix="만원" placeholder="과세표준상한 계산용" note="주택은 세부담상한 대신 과세표준상한(전년도 과세표준 상당액+5%) 적용"/>}</div><div><RPFull miss={isDefault?MI.property:null} isExample={isDefault} title="재산세 총액"
       deadline={deadlineText}
       deadlineLink="https://wetax.go.kr" deadlineLinkLabel="위택스 납부 →"
-      alertMsg={capApplied?"전년 대비 "+(capRate*100-100).toFixed(0)+"% 한도 적용":pt==="house"&&one==="yes"&&pp>9e8?"공시가 9억 초과 1주택: 일반 60% 적용":pt==="house"?"1세대1주택 특례 시 공정가액 43~45%":null}
+      alertMsg={capApplied?"과세표준상한(전년도 +5%) 적용":pt==="house"&&one==="yes"&&pp>9e8?"공시가 9억 초과 1주택: 공정가액 45%·일반세율 적용":pt==="house"?"1세대1주택 특례 시 공정가액 43~45%":null}
       alertType={capApplied?"success":"info"}
       total={total} sub={"공정시장가액비율 "+(fr*100).toFixed(0)+"% 적용"} items={rpItems} nextStep={<NextStep calcId="property" onNav={onNav} isMo={isMo}/>}/></div></div>);}
 
