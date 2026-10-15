@@ -3,7 +3,8 @@
 // 철근콘크리트 등 공동주택의 준공연도별 기간. [5층 이상, 4층 이하]
 //   1981.12.31 이전 20/20, 1982 22/21, 1983 24/22, 1984 26/23, 1985 28/24, 1986 30/25,
 //   1987 30/26, 1988 30/27, 1989 30/28, 1990 30/29, 1991.1.1 이후 30/30
-// 다른 지역(광역시·경기·지방)은 지역 조례에 따라 달라 법령으로 확정하지 못해 기존 값(-3년 보정 등)을 그대로 둔다.
+// 인천광역시 도시 및 주거환경정비 조례: 철근콘크리트·철골콘크리트·철골철근콘크리트·강구조 공동주택 30년(2026.10 확인, 언론 보도 인용).
+// 다른 지역(광역시·경기·지방)은 지역 조례에 따라 달라 법령으로 확정하지 못해 기존 값(-3년 보정 등)을 그대로 두고 화면에 '조례 확인' 안내.
 const SEOUL_TABLE = {1982:[22,21],1983:[24,22],1984:[26,23],1985:[28,24],1986:[30,25],1987:[30,26],1988:[30,27],1989:[30,28],1990:[30,29]};
 export function seoulRcYears(builtYear, high){
   const by = Math.floor(builtYear);
@@ -11,11 +12,12 @@ export function seoulRcYears(builtYear, high){
   if(by >= 1991) return 30;
   return SEOUL_TABLE[by][high ? 0 : 1];
 }
-// region: seoul|metro|other, structure: rc|brick, high: 5층 이상 여부(서울·철근콘크리트에서만 사용)
+// region: seoul|incheon|metro|other, structure: rc|brick, high: 5층 이상 여부(서울·철근콘크리트에서만 사용)
 export function calcReconYear({builtYear, region, structure, high=true, nowYear}){
   const by = parseInt(builtYear) || 0;
   let limit;
   if(structure === "rc" && region === "seoul") limit = seoulRcYears(by, high);
+  else if(structure === "rc" && region === "incheon") limit = 30;
   else {
     const baseLimit = structure === "rc" ? 30 : 20;
     const regionAdj = region === "other" ? -3 : 0;

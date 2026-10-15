@@ -19,6 +19,8 @@ export default {
       expect:{limit:29,targetYear:2019}, law:"서울시 정비 조례 별표1 (1990년 30/29)"},
     {id:"b-1991", desc:"서울·RC·1991(1991.1.1 이후)·4층 이하: 30년", input:{builtYear:1991,region:"seoul",structure:"rc",high:false},
       expect:{limit:30,targetYear:2021}, law:"서울시 정비 조례 별표1 (1991.1.1 이후 30/30)"},
+    {id:"i-2000", desc:"인천·RC·2000 준공: 30년", input:{builtYear:2000,region:"incheon",structure:"rc"},
+      expect:{limit:30,targetYear:2030}, law:"인천광역시 도시 및 주거환경정비 조례 (철근콘크리트 등 공동주택 30년)"},
     {id:"b-1986", desc:"서울·RC·1986·5층 이상: 30년", input:{builtYear:1986,region:"seoul",structure:"rc",high:true},
       expect:{limit:30,targetYear:2016}, law:"서울시 정비 조례 별표1 (1986년 30/25)"}
   ]
