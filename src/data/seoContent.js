@@ -2619,7 +2619,7 @@ jeonseins: `<div style="display:flex;flex-direction:column;gap:16px;">
 <span style="font-size:18px;font-weight:500;color:#172B4D;">핵심 기준</span>
 </div>
 <div style="padding:20px 28px;display:flex;flex-direction:column;gap:8px;">
-<div style="font-size:16px;color:#505f79;line-height:1.9;"><p>HUG: 연 0.115~0.154%. HF(한국주택금융공사): 연 0.02~0.04%. 아파트는 HF가 저렴, 다세대·오피스텔은 HUG.</p></div>
+<div style="font-size:16px;color:#505f79;line-height:1.9;"><p>HUG: 보증금 구간·주택유형·부채비율별 연 0.097~0.211%. HF(한국주택금융공사): 연 0.02~0.04%. 아파트는 HF가 저렴, 다세대·오피스텔은 HUG.</p></div>
 </div>
 </div>
 <div style="background:#fff;border:0.5px solid #dfe1e6;border-radius:12px;overflow:hidden;">
