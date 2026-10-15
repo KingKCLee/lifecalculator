@@ -73,6 +73,7 @@ import { GUIDE_DATA } from './data/guideData';
 import { RATE_GROUPS } from './data/rateTableGroups';
 import { getCurrentSeason } from './utils/seasonCalc';
 import { calcCommission } from './logic/commission.js';
+import { calcStamp } from './logic/stamp.js';
 import Breadcrumb from './components/Breadcrumb';
 // 2026.10 주소·검색용 정보 단일 원천
 import { createSite, applyHead } from './data/siteMeta';
@@ -464,7 +465,7 @@ ltv:`<h2>LTV 완벽 가이드</h2><h3>LTV란?</h3><p>주택 시세 대비 대출
 loanmax:`<h2>대출가능액 가이드</h2><h3>DSR 역산 원리</h3><p>연소득 × DSR 한도(40%) - 기존대출 월상환 × 12 = 가능한 연간 원리금. 이를 원리금균등 공식으로 역산하여 최대 대출원금 산출.</p><h3>예시</h3><p>연소득 5천만, DSR 40%, 기존없음, 3.5% 30년 → 약 3.7억원 대출 가능.</p>`,
 registration:`<h2>등기비용 가이드</h2><h3>구성 요소</h3><p>등록면허세(매매 2%, 상속 0.8%, 증여 1.5%) + 지방교육세(등록면허세 20%) + 인지세 + 국민주택채권 할인비용 + 법원 수수료(15,000원).</p><h3>셀프등기</h3><p>인터넷등기소에서 셀프등기 시 법무사 수수료(30~60만원) 절약.</p>`,
 legal:`<h2>법무사수수료 가이드</h2><h3>기본 보수표</h3><p>대한법무사협회 기준 부동산 가액별 11만~77만원 보수. 상속·증여는 30% 가산, 근저당설정은 50% 수준.</p><h3>추가 비용</h3><p>부가세 10% + 서류작성비 + 교통비. 법무사별 협의 가능.</p>`,
-stamp:`<h2>인지세 가이드</h2><h3>부동산 인지세</h3><p>거래금액 1억 이하 비과세, 1억~10억 15만원, 10억~30억 35만원, 30억 초과 50만원. 매도인·매수인 각 50% 부담.</p><h3>전자수입인지</h3><p>인터넷으로 구매·출력 가능.</p>`,
+stamp:`<h2>인지세 가이드</h2><h3>부동산 인지세</h3><p>거래금액 1억 이하 비과세, 1억~10억 15만원, 10억 초과 35만원. 매도인·매수인 각 50% 부담.</p><h3>전자수입인지</h3><p>인터넷으로 구매·출력 가능.</p>`,
 bond:`<h2>채권할인료 가이드</h2><h3>국민주택채권</h3><p>부동산 등기 시 의무 매입. 매입률 1~5%(지역·가액별). 즉시 매도 시 할인비용(약 4~5%)만 실제 부담.</p><h3>지역별 매입률</h3><p>서울: 6억 초과 5%, 1.6~6억 4%, 1.6억 이하 3%. 기타 지역은 낮음.</p>`,
 appraisal:`<h2>감정평가수수료 가이드</h2><h3>감정평가가 필요한 경우</h3><p>경매 응찰, 담보대출 심사, 상속·증여세 신고, 재건축 관리처분, 소송 등.</p><h3>수수료 기준</h3><p>감정평가사 보수표에 따라 가액별 산정. 부가세 10% 별도.</p>`,
 insurance4:`<h2>4대보험 완벽 가이드</h2><h3>2026년 직장가입자 요율</h3><p>국민연금 4.75%(상한 월 659만원, 2026.7~), 건강보험 3.595%, 장기요양 건보료의 13.14%, 고용보험 0.9%. 사업주 부담분 별도.</p><h3>산재보험</h3><p>사업주 전액 부담(업종별 0.6~18.6%), 근로자 부담 없음.</p><h3>비과세 활용</h3><p>식대·자가운전보조금(각 월 20만원) 비과세로 처리하면 보험료 기준이 낮아져 실수령액 증가.</p>`,
@@ -676,7 +677,7 @@ commission:{q:"중개보수 요율은?",a:"매매 시 9억 이하 0.4%, 15억 �
   {icon:<IconWarn/>,title:"주의사항",body:"• 상가·토지·오피스텔은 0.9% 이내 협의\n• 월세 환산 거래금액 = 보증금 + (월세×100), 보증금보다 작으면 보증금 기준"}
 ]},
 registration:{q:"등기비용 구성은?",a:"소유권이전등기 시 인지세(1억 이하 비과세, 1~10억 15만원, 10억 초과 35만원), 국민주택채권 할인비용(매매가의 3~5%를 매입 후 할인 매도), 법원 등기수수료(15,000원)가 발생합니다. 취득세·등록면허세는 별도 납부합니다.",
-  rates:[["1억 이하","비과세"],["1~10억","15만원"],["10~30억","35만원"],["30억 초과","50만원"]],rh:["거래금액","인지세"],faqList:[
+  rates:[["1억 이하","비과세"],["1~10억","15만원"],["10억 초과","35만원"]],rh:["거래금액","인지세"],faqList:[
   {icon:<IconQ/>,title:"등기비용이란?",body:"소유권 이전 시 발생하는 등록면허세+국민주택채권+법원수수료입니다."},
   {icon:<IconBulb/>,title:"절감 팁",body:"• 국민주택채권은 즉시 할인매도 가능 (할인율 확인 후 실부담 계산)"},
   {icon:<IconCal/>,title:"등기 기한",body:"• 잔금일로부터 60일 이내 등기 신청"},
@@ -3277,10 +3278,8 @@ function CalcHoldTax({isMo=false,onNav=()=>{}}){const[h,sH]=useState("1");const[
 function CalcStamp({isMo=false,onNav=()=>{}}){
   const[p,sP]=useState("");const[electronic,setElectronic]=useState(false);
   const pW=tW(p);
-  let baseStamp=0;if(pW>30e8)baseStamp=500000;else if(pW>10e8)baseStamp=350000;else if(pW>1e8)baseStamp=150000;
-  const stamp=electronic?Math.round(baseStamp*0.3):baseStamp;
-  const half=Math.round(stamp/2);
-  return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}><div><div style={{fontSize:12,color:"#6b778c",marginBottom:-8,marginLeft:2,display:"flex",alignItems:"center",gap:4,flexWrap:"nowrap"}}>인지세 <TipModal title="인지세"><p>매매계약서 작성 시 부과. 매도·매수인 각 50% 부담. 1억↓ 비과세.</p></TipModal></div><Inp label="거래금액" value={p} onChange={sP} suffix="만원" placeholder="예: 90000" error={!p||p==="0"}/><label style={{display:"flex",alignItems:"center",gap:6,fontSize:13,cursor:"pointer",marginTop:8}}><input type="checkbox" checked={electronic} onChange={e=>setElectronic(e.target.checked)}/> 전자문서 인지세 (70% 할인)</label><div style={{padding:"14px 16px",background:P.lt,borderRadius:10,fontSize:13,color:"#4a5568",lineHeight:1.6,marginTop:8}}>• 1억 이하: 비과세<br/>• 1억~10억: 15만원<br/>• 10억~30억: 35만원<br/>• 30억 초과: 50만원<br/>※ 전자계약 시 70% 할인</div></div><RPFull miss={tW(p)>0?null:MI.stamp} title="인지세"
+  const {baseStamp,stamp,half}=calcStamp({pW,electronic});
+  return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}><div><div style={{fontSize:12,color:"#6b778c",marginBottom:-8,marginLeft:2,display:"flex",alignItems:"center",gap:4,flexWrap:"nowrap"}}>인지세 <TipModal title="인지세"><p>매매계약서 작성 시 부과. 매도·매수인 각 50% 부담. 1억↓ 비과세.</p></TipModal></div><Inp label="거래금액" value={p} onChange={sP} suffix="만원" placeholder="예: 90000" error={!p||p==="0"}/><label style={{display:"flex",alignItems:"center",gap:6,fontSize:13,cursor:"pointer",marginTop:8}}><input type="checkbox" checked={electronic} onChange={e=>setElectronic(e.target.checked)}/> 전자문서 인지세 (70% 할인)</label><div style={{padding:"14px 16px",background:P.lt,borderRadius:10,fontSize:13,color:"#4a5568",lineHeight:1.6,marginTop:8}}>• 1억 이하: 비과세<br/>• 1억~10억: 15만원<br/>• 10억 초과: 35만원<br/>※ 전자계약 시 70% 할인</div></div><RPFull miss={tW(p)>0?null:MI.stamp} title="인지세"
       deadline="※ 계약서 작성 시점에 납부 / 전자수입인지(e-revenuestamp.or.kr)"
       alertMsg={stamp===0?"1억 이하: 인지세 비과세":electronic?"전자문서 70% 할인 적용됨":null}
       alertType={stamp===0?"success":"info"}
