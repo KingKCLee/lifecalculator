@@ -1273,7 +1273,7 @@ stamp: `<div style="display:flex;flex-direction:column;gap:16px;">
 <span style="font-size:18px;font-weight:500;color:#172B4D;">이 계산기로 해결되는 것</span>
 </div>
 <div style="padding:20px 28px;display:flex;flex-direction:column;gap:8px;">
-<div style="font-size:16px;color:#505f79;line-height:1.9;"><p>거래금액을 입력하면 인지세액이 자동 계산됩니다. 전자계약 50% 감면도 반영됩니다.</p></div>
+<div style="font-size:16px;color:#505f79;line-height:1.9;"><p>거래금액을 입력하면 인지세액과 매수·매도인 부담액이 자동 계산됩니다. 전자계약이어도 인지세는 서면과 같습니다.</p></div>
 </div>
 </div>
 <div style="background:#fff;border:0.5px solid #dfe1e6;border-radius:12px;overflow:hidden;">
@@ -2640,7 +2640,7 @@ stamp2: `<div style="display:flex;flex-direction:column;gap:16px;">
 <span style="font-size:18px;font-weight:500;color:#172B4D;">이런 분들께 필요해요</span>
 </div>
 <div style="padding:20px 28px;display:flex;flex-direction:column;gap:8px;">
-<div style="display:flex;align-items:flex-start;gap:10px;"><div style="width:6px;height:6px;border-radius:50%;background:#378ADD;margin-top:7px;flex-shrink:0;"></div><span style="font-size:16px;color:#505f79;line-height:1.9;">전자계약 시 <b>인지세 50% 감면</b>이 적용되는지 확인하고 싶은 분</span></div>
+<div style="display:flex;align-items:flex-start;gap:10px;"><div style="width:6px;height:6px;border-radius:50%;background:#378ADD;margin-top:7px;flex-shrink:0;"></div><span style="font-size:16px;color:#505f79;line-height:1.9;">전자계약을 하면 인지세가 줄어드는지, 전자계약 혜택이 무엇인지 확인하고 싶은 분</span></div>
 </div>
 </div>
 <div style="background:#fff;border:0.5px solid #dfe1e6;border-radius:12px;overflow:hidden;">
@@ -2649,7 +2649,7 @@ stamp2: `<div style="display:flex;flex-direction:column;gap:16px;">
 <span style="font-size:18px;font-weight:500;color:#172B4D;">이 계산기로 해결되는 것</span>
 </div>
 <div style="padding:20px 28px;display:flex;flex-direction:column;gap:8px;">
-<div style="font-size:16px;color:#505f79;line-height:1.9;"><p>거래금액을 입력하면 일반 인지세와 전자계약 감면 후 금액이 동시에 표시됩니다.</p></div>
+<div style="font-size:16px;color:#505f79;line-height:1.9;"><p>거래금액을 입력하면 인지세액과 매수·매도인 부담액이 표시됩니다. 전자계약도 인지세 감면은 없습니다.</p></div>
 </div>
 </div>
 <div style="background:#fff;border:0.5px solid #dfe1e6;border-radius:12px;overflow:hidden;">
@@ -2658,7 +2658,7 @@ stamp2: `<div style="display:flex;flex-direction:column;gap:16px;">
 <span style="font-size:18px;font-weight:500;color:#172B4D;">핵심 기준</span>
 </div>
 <div style="padding:20px 28px;display:flex;flex-direction:column;gap:8px;">
-<div style="font-size:16px;color:#505f79;line-height:1.9;"><p>전자계약: 1억↓ 비과세, 1~10억 7.5만원, 10~30억 17.5만원, 30억↑ 25만원. 확정일자 자동 부여 등 추가 혜택.</p></div>
+<div style="font-size:16px;color:#505f79;line-height:1.9;"><p>인지세는 전자계약도 서면과 같습니다(주택 1억 이하 비과세, 1억 초과 10억 이하 15만원, 10억 초과 35만원). 전자계약 혜택은 대출 우대금리와 등기대행수수료 30% 절감 등입니다(국토교통부 부동산거래 전자계약시스템 안내).</p></div>
 </div>
 </div>
 <div style="background:#fff;border:0.5px solid #dfe1e6;border-radius:12px;overflow:hidden;">
@@ -2667,7 +2667,7 @@ stamp2: `<div style="display:flex;flex-direction:column;gap:16px;">
 <span style="font-size:18px;font-weight:500;color:#172B4D;">놓치면 손해보는 것들</span>
 </div>
 <div style="padding:20px 28px;display:flex;flex-direction:column;gap:8px;">
-<div style="padding:10px 14px;background:#f8f9fc;border-radius:8px;border-left:3px solid #E24B4A;"><p style="font-size:15px;color:#505f79;margin:0 0 0;line-height:1.8;">전자계약은 확정일자 자동 부여 + 실거래 신고 자동 처리 — 편의성 높음</p></div>
+<div style="padding:10px 14px;background:#f8f9fc;border-radius:8px;border-left:3px solid #E24B4A;"><p style="font-size:15px;color:#505f79;margin:0 0 0;line-height:1.8;">전자계약은 확정일자 자동 부여 + 실거래 신고 자동 처리 + 대출 우대금리·등기대행수수료 30% 절감. 인지세 감면은 없습니다.</p></div>
 </div>
 </div>
 </div>`,

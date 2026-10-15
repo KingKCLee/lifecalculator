@@ -7,10 +7,14 @@ export function stampDutyBase(pW,kind="house"){
   if(pW<=1e7)return 0;if(pW<=3e7)return 20000;if(pW<=5e7)return 40000;if(pW<=1e8)return 70000;if(pW<=10e8)return 150000;
   return 350000;
 }
-// 인지세 계산기 화면(App.jsx CalcStamp)의 계산: 입력 pW(원), electronic(전자문서 여부)
-export function calcStamp({pW,electronic,kind="house"}){
+// 전자계약·전자문서 감면은 없다: 인지세법 제3조 제3항은 전자문서도 과세문서에 포함하고(과세대상 전자문서),
+// 제8조 제2항·시행령 제11조의2는 납부방법(전자문서용 전자수입인지)만 정한다. 인지세법·시행령·시행규칙과
+// 조세특례제한법 제116조(인지세의 면제)에도 부동산 전자계약 감면 규정이 없다(2026-10-16 law.go.kr 원문 확인).
+// 두 화면(인지세·인지세전자계약)이 모두 이 함수만 쓴다. electronic 입력은 받아도 무시한다.
+// 인지세 계산기 화면의 계산: 입력 pW(원), kind
+export function calcStamp({pW,kind="house"}){
   const baseStamp=stampDutyBase(pW,kind);
-  const stamp=electronic?Math.round(baseStamp*0.3):baseStamp;
+  const stamp=baseStamp;
   const half=Math.round(stamp/2);
   return {baseStamp,stamp,half};
 }

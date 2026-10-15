@@ -172,11 +172,11 @@ const CALC_SUBTITLE={
   commission:"거래유형/금액별 요율 자동 적용 · 법정 상한 기준",
   registration:"취득세 + 등기수수료 + 채권 합산 자동 계산",
   legal:"부동산가액 기준 법무사 보수 자동 계산",
-  stamp:"계약금액별 인지세 자동 계산 · 전자계약 할인 적용",
+  stamp:"계약금액별 인지세 자동 계산 · 주택/주택 외 구분",
   bond:"취득가액 기준 채권 매입액 + 할인료 자동 계산",
   appraisal:"감정평가액 기준 수수료 체감요율 자동 계산",
   bond2:"시가표준액 기준 채권 매입비율 자동 계산",
-  stamp2:"전자계약 인지세 50% 감면 자동 적용",
+  stamp2:"전자계약 인지세 안내 · 감면 없음 · 대출 우대금리·등기대행수수료 30% 절감",
   jeonseins:"HUG/HF 보증료 자동 계산 · 가입조건 자동 확인",
   netsalary:"4대보험 + 소득세 공제 후 실수령액 자동 계산",
   insurance4:"2026년 요율 기준 · 근로자/사업주 부담 자동 구분",
@@ -297,7 +297,7 @@ reconyear:{title:"재건축 연한 계산기 - 준공일 기준 | 생활계산�
 refinance:{title:"대환대출 비교 계산기 - 갈아타기 손익 | 생활계산기",desc:"기존 대출 vs 신규 대출 월 상환액·총 이자·중도상환수수료 비교. 대환 손익분기점 자동 계산."},
 remodel2:{title:"리모델링 ROI 계산기 - 공사기간 기회비용 | 생활계산기",desc:"리모델링 순이익 = 예상 매도가 - 현 시세 - 공사비 - 공사기간 이자 - 임시거주비 - 양도세 추정."},
 rentincrease:{title:"임대료 5% 상한 계산기 - 갱신청구권 | 생활계산기",desc:"주택임대차보호법 제7조 임대료 5% 상한. 계약갱신청구권 행사 시 법정 최대 인상액·전월세전환 시뮬레이션."},
-stamp2:{title:"인지세 계산기 (전자계약) - 50% 감면 | 생활계산기",desc:"부동산 매매계약서 인지세 계산. 구간별 2만~35만원. 전자계약 시 50% 감면. 매수·매도 부담 분할."},
+stamp2:{title:"인지세 계산기 (전자계약 안내) - 감면 여부 | 생활계산기",desc:"부동산 매매계약서 인지세 계산. 구간별 2만~35만원. 전자계약도 인지세 감면은 없으며(인지세법 제3조 제3항), 전자계약 혜택은 대출 우대금리·등기대행수수료 30% 절감. 매수·매도 부담 분할."},
 realprice:{title:"실거래가 조회 - 국토부 호갱노노 네이버 | 생활계산기",desc:"부동산 실거래가 통합 조회. 국토부 실거래가 공개시스템, 호갱노노, 네이버 부동산, 직방 딥링크 제공. 매매·전세 시세 확인."},
 subscription:{title:"청약가점 계산기 2026 - 무주택기간 부양가족 통장 | 생활계산기",desc:"아파트 청약 가점제 84점 자동 계산. 무주택기간 32점 + 부양가족 35점 + 청약통장 17점. 당첨 가능 단지 수준 안내."},
 netsale:{title:"매도 실수령액 계산기 - 양도세·중개수수료 차감 | 생활계산기",desc:"부동산 매도 시 실수령액 자동 계산. 매도가 - 양도소득세 - 중개수수료 - 기타비용. 자동 추정 또는 직접 입력."},
@@ -518,7 +518,7 @@ realprice:`<h2>실거래가 조회 가이드</h2><h3>실거래가 공개시스�
 netsale:`<h2>매도 실수령액 가이드</h2><h3>실수령액이란?</h3><p>부동산 매도 후 양도소득세, 중개수수료, 기타 비용을 차감한 후 실제로 수령하는 금액입니다. 매도가만으로는 실수령액을 정확히 알 수 없으므로 사전 계산이 중요합니다.</p><h3>차감 항목</h3><p>양도소득세(6~45%), 지방소득세(양도세의 10%), 중개수수료(매도 시 0.4~0.9%), 말소등기비용, 기존 대출 잔액 상환. 1세대1주택 비과세 요건 충족 시 양도세 면제.</p><h3>계산 순서</h3><p>매도가 → 양도차익 산출 → 장기보유특별공제 → 기본공제 250만원 → 세율 적용 → 세액 확정 → 매도가 - 세금 - 비용 = 실수령액.</p>`,
 bond2:`<h2>국민주택채권 매입 가이드</h2><h3>국민주택채권이란?</h3><p>주택도시기금법에 따라 부동산 등기 시 의무적으로 매입해야 하는 채권입니다. 매입 후 즉시 시장에서 매도하며, 이때 발생하는 할인 손실이 실제 비용입니다.</p><h3>매입률</h3><p>공시가격 구간별로 1~5% 차등 적용. 서울: 6억 초과 5%, 1.6~6억 4%, 1.6억 이하 3%. 광역시·기타 지역은 낮은 요율 적용.</p><h3>할인율</h3><p>증권사·은행에서 당일 매도 시 약 4~5% 할인율 적용. 실제 부담 비용 = 공시가격 × 매입률 × 할인율.</p>`,
 jeonseins:`<h2>전세보증금 보험료 가이드</h2><h3>전세보증보험이란?</h3><p>임대인이 전세보증금을 반환하지 못할 때 보증기관(HUG, HF)이 대신 반환해주는 보험입니다. 임차인이 가입하며, 보증료를 납부합니다.</p><h3>보증료율</h3><p>HUG: 보증금 구간·주택유형·부채비율별 연 0.097~0.211%. HF(한국주택금융공사): 연 0.02~0.04%. 아파트는 HF가 저렴하고, 다세대·오피스텔은 HUG가 주로 취급합니다.</p><h3>가입 요건</h3><p>전세가율(보증금/시세) 일정 비율 이하, 전세계약서 확정일자 보유, 전입신고 완료가 기본 요건입니다.</p>`,
-stamp2:`<h2>인지세 (전자계약) 가이드</h2><h3>전자계약 인지세란?</h3><p>부동산 전자계약시스템(IRTS)을 통해 체결된 계약은 종이 인지세의 50%를 감면받습니다. 1억 이하 비과세, 1~10억 7.5만원, 10~30억 17.5만원, 30억 초과 25만원.</p><h3>전자계약 장점</h3><p>인지세 50% 감면, 확정일자 자동 부여, 계약서 위변조 방지, 실거래 신고 자동 처리. 공인중개사 사무소에서 전자계약 시스템을 이용할 수 있습니다.</p><h3>납부 방법</h3><p>전자수입인지 사이트(e-revenuestamp.or.kr)에서 온라인 구매·출력. 매도인·매수인 각 50%씩 부담합니다.</p>`,
+stamp2:`<h2>인지세 (전자계약) 가이드</h2><h3>전자계약 인지세란?</h3><p>전자계약(부동산거래 전자계약시스템)으로 체결해도 인지세는 서면계약과 같습니다. 인지세법 제3조 제3항은 전자문서도 과세문서에 포함하며, 법령에 전자계약 감면 규정이 없습니다. 주택 1억 이하 비과세, 1억 초과 10억 이하 15만원, 10억 초과 35만원.</p><h3>전자계약 장점</h3><p>대출 우대금리(0.1~0.2%p), 등기 관련 법무대리인 등기대행수수료 30% 절감, 확정일자·실거래 신고 자동 처리(국토교통부 부동산거래 전자계약시스템 안내). 공인중개사 사무소에서 전자계약 시스템을 이용할 수 있습니다.</p><h3>납부 방법</h3><p>전자수입인지 사이트(e-revenuestamp.or.kr)에서 온라인 구매·출력. 매도인·매수인 각 50%씩 부담합니다.</p>`,
 datediff:`<h2>날짜 계산기 가이드</h2><h3>날짜 계산 활용</h3><p>부동산 거래에서 보유기간, 거주기간, 신고기한 등을 정확히 계산하는 것이 중요합니다. 취득일~양도일 간 일수로 보유기간을 산정하고, 2년 이상 보유/거주 요건 충족 여부를 확인합니다.</p><h3>주요 기한</h3><p>취득세 신고: 취득일로부터 60일(상속 6개월). 양도세 예정신고: 양도일이 속한 달 말일부터 2개월. 종부세 납부: 매년 12월 1~15일. 재산세: 7월·9월.</p><h3>기간 계산법</h3><p>민법상 기간 계산은 초일 불산입 원칙. 다만 세법에서는 취득일·양도일 기준으로 별도 규정이 있으므로 주의가 필요합니다.</p>`,
 */
 
@@ -3180,14 +3180,14 @@ function CalcHoldTax({isMo=false,onNav=()=>{}}){const[h,sH]=useState("1");const[
 
 /* 인지세 */
 function CalcStamp({isMo=false,onNav=()=>{}}){
-  const[p,sP]=useState("");const[electronic,setElectronic]=useState(false);const[kind,setKind]=useState("house");
+  const[p,sP]=useState("");const[kind,setKind]=useState("house");
   const pW=tW(p);
-  const {baseStamp,stamp,half}=calcStamp({pW,electronic,kind});
-  return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}><div><div style={{fontSize:12,color:"#6b778c",marginBottom:-8,marginLeft:2,display:"flex",alignItems:"center",gap:4,flexWrap:"nowrap"}}>인지세 <TipModal title="인지세"><p>매매계약서 작성 시 부과. 매도·매수인 각 50% 부담. 주택은 1억↓ 비과세(인지세법 §6 5호), 토지·상가 등은 1천만 초과부터 과세.</p></TipModal></div><Tog label="물건 종류" value={kind} onChange={setKind} options={[{value:"house",label:"주택"},{value:"other",label:"주택 외(토지·상가 등)"}]}/><Inp label="거래금액" value={p} onChange={sP} suffix="만원" placeholder="예: 90000" error={!p||p==="0"}/><label style={{display:"flex",alignItems:"center",gap:6,fontSize:13,cursor:"pointer",marginTop:8}}><input type="checkbox" checked={electronic} onChange={e=>setElectronic(e.target.checked)}/> 전자문서 인지세 (70% 할인)</label><div style={{padding:"14px 16px",background:P.lt,borderRadius:10,fontSize:13,color:"#4a5568",lineHeight:1.6,marginTop:8}}>{kind==="house"?<>• 주택 1억 이하: 비과세<br/></>:<>• 1천만 이하: 비과세<br/>• 1천만~3천만: 2만원<br/>• 3천만~5천만: 4만원<br/>• 5천만~1억: 7만원<br/></>}• 1억~10억: 15만원<br/>• 10억 초과: 35만원<br/>※ 전자계약 시 70% 할인</div></div><RPFull miss={tW(p)>0?null:MI.stamp} title="인지세"
+  const {baseStamp,stamp,half}=calcStamp({pW,kind});
+  return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}><div><div style={{fontSize:12,color:"#6b778c",marginBottom:-8,marginLeft:2,display:"flex",alignItems:"center",gap:4,flexWrap:"nowrap"}}>인지세 <TipModal title="인지세"><p>매매계약서 작성 시 부과. 매도·매수인 각 50% 부담. 주택은 1억↓ 비과세(인지세법 §6 5호), 토지·상가 등은 1천만 초과부터 과세.</p></TipModal></div><Tog label="물건 종류" value={kind} onChange={setKind} options={[{value:"house",label:"주택"},{value:"other",label:"주택 외(토지·상가 등)"}]}/><Inp label="거래금액" value={p} onChange={sP} suffix="만원" placeholder="예: 90000" error={!p||p==="0"}/><div style={{padding:"14px 16px",background:P.lt,borderRadius:10,fontSize:13,color:"#4a5568",lineHeight:1.6,marginTop:8}}>{kind==="house"?<>• 주택 1억 이하: 비과세<br/></>:<>• 1천만 이하: 비과세<br/>• 1천만~3천만: 2만원<br/>• 3천만~5천만: 4만원<br/>• 5천만~1억: 7만원<br/></>}• 1억~10억: 15만원<br/>• 10억 초과: 35만원<br/>※ 전자계약이어도 감면 없음(인지세법 §3③)</div></div><RPFull miss={tW(p)>0?null:MI.stamp} title="인지세"
       deadline="※ 계약서 작성 시점에 납부 / 전자수입인지(e-revenuestamp.or.kr)"
-      alertMsg={stamp===0?(kind==="house"?"주택 1억 이하: 인지세 비과세":"1천만원 이하: 인지세 비과세"):electronic?"전자문서 70% 할인 적용됨":null}
+      alertMsg={stamp===0?(kind==="house"?"주택 1억 이하: 인지세 비과세":"1천만원 이하: 인지세 비과세"):null}
       alertType={stamp===0?"success":"info"}
-      total={stamp} sub={stamp===0?"비과세 구간":"매도·매수인 각 50% 부담"} items={[{l:"거래금액",v:fW(pW)},{l:"기본 인지세액",v:fW(baseStamp),note:"인지세법 §3"}].concat(electronic?[{l:"전자문서 할인 (70%)",v:"-"+fW(baseStamp-stamp)}]:[]).concat([{l:"납부 인지세",v:fW(stamp)},{l:"매도인 부담",v:fW(half)},{l:"매수인 부담",v:fW(half)}])} nextStep={<NextStep calcId="stamp" onNav={onNav} isMo={isMo}/>}/></div>);}
+      total={stamp} sub={stamp===0?"비과세 구간":"매도·매수인 각 50% 부담"} items={[{l:"거래금액",v:fW(pW)},{l:"기본 인지세액",v:fW(baseStamp),note:"인지세법 §3"}].concat([{l:"납부 인지세",v:fW(stamp)},{l:"매도인 부담",v:fW(half)},{l:"매수인 부담",v:fW(half)}])} nextStep={<NextStep calcId="stamp" onNav={onNav} isMo={isMo}/>}/></div>);}
 
 /* 국민주택채권 할인료 */
 function CalcBond({isMo=false,onNav=()=>{}}){
@@ -6165,7 +6165,7 @@ const CALC_NAV_CONTENT={
   auctionapply:{items:[{title:"어떤 비용을 계산하나?",open:true,body:"경매를 신청하는 채권자가 내는 인지·등록면허세·지방교육세·등기신청수수료·송달료와 집행관 수수료(현황조사·매각)입니다. 낙찰 후 취득세 등은 경매비용계산기에서 계산합니다."},{title:"송달료는 어떻게 정해지나?",body:"송달료규칙 처리요령 별표 1에 따라 (신청서상 이해관계인 수+3)×10회분을 냅니다. 1회 단가는 2025.6.1.부터 5,500원(대법원 공지)입니다."},{title:"예납금은 이 금액 그대로 내나?",body:"감정료·공고비 등 예납금은 법원이 사건별로 정합니다. 이 계산기의 감정료는 국토교통부 고시 기준 참고값이며 실제 안내서가 우선합니다."},{title:"매각수수료는 언제 내나?",body:"집행관수수료규칙 제16조 제4항에 따라 매각허가결정이 확정된 이후에 지급합니다."}],related:["auction","minbid","auctiondiv","registration"]},
   loanincome:{items:[{title:"인정소득과 신고소득은?",open:true,body:"증빙소득(원천징수영수증 등)이 없을 때 은행이 쓰는 대체 소득입니다. 국민연금·건강보험료 납부내역은 인정소득, 임대·이자·매출·카드 사용액 등 본인이 낸 자료는 신고소득입니다."},{title:"왜 95%, 90%만 반영하나?",body:"은행업감독업무시행세칙 별표 18 제9호 다목(3)에 따라 추정 소득액의 인정소득은 95%, 신고소득은 90%만 산정하고 추정 연소득은 5천만원을 넘지 못합니다."},{title:"직장가입자는 한도가 다른가?",body:"총부채원리금상환비율(DSR) 산출 시 직장가입자의 인정소득은 5천만원 한도 없이 추정액 100%를 인정할 수 있습니다(제12-2호 라목). 은행 내규에 따라 달라집니다."},{title:"은행 결과와 다를 수 있나?",body:"보험료 역산 방식은 한국주택금융공사 보금자리론 기준을 따르도록 되어 있어, 이 계산기의 법정 보험료율 역산과 차이가 날 수 있습니다."}],related:["dsr","dti","loanmax","ltv"]},
   lunar:{items:[{title:"윤달이란?",open:true,body:"음력과 계절 차이를 맞추려 2~3년에 한 번 넣는 달. 2025년은 윤6월."},{title:"음력 생일 계산",body:"음력 → 양력 변환에서 해당 연도를 넣으면 그해 양력 날짜 확인."},{title:"정확도",body:"내장 달력(중국 기준시) 사용으로 드물게 하루 차이 가능 — 한국천문연구원 자료로 재확인."}],related:["luckyday", "datediff", "lateinterest", "length"]},
-  stamp2:{items:[{title:"전자계약 인지세란?",open:true,body:"전자계약시스템(IRTS) 체결 시 인지세 50% 감면."},{title:"감면 세율",body:"1억↓ 비과세, 1~10억 7.5만원, 10~30억 17.5만원, 30억↑ 25만원."},{title:"전자계약 장점",body:"인지세감면, 확정일자자동부여, 위변조방지, 실거래신고 자동."},{title:"이용 방법",body:"공인중개사 사무소 전자계약시스템. 부동산거래전자계약시스템."},{title:"납부",body:"e-revenuestamp.or.kr에서 온라인 구매·출력. 매도·매수 각 50%."}],related:["stamp","registration","legal"]},
+  stamp2:{items:[{title:"전자계약 인지세란?",open:true,body:"전자계약으로 체결해도 인지세는 서면과 같음. 인지세법 제3조 제3항: 전자문서도 과세문서."},{title:"세율",body:"주택 1억↓ 비과세, 1억 초과~10억 15만원, 10억↑ 35만원 (주택 외는 1천만 초과부터 2·4·7만원)."},{title:"전자계약 장점",body:"대출 우대금리(0.1~0.2%p), 등기대행수수료 30% 절감, 확정일자·실거래신고 자동(국토교통부 안내)."},{title:"이용 방법",body:"공인중개사 사무소 전자계약시스템. 부동산거래전자계약시스템."},{title:"납부",body:"e-revenuestamp.or.kr에서 온라인 구매·출력. 매도·매수 각 50%."}],related:["stamp","registration","legal"]},
   luckyday:{items:[{title:"손없는날이란?",open:true,body:"음력 9·10·19·20·29·30일. 손(귀신)이 없어 이사·개업에 좋은 날."},{title:"음양력 변환",body:"음력 기준이므로 양력 확인 필요. 본 계산기에서 자동 표시."},{title:"이사 날짜",body:"손없는날에 이사업체 예약 집중. 비용 절감 시 다른 날 선택."},{title:"참고",body:"과학적 근거는 없으나 전통적으로 참고하는 풍습."}],related:["datediff","acquisition"]},
   compare:{items:[{title:"세금비교란?",open:true,body:"매매·증여·상속 시 세금 총액을 비교하여 최적 이전 방법 결정."},{title:"비교 항목",body:"매매: 양도세+취득세. 증여: 증여세+취득세. 상속: 상속세+취득세."},{title:"10년 합산",body:"증여는 10년 내 합산 과세. 장기 분할 증여가 절세 핵심."},{title:"배우자 활용",body:"배우자 6억 증여공제 → 매도 시 취득가액 높여 양도세 절감."},{title:"전문가 상담",body:"가액·보유기간·세대구성에 따라 결과 상이. 세무사 상담 권장."}],related:["transfer","gift","inherit","totalcost"]},
   invest:{items:[{title:"투자수익분석이란?",open:true,body:"매수→보유→매도 전체 현금흐름의 연평균 수익률(IRR) 분석."},{title:"포함 비용",body:"취득세·보유세·대출이자·관리비·매도중개보수·양도세 전부 반영."},{title:"레버리지",body:"대출 비중↑ → 자기자본 수익률↑ + 위험↑. 적정 LTV 유지."},{title:"세후 수익",body:"세전 수익률이 아닌 세후 실질 수익률로 판단해야 정확."},{title:"비교 분석",body:"부동산 vs 주식 vs 예금 수익률 비교. 인플레이션 감안."}],related:["yield","transfer","totalcost","compare"]},
