@@ -7,7 +7,7 @@
     "dev": "vite",
     "test": "node scripts/test-calcs.mjs",
     "pretest:build": "node scripts/test-calcs.mjs",
-    "build": "vite build && node scripts/build-static.mjs && node scripts/check-static.mjs",
+    "build": "vite build && node scripts/build-static.mjs && node scripts/check-static.mjs && node scripts/check-calc.mjs",
     "build:app": "vite build",
     "preview": "vite preview",
     "deploy": "npm run build && npx wrangler pages deploy dist"

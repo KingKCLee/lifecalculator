@@ -72,6 +72,7 @@ import GuideCard from './components/GuideCard';
 import { GUIDE_DATA } from './data/guideData';
 import { RATE_GROUPS } from './data/rateTableGroups';
 import { getCurrentSeason } from './utils/seasonCalc';
+import { calcCommission } from './logic/commission.js';
 import Breadcrumb from './components/Breadcrumb';
 // 2026.10 주소·검색용 정보 단일 원천
 import { createSite, applyHead } from './data/siteMeta';
@@ -2793,26 +2794,7 @@ function CalcComm({isMo=false,onNav=()=>{}}){
   const[customRate,setCustomRate]=useState("");const[useCustom,setUseCustom]=useState(false);
   const[vatIncl,setVatIncl]=useState(true);
   const[showAddr,setShowAddr]=useState(false);const[autoFill,setAutoFill]=useState(null);
-  // 거래금액 계산 (제20조 제5항)
-  let amt=0;
-  if(tx==="rent"){const depW=tW(dep),monW=tW(mon);const conv100=depW+monW*100;amt=conv100<5e7?(depW+monW*70):conv100;}
-  else{amt=tW(p);}
-  // 요율 계산
-  const HOUSE_SALE=[[5e7,.006,25e4],[2e8,.005,80e4],[9e8,.004,null],[12e8,.005,null],[15e8,.006,null],[Infinity,.007,null]];
-  const HOUSE_RENT=[[5e7,.005,20e4],[1e8,.004,30e4],[6e8,.003,null],[12e8,.004,null],[15e8,.005,null],[Infinity,.006,null]];
-  const findRate=(tbl,a)=>{for(const[max,rate,limit]of tbl){if(a<max)return{rate,limit};} return{rate:tbl[tbl.length-1][1],limit:null};};
-  let r=0,mf=null,rateLabel="";
-  if(ty==="res"){
-    const tbl=tx==="sale"?HOUSE_SALE:HOUSE_RENT;const found=findRate(tbl,amt);r=found.rate;mf=found.limit;rateLabel="주택 "+(tx==="sale"?"매매":"임대차");
-  }else if(ty==="offi85"){
-    r=tx==="sale"?0.005:0.004;rateLabel="오피스텔(85㎡이하) "+(tx==="sale"?"매매":"임대차");
-  }else{
-    r=0.009;rateLabel="상가·토지 등 (0.9% 이내 협의)";
-  }
-  if(useCustom&&pN(customRate)>0)r=pN(customRate)/100;
-  const fee=mf?Math.min(Math.floor(amt*r),mf):Math.floor(amt*r);
-  const vat=ty==="res"?0:Math.round(fee*0.1);
-  const total=vatIncl?fee+vat:fee;
+  const {amt,r,mf,rateLabel,fee,vat,total}=calcCommission({ty,tx,p,dep,mon,customRate,useCustom,vatIncl});
   const amtDesc=tx==="rent"?"보증금 "+fW(tW(dep))+" + 월세 "+fW(tW(mon))+" (환산 "+fW(amt)+")":fW(amt);
   return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}><div>
     <Tog label="물건 종류" value={ty} onChange={v=>{sTy(v);markModified();}} options={[{value:"res",label:"주택"},{value:"offi85",label:"오피스텔(85㎡↓)"},{value:"offi",label:"오피스텔(85㎡↑)"},{value:"com",label:"상가·토지 등"}]}/>
