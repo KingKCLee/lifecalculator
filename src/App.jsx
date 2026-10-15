@@ -74,6 +74,14 @@ import GuideCard from './components/GuideCard';
 import { GUIDE_DATA } from './data/guideData';
 import { RATE_GROUPS } from './data/rateTableGroups';
 import { getCurrentSeason } from './utils/seasonCalc';
+import { calcCommission } from './logic/commission.js';
+import { calcStamp } from './logic/stamp.js';
+import { calcAcquisition } from './logic/acquisition.js';
+import { calcRegistration } from './logic/registration.js';
+import { calcProperty } from './logic/property.js';
+import { calcHoldTax } from './logic/holdtax.js';
+import { calcLtc } from './logic/transfer.js';
+import { calcAppraisal } from './logic/appraisal.js';
 import Breadcrumb from './components/Breadcrumb';
 // 2026.10 주소·검색용 정보 단일 원천
 import { createSite, applyHead } from './data/siteMeta';
@@ -462,7 +470,7 @@ gift:`<h2>증여세 완벽 가이드</h2><h3>이런 분들께 필요해요</h3><
 pension:`<h2>국민연금 수령액 완벽 가이드</h2><h3>수령 조건</h3><p>국민연금 최소 가입기간은 10년(120개월)입니다. 10년 미만이면 일시금으로 반환받고, 10년 이상이면 월 연금으로 수령합니다.</p><h3>수령 시작 연령</h3><p>1969년생 이후는 만 65세부터 정상 수령합니다. 60세부터 조기수령이 가능하지만 연 6%씩 감액되어 최대 30% 감액(60세 수령 시). 반대로 70세까지 연기하면 연 7.2%씩 가산되어 최대 36% 증액됩니다.</p><h3>기준소득월액 상한</h3><p>2026년 기준 국민연금 기준소득월액 상한은 637만원입니다. 월급이 637만원을 초과해도 637만원까지만 보험료가 부과되며, 연금액도 이를 기준으로 산정됩니다.</p><h3>연금액 산정 구조</h3><p>기본연금액 = 1.2 × (A + B) × 소득대체율 × (가입기간/40). A는 전체 가입자 평균소득월액(2026년 약 283만원), B는 본인 가입기간 평균 기준소득월액. 2026년 소득대체율은 40%입니다.</p><h3>연금액 높이는 방법</h3><p>1) 추후납부(추납)로 경력단절 기간 보험료 소급 납부 → 가입기간 증가 2) 임의가입·임의계속가입 활용 3) 연기연금 신청으로 최대 36% 가산 4) 기준소득 상한까지 납부.</p>`,
 cartax:`<h2>자동차세 완벽 가이드</h2><h3>자동차세 산정 기준</h3><p>자동차세는 배기량(cc) 기준으로 과세되는 지방세입니다. 매년 6월(1기분), 12월(2기분) 연 2회 납부하며, 지방교육세 30%가 별도 부과됩니다.</p><h3>2026년 승용차 세율</h3><p><strong>비영업용(자가용):</strong> 1,000cc 이하 cc당 80원, 1,001~1,600cc cc당 140원, 1,600cc 초과 cc당 200원.</p><p><strong>영업용:</strong> 1,600cc 이하 cc당 18원, 초과 cc당 19원.</p><p><strong>전기·수소차:</strong> 10만원 정액.</p><h3>차령 할인</h3><p>차량 등록 3년차부터 매년 5%씩 자동차세가 감액되며, 12년 이상 차량은 최대 50% 할인됩니다. 예: 5년차 15% 할인, 10년차 40% 할인.</p><h3>1월 연납 할인</h3><p>매년 1월 16~31일에 위택스(wetax.go.kr)에서 연납 신청하면 약 5% 할인됩니다. 1,000cc 2천만원대 차량 기준 연간 약 1만원 절약.</p><h3>대표 차량별 자동차세</h3><p>1,000cc 경차: 약 10만원 / 1,600cc 준중형: 약 29만원 / 2,000cc 중형: 약 52만원 / 3,000cc 대형: 약 78만원 (지방교육세 포함).</p>`,
 compre:`<h2>2026년 종합부동산세 완벽 가이드</h2><h3>이런 분들께 필요해요</h3><p>공시가격 합산 9억원(다주택) 또는 12억원(1주택)을 초과하는 부동산을 보유한 분, 부부 공동명의 1주택 특례(18억 공제)를 검토하는 분, 다주택 보유 중 6월 1일 전 매도 타이밍을 고민하는 분.</p><h3>이 계산기로 해결되는 것</h3><p>보유 주택의 공시가격을 입력하면 공제액 차감, 공정시장가액비율(60%) 적용, 0.5~2.7% 누진세율 산출, 농어촌특별세(20%) 추가까지 한 번에 계산합니다. 1주택자의 고령자·장기보유 세액공제(합산 최대 80%)도 자동 반영됩니다.</p><h3>계산 방법과 세율</h3><p>과세표준 = (공시가격 합계 - 공제액) x 60%. 세율은 3억 이하 0.5%, 6억 이하 0.7%, 12억 이하 1.0%, 25억 이하 1.3%, 50억 이하 1.5%, 94억 이하 2.0%, 94억 초과 2.7%입니다. 전년 대비 세부담 상한은 150%입니다. 농어촌특별세 20%가 별도 부과됩니다.</p><h3>이 계산기 200% 활용법</h3><p>부부 공동명의 1주택 특례(18억 공제)와 단독명의(12억+고령자·장기보유 공제)를 각각 시뮬레이션하여 유리한 쪽을 확인하세요. 공시가격은 부동산공시가격알리미(realtyprice.kr)에서 조회할 수 있습니다. 다주택자는 매도 1건으로 공제액 이하로 떨어지는지 확인해보세요.</p><h3>놓치면 손해보는 것들</h3><p>과세 기준일은 매년 6월 1일입니다. 5월 31일까지 잔금을 치르면 해당 연도 종부세 부담이 매수자에게 이전됩니다. 납부기한은 12월 1~15일이며 250만원 초과 시 6개월 분납(이자 없음)이 가능합니다. 부부 공동명의 특례는 매년 9~10월 홈택스에서 신청해야 합니다.</p>`,
-property:`<h2>재산세 완벽 가이드</h2><h3>이런 분들께 필요해요</h3><p>아파트·주택·상가·토지를 보유한 모든 분, 올해 재산세가 얼마나 나올지 미리 확인하고 싶은 분, 공시가격 상승으로 세금 부담이 걱정되는 분. 재산세는 부동산을 보유하기만 해도 매년 부과됩니다.</p><h3>이 계산기로 해결되는 것</h3><p>공시가격과 공정시장가액비율(60~70%)을 적용한 과세표준을 산출하고, 주택은 4단계 누진세율(0.1~0.4%), 상가·건축물은 0.25% 단일세율을 자동 적용합니다. 도시지역분(0.14%), 지방교육세(20%) 등 부가세도 함께 계산합니다.</p><h3>계산 방법과 세율</h3><p>주택 재산세는 과세표준 6천만원 이하 0.1%, 1.5억 이하 0.15%, 3억 이하 0.25%, 3억 초과 0.4%입니다. 공정시장가액비율은 주택 60%, 토지·건축물 70%입니다. 세부담 상한은 공시가격별 105~130%로 전년 대비 급격한 인상이 제한됩니다.</p><h3>이 계산기 200% 활용법</h3><p>공시가격은 부동산공시가격알리미에서 확인하세요. 7월분(건물)과 9월분(토지) 합산 연간 세액을 미리 확인하고 자금을 준비하세요. 여러 부동산을 보유한 경우 각각 입력하여 합산 보유세를 파악할 수 있습니다.</p><h3>놓치면 손해보는 것들</h3><p>과세 기준일은 6월 1일로 종부세와 동일합니다. 매도 시 5월 31일 이전 잔금 완료 여부에 따라 해당 연도 재산세 부담자가 달라집니다. 납부기한은 7월(건물분)·9월(토지분) 16~31일입니다. 재산세는 종부세 계산 시 기납부세액으로 차감되므로 이중과세되지 않습니다.</p>`,
+property:`<h2>재산세 완벽 가이드</h2><h3>이런 분들께 필요해요</h3><p>아파트·주택·상가·토지를 보유한 모든 분, 올해 재산세가 얼마나 나올지 미리 확인하고 싶은 분, 공시가격 상승으로 세금 부담이 걱정되는 분. 재산세는 부동산을 보유하기만 해도 매년 부과됩니다.</p><h3>이 계산기로 해결되는 것</h3><p>공시가격과 공정시장가액비율(60~70%)을 적용한 과세표준을 산출하고, 주택은 4단계 누진세율(0.1~0.4%), 상가·건축물은 0.25% 단일세율을 자동 적용합니다. 도시지역분(0.14%), 지방교육세(20%) 등 부가세도 함께 계산합니다.</p><h3>계산 방법과 세율</h3><p>주택 재산세는 과세표준 6천만원 이하 0.1%, 1.5억 이하 0.15%, 3억 이하 0.25%, 3억 초과 0.4%입니다. 공정시장가액비율은 주택 60%, 토지·건축물 70%입니다. 주택은 세부담상한 대신 과세표준상한(전년도 과세표준 상당액+5%)이 적용되어 전년 대비 급격한 인상이 제한됩니다. 시가표준액 9억 이하 1세대1주택은 특례세율(0.05~0.35%)이 적용됩니다.</p><h3>이 계산기 200% 활용법</h3><p>공시가격은 부동산공시가격알리미에서 확인하세요. 7월분(건물)과 9월분(토지) 합산 연간 세액을 미리 확인하고 자금을 준비하세요. 여러 부동산을 보유한 경우 각각 입력하여 합산 보유세를 파악할 수 있습니다.</p><h3>놓치면 손해보는 것들</h3><p>과세 기준일은 6월 1일로 종부세와 동일합니다. 매도 시 5월 31일 이전 잔금 완료 여부에 따라 해당 연도 재산세 부담자가 달라집니다. 납부기한은 7월(건물분)·9월(토지분) 16~31일입니다. 재산세는 종부세 계산 시 기납부세액으로 차감되므로 이중과세되지 않습니다.</p>`,
 holdtax:`<h2>보유세 통합 가이드</h2><h3>보유세란?</h3><p>부동산 보유자에게 매년 부과되는 세금의 총칭입니다. 재산세(지방세) + 종합부동산세(국세)로 구성됩니다.</p><h3>재산세와 종부세의 관계</h3><p>재산세는 모든 부동산에 부과되지만, 종부세는 공시가 공제액(1주택 12억, 다주택 9억)을 초과한 경우에만 추가 부과됩니다.</p><h3>절세 전략</h3><p>공동명의로 공제액 분산(2인 18억까지), 1주택 유지로 고령자·장기보유 공제(최대 80%) 활용, 6월 1일 이전 명의이전 고려.</p>`,
 rental:`<h2>주택임대소득세 완벽 가이드</h2><h3>이런 분들께 필요해요</h3><p>월세를 받는 2주택 이상 보유자, 전세보증금 합계 3억원을 초과하는 3주택 이상 보유자, 기준시가 12억 초과 1주택으로 월세를 받는 분, 임대사업자 등록 여부를 고민하는 분.</p><h3>이 계산기로 해결되는 것</h3><p>연 임대수입(월세+간주임대료)을 산출하고, 2천만원 이하는 분리과세(14%)와 종합과세 중 유리한 쪽을 비교합니다. 등록임대사업자와 미등록의 필요경비율(60% vs 50%)·기본공제(400만 vs 200만) 차이를 반영한 세액을 나란히 보여줍니다.</p><h3>계산 방법과 세율</h3><p>분리과세 세액 = (연 수입 - 필요경비 - 기본공제) x 14%입니다. 등록임대는 경비율 60%+공제 400만, 미등록은 50%+200만입니다. 2천만원 초과 시 다른 소득과 합산하여 6~45% 종합과세됩니다. 3주택 이상은 전세보증금 간주임대료(초과분x60%x정기예금이율)도 과세됩니다.</p><h3>이 계산기 200% 활용법</h3><p>월세 금액과 보증금을 입력하고, 등록/미등록 시나리오를 전환하면서 연간 세액 차이를 비교하세요. 3주택 이상이면 전세보증금 금액에 따른 간주임대료 추가 과세도 자동 계산됩니다. 다른 소득(근로·사업)이 있는 경우 종합과세 예상 세율도 확인하세요.</p><h3>놓치면 손해보는 것들</h3><p>임대소득이 있으면 매년 5월 종합소득세 확정신고 의무가 있습니다. 무신고 시 20% 가산세가 부과됩니다. 등록임대사업자는 10년 의무임대·5% 임대료 상한 등 사후관리를 준수해야 하며, 위반 시 감면세액+가산세가 전액 추징됩니다. 2주택까지는 전세보증금 간주임대료가 비과세입니다.</p>`,
 mortgage:`<h2>대출이자 완벽 가이드</h2><h3>상환방식 3가지</h3><p><strong>원리금균등:</strong> 매월 동일 금액 상환. 초기 이자 비중 높음.</p><p><strong>원금균등:</strong> 매월 동일 원금 + 감소하는 이자. 초기 부담 크지만 총이자 가장 적음.</p><p><strong>만기일시:</strong> 기간 중 이자만, 만기에 원금 일시 상환. 총이자 가장 많음.</p><h3>중도상환수수료</h3><p>대출 후 3년 이내 조기 상환 시 보통 1~1.5% 수수료 부과.</p>`,
@@ -471,7 +479,7 @@ ltv:`<h2>LTV 완벽 가이드</h2><h3>LTV란?</h3><p>주택 시세 대비 대출
 loanmax:`<h2>대출가능액 가이드</h2><h3>DSR 역산 원리</h3><p>연소득 × DSR 한도(40%) - 기존대출 월상환 × 12 = 가능한 연간 원리금. 이를 원리금균등 공식으로 역산하여 최대 대출원금 산출.</p><h3>예시</h3><p>연소득 5천만, DSR 40%, 기존없음, 3.5% 30년 → 약 3.7억원 대출 가능.</p>`,
 registration:`<h2>등기비용 가이드</h2><h3>구성 요소</h3><p>등록면허세(매매 2%, 상속 0.8%, 증여 1.5%) + 지방교육세(등록면허세 20%) + 인지세 + 국민주택채권 할인비용 + 법원 수수료(15,000원).</p><h3>셀프등기</h3><p>인터넷등기소에서 셀프등기 시 법무사 수수료(30~60만원) 절약.</p>`,
 legal:`<h2>법무사수수료 가이드</h2><h3>기본 보수표</h3><p>대한법무사협회 기준 부동산 가액별 11만~77만원 보수. 상속·증여는 30% 가산, 근저당설정은 50% 수준.</p><h3>추가 비용</h3><p>부가세 10% + 서류작성비 + 교통비. 법무사별 협의 가능.</p>`,
-stamp:`<h2>인지세 가이드</h2><h3>부동산 인지세</h3><p>거래금액 1억 이하 비과세, 1억~10억 15만원, 10억~30억 35만원, 30억 초과 50만원. 매도인·매수인 각 50% 부담.</p><h3>전자수입인지</h3><p>인터넷으로 구매·출력 가능.</p>`,
+stamp:`<h2>인지세 가이드</h2><h3>부동산 인지세</h3><p>거래금액 1억 이하 비과세, 1억~10억 15만원, 10억 초과 35만원. 매도인·매수인 각 50% 부담.</p><h3>전자수입인지</h3><p>인터넷으로 구매·출력 가능.</p>`,
 bond:`<h2>채권할인료 가이드</h2><h3>국민주택채권</h3><p>부동산 등기 시 의무 매입. 매입률 1~5%(지역·가액별). 즉시 매도 시 할인비용(약 4~5%)만 실제 부담.</p><h3>지역별 매입률</h3><p>서울: 6억 초과 5%, 1.6~6억 4%, 1.6억 이하 3%. 기타 지역은 낮음.</p>`,
 appraisal:`<h2>감정평가수수료 가이드</h2><h3>감정평가가 필요한 경우</h3><p>경매 응찰, 담보대출 심사, 상속·증여세 신고, 재건축 관리처분, 소송 등.</p><h3>수수료 기준</h3><p>감정평가사 보수표에 따라 가액별 산정. 부가세 10% 별도.</p>`,
 insurance4:`<h2>4대보험 완벽 가이드</h2><h3>2026년 직장가입자 요율</h3><p>국민연금 4.75%(상한 월 659만원, 2026.7~), 건강보험 3.595%, 장기요양 건보료의 13.14%, 고용보험 0.9%. 사업주 부담분 별도.</p><h3>산재보험</h3><p>사업주 전액 부담(업종별 0.6~18.6%), 근로자 부담 없음.</p><h3>비과세 활용</h3><p>식대·자가운전보조금(각 월 20만원) 비과세로 처리하면 보험료 기준이 낮아져 실수령액 증가.</p>`,
@@ -494,7 +502,7 @@ inherit:`<h2>상속세 완벽 가이드</h2><h3>이런 분들께 필요해요</h
 bldvat:`<h2>건물 부가세 완벽 가이드</h2><h3>건물분 부가가치세란?</h3><p>부동산 매매 시 건물 부분에 대해 부과되는 부가가치세(10%)입니다. 매매가를 토지가와 건물가로 안분하여 건물가액에 대해서만 과세합니다. 매도인이 일반과세자인 경우 세금계산서 발급이 필요합니다.</p><h3>면세 대상</h3><p>전용면적 85㎡ 이하 국민주택규모 주택은 부가세가 면제됩니다. 토지 자체도 부가세 면세입니다. 따라서 주택(85㎡ 이하) 거래에서는 건물분 부가세가 발생하지 않습니다.</p><h3>계산 방법</h3><p>건물분 부가세 = (매매가 - 토지가) ÷ 1.1 × 0.1. 토지가 비율은 공시지가 기준으로 산정하며, 감정평가를 통해 정확한 안분이 가능합니다. 상가·오피스텔(업무용) 거래 시 반드시 확인이 필요합니다.</p>`,
 estincome:`<h2>임대 추정소득 완벽 가이드</h2><h3>임대소득 추정이란?</h3><p>월세 수입과 보증금(간주임대료)을 합산하여 연간 총 임대수입금액을 산출하고, 필요경비율을 적용하여 종합소득세 과세 대상 소득금액을 추정하는 과정입니다.</p><h3>필요경비율</h3><p>주택임대 단순경비율은 약 42.6%(등록) ~ 56%(미등록)이며, 실제 장부를 작성하는 경우 실제 경비를 공제할 수 있습니다. 2천만원 이하 임대수입은 분리과세(14%) 선택이 가능합니다.</p><h3>간주임대료</h3><p>3주택 이상 보유하고 전세보증금 합계가 3억원을 초과하면, 초과분의 60%에 정기예금이자율(약 3.5%)을 곱한 금액이 간주임대료로 과세됩니다.</p>`,
 goodlord:`<h2>착한임대인 세액공제 완벽 가이드</h2><h3>착한임대인 세액공제란?</h3><p>조세특례제한법 제96조의3에 따라 상가건물 임대료를 인하한 임대인에게 인하액의 최대 70%를 소득세(법인세)에서 공제해주는 제도입니다. 소상공인 임차인을 대상으로 합니다.</p><h3>공제율</h3><p>종합소득금액 1억원 이하: 인하액의 70% 공제. 1억원 초과: 50% 공제. 임대료를 10% 이상 인하해야 적용되며, 인하 기간 동안 재임대 제한, 임대료 인상 금지 등의 요건이 있습니다.</p><h3>적용 요건</h3><p>임차인이 소상공인이어야 하고, 임대인과 임차인이 특수관계가 아니어야 합니다. 종합소득세 또는 법인세 확정신고 시 세액공제 신청서와 임대차계약서를 첨부합니다.</p>`,
-imputedrent:`<h2>간주임대료 완벽 가이드</h2><h3>간주임대료란?</h3><p>소득세법 제25조에 따라 3주택 이상을 보유한 개인이 전세보증금 합계 3억원을 초과하면, 초과분에 대해 임대수입이 있는 것으로 간주하여 과세하는 제도입니다.</p><h3>계산 공식</h3><p>간주임대료 = (보증금 합계 - 3억원) × 60% × 정기예금이자율(국세청 고시, 2026년 약 3.5%). 금융소득(보증금 운용으로 발생한 이자·배당)은 차감합니다.</p><h3>과세 제외</h3><p>2주택 이하 보유자, 보증금 합계 3억원 이하인 경우, 주택 수 산정 시 소형주택(전용 40㎡ 이하 + 기준시가 2억 이하)은 제외됩니다. 종합소득세 신고 시 부동산임대소득으로 합산 과세됩니다.</p>`,
+imputedrent:`<h2>간주임대료 완벽 가이드</h2><h3>간주임대료란?</h3><p>소득세법 제25조에 따라 3주택 이상을 보유한 개인이 전세보증금 합계 3억원을 초과하거나, 2주택(기준시가 12억원 이하 주택은 주택 수에서 제외)을 보유한 개인이 보증금 합계 12억원을 초과하면, 3억원 초과분에 대해 임대수입이 있는 것으로 간주하여 과세하는 제도입니다.</p><h3>계산 공식</h3><p>간주임대료 = (보증금 합계 - 3억원) × 60% × 정기예금이자율(소득세법 시행규칙 제23조 제1항: 연 3.1%). 금융소득(보증금 운용으로 발생한 이자·배당)은 차감합니다.</p><h3>과세 제외</h3><p>1주택 이하 보유자, 3주택 이상은 보증금 합계 3억원 이하·2주택은 12억원 이하인 경우, 주택 수 산정 시 소형주택(전용 40㎡ 이하 + 기준시가 2억 이하)은 제외됩니다. 종합소득세 신고 시 부동산임대소득으로 합산 과세됩니다.</p>`,
 legalinherit:`<h2>법정상속분 완벽 가이드</h2><h3>법정상속분이란?</h3><p>민법 제1009조에 따라 유언이 없는 경우 상속재산을 법정 비율로 배분하는 기준입니다. 같은 순위의 상속인이 여러 명이면 균분하되, 배우자는 직계비속 또는 직계존속의 상속분에 5할을 가산합니다.</p><h3>상속 순위</h3><p>1순위: 직계비속(자녀) + 배우자. 2순위: 직계존속(부모) + 배우자. 3순위: 형제자매. 4순위: 4촌 이내 방계혈족. 배우자는 1·2순위 상속인과 공동상속하며, 없으면 단독 상속합니다.</p><h3>유류분</h3><p>배우자·직계비속: 법정상속분의 1/2. 직계존속·형제자매: 법정상속분의 1/3. 유류분을 침해하는 유증·증여는 반환청구가 가능합니다(민법 제1112~1118조).</p>`,
 progressive:`<h2>누진세 범용 계산기 가이드</h2><h3>누진세란?</h3><p>과세표준이 커질수록 높은 세율이 적용되는 세금 구조입니다. 한국의 종합소득세(6~45%), 양도소득세(6~45%), 증여세·상속세(10~50%) 등이 누진세 구조를 사용합니다.</p><h3>한계세율과 실효세율</h3><p>한계세율은 마지막 구간에 적용되는 세율이고, 실효세율은 전체 세액을 과세표준으로 나눈 실제 부담률입니다. 예: 과세표준 1억원의 종합소득세 한계세율 35%, 실효세율 약 19.4%.</p><h3>활용 방법</h3><p>세목을 선택하고 과세표준을 입력하면 구간별 세액, 한계세율, 실효세율을 즉시 확인할 수 있습니다. 종합소득세, 양도소득세, 증여세, 상속세 4가지 세목을 지원합니다.</p>`,
 subscription:`<h2>청약가점 완벽 가이드</h2><h3>청약가점제란?</h3><p>아파트 분양 시 무주택기간(32점) + 부양가족 수(35점) + 청약통장 가입기간(17점) = 총 84점 만점으로 당첨자를 선정하는 제도입니다. 투기과열지구·조정대상지역 85㎡ 이하 100% 가점제 적용.</p><h3>점수 산정 기준</h3><p>무주택기간: 30세 이상부터 산정, 15년 이상 32점 만점. 부양가족: 배우자·직계존속·직계비속 합산, 6인 이상 35점 만점. 청약통장: 15년 이상 17점 만점.</p><h3>당첨 전략</h3><p>서울 주요 단지 평균 가점 60점 이상. 무주택기간 극대화, 부양가족 등록(직계존속 3년 이상 동거), 통장 유지가 핵심입니다.</p>`,
@@ -509,7 +517,7 @@ rentincrease:`<h2>임대료 5% 상한 가이드</h2><h3>임대료 인상 상한�
 realprice:`<h2>실거래가 조회 가이드</h2><h3>실거래가 공개시스템</h3><p>국토교통부가 운영하는 부동산 실거래가 공개 시스템에서 전국 아파트, 단독주택, 오피스텔 등의 매매·전세·월세 실거래 내역을 조회할 수 있습니다.</p><h3>조회 방법</h3><p>주소(법정동) + 거래유형(매매/전세/월세) + 기간을 입력하면 최근 거래 내역이 표시됩니다. 계약일, 거래금액, 면적, 층, 건축년도 등의 상세 정보를 확인할 수 있습니다.</p><h3>활용</h3><p>취득세·양도세 계산 시 실거래가 기준으로 정확한 세액을 산출할 수 있습니다. 시세 파악, 투자 분석, 감정평가 참고 자료로도 활용됩니다.</p>`,
 netsale:`<h2>매도 실수령액 가이드</h2><h3>실수령액이란?</h3><p>부동산 매도 후 양도소득세, 중개수수료, 기타 비용을 차감한 후 실제로 수령하는 금액입니다. 매도가만으로는 실수령액을 정확히 알 수 없으므로 사전 계산이 중요합니다.</p><h3>차감 항목</h3><p>양도소득세(6~45%), 지방소득세(양도세의 10%), 중개수수료(매도 시 0.4~0.9%), 말소등기비용, 기존 대출 잔액 상환. 1세대1주택 비과세 요건 충족 시 양도세 면제.</p><h3>계산 순서</h3><p>매도가 → 양도차익 산출 → 장기보유특별공제 → 기본공제 250만원 → 세율 적용 → 세액 확정 → 매도가 - 세금 - 비용 = 실수령액.</p>`,
 bond2:`<h2>국민주택채권 매입 가이드</h2><h3>국민주택채권이란?</h3><p>주택도시기금법에 따라 부동산 등기 시 의무적으로 매입해야 하는 채권입니다. 매입 후 즉시 시장에서 매도하며, 이때 발생하는 할인 손실이 실제 비용입니다.</p><h3>매입률</h3><p>공시가격 구간별로 1~5% 차등 적용. 서울: 6억 초과 5%, 1.6~6억 4%, 1.6억 이하 3%. 광역시·기타 지역은 낮은 요율 적용.</p><h3>할인율</h3><p>증권사·은행에서 당일 매도 시 약 4~5% 할인율 적용. 실제 부담 비용 = 공시가격 × 매입률 × 할인율.</p>`,
-jeonseins:`<h2>전세보증금 보험료 가이드</h2><h3>전세보증보험이란?</h3><p>임대인이 전세보증금을 반환하지 못할 때 보증기관(HUG, HF)이 대신 반환해주는 보험입니다. 임차인이 가입하며, 보증료를 납부합니다.</p><h3>보증료율</h3><p>HUG: 연 0.115~0.154%. HF(한국주택금융공사): 연 0.02~0.04%. 아파트는 HF가 저렴하고, 다세대·오피스텔은 HUG가 주로 취급합니다.</p><h3>가입 요건</h3><p>전세가율(보증금/시세) 일정 비율 이하, 전세계약서 확정일자 보유, 전입신고 완료가 기본 요건입니다.</p>`,
+jeonseins:`<h2>전세보증금 보험료 가이드</h2><h3>전세보증보험이란?</h3><p>임대인이 전세보증금을 반환하지 못할 때 보증기관(HUG, HF)이 대신 반환해주는 보험입니다. 임차인이 가입하며, 보증료를 납부합니다.</p><h3>보증료율</h3><p>HUG: 보증금 구간·주택유형·부채비율별 연 0.097~0.211%. HF(한국주택금융공사): 연 0.02~0.04%. 아파트는 HF가 저렴하고, 다세대·오피스텔은 HUG가 주로 취급합니다.</p><h3>가입 요건</h3><p>전세가율(보증금/시세) 일정 비율 이하, 전세계약서 확정일자 보유, 전입신고 완료가 기본 요건입니다.</p>`,
 stamp2:`<h2>인지세 (전자계약) 가이드</h2><h3>전자계약 인지세란?</h3><p>부동산 전자계약시스템(IRTS)을 통해 체결된 계약은 종이 인지세의 50%를 감면받습니다. 1억 이하 비과세, 1~10억 7.5만원, 10~30억 17.5만원, 30억 초과 25만원.</p><h3>전자계약 장점</h3><p>인지세 50% 감면, 확정일자 자동 부여, 계약서 위변조 방지, 실거래 신고 자동 처리. 공인중개사 사무소에서 전자계약 시스템을 이용할 수 있습니다.</p><h3>납부 방법</h3><p>전자수입인지 사이트(e-revenuestamp.or.kr)에서 온라인 구매·출력. 매도인·매수인 각 50%씩 부담합니다.</p>`,
 datediff:`<h2>날짜 계산기 가이드</h2><h3>날짜 계산 활용</h3><p>부동산 거래에서 보유기간, 거주기간, 신고기한 등을 정확히 계산하는 것이 중요합니다. 취득일~양도일 간 일수로 보유기간을 산정하고, 2년 이상 보유/거주 요건 충족 여부를 확인합니다.</p><h3>주요 기한</h3><p>취득세 신고: 취득일로부터 60일(상속 6개월). 양도세 예정신고: 양도일이 속한 달 말일부터 2개월. 종부세 납부: 매년 12월 1~15일. 재산세: 7월·9월.</p><h3>기간 계산법</h3><p>민법상 기간 계산은 초일 불산입 원칙. 다만 세법에서는 취득일·양도일 기준으로 별도 규정이 있으므로 주의가 필요합니다.</p>`,
 */
@@ -629,7 +637,7 @@ compre:{q:"종합부동산세는 누가 내나요?",a:"매년 6.1 기준 보유 
 property:{q:"재산세는 얼마나 나오나요?",a:"매년 6.1 기준 부동산 보유자에게 부과되는 지방세입니다. 주택의 과세표준은 공시가격×60%이며, 세율 0.1~0.4%가 누진 적용됩니다. 도시지역분(과세표준의 0.14%)과 지방교육세(재산세의 20%)가 별도 부과됩니다. 7월 건물분+토지분 절반, 9월 나머지 절반을 나누어 납부합니다. 상가 건축물은 0.25% 단일세율입니다.",
   rates:[["6천만↓","0.1%"],["~1.5억","0.15%"],["~3억","0.25%"],["3억↑","0.4%"]],rh:["과세표준(주택)","세율"],faqList:[
   {icon:<IconQ/>,title:"재산세란?",body:"매년 6월 1일 기준 부동산 보유자에게 부과되는 지방세입니다."},
-  {icon:<IconBulb/>,title:"절세 팁",body:"• 1세대1주택 공정시장가액비율 특례 (43~45%, 2026년까지)\n• 9억 이하 1주택은 세부담상한 105%로 인상폭 제한\n• 공시가격 이의신청으로 과세표준 낮추기 가능"},
+  {icon:<IconBulb/>,title:"절세 팁",body:"• 1세대1주택 공정시장가액비율 특례 (43~45%, 2026년까지)\n• 9억 이하 1세대1주택은 특례세율(0.05~0.35%) 적용, 주택은 과세표준상한(전년도+5%)으로 인상폭 제한\n• 공시가격 이의신청으로 과세표준 낮추기 가능"},
   {icon:<IconCal/>,title:"납부 기한 및 방법",body:"• 7월: 건축물분 + 주택 1/2\n• 9월: 토지분 + 주택 나머지 1/2\n• 고지서 기반 납부 (별도 신고 불요)\n• 위택스 또는 은행 납부"},
   {icon:<IconWarn/>,title:"주의사항",body:"• 재산세와 종부세는 이중과세 조정 (종부세에서 재산세 차감)\n• 공동소유 시 지분별 각자 납부"}
 ]},
@@ -683,7 +691,7 @@ commission:{q:"중개보수 요율은?",a:"매매 시 9억 이하 0.4%, 15억 �
   {icon:<IconWarn/>,title:"주의사항",body:"• 상가·토지·오피스텔은 0.9% 이내 협의\n• 월세 환산 거래금액 = 보증금 + (월세×100), 보증금보다 작으면 보증금 기준"}
 ]},
 registration:{q:"등기비용 구성은?",a:"소유권이전등기 시 인지세(1억 이하 비과세, 1~10억 15만원, 10억 초과 35만원), 국민주택채권 할인비용(매매가의 3~5%를 매입 후 할인 매도), 법원 등기수수료(15,000원)가 발생합니다. 취득세·등록면허세는 별도 납부합니다.",
-  rates:[["1억 이하","비과세"],["1~10억","15만원"],["10~30억","35만원"],["30억 초과","50만원"]],rh:["거래금액","인지세"],faqList:[
+  rates:[["1억 이하","비과세"],["1~10억","15만원"],["10억 초과","35만원"]],rh:["거래금액","인지세"],faqList:[
   {icon:<IconQ/>,title:"등기비용이란?",body:"소유권 이전 시 발생하는 등록면허세+국민주택채권+법원수수료입니다."},
   {icon:<IconBulb/>,title:"절감 팁",body:"• 국민주택채권은 즉시 할인매도 가능 (할인율 확인 후 실부담 계산)"},
   {icon:<IconCal/>,title:"등기 기한",body:"• 잔금일로부터 60일 이내 등기 신청"},
@@ -1996,79 +2004,7 @@ function CalcAcq({isMo=false,onNav=()=>{}}){
   const showCultivation=realType==="farmLand";
   const isHouse=realType==="house";
   const showBirthChild=isHouse&&acqType==="sale"&&n>=2;
-  let r=0.01,rateLabel="";
-  if(!isHouse){
-    if(realType==="officetel"){
-      if(acqType==="sale"){r=0.04;rateLabel="오피스텔 매매 4%";}
-      else if(acqType==="gift"){r=0.035;rateLabel="오피스텔 증여 3.5%";}
-      else if(acqType==="inherit"){r=0.028;rateLabel="오피스텔 상속 2.8%";}
-      else if(acqType==="newbuild"){r=0.028;rateLabel="오피스텔 원시취득 2.8%";}
-      else{r=0.04;rateLabel="오피스텔 법인 4%";}
-    }
-    else if(realType==="farmLand"){
-      if(acqType==="sale"){r=cultivation?0.015:0.03;rateLabel=cultivation?"농지 자경 1.5%":"농지 매매 3%";}
-      else if(acqType==="gift"){r=0.035;rateLabel="농지 증여 3.5%";}
-      else if(acqType==="inherit"){r=0.023;rateLabel="농지 상속 2.3%";}
-      else if(acqType==="newbuild"){r=0.028;rateLabel="농지 원시취득 2.8%";}
-      else{r=0.04;rateLabel="농지 법인 4%";}
-    }
-    else{
-      if(acqType==="sale"){r=0.04;rateLabel="그 외 매매 4%";}
-      else if(acqType==="gift"){r=0.035;rateLabel="그 외 증여 3.5%";}
-      else if(acqType==="inherit"){r=0.028;rateLabel="그 외 상속 2.8%";}
-      else if(acqType==="newbuild"){r=0.028;rateLabel="그 외 원시취득 2.8%";}
-      else{r=0.04;rateLabel="그 외 법인 4%";}
-    }
-  }
-  else if(acqType==="corp"){r=0.12;rateLabel="법인 주택 12%";}
-  else if(corporation&&acqType==="sale"&&!heavyTaxExclude){r=0.12;rateLabel="법인 중과 12%";}
-  else if(acqType==="sale"){
-    if(lowVal){r=0.01;rateLabel="공시가1억↓ 특례 1%";}
-    else if(heavyTaxExclude&&n>=2){
-      if(pW<=6e8){r=0.01;}else if(pW<=9e8){r=Math.max(0.01,Math.min(0.03,(pW*2/3e8-3)/100));}else{r=0.03;}
-      rateLabel="중과배제 일반세율 "+(r*100).toFixed(2)+"%";
-    }
-    else if(tempTwo||n===1||(n===2&&!isAdj)||(birthChild&&n===2&&isAdj)){
-      if(pW<=6e8){r=0.01;}else if(pW<=9e8){r=Math.max(0.01,Math.min(0.03,(pW*2/3e8-3)/100));}else{r=0.03;}
-      rateLabel=(birthChild&&n===2&&isAdj?"출산양육 2주택(조정) ":tempTwo?"일시적2주택 ":n===1?"1주택 ":"2주택(비조정) ")+(r*100).toFixed(2)+"%";
-    }
-    else if(n===2&&isAdj){r=0.08;rateLabel="2주택(조정) 8%";}
-    else if(n===3&&!isAdj){r=0.08;rateLabel="3주택(비조정) 8%";}
-    else if(birthChild&&n===3&&isAdj){r=0.08;rateLabel="출산양육 3주택(조정) 8%";}
-    else if(n===3&&isAdj){r=0.12;rateLabel="3주택(조정) 12%";}
-    else if(n>=4){r=0.12;rateLabel="4주택+ 12%";}
-  }
-  else if(acqType==="gift"){
-    if(isAdj&&stdW>=3e8&&!spouseChildGive){r=0.12;rateLabel="증여 중과(조정+공시3억↑) 12%";}
-    else{r=0.035;rateLabel=spouseChildGive?"증여 직계 3.5%":"증여 3.5%";}
-  }
-  else if(acqType==="inherit"){
-    if(inheritNone==="yes"){r=0.008;rateLabel="상속 무주택특례 0.8%";}
-    else{r=0.028;rateLabel="상속 2.8%";}
-  }
-  else if(acqType==="newbuild"){r=0.028;rateLabel="원시취득 2.8%";}
-  else if(acqType==="corp"){r=0.12;rateLabel="법인 12%";}
-  // 2026.04.14 사치성재산 중과 (지방세법 §13②): 별장·골프장·고급주택·고급오락장은 표준세율 + 중과기준세율(2%)×4 = +8%p
-  if(luxury){r+=0.08;rateLabel=(rateLabel?rateLabel+" + ":"")+"사치성재산 중과 +8%p";}
-  const ac=Math.round(pW*r);
-  const isHeavy=r>=0.08;
-  let ed;
-  if(isHeavy){ed=Math.round(pW*0.004);}
-  else{ed=Math.round(ac*0.1);}
-  const isBig=areaType==="big";
-  let farmRate=0;
-  if(isBig){
-    if(r>=0.12)farmRate=0.01;
-    else if(r>=0.08)farmRate=0.006;
-    else farmRate=0.002;
-  }else if(!isHouse&&realType!=="officetel"){
-    farmRate=0.002;
-  }
-  const fm=Math.round(pW*farmRate);
-  const firstDedCap=populationDecline?3000000:2000000;
-  const firstDed=acqType==="sale"&&firstOfLife&&n===1&&isFirstHomeBenefit&&pW<=12e8?Math.min(ac,firstDedCap):0;
-  const total=ac+ed+fm-firstDed;
-  const eduRate=isHeavy?0.004:r*0.1;
+  const {r,rateLabel,ac,isHeavy,ed,isBig,farmRate,fm,firstDedCap,firstDed,total,eduRate}=calcAcquisition({acqType,realType,areaType,pW,stdW,n,isAdj,isHouse,cultivation,corporation,heavyTaxExclude,lowVal,tempTwo,birthChild,spouseChildGive,inheritNone,luxury,populationDecline,firstOfLife,isFirstHomeBenefit});
   const resultItems=[];
   resultItems.push({l:"과세표준",v:fW(pW),note:stdPrice?"취득가액":"시가표준액=취득가액"});
   resultItems.push({l:"취득세율",v:(r*100).toFixed(2)+"%",note:rateLabel});
@@ -2313,26 +2249,12 @@ function CalcTrans({isMo=false,onNav=()=>{}}){
       taxableGain=Math.round(gain*(adjSell-12e8)/adjSell);
       exemptNote="12억 초과분 과세 (비율: "+((adjSell-12e8)/adjSell*100).toFixed(1)+"%)";
     }
-    let ltcRate=0;let ltcNote="";
+    let ltcRate=0;let ltcNote="";let ltcAmount=0;
     const isShort=taxHoldYears<2;
     const heavyApplied=(isHeavy2||isHeavy3)&&!inMoratorium;
     if(!unregistered&&!isShort&&!heavyApplied&&holdFloor>=3){
-      if(is1HouseExempt&&own==="one"&&assetType==="house"){
-        let holdRate=0;
-        if(holdFloor>=3)holdRate=0.12;if(holdFloor>=4)holdRate=0.16;if(holdFloor>=5)holdRate=0.20;if(holdFloor>=6)holdRate=0.24;if(holdFloor>=7)holdRate=0.28;if(holdFloor>=8)holdRate=0.32;if(holdFloor>=9)holdRate=0.36;if(holdFloor>=10)holdRate=0.40;
-        let liveRate=0;
-        if(!sangSaeng){if(liveYrs>=2)liveRate=0.08;if(liveYrs>=3)liveRate=0.12;if(liveYrs>=4)liveRate=0.16;if(liveYrs>=5)liveRate=0.20;if(liveYrs>=6)liveRate=0.24;if(liveYrs>=7)liveRate=0.28;if(liveYrs>=8)liveRate=0.32;if(liveYrs>=9)liveRate=0.36;if(liveYrs>=10)liveRate=0.40;}
-        ltcRate=Math.min(holdRate+liveRate,0.80);
-        ltcNote=sangSaeng?"상생임대주택: 보유공제 "+(holdRate*100)+"% 만 적용 (거주공제 제외)":"1주택 보유"+(holdRate*100)+"%+거주"+(liveRate*100)+"% = "+(ltcRate*100)+"%"+(ltcRate>=0.80?" (최대80%)":"");
-      }else if(longRentEx){
-        ltcRate=holdFloor>=10?0.70:holdFloor>=8?0.50:0;
-        ltcNote="장기임대 조세특례 "+(ltcRate*100)+"%";
-      }else{
-        if(holdFloor>=3)ltcRate=0.06;if(holdFloor>=4)ltcRate=0.08;if(holdFloor>=5)ltcRate=0.10;if(holdFloor>=6)ltcRate=0.12;if(holdFloor>=7)ltcRate=0.14;if(holdFloor>=8)ltcRate=0.16;if(holdFloor>=9)ltcRate=0.18;if(holdFloor>=10)ltcRate=0.20;if(holdFloor>=11)ltcRate=0.22;if(holdFloor>=12)ltcRate=0.24;if(holdFloor>=13)ltcRate=0.26;if(holdFloor>=14)ltcRate=0.28;if(holdFloor>=15)ltcRate=0.30;
-        ltcNote="일반 장특공 보유 "+(ltcRate*100)+"% (최대30%)";
-      }
+      ({ltcRate,ltcNote,ltcAmount}=calcLtc({holdFloor,liveYrs,sangSaeng,oneHouse:is1HouseExempt&&own==="one"&&assetType==="house",longRentEx,taxableGain}));
     }
-    const ltcAmount=Math.round(taxableGain*ltcRate);
     const incomeAmount=taxableGain-ltcAmount;
     const basicDed=baseDeduct?2.5e6:0;
     const taxBase=Math.max(0,incomeAmount-basicDed);
@@ -2621,37 +2543,13 @@ function CalcCompre({isMo=false,onNav=()=>{}}){
 function CalcProp({isMo=false,onNav=()=>{}}){
   const[pt,sPt]=useState("house");const[p,sP]=useState("");const[isDefault,setIsDefault]=useState(true);const markModified=()=>setIsDefault(false);const[one,sOne]=useState("no");const[prevTax,sPT]=useState("");const[showPropLookup,setShowPropLookup]=useState(false);const[selectedPropInfo,setSelectedPropInfo]=useState(null);const[autoPropFill,setAutoPropFill]=useState(false);
   const pp=tW(p);
-  let fr=0.70;
-  if(pt==="house"){
-    if(one==="yes"){
-      if(pp<=3e8)fr=0.43;
-      else if(pp<=6e8)fr=0.44;
-      else if(pp<=9e8)fr=0.45;
-      else fr=0.60;
-    }else{fr=0.60;}
-  }
-  const tb=pp*fr;
-  let tx=0;
-  if(pt==="house")tx=pTx(tb,[[6e7,.001],[1.5e8,.0015],[3e8,.0025],[Infinity,.004]]);
-  else if(pt==="land")tx=pTx(tb,[[5e7,.002],[1e8,.003],[Infinity,.005]]);
-  else tx=tb*.0025;
-  tx=Math.round(tx);
-  const ci=pt==="house"?Math.round(tb*.0014):0;
-  const ed=Math.round(tx*.2);
-  let rt=0;
-  if(pt==="house"){if(tb<=6e7)rt=Math.round(tb*.00004);else if(tb<=1.3e8)rt=2400+Math.round((tb-6e7)*.00005);else if(tb<=2.6e8)rt=5900+Math.round((tb-1.3e8)*.00006);else if(tb<=3.9e8)rt=13700+Math.round((tb-2.6e8)*.00008);else if(tb<=6.4e8)rt=24100+Math.round((tb-3.9e8)*.0001);else rt=49100+Math.round((tb-6.4e8)*.00012);}
-  const rawTotal=tx+ci+ed+rt;
-  let total=rawTotal;
-  const prev=tW(prevTax);
-  const capRate=pp<=3e8?1.05:pp<=6e8?1.10:1.30;
-  let capApplied=false;
-  if(prev>0){const capped=Math.round(prev*capRate);if(total>capped){total=capped;capApplied=true;}}
+  const{fr,tb,tx,ci,ed,rt,total,capApplied}=calcProperty({pt,pp,one,prevStdW:tW(prevTax)});
   const half=Math.round(total/2);
-  const rpItems=[{l:"공시가격",v:fW(pp)},{l:"과세표준",v:fW(tb),note:"공정시장가액비율 "+(fr*100).toFixed(0)+"% (지방세법 시행령 §109)"},{l:"재산세 본세",v:fW(tx),note:"지방세법 §111"}];
+  const rpItems=[{l:"공시가격",v:fW(pp)},{l:"과세표준",v:fW(tb),note:"공정시장가액비율 "+(fr*100).toFixed(0)+"% (지방세법 시행령 §109)"},{l:"재산세 본세",v:fW(tx),note:pt==="house"&&one==="yes"&&pp<=9e8?"지방세법 §111조의2 특례세율":"지방세법 §111"}];
   if(pt==="house")rpItems.push({l:"도시지역분 (0.14%)",v:fW(ci)});
   rpItems.push({l:"지방교육세 (20%)",v:fW(ed)});
   if(rt>0)rpItems.push({l:"지역자원시설세",v:fW(rt),note:"건축물 소재지 적용"});
-  if(capApplied)rpItems.push({l:"세부담 상한 적용",v:fW(total),note:"전년 대비 "+(capRate*100-100).toFixed(0)+"%↑ 한도 (지방세법 §122)"});
+  if(capApplied)rpItems.push({l:"과세표준상한 적용",v:fW(tb),note:"전년도 과세표준 상당액+5% 한도 (지방세법 §110③)"});
   if(pt==="house"){rpItems.push({l:"7월 납부 (건물+주택½)",v:fW(half)});rpItems.push({l:"9월 납부 (토지+주택½)",v:fW(total-half)});}
   else if(pt==="land")rpItems.push({l:"9월 일괄 납부",v:fW(total)});
   else rpItems.push({l:"7월 일괄 납부",v:fW(total)});
@@ -2659,10 +2557,10 @@ function CalcProp({isMo=false,onNav=()=>{}}){
   return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}><div><Tog label="부동산 유형" value={pt} onChange={sPt} options={[{value:"house",label:"주택"},{value:"land",label:"토지"},{value:"com",label:"건축물"}]}/><div style={{fontSize:13,color:"#374151",fontWeight:600,marginBottom:4,display:"flex",alignItems:"center",gap:6}}>공시가격 <TipModal title=""><p>매년 1월 1일 기준 공시가격. realtyprice.kr에서 확인. 공정시장가액비율(60%)을 곱한 금액이 과세표준.</p></TipModal></div>{!isMo&&<div style={{marginBottom:10}}><button type="button" onClick={()=>setShowPropLookup(true)} style={{width:"100%",padding:"12px 16px",background:"linear-gradient(135deg,#eff6ff,#dbeafe)",border:"1.5px solid #bfdbfe",borderRadius:10,fontSize:13,fontWeight:700,color:"#1e40af",cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>📍 주소로 공시가격 자동조회</button></div>}{showPropLookup&&<AddressModal calcType="holding" onClose={()=>setShowPropLookup(false)} onApplyStd={v=>{sP(String(Math.round(v/10000)));markModified();setAutoPropFill(true);}} onApplyInfo={info=>setSelectedPropInfo(info)}/>}{selectedPropInfo&&!isMo&&<div style={{background:"#eff6ff",border:"1px solid #bfdbfe",borderRadius:10,padding:"10px 14px",marginBottom:8,display:"flex",alignItems:"center",justifyContent:"space-between",gap:8}}>
         <div style={{minWidth:0}}><div style={{fontSize:13,fontWeight:700,color:"#1e40af"}}>{selectedPropInfo.aptName}{selectedPropInfo.dongNm?" "+selectedPropInfo.dongNm+"동":""}{selectedPropInfo.hoNm?" "+selectedPropInfo.hoNm+"호":""}</div><div style={{fontSize:11,color:"#3b82f6",marginTop:2}}>{selectedPropInfo.priceYear?"공시가격 "+selectedPropInfo.priceYear+"년 기준 자동입력":""}</div></div>
         <button onClick={()=>{setSelectedPropInfo(null);setShowPropLookup(true);}} style={{fontSize:12,color:"#0141f9",background:"none",border:"none",cursor:"pointer",fontWeight:700,fontFamily:"inherit",whiteSpace:"nowrap"}}>다시검색</button>
-      </div>}<Inp label="" value={p} onChange={v=>{sP(v);setAutoPropFill(false);}} suffix="만원" placeholder="예: 50000" error={!p||p==="0"}/>{autoPropFill&&p&&<div style={{fontSize:11,color:"#4285F4",marginTop:-8,marginBottom:8,fontWeight:500}}>📍 주소조회로 자동입력됨 · 직접 수정 가능</div>}{pt==="house"&&<Tog label="1세대 1주택 특례" value={one} onChange={sOne} options={[{value:"no",label:"일반 (60%)"},{value:"yes",label:"1세대1주택 (43~45%)"}]}/>}{pt==="house"&&one==="yes"&&pp>9e8&&<div style={{padding:"10px 14px",background:"#FFF8E1",border:"1px solid #FFE082",borderRadius:10,fontSize:12,color:"#F57F17",marginTop:8,lineHeight:1.6}}>공시가격 9억 초과 1주택자는 특례 공정시장가액비율 대상이 아니며 일반 60%가 적용됩니다.</div>}{pt==="house"&&<Inp label="전년도 재산세액 (선택)" value={prevTax} onChange={sPT} suffix="만원" placeholder="세부담상한 계산용" note="공시가 3억↓105% / 6억↓110% / 6억↑130%"/>}</div><div><RPFull miss={isDefault?MI.property:null} isExample={isDefault} title="재산세 총액"
+      </div>}<Inp label="" value={p} onChange={v=>{sP(v);setAutoPropFill(false);}} suffix="만원" placeholder="예: 50000" error={!p||p==="0"}/>{autoPropFill&&p&&<div style={{fontSize:11,color:"#4285F4",marginTop:-8,marginBottom:8,fontWeight:500}}>📍 주소조회로 자동입력됨 · 직접 수정 가능</div>}{pt==="house"&&<Tog label="1세대 1주택 특례" value={one} onChange={sOne} options={[{value:"no",label:"일반 (60%)"},{value:"yes",label:"1세대1주택 (43~45%)"}]}/>}{pt==="house"&&one==="yes"&&pp>9e8&&<div style={{padding:"10px 14px",background:"#FFF8E1",border:"1px solid #FFE082",borderRadius:10,fontSize:12,color:"#F57F17",marginTop:8,lineHeight:1.6}}>공시가격 9억 초과 1세대1주택은 2026년 성립분에 한해 공정시장가액비율 43~45%가 적용되고, 특례세율(9억 이하 한정)은 적용되지 않아 일반세율로 계산됩니다.</div>}{pt==="house"&&<Inp label="전년도 공시가격 (선택)" value={prevTax} onChange={sPT} suffix="만원" placeholder="과세표준상한 계산용" note="주택은 세부담상한 대신 과세표준상한(전년도 과세표준 상당액+5%) 적용"/>}</div><div><RPFull miss={isDefault?MI.property:null} isExample={isDefault} title="재산세 총액"
       deadline={deadlineText}
       deadlineLink="https://wetax.go.kr" deadlineLinkLabel="위택스 납부 →"
-      alertMsg={capApplied?"전년 대비 "+(capRate*100-100).toFixed(0)+"% 한도 적용":pt==="house"&&one==="yes"&&pp>9e8?"공시가 9억 초과 1주택: 일반 60% 적용":pt==="house"?"1세대1주택 특례 시 공정가액 43~45%":null}
+      alertMsg={capApplied?"과세표준상한(전년도 +5%) 적용":pt==="house"&&one==="yes"&&pp>9e8?"공시가 9억 초과 1주택: 공정가액 45%·일반세율 적용":pt==="house"?"1세대1주택 특례 시 공정가액 43~45%":null}
       alertType={capApplied?"success":"info"}
       total={total} sub={"공정시장가액비율 "+(fr*100).toFixed(0)+"% 적용"} items={rpItems} nextStep={<NextStep calcId="property" onNav={onNav} isMo={isMo}/>}/></div></div>);}
 
@@ -2807,26 +2705,7 @@ function CalcComm({isMo=false,onNav=()=>{}}){
   const[customRate,setCustomRate]=useState("");const[useCustom,setUseCustom]=useState(false);
   const[vatIncl,setVatIncl]=useState(true);
   const[showAddr,setShowAddr]=useState(false);const[autoFill,setAutoFill]=useState(null);
-  // 거래금액 계산 (제20조 제5항)
-  let amt=0;
-  if(tx==="rent"){const depW=tW(dep),monW=tW(mon);const conv100=depW+monW*100;amt=conv100<5e7?(depW+monW*70):conv100;}
-  else{amt=tW(p);}
-  // 요율 계산
-  const HOUSE_SALE=[[5e7,.006,25e4],[2e8,.005,80e4],[9e8,.004,null],[12e8,.005,null],[15e8,.006,null],[Infinity,.007,null]];
-  const HOUSE_RENT=[[5e7,.005,20e4],[1e8,.004,30e4],[6e8,.003,null],[12e8,.004,null],[15e8,.005,null],[Infinity,.006,null]];
-  const findRate=(tbl,a)=>{for(const[max,rate,limit]of tbl){if(a<max)return{rate,limit};} return{rate:tbl[tbl.length-1][1],limit:null};};
-  let r=0,mf=null,rateLabel="";
-  if(ty==="res"){
-    const tbl=tx==="sale"?HOUSE_SALE:HOUSE_RENT;const found=findRate(tbl,amt);r=found.rate;mf=found.limit;rateLabel="주택 "+(tx==="sale"?"매매":"임대차");
-  }else if(ty==="offi85"){
-    r=tx==="sale"?0.005:0.004;rateLabel="오피스텔(85㎡이하) "+(tx==="sale"?"매매":"임대차");
-  }else{
-    r=0.009;rateLabel="상가·토지 등 (0.9% 이내 협의)";
-  }
-  if(useCustom&&pN(customRate)>0)r=pN(customRate)/100;
-  const fee=mf?Math.min(Math.floor(amt*r),mf):Math.floor(amt*r);
-  const vat=ty==="res"?0:Math.round(fee*0.1);
-  const total=vatIncl?fee+vat:fee;
+  const {amt,r,mf,rateLabel,fee,vat,total}=calcCommission({ty,tx,p,dep,mon,customRate,useCustom,vatIncl});
   const amtDesc=tx==="rent"?"보증금 "+fW(tW(dep))+" + 월세 "+fW(tW(mon))+" (환산 "+fW(amt)+")":fW(amt);
   return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}><div>
     <Tog label="물건 종류" value={ty} onChange={v=>{sTy(v);markModified();}} options={[{value:"res",label:"주택"},{value:"offi85",label:"오피스텔(85㎡↓)"},{value:"offi",label:"오피스텔(85㎡↑)"},{value:"com",label:"상가·토지 등"}]}/>
@@ -3215,19 +3094,13 @@ function CalcTerms({isMo=false,onNav=()=>{}}){
 
 /* 등기비용 */
 function CalcReg({isMo=false,onNav=()=>{}}){const[tx,sTx]=useState("sale");const[propType,sPT]=useState("house");const[p,sP]=useState("");const[loan,sLoan]=useState("");const pW=tW(p),loanW=tW(loan);const _regErr=!p||p==="0";
-  const acqR=tx==="sale"?0.01:tx==="gift"?0.035:0.028;const acqTax=Math.round(pW*acqR);const acqEdu=Math.round(acqTax*0.1);const acqFarm=acqR>=0.08?Math.round(pW*0.002):0;const acqTotal=acqTax+acqEdu+acqFarm;
-  let bondRate=0;if(propType==="house"){if(pW>6e8)bondRate=0.035;else if(pW>5.5e8)bondRate=0.021;else if(pW>2.2e8)bondRate=0.016;else if(pW>1.6e8)bondRate=0.015;else if(pW>5e7)bondRate=0.013;}else{if(pW>10e8)bondRate=0.035;else if(pW>5e8)bondRate=0.016;else if(pW>1e8)bondRate=0.014;else if(pW>5e7)bondRate=0.012;}const bondAmt=Math.round(pW*bondRate);const bondCost=Math.round(bondAmt*0.045);
-  let stamp=0;if(pW>30e8)stamp=500000;else if(pW>10e8)stamp=350000;else if(pW>1e8)stamp=150000;
-  const court=15000;
-  let legal=pW<=1e8?160000:pW<=3e8?220000:pW<=5e8?310000:pW<=1e9?420000:600000;const legalVat=Math.round(legal*0.1);const legalTotal=legal+legalVat+50000+30000;
-  const mortBond=loanW>0?loanW*1.2:0;const mortReg=Math.round(mortBond*0.002);const mortEdu=Math.round(mortReg*0.2);const mortTotal=mortReg+mortEdu;
-  const total=acqTotal+bondCost+stamp+court+legalTotal+mortTotal;
+  const{acqR,acqTax,acqEdu,acqFarm,acqTotal,bondRate,bondAmt,bondCost,stamp,court,legal,legalVat,legalTotal,mortTotal,mortReg,mortEdu,total}=calcRegistration({tx,propType,pW,loanW});
   return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}><div><Tog label="거래 유형" value={tx} onChange={sTx} options={[{value:"sale",label:"매매"},{value:"gift",label:"증여"},{value:"inherit",label:"상속"}]}/><Tog label="부동산 유형" value={propType} onChange={sPT} options={[{value:"house",label:"주택"},{value:"land",label:"토지·상가·건물"}]}/><Inp label="부동산 가액" value={p} onChange={sP} suffix="만원" placeholder="예: 90000" error={_regErr}/><Inp label="대출금액 (설정등기용)" value={loan} onChange={sLoan} suffix="만원" placeholder="없으면 0" note="채권최고액 = 대출액 × 120%"/></div><div><RPFull miss={pW>0?null:MI.registration} title="등기비용 통합"
       deadline="등기 신청: 잔금일로부터 60일 이내 (미이행 시 과태료)"
       deadlineLink="https://iros.go.kr" deadlineLinkLabel="인터넷등기소 →"
       alertMsg={pW>=10e8?"고가 부동산: 법무사 선임 권장":loanW>0?"설정등기(근저당) 비용 별도 포함됨":null}
       alertType="info"
-      total={total} sub={"총 "+fW(total)+" (취득세 포함)"} items={[{l:"부동산 가액",v:fW(pW)},{l:"▼ 취득세 합계",v:fW(acqTotal),note:"세금 파트"},{l:"  취득세 ("+(acqR*100).toFixed(1)+"%)",v:fW(acqTax),note:"지방세법 §11"},{l:"  지방교육세",v:fW(acqEdu)}].concat(acqFarm>0?[{l:"  농어촌특별세",v:fW(acqFarm)}]:[]).concat([{l:"▼ 채권할인료",v:fW(bondCost),note:"할인율 4.5% 적용"},{l:"  매입률 "+fP(bondRate*100),v:"매입액 "+fW(bondAmt)},{l:"  실부담 (매입액×4.5%)",v:fW(bondCost)},{l:"인지세",v:fW(stamp),note:"인지세법 §3"},{l:"법원수수료",v:fW(court)},{l:"▼ 법무사 보수 합계",v:fW(legalTotal),note:"VAT·경비 포함"},{l:"  기본 보수",v:fW(legal)},{l:"  VAT (10%)",v:fW(legalVat)},{l:"  교통비·서류",v:fW(80000)}]).concat(loanW>0?[{l:"▼ 설정등기 (근저당)",v:fW(mortTotal),note:"채권최고액 = 대출×120%"},{l:"  등록면허세 (0.2%)",v:fW(mortReg),note:"지방세법 §28"},{l:"  지방교육세",v:fW(mortEdu)}]:[]).concat([{l:"※ 매수가 대비 총비용",v:pW>0?fP(total/pW*100):"0%",note:"세금+등기+법무사"}])} nextStep={<NextStep calcId="registration" onNav={onNav} isMo={isMo}/>}/></div></div>);}
+      total={total} sub={"총 "+fW(total)+" (취득세 포함)"} items={[{l:"부동산 가액",v:fW(pW)},{l:"▼ 취득세 합계",v:fW(acqTotal),note:"세금 파트"},{l:"  취득세 ("+(acqR*100).toFixed(2).replace(/0$/,"")+"%)",v:fW(acqTax),note:"지방세법 §11"},{l:"  지방교육세",v:fW(acqEdu)}].concat(acqFarm>0?[{l:"  농어촌특별세",v:fW(acqFarm)}]:[]).concat([{l:"▼ 채권할인료",v:fW(bondCost),note:"할인율 4.5% 적용"},{l:"  매입률 "+fP(bondRate*100),v:"매입액 "+fW(bondAmt),note:propType==="house"?"서울·광역시 주택 기준":undefined},{l:"  실부담 (매입액×4.5%)",v:fW(bondCost)},{l:"인지세",v:fW(stamp),note:"인지세법 §3"},{l:"법원수수료",v:fW(court)},{l:"▼ 법무사 보수 합계",v:fW(legalTotal),note:"VAT·경비 포함"},{l:"  기본 보수",v:fW(legal)},{l:"  VAT (10%)",v:fW(legalVat)},{l:"  교통비·서류",v:fW(80000)}]).concat(loanW>0?[{l:"▼ 설정등기 (근저당)",v:fW(mortTotal),note:"채권최고액 = 대출×120%"},{l:"  등록면허세 (0.2%)",v:fW(mortReg),note:"지방세법 §28"},{l:"  지방교육세",v:fW(mortEdu)}]:[]).concat([{l:"※ 매수가 대비 총비용",v:pW>0?fP(total/pW*100):"0%",note:"세금+등기+법무사"}])} nextStep={<NextStep calcId="registration" onNav={onNav} isMo={isMo}/>}/></div></div>);}
 
 /* 법무사수수료 */
 function CalcLegal({isMo=false,onNav=()=>{}}){const[tx,sTx]=useState("sale");const[p,sP]=useState("");const pW=tW(p);
@@ -3295,7 +3168,7 @@ function CalcLoanMax({isMo=false,onNav=()=>{}}){
       total={Math.max(0,maxLoan)} sub={"제한 요인: "+limitReason} items={[{l:"연 소득",v:fW(ai)},{l:"실제 적용 금리",v:fP(adjRate*100),note:stressRate>0?"스트레스 +"+fP(stressRate*100)+"p":"가산 없음"},{l:"적용 대출 기간",v:adjYear+"년",note:parseInt(yr)>maxTerm?"연령 최대 "+maxTerm+"년":""},{l:"DSR 기준 대출가능액",v:fW(Math.max(0,dsrLoan)),note:"금융위 고시"}].concat(pW>0?[{l:"LTV 70% 기준",v:fW(ltvLoan),note:"금융위 고시"}]:[]).concat(region==="metro"&&pW>0?[{l:"수도권 주담대 한도",v:metroCap===Infinity?"제한없음":fW(metroCap)}]:[]).concat([{l:"최대 대출가능액",v:fW(Math.max(0,maxLoan)),note:limitReason+" 적용"},{l:"적용 DSR",v:fP(actualDsr)}])} nextStep={<NextStep calcId="loanmax" onNav={onNav} isMo={isMo}/>}/></div></div>);}
 
 /* 보유세 통합 */
-function CalcHoldTax({isMo=false,onNav=()=>{}}){const[h,sH]=useState("1");const[p,sP]=useState("");const[isDefault,setIsDefault]=useState(true);const markModified=()=>setIsDefault(false);const[showHoldLookup,setShowHoldLookup]=useState(false);const[selectedHoldInfo,setSelectedHoldInfo]=useState(null);const[autoHoldFill,setAutoHoldFill]=useState(false);const pW=tW(p);const n=parseInt(h);const ptBase=pW*0.6;const PTB=[[6e7,.001],[1.5e8,.0015],[3e8,.0025],[Infinity,.004]];const ptTax=pTx(ptBase,PTB);const ptCity=Math.round(ptBase*0.0014);const ptEdu=Math.round(ptTax*0.2);const ptTotal=ptTax+ptCity+ptEdu;const cDed=n===1?12e8:9e8;const cBase=Math.max(0,(pW-cDed)*0.6);const CTB=[[3e8,.005],[6e8,.007],[12e8,.01],[25e8,.013],[50e8,.015],[94e8,.020],[Infinity,.027]];const cTax=pTx(cBase,CTB);const cFarm=Math.round(cTax*0.2);const cTotal=cTax+cFarm;const grand=ptTotal+cTotal;return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}><div><Radio label="주택 수" value={h} onChange={sH} options={[{value:"1",label:"1주택"},{value:"2",label:"2주택"},{value:"3",label:"3주택 이상"}]}/><div style={{fontSize:13,color:"#374151",fontWeight:600,marginBottom:4,display:"flex",alignItems:"center",gap:6}}>공시가격 <TipModal title=""><p>매년 6.1 기준. realtyprice.kr에서 확인. 재산세: 공시가×60%</p></TipModal></div>{!isMo&&<div style={{marginBottom:10}}><button type="button" onClick={()=>setShowHoldLookup(true)} style={{width:"100%",padding:"12px 16px",background:"linear-gradient(135deg,#eff6ff,#dbeafe)",border:"1.5px solid #bfdbfe",borderRadius:10,fontSize:13,fontWeight:700,color:"#1e40af",cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>📍 주소로 공시가격 자동조회</button></div>}{showHoldLookup&&<AddressModal calcType="holding" onClose={()=>setShowHoldLookup(false)} onApplyStd={v=>{sP(String(Math.round(v/10000)));markModified();setAutoHoldFill(true);}} onApplyInfo={info=>setSelectedHoldInfo(info)}/>}{selectedHoldInfo&&!isMo&&<div style={{background:"#eff6ff",border:"1px solid #bfdbfe",borderRadius:10,padding:"10px 14px",marginBottom:8,display:"flex",alignItems:"center",justifyContent:"space-between",gap:8}}>
+function CalcHoldTax({isMo=false,onNav=()=>{}}){const[h,sH]=useState("1");const[p,sP]=useState("");const[isDefault,setIsDefault]=useState(true);const markModified=()=>setIsDefault(false);const[showHoldLookup,setShowHoldLookup]=useState(false);const[selectedHoldInfo,setSelectedHoldInfo]=useState(null);const[autoHoldFill,setAutoHoldFill]=useState(false);const pW=tW(p);const n=parseInt(h);const{fr,ptBase,ptTax,ptCity,ptEdu,ptTotal,cDed,cBase,cTax,ded,cTaxNet,cFarm,cTotal,grand}=calcHoldTax({n,pW});return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}><div><Radio label="주택 수" value={h} onChange={sH} options={[{value:"1",label:"1주택"},{value:"2",label:"2주택"},{value:"3",label:"3주택 이상"}]}/><div style={{fontSize:13,color:"#374151",fontWeight:600,marginBottom:4,display:"flex",alignItems:"center",gap:6}}>공시가격 <TipModal title=""><p>매년 6.1 기준. realtyprice.kr에서 확인. 재산세: 공시가×60% (2026년 1세대1주택은 43~45%)</p></TipModal></div>{!isMo&&<div style={{marginBottom:10}}><button type="button" onClick={()=>setShowHoldLookup(true)} style={{width:"100%",padding:"12px 16px",background:"linear-gradient(135deg,#eff6ff,#dbeafe)",border:"1.5px solid #bfdbfe",borderRadius:10,fontSize:13,fontWeight:700,color:"#1e40af",cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>📍 주소로 공시가격 자동조회</button></div>}{showHoldLookup&&<AddressModal calcType="holding" onClose={()=>setShowHoldLookup(false)} onApplyStd={v=>{sP(String(Math.round(v/10000)));markModified();setAutoHoldFill(true);}} onApplyInfo={info=>setSelectedHoldInfo(info)}/>}{selectedHoldInfo&&!isMo&&<div style={{background:"#eff6ff",border:"1px solid #bfdbfe",borderRadius:10,padding:"10px 14px",marginBottom:8,display:"flex",alignItems:"center",justifyContent:"space-between",gap:8}}>
         <div style={{minWidth:0}}><div style={{fontSize:13,fontWeight:700,color:"#1e40af"}}>{selectedHoldInfo.aptName}{selectedHoldInfo.dongNm?" "+selectedHoldInfo.dongNm+"동":""}{selectedHoldInfo.hoNm?" "+selectedHoldInfo.hoNm+"호":""}</div><div style={{fontSize:11,color:"#3b82f6",marginTop:2}}>{selectedHoldInfo.priceYear?"공시가격 "+selectedHoldInfo.priceYear+"년 기준 자동입력":""}</div></div>
         <button onClick={()=>{setSelectedHoldInfo(null);setShowHoldLookup(true);}} style={{fontSize:12,color:"#0141f9",background:"none",border:"none",cursor:"pointer",fontWeight:700,fontFamily:"inherit",whiteSpace:"nowrap"}}>다시검색</button>
       </div>}<Inp label="" value={p} onChange={v=>{sP(v);setAutoHoldFill(false);}} suffix="만원" placeholder="예: 150000" error={!p||p==="0"}/>{autoHoldFill&&p&&<div style={{fontSize:11,color:"#4285F4",marginTop:-8,marginBottom:8,fontWeight:500}}>📍 주소조회로 자동입력됨 · 직접 수정 가능</div>}</div><div><RPFull miss={isDefault?MI.holdtax:null} isExample={isDefault} title="연간 보유세 합계"
@@ -3303,16 +3176,14 @@ function CalcHoldTax({isMo=false,onNav=()=>{}}){const[h,sH]=useState("1");const[
       deadlineLink="https://hometax.go.kr" deadlineLinkLabel="홈택스 →"
       alertMsg={cTotal>0?"종부세 과세 대상 (공시가 "+(cDed/1e8)+"억 초과)":n>=3?"3주택 이상: 중과세율 적용 대상":null}
       alertType={cTotal>0?"warning":"info"}
-      total={grand} sub={"공시가 "+fW(pW)+" 기준 / 재산세+종부세"} items={[{l:"▼ 재산세 (7·9월 납부)",v:fW(ptTotal),note:"지방세법 §111"},{l:"  과세표준 (공정가 60%)",v:fW(ptBase),note:"지방세법 시행령 §109"},{l:"  재산세 본세",v:fW(ptTax)},{l:"  도시지역분 (0.14%)",v:fW(ptCity)},{l:"  지방교육세 (20%)",v:fW(ptEdu)},{l:"▼ 종합부동산세 (12월 납부)",v:fW(cTotal),note:"종부세법 §9"},{l:"  공제금액",v:fW(cDed)},{l:"  과세표준 (공정가 60%)",v:fW(cBase)},{l:"  종부세",v:fW(cTax)},{l:"  농어촌특별세 (20%)",v:fW(cFarm),note:"종부세×20% (농특세법 §5)"},{l:"연간 보유세 총합",v:fW(grand),note:"재산세+종부세"}]} nextStep={<NextStep calcId="loanmax" onNav={onNav} isMo={isMo}/>}/></div></div>);}
+      total={grand} sub={"공시가 "+fW(pW)+" 기준 / 재산세+종부세"} items={[{l:"▼ 재산세 (7·9월 납부)",v:fW(ptTotal),note:"지방세법 §111"},{l:"  과세표준 (공정가 "+Math.round(fr*100)+"%)",v:fW(ptBase),note:"지방세법 시행령 §109"},{l:"  재산세 본세",v:fW(ptTax),note:n===1&&pW<=9e8?"지방세법 §111조의2 특례세율":undefined},{l:"  도시지역분 (0.14%)",v:fW(ptCity)},{l:"  지방교육세 (20%)",v:fW(ptEdu)},{l:"▼ 종합부동산세 (12월 납부)",v:fW(cTotal),note:"종부세법 §9"},{l:"  공제금액",v:fW(cDed)},{l:"  과세표준 (공정가 60%)",v:fW(cBase)},{l:"  종부세 산출세액",v:fW(cTax)},{l:"  재산세 중복분 공제",v:"-"+fW(ded),note:"종부세법 §9③"},{l:"  종부세 (공제 후)",v:fW(cTaxNet)},{l:"  농어촌특별세 (20%)",v:fW(cFarm),note:"종부세×20% (농특세법 §5)"},{l:"연간 보유세 총합",v:fW(grand),note:"재산세+종부세"}]} nextStep={<NextStep calcId="loanmax" onNav={onNav} isMo={isMo}/>}/></div></div>);}
 
 /* 인지세 */
 function CalcStamp({isMo=false,onNav=()=>{}}){
   const[p,sP]=useState("");const[electronic,setElectronic]=useState(false);
   const pW=tW(p);
-  let baseStamp=0;if(pW>30e8)baseStamp=500000;else if(pW>10e8)baseStamp=350000;else if(pW>1e8)baseStamp=150000;
-  const stamp=electronic?Math.round(baseStamp*0.3):baseStamp;
-  const half=Math.round(stamp/2);
-  return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}><div><div style={{fontSize:12,color:"#6b778c",marginBottom:-8,marginLeft:2,display:"flex",alignItems:"center",gap:4,flexWrap:"nowrap"}}>인지세 <TipModal title="인지세"><p>매매계약서 작성 시 부과. 매도·매수인 각 50% 부담. 1억↓ 비과세.</p></TipModal></div><Inp label="거래금액" value={p} onChange={sP} suffix="만원" placeholder="예: 90000" error={!p||p==="0"}/><label style={{display:"flex",alignItems:"center",gap:6,fontSize:13,cursor:"pointer",marginTop:8}}><input type="checkbox" checked={electronic} onChange={e=>setElectronic(e.target.checked)}/> 전자문서 인지세 (70% 할인)</label><div style={{padding:"14px 16px",background:P.lt,borderRadius:10,fontSize:13,color:"#4a5568",lineHeight:1.6,marginTop:8}}>• 1억 이하: 비과세<br/>• 1억~10억: 15만원<br/>• 10억~30억: 35만원<br/>• 30억 초과: 50만원<br/>※ 전자계약 시 70% 할인</div></div><RPFull miss={tW(p)>0?null:MI.stamp} title="인지세"
+  const {baseStamp,stamp,half}=calcStamp({pW,electronic});
+  return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}><div><div style={{fontSize:12,color:"#6b778c",marginBottom:-8,marginLeft:2,display:"flex",alignItems:"center",gap:4,flexWrap:"nowrap"}}>인지세 <TipModal title="인지세"><p>매매계약서 작성 시 부과. 매도·매수인 각 50% 부담. 1억↓ 비과세.</p></TipModal></div><Inp label="거래금액" value={p} onChange={sP} suffix="만원" placeholder="예: 90000" error={!p||p==="0"}/><label style={{display:"flex",alignItems:"center",gap:6,fontSize:13,cursor:"pointer",marginTop:8}}><input type="checkbox" checked={electronic} onChange={e=>setElectronic(e.target.checked)}/> 전자문서 인지세 (70% 할인)</label><div style={{padding:"14px 16px",background:P.lt,borderRadius:10,fontSize:13,color:"#4a5568",lineHeight:1.6,marginTop:8}}>• 1억 이하: 비과세<br/>• 1억~10억: 15만원<br/>• 10억 초과: 35만원<br/>※ 전자계약 시 70% 할인</div></div><RPFull miss={tW(p)>0?null:MI.stamp} title="인지세"
       deadline="※ 계약서 작성 시점에 납부 / 전자수입인지(e-revenuestamp.or.kr)"
       alertMsg={stamp===0?"1억 이하: 인지세 비과세":electronic?"전자문서 70% 할인 적용됨":null}
       alertType={stamp===0?"success":"info"}
@@ -3356,12 +3227,10 @@ function CalcRental({isMo=false,onNav=()=>{}}){const[h,sH]=useState("2");const[r
 function CalcAppraisal({isMo=false,onNav=()=>{}}){
   const[p,sP]=useState("");const[vatType,setVatType]=useState("include");
   const pW=tW(p);
-  let fee=0;if(pW<=5e7)fee=200000;else if(pW<=2e8)fee=200000+Math.round((pW-5e7)*0.0009);else if(pW<=5e8)fee=155000+Math.round((pW-2e8)*0.0008);else if(pW<=10e8)fee=395000+Math.round((pW-5e8)*0.0006);else if(pW<=50e8)fee=695000+Math.round((pW-10e8)*0.0004);else if(pW<=100e8)fee=2295000+Math.round((pW-50e8)*0.0002);else fee=2295000+Math.round((pW-100e8)*0.0001);
-  const vat=Math.round(fee*0.1);
-  const total=vatType==="include"?fee+vat:fee;
-  return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}><div><Inp label="감정가액" value={p} onChange={sP} suffix="만원" placeholder="예: 90000"/><Tog label="부가세 처리" value={vatType} onChange={setVatType} options={[{value:"include",label:"VAT 포함"},{value:"exclude",label:"VAT 별도"}]}/><div style={{padding:"14px 16px",background:P.lt,borderRadius:10,fontSize:12,color:"#4a5568",lineHeight:1.8,marginTop:8}}>• 5천만 이하: 기본 20만원<br/>• 5천만~2억: 20만 + 초과분×0.09%<br/>• 2~5억: 15.5만 + 초과분×0.08%<br/>• 5~10억: 39.5만 + 초과분×0.06%<br/>• 10~50억: 69.5만 + 초과분×0.04%</div>
+  const {fee,vat,total}=calcAppraisal({pW,vatType});
+  return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}><div><Inp label="감정가액" value={p} onChange={sP} suffix="만원" placeholder="예: 90000"/><Tog label="부가세 처리" value={vatType} onChange={setVatType} options={[{value:"include",label:"VAT 포함"},{value:"exclude",label:"VAT 별도"}]}/><div style={{padding:"14px 16px",background:P.lt,borderRadius:10,fontSize:12,color:"#4a5568",lineHeight:1.8,marginTop:8}}>• 5천만 이하: 25만원<br/>• 5천만~5억: 25만 + 5천만 초과분×0.11%<br/>• 5~10억: 74.5만 + 5억 초과분×0.09%<br/>• 10~50억: 119.5만 + 10억 초과분×0.08%<br/>• 50~100억: 439.5만 + 50억 초과분×0.07%<br/>• 100~500억: 789.5만 + 100억 초과분×0.06%</div>
     </div><RPFull miss={tW(p)>0?null:MI.appraisal} title="감정평가 수수료"
-      deadline="※ 감정평가협회 표준보수표 기준 (실제는 협의)"
+      deadline="※ 국토교통부 고시 「감정평가법인등의 보수에 관한 기준」 별표 기준 수수료 (실제는 0.8~1.2배 범위 협의)"
       alertMsg={pW>=50e8?"고가 부동산: 감정평가 2인 이상 권장":null}
       alertType="info"
       total={total} sub={vatType==="include"?"부가세 포함":"부가세 별도"} items={[{l:"감정가액",v:fW(pW)},{l:"기본 수수료 (누진)",v:fW(fee),note:"구간별 누진 계산"},{l:"부가가치세 (10%)",v:fW(vat)},{l:"합계 ("+(vatType==="include"?"VAT 포함":"VAT 별도")+")",v:fW(total)}]} nextStep={<NextStep calcId="appraisal" onNav={onNav} isMo={isMo}/>}/></div>);}
@@ -6259,8 +6128,8 @@ const CALC_NAV_CONTENT={
   datediff:{items:[{title:"날짜 계산 활용",open:true,body:"보유기간·거주기간·신고기한 등 일수 계산. 세금 요건 확인 필수."},{title:"보유기간",body:"취득일~양도일. 2년 이상 보유 시 장기보유특별공제 적용."},{title:"주요 기한",body:"취득세 60일, 양도세 2개월, 상속세 6개월, 종부세 12월."},{title:"기간 계산법",body:"민법 초일 불산입 원칙. 세법은 별도 규정 있으므로 주의."}],related:["transfer","acquisition","inherit"]},
   estincome:{items:[{title:"임대 추정소득이란?",open:true,body:"월세 수입+간주임대료를 합산하여 과세 소득금액 추정."},{title:"필요경비율",body:"주택임대 단순경비율 약 42.6~56%. 실제 장부 경비 공제 가능."},{title:"분리과세",body:"2천만원 이하 수입은 분리과세(14%) 선택 가능."},{title:"간주임대료",body:"3주택 이상, 보증금 3억 초과 시 과세. (보증금-3억)×60%×이자율."}],related:["rental","imputedrent","goodlord","inctax"]},
   goodlord:{items:[{title:"착한임대인 공제란?",open:true,body:"상가 임대료 인하액의 최대 70%를 소득세에서 세액공제."},{title:"공제율",body:"소득 1억↓: 70%, 1억↑: 50%. 10% 이상 인하 시 적용."},{title:"적용 요건",body:"임차인이 소상공인, 특수관계 아닌 경우."},{title:"신청 방법",body:"종합소득세 확정신고 시 세액공제 신청서+계약서 첨부."},{title:"기간",body:"2025년 12월 31일까지 한시 적용(연장 가능성 있음)."}],related:["rental","estincome","inctax"]},
-  imputedrent:{items:[{title:"간주임대료란?",open:true,body:"3주택 이상 보유 + 보증금 합계 3억 초과 시 과세."},{title:"계산 공식",body:"(보증금-3억)×60%×정기예금이자율(약3.5%). 금융소득 차감."},{title:"과세 제외",body:"2주택↓, 보증금 3억↓, 소형주택(전용40㎡+기준시가2억↓) 제외."},{title:"신고",body:"종합소득세 신고 시 부동산임대소득으로 합산."},{title:"절세",body:"소형주택 활용, 보증금 3억 이내 관리, 분리과세 선택."}],related:["rental","estincome","goodlord"]},
-  jeonseins:{items:[{title:"전세보증보험이란?",open:true,body:"임대인 보증금 미반환 시 보증기관(HUG/HF)이 대신 반환."},{title:"보증료율",body:"HUG 연 0.115~0.154%, HF 연 0.02~0.04%. 아파트는 HF가 저렴."},{title:"가입 요건",body:"전세가율 일정 이하, 확정일자, 전입신고 완료."},{title:"보증기관",body:"HUG(주택도시보증공사), HF(한국주택금융공사), SGI(서울보증보험)."},{title:"활용 팁",body:"전세대출 시 보증보험 필수. 갱신 시 보증료 추가 납부."}],related:["convert","yield","datediff"]},
+  imputedrent:{items:[{title:"간주임대료란?",open:true,body:"3주택 이상 + 보증금 합계 3억 초과, 또는 2주택(기준시가 12억 이하 주택은 수에서 제외) + 보증금 합계 12억 초과 시 과세."},{title:"계산 공식",body:"(보증금-3억)×60%×정기예금이자율(연 3.1%, 시행규칙 제23조). 금융소득 차감."},{title:"과세 제외",body:"1주택 이하, 3주택 이상은 보증금 3억 이하·2주택은 12억 이하, 소형주택(전용40㎡+기준시가2억↓) 제외."},{title:"신고",body:"종합소득세 신고 시 부동산임대소득으로 합산."},{title:"절세",body:"소형주택 활용, 보증금 3억 이내 관리, 분리과세 선택."}],related:["rental","estincome","goodlord"]},
+  jeonseins:{items:[{title:"전세보증보험이란?",open:true,body:"임대인 보증금 미반환 시 보증기관(HUG/HF)이 대신 반환."},{title:"보증료율",body:"HUG 연 0.097~0.211%(보증금 구간·유형·부채비율별), HF 연 0.02~0.04%. 아파트는 HF가 저렴."},{title:"가입 요건",body:"전세가율 일정 이하, 확정일자, 전입신고 완료."},{title:"보증기관",body:"HUG(주택도시보증공사), HF(한국주택금융공사), SGI(서울보증보험)."},{title:"활용 팁",body:"전세대출 시 보증보험 필수. 갱신 시 보증료 추가 납부."}],related:["convert","yield","datediff"]},
   legalinherit:{items:[{title:"법정상속분이란?",open:true,body:"민법 제1009조. 유언 없는 경우 법정 비율로 상속재산 배분."},{title:"배우자",body:"직계비속/존속과 공동상속 시 1.5배 가산. 단독 상속 가능."},{title:"상속 순위",body:"1순위 자녀+배우자, 2순위 부모+배우자, 3순위 형제자매."},{title:"유류분",body:"배우자·직계비속 1/2, 직계존속·형제자매 1/3. 침해 시 반환청구."},{title:"협의분할",body:"상속인 전원 합의 시 법정상속분과 다르게 분할 가능."}],related:["inherit","gift","compare"]},
   progressive:{items:[{title:"누진세란?",open:true,body:"과세표준이 커질수록 높은 세율 적용. 종소세·양도세·증여세·상속세."},{title:"한계세율",body:"마지막 구간 세율. 종소세 최고 45%, 증여세·상속세 최고 50%."},{title:"실효세율",body:"전체 세액÷과세표준. 한계세율보다 항상 낮음."},{title:"활용",body:"세목 선택+과세표준 입력 → 구간별 세액·한계세율·실효세율 확인."}],related:["inctax","transfer","gift","inherit"]},
   reconyear:{items:[{title:"재건축 연한이란?",open:true,body:"준공 후 일정 연수 경과 시 안전진단 신청 가능. 서울 30년."},{title:"지역별 기준",body:"서울 30년, 광역시 25~30년, 기타 20~30년."},{title:"안전진단",body:"예비안전진단(지자체) → 정밀안전진단(시설안전공단). D등급 이하 시 추진."},{title:"투자 고려",body:"연한 도래 시점, 안전등급, 사업성(용적률 상향), 조합 추진 상황."},{title:"주의사항",body:"안전진단 통과 후에도 사업 착수까지 5~10년 이상 소요."}],related:["remodel","remodel2","far","auction"]},
@@ -6269,7 +6138,7 @@ const CALC_NAV_CONTENT={
   rentincrease:{items:[{title:"5% 상한제란?",open:true,body:"계약갱신청구권 행사 시 임대료 인상폭 5% 제한."},{title:"전월세 전환",body:"보증금↔월세 전환 시에도 5% 상한+법정전환율(기준금리+2%) 제한."},{title:"적용 범위",body:"갱신청구권 1회 한정. 갱신 계약 존속기간 2년."},{title:"거절 사유",body:"임대인 실거주, 재건축, 2기 연속 차임 연체 등 법정 사유."},{title:"분쟁 해결",body:"주택임대차분쟁조정위원회 신청. 확정일자 증빙 필수."}],related:["convert","yield","jeonseins"]},
   realprice:{items:[{title:"실거래가 조회란?",open:true,body:"국토부 실거래가 공개시스템에서 전국 매매·전세·월세 내역 조회."},{title:"조회 방법",body:"주소(법정동)+거래유형+기간 입력. 계약일·금액·면적·층 확인."},{title:"활용",body:"취득세·양도세 계산 시 실거래가 기준 정확한 세액 산출."},{title:"출처",body:"국토교통부 실거래가 공개시스템, 네이버 부동산, 호갱노노 등."},{title:"주의사항",body:"실거래 신고 후 30일 이내 공개. 최신 거래는 미반영 가능."}],related:["transfer","acquisition","netsale"]},
   netsale:{items:[{title:"매도 실수령액이란?",open:true,body:"매도가에서 양도세·중개수수료·기타비용 차감 후 실수령액."},{title:"차감 항목",body:"양도소득세, 지방소득세(양도세10%), 중개수수료(0.4~0.9%), 말소등기."},{title:"비과세 요건",body:"1세대1주택 2년보유(조정지역 2년거주)+12억이하 → 양도세 면제."},{title:"계산 순서",body:"매도가→양도차익→장특공제→기본공제250만→세율→세액→실수령액."},{title:"절세",body:"장기보유특별공제 극대화. 필요경비(인테리어비 등) 영수증 보관."}],related:["transfer","compare","commission","totalcost"]},
-  surveyfee:{items:[{title:"근거는?",open:true,body:"2026년 지적측량수수료 고시(국토교통부 고시 제2025-896호, 2026.1.1 시행). 부가세 별도."},{title:"공시지가가 왜 필요?",body:"분할·경계복원·지적현황·도시계획선명시측량은 개별공시지가 구간별 단가를 씀."},{title:"시·구 지역은?",body:"이 4개 종목 표는 군 지역 기준이며 시·구 지역은 지역 계수가 더해짐. 정확한 금액은 LX 간편수수료 계산에서 확인."}],related:["registration", "legal", "landshare", "far"]},
+  surveyfee:{items:[{title:"근거는?",open:true,body:"2026년 지적측량수수료 고시(국토교통부 고시 제2025-896호, 2026.1.1 시행). 부가세 별도."},{title:"공시지가가 왜 필요?",body:"분할·경계복원·지적현황·도시계획선명시측량은 개별공시지가 구간별 단가를 씀."},{title:"시·구 지역은?",body:"이 4개 종목은 지가계수를 적용하므로 시·구 지역 구분 단가를 쓰지 않음(고시 5항). 신규등록·등록전환·축척변경 등은 군·시·구 지역별 단가. 기준면적 초과 가산은 반영되지 않으니 LX 간편수수료 계산에서 확인."}],related:["registration", "legal", "landshare", "far"]},
   jeonsewolse:{items:[{title:"전세와 월세 비교 기준은?",open:true,body:"전세: 대출이자+자기자금 기회비용. 월세: 월세×12+보증금 기회비용. 둘 중 연간 부담이 작은 쪽이 유리."},{title:"손익분기 전환율이란?",body:"월세×12 ÷ (전세보증금−월세보증금). 전세대출 금리가 이보다 낮으면 대체로 전세가 유리."},{title:"기회비용은 왜 넣나요?",body:"보증금으로 묶인 내 돈을 예금에 넣었다면 받았을 이자도 실제 비용이기 때문."},{title:"주의할 점",body:"전세는 보증금 반환 위험(전세사기)이 있어 전세보증보험 가입비도 함께 고려."}],related:["convert", "rentadjust", "mortgage", "jeonseins"]},
   rentadjust:{items:[{title:"계산 방법은?",open:true,body:"월세 변동 = 보증금 변동액 × 전환율 ÷ 12. 보증금을 올리면 월세가 그만큼 내려갑니다."},{title:"법정 전환율은?",body:"주택은 기준금리+2%p(현재 5.0%)가 상한(주택임대차보호법 시행령 §9)."},{title:"갱신 시 인상 제한",body:"계약갱신청구권 행사 시 환산 기준 5% 이내로만 인상 가능."}],related:["convert", "rentincrease", "jeonsewolse", "commission"]},
   lateinterest:{items:[{title:"법정이율은?",open:true,body:"민사 연 5%(민법 §379), 상사 연 6%(상법 §54). 약정이 있으면 약정 이율 우선."},{title:"소송하면?",body:"소장 송달 다음날부터 연 12%(소송촉진 등에 관한 특례법)."},{title:"계산 방법",body:"연체 금액 × 연이율 × 연체 일수 ÷ 365."}],related:["rentincrease", "convert", "eviction", "datediff"]},
@@ -6283,7 +6152,7 @@ const CALC_NAV_CONTENT={
   prepay:{items:[{title:"계산 방법",open:true,body:"상환금액 × 수수료율 × (남은 일수 ÷ 부과기간 전체 일수)."},{title:"면제 기간",body:"대부분 대출 실행 후 3년. 이후 수수료 없음."},{title:"2025년 개편",body:"2025.1.13부터 실비 기준으로 수수료율이 재산정돼 많이 낮아짐."}],related:["refinance", "mortgage", "loanmax", "dsr"]},
   futureincome:{items:[{title:"대상은?",open:true,body:"만 20~44세 무주택 근로소득자, 만기 10년 이상·거치 1년 이하 분할상환 주담대."},{title:"얼마나 늘어나나?",body:"20~24세 30년 만기 최대 51.6%, 25~29세 31.4%, 30~34세 17.7%."},{title:"만기 선택",body:"최대 20년 또는 실제 만기 중 유리한 인정률 적용(2022.6 개편)."}],related:["dsr", "loanmax", "ltv", "mortgage"]},
   resourcetax:{items:[{title:"언제 내나?",open:true,body:"7월 재산세(건축물분)와 함께 고지."},{title:"과세표준",body:"건축물 시가표준액. 주택은 60%(공정시장가액비율) 적용."},{title:"중과",body:"화재위험 건축물 2배, 대형 화재위험 건축물 3배."}],related:["property", "holdtax", "compre", "bldstdprice"]},
-  corptransfer:{items:[{title:"법인세율(2026)",open:true,body:"2억 이하 10%, 200억 이하 20%, 3,000억 이하 22%, 초과 25%(2026 개시 사업연도부터 1%p 인상)."},{title:"추가과세",body:"주택·별장·입주권·분양권 20%, 비사업용 토지 10%, 미등기 40%(법인세법 §55의2)."},{title:"결손이 있으면?",body:"법인세는 줄어도 추가과세는 별도로 부과."}],related:["transfer", "acquisition", "compare", "bldvat"]},
+  corptransfer:{items:[{title:"법인세율(2026)",open:true,body:"2억 이하 10%, 200억 이하 20%, 3,000억 이하 22%, 초과 25%(2026 개시 사업연도부터 1%p 인상)."},{title:"추가과세",body:"주택·별장·입주권·분양권 20%, 비사업용 토지 10%, 미등기 주택·별장·비사업용 토지 40%(법인세법 §55의2). 상가 등 그 밖의 자산은 미등기여도 추가과세가 없습니다."},{title:"결손이 있으면?",body:"법인세는 줄어도 추가과세는 별도로 부과."}],related:["transfer", "acquisition", "compare", "bldvat"]},
   bldstdprice:{items:[{title:"공식",open:true,body:"신축가격기준액 × 구조지수 × 용도지수 × 위치지수 × 잔가율 × 개별특성조정률(상속·증여) × 면적."},{title:"2026 신축가격기준액",body:"㎡당 860,000원(2025년 850,000원)."},{title:"지수는 어디서?",body:"국세청 '건물 기준시가 계산방법' 고시표(홈택스)."}],related:["bldvalue", "transfer", "gift", "inherit"]},
   costapproach:{items:[{title:"원가법이란?",open:true,body:"대상물건을 다시 만드는 비용(재조달원가)에서 낡은 만큼(감가)을 빼는 방법."},{title:"감가수정",body:"정액법: 재조달원가×(1−잔가율)×경과연수÷내용연수."},{title:"주로 쓰는 곳",body:"건물·구축물·기계 평가."}],related:["bldvalue", "salescomp", "incomecap", "appraisal"]},
   salescomp:{items:[{title:"방법",open:true,body:"비슷한 거래사례 가격에 사정보정·시점수정·지역/개별요인 비교를 해 대상 가격 산정."},{title:"사정보정",body:"급매·특수관계 거래 등 비정상 가격을 정상화."},{title:"주로 쓰는 곳",body:"아파트·토지·구분소유 건물."}],related:["landprice", "costapproach", "realprice", "appraisal"]},
