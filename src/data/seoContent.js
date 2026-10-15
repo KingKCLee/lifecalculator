@@ -2229,7 +2229,7 @@ reconyear: `<div style="display:flex;flex-direction:column;gap:16px;">
 <span style="font-size:18px;font-weight:500;color:#172B4D;">핵심 기준</span>
 </div>
 <div style="padding:20px 28px;display:flex;flex-direction:column;gap:8px;">
-<div style="font-size:16px;color:#505f79;line-height:1.9;"><p>서울 30년, 광역시 25~30년, 기타 20~30년. 안전진단 D등급 이하 필요.</p></div>
+<div style="font-size:16px;color:#505f79;line-height:1.9;"><p>연한은 시·도 조례가 20~30년 범위에서 정합니다. 서울·경기는 준공연도·층수별 표, 인천·부산·울산·광주는 공동주택 30년, 대구·대전·세종은 준공연도별 20~30년입니다. 안전진단 D등급 이하 필요.</p></div>
 </div>
 </div>
 <div style="background:#fff;border:0.5px solid #dfe1e6;border-radius:12px;overflow:hidden;">
