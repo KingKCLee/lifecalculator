@@ -3180,12 +3180,12 @@ function CalcHoldTax({isMo=false,onNav=()=>{}}){const[h,sH]=useState("1");const[
 
 /* 인지세 */
 function CalcStamp({isMo=false,onNav=()=>{}}){
-  const[p,sP]=useState("");const[electronic,setElectronic]=useState(false);
+  const[p,sP]=useState("");const[electronic,setElectronic]=useState(false);const[kind,setKind]=useState("house");
   const pW=tW(p);
-  const {baseStamp,stamp,half}=calcStamp({pW,electronic});
-  return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}><div><div style={{fontSize:12,color:"#6b778c",marginBottom:-8,marginLeft:2,display:"flex",alignItems:"center",gap:4,flexWrap:"nowrap"}}>인지세 <TipModal title="인지세"><p>매매계약서 작성 시 부과. 매도·매수인 각 50% 부담. 1억↓ 비과세.</p></TipModal></div><Inp label="거래금액" value={p} onChange={sP} suffix="만원" placeholder="예: 90000" error={!p||p==="0"}/><label style={{display:"flex",alignItems:"center",gap:6,fontSize:13,cursor:"pointer",marginTop:8}}><input type="checkbox" checked={electronic} onChange={e=>setElectronic(e.target.checked)}/> 전자문서 인지세 (70% 할인)</label><div style={{padding:"14px 16px",background:P.lt,borderRadius:10,fontSize:13,color:"#4a5568",lineHeight:1.6,marginTop:8}}>• 1억 이하: 비과세<br/>• 1억~10억: 15만원<br/>• 10억 초과: 35만원<br/>※ 전자계약 시 70% 할인</div></div><RPFull miss={tW(p)>0?null:MI.stamp} title="인지세"
+  const {baseStamp,stamp,half}=calcStamp({pW,electronic,kind});
+  return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}><div><div style={{fontSize:12,color:"#6b778c",marginBottom:-8,marginLeft:2,display:"flex",alignItems:"center",gap:4,flexWrap:"nowrap"}}>인지세 <TipModal title="인지세"><p>매매계약서 작성 시 부과. 매도·매수인 각 50% 부담. 주택은 1억↓ 비과세(인지세법 §6 5호), 토지·상가 등은 1천만 초과부터 과세.</p></TipModal></div><Tog label="물건 종류" value={kind} onChange={setKind} options={[{value:"house",label:"주택"},{value:"other",label:"주택 외(토지·상가 등)"}]}/><Inp label="거래금액" value={p} onChange={sP} suffix="만원" placeholder="예: 90000" error={!p||p==="0"}/><label style={{display:"flex",alignItems:"center",gap:6,fontSize:13,cursor:"pointer",marginTop:8}}><input type="checkbox" checked={electronic} onChange={e=>setElectronic(e.target.checked)}/> 전자문서 인지세 (70% 할인)</label><div style={{padding:"14px 16px",background:P.lt,borderRadius:10,fontSize:13,color:"#4a5568",lineHeight:1.6,marginTop:8}}>{kind==="house"?<>• 주택 1억 이하: 비과세<br/></>:<>• 1천만 이하: 비과세<br/>• 1천만~3천만: 2만원<br/>• 3천만~5천만: 4만원<br/>• 5천만~1억: 7만원<br/></>}• 1억~10억: 15만원<br/>• 10억 초과: 35만원<br/>※ 전자계약 시 70% 할인</div></div><RPFull miss={tW(p)>0?null:MI.stamp} title="인지세"
       deadline="※ 계약서 작성 시점에 납부 / 전자수입인지(e-revenuestamp.or.kr)"
-      alertMsg={stamp===0?"1억 이하: 인지세 비과세":electronic?"전자문서 70% 할인 적용됨":null}
+      alertMsg={stamp===0?(kind==="house"?"주택 1억 이하: 인지세 비과세":"1천만원 이하: 인지세 비과세"):electronic?"전자문서 70% 할인 적용됨":null}
       alertType={stamp===0?"success":"info"}
       total={stamp} sub={stamp===0?"비과세 구간":"매도·매수인 각 50% 부담"} items={[{l:"거래금액",v:fW(pW)},{l:"기본 인지세액",v:fW(baseStamp),note:"인지세법 §3"}].concat(electronic?[{l:"전자문서 할인 (70%)",v:"-"+fW(baseStamp-stamp)}]:[]).concat([{l:"납부 인지세",v:fW(stamp)},{l:"매도인 부담",v:fW(half)},{l:"매수인 부담",v:fW(half)}])} nextStep={<NextStep calcId="stamp" onNav={onNav} isMo={isMo}/>}/></div>);}
 

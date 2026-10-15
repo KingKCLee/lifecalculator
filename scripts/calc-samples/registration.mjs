@@ -22,6 +22,8 @@ export default {
       input:{tx:"sale",propType:"house",pW:20010000,loanW:0}, expect:{bondAmt:260000}, law:LAW_BOND},
     {id:"c2-6억", desc:"주택 6억원: 6억 이상 31/1,000 = 18,600,000원",
       input:{tx:"sale",propType:"house",pW:600000000,loanW:0}, expect:{bondRate:0.031,bondAmt:18600000}, law:LAW_BOND},
+    {id:"c6-토지5천만", desc:"주택 외 5천만원 매매: 인지세 4만원(주택 외는 1억 이하도 과세)", input:{tx:"sale",propType:"land",pW:50000000,loanW:0}, expect:{stamp:40000}, law:"인지세법 제3조 제1항 제1호"},
+    {id:"c6-주택5천만", desc:"주택 5천만원 매매: 인지세 비과세", input:{tx:"sale",propType:"house",pW:50000000,loanW:0}, expect:{stamp:0}, law:"인지세법 제6조 제5호"},
     {id:"c6-30억1만", desc:"거래금액 30억 1만원: 10억 초과 단일 구간 인지세 35만원",
       input:{tx:"sale",propType:"house",pW:3000010000,loanW:0}, expect:{stamp:350000}, law:"인지세법 제3조 제1항 제1호 (기재금액 10억원 초과: 35만원)"}
   ]
