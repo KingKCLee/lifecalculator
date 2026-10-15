@@ -1,0 +1,841 @@
+{
+ "site": "https://xn--989a00af8jnslv3dba.com",
+ "count": 69,
+ "calculators": [
+  {
+   "name": "중개보수",
+   "path": "/중개보수",
+   "file": "중개보수.md",
+   "aliases": [
+    "중개보수"
+   ],
+   "groups": [
+    "보수·수수료"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "법무사보수",
+   "path": "/법무사보수",
+   "file": "법무사보수.md",
+   "aliases": [
+    "법무사보수"
+   ],
+   "groups": [
+    "보수·수수료"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "감정평가수수료",
+   "path": "/감정평가수수료",
+   "file": "감정평가수수료.md",
+   "aliases": [
+    "감정평가수수료"
+   ],
+   "groups": [
+    "보수·수수료"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "지적측량수수료",
+   "path": "/지적측량수수료",
+   "file": "지적측량수수료.md",
+   "aliases": [
+    "지적측량수수료"
+   ],
+   "groups": [
+    "보수·수수료"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "등기비용",
+   "path": "/등기비용",
+   "file": "등기비용.md",
+   "aliases": [
+    "등기비용"
+   ],
+   "groups": [
+    "취득·등기·보유"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "취득세",
+   "path": "/취득세",
+   "file": "취득세.md",
+   "aliases": [
+    "취득세"
+   ],
+   "groups": [
+    "취득·등기·보유"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "국민주택채권",
+   "path": "/국민주택채권",
+   "file": "국민주택채권.md",
+   "aliases": [
+    "국민주택채권"
+   ],
+   "groups": [
+    "취득·등기·보유"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "인지세",
+   "path": "/인지세",
+   "file": "인지세.md",
+   "aliases": [
+    "인지세"
+   ],
+   "groups": [
+    "취득·등기·보유"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "재산세",
+   "path": "/재산세",
+   "file": "재산세.md",
+   "aliases": [
+    "재산세"
+   ],
+   "groups": [
+    "취득·등기·보유"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "보유세 통합",
+   "path": "/보유세",
+   "file": "보유세_통합.md",
+   "aliases": [
+    "보유세 통합"
+   ],
+   "groups": [
+    "취득·등기·보유"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "지역자원시설세",
+   "path": "/지역자원시설세",
+   "file": "지역자원시설세.md",
+   "aliases": [
+    "지역자원시설세"
+   ],
+   "groups": [
+    "취득·등기·보유"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "양도세",
+   "path": "/양도세",
+   "file": "양도세.md",
+   "aliases": [
+    "양도세"
+   ],
+   "groups": [
+    "양도·증여·상속"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "법인양도세",
+   "path": "/법인양도세",
+   "file": "법인양도세.md",
+   "aliases": [
+    "법인양도세"
+   ],
+   "groups": [
+    "양도·증여·상속"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "증여세",
+   "path": "/증여세",
+   "file": "증여세.md",
+   "aliases": [
+    "증여세"
+   ],
+   "groups": [
+    "양도·증여·상속"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "상속세",
+   "path": "/상속세",
+   "file": "상속세.md",
+   "aliases": [
+    "상속세"
+   ],
+   "groups": [
+    "양도·증여·상속"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "상속지분",
+   "path": "/상속지분",
+   "file": "상속지분.md",
+   "aliases": [
+    "상속지분"
+   ],
+   "groups": [
+    "양도·증여·상속"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "임대수익률",
+   "path": "/임대수익률",
+   "file": "임대수익률.md",
+   "aliases": [
+    "임대수익률"
+   ],
+   "groups": [
+    "임대차",
+    "투자·평가"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "전월세 전환",
+   "path": "/전월세전환",
+   "file": "전월세_전환.md",
+   "aliases": [
+    "전월세 전환"
+   ],
+   "groups": [
+    "임대차"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "전세 vs 월세 비교",
+   "path": "/전월세비교",
+   "file": "전세_vs_월세_비교.md",
+   "aliases": [
+    "전세 vs 월세 비교"
+   ],
+   "groups": [
+    "임대차"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "월세보증금 조정",
+   "path": "/월세보증금조정",
+   "file": "월세보증금_조정.md",
+   "aliases": [
+    "월세보증금 조정"
+   ],
+   "groups": [
+    "임대차"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "전세보증보험",
+   "path": "/전세보증보험",
+   "file": "전세보증보험.md",
+   "aliases": [
+    "전세보증보험"
+   ],
+   "groups": [
+    "임대차",
+    "DSR·LTV·금융"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "임대료 상승분",
+   "path": "/임대료상승분",
+   "file": "임대료_상승분.md",
+   "aliases": [
+    "임대료 상승분"
+   ],
+   "groups": [
+    "임대차"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "연체 임대료 이자",
+   "path": "/연체이자",
+   "file": "연체_임대료_이자.md",
+   "aliases": [
+    "연체 임대료 이자"
+   ],
+   "groups": [
+    "임대차"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "환산임대료(NOC)",
+   "path": "/noc",
+   "file": "환산임대료(NOC).md",
+   "aliases": [
+    "환산임대료(NOC)"
+   ],
+   "groups": [
+    "임대차",
+    "투자·평가"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "간주임대료",
+   "path": "/간주임대료",
+   "file": "간주임대료.md",
+   "aliases": [
+    "간주임대료"
+   ],
+   "groups": [
+    "임대차"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "주택임대소득세",
+   "path": "/주택임대소득세",
+   "file": "주택임대소득세.md",
+   "aliases": [
+    "주택임대소득세"
+   ],
+   "groups": [
+    "임대차"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "명도비용",
+   "path": "/명도비용",
+   "file": "명도비용.md",
+   "aliases": [
+    "명도비용"
+   ],
+   "groups": [
+    "임대차",
+    "경매 계산"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "적정 매수가",
+   "path": "/매수가",
+   "file": "적정_매수가.md",
+   "aliases": [
+    "적정 매수가",
+    "적정 입찰가"
+   ],
+   "groups": [
+    "투자·평가",
+    "경매 계산"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "종합소득세",
+   "path": "/종합소득세",
+   "file": "종합소득세.md",
+   "aliases": [
+    "종합소득세"
+   ],
+   "groups": [
+    "투자·평가"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "리모델링 수익",
+   "path": "/리모델링",
+   "file": "리모델링_수익.md",
+   "aliases": [
+    "리모델링 수익"
+   ],
+   "groups": [
+    "투자·평가"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "건물 기준시가",
+   "path": "/건물기준시가",
+   "file": "건물_기준시가.md",
+   "aliases": [
+    "건물 기준시가"
+   ],
+   "groups": [
+    "투자·평가"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "건물 잔존가치",
+   "path": "/잔존가치",
+   "file": "건물_잔존가치.md",
+   "aliases": [
+    "건물 잔존가치"
+   ],
+   "groups": [
+    "투자·평가"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "건물 부가세",
+   "path": "/부가세",
+   "file": "건물_부가세.md",
+   "aliases": [
+    "건물 부가세"
+   ],
+   "groups": [
+    "투자·평가"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "원가법",
+   "path": "/원가법",
+   "file": "원가법.md",
+   "aliases": [
+    "원가법"
+   ],
+   "groups": [
+    "투자·평가 > 감정평가"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "거래사례비교법",
+   "path": "/거래사례비교법",
+   "file": "거래사례비교법.md",
+   "aliases": [
+    "거래사례비교법"
+   ],
+   "groups": [
+    "투자·평가 > 감정평가"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "공시지가기준법",
+   "path": "/공시지가기준법",
+   "file": "공시지가기준법.md",
+   "aliases": [
+    "공시지가기준법"
+   ],
+   "groups": [
+    "투자·평가 > 감정평가"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "수익환원법",
+   "path": "/수익환원법",
+   "file": "수익환원법.md",
+   "aliases": [
+    "수익환원법"
+   ],
+   "groups": [
+    "투자·평가 > 감정평가"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "DCF",
+   "path": "/dcf",
+   "file": "DCF.md",
+   "aliases": [
+    "DCF"
+   ],
+   "groups": [
+    "투자·평가 > 감정평가"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "임대사례비교법",
+   "path": "/임대사례비교법",
+   "file": "임대사례비교법.md",
+   "aliases": [
+    "임대사례비교법"
+   ],
+   "groups": [
+    "투자·평가 > 감정평가"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "적산법",
+   "path": "/적산법",
+   "file": "적산법.md",
+   "aliases": [
+    "적산법"
+   ],
+   "groups": [
+    "투자·평가 > 감정평가"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "수익분석법",
+   "path": "/수익분석법",
+   "file": "수익분석법.md",
+   "aliases": [
+    "수익분석법"
+   ],
+   "groups": [
+    "투자·평가 > 감정평가"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "DSR/신DTI",
+   "path": "/DSR",
+   "file": "DSR_신DTI.md",
+   "aliases": [
+    "DSR/신DTI"
+   ],
+   "groups": [
+    "DSR·LTV·금융"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "DTI",
+   "path": "/DTI",
+   "file": "DTI.md",
+   "aliases": [
+    "DTI"
+   ],
+   "groups": [
+    "DSR·LTV·금융"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "RTI",
+   "path": "/rti",
+   "file": "RTI.md",
+   "aliases": [
+    "RTI"
+   ],
+   "groups": [
+    "DSR·LTV·금융"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "LTV",
+   "path": "/ltv",
+   "file": "LTV.md",
+   "aliases": [
+    "LTV"
+   ],
+   "groups": [
+    "DSR·LTV·금융"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "대출가능액",
+   "path": "/대출가능액",
+   "file": "대출가능액.md",
+   "aliases": [
+    "대출가능액"
+   ],
+   "groups": [
+    "DSR·LTV·금융"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "추정·인정 소득",
+   "path": "/추정소득",
+   "file": "추정·인정_소득.md",
+   "aliases": [
+    "추정·인정 소득"
+   ],
+   "groups": [
+    "DSR·LTV·금융"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "장래 소득",
+   "path": "/장래소득",
+   "file": "장래_소득.md",
+   "aliases": [
+    "장래 소득"
+   ],
+   "groups": [
+    "DSR·LTV·금융"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "대출 이자",
+   "path": "/대출이자",
+   "file": "대출_이자.md",
+   "aliases": [
+    "대출 이자"
+   ],
+   "groups": [
+    "DSR·LTV·금융"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "대출대환 이자",
+   "path": "/대출대환",
+   "file": "대출대환_이자.md",
+   "aliases": [
+    "대출대환 이자"
+   ],
+   "groups": [
+    "DSR·LTV·금융"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "중도상환수수료",
+   "path": "/중도상환수수료",
+   "file": "중도상환수수료.md",
+   "aliases": [
+    "중도상환수수료"
+   ],
+   "groups": [
+    "DSR·LTV·금융"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "경락대출 한도",
+   "path": "/경락대출한도",
+   "file": "경락대출_한도.md",
+   "aliases": [
+    "경락대출 한도"
+   ],
+   "groups": [
+    "DSR·LTV·금융",
+    "경매 계산"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "예적금 이자",
+   "path": "/예적금이자",
+   "file": "예적금_이자.md",
+   "aliases": [
+    "예적금 이자"
+   ],
+   "groups": [
+    "DSR·LTV·금융"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "경매비용",
+   "path": "/경매비용",
+   "file": "경매비용.md",
+   "aliases": [
+    "경매비용"
+   ],
+   "groups": [
+    "경매 계산"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "최저가·입찰보증금",
+   "path": "/유찰가",
+   "file": "최저가·입찰보증금.md",
+   "aliases": [
+    "최저가·입찰보증금"
+   ],
+   "groups": [
+    "경매 계산"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "경매 배당",
+   "path": "/경매배당",
+   "file": "경매_배당.md",
+   "aliases": [
+    "경매 배당"
+   ],
+   "groups": [
+    "경매 계산"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "날짜·기간",
+   "path": "/날짜",
+   "file": "날짜·기간.md",
+   "aliases": [
+    "날짜·기간"
+   ],
+   "groups": [
+    "면적·단위·날짜"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "손 없는 날",
+   "path": "/손없는날",
+   "file": "손_없는_날.md",
+   "aliases": [
+    "손 없는 날"
+   ],
+   "groups": [
+    "면적·단위·날짜"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "음력 달력",
+   "path": "/음력",
+   "file": "음력_달력.md",
+   "aliases": [
+    "음력 달력"
+   ],
+   "groups": [
+    "면적·단위·날짜"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "평수·면적 환산",
+   "path": "/평수환산",
+   "file": "평수·면적_환산.md",
+   "aliases": [
+    "평수·면적 환산"
+   ],
+   "groups": [
+    "면적·단위·날짜"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "길이 환산",
+   "path": "/길이",
+   "file": "길이_환산.md",
+   "aliases": [
+    "길이 환산"
+   ],
+   "groups": [
+    "면적·단위·날짜"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "단위가격",
+   "path": "/단위가격",
+   "file": "단위가격.md",
+   "aliases": [
+    "단위가격"
+   ],
+   "groups": [
+    "면적·단위·날짜"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "대지지분",
+   "path": "/대지지분",
+   "file": "대지지분.md",
+   "aliases": [
+    "대지지분"
+   ],
+   "groups": [
+    "면적·단위·날짜"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "건폐율·용적률",
+   "path": "/건폐율용적률",
+   "file": "건폐율·용적률.md",
+   "aliases": [
+    "건폐율·용적률"
+   ],
+   "groups": [
+    "면적·단위·날짜"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "재건축 연한",
+   "path": "/재건축연한",
+   "file": "재건축_연한.md",
+   "aliases": [
+    "재건축 연한"
+   ],
+   "groups": [
+    "면적·단위·날짜"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "누진세",
+   "path": "/누진세",
+   "file": "누진세.md",
+   "aliases": [
+    "누진세"
+   ],
+   "groups": [
+    "면적·단위·날짜"
+   ],
+   "outsideMenu": false
+  },
+  {
+   "name": "착한임대인",
+   "path": "/착한임대인",
+   "file": "착한임대인.md",
+   "aliases": [
+    "착한임대인"
+   ],
+   "groups": [
+    "메뉴 밖 후보"
+   ],
+   "outsideMenu": true
+  },
+  {
+   "name": "신DTI",
+   "path": "/신DTI",
+   "file": "신DTI.md",
+   "aliases": [
+    "신DTI"
+   ],
+   "groups": [
+    "메뉴 밖 후보"
+   ],
+   "outsideMenu": true
+  },
+  {
+   "name": "전세vs월세",
+   "path": "/전세vs월세",
+   "file": "전세vs월세.md",
+   "aliases": [
+    "전세vs월세"
+   ],
+   "groups": [
+    "메뉴 밖 후보"
+   ],
+   "outsideMenu": true
+  }
+ ]
+}
