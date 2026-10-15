@@ -79,6 +79,7 @@ import { calcRegistration } from './logic/registration.js';
 import { calcProperty } from './logic/property.js';
 import { calcHoldTax } from './logic/holdtax.js';
 import { calcLtc } from './logic/transfer.js';
+import { calcAppraisal } from './logic/appraisal.js';
 import Breadcrumb from './components/Breadcrumb';
 // 2026.10 주소·검색용 정보 단일 원천
 import { createSite, applyHead } from './data/siteMeta';
@@ -3212,12 +3213,10 @@ function CalcRental({isMo=false,onNav=()=>{}}){const[h,sH]=useState("2");const[r
 function CalcAppraisal({isMo=false,onNav=()=>{}}){
   const[p,sP]=useState("");const[vatType,setVatType]=useState("include");
   const pW=tW(p);
-  let fee=0;if(pW<=5e7)fee=200000;else if(pW<=2e8)fee=200000+Math.round((pW-5e7)*0.0009);else if(pW<=5e8)fee=155000+Math.round((pW-2e8)*0.0008);else if(pW<=10e8)fee=395000+Math.round((pW-5e8)*0.0006);else if(pW<=50e8)fee=695000+Math.round((pW-10e8)*0.0004);else if(pW<=100e8)fee=2295000+Math.round((pW-50e8)*0.0002);else fee=2295000+Math.round((pW-100e8)*0.0001);
-  const vat=Math.round(fee*0.1);
-  const total=vatType==="include"?fee+vat:fee;
-  return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}><div><Inp label="감정가액" value={p} onChange={sP} suffix="만원" placeholder="예: 90000"/><Tog label="부가세 처리" value={vatType} onChange={setVatType} options={[{value:"include",label:"VAT 포함"},{value:"exclude",label:"VAT 별도"}]}/><div style={{padding:"14px 16px",background:P.lt,borderRadius:10,fontSize:12,color:"#4a5568",lineHeight:1.8,marginTop:8}}>• 5천만 이하: 기본 20만원<br/>• 5천만~2억: 20만 + 초과분×0.09%<br/>• 2~5억: 15.5만 + 초과분×0.08%<br/>• 5~10억: 39.5만 + 초과분×0.06%<br/>• 10~50억: 69.5만 + 초과분×0.04%</div>
+  const {fee,vat,total}=calcAppraisal({pW,vatType});
+  return(<div style={{display:"grid",gridTemplateColumns:isMo?"1fr":"3fr 2fr",gap:isMo?16:28,alignItems:"start",minWidth:0}}><div><Inp label="감정가액" value={p} onChange={sP} suffix="만원" placeholder="예: 90000"/><Tog label="부가세 처리" value={vatType} onChange={setVatType} options={[{value:"include",label:"VAT 포함"},{value:"exclude",label:"VAT 별도"}]}/><div style={{padding:"14px 16px",background:P.lt,borderRadius:10,fontSize:12,color:"#4a5568",lineHeight:1.8,marginTop:8}}>• 5천만 이하: 25만원<br/>• 5천만~5억: 25만 + 5천만 초과분×0.11%<br/>• 5~10억: 74.5만 + 5억 초과분×0.09%<br/>• 10~50억: 119.5만 + 10억 초과분×0.08%<br/>• 50~100억: 439.5만 + 50억 초과분×0.07%<br/>• 100~500억: 789.5만 + 100억 초과분×0.06%</div>
     </div><RPFull miss={tW(p)>0?null:MI.appraisal} title="감정평가 수수료"
-      deadline="※ 감정평가협회 표준보수표 기준 (실제는 협의)"
+      deadline="※ 국토교통부 고시 「감정평가법인등의 보수에 관한 기준」 별표 기준 수수료 (실제는 0.8~1.2배 범위 협의)"
       alertMsg={pW>=50e8?"고가 부동산: 감정평가 2인 이상 권장":null}
       alertType="info"
       total={total} sub={vatType==="include"?"부가세 포함":"부가세 별도"} items={[{l:"감정가액",v:fW(pW)},{l:"기본 수수료 (누진)",v:fW(fee),note:"구간별 누진 계산"},{l:"부가가치세 (10%)",v:fW(vat)},{l:"합계 ("+(vatType==="include"?"VAT 포함":"VAT 별도")+")",v:fW(total)}]} nextStep={<NextStep calcId="appraisal" onNav={onNav} isMo={isMo}/>}/></div>);}
