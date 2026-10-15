@@ -1,24 +1,20 @@
 import React, {useState} from 'react';
-import {tW, fW, pTx, Inp, Sel, RP, CalcShell} from "./_shared";
+import {tW, fW, Inp, Sel, RP, CalcShell} from "./_shared";
+import {calcCorpTransfer} from "../logic/corpTransfer.js";
 
 // 법인 부동산 양도세 (2026.10 신설)
 // 법인세율(2026.1.1 이후 개시 사업연도, 2025.12 개정): 2억 10% / 200억 20% / 3,000억 22% / 초과 25%
-// 토지 등 양도소득 추가과세(법인세법 §55의2): 주택·별장·입주권·분양권 20%, 비사업용 토지 10%, 미등기 40%
+// 토지 등 양도소득 추가과세(법인세법 §55의2): 주택·별장·입주권·분양권 20%, 비사업용 토지 10%, 미등기 주택·별장·비사업용 토지 40%
 // 법인지방소득세 = 법인세 산출액의 10% (지방세법 §103의20 구간 세율, 산출액 기준 10%로 근사)
-const CIT = [[2e8,0.10],[2e10,0.20],[3e11,0.22],[Infinity,0.25]];
-const EXTRA = [{value:"0",label:"일반 (상가·업무용·사업용 토지 등)"},{value:"0.2",label:"주택·별장·입주권·분양권 (+20%)"},{value:"0.1",label:"비사업용 토지 (+10%)"},{value:"0.4",label:"미등기 자산 (+40%)"}];
+const EXTRA = [{value:"general",label:"일반 (상가·업무용·사업용 토지 등, 미등기여도 추가과세 없음)"},{value:"house",label:"주택·별장·입주권·분양권 (+20%)"},{value:"land",label:"비사업용 토지 (+10%)"},{value:"unreg",label:"미등기 주택·별장·비사업용 토지 (+40%)"}];
 export default function CalcCorpTransfer({isMo=false}){
   const [sell, setSell] = useState("");
   const [book, setBook] = useState("");
   const [cost, setCost] = useState("");
   const [other, setOther] = useState("");
-  const [kind, setKind] = useState("0.2");
-  const S=tW(sell), B=tW(book), C=tW(cost), O=tW(other), x=+kind;
-  const gain = Math.max(0, S-B-C);
-  const citDelta = pTx(Math.max(0,O+gain), CIT) - pTx(Math.max(0,O), CIT);
-  const extra = Math.max(0, S-B)*x;
-  const local = (citDelta+extra)*0.1;
-  const total = citDelta+extra+local;
+  const [kind, setKind] = useState("house");
+  const S=tW(sell), B=tW(book), C=tW(cost), O=tW(other);
+  const {x,gain,citDelta,extra,local,total} = calcCorpTransfer({S,B,C,O,kind:kind==='unreg'?'house':kind,unregistered:kind==='unreg'});
   const miss=[]; if(!S) miss.push("양도가액을 입력해주세요"); if(!B) miss.push("장부가액(취득가)을 입력해주세요");
   return(<CalcShell title="법인 양도세 계산기" isMo={isMo} wide>
     <Inp label="양도가액" value={sell} onChange={setSell} suffix="만원" placeholder="예: 100000" error={!sell}/>
