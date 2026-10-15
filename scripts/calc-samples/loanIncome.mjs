@@ -1,0 +1,48 @@
+import {calcLoanIncome} from "../../src/logic/loanIncome.js";
+
+// 대출 인정·신고소득 — 손계산 표본. 기대값은 조문의 비율(95%/90%/5천만원 한도)과 법정 보험료율로 따로 계산했다.
+export default {
+  name: "대출 인정·신고소득",
+  run: calcLoanIncome,
+  samples: [
+    {id:"pen-직장", desc:"국민연금 직장가입자 본인 월 135,000원: 135,000/4.75% x12 x95% = 32,400,000 (추정 연소득 34,105,263)",
+      input:{kind:"pension", payer:"worker", monthly:135000},
+      expect:{recognized:32400000, raw:34105263, workerFull:34105263, capped:false},
+      law:"국민연금법 부칙(연금보험료에 관한 특례) 2026년 사업장가입자 기준소득월액의 1만분의 475; 은행업감독업무시행세칙 [별표 18] 제9호 다목(3) 인정소득 95%, 제12-2호 라목"},
+    {id:"pen-지역", desc:"국민연금 지역가입자 월 135,000원: 135,000/9.5% x12 x95% = 16,200,000",
+      input:{kind:"pension", payer:"local", monthly:135000},
+      expect:{recognized:16200000, workerFull:0},
+      law:"국민연금법 부칙 2026년 지역가입자 1천분의 95; 시행세칙 [별표 18] 제9호 다목(3)"},
+    {id:"pen-한도", desc:"국민연금 직장 월 300,000원: 300,000/4.75% x12 x95% = 72,000,000 -> 5천만원 한도, 직장가입자 DSR 산정 시 한도 없는 추정 연소득 75,789,473",
+      input:{kind:"pension", payer:"worker", monthly:300000},
+      expect:{recognized:50000000, uncapped:72000000, capped:true, workerFull:75789473},
+      law:"시행세칙 [별표 18] 제9호 다목(3)(5천만원 초과 불가), 제12-2호 라목(직장가입자 인정소득은 한도 미적용)"},
+    {id:"건보-직장", desc:"건강보험 직장가입자 본인 월 100,000원: 100,000x12/3.595% = 33,379,694 x95% = 31,710,709",
+      input:{kind:"health", monthly:100000},
+      expect:{raw:33379694, recognized:31710709, capped:false},
+      law:"국민건강보험법 시행령 제44조 제1항(1만분의 719), 국민건강보험법 제76조 제1항(직장가입자 본인 100분의 50): 본인 3.595%"},
+    {id:"임대-6개월", desc:"임대 입금 6개월 12,000,000원: 연환산 24,000,000 x90% = 21,600,000",
+      input:{kind:"rent", amount:12000000, months:6},
+      expect:{raw:24000000, recognized:21600000},
+      law:"시행세칙 [별표 18] 부표 임대소득 추정(최근 1년간 입금액, 3개월 이상이면 연환산), 제9호 다목(3) 신고소득 90%"},
+    {id:"임대-2개월", desc:"입금기간 2개월은 연환산 불가", input:{kind:"rent", amount:5000000, months:2},
+      expect:{err:"입금기간이 3개월 이상이어야 연환산할 수 있습니다", recognized:0},
+      law:"시행세칙 [별표 18] 부표 (입금기간이 3개월 이상인 경우 연환산 가능)"},
+    {id:"매출", desc:"매출 1억, 경비율 60%: 40,000,000 x90% = 36,000,000",
+      input:{kind:"sales", sales:100000000, expensePct:60},
+      expect:{raw:40000000, recognized:36000000},
+      law:"시행세칙 [별표 18] 부표 매출액으로 추정: 매출액x(1-단순경비율), 신고소득 90%"},
+    {id:"매출-한도", desc:"매출 3억, 경비율 50%: 1.5억 x90%=1.35억 -> 5천만원 한도",
+      input:{kind:"sales", sales:300000000, expensePct:50},
+      expect:{recognized:50000000, uncapped:135000000, capped:true},
+      law:"시행세칙 [별표 18] 부표 ※ 각 소득종류별 연소득금액은 5천만원을 초과할 수 없음"},
+    {id:"카드", desc:"카드 소득공제금액 600만원, 사용률 40%: 15,000,000 x90% = 13,500,000",
+      input:{kind:"card", deduction:6000000, usePct:40},
+      expect:{raw:15000000, recognized:13500000},
+      law:"시행세칙 [별표 18] 부표 신용카드 사용액으로 추정: 소득공제금액÷신용(체크)카드 사용률, 신고소득 90%"},
+    {id:"적립", desc:"적립식 납부 300만원, 민간저축률 10%: 30,000,000 x90% = 27,000,000",
+      input:{kind:"saving", paid:3000000, savePct:10},
+      expect:{raw:30000000, recognized:27000000},
+      law:"시행세칙 [별표 18] 부표 적립식으로 추정: 최근 1년간 납부금액÷민간저축률"}
+  ]
+};
