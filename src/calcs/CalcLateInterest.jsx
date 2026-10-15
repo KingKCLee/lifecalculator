@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {tW, pN, fW, Inp, Tog, RP, CalcShell, useTodayStr} from "./_shared";
+import {calcLateInterest} from "../logic/lateInterest.js";
 
 // 연체 임대료 이자 (지연손해금) (2026.10 신설)
 // 약정 이율이 없으면 법정이율: 민법 §379 연 5%, 상법 §54 연 6%
@@ -16,8 +17,7 @@ export default function CalcLateInterest({isMo=false}){
   const [custom, setCustom] = useState("");
   const rate = kind==="civil"?0.05:kind==="commerce"?0.06:kind==="suit"?0.12:pN(custom)/100;
   const A = tW(amt), d1 = toDate(from), d2 = toDate(to);
-  const days = d1&&d2 ? Math.max(0, Math.round((d2-d1)/86400000)) : 0;
-  const interest = Math.floor(A*rate*days/365);
+  const {days, interest} = calcLateInterest({A, rate, d1, d2});
   const miss = [];
   if(!A) miss.push("연체 금액을 입력해주세요");
   if(!d1) miss.push("연체 시작일(8자리)을 입력해주세요");
