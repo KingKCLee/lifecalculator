@@ -1,0 +1,9 @@
+# 2026.10 윈도 PC에서 줄바꿈이 CRLF로 바뀌어 App.jsx 7425줄 전체가 바뀐 것으로 올라온 사고(PR #15) 재발 방지
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.ico binary
+*.webp binary
+*.woff binary
+*.woff2 binary
+*.pdf binary
