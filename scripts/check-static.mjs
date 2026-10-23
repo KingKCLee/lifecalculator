@@ -91,6 +91,19 @@ for (const f of allHtml) {
     for (const m of mods) if (!known.has(m)) bad(`${g.path}: data-lc-mods 의 '${m}' 는 등록되지 않은 조각`)
   }
 }
+/* ⑨ 2026.10 윈도 PC에서 줄바꿈이 CRLF로 바뀌어 App.jsx 7425줄이 통째로 바뀐 것으로 올라왔다(PR #15).
+ *    → 소스(src·scripts·index.html)에 CRLF 가 한 줄이라도 있으면 막는다. .gitattributes(eol=lf)가 1차, 이것이 2차. */
+{
+  const crlf = []
+  const scan = (p) => {
+    if (!fs.existsSync(p)) return
+    const st = fs.statSync(p)
+    if (st.isDirectory()) { for (const n of fs.readdirSync(p)) if (n !== 'node_modules') scan(path.join(p, n)); return }
+    if (/\.(m?js|cjs|jsx|ts|tsx|json|html|css|md)$/.test(p) && fs.readFileSync(p, 'utf8').includes('\r\n')) crlf.push(path.relative(ROOT, p))
+  }
+  for (const d of ['src', 'scripts', 'index.html']) scan(path.join(ROOT, d))
+  if (crlf.length) bad(`줄바꿈 CRLF 파일 ${crlf.length}개(LF 로 바꿔야 함 — 윈도 저장 사고): ${crlf.slice(0, 8).join(', ')}`)
+}
 const nf = path.join(DIST, '404.html')
 if (!fs.existsSync(nf) || !/noindex/.test(fs.readFileSync(nf, 'utf8'))) bad('404.html 없음 또는 noindex 아님')
 
