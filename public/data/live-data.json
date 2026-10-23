@@ -1167,6 +1167,12 @@
   },
   "updateLog": [
     {
+      "date": "2026.10.23",
+      "category": "전체",
+      "title": "fix(build): 줄바꿈 CRLF→LF 정상화 + 재발 방지(.gitattributes·check-static ⑨)",
+      "desc": "fix(build): 줄바꿈 CRLF→LF 정상화 + 재발 방지(.gitattributes·check-static ⑨)"
+    },
+    {
       "date": "2026.10.16",
       "category": "전체",
       "title": "fix: 나눠 실은 조각 받기 실패 시 1회 재시도(드문 이어받기 깜빡임 #421 대비)",
@@ -1480,12 +1486,6 @@
       "category": "전체",
       "title": "feat: 아코디언 세율표 57개 계산기 완성",
       "desc": "feat: 아코디언 세율표 57개 계산기 완성"
-    },
-    {
-      "date": "2026.04.18",
-      "category": "전체",
-      "title": "feat: 전체 계산기 결과 항목에 법령근거 note 일괄 추가",
-      "desc": "feat: 전체 계산기 결과 항목에 법령근거 note 일괄 추가"
     }
   ],
   "rates": {
